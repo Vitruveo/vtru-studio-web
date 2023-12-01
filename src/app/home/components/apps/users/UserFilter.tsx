@@ -4,16 +4,16 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
-
-import Scrollbar from "../../custom-scroll/Scrollbar";
+import { Switch } from "@mui/material";
 import {
   IconMail,
   IconSend,
   IconBucket,
   IconFolder,
 } from "@tabler/icons-react";
-import ContactAdd from "./ContactAdd";
-import { Box, Switch } from "@mui/material";
+
+import UserAdd from "./UserAdd";
+import Scrollbar from "../../custom-scroll/Scrollbar";
 
 interface DataType {
   id: number;
@@ -25,7 +25,7 @@ interface DataType {
   color?: string;
 }
 
-const ContactFilter = () => {
+export default function UserFilter() {
   const active = "show_all";
   const customizer = {
     activeDir: "ltr",
@@ -55,19 +55,19 @@ const ContactFilter = () => {
     {
       id: 3,
       name: "Starred",
-      sort: "frequent_contact",
+      sort: "frequent_user",
       icon: IconSend,
     },
     {
       id: 4,
       name: "Pending Approval",
-      sort: "starred_contact",
+      sort: "starred_user",
       icon: IconBucket,
     },
     {
       id: 5,
       name: "Blocked",
-      sort: "starred_contact",
+      sort: "starred_user",
       icon: IconBucket,
     },
     {
@@ -89,7 +89,7 @@ const ContactFilter = () => {
 
   return (
     <>
-      <ContactAdd />
+      <UserAdd />
       <List>
         <Scrollbar
           sx={{
@@ -137,6 +137,4 @@ const ContactFilter = () => {
       </List>
     </>
   );
-};
-
-export default ContactFilter;
+}

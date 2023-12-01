@@ -11,7 +11,7 @@ import { useTheme } from "@mui/material/styles";
 import { IconStar, IconTrash } from "@tabler/icons-react";
 
 type Props = {
-  onContactClick: (event: React.MouseEvent<HTMLElement>) => void;
+  onUserClick: (event: React.MouseEvent<HTMLElement>) => void;
   onStarredClick: React.MouseEventHandler<SVGElement>;
   onDeleteClick: React.MouseEventHandler<SVGElement>;
   id: string | number;
@@ -23,18 +23,17 @@ type Props = {
   active: any;
 };
 
-const ContactListItem = ({
-  onContactClick,
+export default function UserListItem({
+  onUserClick,
   onStarredClick,
   onDeleteClick,
-  id,
   firstname,
   lastname,
   image,
   department,
   starred,
   active,
-}: Props) => {
+}: Props) {
   const customizer = {
     activeDir: "ltr",
     activeMode: "light", // This can be light or dark
@@ -64,7 +63,7 @@ const ContactListItem = ({
       </ListItemAvatar>
       <ListItemText>
         <Stack direction="row" gap="10px" alignItems="center">
-          <Box mr="auto" onClick={onContactClick}>
+          <Box mr="auto" onClick={onUserClick}>
             <Typography
               variant="subtitle1"
               noWrap
@@ -91,6 +90,4 @@ const ContactListItem = ({
       </ListItemText>
     </ListItemButton>
   );
-};
-
-export default ContactListItem;
+}

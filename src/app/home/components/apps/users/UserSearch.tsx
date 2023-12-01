@@ -10,7 +10,7 @@ type Props = {
   onClick: (event: React.MouseEvent<HTMLElement>) => void;
 };
 
-const ContactSearch = ({ onClick }: Props) => {
+export default function UserSearch({ onClick }: Props) {
   const searchTerm = "";
 
   return (
@@ -39,12 +39,10 @@ const ContactSearch = ({ onClick }: Props) => {
         fullWidth
         size="small"
         value={searchTerm}
-        placeholder="Search Contacts"
+        placeholder="Search Users"
         variant="outlined"
         onChange={(e) => {}}
       />
     </Box>
   );
-};
-
-export default ContactSearch;
+}

@@ -1,6 +1,20 @@
-import { ContactType } from "@/app/home/types/apps/contact";
+export interface UserType {
+  id: number | string;
+  firstname: string;
+  lastname: string;
+  image: string;
+  department: string;
+  company: string;
+  phone: string;
+  email: string;
+  address: string;
+  notes: string;
+  frequentlycontacted: boolean;
+  starred: boolean;
+  deleted: boolean;
+}
 
-export const contactList: ContactType[] = [
+export const userList: UserType[] = [
   {
     id: 1,
     firstname: "Georgeanna",

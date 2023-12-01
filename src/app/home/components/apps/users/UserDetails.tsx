@@ -1,4 +1,3 @@
-import { useSelector } from "@/store/hooks";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -10,21 +9,21 @@ import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
-
-import BlankCard from "../../shared/BlankCard";
-import { ContactType } from "../../../types/apps/contact";
+import Image from "next/image";
 import {
   IconPencil,
   IconStar,
   IconTrash,
   IconDeviceFloppy,
 } from "@tabler/icons-react";
+
+import { UserType } from "@/mock/users";
+import BlankCard from "../../shared/BlankCard";
 import Scrollbar from "../../custom-scroll/Scrollbar";
 import emailIcon from "public/images/breadcrumb/emailSv.png";
-import Image from "next/image";
 
-const ContactDetails = () => {
-  const contactDetail: ContactType = {
+export default function UserDetails() {
+  const userDetail: UserType = {
     id: 1,
     firstname: "John",
     lastname: "Doe",
@@ -40,7 +39,7 @@ const ContactDetails = () => {
     starred: false,
     deleted: false,
   };
-  const editContact = false;
+  const editUser = false;
 
   const theme = useTheme();
 
@@ -51,88 +50,82 @@ const ContactDetails = () => {
       id: 1,
       title: "Firstname",
       alias: "firstname",
-      gdata: contactDetail ? contactDetail.firstname : "",
+      gdata: userDetail ? userDetail.firstname : "",
       type: "text",
     },
     {
       id: 2,
       title: "Lastname",
       alias: "lastname",
-      gdata: contactDetail ? contactDetail.lastname : "",
+      gdata: userDetail ? userDetail.lastname : "",
       type: "text",
     },
     {
       id: 3,
       title: "Company",
       alias: "company",
-      gdata: contactDetail ? contactDetail.company : "",
+      gdata: userDetail ? userDetail.company : "",
       type: "text",
     },
     {
       id: 4,
       title: "Department",
       alias: "department",
-      gdata: contactDetail ? contactDetail.department : "",
+      gdata: userDetail ? userDetail.department : "",
       type: "text",
     },
     {
       id: 5,
       title: "Email",
       alias: "email",
-      gdata: contactDetail ? contactDetail.email : "",
+      gdata: userDetail ? userDetail.email : "",
       type: "email",
     },
     {
       id: 6,
       title: "Phone",
       alias: "phone",
-      gdata: contactDetail ? contactDetail.phone : "",
+      gdata: userDetail ? userDetail.phone : "",
       type: "phone",
     },
     {
       id: 7,
       title: "Address",
       alias: "address",
-      gdata: contactDetail ? contactDetail.address : "",
+      gdata: userDetail ? userDetail.address : "",
       type: "text",
     },
     {
       id: 8,
       title: "Notes",
       alias: "notes",
-      gdata: contactDetail ? contactDetail.notes : "",
+      gdata: userDetail ? userDetail.notes : "",
       type: "text",
     },
   ];
 
   return (
     <>
-      {/* ------------------------------------------- */}
-      {/* Contact Detail Part */}
-      {/* ------------------------------------------- */}
-      {contactDetail && !contactDetail.deleted ? (
+      {userDetail && !userDetail.deleted ? (
         <>
-          {/* ------------------------------------------- */}
-          {/* Header Part */}
-          {/* ------------------------------------------- */}
           <Box p={3} py={2} display={"flex"} alignItems="center">
             <Typography variant="h5">User Details</Typography>
             <Stack gap={0} direction="row" ml={"auto"}>
-              <Tooltip title={contactDetail.starred ? "Unstar" : "Star"}>
+              <Tooltip title={userDetail.starred ? "Unstar" : "Star"}>
                 <IconButton>
                   <IconStar
                     stroke={1.3}
                     size="18"
                     style={{
-                      fill: contactDetail.starred ? warningColor : "",
-                      stroke: contactDetail.starred ? warningColor : "",
+                      fill: userDetail.starred ? warningColor : "",
+                      stroke: userDetail.starred ? warningColor : "",
                     }}
                   />
                 </IconButton>
               </Tooltip>
-              <Tooltip title={editContact ? "Save" : "Edit"}>
+              <Tooltip title={editUser ? "Save" : "Edit"}>
                 <IconButton>
-                  {!editContact ? (
+                  {!editUser ? (
                     <IconPencil size="18" stroke={1.3} />
                   ) : (
                     <IconDeviceFloppy size="18" stroke={1.3} />
@@ -147,32 +140,30 @@ const ContactDetails = () => {
             </Stack>
           </Box>
           <Divider />
-          {/* ------------------------------------------- */}
-          {/* Contact Table Part */}
-          {/* ------------------------------------------- */}
+
           <Box sx={{ overflow: "auto" }}>
-            {!editContact ? (
+            {!editUser ? (
               <Box>
                 <Box p={3}>
                   <Box display="flex" alignItems="center">
                     <Avatar
-                      alt={contactDetail.image}
-                      src={contactDetail.image}
+                      alt={userDetail.image}
+                      src={userDetail.image}
                       sx={{ width: "72px", height: "72px" }}
                     />
                     <Box sx={{ ml: 2 }}>
                       <Typography variant="h6" mb={0.5}>
-                        {contactDetail.firstname} {contactDetail.lastname}
+                        {userDetail.firstname} {userDetail.lastname}
                       </Typography>
                       <Typography
                         variant="body2"
                         color="text.secondary"
                         mb={0.5}
                       >
-                        {contactDetail.department}
+                        {userDetail.department}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        {contactDetail.company}
+                        {userDetail.company}
                       </Typography>
                     </Box>
                   </Box>
@@ -182,7 +173,7 @@ const ContactDetails = () => {
                         Phone Number
                       </Typography>
                       <Typography variant="subtitle1" mb={0.5} fontWeight={600}>
-                        {contactDetail.phone}
+                        {userDetail.phone}
                       </Typography>
                     </Grid>
                     <Grid item lg={6} xs={12} mt={4}>
@@ -190,7 +181,7 @@ const ContactDetails = () => {
                         Email address
                       </Typography>
                       <Typography variant="subtitle1" fontWeight={600} mb={0.5}>
-                        {contactDetail.email}
+                        {userDetail.email}
                       </Typography>
                     </Grid>
                     <Grid item lg={12} xs={12} mt={4}>
@@ -198,7 +189,7 @@ const ContactDetails = () => {
                         Address
                       </Typography>
                       <Typography variant="subtitle1" fontWeight={600} mb={0.5}>
-                        {contactDetail.address}
+                        {userDetail.address}
                       </Typography>
                     </Grid>
                     <Grid item lg={6} xs={12} mt={4}>
@@ -206,7 +197,7 @@ const ContactDetails = () => {
                         Department
                       </Typography>
                       <Typography variant="subtitle1" mb={0.5} fontWeight={600}>
-                        {contactDetail.department}
+                        {userDetail.department}
                       </Typography>
                     </Grid>
                     <Grid item lg={6} xs={12} mt={4}>
@@ -214,7 +205,7 @@ const ContactDetails = () => {
                         Company
                       </Typography>
                       <Typography variant="subtitle1" fontWeight={600} mb={0.5}>
-                        {contactDetail.company}
+                        {userDetail.company}
                       </Typography>
                     </Grid>
                     <Grid item lg={12} xs={12} mt={4}>
@@ -222,7 +213,7 @@ const ContactDetails = () => {
                         Notes
                       </Typography>
                       <Typography variant="subtitle1" mb={0.5}>
-                        {contactDetail.notes}
+                        {userDetail.notes}
                       </Typography>
                     </Grid>
                   </Grid>
@@ -279,7 +270,7 @@ const ContactDetails = () => {
                           variant="contained"
                           onClick={() => {}}
                         >
-                          Save Contact
+                          Save User
                         </Button>
                       </Box>
                     </Box>
@@ -297,11 +288,8 @@ const ContactDetails = () => {
           justifyContent="center"
           alignItems={"center"}
         >
-          {/* ------------------------------------------- */}
-          {/* If no Contact  */}
-          {/* ------------------------------------------- */}
           <Box>
-            <Typography variant="h4">Please Select a Contact</Typography>
+            <Typography variant="h4">Please Select a User</Typography>
             <br />
             <Image src={emailIcon} alt={"emailIcon"} width="250" />
           </Box>
@@ -309,6 +297,4 @@ const ContactDetails = () => {
       )}
     </>
   );
-};
-
-export default ContactDetails;
+}

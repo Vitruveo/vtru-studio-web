@@ -9,10 +9,7 @@ import FormLabel from "@mui/material/FormLabel";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 
-import user1 from "public/images/profile/user-1.jpg";
-
-const ContactAdd = () => {
-  const id = 1;
+export default function UserAdd() {
   const [modal, setModal] = React.useState(false);
 
   const toggle = () => {
@@ -51,11 +48,11 @@ const ContactAdd = () => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title" variant="h5">
-          {"Add New Contact"}
+          {"Add New User"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Lets add new contact for your application. fill the all field and
+            Lets add new user for your application. fill the all field and
             <br /> click on submit button.
           </DialogContentText>
           <Box mt={3}>
@@ -194,6 +191,4 @@ const ContactAdd = () => {
       </Dialog>
     </>
   );
-};
-
-export default ContactAdd;
+}

@@ -8,10 +8,10 @@ import { Theme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import PageContainer from "@/app/home/components/container/PageContainer";
 import Breadcrumb from "@/app/home/layout/shared/breadcrumb/Breadcrumb";
-import ContactDetails from "@/app/home/components/apps/contacts/ContactDetails";
-import ContactList from "@/app/home/components/apps/contacts/ContactList";
-import ContactSearch from "@/app/home/components/apps/contacts/ContactSearch";
-import ContactFilter from "@/app/home/components/apps/contacts/ContactFilter";
+import UserDetails from "@/app/home/components/apps/users/UserDetails";
+import UserList from "@/app/home/components/apps/users/UsertList";
+import UserSearch from "@/app/home/components/apps/users/UserSearch";
+import UserFilter from "@/app/home/components/apps/users/UserFilter";
 import AppCard from "@/app/home/components/shared/AppCard";
 
 const drawerWidth = 240;
@@ -27,10 +27,6 @@ export default function Users() {
     <PageContainer title="User" description="this is Users">
       <Breadcrumb title="Users Application" subtitle="List Your Users" />
       <AppCard>
-        {/* ------------------------------------------- */}
-        {/* Left Part */}
-        {/* ------------------------------------------- */}
-
         <Drawer
           open={isLeftSidebarOpen}
           onClose={() => setLeftSidebarOpen(false)}
@@ -45,11 +41,9 @@ export default function Users() {
           }}
           variant={lgUp ? "permanent" : "temporary"}
         >
-          <ContactFilter />
+          <UserFilter />
         </Drawer>
-        {/* ------------------------------------------- */}
-        {/* Middle part */}
-        {/* ------------------------------------------- */}
+
         <Box
           sx={{
             minWidth: secdrawerWidth,
@@ -57,12 +51,10 @@ export default function Users() {
             flexShrink: 0,
           }}
         >
-          <ContactSearch onClick={() => setLeftSidebarOpen(true)} />
-          <ContactList showrightSidebar={() => setRightSidebarOpen(true)} />
+          <UserSearch onClick={() => setLeftSidebarOpen(true)} />
+          <UserList showrightSidebar={() => setRightSidebarOpen(true)} />
         </Box>
-        {/* ------------------------------------------- */}
-        {/* Right part */}
-        {/* ------------------------------------------- */}
+
         <Drawer
           anchor="right"
           open={isRightSidebarOpen}
@@ -75,7 +67,6 @@ export default function Users() {
             [`& .MuiDrawer-paper`]: { width: "100%", position: "relative" },
           }}
         >
-          {/* back btn Part */}
           {mdUp ? (
             ""
           ) : (
@@ -91,7 +82,7 @@ export default function Users() {
               </Button>
             </Box>
           )}
-          <ContactDetails />
+          <UserDetails />
         </Drawer>
       </AppCard>
     </PageContainer>
