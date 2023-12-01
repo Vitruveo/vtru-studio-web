@@ -1,9 +1,9 @@
 "use client";
 import Link from "next/link";
 import { Grid, Box, Stack, Typography } from "@mui/material";
-import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
+import PageContainer from "@/app/home/components/container/PageContainer";
 
-import AuthLogin from "./authForms/AuthLogin";
+import AuthLogin from "./components/form/AuthLogin";
 import Image from "next/image";
 
 export default function Login() {
@@ -25,7 +25,7 @@ export default function Login() {
             position: "relative",
             "&:before": {
               content: '""',
-              background: "radial-gradient(#d2f1df, #d3d7fa, #bad8f4)",
+              background: "#F2ECF9",
               backgroundSize: "400% 400%",
               animation: "gradient 15s ease infinite",
               position: "absolute",
@@ -49,7 +49,7 @@ export default function Login() {
               }}
             >
               <Image
-                src={"/images/backgrounds/login-bg.svg"}
+                src={"/images/logos/vtru-login-admin.svg"}
                 alt="bg"
                 width={500}
                 height={500}
@@ -74,33 +74,11 @@ export default function Login() {
         >
           <Box p={4}>
             <AuthLogin
-              title="Welcome to Vitruveo"
+              title="Welcome to vtruStudio Admin"
               subtext={
                 <Typography variant="subtitle1" color="textSecondary" mb={1}>
                   Your Admin Dashboard
                 </Typography>
-              }
-              subtitle={
-                <Stack direction="row" spacing={1} mt={3}>
-                  <Typography
-                    color="textSecondary"
-                    variant="h6"
-                    fontWeight="500"
-                  >
-                    New to Modernize?
-                  </Typography>
-                  <Typography
-                    component={Link}
-                    href="/auth/auth1/register"
-                    fontWeight="500"
-                    sx={{
-                      textDecoration: "none",
-                      color: "primary.main",
-                    }}
-                  >
-                    Create an account
-                  </Typography>
-                </Stack>
               }
             />
           </Box>

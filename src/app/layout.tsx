@@ -7,8 +7,8 @@ import {
   ThemeProvider,
   createTheme,
 } from "@mui/material/styles";
-import { configTheme } from "@/app/utils/theme/Theme";
-import { NextAppDirEmotionCacheProvider } from "@/app/utils/theme/EmotionCache";
+import { configTheme } from "@/app/common/theme/Theme";
+import { NextAppDirEmotionCacheProvider } from "@/app/common/theme/EmotionCache";
 import "@/utils/i18n";
 
 const inter = Inter({ subsets: ["latin"] });
