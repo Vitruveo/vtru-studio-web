@@ -34,7 +34,6 @@ const MyApp = ({ children }: { children: React.ReactNode }) => {
           {children}
         </ThemeProvider>
       </NextAppDirEmotionCacheProvider>
-      x
     </>
   );
 };

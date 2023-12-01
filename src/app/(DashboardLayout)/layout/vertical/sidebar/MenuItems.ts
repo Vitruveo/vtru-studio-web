@@ -40,20 +40,20 @@ const Menuitems: MenuitemsType[] = [
     id: uniqueId(),
     title: "Users",
     icon: IconPackage,
-    href: "/users",
+    href: "/apps/users",
   },
 
   {
     id: uniqueId(),
     title: "Creators",
     icon: IconChartDonut3,
-    href: "/creators",
+    href: "/apps/creators",
   },
   {
     id: uniqueId(),
     title: "Assets",
     icon: IconChartDonut3,
-    href: "/assets",
+    href: "/apps/assets",
   },
   {
     navlabel: true,
@@ -63,13 +63,13 @@ const Menuitems: MenuitemsType[] = [
     id: uniqueId(),
     title: "General",
     icon: IconChartDonut3,
-    href: "/general",
+    href: "/apps/general",
   },
   {
     id: uniqueId(),
     title: "Roles",
     icon: IconChartDonut3,
-    href: "/roles",
+    href: "/apps/roles",
   },
 ];
 
