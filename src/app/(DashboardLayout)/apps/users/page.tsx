@@ -17,14 +17,14 @@ import AppCard from "@/app/(DashboardLayout)/components/shared/AppCard";
 const drawerWidth = 240;
 const secdrawerWidth = 320;
 
-const Contacts = () => {
+export default function Users() {
   const [isLeftSidebarOpen, setLeftSidebarOpen] = useState(false);
   const [isRightSidebarOpen, setRightSidebarOpen] = useState(false);
   const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
   const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("md"));
 
   return (
-    <PageContainer title="Contact" description="this is Contact">
+    <PageContainer title="User" description="this is Users">
       <Breadcrumb title="Users Application" subtitle="List Your Users" />
       <AppCard>
         {/* ------------------------------------------- */}
@@ -96,6 +96,4 @@ const Contacts = () => {
       </AppCard>
     </PageContainer>
   );
-};
-
-export default Contacts;
+}
