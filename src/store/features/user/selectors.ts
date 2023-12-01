@@ -12,10 +12,8 @@ import { UserSliceState } from "./types";
  */
 
 export const userSelector = <T extends keyof UserSliceState>(fields: T[]) => {
-  return (
-    state: ReduxState["user"]
-  ): FieldSelector<Pick<UserSliceState, T>> => {
-    const selectedFields: FieldSelector<Pick<UserSliceState, T>> = {};
+  return (state: ReduxState["user"]): Pick<UserSliceState, T> => {
+    const selectedFields: Pick<UserSliceState, T> = {};
 
     fields.forEach((field) => {
       selectedFields[field] = state[field];
