@@ -1,7 +1,6 @@
-import { useTheme } from '@mui/material/styles';
-import { Card, CardContent, Typography, Stack, Box } from '@mui/material';
-import { useSelector } from '@/store/hooks';
-import { AppState } from '@/store/store';
+import { useTheme } from "@mui/material/styles";
+import { Card, CardContent, Typography, Stack, Box } from "@mui/material";
+import { useSelector } from "@/store/hooks";
 
 type Props = {
   title?: string;
@@ -26,16 +25,34 @@ const DashboardCard = ({
   headsubtitle,
   middlecontent,
 }: Props) => {
-  const customizer = useSelector((state: AppState) => state.customizer);
+  const customizer = {
+    activeDir: "ltr",
+    activeMode: "light", // This can be light or dark
+    activeTheme: "BLUE_THEME", // BLUE_THEME, GREEN_THEME, BLACK_THEME, PURPLE_THEME, ORANGE_THEME
+    SidebarWidth: 270,
+    MiniSidebarWidth: 87,
+    TopbarHeight: 70,
+    isLayout: "boxed", // This can be full or boxed
+    isCollapse: false, // to make sidebar Mini by default
+    isSidebarHover: false,
+    isMobileSidebar: false,
+    isHorizontal: false,
+    isLanguage: "en",
+    isCardShadow: true,
+    borderRadius: 7,
+  };
 
   const theme = useTheme();
   const borderColor = theme.palette.divider;
 
   return (
     <Card
-      sx={{ padding: 0, border: !customizer.isCardShadow ?  `1px solid ${borderColor}` : 'none' }}
+      sx={{
+        padding: 0,
+        border: !customizer.isCardShadow ? `1px solid ${borderColor}` : "none",
+      }}
       elevation={customizer.isCardShadow ? 9 : 0}
-      variant={!customizer.isCardShadow ? 'outlined' : undefined}
+      variant={!customizer.isCardShadow ? "outlined" : undefined}
     >
       {cardheading ? (
         <CardContent>
@@ -45,24 +62,24 @@ const DashboardCard = ({
           </Typography>
         </CardContent>
       ) : (
-        <CardContent sx={{p: "30px"}}>
+        <CardContent sx={{ p: "30px" }}>
           {title ? (
             <Stack
               direction="row"
               spacing={2}
               justifyContent="space-between"
-              alignItems={'center'}
+              alignItems={"center"}
               mb={3}
             >
               <Box>
-                {title ? <Typography variant="h5">{title}</Typography> : ''}
+                {title ? <Typography variant="h5">{title}</Typography> : ""}
 
                 {subtitle ? (
                   <Typography variant="subtitle2" color="textSecondary">
                     {subtitle}
                   </Typography>
                 ) : (
-                  ''
+                  ""
                 )}
               </Box>
               {action}

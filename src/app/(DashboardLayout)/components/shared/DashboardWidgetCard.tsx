@@ -1,8 +1,7 @@
-import { useTheme } from '@mui/material/styles';
-import { Card, CardContent, Typography, Box, Stack } from '@mui/material';
-import { useSelector } from '@/store/hooks';
-import { AppState } from '@/store/store';
-import { IconGridDots } from '@tabler/icons-react';
+import { useTheme } from "@mui/material/styles";
+import { Card, CardContent, Typography, Box, Stack } from "@mui/material";
+
+import { IconGridDots } from "@tabler/icons-react";
 
 type Props = {
   title: string;
@@ -23,35 +22,58 @@ const DashboardWidgetCard = ({
   dataLabel2,
   dataItem2,
 }: Props) => {
-  const customizer = useSelector((state: AppState) => state.customizer);
+  const customizer = {
+    activeDir: "ltr",
+    activeMode: "light", // This can be light or dark
+    activeTheme: "BLUE_THEME", // BLUE_THEME, GREEN_THEME, BLACK_THEME, PURPLE_THEME, ORANGE_THEME
+    SidebarWidth: 270,
+    MiniSidebarWidth: 87,
+    TopbarHeight: 70,
+    isLayout: "boxed", // This can be full or boxed
+    isCollapse: false, // to make sidebar Mini by default
+    isSidebarHover: false,
+    isMobileSidebar: false,
+    isHorizontal: false,
+    isLanguage: "en",
+    isCardShadow: true,
+    borderRadius: 7,
+  };
 
   const theme = useTheme();
   const borderColor = theme.palette.grey[100];
 
   return (
     <Card
-      sx={{ padding: 0, border: !customizer.isCardShadow ? `1px solid ${borderColor}` : 'none' }}
+      sx={{
+        padding: 0,
+        border: !customizer.isCardShadow ? `1px solid ${borderColor}` : "none",
+      }}
       elevation={customizer.isCardShadow ? 9 : 0}
-      variant={!customizer.isCardShadow ? 'outlined' : undefined}
+      variant={!customizer.isCardShadow ? "outlined" : undefined}
     >
-      <CardContent sx={{ p: '30px' }}>
+      <CardContent sx={{ p: "30px" }}>
         {title ? (
           <Box>
-            {title ? <Typography variant="h5">{title}</Typography> : ''}
+            {title ? <Typography variant="h5">{title}</Typography> : ""}
 
             {subtitle ? (
               <Typography variant="subtitle2" color="textSecondary">
                 {subtitle}
               </Typography>
             ) : (
-              ''
+              ""
             )}
           </Box>
         ) : null}
 
         {children}
 
-        <Stack direction="row" spacing={2} justifyContent="space-between" mt={2}>
+        <Stack
+          direction="row"
+          spacing={2}
+          justifyContent="space-between"
+          mt={2}
+        >
           <Stack direction="row" spacing={2} alignItems="center">
             <Box
               width={38}
