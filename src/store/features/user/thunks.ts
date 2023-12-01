@@ -9,7 +9,7 @@ export const userAuthThunk = createAppAsyncThunk<UserAuthApiRes, UserAuthReq>(
       const response = await userAuthReq({ email });
       return response;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error as string);
     }
   }
 );

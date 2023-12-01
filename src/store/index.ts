@@ -21,20 +21,20 @@ export const reduxStore = configureStore({
 });
 
 export const useDispatch = () => useReduxDispatch<ReduxDispatch>();
-export const useSelector: TypedUseSelectorHook<ReduxState> = useReduxSelector;
+export const useSelector: TypedUseSelectorHook<AppState> = useReduxSelector;
 
 export type ReduxStore = typeof reduxStore;
-export type ReduxState = ReturnType<typeof reduxStore.getState>;
+export type AppState = ReturnType<typeof reduxStore.getState>;
 export type ReduxDispatch = typeof reduxStore.dispatch;
 export type ReduxThunkAction<ReturnType = void> = ThunkAction<
   ReturnType,
-  ReduxState,
+  AppState,
   unknown,
   Action
 >;
 
 export const createAppAsyncThunk = createAsyncThunk.withTypes<{
-  state: ReduxState;
+  state: AppState;
   dispatch: ReduxDispatch;
   rejectValue: string;
 }>();

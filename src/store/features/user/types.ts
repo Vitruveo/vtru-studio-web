@@ -2,9 +2,9 @@ import { APIResponse } from "../common/types";
 
 export interface UserSliceState {
   token: string;
-  name;
-  email;
-  status: "loading" | "succeeded" | "failed";
+  name: string;
+  email: string;
+  status: "" | "loading" | "succeeded" | "failed";
   error: string;
 }
 
@@ -18,4 +18,4 @@ export interface UserAuthRes {
   email: string;
 }
 
-export type UserAuthApiRes = APIResponse<UserAuthDataRes>;
+export type UserAuthApiRes = APIResponse<UserAuthRes>;

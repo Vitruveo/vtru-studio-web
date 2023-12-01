@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from "react";
-import List from '@mui/material/List';
+import List from "@mui/material/List";
 import { useSelector, useDispatch } from "@/store/hooks";
 import EmailListItem from "./EmailListItem";
-import {
-  fetchEmails,
-  SelectEmail,
-  starEmail,
-  importantEmail,
-  deleteEmail,
-  checkEmail,
-} from "@/store/apps/email/EmailSlice";
 
 import Scrollbar from "../../../components/custom-scroll/Scrollbar";
 import { EmailType } from "../../../types/apps/email";
@@ -20,10 +12,6 @@ interface Props {
 
 const EmailList = ({ showrightSidebar }: Props) => {
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchEmails());
-  }, [dispatch]);
 
   const getVisibleEmail = (
     emails: EmailType[],
@@ -129,17 +117,13 @@ const EmailList = ({ showrightSidebar }: Props) => {
             key={email.id}
             {...email}
             onClick={() => {
-              dispatch(SelectEmail(email.id));
               showrightSidebar();
             }}
-            onDelete={() => dispatch(deleteEmail(email.id))}
+            onDelete={() => {}}
             isSelected={email.id === active}
-            onStar={() => dispatch(starEmail(email.id))}
-            onImportant={() => dispatch(importantEmail(email.id))}
-            onChange={(e) => {
-              if (e.target.checked === true) dispatch(checkEmail(email.id));
-              else dispatch(checkEmail(email.id));
-            }}
+            onStar={() => {}}
+            onImportant={() => {}}
+            onChange={(e) => {}}
           />
         ))}
       </Scrollbar>

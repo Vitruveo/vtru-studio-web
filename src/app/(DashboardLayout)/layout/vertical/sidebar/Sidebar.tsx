@@ -6,7 +6,7 @@ import SidebarItems from "./SidebarItems";
 import Logo from "../../shared/logo/Logo";
 import Scrollbar from "@/app/(DashboardLayout)/components/custom-scroll/Scrollbar";
 import { Profile } from "./SidebarProfile/Profile";
-// import { AppState } from '@/store/store';
+// import { AppState } from '@/store';
 
 const Sidebar = () => {
   const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up("lg"));

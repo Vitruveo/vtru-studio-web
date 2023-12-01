@@ -1,14 +1,14 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 import { userAuthThunk } from "./thunks";
-import { UserSliceState } from "./types";
+import { UserAuthApiRes, UserSliceState } from "./types";
 
 const initialState: UserSliceState = {
-  token,
-  name,
-  email,
-  status,
-  error,
+  token: "",
+  name: "",
+  email: "",
+  status: "",
+  error: "",
 };
 
 export const userSlice = createSlice({
@@ -16,24 +16,22 @@ export const userSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder
-      .addCase(userAuthThunk.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(
-        userAuthThunk.fulfilled,
-        (state, action: PayloadAction<YourData[]>) => {
-          state.status = "succeeded";
-          state.data = action.payload;
-        }
-      )
-      .addCase(
-        userAuthThunk.rejected,
-        (state, action: PayloadAction<string>) => {
-          state.status = "failed";
-          state.error = action.payload;
-        }
-      );
+    builder.addCase(userAuthThunk.pending, (state) => {
+      state.status = "loading";
+    });
+    //   .addCase(
+    //     userAuthThunk.fulfilled,
+    //     (state, action: PayloadAction<UserAuthApiRes>) => {
+    //       state.status = "succeeded";
+    //     }
+    //   )
+    //   .addCase(
+    //     userAuthThunk.rejected,
+    //     (state, action: PayloadAction<string>) => {
+    //       state.status = "failed";
+    //       state.error = action.payload;
+    //     }
+    //   );
   },
 });
 

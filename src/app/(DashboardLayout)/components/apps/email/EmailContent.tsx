@@ -1,24 +1,19 @@
 import React, { useState } from "react";
-import Avatar from '@mui/material/Avatar';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Chip from '@mui/material/Chip';
-import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
-import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
-import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
+import Divider from "@mui/material/Divider";
+import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material/styles";
 import { EmailType } from "../../../types/apps/email";
 import { IconStar, IconAlertCircle, IconTrash } from "@tabler/icons-react";
 import { useSelector, useDispatch } from "@/store/hooks";
-import {
-  starEmail,
-  importantEmail,
-  deleteEmail,
-} from "@/store/apps/email/EmailSlice";
 import emailIcon from "public/images/breadcrumb/emailSv.png";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
@@ -57,7 +52,7 @@ const EmailContent = () => {
     <Box>
       <Stack p={2} gap={0} direction="row">
         <Tooltip title={emailDetails.starred ? "Unstar" : "Star"}>
-          <IconButton onClick={() => dispatch(starEmail(emailDetails.id))}>
+          <IconButton onClick={() => {}}>
             <IconStar
               stroke={1.3}
               size="18"
@@ -69,7 +64,7 @@ const EmailContent = () => {
           </IconButton>
         </Tooltip>
         <Tooltip title={emailDetails ? "Important" : "Not Important"}>
-          <IconButton onClick={() => dispatch(importantEmail(emailDetails.id))}>
+          <IconButton onClick={() => {}}>
             <IconAlertCircle
               size="18"
               stroke={1.3}
@@ -80,7 +75,7 @@ const EmailContent = () => {
           </IconButton>
         </Tooltip>
         <Tooltip title="Delete">
-          <IconButton onClick={() => dispatch(deleteEmail(emailDetails.id))}>
+          <IconButton onClick={() => {}}>
             <IconTrash size="18" stroke={1.3} />
           </IconButton>
         </Tooltip>

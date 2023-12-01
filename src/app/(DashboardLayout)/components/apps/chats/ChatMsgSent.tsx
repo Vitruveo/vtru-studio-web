@@ -1,9 +1,9 @@
 import React from "react";
 import { useSelector, useDispatch } from "@/store/hooks";
-import Box from '@mui/material/Box'
-import IconButton from '@mui/material/IconButton'
-import InputBase from '@mui/material/InputBase'
-import Popover from '@mui/material/Popover'
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import InputBase from "@mui/material/InputBase";
+import Popover from "@mui/material/Popover";
 import EmojiPicker, {
   EmojiStyle,
   SkinTones,
@@ -20,7 +20,6 @@ import {
   IconPhoto,
   IconSend,
 } from "@tabler/icons-react";
-import { sendMsg } from "@/store/apps/chat/ChatSlice";
 
 const ChatMsgSent = () => {
   const [msg, setMsg] = React.useState<any>("");
@@ -53,7 +52,6 @@ const ChatMsgSent = () => {
   const onChatMsgSubmit = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    dispatch(sendMsg(newMsg));
     setMsg("");
   };
 
@@ -115,7 +113,6 @@ const ChatMsgSent = () => {
         <IconButton
           aria-label="delete"
           onClick={() => {
-            dispatch(sendMsg(newMsg));
             setMsg("");
           }}
           disabled={!msg}

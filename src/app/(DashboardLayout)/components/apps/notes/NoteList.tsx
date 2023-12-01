@@ -1,19 +1,14 @@
 import React, { useEffect } from "react";
-import Alert from '@mui/material/Alert';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
-import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
+import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "@/store/hooks";
 import Scrollbar from "../../custom-scroll/Scrollbar";
-import {
-  fetchNotes,
-  SelectNote,
-  DeleteNote,
-  SearchNotes,
-} from "@/store/apps/notes/NotesSlice";
+
 import { IconTrash } from "@tabler/icons-react";
 import { NotesType } from "../../../types/apps/notes";
 
@@ -21,10 +16,6 @@ const NoteList = () => {
   const dispatch = useDispatch();
   const activeNote = useSelector((state) => state.notesReducer.notesContent);
   const searchTerm = useSelector((state) => state.notesReducer.noteSearch);
-
-  useEffect(() => {
-    dispatch(fetchNotes());
-  }, [dispatch]);
 
   const filterNotes = (notes: NotesType[], nSearch: string) => {
     if (nSearch !== "")
@@ -56,7 +47,7 @@ const NoteList = () => {
           type="search"
           variant="outlined"
           fullWidth
-          onChange={(e) => dispatch(SearchNotes(e.target.value))}
+          onChange={(e) => {}}
         />
         <Typography variant="h6" mb={0} mt={4} pl={1}>
           All Notes
@@ -83,7 +74,7 @@ const NoteList = () => {
                       activeNote === note.id ? "scale(1)" : "scale(0.95)",
                     backgroundColor: `${note.color}.light`,
                   }}
-                  onClick={() => dispatch(SelectNote(note.id))}
+                  onClick={() => {}}
                 >
                   <Typography variant="h6" noWrap color={note.color + ".main"}>
                     {note.title}
@@ -100,7 +91,7 @@ const NoteList = () => {
                       <IconButton
                         aria-label="delete"
                         size="small"
-                        onClick={() => dispatch(DeleteNote(note.id))}
+                        onClick={() => {}}
                       >
                         <IconTrash width={18} />
                       </IconButton>

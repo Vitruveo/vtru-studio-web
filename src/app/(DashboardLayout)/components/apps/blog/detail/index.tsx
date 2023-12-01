@@ -25,10 +25,9 @@ import {
 import { format } from "date-fns";
 import BlogComment from "./BlogComment";
 import { uniqueId } from "lodash";
-import { addComment } from "@/store/apps/blog/BlogSlice";
 import BlankCard from "../../../shared/BlankCard";
 import { useDispatch, useSelector } from "@/store/hooks";
-import { AppState } from "@/store/store";
+import { AppState } from "@/store";
 import type { BlogPostType, BlogType } from "../../../../types/apps/blog";
 
 const BlogDetail = () => {
@@ -47,11 +46,9 @@ const BlogDetail = () => {
       .replace(/[^\w-]+/g, "");
 
   // Get post
-  const getPost = useSelector((state: AppState) => state.blogReducer.blogposts);
-  console.log(getPost);
-  const post: BlogPostType | any = getPost.find(
-    (p: BlogPostType) => getTitle === paramCase(p.title)
-  );
+  //   const getPost = useSelector((state: AppState) => state.blogReducer.blogposts);
+  //   console.log(getPost);
+  const post = {} as any;
 
   const BCrumb = [
     {
@@ -80,7 +77,6 @@ const BlogDetail = () => {
       comment: reply,
       replies: [],
     };
-    dispatch(addComment(id, newReply));
     setReplyTxt("");
   };
 

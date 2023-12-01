@@ -1,26 +1,23 @@
-import Box from '@mui/material/Box';
-import CardMedia from '@mui/material/CardMedia';
-import Chip from '@mui/material/Chip';
-import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import Skeleton from '@mui/material/Skeleton';
-import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import CardMedia from "@mui/material/CardMedia";
+import Chip from "@mui/material/Chip";
+import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import Skeleton from "@mui/material/Skeleton";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import React, { useEffect } from "react";
 import BlankCard from "../../../../components/shared/BlankCard";
 import { useSelector, useDispatch } from "@/store/hooks";
-import { fetchPhotos } from "@/store/apps/userProfile/UserProfileSlice";
+
 import { IconDotsVertical, IconSearch } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { GallaryType } from "../../../../types/apps/users";
 
 const GalleryCard = () => {
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchPhotos());
-  }, [dispatch]);
 
   const filterPhotos = (photos: GallaryType[], cSearch: string) => {
     if (photos)

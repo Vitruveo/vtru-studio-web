@@ -1,18 +1,17 @@
-import Grid from '@mui/material/Grid'
-import { useEffect } from 'react';
-import { useSelector, useDispatch } from'@/store/hooks';
-import { fetchPosts } from '@/store/apps/userProfile/UserProfileSlice';
-import PostItem from './PostItem';
-import { PostTextBox } from './PostTextBox';
-import { PostType } from '../../../../types/apps/userProfile';
+import Grid from "@mui/material/Grid";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "@/store/hooks";
+
+import PostItem from "./PostItem";
+import { PostTextBox } from "./PostTextBox";
+import { PostType } from "../../../../types/apps/userProfile";
 
 const Post = () => {
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchPosts());
-  }, [dispatch]);
 
-  const getPosts: PostType[] = useSelector((state) => state.userpostsReducer.posts);
+  const getPosts: PostType[] = useSelector(
+    (state) => state.userpostsReducer.posts
+  );
 
   return (
     <Grid container spacing={3}>

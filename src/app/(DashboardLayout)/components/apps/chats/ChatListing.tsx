@@ -1,25 +1,20 @@
 import React, { useEffect, useState } from "react";
-import Alert from '@mui/material/Alert'
-import Avatar from '@mui/material/Avatar'
-import Badge from '@mui/material/Badge'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import InputAdornment from '@mui/material/InputAdornment'
-import List from '@mui/material/List'
-import ListItemAvatar from '@mui/material/ListItemAvatar'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemText from '@mui/material/ListItemText'
-import Menu from '@mui/material/Menu'
-import MenuItem from '@mui/material/MenuItem'
-import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
+import Alert from "@mui/material/Alert";
+import Avatar from "@mui/material/Avatar";
+import Badge from "@mui/material/Badge";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import InputAdornment from "@mui/material/InputAdornment";
+import List from "@mui/material/List";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "@/store/hooks";
 import Scrollbar from "../../custom-scroll/Scrollbar";
-import {
-  SelectChat,
-  fetchChats,
-  SearchChat,
-} from "@/store/apps/chat/ChatSlice";
 import { ChatsType } from "../../../types/apps/chat";
 import { last } from "lodash";
 import { formatDistanceToNowStrict } from "date-fns";
@@ -33,10 +28,6 @@ const ChatListing = () => {
 
   const dispatch = useDispatch();
   const activeChat = useSelector((state) => state.chatReducer.chatContent);
-
-  useEffect(() => {
-    dispatch(fetchChats());
-  }, [dispatch]);
 
   const filterChats = (chats: ChatsType[], cSearch: string) => {
     if (chats)
@@ -122,7 +113,7 @@ const ChatListing = () => {
             ),
           }}
           fullWidth
-          onChange={(e) => dispatch(SearchChat(e.target.value))}
+          onChange={(e) => ({})}
         />
       </Box>
       {/* ------------------------------------------- */}
@@ -164,7 +155,7 @@ const ChatListing = () => {
             chats.map((chat) => (
               <ListItemButton
                 key={chat.id}
-                onClick={() => dispatch(SelectChat(chat.id))}
+                onClick={() => {}}
                 sx={{
                   mb: 0.5,
                   py: 2,

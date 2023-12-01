@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "@/store/hooks";
 import { Stack } from "@mui/system";
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
-// import { AppState } from '@/store/store';
+// import { AppState } from '@/store';
 
 const Languages = [
   {

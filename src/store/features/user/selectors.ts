@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import type { ReduxState } from "@/store/index";
+import type { AppState } from "@/store/index";
 import { UserSliceState } from "./types";
 
 /**
@@ -12,8 +12,8 @@ import { UserSliceState } from "./types";
  */
 
 export const userSelector = <T extends keyof UserSliceState>(fields: T[]) => {
-  return (state: ReduxState["user"]): Pick<UserSliceState, T> => {
-    const selectedFields: Pick<UserSliceState, T> = {};
+  return (state: AppState["user"]): Pick<UserSliceState, T> => {
+    const selectedFields = {} as Pick<UserSliceState, T>;
 
     fields.forEach((field) => {
       selectedFields[field] = state[field];

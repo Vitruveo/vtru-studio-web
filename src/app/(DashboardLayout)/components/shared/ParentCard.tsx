@@ -1,8 +1,8 @@
-import React from 'react';
-import { useTheme } from '@mui/material/styles';
-import { Card, CardHeader, CardContent, Divider, Box } from '@mui/material';
-import { useSelector } from '@/store/hooks';
-import { AppState } from '@/store/store';
+import React from "react";
+import { useTheme } from "@mui/material/styles";
+import { Card, CardHeader, CardContent, Divider, Box } from "@mui/material";
+import { useSelector } from "@/store/hooks";
+import { AppState } from "@/store";
 
 type Props = {
   title: string;
@@ -18,9 +18,12 @@ const ParentCard = ({ title, children, footer }: Props) => {
 
   return (
     <Card
-      sx={{ padding: 0, border: !customizer.isCardShadow ? `1px solid ${borderColor}` : 'none' }}
+      sx={{
+        padding: 0,
+        border: !customizer.isCardShadow ? `1px solid ${borderColor}` : "none",
+      }}
       elevation={customizer.isCardShadow ? 9 : 0}
-      variant={!customizer.isCardShadow ? 'outlined' : undefined}
+      variant={!customizer.isCardShadow ? "outlined" : undefined}
     >
       <CardHeader title={title} />
       <Divider />
@@ -32,7 +35,7 @@ const ParentCard = ({ title, children, footer }: Props) => {
           <Box p={3}>{footer}</Box>
         </>
       ) : (
-        ''
+        ""
       )}
     </Card>
   );

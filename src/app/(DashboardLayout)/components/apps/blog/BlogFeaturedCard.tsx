@@ -74,7 +74,7 @@ const BlogFeaturedCard = ({ post, index }: Btype) => {
               <Typography
                 component={Link}
                 href={`/apps/blog/detail/${linkTo}`}
-                onClick={() => dispatch({})}
+                onClick={() => {}}
               >
                 <CoverBox
                   sx={{
