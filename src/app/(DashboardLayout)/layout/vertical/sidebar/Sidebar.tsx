@@ -93,7 +93,6 @@ const Sidebar = () => {
               {/* ------------------------------------------- */}
               <SidebarItems />
             </Scrollbar>
-            <Profile />
           </Box>
         </Drawer>
       </Box>

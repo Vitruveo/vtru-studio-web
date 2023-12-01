@@ -76,6 +76,7 @@ export default function NavItem({
     whiteSpace: "nowrap",
     marginBottom: "2px",
     padding: "8px 10px",
+    textDecoration: "none",
     borderRadius: `${customizer.borderRadius}px`,
     backgroundColor: level > 1 ? "transparent !important" : "inherit",
     color:
@@ -130,7 +131,7 @@ export default function NavItem({
           >
             {itemIcon}
           </ListItemIcon>
-          <ListItemText>
+          <ListItemText style={{ textDecoration: "none" }}>
             {hideMenu ? "" : <>{t(`${item?.title}`)}</>}
             <br />
             {item?.subtitle ? (
