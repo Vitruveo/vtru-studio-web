@@ -1,20 +1,18 @@
-import React from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import FormLabel from '@mui/material/FormLabel';
-import Grid from '@mui/material/Grid';
-import TextField from '@mui/material/TextField';
-import { useSelector, useDispatch } from '@/store/hooks';
-import { addContact } from '@/store/apps/contacts/ContactSlice';
-import user1 from 'public/images/profile/user-1.jpg';
+import React from "react";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import FormLabel from "@mui/material/FormLabel";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
+
+import user1 from "public/images/profile/user-1.jpg";
 
 const ContactAdd = () => {
-  const dispatch = useDispatch();
-  const id = useSelector((state) => state.contactsReducer.contacts.length + 1);
+  const id = 1;
   const [modal, setModal] = React.useState(false);
 
   const toggle = () => {
@@ -22,32 +20,19 @@ const ContactAdd = () => {
   };
 
   const [values, setValues] = React.useState({
-    firstname: '',
-    lastname: '',
-    department: '',
-    company: '',
-    phone: '',
-    email: '',
-    address: '',
-    notes: '',
+    firstname: "",
+    lastname: "",
+    department: "",
+    company: "",
+    phone: "",
+    email: "",
+    address: "",
+    notes: "",
   });
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    dispatch(
-      addContact(
-        id,
-        values.firstname,
-        values.lastname,
-        user1,
-        values.department,
-        values.company,
-        values.phone,
-        values.email,
-        values.address,
-        values.notes,
-      ),
-    );
+
     setModal(!modal);
   };
 
@@ -55,7 +40,7 @@ const ContactAdd = () => {
     <>
       <Box p={3} pb={1}>
         <Button color="primary" variant="contained" fullWidth onClick={toggle}>
-          Add New Contact
+          Add New User
         </Button>
       </Box>
       <Dialog
@@ -66,7 +51,7 @@ const ContactAdd = () => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title" variant="h5">
-          {'Add New Contact'}
+          {"Add New Contact"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -84,7 +69,9 @@ const ContactAdd = () => {
                     variant="outlined"
                     fullWidth
                     value={values.firstname}
-                    onChange={(e) => setValues({ ...values, firstname: e.target.value })}
+                    onChange={(e) =>
+                      setValues({ ...values, firstname: e.target.value })
+                    }
                   />
                 </Grid>
                 <Grid item xs={12} lg={6}>
@@ -95,7 +82,9 @@ const ContactAdd = () => {
                     variant="outlined"
                     fullWidth
                     value={values.lastname}
-                    onChange={(e) => setValues({ ...values, lastname: e.target.value })}
+                    onChange={(e) =>
+                      setValues({ ...values, lastname: e.target.value })
+                    }
                   />
                 </Grid>
                 <Grid item xs={12} lg={6}>
@@ -106,7 +95,9 @@ const ContactAdd = () => {
                     variant="outlined"
                     fullWidth
                     value={values.department}
-                    onChange={(e) => setValues({ ...values, department: e.target.value })}
+                    onChange={(e) =>
+                      setValues({ ...values, department: e.target.value })
+                    }
                   />
                 </Grid>
                 <Grid item xs={12} lg={6}>
@@ -117,7 +108,9 @@ const ContactAdd = () => {
                     variant="outlined"
                     fullWidth
                     value={values.company}
-                    onChange={(e) => setValues({ ...values, company: e.target.value })}
+                    onChange={(e) =>
+                      setValues({ ...values, company: e.target.value })
+                    }
                   />
                 </Grid>
                 <Grid item xs={12} lg={6}>
@@ -128,7 +121,9 @@ const ContactAdd = () => {
                     variant="outlined"
                     fullWidth
                     value={values.phone}
-                    onChange={(e) => setValues({ ...values, phone: e.target.value })}
+                    onChange={(e) =>
+                      setValues({ ...values, phone: e.target.value })
+                    }
                   />
                 </Grid>
                 <Grid item xs={12} lg={6}>
@@ -141,7 +136,9 @@ const ContactAdd = () => {
                     variant="outlined"
                     fullWidth
                     value={values.email}
-                    onChange={(e) => setValues({ ...values, email: e.target.value })}
+                    onChange={(e) =>
+                      setValues({ ...values, email: e.target.value })
+                    }
                   />
                 </Grid>
                 <Grid item xs={12} lg={12}>
@@ -154,7 +151,9 @@ const ContactAdd = () => {
                     variant="outlined"
                     fullWidth
                     value={values.address}
-                    onChange={(e) => setValues({ ...values, address: e.target.value })}
+                    onChange={(e) =>
+                      setValues({ ...values, address: e.target.value })
+                    }
                   />
                 </Grid>
                 <Grid item xs={12} lg={12}>
@@ -167,7 +166,9 @@ const ContactAdd = () => {
                     variant="outlined"
                     fullWidth
                     value={values.notes}
-                    onChange={(e) => setValues({ ...values, notes: e.target.value })}
+                    onChange={(e) =>
+                      setValues({ ...values, notes: e.target.value })
+                    }
                   />
                 </Grid>
                 <Grid item xs={12} lg={12}>
@@ -176,7 +177,9 @@ const ContactAdd = () => {
                     color="primary"
                     sx={{ mr: 1 }}
                     type="submit"
-                    disabled={values.firstname.length === 0 || values.notes.length === 0}
+                    disabled={
+                      values.firstname.length === 0 || values.notes.length === 0
+                    }
                   >
                     Submit
                   </Button>

@@ -1,16 +1,9 @@
-import { useEffect, useState } from "react";
-import List from '@mui/material/List';
-import { useSelector, useDispatch } from "@/store/hooks";
-import {
-  SelectContact,
-  fetchContacts,
-  DeleteContact,
-  toggleStarredContact,
-} from "@/store/apps/contacts/ContactSlice";
+import List from "@mui/material/List";
 
 import Scrollbar from "../../../components/custom-scroll/Scrollbar";
 import ContactListItem from "./ContactListItem";
 import type { ContactType } from "../../../types/apps/contact";
+import { contactList } from "@/data/contacts";
 
 type Props = {
   showrightSidebar: () => void;
@@ -21,11 +14,6 @@ const ContactList = ({ showrightSidebar }: Props) => {
   // useEffect(() => {
   //   setMounted(true);
   // }, []);
-
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchContacts());
-  }, [dispatch]);
 
   const getVisibleContacts = (
     contacts: ContactType[],
@@ -84,15 +72,9 @@ const ContactList = ({ showrightSidebar }: Props) => {
         throw new Error(`Unknown filter: ${filter}`);
     }
   };
-  const contacts = useSelector((state) =>
-    getVisibleContacts(
-      state.contactsReducer.contacts,
-      state.contactsReducer.currentFilter,
-      state.contactsReducer.contactSearch
-    )
-  );
+  const contacts = getVisibleContacts(contactList, "show_all", "");
 
-  const active = useSelector((state) => state.contactsReducer.contactContent);
+  const active = "show_all";
 
   return (
     <Scrollbar
@@ -108,11 +90,10 @@ const ContactList = ({ showrightSidebar }: Props) => {
             active={contact.id === active}
             {...contact}
             onContactClick={() => {
-              dispatch(SelectContact(contact.id));
               showrightSidebar();
             }}
-            onDeleteClick={() => dispatch(DeleteContact(contact.id))}
-            onStarredClick={() => dispatch(toggleStarredContact(contact.id))}
+            onDeleteClick={() => {}}
+            onStarredClick={() => {}}
           />
         ))}
       </List>
