@@ -41,10 +41,10 @@ const Logo = () => {
           />
         ) : (
           <Image
-            src={"/images/logos/dark-logo.svg"}
+            src={"/images/logos/vtru-logo.svg"}
             alt="logo"
             height={customizer.TopbarHeight}
-            width={174}
+            width={240}
             priority
           />
         )}
