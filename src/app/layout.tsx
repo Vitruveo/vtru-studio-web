@@ -1,5 +1,4 @@
 "use client";
-
 import { Inter } from "next/font/google";
 import CssBaseline from "@mui/material/CssBaseline";
 import {
@@ -14,7 +13,7 @@ import { NextAppDirEmotionCacheProvider } from "@/app/utils/theme/EmotionCache";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const MyApp = ({ children }: { children: React.ReactNode }) => {
+const MyApp = ({ children }: { children: React.ReactNode }) => {
   const theme = configTheme();
   return (
     <>
@@ -35,6 +34,7 @@ export const MyApp = ({ children }: { children: React.ReactNode }) => {
           {children}
         </ThemeProvider>
       </NextAppDirEmotionCacheProvider>
+      x
     </>
   );
 };
@@ -47,7 +47,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <MyApp children={children} />
+        <MyApp>{children}</MyApp>
       </body>
     </html>
   );
