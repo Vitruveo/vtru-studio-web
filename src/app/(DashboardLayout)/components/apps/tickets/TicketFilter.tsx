@@ -17,9 +17,7 @@ const BoxStyled = styled(Box)(() => ({
 
 const TicketFilter = () => {
   const dispatch = useDispatch();
-  const counter: TicketType[] = useSelector(
-    (state) => state.ticketReducer.tickets
-  );
+  const counter = [] as TicketType[];
   const pendingC = counter.filter((t) => t.Status === "Pending").length;
   const openC = counter.filter((t) => t.Status === "Open").length;
   const closeC = counter.filter((t) => t.Status === "Closed").length;

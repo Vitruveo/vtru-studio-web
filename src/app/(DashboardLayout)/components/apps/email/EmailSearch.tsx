@@ -11,7 +11,7 @@ interface Props {
 }
 
 const EmailSearch = ({ onClick }: Props) => {
-  const searchTerm = useSelector((state) => state.emailReducer.emailSearch);
+  const searchTerm = "";
   const dispatch = useDispatch();
 
   return (

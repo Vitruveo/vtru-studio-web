@@ -27,9 +27,7 @@ const FollowerCard = () => {
     return followers;
   };
   const [search, setSearch] = React.useState("");
-  const getFollowers = useSelector((state) =>
-    filterFollowers(state.userpostsReducer.followers, search)
-  );
+  const getFollowers = [] as userType[];
 
   return (
     <>

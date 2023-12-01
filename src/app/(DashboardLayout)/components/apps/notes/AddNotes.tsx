@@ -19,7 +19,7 @@ const AddNotes = ({ colors }: Props) => {
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const [scolor, setScolor] = React.useState<string>("primary");
-  const id = useSelector((state) => state.notesReducer.notes.length + 1);
+  const id = "";
   const [title, setTitle] = React.useState("");
 
   const setColor = (e: string) => {

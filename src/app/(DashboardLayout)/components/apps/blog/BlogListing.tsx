@@ -38,23 +38,14 @@ const BlogListing = () => {
     return (posts = posts.filter((t) => t.featured));
   };
 
-  const blogPosts = useSelector((state) =>
-    filterBlogs(
-      state.blogReducer.blogposts,
-      state.blogReducer.sortBy,
-      state.blogReducer.blogSearch
-    )
-  );
-  const featuredPost = useSelector((state) =>
-    filterFeaturedpost(state.blogReducer.blogposts)
-  );
+  const posts = [] as BlogPostType[];
 
   return (
     <Grid container spacing={3}>
-      {featuredPost.map((post, index) => {
+      {posts.map((post, index) => {
         return <BlogFeaturedCard index={index} post={post} key={post.title} />;
       })}
-      {blogPosts.map((post) => {
+      {posts.map((post) => {
         return <BlogCard post={post} key={post.id} />;
       })}
       <Grid item lg={12} sm={12} mt={3}>

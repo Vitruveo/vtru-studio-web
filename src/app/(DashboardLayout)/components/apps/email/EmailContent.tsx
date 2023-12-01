@@ -30,9 +30,7 @@ const ReactQuill: any = dynamic(
 import Image from "next/image";
 
 const EmailContent = () => {
-  const emailDetails: EmailType = useSelector(
-    (state) => state.emailReducer.emails[state.emailReducer.emailContent - 1]
-  );
+  const emailDetails = {} as EmailType;
 
   const [show, setShow] = useState(false);
   const [text, setText] = useState("");

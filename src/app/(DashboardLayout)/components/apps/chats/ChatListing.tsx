@@ -27,7 +27,7 @@ const ChatListing = () => {
   // }, []);
 
   const dispatch = useDispatch();
-  const activeChat = useSelector((state) => state.chatReducer.chatContent);
+  const activeChat = "1";
 
   const filterChats = (chats: ChatsType[], cSearch: string) => {
     if (chats)
@@ -38,9 +38,7 @@ const ChatListing = () => {
     return chats;
   };
 
-  const chats = useSelector((state) =>
-    filterChats(state.chatReducer.chats, state.chatReducer.chatSearch)
-  );
+  const chats = [] as ChatsType[];
 
   const getDetails = (conversation: ChatsType) => {
     let displayText = "";

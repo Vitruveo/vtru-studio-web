@@ -14,8 +14,8 @@ import { NotesType } from "../../../types/apps/notes";
 
 const NoteList = () => {
   const dispatch = useDispatch();
-  const activeNote = useSelector((state) => state.notesReducer.notesContent);
-  const searchTerm = useSelector((state) => state.notesReducer.noteSearch);
+  const activeNote = 1;
+  const searchTerm = "";
 
   const filterNotes = (notes: NotesType[], nSearch: string) => {
     if (nSearch !== "")
@@ -31,9 +31,7 @@ const NoteList = () => {
     return notes.filter((t) => !t.deleted);
   };
 
-  const notes = useSelector((state) =>
-    filterNotes(state.notesReducer.notes, state.notesReducer.noteSearch)
-  );
+  const notes = {} as NotesType[];
 
   return (
     <>

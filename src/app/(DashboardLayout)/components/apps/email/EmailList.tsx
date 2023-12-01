@@ -91,15 +91,9 @@ const EmailList = ({ showrightSidebar }: Props) => {
     }
   };
 
-  const emails = useSelector((state) =>
-    getVisibleEmail(
-      state.emailReducer.emails,
-      state.emailReducer.currentFilter,
-      state.emailReducer.emailSearch
-    )
-  );
+  const emails = [] as EmailType[];
 
-  const active = useSelector((state) => state.emailReducer.emailContent);
+  const active = 1;
 
   return (
     <List>

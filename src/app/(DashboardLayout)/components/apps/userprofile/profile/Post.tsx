@@ -9,9 +9,7 @@ import { PostType } from "../../../../types/apps/userProfile";
 const Post = () => {
   const dispatch = useDispatch();
 
-  const getPosts: PostType[] = useSelector(
-    (state) => state.userpostsReducer.posts
-  );
+  const getPosts = [] as PostType[];
 
   return (
     <Grid container spacing={3}>

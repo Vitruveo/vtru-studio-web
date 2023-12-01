@@ -52,9 +52,7 @@ const FriendsCard = () => {
     return friends;
   };
   const [search, setSearch] = React.useState("");
-  const getFriends = useSelector((state) =>
-    filterFriends(state.userpostsReducer.followers, search)
-  );
+  const getFriends = [] as userType[];
 
   return (
     <>

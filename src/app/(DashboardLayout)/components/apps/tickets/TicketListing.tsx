@@ -66,13 +66,7 @@ const TicketListing = () => {
     }
   };
 
-  const tickets = useSelector((state) =>
-    getVisibleTickets(
-      state.ticketReducer.tickets,
-      state.ticketReducer.currentFilter,
-      state.ticketReducer.ticketSearch
-    )
-  );
+  const tickets = [] as TicketType[];
   const ticketBadge = (ticket: TicketType) => {
     return ticket.Status === "Open"
       ? theme.palette.success.light

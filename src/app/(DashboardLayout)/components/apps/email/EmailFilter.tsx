@@ -30,7 +30,7 @@ interface fitlerType {
 }
 
 const EmailFilter = () => {
-  const active = useSelector((state) => state.emailReducer.currentFilter);
+  const active = "";
   const customizer = useSelector((state) => state.customizer);
   const br = `${customizer.borderRadius}px`;
 

@@ -41,7 +41,7 @@ const ChatMsgSent = () => {
     setAnchorEl(null);
   };
 
-  const id = useSelector((state) => state.chatReducer.chatContent);
+  const id = "1";
 
   const handleChatMsgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMsg(e.target.value);

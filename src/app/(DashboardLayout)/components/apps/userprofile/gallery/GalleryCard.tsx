@@ -28,9 +28,7 @@ const GalleryCard = () => {
     return photos;
   };
   const [search, setSearch] = React.useState("");
-  const getPhotos = useSelector((state) =>
-    filterPhotos(state.userpostsReducer.gallery, search)
-  );
+  const getPhotos = [] as GallaryType[];
 
   // skeleton
   const [isLoading, setLoading] = React.useState(true);

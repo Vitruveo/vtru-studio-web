@@ -26,9 +26,7 @@ interface Props {
 }
 
 const NoteContent = ({ toggleNoteSidebar }: Props) => {
-  const noteDetails: NotesType = useSelector(
-    (state) => state.notesReducer.notes[state.notesReducer.notesContent - 1]
-  );
+  const noteDetails = {} as NotesType;
   const theme = useTheme();
 
   const dispatch = useDispatch();
