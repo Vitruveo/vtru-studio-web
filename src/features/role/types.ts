@@ -4,6 +4,7 @@ export interface RoleSliceState {
   name: string;
   description: string;
   permissions: string[];
+  byId: { [key: string]: RoleRes };
   status: "" | "loading" | "succeeded" | "failed";
   error: string;
 }

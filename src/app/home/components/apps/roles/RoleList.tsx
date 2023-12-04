@@ -3,6 +3,7 @@ import List from "@mui/material/List";
 import Scrollbar from "../../custom-scroll/Scrollbar";
 import RoleListItem from "./RoleListItem";
 import { RoleType, roleList } from "@/mock/roles";
+import { useEffect, useState } from "react";
 
 type Props = {
   showrightSidebar: () => void;
@@ -13,6 +14,25 @@ export default function RoleList({ showrightSidebar }: Props) {
   // useEffect(() => {
   //   setMounted(true);
   // }, []);
+
+  const [data, setData] = useState<RoleType[]>([]);
+
+  useEffect(() => {
+    const sse = new EventSource("http://127.0.0.1:5001/roles");
+
+    sse.addEventListener("role_list", (event) => {
+      if (event.data === "exit") {
+        sse.close();
+        return;
+      }
+
+      setData((prevState) => [...prevState, JSON.parse(event.data)]);
+    });
+
+    return () => {
+      sse.close();
+    };
+  }, []);
 
   const getVisibleRoles = (
     roles: RoleType[],
@@ -37,7 +57,7 @@ export default function RoleList({ showrightSidebar }: Props) {
         throw new Error(`Unknown filter: ${filter}`);
     }
   };
-  const roles = getVisibleRoles(roleList, "show_all", "");
+  const roles = getVisibleRoles(data, "show_all", "");
 
   const active = "show_all";
 

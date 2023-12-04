@@ -1,9 +1,10 @@
 import { apiService } from "@/app/services/api";
 import { RoleRes, RoleReq, RoleApiRes } from "./types";
 
-export function findManyRoles(): Promise<RoleRes[]> {
-  const req: any = {};
-  return req;
+export async function findManyRoles(): Promise<RoleRes[]> {
+  const response: RoleRes[] = [];
+
+  return response;
 }
 
 export function findOneRole(id: string): Promise<RoleRes> {
