@@ -19,19 +19,14 @@ export const userSlice = createSlice({
     builder.addCase(userAuthThunk.pending, (state) => {
       state.status = "loading";
     });
-    //   .addCase(
-    //     userAuthThunk.fulfilled,
-    //     (state, action: PayloadAction<UserAuthApiRes>) => {
-    //       state.status = "succeeded";
-    //     }
-    //   )
-    //   .addCase(
-    //     userAuthThunk.rejected,
-    //     (state, action: PayloadAction<string>) => {
-    //       state.status = "failed";
-    //       state.error = action.payload;
-    //     }
-    //   );
+    builder.addCase(userAuthThunk.fulfilled, (state, action) => {
+      state.status = "succeeded";
+    });
+    builder.addCase(userAuthThunk.rejected, (state, action) => {
+      state.status = "failed";
+
+      state.error = action.error.message || "";
+    });
   },
 });
 

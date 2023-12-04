@@ -12,16 +12,16 @@ import {
 
 import { reducer } from "./rootReducer";
 
-export const reduxStore = configureStore({
+export const store = configureStore({
   reducer,
 });
 
 export const useDispatch = () => useReduxDispatch<ReduxDispatch>();
 export const useSelector: TypedUseSelectorHook<AppState> = useReduxSelector;
 
-export type ReduxStore = typeof reduxStore;
-export type AppState = ReturnType<typeof reduxStore.getState>;
-export type ReduxDispatch = typeof reduxStore.dispatch;
+export type Store = typeof store;
+export type AppState = ReturnType<typeof store.getState>;
+export type ReduxDispatch = typeof store.dispatch;
 export type ReduxThunkAction<ReturnType = void> = ThunkAction<
   ReturnType,
   AppState,
@@ -29,8 +29,4 @@ export type ReduxThunkAction<ReturnType = void> = ThunkAction<
   Action
 >;
 
-export const createAppAsyncThunk = createAsyncThunk.withTypes<{
-  state: AppState;
-  dispatch: ReduxDispatch;
-  rejectValue: string;
-}>();
+export default store;

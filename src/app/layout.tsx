@@ -1,4 +1,6 @@
 "use client";
+
+import { Provider } from "react-redux";
 import { Inter } from "next/font/google";
 import CssBaseline from "@mui/material/CssBaseline";
 import {
@@ -10,6 +12,7 @@ import {
 import { configTheme } from "@/app/common/theme/Theme";
 import { NextAppDirEmotionCacheProvider } from "@/app/common/theme/EmotionCache";
 import "@/utils/i18n";
+import { store } from "../store";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -100,7 +103,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <MyApp>{children}</MyApp>
+        <Provider store={store}>
+          <MyApp>{children}</MyApp>
+        </Provider>
       </body>
     </html>
   );
