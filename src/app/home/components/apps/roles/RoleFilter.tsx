@@ -47,7 +47,7 @@ export default function RoleFilter() {
   const filterData: DataType[] = [
     {
       id: 2,
-      name: "All Users",
+      name: "All Roles",
       sort: "show_all",
       icon: IconMail,
     },
@@ -57,18 +57,18 @@ export default function RoleFilter() {
       sort: "frequent_role",
       icon: IconSend,
     },
-    {
-      id: 4,
-      name: "Pending Approval",
-      sort: "starred_role",
-      icon: IconBucket,
-    },
-    {
-      id: 5,
-      name: "Blocked",
-      sort: "starred_role",
-      icon: IconBucket,
-    },
+    // {
+    //   id: 4,
+    //   name: "Pending Approval",
+    //   sort: "starred_role",
+    //   icon: IconBucket,
+    // },
+    // {
+    //   id: 5,
+    //   name: "Blocked",
+    //   sort: "starred_role",
+    //   icon: IconBucket,
+    // },
     {
       id: 6,
       devider: true,

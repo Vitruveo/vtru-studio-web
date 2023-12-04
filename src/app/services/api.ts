@@ -3,7 +3,7 @@ import { store } from "@/store/index";
 import { APIResponse } from "@/features/common/types";
 
 const api = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: process.env.BASE_URL || "http://127.0.0.1:5001",
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
@@ -26,7 +26,7 @@ api.interceptors.request.use(
   }
 );
 
-const apiService = {
+export const apiService = {
   get: async <T = unknown, E = any>(
     url: string
   ): Promise<APIResponse<T, E>> => {
@@ -75,5 +75,3 @@ const apiService = {
     }
   },
 };
-
-export default apiService;

@@ -59,12 +59,12 @@ const Menuitems: MenuitemsType[] = [
     navlabel: true,
     subheader: "Settings",
   },
-  {
-    id: uniqueId(),
-    title: "General",
-    icon: IconChartDonut3,
-    href: "/home/contents/general",
-  },
+  // {
+  //   id: uniqueId(),
+  //   title: "General",
+  //   icon: IconChartDonut3,
+  //   href: "/home/contents/general",
+  // },
   {
     id: uniqueId(),
     title: "Roles",

@@ -4,19 +4,15 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  Avatar,
   Typography,
   TableHead,
-  Chip,
-  Box,
-  AvatarGroup,
   Switch,
 } from "@mui/material";
 import BlankCard from "@/app/home/components/shared/BlankCard";
-import { Stack } from "@mui/system";
-import { RoleType, roleList } from "@/mock/roles";
 
-const basics: RoleType[] = roleList;
+import { permissionsList, PermissionType } from "@/mock/permissions";
+
+const basics: PermissionType[] = permissionsList;
 
 export default function RolePermissionsTable() {
   return (
@@ -31,10 +27,10 @@ export default function RolePermissionsTable() {
           <TableHead>
             <TableRow>
               <TableCell>
-                <Typography variant="h6">Role</Typography>
+                <Typography variant="h6">Category</Typography>
               </TableCell>
               <TableCell>
-                <Typography variant="h6">Category</Typography>
+                <Typography variant="h6">Permission</Typography>
               </TableCell>
               <TableCell>
                 <Typography variant="h6">Status</Typography>
@@ -50,7 +46,7 @@ export default function RolePermissionsTable() {
                     variant="h6"
                     fontWeight={400}
                   >
-                    {basic.name}
+                    {basic.category}
                   </Typography>
                 </TableCell>
 
@@ -60,7 +56,7 @@ export default function RolePermissionsTable() {
                     variant="h6"
                     fontWeight={400}
                   >
-                    {basic.description}
+                    {basic.permission}
                   </Typography>
                 </TableCell>
 

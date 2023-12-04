@@ -10,7 +10,7 @@ export interface RoleType {
 export const roleList: RoleType[] = [
   {
     id: 1,
-    name: "Admin",
+    name: "Create assets",
     description: "Admin permissions",
     permissions: ["all"],
     starred: true,
@@ -26,8 +26,8 @@ export const roleList: RoleType[] = [
   },
   {
     id: 3,
-    name: "User",
-    description: "User permissions",
+    name: "Regular User",
+    description: "Regular user permissions",
     permissions: ["all"],
     starred: true,
     deleted: false,

@@ -1,28 +1,25 @@
-import { useSelector } from "@/store/hooks";
 import Avatar from "@mui/material/Avatar";
+import Image from "next/image";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
-import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
-import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
-
-import BlankCard from "../../shared/BlankCard";
 import {
   IconPencil,
   IconStar,
   IconTrash,
   IconDeviceFloppy,
 } from "@tabler/icons-react";
-import Scrollbar from "../../custom-scroll/Scrollbar";
+
 import emailIcon from "public/images/breadcrumb/emailSv.png";
-import Image from "next/image";
-import { RoleType } from "@/mock/roles";
+import BlankCard from "../../shared/BlankCard";
+import Scrollbar from "../../custom-scroll/Scrollbar";
 import RolePermissionsTable from "./RolePermissions";
+import { RoleType } from "@/mock/roles";
 
 export default function RoleDetails() {
   const roleDetail: RoleType = {
@@ -40,14 +37,8 @@ export default function RoleDetails() {
 
   return (
     <>
-      {/* ------------------------------------------- */}
-
-      {/* ------------------------------------------- */}
       {roleDetail && !roleDetail.deleted ? (
         <>
-          {/* ------------------------------------------- */}
-          {/* Header Part */}
-          {/* ------------------------------------------- */}
           <Box p={3} py={2} display={"flex"} alignItems="center">
             <Typography variant="h5">Role Details</Typography>
             <Stack gap={0} direction="row" ml={"auto"}>
@@ -80,9 +71,7 @@ export default function RoleDetails() {
             </Stack>
           </Box>
           <Divider />
-          {/* ------------------------------------------- */}
 
-          {/* ------------------------------------------- */}
           <Box sx={{ overflow: "auto" }}>
             {!editRole ? (
               <Box>
@@ -103,9 +92,6 @@ export default function RoleDetails() {
                         mb={0.5}
                       >
                         {roleDetail.description}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {roleDetail.permissions.join(" - ")}
                       </Typography>
                     </Box>
                   </Box>
@@ -156,9 +142,6 @@ export default function RoleDetails() {
           justifyContent="center"
           alignItems={"center"}
         >
-          {/* ------------------------------------------- */}
-
-          {/* ------------------------------------------- */}
           <Box>
             <Typography variant="h4">Please Select a Role</Typography>
             <br />
