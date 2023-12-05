@@ -34,7 +34,7 @@ interface Props {
 export default function RoleAdd({ handleAddNewRole }: Props) {
   const dispatch = useDispatch();
 
-  const [modal, setModal] = React.useState(false);
+    const [modal, setModal] = React.useState(false);
 
   const { handleSubmit, handleChange, resetForm, values, errors } = useFormik({
     initialValues: {
@@ -61,9 +61,9 @@ export default function RoleAdd({ handleAddNewRole }: Props) {
     },
   });
 
-  const toggle = () => {
-    setModal(!modal);
-  };
+    const toggle = () => {
+        setModal(!modal);
+    };
 
   return (
     <>

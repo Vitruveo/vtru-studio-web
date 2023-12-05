@@ -9,17 +9,18 @@ import {
   RoleRes,
 } from "./types";
 
-export const roleFindManyThunk = createAppAsyncThunk<RoleRes[]>(
-  "roles/findmany",
-  async ({ rejectWithValue, getState }) => {
-    try {
-      const response = await findManyRoles();
-      return response;
-    } catch (error) {
-      return rejectWithValue(error as string);
-    }
-  }
-);
+// export const roleFindManyThunk = createAppAsyncThunk<RoleRes[]>(
+//     'roles/findmany',
+//     async () => {
+//         try {
+//             const response = await findManyRoles();
+//             return response;
+//         } catch (error) {
+//             return rejectWithValue(error as string);
+//         }
+//     }
+// );
+
 
 export const roleCreateThunk = createAppAsyncThunk<RoleApiResCreate, RoleReq>(
   "roles/create",
