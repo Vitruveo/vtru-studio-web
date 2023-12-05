@@ -6,13 +6,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 
 import Scrollbar from "../../custom-scroll/Scrollbar";
-import {
-  IconMail,
-  IconSend,
-  IconBucket,
-  IconFolder,
-} from "@tabler/icons-react";
-import RoleAdd from "./RoleAdd";
+import { IconMail, IconSend, IconFolder } from "@tabler/icons-react";
 
 interface DataType {
   id: number;
@@ -103,7 +97,6 @@ export default function RoleFilter() {
 
   return (
     <>
-      <RoleAdd />
       <List>
         <Scrollbar
           sx={{

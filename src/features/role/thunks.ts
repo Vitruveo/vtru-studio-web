@@ -1,6 +1,13 @@
 import { createAppAsyncThunk } from "@/store/asyncThunk";
-import { findManyRoles, createRole, updateRole } from "./requests";
-import { RoleApiRes, RoleReq, RoleRes } from "./types";
+import { findManyRoles, createRole, updateRole, deleteRole } from "./requests";
+import {
+  RoleApiRes,
+  RoleApiResCreate,
+  RoleReq,
+  RoleReqDelete,
+  RoleReqUpdate,
+  RoleRes,
+} from "./types";
 
 export const roleFindManyThunk = createAppAsyncThunk<RoleRes[]>(
   "roles/findmany",
@@ -14,7 +21,7 @@ export const roleFindManyThunk = createAppAsyncThunk<RoleRes[]>(
   }
 );
 
-export const roleCreateThunk = createAppAsyncThunk<RoleApiRes, RoleReq>(
+export const roleCreateThunk = createAppAsyncThunk<RoleApiResCreate, RoleReq>(
   "roles/create",
   async ({ name, description, permissions }, { rejectWithValue, getState }) => {
     try {
@@ -26,11 +33,30 @@ export const roleCreateThunk = createAppAsyncThunk<RoleApiRes, RoleReq>(
   }
 );
 
-export const roleUpdateThunk = createAppAsyncThunk<RoleApiRes, RoleReq>(
+export const roleUpdateThunk = createAppAsyncThunk<RoleApiRes, RoleReqUpdate>(
   "roles/update",
-  async ({ name, description, permissions }, { rejectWithValue, getState }) => {
+  async (
+    { _id, name, description, permissions },
+    { rejectWithValue, getState }
+  ) => {
     try {
-      const response = await updateRole({ name, description, permissions });
+      const response = await updateRole(_id, {
+        name,
+        description,
+        permissions,
+      });
+      return response;
+    } catch (error) {
+      return rejectWithValue(error as string);
+    }
+  }
+);
+
+export const roleDeleteThunk = createAppAsyncThunk<RoleApiRes, RoleReqDelete>(
+  "roles/delete",
+  async ({ _id }, { rejectWithValue, getState }) => {
+    try {
+      const response = await deleteRole(_id);
       return response;
     } catch (error) {
       return rejectWithValue(error as string);

@@ -10,9 +10,21 @@ export interface RoleSliceState {
 }
 
 export interface RoleReq {
+  _id?: string;
   name: string;
   description: string;
   permissions: string[];
+}
+
+export interface RoleReqUpdate {
+  _id: string;
+  name: string;
+  description: string;
+  permissions: string[];
+}
+
+export interface RoleReqDelete {
+  _id: string;
 }
 
 export interface RoleRes {
@@ -24,3 +36,8 @@ export interface RoleRes {
 }
 
 export type RoleApiRes = APIResponse<RoleRes>;
+export type RoleApiResDelete = APIResponse<{ ok: boolean }>;
+export type RoleApiResCreate = APIResponse<{
+  acknowledged: boolean;
+  insertedId: string;
+}>;

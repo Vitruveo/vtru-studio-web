@@ -13,6 +13,7 @@ import { configTheme } from "@/app/common/theme/Theme";
 import { NextAppDirEmotionCacheProvider } from "@/app/common/theme/EmotionCache";
 import "@/utils/i18n";
 import { store } from "../store";
+import "toastr/build/toastr.min.css";
 
 const inter = Inter({ subsets: ["latin"] });
 

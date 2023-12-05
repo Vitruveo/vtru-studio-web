@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import toastr from "toastr";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -10,16 +11,28 @@ import DialogTitle from "@mui/material/DialogTitle";
 import FormLabel from "@mui/material/FormLabel";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
-import { useDispatch, useSelector } from "@/store/hooks";
+
+import { useDispatch } from "@/store/hooks";
 import { roleCreateThunk } from "@/features/role";
+import { RoleApiResCreate } from "@/features/role/types";
 
 const roleSchemaValidation = yup.object({
-  name: yup.string().required("field name is required."),
+  name: yup
+    .string()
+    .min(3, "name field needs at least 3 characters")
+    .required("field name is required."),
 });
 
-export default function RoleAdd() {
+interface Props {
+  handleAddNewRole(params: {
+    id: string;
+    name: string;
+    description: string;
+  }): void;
+}
+
+export default function RoleAdd({ handleAddNewRole }: Props) {
   const dispatch = useDispatch();
-  const roleStatus = useSelector((state) => state.role.status);
 
   const [modal, setModal] = React.useState(false);
 
@@ -29,27 +42,28 @@ export default function RoleAdd() {
       description: "",
     },
     validationSchema: roleSchemaValidation,
-    onSubmit: (values) => {
-      dispatch(
+    onSubmit: async (values) => {
+      const response = await dispatch(
         roleCreateThunk({
           name: values.name,
           description: values.description,
           permissions: [],
         })
       );
+      handleAddNewRole({
+        id: (response.payload as RoleApiResCreate).data?.insertedId as string,
+        name: values.name,
+        description: values.description,
+      });
+      toggle();
+      resetForm();
+      toastr.success("Record created success");
     },
   });
 
   const toggle = () => {
     setModal(!modal);
   };
-
-  useEffect(() => {
-    if (roleStatus === "succeeded") {
-      toggle();
-      resetForm();
-    }
-  }, [roleStatus]);
 
   return (
     <>
@@ -102,15 +116,12 @@ export default function RoleAdd() {
                   />
                 </Grid>
 
-                {roleStatus === "failed" && <span>Error on created role</span>}
-
                 <Grid item xs={12} lg={12}>
                   <Button
                     variant="contained"
                     color="primary"
                     sx={{ mr: 1 }}
                     type="submit"
-                    disabled={roleStatus === "loading"}
                   >
                     Submit
                   </Button>
