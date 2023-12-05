@@ -42,18 +42,18 @@ export default function RoleAdd({ handleAddNewRole }: Props) {
       description: "",
     },
     validationSchema: roleSchemaValidation,
-    onSubmit: async (values) => {
+    onSubmit: async (payload) => {
       const response = await dispatch(
         roleCreateThunk({
-          name: values.name,
-          description: values.description,
+          name: payload.name,
+          description: payload.description,
           permissions: [],
         })
       );
       handleAddNewRole({
         id: (response.payload as RoleApiResCreate).data?.insertedId as string,
-        name: values.name,
-        description: values.description,
+        name: payload.name,
+        description: payload.description,
       });
       toggle();
       resetForm();
