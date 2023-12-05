@@ -18,12 +18,16 @@ export async function createRole(data: RoleReq): Promise<RoleApiRes> {
     return response;
 }
 
-export function updateRole(data: RoleReq): Promise<RoleApiRes> {
-    const req: any = {};
-    return req;
+export async function updateRole(
+  id: string,
+  data: RoleReq
+): Promise<RoleApiRes> {
+  const response = await apiService.put<RoleRes>(`/roles/${id}`, data);
+
+  return response;
 }
 
-export function deleteRole(data: RoleReq): Promise<RoleRes> {
-    const req: any = {};
-    return req;
+export async function deleteRole(id: string): Promise<boolean> {
+  await apiService.delete(`/roles/${id}`);
+  return true;
 }

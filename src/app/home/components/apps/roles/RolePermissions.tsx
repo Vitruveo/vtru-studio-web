@@ -9,12 +9,19 @@ import {
   Switch,
 } from "@mui/material";
 import BlankCard from "@/app/home/components/shared/BlankCard";
+import { PermissionType } from "@/mock/permissions";
 
-import { permissionsList, PermissionType } from "@/mock/permissions";
+interface Props {
+  permissions: PermissionType[];
+  activePermissions: string[];
+  handleChangePermission(permissionKey: string): void;
+}
 
-const basics: PermissionType[] = permissionsList;
-
-export default function RolePermissionsTable() {
+export default function RolePermissionsTable({
+  permissions,
+  activePermissions,
+  handleChangePermission,
+}: Props) {
   return (
     <BlankCard>
       <TableContainer>
@@ -38,39 +45,46 @@ export default function RolePermissionsTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {basics.map((basic) => (
-              <TableRow key={basic.id}>
-                <TableCell>
-                  <Typography
-                    color="textSecondary"
-                    variant="h6"
-                    fontWeight={400}
-                  >
-                    {basic.category}
-                  </Typography>
-                </TableCell>
+            {permissions.map((permission) => {
+              const [category, name] = permission.key.split(":");
 
-                <TableCell>
-                  <Typography
-                    color="textSecondary"
-                    variant="h6"
-                    fontWeight={400}
-                  >
-                    {basic.permission}
-                  </Typography>
-                </TableCell>
+              return (
+                <TableRow key={permission._id}>
+                  <TableCell>
+                    <Typography
+                      color="textSecondary"
+                      variant="h6"
+                      fontWeight={400}
+                    >
+                      {category}
+                    </Typography>
+                  </TableCell>
 
-                <TableCell>
-                  <Typography
-                    color="textSecondary"
-                    variant="h6"
-                    fontWeight={400}
-                  >
-                    <Switch />
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            ))}
+                  <TableCell>
+                    <Typography
+                      color="textSecondary"
+                      variant="h6"
+                      fontWeight={400}
+                    >
+                      {name}
+                    </Typography>
+                  </TableCell>
+
+                  <TableCell>
+                    <Typography
+                      color="textSecondary"
+                      variant="h6"
+                      fontWeight={400}
+                    >
+                      <Switch
+                        checked={activePermissions.includes(permission.key)}
+                        onChange={() => handleChangePermission(permission.key)}
+                      />
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>

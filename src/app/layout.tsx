@@ -14,6 +14,7 @@ import { TypographyOptions } from '@mui/material/styles/createTypography';
 import { Inter } from 'next/font/google';
 import { Provider } from 'react-redux';
 import { store } from '../store';
+import "toastr/build/toastr.min.css";
 
 const inter = Inter({ subsets: ['latin'] });
 

@@ -9,19 +9,15 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import { IconStar, IconTrash } from "@tabler/icons-react";
+import { RoleType } from "@/mock/roles";
 
-type Props = {
+interface Props extends RoleType {
   onRoleClick: (event: React.MouseEvent<HTMLElement>) => void;
   onStarredClick: React.MouseEventHandler<SVGElement>;
   onDeleteClick: React.MouseEventHandler<SVGElement>;
-  id: string | number;
-  name: string;
-  description: string;
-  permissions: string[];
   image: string;
-  starred: boolean;
   active: any;
-};
+}
 
 export default function RoleListItem({
   onRoleClick,
@@ -30,7 +26,6 @@ export default function RoleListItem({
   name,
   description,
   image,
-  starred,
   active,
 }: Props) {
   const customizer = {
@@ -75,15 +70,7 @@ export default function RoleListItem({
               {description}
             </Typography>
           </Box>
-          <IconStar
-            onClick={onStarredClick}
-            size="16"
-            stroke={1.5}
-            style={{
-              fill: starred ? warningColor : "",
-              stroke: starred ? warningColor : "",
-            }}
-          />
+          <IconStar onClick={onStarredClick} size="16" stroke={1.5} />
           <IconTrash onClick={onDeleteClick} size="16" stroke={1.5} />
         </Stack>
       </ListItemText>

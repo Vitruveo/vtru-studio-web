@@ -24,7 +24,7 @@ const AppCard = ({ children }: Props) => {
 
   return (
     <Card
-      sx={{ display: "flex", p: 0 }}
+      sx={{ display: "flex", p: 0, maxHeight: 550 }}
       elevation={customizer.isCardShadow ? 9 : 0}
       variant={!customizer.isCardShadow ? "outlined" : undefined}
     >
