@@ -1,5 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-// import { createAppAsyncThunk } from '../../store/asyncThunk';
+import { createAppAsyncThunk } from '../../store/asyncThunk';
 import { createRole, updateRole } from './requests';
 import { RoleApiRes, RoleReq } from './types';
 
@@ -15,7 +14,7 @@ import { RoleApiRes, RoleReq } from './types';
 //     }
 // );
 
-export const roleCreateThunk = createAsyncThunk<RoleApiRes, RoleReq>(
+export const roleCreateThunk = createAppAsyncThunk<RoleApiRes, RoleReq>(
     'roles/create',
     async ({ name, description, permissions }, { rejectWithValue }) => {
         try {
@@ -31,7 +30,7 @@ export const roleCreateThunk = createAsyncThunk<RoleApiRes, RoleReq>(
     }
 );
 
-export const roleUpdateThunk = createAsyncThunk<RoleApiRes, RoleReq>(
+export const roleUpdateThunk = createAppAsyncThunk<RoleApiRes, RoleReq>(
     'roles/update',
     async ({ name, description, permissions }, { rejectWithValue }) => {
         try {
