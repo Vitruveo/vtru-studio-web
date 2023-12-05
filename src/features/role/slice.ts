@@ -26,22 +26,19 @@ export const roleSlice = createSlice({
         });
         builder.addCase(roleCreateThunk.rejected, (state, action) => {
             state.status = 'failed';
-
             state.error = action.error.message || '';
         });
-
         /** BUILDER ROLE FIND MANY THUNK */
         // builder.addCase(roleFindManyThunk.pending, (state) => {
-        //   state.status = "loading";
+        //     state.status = 'loading';
         // });
         // builder.addCase(roleFindManyThunk.fulfilled, (state, action) => {
-        //   state.status = "succeeded";
-        //   action.payload.forEach((item) => (state.byId[item.id] = item));
+        //     state.status = 'succeeded';
+        //     action.payload.forEach((item) => (state.byId[item.id] = item));
         // });
         // builder.addCase(roleFindManyThunk.rejected, (state, action) => {
-        //   state.status = "failed";
-
-        //   state.error = action.error.message || "";
+        //     state.status = 'failed';
+        //     state.error = action.error.message || '';
         // });
     },
 });
