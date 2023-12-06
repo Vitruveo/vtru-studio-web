@@ -8,7 +8,7 @@ type Props = {
     roleId: string;
     data: RoleType[];
     onRoleClick(params: { id: string }): void;
-    onDeleteClick(params: { id: string }): void;
+    onDeleteClick(params: { id: string; name: string }): void;
 };
 
 export default function RoleList({
@@ -34,7 +34,9 @@ export default function RoleList({
                         image=""
                         {...role}
                         onRoleClick={() => onRoleClick({ id: role._id })}
-                        onDeleteClick={() => onDeleteClick({ id: role._id })}
+                        onDeleteClick={() =>
+                            onDeleteClick({ id: role._id, name: role.name })
+                        }
                         onStarredClick={() => {}}
                     />
                 ))}

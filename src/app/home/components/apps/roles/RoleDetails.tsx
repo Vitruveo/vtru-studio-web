@@ -42,7 +42,7 @@ interface Props {
     roleId: string;
     permissions: PermissionType[];
 
-    onDeleteClick(params: { id: string }): void;
+    onDeleteClick(params: { id: string; name: string }): void;
     handleUpdateRole(params: {
         id: string;
         name: string;
@@ -180,7 +180,10 @@ export default function RoleDetails({
                                 <Tooltip title="Delete">
                                     <IconButton
                                         onClick={() =>
-                                            onDeleteClick({ id: role._id })
+                                            onDeleteClick({
+                                                id: role._id,
+                                                name: role.name,
+                                            })
                                         }
                                     >
                                         <IconTrash size="18" stroke={1.3} />

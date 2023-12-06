@@ -19,6 +19,7 @@ import { PermissionType } from '@/mock/permissions';
 import { useDispatch } from '@/store/hooks';
 import { roleDeleteThunk } from '@/features/role/thunks';
 import RoleAdd from '../../components/apps/roles/RoleAdd';
+import { RoleDialogDelete } from '../../components/apps/roles/RoleDialogDelete';
 
 const drawerWidth = 240;
 const secdrawerWidth = 320;
@@ -33,6 +34,8 @@ export default function Roles() {
     const [roleId, setRoleId] = useState('');
     const [search, setSearch] = useState('');
     const [category, setCategory] = useState('');
+    const [isOpenDialogDelete, setIsOpenDialogDelete] = useState(false);
+    const [roleDelete, setRoleDelete] = useState({ name: '', id: '' });
     const [isLeftSidebarOpen, setLeftSidebarOpen] = useState(false);
     const [isRightSidebarOpen, setRightSidebarOpen] = useState(false);
 
@@ -96,15 +99,19 @@ export default function Roles() {
         return [...acc, categoryName];
     }, []);
 
-    const onDeleteClick = ({ id }: { id: string }) => {
-        if (window.confirm('Are sure want to delete?')) {
-            dispatch(roleDeleteThunk({ _id: id }));
-            setRoles((prevState) =>
-                prevState.filter((item) => item._id !== id)
-            );
-            if (id === roleId) setRoleId('');
-            toastr.success('Record deleted success');
-        }
+    const onDeleteClick = ({ id, name }: { id: string; name: string }) => {
+        setIsOpenDialogDelete(true);
+        setRoleDelete({ id, name: name });
+    };
+
+    const onDeleteConfirm = () => {
+        const { id } = roleDelete;
+
+        dispatch(roleDeleteThunk({ _id: id }));
+        setRoles((prevState) => prevState.filter((item) => item._id !== id));
+        if (id === roleId) setRoleId('');
+        toastr.success('Record deleted success');
+        setIsOpenDialogDelete(false);
     };
 
     const handleAddNewRole = useCallback(
@@ -256,6 +263,13 @@ export default function Roles() {
                     />
                 </Drawer>
             </AppCard>
+
+            <RoleDialogDelete
+                roleName={roleDelete.name}
+                isOpen={isOpenDialogDelete}
+                handleCancel={() => setIsOpenDialogDelete(!isOpenDialogDelete)}
+                handleConfirm={onDeleteConfirm}
+            />
         </PageContainer>
     );
 }
