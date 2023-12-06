@@ -1,19 +1,14 @@
-import Divider from "@mui/material/Divider";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import Typography from "@mui/material/Typography";
-import { Switch } from "@mui/material";
-import {
-  IconMail,
-  IconSend,
-  IconBucket,
-  IconFolder,
-} from "@tabler/icons-react";
+import { Switch } from '@mui/material';
+import Divider from '@mui/material/Divider';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Typography from '@mui/material/Typography';
+import { IconBucket, IconFolder, IconMail, IconSend } from '@tabler/icons-react';
 
-import UserAdd from "./UserAdd";
-import Scrollbar from "../../custom-scroll/Scrollbar";
+import Scrollbar from '../../custom-scroll/Scrollbar';
+import UserAdd from './userAdd/container';
 
 interface DataType {
   id: number;
@@ -26,20 +21,20 @@ interface DataType {
 }
 
 export default function UserFilter() {
-  const active = "show_all";
+  const active = 'show_all';
   const customizer = {
-    activeDir: "ltr",
-    activeMode: "light", // This can be light or dark
-    activeTheme: "BLUE_THEME", // BLUE_THEME, GREEN_THEME, BLACK_THEME, PURPLE_THEME, ORANGE_THEME
+    activeDir: 'ltr',
+    activeMode: 'light', // This can be light or dark
+    activeTheme: 'BLUE_THEME', // BLUE_THEME, GREEN_THEME, BLACK_THEME, PURPLE_THEME, ORANGE_THEME
     SidebarWidth: 270,
     MiniSidebarWidth: 87,
     TopbarHeight: 70,
-    isLayout: "full", // This can be full or boxed
+    isLayout: 'full', // This can be full or boxed
     isCollapse: false, // to make sidebar Mini by default
     isSidebarHover: false,
     isMobileSidebar: false,
     isHorizontal: false,
-    isLanguage: "en",
+    isLanguage: 'en',
     isCardShadow: true,
     borderRadius: 7,
   };
@@ -48,26 +43,26 @@ export default function UserFilter() {
   const filterData: DataType[] = [
     {
       id: 2,
-      name: "All Users",
-      sort: "show_all",
+      name: 'All Users',
+      sort: 'show_all',
       icon: IconMail,
     },
     {
       id: 3,
-      name: "Starred",
-      sort: "frequent_user",
+      name: 'Starred',
+      sort: 'frequent_user',
       icon: IconSend,
     },
     {
       id: 4,
-      name: "Pending Approval",
-      sort: "starred_user",
+      name: 'Pending Approval',
+      sort: 'starred_user',
       icon: IconBucket,
     },
     {
       id: 5,
-      name: "Blocked",
-      sort: "starred_user",
+      name: 'Blocked',
+      sort: 'starred_user',
       icon: IconBucket,
     },
     {
@@ -76,14 +71,14 @@ export default function UserFilter() {
     },
     {
       id: 7,
-      filterbyTitle: "Filter",
+      filterbyTitle: 'Filter',
     },
     {
       id: 8,
-      name: "Online",
-      sort: "engineering_department",
+      name: 'Online',
+      sort: 'engineering_department',
       icon: IconFolder,
-      color: "primary.main",
+      color: 'primary.main',
     },
   ];
 
@@ -93,21 +88,16 @@ export default function UserFilter() {
       <List>
         <Scrollbar
           sx={{
-            height: { lg: "calc(100vh - 100px)", md: "100vh" },
-            maxHeight: "800px",
-          }}
-        >
+            height: {
+              lg: 'calc(100vh - 100px)',
+              md: '100vh',
+            },
+            maxHeight: '800px',
+          }}>
           {filterData.map((filter, index) => {
             if (filter.filterbyTitle) {
               return (
-                <Typography
-                  variant="subtitle1"
-                  fontWeight={600}
-                  pl={5.1}
-                  mt={1}
-                  pb={2}
-                  key={filter.id}
-                >
+                <Typography variant="subtitle1" fontWeight={600} pl={5.1} mt={1} pb={2} key={filter.id}>
                   {filter.filterbyTitle}
                 </Typography>
               );
@@ -117,15 +107,22 @@ export default function UserFilter() {
 
             return (
               <ListItemButton
-                sx={{ mb: 1, mx: 3, borderRadius: br }}
+                sx={{
+                  mb: 1,
+                  mx: 3,
+                  borderRadius: br,
+                }}
                 selected={active === `${filter.sort}`}
                 onClick={() => {}}
-                key={filter.id}
-              >
+                key={filter.id}>
                 {filter.id === 8 ? (
                   <Switch />
                 ) : (
-                  <ListItemIcon sx={{ minWidth: "30px", color: filter.color }}>
+                  <ListItemIcon
+                    sx={{
+                      minWidth: '30px',
+                      color: filter.color,
+                    }}>
                     <filter.icon stroke="1.5" size={19} />
                   </ListItemIcon>
                 )}
