@@ -32,7 +32,7 @@ function LoginView({ values, errors, handleChange, handleSubmit }: LoginViewProp
 
           <Stack justifyContent="space-between" direction="row" alignItems="center" my={2}>
             <FormGroup>
-              <FormControlLabel control={<CustomCheckbox defaultChecked />} label="Remeber this Device" />
+              <FormControlLabel control={<CustomCheckbox defaultChecked />} label="Remember this Device" />
             </FormGroup>
           </Stack>
         </Stack>

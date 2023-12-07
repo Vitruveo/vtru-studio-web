@@ -4,7 +4,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
 export interface CustomizedSnackbarState {
-  type: 'success' | 'info' | 'warning' | 'error';
+  type: '' | 'success' | 'info' | 'warning' | 'error';
   open: boolean;
   message: string;
 }
@@ -22,7 +22,7 @@ export default function CustomizedSnackbar({ type, open, message, setOpentate }:
     if (reason === 'clickaway') {
       return;
     }
-    setOpentate({ open: false, type: 'success', message: '' });
+    setOpentate({ open: false, type: '', message: '' });
   };
 
   return (
@@ -30,11 +30,15 @@ export default function CustomizedSnackbar({ type, open, message, setOpentate }:
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={open}
-        autoHideDuration={6000}
+        autoHideDuration={4000}
         onClose={handleClose}>
-        <Alert onClose={handleClose} severity={type} sx={{ width: '100%' }}>
-          {message}
-        </Alert>
+        {!type || !type.length ? (
+          <div />
+        ) : (
+          <Alert onClose={handleClose} severity={type} sx={{ width: '100%', color: 'white' }}>
+            {message}
+          </Alert>
+        )}
       </Snackbar>
     </Stack>
   );

@@ -1,12 +1,9 @@
-'use client';
-
+import { useState } from 'react';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 
 import { useDispatch } from '@/store/hooks';
 import { userLoginThunk } from '@/features/user/thunks';
-
-import { useState } from 'react';
 
 import LoginView from './view';
 import { loginSchemaValidation } from './formSchema';
@@ -37,7 +34,7 @@ const LoginContainer = () => {
 
   return (
     <>
-      <LoginView values={values} errors={errors} handleSubmit={handleSubmit} handleChange={handleChange} />;
+      <LoginView values={values} errors={errors} handleSubmit={handleSubmit} handleChange={handleChange} />
       <CustomizedSnackbar type={toastr.type} open={toastr.open} message={toastr.message} setOpentate={setToastr} />
     </>
   );

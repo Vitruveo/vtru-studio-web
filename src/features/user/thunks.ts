@@ -1,4 +1,4 @@
-// import { createAppAsyncThunk } from '@/store/asyncThunk';
+import { createAppAsyncThunk } from '@/store/asyncThunk';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { userLoginReq, userAddReq, userOTPConfimReq } from './requests';
 import {
@@ -10,9 +10,9 @@ import {
   UserOTPConfirmApiRes,
 } from './types';
 
-export const userLoginThunk = createAsyncThunk<UserLoginApiRes, UserLoginReq>(
+export const userLoginThunk = createAppAsyncThunk<UserLoginApiRes, UserLoginReq>(
   'user/login',
-  async ({ email }, { rejectWithValue, getState }) => {
+  async ({ email }, { rejectWithValue }) => {
     try {
       const response = await userLoginReq({ email });
       return response;
@@ -22,7 +22,7 @@ export const userLoginThunk = createAsyncThunk<UserLoginApiRes, UserLoginReq>(
   },
 );
 
-export const userAddThunk = createAsyncThunk<UserAddApiRes, UserAddReq>(
+export const userAddThunk = createAppAsyncThunk<UserAddApiRes, UserAddReq>(
   'user/add',
   async ({ name, email }, { rejectWithValue }) => {
     try {
@@ -34,7 +34,7 @@ export const userAddThunk = createAsyncThunk<UserAddApiRes, UserAddReq>(
   },
 );
 
-export const userOTPConfirmThunk = createAsyncThunk<UserOTPConfirmApiRes, UserOTPConfirmReq>(
+export const userOTPConfirmThunk = createAppAsyncThunk<UserOTPConfirmApiRes, UserOTPConfirmReq>(
   'user/otpConfirm',
   async ({ email, code }, { rejectWithValue }) => {
     try {

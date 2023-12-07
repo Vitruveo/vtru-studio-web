@@ -1,4 +1,3 @@
-import toastr from 'toastr';
 import { useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
@@ -9,8 +8,12 @@ import { userLoginThunk, userOTPConfirmThunk } from '@/features/user/thunks';
 import ConfirmView from './view';
 import { otpSchemaValidation } from './formSchema';
 import { userSelector } from '@/features/user';
+import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
+import { useState } from 'react';
 
 export default function ConfirmContainer() {
+  const [toastr, setToastr] = useState<CustomizedSnackbarState>({ type: 'success', open: false, message: '' });
+
   const dispatch = useDispatch();
 
   const {
@@ -27,22 +30,20 @@ export default function ConfirmContainer() {
     onSubmit: async (formValues) => {
       const resOTPConfirm = await dispatch(userOTPConfirmThunk({ code: formValues.code, email }));
       if (resOTPConfirm.meta.requestStatus === 'fulfilled') {
-        toastr.success('OTP confirmed!');
+        setToastr({ open: true, type: 'success', message: 'OTP confirmed!' });
         router.push('/home');
         return;
       }
 
       if (resOTPConfirm.meta.requestStatus === 'rejected') {
-        toastr.error('Login failed: invalid code');
+        setToastr({ open: true, type: 'error', message: 'Login failed: invalid code' });
       }
     },
   });
 
   const handleCustomChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     handleChange(e);
-
     await validateForm();
-
     if (e.target.value.length === 6) {
       submitForm();
     }
@@ -50,17 +51,21 @@ export default function ConfirmContainer() {
 
   const handleResendCode = async () => {
     const resUserLogin = await dispatch(userLoginThunk({ email }));
-    if (resUserLogin.meta.requestStatus === 'fulfilled') toastr.success('Code sent to your email!');
-    else toastr.error('Something went wrong! Try again later.');
+    if (resUserLogin.meta.requestStatus === 'fulfilled')
+      setToastr({ open: true, type: 'success', message: 'Code sent to your email!' });
+    else setToastr({ open: true, type: 'error', message: 'Something went wrong! Try again later.' });
   };
 
   return (
-    <ConfirmView
-      values={values}
-      errors={errors}
-      handleResendCode={handleResendCode}
-      handleChange={handleCustomChange}
-      handleSubmit={handleSubmit}
-    />
+    <>
+      <ConfirmView
+        values={values}
+        errors={errors}
+        handleResendCode={handleResendCode}
+        handleChange={handleCustomChange}
+        handleSubmit={handleSubmit}
+      />
+      <CustomizedSnackbar type={toastr.type} open={toastr.open} message={toastr.message} setOpentate={setToastr} />
+    </>
   );
 }
