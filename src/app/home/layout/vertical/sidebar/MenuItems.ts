@@ -1,4 +1,4 @@
-import { uniqueId } from "lodash";
+import { uniqueId } from 'lodash';
 
 interface MenuitemsType {
   [x: string]: any;
@@ -14,63 +14,38 @@ interface MenuitemsType {
   variant?: string;
   external?: boolean;
 }
-import {
-  IconPackage,
-  IconChartDonut3,
-  IconAperture,
-} from "@tabler/icons-react";
+import { IconPackage, IconChartDonut3, IconAperture } from '@tabler/icons-react';
 
 const Menuitems: MenuitemsType[] = [
   {
     navlabel: true,
-    subheader: "Dashboards",
+    subheader: 'Dashboards',
   },
 
   {
     id: uniqueId(),
-    title: "General",
+    title: 'General',
     icon: IconAperture,
-    href: "/home",
+    href: '/home',
   },
   {
     navlabel: true,
-    subheader: "Applications",
-  },
-  {
-    id: uniqueId(),
-    title: "Users",
-    icon: IconPackage,
-    href: "/home/contents/users",
+    subheader: 'Applications',
   },
 
   {
     id: uniqueId(),
-    title: "Creators",
+    title: 'Assets',
     icon: IconChartDonut3,
-    href: "/home/contents/creators",
+    href: '/home/contents/assets',
   },
-  {
-    id: uniqueId(),
-    title: "Assets",
-    icon: IconChartDonut3,
-    href: "/home/contents/assets",
-  },
-  {
-    navlabel: true,
-    subheader: "Settings",
-  },
+
   // {
   //   id: uniqueId(),
   //   title: "General",
   //   icon: IconChartDonut3,
   //   href: "/home/contents/general",
   // },
-  {
-    id: uniqueId(),
-    title: "Roles",
-    icon: IconChartDonut3,
-    href: "/home/contents/roles",
-  },
 ];
 
 export default Menuitems;

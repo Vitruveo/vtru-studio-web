@@ -2,8 +2,8 @@
 import { Grid, Box } from '@mui/material';
 import PageContainer from '@/app/home/components/container/PageContainer';
 
-import AuthLogo from './components/AuthLogo';
-import AuthLogin from './components/authLogin/container';
+import AuthLogo from '@/app/login/components/AuthLogo';
+import AuthLogin from '@/app/login/components/authLogin/container';
 
 export default function Login() {
   return (

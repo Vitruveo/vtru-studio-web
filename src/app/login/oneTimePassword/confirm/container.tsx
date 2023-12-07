@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 
 import { useDispatch } from '@/store/hooks';
-import { userLoginThunk, userOTPConfirmThunk } from '@/features/user/thunks';
+import { userLoginThunk, userOTPConfirmThunk } from '@/features/user/slice';
 
 import ConfirmView from './view';
 import { otpSchemaValidation } from './formSchema';

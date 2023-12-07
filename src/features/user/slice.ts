@@ -54,5 +54,5 @@ export const userSlice = createSlice({
   },
 });
 
-export const userActionsCreators = userSlice.actions;
 export const userThunksCreators = userSlice.reducer;
+export { userOTPConfirmThunk, userAddThunk, userLoginThunk };
