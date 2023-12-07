@@ -38,7 +38,7 @@ const LoginContainer = () => {
   return (
     <>
       <LoginView values={values} errors={errors} handleSubmit={handleSubmit} handleChange={handleChange} />;
-      <CustomizedSnackbar type={toastr.type} open={true} message={toastr.message} setOpentate={setToastr} />
+      <CustomizedSnackbar type={toastr.type} open={toastr.open} message={toastr.message} setOpentate={setToastr} />
     </>
   );
 };
