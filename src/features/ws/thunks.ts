@@ -4,6 +4,7 @@ import { io } from 'socket.io-client';
 
 import { websocketSlice } from '.';
 import { WebsocketSliceState } from './types';
+import { createAppAsyncThunk } from '@/store/asyncThunk';
 
 export const connectWebSocketThunk = createAsyncThunk<void, undefined>('websocket/connect', async (_, { dispatch }) => {
   const WS_SERVER_URL = `ws://localhost:${3000}`;
@@ -12,7 +13,7 @@ export const connectWebSocketThunk = createAsyncThunk<void, undefined>('websocke
   dispatch(websocketSlice.actions.websocketConnected(socket));
 });
 
-export const loginWebSocketThunk = createAsyncThunk<void, { _id: string }>(
+export const loginWebSocketThunk = createAppAsyncThunk<void, { _id: string }>(
   'websocket/login',
   async ({ _id }, { getState }) => {
     const socket = (
@@ -21,8 +22,11 @@ export const loginWebSocketThunk = createAsyncThunk<void, { _id: string }>(
       }>
     ).websocket.connection!;
 
+    const creator = getState().user;
+
     socket.emit('login', {
-      id: _id,
+      id: creator._id,
+      email: creator.login.email,
       token: 'creator',
     });
   },

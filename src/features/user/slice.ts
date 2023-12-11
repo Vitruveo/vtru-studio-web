@@ -51,6 +51,7 @@ export const userSlice = createSlice({
       state.status = `succeeded: ${action.type}`;
       if (!action.payload.data) return;
       state.token = action.payload.data.token;
+      state._id = action.payload.data.creator._id;
     });
     builder.addCase(userOTPConfirmThunk.rejected, (state, action) => {
       state.status = `failed: ${action.type}`;
