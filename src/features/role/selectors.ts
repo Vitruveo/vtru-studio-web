@@ -11,13 +11,13 @@ import { RoleSliceState } from './types';
  */
 
 export const roleSelector = <T extends keyof RoleSliceState>(fields: T[]) => {
-    return (state: AppState['role']): Pick<RoleSliceState, T> => {
-        const selectedFields = {} as Pick<RoleSliceState, T>;
+  return (state: AppState['role']): Pick<RoleSliceState, T> => {
+    const selectedFields = {} as Pick<RoleSliceState, T>;
 
-        fields.forEach((field) => {
-            selectedFields[field] = state[field];
-        });
+    fields.forEach((field) => {
+      selectedFields[field] = state[field];
+    });
 
-        return selectedFields;
-    };
+    return selectedFields;
+  };
 };

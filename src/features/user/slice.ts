@@ -4,6 +4,7 @@ import { userLoginThunk, userAddThunk, userOTPConfirmThunk } from './thunks';
 import { UserSliceState } from './types';
 
 const initialState: UserSliceState = {
+  _id: '',
   token: '',
   name: '',
   login: {
@@ -23,7 +24,11 @@ const initialState: UserSliceState = {
 export const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    logout: () => {
+      return initialState;
+    },
+  },
   extraReducers: (builder) => {
     /** BUILDER USER AUTH THUNK */
     builder.addCase(userLoginThunk.pending, (state, action) => {
@@ -54,5 +59,5 @@ export const userSlice = createSlice({
   },
 });
 
-export const userThunksCreators = userSlice.reducer;
+export const userActionsCreators = userSlice.actions;
 export { userOTPConfirmThunk, userAddThunk, userLoginThunk };

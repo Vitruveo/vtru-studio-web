@@ -1,15 +1,17 @@
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 
 import { useDispatch } from '@/store/hooks';
 import { userLoginThunk, userOTPConfirmThunk } from '@/features/user/slice';
+import { userSelector } from '@/features/user';
+import { connectWebSocketThunk, loginWebSocketThunk } from '@/features/ws';
+import { UserOTPConfirmApiRes } from '@/features/user/types';
+import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 
 import ConfirmView from './view';
 import { otpSchemaValidation } from './formSchema';
-import { userSelector } from '@/features/user';
-import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
-import { useState } from 'react';
 
 export default function ConfirmContainer() {
   const [toastr, setToastr] = useState<CustomizedSnackbarState>({ type: 'success', open: false, message: '' });
@@ -30,6 +32,9 @@ export default function ConfirmContainer() {
     onSubmit: async (formValues) => {
       const resOTPConfirm = await dispatch(userOTPConfirmThunk({ code: formValues.code, email }));
       if (resOTPConfirm.meta.requestStatus === 'fulfilled') {
+        const id = (resOTPConfirm.payload as UserOTPConfirmApiRes).data!.user._id;
+        await dispatch(connectWebSocketThunk());
+        await dispatch(loginWebSocketThunk({ _id: id }));
         setToastr({ open: true, type: 'success', message: 'OTP confirmed!' });
         router.push('/home');
         return;
