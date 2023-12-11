@@ -32,7 +32,7 @@ export default function ConfirmContainer() {
     onSubmit: async (formValues) => {
       const resOTPConfirm = await dispatch(userOTPConfirmThunk({ code: formValues.code, email }));
       if (resOTPConfirm.meta.requestStatus === 'fulfilled') {
-        const id = (resOTPConfirm.payload as UserOTPConfirmApiRes).data!.user._id;
+        const id = (resOTPConfirm.payload as UserOTPConfirmApiRes).data!.creator._id;
         await dispatch(connectWebSocketThunk());
         await dispatch(loginWebSocketThunk({ _id: id }));
         setToastr({ open: true, type: 'success', message: 'OTP confirmed!' });

@@ -39,7 +39,7 @@ export interface UserOTPConfirmReq {
 }
 
 export interface UserOTPConfirmRes {
-  user: User;
+  creator: User;
   token: string;
 }
 
