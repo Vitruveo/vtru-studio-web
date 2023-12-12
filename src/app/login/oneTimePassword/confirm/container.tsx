@@ -36,7 +36,7 @@ export default function ConfirmContainer() {
         await dispatch(connectWebSocketThunk());
         await dispatch(loginWebSocketThunk({ _id: id }));
         setToastr({ open: true, type: 'success', message: 'OTP confirmed!' });
-        router.push('/home');
+        router.push('/home/contents/wizard');
         return;
       }
 

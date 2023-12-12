@@ -10,6 +10,7 @@ const initialState: UserSliceState = {
   login: {
     email: '',
   },
+  emails: [],
   profile: {
     avatar: '',
     phone: '',
@@ -52,6 +53,7 @@ export const userSlice = createSlice({
       if (!action.payload.data) return;
       state.token = action.payload.data.token;
       state._id = action.payload.data.creator._id;
+      state.emails = action.payload.data.creator.emails;
     });
     builder.addCase(userOTPConfirmThunk.rejected, (state, action) => {
       state.status = `failed: ${action.type}`;
