@@ -15,7 +15,7 @@ const LoginContainer = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const { handleSubmit, handleChange, resetForm, values, errors } = useFormik({
+  const { handleSubmit, handleChange, resetForm, setFieldValue, values, errors } = useFormik({
     initialValues: {
       email: '',
     },
@@ -34,7 +34,13 @@ const LoginContainer = () => {
 
   return (
     <>
-      <LoginView values={values} errors={errors} handleSubmit={handleSubmit} handleChange={handleChange} />
+      <LoginView
+        values={values}
+        errors={errors}
+        setFieldValue={setFieldValue}
+        handleSubmit={handleSubmit}
+        handleChange={handleChange}
+      />
       <CustomizedSnackbar type={toastr.type} open={toastr.open} message={toastr.message} setOpentate={setToastr} />
     </>
   );

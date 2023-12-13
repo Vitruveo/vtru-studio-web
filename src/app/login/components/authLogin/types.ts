@@ -8,7 +8,7 @@ interface LoginFormValues {
 
 type LoginFormErros = FormikErrors<LoginFormValues>;
 
-export interface LoginViewProps extends FormikDefaultProps {
+export interface LoginViewProps extends FormikDefaultProps<LoginFormValues> {
   values: LoginFormValues;
   errors: LoginFormErros;
 }

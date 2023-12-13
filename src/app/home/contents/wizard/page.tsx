@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { useFormik } from 'formik';
 import { Box, Button, Stack } from '@mui/material';
 
 import PageContainer from '@/app/home/components/container/PageContainer';
@@ -9,12 +10,14 @@ import FinalStep from '@/app/home/components/wizard/FinalStep';
 import FirstStep from '@/app/home/components/wizard/FirstStep';
 import SecondStep from '@/app/home/components/wizard/SecondStep';
 import { Wallet } from '@/app/home/components/apps/wallet';
+import { StepsFormValues } from '../../components/wizard/types';
+import { stepsSchemaValidation } from './formschema';
 
 export default function Wizard() {
   const steps = [
     {
       key: 'Creator: account',
-      render: <FirstStep />,
+      render: FirstStep,
       title: (
         <div>
           Creator <br /> account
@@ -23,7 +26,7 @@ export default function Wizard() {
     },
     {
       key: 'Assets Upload',
-      render: <SecondStep />,
+      render: SecondStep,
       title: (
         <div>
           Asset <br /> upload{' '}
@@ -32,7 +35,7 @@ export default function Wizard() {
     },
     {
       key: 'Assets Metadata',
-      render: <FirstStep />,
+      render: FirstStep,
       title: (
         <div>
           Asset <br /> metadata{' '}
@@ -41,7 +44,7 @@ export default function Wizard() {
     },
     {
       key: 'Sign Media',
-      render: <FirstStep />,
+      render: FirstStep,
       title: (
         <div>
           Asset <br /> signature{' '}
@@ -50,7 +53,7 @@ export default function Wizard() {
     },
     {
       key: 'Licenses',
-      render: <FirstStep />,
+      render: FirstStep,
       title: (
         <div>
           Asset
@@ -60,7 +63,7 @@ export default function Wizard() {
     },
     {
       key: 'Creator Profile',
-      render: <FirstStep />,
+      render: FirstStep,
       title: (
         <div>
           Creator <br /> profile{' '}
@@ -69,7 +72,7 @@ export default function Wizard() {
     },
     {
       key: 'TruID Verification',
-      render: <FirstStep />,
+      render: FirstStep,
       title: (
         <div>
           Creator <br /> verification{' '}
@@ -78,7 +81,7 @@ export default function Wizard() {
     },
     {
       key: 'Creator Agreement',
-      render: <FirstStep />,
+      render: FirstStep,
       title: (
         <div>
           Creator <br /> agreement{' '}
@@ -87,7 +90,7 @@ export default function Wizard() {
     },
     {
       key: 'Publish',
-      render: <FirstStep />,
+      render: FirstStep,
       title: (
         <div>
           Asset
@@ -97,7 +100,7 @@ export default function Wizard() {
     },
     {
       key: 'Asset Listing',
-      render: <FirstStep />,
+      render: FirstStep,
       title: (
         <div>
           Asset <br /> listing{' '}
@@ -113,9 +116,23 @@ export default function Wizard() {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
+
   const handleReset = () => {
     setActiveStep(0);
   };
+
+  const { handleSubmit, handleChange, resetForm, setFieldValue, values, errors } = useFormik<StepsFormValues>({
+    initialValues: {
+      username: '',
+      email: '',
+      wallet: '',
+      file: undefined,
+    },
+    validationSchema: stepsSchemaValidation,
+    onSubmit: async (formValues) => {
+      toastr.success('Record created success');
+    },
+  });
 
   return (
     <PageContainer title="Wizard" description="this is Wizard">
@@ -126,7 +143,13 @@ export default function Wizard() {
             (item, index) =>
               activeStep === index && (
                 <>
-                  {item.render}
+                  <item.render
+                    values={values}
+                    errors={errors}
+                    setFieldValue={setFieldValue}
+                    handleChange={handleChange}
+                    handleSubmit={handleSubmit}
+                  />
                   <Stack direction="row" justifyContent="center" gap={5}>
                     {index !== 0 && (
                       <Button color="primary" variant="outlined" onClick={handleBack}>

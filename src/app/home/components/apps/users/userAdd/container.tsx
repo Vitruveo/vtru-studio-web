@@ -11,7 +11,7 @@ export default function Container() {
 
   const dispatch = useDispatch();
 
-  const { handleSubmit, handleChange, resetForm, values, errors } = useFormik({
+  const { handleSubmit, handleChange, resetForm, setFieldValue, values, errors } = useFormik({
     initialValues: {
       name: '',
       email: '',
@@ -33,6 +33,7 @@ export default function Container() {
       values={values}
       showModal={showModal}
       errors={errors}
+      setFieldValue={setFieldValue}
       handleChangeModal={handleChangeModal}
       handleChange={handleChange}
       handleSubmit={handleSubmit}
