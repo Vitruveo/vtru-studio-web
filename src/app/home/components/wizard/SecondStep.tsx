@@ -6,9 +6,14 @@ import { IconTrash } from '@tabler/icons-react';
 import { Box, Button, Divider, FormControl, LinearProgress, Typography } from '@mui/material';
 import { StepsFormValues, StepsProps } from './types';
 
+import { sendRequestUploadThunk } from '@/features/user/thunks';
+import { useDispatch } from '@/store/hooks';
+
 const currentStep = 2;
 
 const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue }: StepsProps) => {
+  const dispatch = useDispatch();
+
   const [isUpload, setIsUpload] = useState(false);
   const [progress, setProgress] = useState(0);
 
@@ -45,6 +50,10 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
       setFieldValue('completedSteps', { ...values.completedSteps });
     }
   }, [values.wallet, errors]);
+
+  const handleRequestUpload = ({ mimetype, originalName }: { mimetype: string; originalName: string }) => {
+    dispatch(sendRequestUploadThunk({ mimetype, originalName }));
+  };
 
   return (
     <Box display="flex" justifyContent="center" my={3}>
@@ -88,7 +97,13 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
                 <Box display="flex" alignItems="center" gap={2}>
                   <Typography>{formatBytesToMB(values.file?.size || 0)}</Typography>
                   {progress < 100 && (
-                    <Button disabled={progress > 0} variant="outlined" size="small" onClick={() => setIsUpload(true)}>
+                    <Button
+                      disabled={progress > 0}
+                      variant="outlined"
+                      size="small"
+                      onClick={() =>
+                        handleRequestUpload({ mimetype: values.file!.type, originalName: values.file!.name })
+                      }>
                       send now
                     </Button>
                   )}
