@@ -8,7 +8,7 @@ interface UserAddFormValues {
 
 type UserAddFormErros = FormikErrors<UserAddFormValues>;
 
-export interface UserAddProps extends FormikDefaultProps, ShowModalProps {
+export interface UserAddProps extends FormikDefaultProps<UserAddFormValues>, ShowModalProps {
   values: UserAddFormValues;
   errors: UserAddFormErros;
 }

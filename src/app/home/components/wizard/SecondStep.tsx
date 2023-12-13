@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react';
+import Img from 'next/image';
 import { useDropzone } from 'react-dropzone';
 import { IconTrash } from '@tabler/icons-react';
 
 import { Box, Button, Divider, FormControl, LinearProgress, Typography } from '@mui/material';
+import { StepsProps } from './types';
 
-const SecondStep = () => {
-  const [assets, setAssets] = useState<File[]>([]);
-  const onDrop = (acceptedFiles: File[]) => {
-    setAssets((prevState) => [acceptedFiles[0], ...prevState]);
-  };
-
+const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue }: StepsProps) => {
   const [isUpload, setIsUpload] = useState(false);
   const [progress, setProgress] = useState(0);
+
+  const onDrop = (acceptedFiles: File[]) => {
+    setFieldValue('file', acceptedFiles[0]);
+  };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
@@ -25,6 +26,10 @@ const SecondStep = () => {
 
   const formatBytesToMB = (bytes: number) => {
     return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+  };
+
+  const handleDeleteFile = () => {
+    setFieldValue('file', null);
   };
 
   return (
@@ -50,18 +55,18 @@ const SecondStep = () => {
           </Box>
         </FormControl>
 
-        <Box display="flex" flexDirection="column" gap={2}>
-          {assets.map((item) => (
+        {values.file && (
+          <Box display="flex" flexDirection="column" gap={2}>
             <>
-              <Box key={item.name} display="flex" alignItems="center" justifyContent="space-between">
+              <Box key={values.file?.name} display="flex" alignItems="center" justifyContent="space-between">
                 <Box display="flex" alignItems="center" gap={1}>
-                  <IconTrash color="red" onClick={() => {}} size="16" stroke={1.5} />
-                  <img width={40} height={40} src={URL.createObjectURL(item)} alt="" />
-                  <Typography>{item.name}</Typography>
+                  <IconTrash color="red" onClick={handleDeleteFile} size="16" stroke={1.5} />
+                  <Img width={40} height={40} src={values.file ? URL.createObjectURL(values.file) : ''} alt="" />
+                  <Typography>{values.file?.name}</Typography>
                 </Box>
 
                 <Box display="flex" alignItems="center" gap={2}>
-                  <Typography>{formatBytesToMB(item.size)}</Typography>
+                  <Typography>{formatBytesToMB(values.file?.size || 0)}</Typography>
                   {progress < 100 && (
                     <Button disabled={progress > 0} variant="outlined" size="small" onClick={() => setIsUpload(true)}>
                       send now
@@ -81,8 +86,8 @@ const SecondStep = () => {
 
               <Divider />
             </>
-          ))}
-        </Box>
+          </Box>
+        )}
       </Box>
     </Box>
   );

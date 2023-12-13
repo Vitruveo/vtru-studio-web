@@ -24,7 +24,7 @@ export default function ConfirmContainer() {
 
   const router = useRouter();
 
-  const { handleSubmit, handleChange, values, errors, submitForm, validateForm } = useFormik({
+  const { handleSubmit, handleChange, values, errors, submitForm, validateForm, setFieldValue } = useFormik({
     initialValues: {
       code: '',
     },
@@ -66,6 +66,7 @@ export default function ConfirmContainer() {
       <ConfirmView
         values={values}
         errors={errors}
+        setFieldValue={setFieldValue}
         handleResendCode={handleResendCode}
         handleChange={handleCustomChange}
         handleSubmit={handleSubmit}

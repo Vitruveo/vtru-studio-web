@@ -8,7 +8,7 @@ interface OTPConfirmFormValues {
 
 type OTPConfirmFormErros = FormikErrors<OTPConfirmFormValues>;
 
-export interface OTPConfirmViewProps extends FormikDefaultProps {
+export interface OTPConfirmViewProps extends FormikDefaultProps<OTPConfirmFormValues> {
   values: OTPConfirmFormValues;
   errors: OTPConfirmFormErros;
   handleResendCode: () => void;

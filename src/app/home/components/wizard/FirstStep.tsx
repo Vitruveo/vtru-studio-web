@@ -1,11 +1,12 @@
+import { useState } from 'react';
+import Img from 'next/image';
+import { useSelector } from 'react-redux';
 import { WalletButton, ConnectButton } from '@rainbow-me/rainbowkit';
 import Box from '@mui/material/Box';
 import { Button, Divider, FormControl, Grid, IconButton, Stack, Typography } from '@mui/material';
-
-import CustomTextField from '../forms/theme-elements/CustomTextField';
-import { useState } from 'react';
 import { AddCircle } from '@mui/icons-material';
 import { IconTrash } from '@tabler/icons-react';
+
 import { useDispatch } from '@/store/hooks';
 import {
   addCreatorEmailThunk,
@@ -14,21 +15,18 @@ import {
 } from '@/features/user/thunks';
 import { CreatorEmailExistApiRes, CreatorUsernameExistApiRes } from '@/features/user/types';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
-import { useSelector } from 'react-redux';
 import { userSelector } from '@/features/user';
 
-const FirstStep = () => {
-  const dispatch = useDispatch();
+import CustomTextField from '../forms/theme-elements/CustomTextField';
+import { StepsProps } from './types';
 
-  const { _id } = useSelector(userSelector(['_id']));
+const FirstStep = ({ values, errors, handleChange, handleSubmit, setFieldValue }: StepsProps) => {
   const emailsCreator = useSelector(userSelector(['emails']));
 
   const [toastr, setToastr] = useState<CustomizedSnackbarState>({ type: 'success', open: false, message: '' });
 
-  const [username, setUsername] = useState('');
   const [usernameExist, setUsernameExist] = useState<boolean | null>(null);
 
-  const [inputEmail, setInputEmail] = useState('');
   const [emailExist, setEmailExist] = useState<boolean | null>(null);
   const [emails, setEmails] = useState<{ verificated: boolean; email: string; sentCode: boolean }[]>(
     emailsCreator.emails.map((item) => ({
@@ -38,15 +36,18 @@ const FirstStep = () => {
     })),
   );
 
-  const [wallets, setWallets] = useState(1);
+  const dispatch = useDispatch();
+
+  const { _id } = useSelector(userSelector(['_id']));
 
   const handleAddEmails = async () => {
-    if (!inputEmail.trim()) {
+    if (errors.email) return;
+    if (!values.email.trim()) {
       setEmailExist(false);
       return;
     }
 
-    const checkedEmailExist = await dispatch(checkCreatorEmailExistThunk({ email: inputEmail.trim() }));
+    const checkedEmailExist = await dispatch(checkCreatorEmailExistThunk({ email: values.email.trim() }));
 
     if ((checkedEmailExist.payload as CreatorEmailExistApiRes).data!) {
       setEmailExist(true);
@@ -54,15 +55,14 @@ const FirstStep = () => {
       return;
     }
 
-    await dispatch(addCreatorEmailThunk({ email: inputEmail.trim(), id: _id }));
+    await dispatch(addCreatorEmailThunk({ email: values.email.trim(), id: _id }));
 
-    setEmails((prevState) => [...prevState, { verificated: false, email: inputEmail.trim(), sentCode: false }]);
+    setEmails((prevState) => [{ verificated: false, email: values.email.trim(), sentCode: false }]);
     setEmailExist(false);
-    setInputEmail('');
   };
 
   const handleEmailClearError = () => {
-    if (!inputEmail.trim()) {
+    if (!values.email.trim()) {
       setEmailExist(false);
       return;
     }
@@ -73,11 +73,11 @@ const FirstStep = () => {
   };
 
   const handleBlurUsernameExist = async () => {
-    if (!username.trim()) {
+    if (!values.username.trim()) {
       setUsernameExist(false);
       return;
     }
-    const checkedUsernameExist = await dispatch(checkCreatorUsernameExistThunk({ username }));
+    const checkedUsernameExist = await dispatch(checkCreatorUsernameExistThunk({ username: values.username }));
     setUsernameExist((checkedUsernameExist.payload as CreatorUsernameExistApiRes).data!);
   };
 
@@ -95,37 +95,34 @@ const FirstStep = () => {
           <CustomTextField
             placeholder="type a username..."
             size="small"
-            id="email"
+            id="username"
             error={usernameExist || false}
             variant="outlined"
             fullWidth
             onBlur={handleBlurUsernameExist}
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={values.username}
+            onChange={handleChange}
             helperText={usernameExist && 'username already exist'}
           />
         </Box>
 
         <Box>
           <Typography variant="subtitle1" fontWeight={600} component="label">
-            Emails
+            Email
           </Typography>
           <Box display="flex" alignItems="center" gap={1}>
             <CustomTextField
-              onChange={(e) => setInputEmail(e.target.value)}
-              value={inputEmail}
+              onChange={handleChange}
+              onBlur={handleAddEmails}
+              value={values.email}
               size="small"
               id="email"
-              error={emailExist || false}
-              helperText={emailExist && 'email already exist'}
+              error={emailExist || errors.email ? true : false}
+              helperText={errors.email || (emailExist && 'email already exist')}
               variant="outlined"
-              onBlur={handleEmailClearError}
               fullWidth
               placeholder="type a email..."
             />
-            <Button onClick={handleAddEmails}>
-              <AddCircle />
-            </Button>
           </Box>
         </Box>
 
@@ -170,66 +167,55 @@ const FirstStep = () => {
 
         <Box display="flex" flexDirection="column">
           <Typography variant="subtitle1" fontWeight={600} component="label">
-            Wallets
+            Wallet
           </Typography>
-          {Array.from({ length: wallets }).map((_, index) => (
-            <ConnectButton.Custom key={index}>
-              {({
-                openConnectModal,
-                openAccountModal,
-                openChainModal,
-                account,
 
-                chain,
-              }) => {
-                if (account && chain) {
-                  return (
-                    <Box display="flex" flexDirection="column" gap={2}>
-                      {[
-                        {
-                          walletId: account.address,
-                          displayName: account.displayName,
-                          iconUrl: chain.iconUrl,
-                          name: chain.name,
-                        },
-                      ].map((item) => (
-                        <Box display="flex" flexDirection="column" gap={2} key={item.walletId}>
-                          <Box display="flex" alignItems="center" justifyContent="space-between">
-                            <Box display="flex" alignItems="center" gap={1}>
-                              <img src={item.iconUrl} />
-                              <Typography>
-                                {item.name} - {item.displayName}
-                              </Typography>
-                            </Box>
-
-                            <Box display="flex" alignItems="center" gap={2}>
-                              <Button variant="outlined" size="small" onClick={openChainModal}>
-                                Other
-                              </Button>
-                              <Button variant="outlined" size="small" onClick={openAccountModal}>
-                                Account
-                              </Button>
-                            </Box>
-                          </Box>
-                          <Divider />
-                        </Box>
-                      ))}
-
-                      <Button variant="outlined" onClick={() => {}} disabled>
-                        Connect more Wallet
-                      </Button>
-                    </Box>
-                  );
-                }
-
+          <ConnectButton.Custom>
+            {({ openConnectModal, openAccountModal, openChainModal, account, chain }) => {
+              if (account && chain) {
+                if (!values.wallet) setFieldValue('wallet', account.address);
                 return (
-                  <Button variant="outlined" onClick={openConnectModal}>
-                    Connect Wallet
-                  </Button>
+                  <Box display="flex" flexDirection="column" gap={2}>
+                    {[
+                      {
+                        walletId: account.address,
+                        displayName: account.displayName,
+                        iconUrl: chain.iconUrl,
+                        name: chain.name,
+                      },
+                    ].map((item) => (
+                      <Box display="flex" flexDirection="column" gap={2} key={item.walletId}>
+                        <Box display="flex" alignItems="center" justifyContent="space-between">
+                          <Box display="flex" alignItems="center" gap={1}>
+                            <Img alt="wallet" width={30} height={30} src={item.iconUrl || ''} />
+                            <Typography>
+                              {item.name} - {item.displayName}
+                            </Typography>
+                          </Box>
+
+                          <Box display="flex" alignItems="center" gap={2}>
+                            <Button variant="outlined" size="small" onClick={openChainModal}>
+                              Other
+                            </Button>
+                            <Button variant="outlined" size="small" onClick={openAccountModal}>
+                              Account
+                            </Button>
+                          </Box>
+                        </Box>
+                        <Divider />
+                      </Box>
+                    ))}
+                  </Box>
                 );
-              }}
-            </ConnectButton.Custom>
-          ))}
+              }
+
+              return (
+                <Button variant="outlined" onClick={openConnectModal}>
+                  Connect Wallet
+                </Button>
+              );
+            }}
+          </ConnectButton.Custom>
         </Box>
       </Box>
 
