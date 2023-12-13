@@ -2,29 +2,44 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
+import StepButton from '@mui/material/StepButton';
 import Button from '@mui/material/Button';
 import Link from 'next/link';
+import { CompletedSteps } from './types';
+import { StepLabel, Typography } from '@mui/material';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 interface Props {
   children: JSX.Element | JSX.Element[];
   steps: any[];
   activeStep: number;
   handleReset: (event: React.SyntheticEvent | Event) => void;
+  handleStep: (value: number) => void;
   finalStep: JSX.Element | JSX.Element[];
+  completedSteps?: CompletedSteps;
 }
 
-const HorizontalStepper = ({ children, steps, activeStep, handleReset, finalStep }: Props) => {
+const HorizontalStepper = ({
+  children,
+  steps,
+  activeStep,
+  completedSteps,
+  handleReset,
+  handleStep,
+  finalStep,
+}: Props) => {
   return (
     <Box sx={{ width: '100%' }}>
-      <Stepper activeStep={activeStep} alternativeLabel>
-        {steps.map((label) => {
-          const stepProps = {};
-          const labelProps = {};
+      <Stepper nonLinear activeStep={activeStep} alternativeLabel>
+        {steps.map((label, index) => {
+          const step = index + 1;
+          const error = completedSteps?.[step]?.errors;
 
           return (
-            <Step key={label.key} {...stepProps}>
-              <StepLabel {...labelProps}>{label.title}</StepLabel>
+            <Step completed={error === false} key={label.key}>
+              <StepButton icon={error === true && <ErrorOutlineIcon color="error" />} onClick={() => handleStep(index)}>
+                <Typography color={error === true ? 'error' : ''}>{label.title}</Typography>
+              </StepButton>
             </Step>
           );
         })}

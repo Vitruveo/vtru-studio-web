@@ -4,7 +4,9 @@ import { useDropzone } from 'react-dropzone';
 import { IconTrash } from '@tabler/icons-react';
 
 import { Box, Button, Divider, FormControl, LinearProgress, Typography } from '@mui/material';
-import { StepsProps } from './types';
+import { StepsFormValues, StepsProps } from './types';
+
+const currentStep = 2;
 
 const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue }: StepsProps) => {
   const [isUpload, setIsUpload] = useState(false);
@@ -32,12 +34,24 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
     setFieldValue('file', null);
   };
 
+  useEffect(() => {
+    const fields: Array<keyof StepsFormValues> = ['file'];
+
+    if (!fields.some((field) => errors[field])) {
+      values.completedSteps[currentStep] = { step: currentStep, errors: false };
+      setFieldValue('completedSteps', { ...values.completedSteps });
+    } else {
+      values.completedSteps[currentStep] = { step: currentStep, errors: true };
+      setFieldValue('completedSteps', { ...values.completedSteps });
+    }
+  }, [values.wallet, errors]);
+
   return (
     <Box display="flex" justifyContent="center" my={3}>
       <Box width={600} display="flex" flexDirection="column" gap={4} p={2}>
         <FormControl fullWidth error={false}>
           <Typography variant="subtitle1" fontWeight={600} component="label">
-            Assets
+            Asset
           </Typography>
           <Box
             border="1px dashed"
@@ -46,16 +60,22 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
             alignItems="center"
             justifyContent="center"
             {...getRootProps()}>
-            <input {...getInputProps()} />
+            <input id="file" {...getInputProps()} />
             {isDragActive ? (
               <p>Drop the files here...</p>
             ) : (
-              <p>Drag and drop some files here or click to select files</p>
+              <p>
+                Drag and drop files here or click to select files. Please note that only JPG, GIF, PNG, or MP4 file
+                types are accepted.
+              </p>
             )}
           </Box>
+          <Typography my={1} color="error">
+            {errors.file}
+          </Typography>
         </FormControl>
 
-        {values.file && (
+        {values.file && !errors.file && (
           <Box display="flex" flexDirection="column" gap={2}>
             <>
               <Box key={values.file?.name} display="flex" alignItems="center" justifyContent="space-between">

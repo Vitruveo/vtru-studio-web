@@ -13,102 +13,104 @@ import { Wallet } from '@/app/home/components/apps/wallet';
 import { StepsFormValues } from '../../components/wizard/types';
 import { stepsSchemaValidation } from './formschema';
 
+const steps = [
+  {
+    key: 'Creator: account',
+    render: FirstStep,
+    title: (
+      <div>
+        Creator <br /> account
+      </div>
+    ),
+  },
+  {
+    key: 'Assets Upload',
+    render: SecondStep,
+    title: (
+      <div>
+        Asset <br /> upload{' '}
+      </div>
+    ),
+  },
+  {
+    key: 'Assets Metadata',
+    render: FirstStep,
+    title: (
+      <div>
+        Asset <br /> metadata{' '}
+      </div>
+    ),
+  },
+  {
+    key: 'Sign Media',
+    render: FirstStep,
+    title: (
+      <div>
+        Asset <br /> signature{' '}
+      </div>
+    ),
+  },
+  {
+    key: 'Licenses',
+    render: FirstStep,
+    title: (
+      <div>
+        Asset
+        <br /> licenses
+      </div>
+    ),
+  },
+  {
+    key: 'Creator Profile',
+    render: FirstStep,
+    title: (
+      <div>
+        Creator <br /> profile{' '}
+      </div>
+    ),
+  },
+  {
+    key: 'TruID Verification',
+    render: FirstStep,
+    title: (
+      <div>
+        Creator <br /> verification{' '}
+      </div>
+    ),
+  },
+  {
+    key: 'Creator Agreement',
+    render: FirstStep,
+    title: (
+      <div>
+        Creator <br /> agreement{' '}
+      </div>
+    ),
+  },
+  {
+    key: 'Publish',
+    render: FirstStep,
+    title: (
+      <div>
+        Asset
+        <br /> publish
+      </div>
+    ),
+  },
+  {
+    key: 'Asset Listing',
+    render: FirstStep,
+    title: (
+      <div>
+        Asset <br /> listing{' '}
+      </div>
+    ),
+  },
+];
+
 export default function Wizard() {
-  const steps = [
-    {
-      key: 'Creator: account',
-      render: FirstStep,
-      title: (
-        <div>
-          Creator <br /> account
-        </div>
-      ),
-    },
-    {
-      key: 'Assets Upload',
-      render: SecondStep,
-      title: (
-        <div>
-          Asset <br /> upload{' '}
-        </div>
-      ),
-    },
-    {
-      key: 'Assets Metadata',
-      render: FirstStep,
-      title: (
-        <div>
-          Asset <br /> metadata{' '}
-        </div>
-      ),
-    },
-    {
-      key: 'Sign Media',
-      render: FirstStep,
-      title: (
-        <div>
-          Asset <br /> signature{' '}
-        </div>
-      ),
-    },
-    {
-      key: 'Licenses',
-      render: FirstStep,
-      title: (
-        <div>
-          Asset
-          <br /> licenses
-        </div>
-      ),
-    },
-    {
-      key: 'Creator Profile',
-      render: FirstStep,
-      title: (
-        <div>
-          Creator <br /> profile{' '}
-        </div>
-      ),
-    },
-    {
-      key: 'TruID Verification',
-      render: FirstStep,
-      title: (
-        <div>
-          Creator <br /> verification{' '}
-        </div>
-      ),
-    },
-    {
-      key: 'Creator Agreement',
-      render: FirstStep,
-      title: (
-        <div>
-          Creator <br /> agreement{' '}
-        </div>
-      ),
-    },
-    {
-      key: 'Publish',
-      render: FirstStep,
-      title: (
-        <div>
-          Asset
-          <br /> publish
-        </div>
-      ),
-    },
-    {
-      key: 'Asset Listing',
-      render: FirstStep,
-      title: (
-        <div>
-          Asset <br /> listing{' '}
-        </div>
-      ),
-    },
-  ];
   const [activeStep, setActiveStep] = useState(0);
+
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -117,27 +119,37 @@ export default function Wizard() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
+  const handleStep = (value: number) => {
+    setActiveStep(value);
+  };
+
   const handleReset = () => {
     setActiveStep(0);
   };
 
-  const { handleSubmit, handleChange, resetForm, setFieldValue, values, errors } = useFormik<StepsFormValues>({
-    initialValues: {
-      username: '',
-      email: '',
-      wallet: '',
-      file: undefined,
-    },
-    validationSchema: stepsSchemaValidation,
-    onSubmit: async (formValues) => {
-      toastr.success('Record created success');
-    },
-  });
+  const { handleSubmit, handleChange, resetForm, setFieldValue, setFieldError, values, errors } =
+    useFormik<StepsFormValues>({
+      initialValues: {
+        username: '',
+        email: '',
+        wallet: '',
+        file: undefined,
+        completedSteps: {},
+      },
+      validationSchema: stepsSchemaValidation,
+      onSubmit: async (formValues) => {},
+    });
 
   return (
     <PageContainer title="Wizard" description="this is Wizard">
       <Breadcrumb title="Wizard Application" />
-      <HorizontalStepper steps={steps} handleReset={handleReset} activeStep={activeStep} finalStep={<FinalStep />}>
+      <HorizontalStepper
+        steps={steps}
+        handleReset={handleReset}
+        handleStep={handleStep}
+        activeStep={activeStep}
+        finalStep={<FinalStep />}
+        completedSteps={values.completedSteps}>
         <Wallet>
           {steps.map(
             (item, index) =>
@@ -146,6 +158,7 @@ export default function Wizard() {
                   <item.render
                     values={values}
                     errors={errors}
+                    setFieldError={setFieldError}
                     setFieldValue={setFieldValue}
                     handleChange={handleChange}
                     handleSubmit={handleSubmit}

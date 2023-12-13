@@ -1,6 +1,7 @@
 import { FormikErrors } from 'formik';
 
 export interface FormikDefaultProps<T> {
+  setFieldError: (field: string, value: string | undefined) => void;
   setFieldValue: (
     field: string,
     value: any,
