@@ -52,6 +52,11 @@ export interface AddCreatorEmailReq {
   email: string;
 }
 
+export interface CreatorSendRequestUploadReq {
+  mimetype: string;
+  originalName: string;
+}
+
 export interface UserOTPConfirmReq {
   email: string;
   code: string;
@@ -68,3 +73,4 @@ export type UserOTPConfirmApiRes = APIResponse<UserOTPConfirmRes>;
 export type CreatorUsernameExistApiRes = APIResponse<boolean>;
 export type CreatorEmailExistApiRes = APIResponse<boolean>;
 export type AddCreatorEmailApiRes = APIResponse<boolean>;
+export type CreatorSendRequestUploadApiRes = APIResponse<string>;

@@ -3,8 +3,12 @@ import { useDropzone } from 'react-dropzone';
 import { IconTrash } from '@tabler/icons-react';
 
 import { Box, Button, Divider, FormControl, LinearProgress, Typography } from '@mui/material';
+import { sendRequestUploadThunk } from '@/features/user/thunks';
+import { useDispatch } from '@/store/hooks';
 
 const SecondStep = () => {
+  const dispatch = useDispatch();
+
   const [assets, setAssets] = useState<File[]>([]);
   const onDrop = (acceptedFiles: File[]) => {
     setAssets((prevState) => [acceptedFiles[0], ...prevState]);
@@ -25,6 +29,10 @@ const SecondStep = () => {
 
   const formatBytesToMB = (bytes: number) => {
     return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+  };
+
+  const handleRequestUpload = ({ mimetype, originalName }: { mimetype: string; originalName: string }) => {
+    dispatch(sendRequestUploadThunk({ mimetype, originalName }));
   };
 
   return (
@@ -63,7 +71,11 @@ const SecondStep = () => {
                 <Box display="flex" alignItems="center" gap={2}>
                   <Typography>{formatBytesToMB(item.size)}</Typography>
                   {progress < 100 && (
-                    <Button disabled={progress > 0} variant="outlined" size="small" onClick={() => setIsUpload(true)}>
+                    <Button
+                      disabled={progress > 0}
+                      variant="outlined"
+                      size="small"
+                      onClick={() => handleRequestUpload({ mimetype: item.type, originalName: item.name })}>
                       send now
                     </Button>
                   )}

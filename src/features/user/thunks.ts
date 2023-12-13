@@ -7,6 +7,7 @@ import {
   checkCreatorUsernameExist,
   checkCreatorEmailExist,
   addCreatorEmailExist,
+  sendRequestUploadExist,
 } from './requests';
 import {
   UserAddApiRes,
@@ -21,6 +22,8 @@ import {
   CreatorEmailExistReq,
   AddCreatorEmailApiRes,
   AddCreatorEmailReq,
+  CreatorSendRequestUploadApiRes,
+  CreatorSendRequestUploadReq,
 } from './types';
 
 export const userLoginThunk = createAppAsyncThunk<UserLoginApiRes, UserLoginReq>(
@@ -88,6 +91,18 @@ export const addCreatorEmailThunk = createAppAsyncThunk<AddCreatorEmailApiRes, A
   async ({ email, id }, { rejectWithValue }) => {
     try {
       const response = await addCreatorEmailExist({ id, email });
+      return response;
+    } catch (error) {
+      return rejectWithValue(error as string);
+    }
+  },
+);
+
+export const sendRequestUploadThunk = createAppAsyncThunk<CreatorSendRequestUploadApiRes, CreatorSendRequestUploadReq>(
+  'creator/add/emaill',
+  async ({ mimetype, originalName }, { rejectWithValue }) => {
+    try {
+      const response = await sendRequestUploadExist({ mimetype, originalName });
       return response;
     } catch (error) {
       return rejectWithValue(error as string);

@@ -29,5 +29,9 @@ export const loginWebSocketThunk = createAppAsyncThunk<void, { _id: string }>(
       email: creator.login.email,
       token: 'creator',
     });
+
+    socket.on('presignedURL', (data) => {
+      console.log(`presignedURL: ${JSON.stringify(data)}`);
+    });
   },
 );

@@ -4,6 +4,8 @@ import {
   AddCreatorEmailReq,
   CreatorEmailExistApiRes,
   CreatorEmailExistReq,
+  CreatorSendRequestUploadApiRes,
+  CreatorSendRequestUploadReq,
   CreatorUsernameExistApiRes,
   CreatorUsernameExistReq,
   UserAddApiRes,
@@ -43,5 +45,12 @@ export async function checkCreatorEmailExist(data: CreatorEmailExistReq): Promis
 
 export async function addCreatorEmailExist(data: AddCreatorEmailReq): Promise<AddCreatorEmailApiRes> {
   const res = apiService.post<boolean>(`/creators/${data.id}/email/add`, { email: data.email });
+  return res;
+}
+
+export async function sendRequestUploadExist(
+  data: CreatorSendRequestUploadReq,
+): Promise<CreatorSendRequestUploadApiRes> {
+  const res = apiService.post<string>('/creators/request/upload', data);
   return res;
 }
