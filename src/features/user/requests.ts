@@ -34,17 +34,17 @@ export async function userOTPConfimReq(data: UserOTPConfirmReq): Promise<UserOTP
 }
 
 export async function checkCreatorUsernameExist(data: CreatorUsernameExistReq): Promise<CreatorUsernameExistApiRes> {
-  const res = apiService.get<boolean>(`/creators/${data.username}/username/exist`);
+  const res = apiService.get<boolean>(`/creators/${data.username}/username`);
   return res;
 }
 
 export async function checkCreatorEmailExist(data: CreatorEmailExistReq): Promise<CreatorEmailExistApiRes> {
-  const res = apiService.get<boolean>(`/creators/${data.email}/email/exist`);
+  const res = apiService.get<boolean>(`/creators/${data.email}/email`);
   return res;
 }
 
 export async function addCreatorEmailExist(data: AddCreatorEmailReq): Promise<AddCreatorEmailApiRes> {
-  const res = apiService.post<boolean>(`/creators/${data.id}/email/add`, { email: data.email });
+  const res = apiService.post<boolean>(`/creators/${data.id}/email`, { email: data.email });
   return res;
 }
 

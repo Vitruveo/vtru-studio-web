@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Img from 'next/image';
 import { useSelector } from 'react-redux';
 import { useAccount } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 import Box from '@mui/material/Box';
-import { Button, Divider, IconButton, Stack, Typography } from '@mui/material';
+import { Avatar, Button, CardContent, Divider, IconButton, Stack, Typography } from '@mui/material';
 import { IconTrash } from '@tabler/icons-react';
 
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
@@ -13,10 +13,20 @@ import { userSelector } from '@/features/user';
 
 import CustomTextField from '../forms/theme-elements/CustomTextField';
 import { StepsFormValues, StepsProps } from './types';
+import BlankCard from '../shared/BlankCard';
+import { debouncedEmailValidation, debouncedUsernameValidation } from '../../contents/wizard/formschema';
 
 const currentStep = 1;
 
-const FirstStep = ({ values, errors, handleChange, handleSubmit, setFieldValue, setFieldError }: StepsProps) => {
+const FirstStep = ({
+  values,
+  errors,
+  handleChange,
+  handleSubmit,
+  setFieldValue,
+  setFieldError,
+  setErrors,
+}: StepsProps) => {
   const { address } = useAccount();
   const emailsCreator = useSelector(userSelector(['emails']));
 
@@ -39,19 +49,22 @@ const FirstStep = ({ values, errors, handleChange, handleSubmit, setFieldValue, 
   };
 
   useEffect(() => {
-    const fields: Array<keyof StepsFormValues> = ['email', 'username', 'wallet'];
-    if (!fields.some((field) => errors[field])) {
-      values.completedSteps[currentStep] = { step: currentStep, errors: false };
-      setFieldValue('completedSteps', { ...values.completedSteps });
-    } else {
-      values.completedSteps[currentStep] = { step: currentStep, errors: true };
-      setFieldValue('completedSteps', { ...values.completedSteps });
-    }
-  }, [values.email, values.username, values.wallet, errors]);
+    console.log('errors', errors);
+  }, [errors]);
 
   useEffect(() => {
     setFieldValue('wallet', address);
   }, [address]);
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (handleChange) handleChange(e);
+    debouncedEmailValidation(e.target.value, () => setErrors({ ...errors, email: 'Email already exists' }));
+  };
+
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (handleChange) handleChange(e);
+    debouncedUsernameValidation(e.target.value, () => setErrors({ ...errors, username: 'Username already exists' }));
+  };
 
   return (
     <Stack sx={{ width: '100%' }}>
@@ -64,14 +77,59 @@ const FirstStep = ({ values, errors, handleChange, handleSubmit, setFieldValue, 
             placeholder="type a username..."
             size="small"
             id="username"
-            error={!!errors.username}
             variant="outlined"
             fullWidth
             value={values.username}
-            onChange={handleChange}
+            onChange={handleUsernameChange}
+            error={!!errors.username}
             helperText={errors.username}
           />
         </Box>
+
+        <BlankCard>
+          <CardContent>
+            <Typography variant="h5" mb={1}>
+              Setup profile avatar
+            </Typography>
+            <Typography color="textSecondary" mb={3}>
+              Your profile picture
+            </Typography>
+            <Box textAlign="center" display="flex" justifyContent="center">
+              <Box>
+                <Avatar
+                  src={values.profile ? URL.createObjectURL(values.profile) : '/images/profile/user-1.jpg'}
+                  alt={'user1'}
+                  sx={{
+                    width: 120,
+                    height: 120,
+                    margin: '0 auto',
+                  }}
+                />
+                <Stack direction="row" justifyContent="center" spacing={2} my={3}>
+                  <Button variant="contained" color="primary" component="label">
+                    Upload
+                    <input
+                      hidden
+                      accept="image/*"
+                      multiple
+                      type="file"
+                      onChange={(e) => e.target.files && setFieldValue('profile', e.target.files[0])}
+                    />
+                  </Button>
+                  <Button variant="outlined" color="error" onClick={() => setFieldValue('profile', undefined)}>
+                    Reset
+                  </Button>
+                </Stack>
+                <Typography variant="subtitle1" color="textSecondary" mb={4}>
+                  Allowed JPG, GIF or PNG. Max size of 2MB
+                </Typography>
+              </Box>
+            </Box>
+          </CardContent>
+        </BlankCard>
+        <Typography my={1} color="error">
+          {errors.profile}
+        </Typography>
 
         <Box>
           <Typography variant="subtitle1" fontWeight={600} component="label">
@@ -79,15 +137,15 @@ const FirstStep = ({ values, errors, handleChange, handleSubmit, setFieldValue, 
           </Typography>
           <Box display="flex" alignItems="center" gap={1}>
             <CustomTextField
-              onChange={handleChange}
+              onChange={handleEmailChange}
               value={values.email}
               size="small"
               id="email"
-              error={!!errors.email}
-              helperText={errors.email}
               variant="outlined"
               fullWidth
               placeholder="type a email..."
+              error={!!errors.email}
+              helperText={errors.email}
             />
           </Box>
         </Box>

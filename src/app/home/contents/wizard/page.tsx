@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useFormik } from 'formik';
 import { Box, Button, Stack } from '@mui/material';
 
@@ -41,71 +41,6 @@ const steps = [
       </div>
     ),
   },
-  {
-    key: 'Sign Media',
-    render: FirstStep,
-    title: (
-      <div>
-        Asset <br /> signature{' '}
-      </div>
-    ),
-  },
-  {
-    key: 'Licenses',
-    render: FirstStep,
-    title: (
-      <div>
-        Asset
-        <br /> licenses
-      </div>
-    ),
-  },
-  {
-    key: 'Creator Profile',
-    render: FirstStep,
-    title: (
-      <div>
-        Creator <br /> profile{' '}
-      </div>
-    ),
-  },
-  {
-    key: 'TruID Verification',
-    render: FirstStep,
-    title: (
-      <div>
-        Creator <br /> verification{' '}
-      </div>
-    ),
-  },
-  {
-    key: 'Creator Agreement',
-    render: FirstStep,
-    title: (
-      <div>
-        Creator <br /> agreement{' '}
-      </div>
-    ),
-  },
-  {
-    key: 'Publish',
-    render: FirstStep,
-    title: (
-      <div>
-        Asset
-        <br /> publish
-      </div>
-    ),
-  },
-  {
-    key: 'Asset Listing',
-    render: FirstStep,
-    title: (
-      <div>
-        Asset <br /> listing{' '}
-      </div>
-    ),
-  },
 ];
 
 export default function Wizard() {
@@ -127,10 +62,11 @@ export default function Wizard() {
     setActiveStep(0);
   };
 
-  const { handleSubmit, handleChange, resetForm, setFieldValue, setFieldError, values, errors } =
+  const { handleSubmit, handleChange, resetForm, setFieldValue, setFieldError, setErrors, values, errors } =
     useFormik<StepsFormValues>({
       initialValues: {
         username: '',
+        profile: undefined,
         email: '',
         wallet: '',
         file: undefined,
@@ -159,6 +95,7 @@ export default function Wizard() {
                     values={values}
                     errors={errors}
                     setFieldError={setFieldError}
+                    setErrors={setErrors}
                     setFieldValue={setFieldValue}
                     handleChange={handleChange}
                     handleSubmit={handleSubmit}

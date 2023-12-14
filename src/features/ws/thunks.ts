@@ -30,8 +30,8 @@ export const loginWebSocketThunk = createAppAsyncThunk<void, { _id: string }>(
       token: 'creator',
     });
 
-    socket.on('presignedURL', (data) => {
-      console.log(`presignedURL: ${JSON.stringify(data)}`);
+    socket.on('preSignedURL', (data) => {
+      console.log(`preSignedURL: ${JSON.stringify(data)}`);
     });
   },
 );

@@ -1,14 +1,14 @@
-import React from "react";
+import React from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Radio from '@mui/material/Radio';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import Paypal from "public/images/svgs/paypal.svg";
-import payment from "public/images/products/payment.svg";
-import mastercard from "public/images/svgs/mastercard.svg";
-import Image from "next/image";
+import Paypal from 'public/images/svgs/paypal.svg';
+import payment from 'public/images/products/payment.svg';
+import mastercard from 'public/images/svgs/mastercard.svg';
+import Image from 'next/image';
 
 interface deliveryType {
   id: number;
@@ -26,45 +26,94 @@ interface paymentType {
 const Delivery: deliveryType[] = [
   {
     id: 1,
-    title: "Free delivery",
-    description: "Delivered on Firday, May 10",
+    title: 'Free delivery',
+    description: 'Delivered on Firday, May 10',
   },
   {
     id: 2,
-    title: "Fast delivery ($2,00)",
-    description: "Delivered on Wednesday, May 8",
+    title: 'Fast delivery ($2,00)',
+    description: 'Delivered on Wednesday, May 8',
   },
 ];
 
 const Payment: paymentType[] = [
   {
-    value: "paypal",
-    title: "Pay with Paypal",
-    description:
-      "You will be redirected to PayPal website to complete your purchase securely.",
+    value: 'paypal',
+    title: 'Pay with Paypal',
+    description: 'You will be redirected to PayPal website to complete your purchase securely.',
     icons: Paypal,
   },
   {
-    value: "credit_card",
-    title: "Credit / Debit Card",
-    description: "We support Mastercard, Visa, Discover and Stripe.",
+    value: 'credit_card',
+    title: 'Credit / Debit Card',
+    description: 'We support Mastercard, Visa, Discover and Stripe.',
     icons: mastercard,
   },
   {
-    value: "cash",
-    title: "Cash on Delivery",
-    description: "Pay with cash when your order is delivered.",
-    icons: "",
+    value: 'cash',
+    title: 'Cash on Delivery',
+    description: 'Pay with cash when your order is delivered.',
+    icons: '',
+  },
+];
+
+const domains = [
+  { value: 'music', label: 'Music' },
+  { value: 'artwork', label: 'Artwork' },
+];
+
+const metaDataDefinitions = [
+  {
+    domain: 'music',
+    order: 0,
+    name: 'subject',
+    title: 'Subject',
+    type: 'string',
+    required: true,
+    validation: `
+    function validate(value, language) {
+      if (value.length < 3) return { message: 'Subject must be at least 3 characters long', isValid: false };
+      return { message: '', isValid: true };
+    }
+  `,
+  },
+  {
+    domain: 'artwork',
+    order: 1,
+    name: 'creationDate',
+    title: 'Creation Date',
+    type: 'date',
+    required: false,
+    validation: `
+    function validate(value, language) {
+      return { message: '', isValid: true };
+    }
+  `,
+  },
+  {
+    order: 2,
+    title: 'Category',
+    type: 'select',
+    options: [
+      { value: '1', label: 'Category 1' },
+      { value: '2', label: 'Category 2' },
+    ],
+    required: false,
+    validation: `
+    function validate(value, language) {
+      return { message: '', isValid: true };
+    }
+  `,
   },
 ];
 
 const ThirdStep = () => {
-  const [selectedValue, setSelectedValue] = React.useState("Free delivery");
+  const [selectedValue, setSelectedValue] = React.useState('Free delivery');
 
   const handleDChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedValue(event.target.value);
   };
-  const [selectedPyament, setSelectedPyament] = React.useState("paypal");
+  const [selectedPyament, setSelectedPyament] = React.useState('paypal');
 
   const handlePChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedPyament(event.target.value);
@@ -84,25 +133,20 @@ const ThirdStep = () => {
                 variant="outlined"
                 sx={{
                   p: 2,
-                  borderColor:
-                    selectedValue === option.title ? "primary.main" : "",
-                  backgroundColor:
-                    selectedValue === option.title ? "primary.light" : "",
-                }}
-              >
-                <Stack direction={"row"} alignItems="center" gap={1}>
+                  borderColor: selectedValue === option.title ? 'primary.main' : '',
+                  backgroundColor: selectedValue === option.title ? 'primary.light' : '',
+                }}>
+                <Stack direction={'row'} alignItems="center" gap={1}>
                   <Radio
                     checked={selectedValue === option.title}
                     onChange={handleDChange}
                     value={option.title}
                     name="radio-buttons"
-                    inputProps={{ "aria-label": option.title }}
+                    inputProps={{ 'aria-label': option.title }}
                   />
                   <Box>
                     <Typography variant="h6">{option.title}</Typography>
-                    <Typography variant="subtitle2">
-                      {option.description}
-                    </Typography>
+                    <Typography variant="subtitle2">{option.description}</Typography>
                   </Box>
                 </Stack>
               </Paper>
@@ -124,33 +168,22 @@ const ThirdStep = () => {
                     variant="outlined"
                     sx={{
                       p: 2,
-                      borderColor:
-                        selectedPyament === option.value ? "primary.main" : "",
-                      backgroundColor:
-                        selectedPyament === option.value ? "primary.light" : "",
-                    }}
-                  >
-                    <Stack direction={"row"} alignItems="center" gap={1}>
+                      borderColor: selectedPyament === option.value ? 'primary.main' : '',
+                      backgroundColor: selectedPyament === option.value ? 'primary.light' : '',
+                    }}>
+                    <Stack direction={'row'} alignItems="center" gap={1}>
                       <Radio
                         checked={selectedPyament === option.value}
                         onChange={handlePChange}
                         value={option.value}
                         name="radio-buttons"
-                        inputProps={{ "aria-label": option.title }}
+                        inputProps={{ 'aria-label': option.title }}
                       />
                       <Box>
                         <Typography variant="h6">{option.title}</Typography>
-                        <Typography variant="subtitle2">
-                          {option.description}
-                        </Typography>
+                        <Typography variant="subtitle2">{option.description}</Typography>
                       </Box>
-                      <Box ml="auto">
-                        {option.icons ? (
-                          <Image src={option.icons} alt="payment" />
-                        ) : (
-                          ""
-                        )}
-                      </Box>
+                      <Box ml="auto">{option.icons ? <Image src={option.icons} alt="payment" /> : ''}</Box>
                     </Stack>
                   </Paper>
                 </Grid>
@@ -158,11 +191,7 @@ const ThirdStep = () => {
             </Grid>
           </Grid>
           <Grid lg={4} xs={12} item>
-            <Image
-              src={payment}
-              alt="payment"
-              style={{ height: "265px", width: "265px" }}
-            />
+            <Image src={payment} alt="payment" style={{ height: '265px', width: '265px' }} />
           </Grid>
         </Grid>
       </Paper>

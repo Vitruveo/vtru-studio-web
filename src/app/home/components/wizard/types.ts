@@ -9,6 +9,7 @@ export interface CompletedSteps {
 }
 export interface StepsFormValues {
   username: string;
+  profile?: File;
   email: string;
   wallet?: string;
   file?: File;
@@ -20,4 +21,5 @@ type StepsFormErros = FormikErrors<StepsFormValues>;
 export interface StepsProps extends FormikDefaultProps<StepsFormValues> {
   values: StepsFormValues;
   errors: StepsFormErros;
+  setErrors: (errors: StepsFormErros) => void;
 }
