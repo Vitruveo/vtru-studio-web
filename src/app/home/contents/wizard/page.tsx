@@ -9,9 +9,11 @@ import HorizontalStepper from '@/app/home/components/wizard/HorizontalStepper';
 import FinalStep from '@/app/home/components/wizard/FinalStep';
 import FirstStep from '@/app/home/components/wizard/FirstStep';
 import SecondStep from '@/app/home/components/wizard/SecondStep';
+import ThirdStep from '@/app/home/components/wizard/ThirdStep';
 import { Wallet } from '@/app/home/components/apps/wallet';
 import { StepsFormValues } from '../../components/wizard/types';
 import { stepsSchemaValidation } from './formschema';
+import { metaDataDefinitions } from './mock';
 
 const steps = [
   {
@@ -34,7 +36,7 @@ const steps = [
   },
   {
     key: 'Assets Metadata',
-    render: FirstStep,
+    render: ThirdStep,
     title: (
       <div>
         Asset <br /> metadata{' '}
@@ -70,6 +72,7 @@ export default function Wizard() {
         email: '',
         wallet: '',
         file: undefined,
+        assetMetadata: metaDataDefinitions,
         completedSteps: {},
       },
       validationSchema: stepsSchemaValidation,

@@ -9,105 +9,17 @@ import Paypal from 'public/images/svgs/paypal.svg';
 import payment from 'public/images/products/payment.svg';
 import mastercard from 'public/images/svgs/mastercard.svg';
 import Image from 'next/image';
-
-interface deliveryType {
-  id: number;
-  title: string;
-  description: string;
-}
-
-interface paymentType {
-  value: string;
-  title: string;
-  description: string;
-  icons: string;
-}
-
-const Delivery: deliveryType[] = [
-  {
-    id: 1,
-    title: 'Free delivery',
-    description: 'Delivered on Firday, May 10',
-  },
-  {
-    id: 2,
-    title: 'Fast delivery ($2,00)',
-    description: 'Delivered on Wednesday, May 8',
-  },
-];
-
-const Payment: paymentType[] = [
-  {
-    value: 'paypal',
-    title: 'Pay with Paypal',
-    description: 'You will be redirected to PayPal website to complete your purchase securely.',
-    icons: Paypal,
-  },
-  {
-    value: 'credit_card',
-    title: 'Credit / Debit Card',
-    description: 'We support Mastercard, Visa, Discover and Stripe.',
-    icons: mastercard,
-  },
-  {
-    value: 'cash',
-    title: 'Cash on Delivery',
-    description: 'Pay with cash when your order is delivered.',
-    icons: '',
-  },
-];
+import { StepsProps } from './types';
+import CustomSelect from '../forms/theme-elements/CustomSelect';
+import { MenuItem } from '@mui/material';
+import CustomTextField from '../forms/theme-elements/CustomTextField';
 
 const domains = [
   { value: 'music', label: 'Music' },
   { value: 'artwork', label: 'Artwork' },
 ];
 
-const metaDataDefinitions = [
-  {
-    domain: 'music',
-    order: 0,
-    name: 'subject',
-    title: 'Subject',
-    type: 'string',
-    required: true,
-    validation: `
-    function validate(value, language) {
-      if (value.length < 3) return { message: 'Subject must be at least 3 characters long', isValid: false };
-      return { message: '', isValid: true };
-    }
-  `,
-  },
-  {
-    domain: 'artwork',
-    order: 1,
-    name: 'creationDate',
-    title: 'Creation Date',
-    type: 'date',
-    required: false,
-    validation: `
-    function validate(value, language) {
-      return { message: '', isValid: true };
-    }
-  `,
-  },
-  {
-    order: 2,
-    title: 'Category',
-    type: 'select',
-    options: [
-      { value: '1', label: 'Category 1' },
-      { value: '2', label: 'Category 2' },
-    ],
-    required: false,
-    validation: `
-    function validate(value, language) {
-      return { message: '', isValid: true };
-    }
-  `,
-  },
-];
-
-const ThirdStep = () => {
+const ThirdStep = ({ values, handleChange }: StepsProps) => {
   const [selectedValue, setSelectedValue] = React.useState('Free delivery');
 
   const handleDChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -121,80 +33,42 @@ const ThirdStep = () => {
 
   return (
     <>
-      {/* ------------------------------------------- */}
-      {/* Delivery Option */}
-      {/* ------------------------------------------- */}
-      <Paper variant="outlined" sx={{ p: 3, mt: 4 }}>
-        <Typography variant="h6">Delivery Option</Typography>
-        <Grid container spacing={3} mt={1}>
-          {Delivery.map((option) => (
-            <Grid item lg={6} xs={12} key={option.id}>
-              <Paper
-                variant="outlined"
-                sx={{
-                  p: 2,
-                  borderColor: selectedValue === option.title ? 'primary.main' : '',
-                  backgroundColor: selectedValue === option.title ? 'primary.light' : '',
-                }}>
-                <Stack direction={'row'} alignItems="center" gap={1}>
-                  <Radio
-                    checked={selectedValue === option.title}
-                    onChange={handleDChange}
-                    value={option.title}
-                    name="radio-buttons"
-                    inputProps={{ 'aria-label': option.title }}
-                  />
-                  <Box>
-                    <Typography variant="h6">{option.title}</Typography>
-                    <Typography variant="subtitle2">{option.description}</Typography>
-                  </Box>
-                </Stack>
-              </Paper>
-            </Grid>
-          ))}
-        </Grid>
-      </Paper>
-      {/* ------------------------------------------- */}
-      {/* Payment Option */}
-      {/* ------------------------------------------- */}
-      <Paper variant="outlined" sx={{ p: 3, mt: 4 }}>
-        <Typography variant="h6">Payment Option</Typography>
-        <Grid container spacing={3} alignItems="center">
-          <Grid lg={8} xs={12} item>
-            <Grid container spacing={3} mt={2}>
-              {Payment.map((option) => (
-                <Grid item lg={12} xs={12} key={option.value}>
-                  <Paper
-                    variant="outlined"
-                    sx={{
-                      p: 2,
-                      borderColor: selectedPyament === option.value ? 'primary.main' : '',
-                      backgroundColor: selectedPyament === option.value ? 'primary.light' : '',
-                    }}>
-                    <Stack direction={'row'} alignItems="center" gap={1}>
-                      <Radio
-                        checked={selectedPyament === option.value}
-                        onChange={handlePChange}
-                        value={option.value}
-                        name="radio-buttons"
-                        inputProps={{ 'aria-label': option.title }}
-                      />
-                      <Box>
-                        <Typography variant="h6">{option.title}</Typography>
-                        <Typography variant="subtitle2">{option.description}</Typography>
-                      </Box>
-                      <Box ml="auto">{option.icons ? <Image src={option.icons} alt="payment" /> : ''}</Box>
-                    </Stack>
-                  </Paper>
-                </Grid>
-              ))}
-            </Grid>
+      <Grid
+        my={3}
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="center"
+        width={500}
+        container
+        spacing={3}
+        mt={1}>
+        {values.assetMetadata?.map((v, i) => (
+          <Grid justifyContent="center" width={500} p={1} lg={6} xs={12} key={v.name}>
+            {v.type === 'select' && (
+              <>
+                <Typography variant="subtitle1" fontWeight={600} component="label">
+                  {v.title}
+                </Typography>
+                <CustomSelect name={`assetMetadata.${i}.${v.name}`} fullWidth variant="outlined">
+                  {v.options?.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </CustomSelect>
+              </>
+            )}
+            {v.type === 'string' && (
+              <>
+                <Typography variant="subtitle1" fontWeight={600} component="label">
+                  {v.title}
+                </Typography>
+                <CustomTextField fullWidth size="small" name={`assetMetadata.${i}.${v.name}`} variant="outlined" />
+              </>
+            )}
           </Grid>
-          <Grid lg={4} xs={12} item>
-            <Image src={payment} alt="payment" style={{ height: '265px', width: '265px' }} />
-          </Grid>
-        </Grid>
-      </Paper>
+        ))}
+      </Grid>
     </>
   );
 };
