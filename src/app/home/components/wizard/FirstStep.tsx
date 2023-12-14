@@ -6,7 +6,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 import Box from '@mui/material/Box';
 import { Avatar, Button, CardContent, Divider, IconButton, Stack, Typography } from '@mui/material';
-import { IconTrash } from '@tabler/icons-react';
+import { IconTrash, IconPlus } from '@tabler/icons-react';
 
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 import { userSelector } from '@/features/user';
@@ -28,6 +28,7 @@ const FirstStep = ({
   setErrors,
 }: StepsProps) => {
   const { address } = useAccount();
+
   const emailsCreator = useSelector(userSelector(['emails']));
 
   const [toastr, setToastr] = useState<CustomizedSnackbarState>({ type: 'success', open: false, message: '' });
@@ -132,21 +133,33 @@ const FirstStep = ({
         </Typography>
 
         <Box>
-          <Typography variant="subtitle1" fontWeight={600} component="label">
-            Email
-          </Typography>
-          <Box display="flex" alignItems="center" gap={1}>
-            <CustomTextField
-              onChange={handleEmailChange}
-              value={values.email}
-              size="small"
-              id="email"
-              variant="outlined"
-              fullWidth
-              placeholder="type a email..."
-              error={!!errors.email}
-              helperText={errors.email}
-            />
+          <Stack direction="row" justifyContent="space-between">
+            <Typography variant="subtitle1" fontWeight={600} component="label">
+              Email
+            </Typography>
+            <IconButton
+              color="primary"
+              onClick={() => setFieldValue('emails', [{ email: '', checkedAt: false }, ...values.emails])}>
+              <IconPlus />
+              <Typography color="primary">Add email</Typography>
+            </IconButton>
+          </Stack>
+          <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
+            {values.emails.map((item, index) => (
+              <CustomTextField
+                key={item.email}
+                value={values.emails[index].email || ''}
+                onChange={(e) => setFieldValue(`emails[${index}].email`, e.target.value)}
+                size="small"
+                id="email"
+                name={`emails[${index}].email`}
+                fullWidth
+                variant="outlined"
+                placeholder="type a email..."
+                error={!!errors.emails?.[index]}
+                helperText={errors.emails?.[index]}
+              />
+            ))}
           </Box>
         </Box>
 

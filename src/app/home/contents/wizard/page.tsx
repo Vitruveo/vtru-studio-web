@@ -43,6 +43,24 @@ const steps = [
       </div>
     ),
   },
+
+  {
+    key: 'License',
+    render: ThirdStep,
+    title: 'License',
+  },
+
+  {
+    key: 'Contract',
+    render: ThirdStep,
+    title: 'Contract',
+  },
+
+  {
+    key: 'Publish',
+    render: ThirdStep,
+    title: 'Publish',
+  },
 ];
 
 export default function Wizard() {
@@ -69,8 +87,8 @@ export default function Wizard() {
       initialValues: {
         username: '',
         profile: undefined,
-        email: '',
-        wallet: '',
+        emails: [],
+        wallets: [],
         file: undefined,
         assetMetadata: metaDataDefinitions,
         completedSteps: {},

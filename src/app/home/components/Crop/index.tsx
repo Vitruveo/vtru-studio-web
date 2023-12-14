@@ -20,7 +20,7 @@ export function Crop({ image, width, height }: Props) {
 
   return (
     <Stack direction="column" alignItems="center">
-      <Box minHeight={600} height={height} width={1200}>
+      <Box height={600} width={1200}>
         <Box position="relative" height="100%" width="100%">
           <Cropper
             image={image}
@@ -39,7 +39,7 @@ export function Crop({ image, width, height }: Props) {
           <input
             type="range"
             value={zoom}
-            min={1}
+            min={-3}
             max={3}
             step={0.1}
             aria-labelledby="Zoom"

@@ -23,11 +23,21 @@ export interface CompletedSteps {
     errors: boolean;
   };
 }
+
+interface Wallet {
+  address: string;
+  network: string;
+}
+
+interface Email {
+  email: string;
+  checkedAt: boolean;
+}
 export interface StepsFormValues {
   username: string;
   profile?: File;
-  email: string;
-  wallet?: string;
+  emails: Email[];
+  wallets: Wallet[];
   file?: File;
   assetMetadata: MetaDataDefinitionTypes[];
   completedSteps: CompletedSteps;

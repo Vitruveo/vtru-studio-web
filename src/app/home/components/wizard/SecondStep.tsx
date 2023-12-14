@@ -3,7 +3,7 @@ import Img from 'next/image';
 import { useDropzone } from 'react-dropzone';
 import { IconTrash } from '@tabler/icons-react';
 
-import { Box, Button, Divider, FormControl, LinearProgress, MenuItem, Typography } from '@mui/material';
+import { Box, MenuItem, Typography } from '@mui/material';
 import { StepsFormValues, StepsProps } from './types';
 
 import { sendRequestUploadThunk } from '@/features/user/thunks';
