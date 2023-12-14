@@ -11,6 +11,39 @@ import { useDispatch } from '@/store/hooks';
 
 const currentStep = 2;
 
+const mediaDefinitions = [
+  {
+    name: 'square',
+    title: 'Square',
+    formats: [
+      {
+        name: 'preview_1000',
+        title: 'Preview 1000',
+        width: 1000,
+        height: 1000,
+      },
+      {
+        name: 'preview_2000',
+        title: 'Preview 2000',
+        width: 2000,
+        height: 2000,
+      },
+    ],
+  },
+  {
+    name: 'landscape',
+    title: 'Landscape',
+    formats: [
+      {
+        name: 'preview',
+        title: 'Preview',
+        width: 1000,
+        height: 1000,
+      },
+    ],
+  },
+];
+
 const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue }: StepsProps) => {
   const dispatch = useDispatch();
 

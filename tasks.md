@@ -1,1 +1,3 @@
 - validar o tamanhdo de profile avatar para no maximo 2mb
+- adicionar multiplos email (email do login vem como verificado e nao pode excluir)
+- adicionar multiplos carteiras (salvar o address, rede)
