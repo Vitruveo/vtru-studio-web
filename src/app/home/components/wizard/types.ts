@@ -1,6 +1,22 @@
 import { FormikErrors } from 'formik';
 import { FormikDefaultProps } from '@/app/common/types';
 
+export interface MetaDataDefinitionTypes {
+  domain?: string;
+  order: number;
+  name: string;
+  title: string;
+  type: 'string' | 'date' | 'select';
+  required: boolean;
+  validation: string;
+  options?: Option[];
+}
+
+export interface Option {
+  value: string;
+  label: string;
+}
+
 export interface CompletedSteps {
   [key: string]: {
     step: number;
@@ -13,6 +29,7 @@ export interface StepsFormValues {
   email: string;
   wallet?: string;
   file?: File;
+  assetMetadata: MetaDataDefinitionTypes[];
   completedSteps: CompletedSteps;
   definition: string;
 }
