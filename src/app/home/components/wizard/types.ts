@@ -14,6 +14,7 @@ export interface StepsFormValues {
   wallet?: string;
   file?: File;
   completedSteps: CompletedSteps;
+  definition: string;
 }
 
 type StepsFormErros = FormikErrors<StepsFormValues>;

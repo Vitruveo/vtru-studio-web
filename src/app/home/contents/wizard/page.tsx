@@ -71,6 +71,7 @@ export default function Wizard() {
         wallet: '',
         file: undefined,
         completedSteps: {},
+        definition: '',
       },
       validationSchema: stepsSchemaValidation,
       onSubmit: async (formValues) => {},
@@ -100,7 +101,7 @@ export default function Wizard() {
                     handleChange={handleChange}
                     handleSubmit={handleSubmit}
                   />
-                  <Stack direction="row" justifyContent="center" gap={5}>
+                  <Stack direction="row" justifyContent="center" gap={5} marginTop={10}>
                     {index !== 0 && (
                       <Button color="primary" variant="outlined" onClick={handleBack}>
                         Previous
