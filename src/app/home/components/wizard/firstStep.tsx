@@ -17,15 +17,7 @@ import { debouncedUsernameValidation, validateEmailFormValue } from '../../conte
 
 const currentStep = 1;
 
-const FirstStep = ({
-    values,
-    errors,
-    handleChange,
-
-    setFieldValue,
-
-    setErrors,
-}: StepsProps) => {
+const FirstStep = ({ values, errors, handleChange, setFieldValue, setErrors }: StepsProps) => {
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
     const [toastr, setToastr] = useState<CustomizedSnackbarState>({
@@ -80,6 +72,14 @@ const FirstStep = ({
         },
         [setFieldValue, values.emails]
     );
+
+    const handleConnect = async ({ openConnectModal }: { openConnectModal: () => any }) => {
+        const wallet = await openConnectModal();
+        console.log({ wallet });
+        if (wallet) {
+            setFieldValue('wallets', [...values.wallets, wallet]);
+        }
+    };
 
     useEffect(() => {
         setFieldValue('wallet', address);
@@ -241,6 +241,7 @@ const FirstStep = ({
                             </Typography>
                         </IconButton>
                     </Stack>
+
                     <ConnectButton.Custom>
                         {({ openConnectModal, openAccountModal, openChainModal, account, chain }) => {
                             if (account && chain) {
@@ -288,13 +289,16 @@ const FirstStep = ({
                                                 <Divider />
                                             </Box>
                                         ))}
+                                        <Button variant="outlined" onClick={openConnectModal}>
+                                            Connect Another Wallet
+                                        </Button>
                                     </Box>
                                 );
                             }
 
                             return (
                                 <>
-                                    <Button variant="outlined" onClick={openConnectModal}>
+                                    <Button variant="outlined" onClick={() => handleConnect({ openConnectModal })}>
                                         Connect Wallet
                                     </Button>
                                     {/* <Typography my={1} color="error">
