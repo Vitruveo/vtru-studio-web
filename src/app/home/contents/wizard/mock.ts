@@ -1,34 +1,11 @@
-import { MetaDataDefinitionTypes } from '../../components/wizard/types';
+import { MetadataDefinitionTypes } from '../../components/wizard/types';
 
-// {
-//     domain: 'music',
-//     order: 0,
-//     name: 'subject',
-//     title: 'Subject',
-//     type: 'string',
-//     required: true,
-//     validation: `
-//       function validate(value, language) {
-//         if (value.length < 3) return { message: 'Subject must be at least 3 characters long', isValid: false };
-//         return { message: '', isValid: true };
-//       }
-//     `,
-//   },
-//   {
-//     domain: 'artwork',
-//     order: 1,
-//     name: 'creationDate',
-//     title: 'Creation Date',
-//     type: 'date',
-//     required: false,
-//     validation: `
-//       function validate(value, language) {
-//         return { message: '', isValid: true };
-//       }
-//     `,
-//   },
+export const metadataDomains = [
+  { value: 'music', label: 'Music' },
+  { value: 'artwork', label: 'Artwork' },
+];
 
-export const metaDataDefinitions: MetaDataDefinitionTypes[] = [
+export const metadataDefinitions: MetadataDefinitionTypes[] = [
   {
     domain: 'music',
     order: 0,

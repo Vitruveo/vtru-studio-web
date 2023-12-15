@@ -6,11 +6,11 @@ import Stack from '@mui/material/Stack';
 import AddToCart from '../productCart/AddToCart';
 import { IconArrowBack } from '@tabler/icons-react';
 import { useSelector } from '@/store/hooks';
-import HorizontalStepper from './HorizontalStepper';
-import FirstStep from './FirstStep';
-import SecondStep from './SecondStep';
-import ThirdStep from './ThirdStep';
-import FinalStep from './FinalStep';
+import HorizontalStepper from './horizontalStepper';
+import FirstStep from './firstStep';
+import SecondStep from './secondStep';
+import ThirdStep from './thirdStep';
+import FinalStep from './finalStep';
 import { ProductType } from '../../../../types/apps/eCommerce';
 
 const ProductChecout = () => {
@@ -33,12 +33,7 @@ const ProductChecout = () => {
 
   return (
     <Box>
-      <HorizontalStepper
-        steps={steps}
-        handleReset={handleReset}
-        activeStep={activeStep}
-        finalStep={<FinalStep />}
-      >
+      <HorizontalStepper steps={steps} handleReset={handleReset} activeStep={activeStep} finalStep={<FinalStep />}>
         {/* ------------------------------------------- */}
         {/* Step1 */}
         {/* ------------------------------------------- */}
@@ -54,12 +49,7 @@ const ProductChecout = () => {
                 {/* ------------------------------------------- */}
                 <FirstStep total={total} Discount={Discount} />
                 <Stack direction={'row'} justifyContent="space-between">
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    disabled={activeStep === 0}
-                    onClick={handleBack}
-                  >
+                  <Button color="secondary" variant="contained" disabled={activeStep === 0} onClick={handleBack}>
                     Back
                   </Button>
                   <Button variant="contained" onClick={handleNext}>
