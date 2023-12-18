@@ -1,4 +1,4 @@
-import { apiService } from '@/app/services/api';
+import { apiService } from '@/services/api';
 import { RoleApiRes, RoleReq, RoleRes } from './types';
 
 export async function findManyRoles(): Promise<RoleRes[]> {
@@ -18,16 +18,13 @@ export async function createRole(data: RoleReq): Promise<RoleApiRes> {
     return response;
 }
 
-export async function updateRole(
-  id: string,
-  data: RoleReq
-): Promise<RoleApiRes> {
-  const response = await apiService.put<RoleRes>(`/roles/${id}`, data);
+export async function updateRole(id: string, data: RoleReq): Promise<RoleApiRes> {
+    const response = await apiService.put<RoleRes>(`/roles/${id}`, data);
 
-  return response;
+    return response;
 }
 
 export async function deleteRole(id: string): Promise<boolean> {
-  await apiService.delete(`/roles/${id}`);
-  return true;
+    await apiService.delete(`/roles/${id}`);
+    return true;
 }

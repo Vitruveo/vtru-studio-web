@@ -39,7 +39,7 @@ export interface StepsFormValues {
     profile?: File;
     emails: EmailFormValues[];
     wallets: Wallet[];
-    file?: File;
+    asset?: File;
     contract: boolean;
     assetMetadata: {
         metadataDefinitions: MetadataDefinitionTypes[];

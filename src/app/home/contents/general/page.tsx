@@ -1,3 +1,4 @@
+'use client';
 export default function General() {
-  return <h1>General</h1>;
+    return <h1>General</h1>;
 }

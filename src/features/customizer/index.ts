@@ -1,1 +1,1 @@
-export { customizerSlice, userActionsCreators } from "./slice";
+export { customizerSlice, customizerActionsCreators } from './slice';

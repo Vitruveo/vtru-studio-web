@@ -5,6 +5,7 @@ import { argentWallet, trustWallet, ledgerWallet } from '@rainbow-me/rainbowkit/
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import { mainnet, polygon, optimism, arbitrum, base, zora, goerli } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
+import { alchemyProvider } from 'wagmi/providers/alchemy';
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
     [
@@ -16,7 +17,7 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
         zora,
         ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true' ? [goerli] : []),
     ],
-    [publicProvider()]
+    [alchemyProvider({ apiKey: 'QVu1QOsFMNO67ap6rhDGnkvSi-3pvYXF' }), publicProvider()]
 );
 
 const projectId = 'e35af8e9cf766036d44374c2bd11ebbe';
@@ -54,7 +55,7 @@ interface Props {
     children: React.ReactNode;
 }
 
-export function Wallet({ children }: Props) {
+export function WalletProvider({ children }: Props) {
     return (
         <WagmiConfig config={wagmiConfig}>
             <RainbowKitProvider appInfo={demoAppInfo} chains={chains} locale="en-US">

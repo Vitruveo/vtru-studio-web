@@ -1,3 +1,3 @@
-export { roleSlice } from "./slice";
-export { roleCreateThunk, roleUpdateThunk } from "./thunks";
-export { roleSelector } from "./selectors";
+export { roleSlice } from './slice';
+
+export { roleSelector } from './selectors';

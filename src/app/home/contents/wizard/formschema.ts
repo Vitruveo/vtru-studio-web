@@ -34,7 +34,7 @@ export const stepsSchemaValidation = yup.object({
             const allowedFileTypes = ['image/jpeg', 'image/png', 'image/gif', 'video/mp4'];
             return allowedFileTypes.includes(file.type);
         }),
-    file: yup
+    asset: yup
         .mixed()
         .required('field asset is required.')
         .test('checkFileType', 'Invalid file type. Please upload a valid file.', (file) => {

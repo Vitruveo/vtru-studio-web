@@ -3,6 +3,7 @@ import {
     Box,
     Chip,
     MenuItem,
+    SelectChangeEvent,
     Stack,
     Table,
     TableBody,
@@ -23,8 +24,8 @@ const ProductPerformances = () => {
     // for select
     const [month, setMonth] = React.useState('1');
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setMonth(event.target.value);
+    const handleChange = (event: SelectChangeEvent<unknown>) => {
+        setMonth(event.target.value as string);
     };
 
     // chart color
@@ -197,13 +198,7 @@ const ProductPerformances = () => {
         <DashboardCard
             title="Product Performance"
             action={
-                <CustomSelect
-                    labelId="month-dd"
-                    id="month-dd"
-                    size="small"
-                    value={month}
-                    onChange={handleChange}
-                >
+                <CustomSelect labelId="month-dd" id="month-dd" size="small" value={month} onChange={handleChange}>
                     <MenuItem value={1}>March 2023</MenuItem>
                     <MenuItem value={2}>April 2023</MenuItem>
                     <MenuItem value={3}>May 2023</MenuItem>
@@ -220,42 +215,27 @@ const ProductPerformances = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell sx={{ pl: 0 }}>
-                                <Typography
-                                    variant="subtitle2"
-                                    fontWeight={600}
-                                >
+                                <Typography variant="subtitle2" fontWeight={600}>
                                     Product
                                 </Typography>
                             </TableCell>
                             <TableCell>
-                                <Typography
-                                    variant="subtitle2"
-                                    fontWeight={600}
-                                >
+                                <Typography variant="subtitle2" fontWeight={600}>
                                     Progress
                                 </Typography>
                             </TableCell>
                             <TableCell>
-                                <Typography
-                                    variant="subtitle2"
-                                    fontWeight={600}
-                                >
+                                <Typography variant="subtitle2" fontWeight={600}>
                                     Priority
                                 </Typography>
                             </TableCell>
                             <TableCell>
-                                <Typography
-                                    variant="subtitle2"
-                                    fontWeight={600}
-                                >
+                                <Typography variant="subtitle2" fontWeight={600}>
                                     Budget
                                 </Typography>
                             </TableCell>
                             <TableCell>
-                                <Typography
-                                    variant="subtitle2"
-                                    fontWeight={600}
-                                >
+                                <Typography variant="subtitle2" fontWeight={600}>
                                     Chart
                                 </Typography>
                             </TableCell>
@@ -272,36 +252,24 @@ const ProductPerformances = () => {
                                         sx={{ width: 48, height: 48 }}
                                     />
                                     <Box>
-                                        <Typography
-                                            variant="subtitle2"
-                                            fontWeight={600}
-                                        >
+                                        <Typography variant="subtitle2" fontWeight={600}>
                                             Gaming Console
                                         </Typography>
-                                        <Typography
-                                            color="textSecondary"
-                                            fontSize="12px"
-                                            variant="subtitle2"
-                                        >
+                                        <Typography color="textSecondary" fontSize="12px" variant="subtitle2">
                                             Electronics
                                         </Typography>
                                     </Box>
                                 </Stack>
                             </TableCell>
                             <TableCell>
-                                <Typography
-                                    color="textSecondary"
-                                    variant="subtitle2"
-                                    fontWeight={400}
-                                >
+                                <Typography color="textSecondary" variant="subtitle2" fontWeight={400}>
                                     78.5%
                                 </Typography>
                             </TableCell>
                             <TableCell>
                                 <Chip
                                     sx={{
-                                        bgcolor: (th) =>
-                                            th.palette.success.light,
+                                        bgcolor: (th) => th.palette.success.light,
                                         color: (th) => th.palette.success.main,
                                         borderRadius: '6px',
                                         width: 80,
@@ -311,9 +279,7 @@ const ProductPerformances = () => {
                                 />
                             </TableCell>
                             <TableCell>
-                                <Typography variant="subtitle2">
-                                    $3.9k
-                                </Typography>
+                                <Typography variant="subtitle2">$3.9k</Typography>
                             </TableCell>
                             <TableCell>
                                 <Chart
@@ -336,36 +302,24 @@ const ProductPerformances = () => {
                                         sx={{ width: 48, height: 48 }}
                                     />
                                     <Box>
-                                        <Typography
-                                            variant="subtitle2"
-                                            fontWeight={600}
-                                        >
+                                        <Typography variant="subtitle2" fontWeight={600}>
                                             Leather Purse
                                         </Typography>
-                                        <Typography
-                                            color="textSecondary"
-                                            fontSize="12px"
-                                            variant="subtitle2"
-                                        >
+                                        <Typography color="textSecondary" fontSize="12px" variant="subtitle2">
                                             Fashion
                                         </Typography>
                                     </Box>
                                 </Stack>
                             </TableCell>
                             <TableCell>
-                                <Typography
-                                    color="textSecondary"
-                                    variant="subtitle2"
-                                    fontWeight={400}
-                                >
+                                <Typography color="textSecondary" variant="subtitle2" fontWeight={400}>
                                     58.6%
                                 </Typography>
                             </TableCell>
                             <TableCell>
                                 <Chip
                                     sx={{
-                                        bgcolor: (th) =>
-                                            th.palette.warning.light,
+                                        bgcolor: (th) => th.palette.warning.light,
                                         color: (th) => th.palette.warning.main,
                                         borderRadius: '6px',
                                         width: 80,
@@ -375,9 +329,7 @@ const ProductPerformances = () => {
                                 />
                             </TableCell>
                             <TableCell>
-                                <Typography variant="subtitle2">
-                                    $3.5k
-                                </Typography>
+                                <Typography variant="subtitle2">$3.5k</Typography>
                             </TableCell>
                             <TableCell>
                                 <Chart
@@ -400,36 +352,24 @@ const ProductPerformances = () => {
                                         sx={{ width: 48, height: 48 }}
                                     />
                                     <Box>
-                                        <Typography
-                                            variant="subtitle2"
-                                            fontWeight={600}
-                                        >
+                                        <Typography variant="subtitle2" fontWeight={600}>
                                             Red Velvate Dress
                                         </Typography>
-                                        <Typography
-                                            color="textSecondary"
-                                            fontSize="12px"
-                                            variant="subtitle2"
-                                        >
+                                        <Typography color="textSecondary" fontSize="12px" variant="subtitle2">
                                             Womens Fashion
                                         </Typography>
                                     </Box>
                                 </Stack>
                             </TableCell>
                             <TableCell>
-                                <Typography
-                                    color="textSecondary"
-                                    variant="subtitle2"
-                                    fontWeight={400}
-                                >
+                                <Typography color="textSecondary" variant="subtitle2" fontWeight={400}>
                                     25%
                                 </Typography>
                             </TableCell>
                             <TableCell>
                                 <Chip
                                     sx={{
-                                        bgcolor: (th) =>
-                                            th.palette.primary.light,
+                                        bgcolor: (th) => th.palette.primary.light,
                                         color: (th) => th.palette.primary.main,
                                         borderRadius: '6px',
                                         width: 80,
@@ -439,9 +379,7 @@ const ProductPerformances = () => {
                                 />
                             </TableCell>
                             <TableCell>
-                                <Typography variant="subtitle2">
-                                    $3.5k
-                                </Typography>
+                                <Typography variant="subtitle2">$3.5k</Typography>
                             </TableCell>
                             <TableCell>
                                 <Chart
@@ -464,28 +402,17 @@ const ProductPerformances = () => {
                                         sx={{ width: 48, height: 48 }}
                                     />
                                     <Box>
-                                        <Typography
-                                            variant="subtitle2"
-                                            fontWeight={600}
-                                        >
+                                        <Typography variant="subtitle2" fontWeight={600}>
                                             Headphone Boat
                                         </Typography>
-                                        <Typography
-                                            color="textSecondary"
-                                            fontSize="12px"
-                                            variant="subtitle2"
-                                        >
+                                        <Typography color="textSecondary" fontSize="12px" variant="subtitle2">
                                             Electronics
                                         </Typography>
                                     </Box>
                                 </Stack>
                             </TableCell>
                             <TableCell>
-                                <Typography
-                                    color="textSecondary"
-                                    variant="subtitle2"
-                                    fontWeight={400}
-                                >
+                                <Typography color="textSecondary" variant="subtitle2" fontWeight={400}>
                                     96.3%
                                 </Typography>
                             </TableCell>
@@ -502,9 +429,7 @@ const ProductPerformances = () => {
                                 />
                             </TableCell>
                             <TableCell>
-                                <Typography variant="subtitle2">
-                                    $3.5k
-                                </Typography>
+                                <Typography variant="subtitle2">$3.5k</Typography>
                             </TableCell>
                             <TableCell>
                                 <Chart

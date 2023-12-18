@@ -7,17 +7,27 @@ import Box from '@mui/material/Box';
 import { Avatar, Button, CardContent, Divider, IconButton, Stack, Typography } from '@mui/material';
 import { IconTrash, IconPlus } from '@tabler/icons-react';
 
+import { WalletProvider } from '@/app/home/components/apps/wallet';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 import { checkCreatorEmailExist } from '@/features/user/requests';
 
 import CustomTextField from '../forms/theme-elements/CustomTextField';
 import { StepsProps } from './types';
 import BlankCard from '../shared/BlankCard';
+import Wallet from './wallet';
 import { debouncedUsernameValidation, validateEmailFormValue } from '../../contents/wizard/formschema';
 
 const currentStep = 1;
 
-const FirstStep = ({ values, errors, handleChange, setFieldValue, setErrors }: StepsProps) => {
+const FirstStep = ({
+    values,
+    errors,
+    handleChange,
+    handleSubmit,
+    setFieldValue,
+    setErrors,
+    setFieldError,
+}: StepsProps) => {
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
     const [toastr, setToastr] = useState<CustomizedSnackbarState>({
@@ -26,9 +36,7 @@ const FirstStep = ({ values, errors, handleChange, setFieldValue, setErrors }: S
         message: '',
     });
 
-    const { address } = useAccount();
-
-    const handleSendCodeEmail = useCallback((email: string, index: number) => {
+    const handleSendCodeEmail = useCallback((emailSend: string, index: number) => {
         setToastr({
             open: true,
             type: 'success',
@@ -72,18 +80,6 @@ const FirstStep = ({ values, errors, handleChange, setFieldValue, setErrors }: S
         },
         [setFieldValue, values.emails]
     );
-
-    const handleConnect = async ({ openConnectModal }: { openConnectModal: () => any }) => {
-        const wallet = await openConnectModal();
-        console.log({ wallet });
-        if (wallet) {
-            setFieldValue('wallets', [...values.wallets, wallet]);
-        }
-    };
-
-    useEffect(() => {
-        setFieldValue('wallet', address);
-    }, [address]);
 
     return (
         <Stack sx={{ width: '100%' }}>
@@ -225,89 +221,23 @@ const FirstStep = ({ values, errors, handleChange, setFieldValue, setErrors }: S
                             </Box>
                         ))}
                 </Box>
-
                 <Box display="flex" flexDirection="column">
                     <Stack my={1} direction="row" display="flex" alignItems="center" justifyContent="space-between">
                         <Typography variant="subtitle1" fontWeight={600} component="label">
                             Wallets
                         </Typography>
-                        <IconButton
-                            color="primary"
-                            onClick={() => setFieldValue('emails', [{ email: '', checkedAt: false }, ...values.emails])}
-                        >
-                            <IconPlus />
-                            <Typography variant="subtitle1" fontWeight={600} color="primary">
-                                Add wallet
-                            </Typography>
-                        </IconButton>
                     </Stack>
-
-                    <ConnectButton.Custom>
-                        {({ openConnectModal, openAccountModal, openChainModal, account, chain }) => {
-                            if (account && chain) {
-                                return (
-                                    <Box display="flex" flexDirection="column" gap={2}>
-                                        {[
-                                            {
-                                                walletId: account.address,
-                                                displayName: account.displayName,
-                                                iconUrl: chain.iconUrl,
-                                                name: chain.name,
-                                            },
-                                        ].map((item) => (
-                                            <Box display="flex" flexDirection="column" gap={2} key={item.walletId}>
-                                                <Box display="flex" alignItems="center" justifyContent="space-between">
-                                                    <Box display="flex" alignItems="center" gap={1}>
-                                                        <Img
-                                                            alt="wallet"
-                                                            width={30}
-                                                            height={30}
-                                                            src={item.iconUrl || ''}
-                                                        />
-                                                        <Typography>
-                                                            {item.name} - {item.displayName}
-                                                        </Typography>
-                                                    </Box>
-
-                                                    <Box display="flex" alignItems="center" gap={2}>
-                                                        <Button
-                                                            variant="outlined"
-                                                            size="small"
-                                                            onClick={openChainModal}
-                                                        >
-                                                            Other
-                                                        </Button>
-                                                        <Button
-                                                            variant="outlined"
-                                                            size="small"
-                                                            onClick={openAccountModal}
-                                                        >
-                                                            Account
-                                                        </Button>
-                                                    </Box>
-                                                </Box>
-                                                <Divider />
-                                            </Box>
-                                        ))}
-                                        <Button variant="outlined" onClick={openConnectModal}>
-                                            Connect Another Wallet
-                                        </Button>
-                                    </Box>
-                                );
-                            }
-
-                            return (
-                                <>
-                                    <Button variant="outlined" onClick={() => handleConnect({ openConnectModal })}>
-                                        Connect Wallet
-                                    </Button>
-                                    {/* <Typography my={1} color="error">
-                    {errors.wallet}
-                  </Typography> */}
-                                </>
-                            );
-                        }}
-                    </ConnectButton.Custom>
+                    <WalletProvider>
+                        <Wallet
+                            values={values}
+                            errors={errors}
+                            handleSubmit={handleSubmit}
+                            handleChange={handleChange}
+                            setFieldValue={setFieldValue}
+                            setErrors={setErrors}
+                            setFieldError={setFieldError}
+                        />
+                    </WalletProvider>
                 </Box>
             </Box>
             <CustomizedSnackbar

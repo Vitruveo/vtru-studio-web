@@ -73,7 +73,7 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
     const [progress, setProgress] = useState(0);
 
     const onDrop = (acceptedFiles: File[]) => {
-        setFieldValue('file', acceptedFiles[0]);
+        setFieldValue('asset', acceptedFiles[0]);
     };
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -89,7 +89,7 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
     }, [isUpload, progress]);
 
     useEffect(() => {
-        const fields: Array<keyof StepsFormValues> = ['file'];
+        const fields: Array<keyof StepsFormValues> = ['asset'];
 
         if (!fields.some((field) => errors[field])) {
             values.completedSteps[currentStep] = {
@@ -110,7 +110,6 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
         if (imgRef.current) {
             // Acesse a altura original da imagem
             const height = imgRef.current.naturalHeight;
-            console.log(height);
         }
     }, [imgRef]);
 
@@ -119,7 +118,7 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
     };
 
     const handleDeleteFile = () => {
-        setFieldValue('file', null);
+        setFieldValue('asset', null);
     };
 
     const handleRequestUpload = ({ mimetype, originalName }: { mimetype: string; originalName: string }) => {
@@ -141,7 +140,7 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
                     justifyContent="center"
                     {...getRootProps()}
                 >
-                    <input id="file" {...getInputProps()} />
+                    <input id="asset" {...getInputProps()} />
                     {isDragActive ? (
                         <p>Drop the files here...</p>
                     ) : (
@@ -153,37 +152,39 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
                 </Box>
             </Box>
             <Typography my={1} color="error">
-                {errors.file}
+                {errors.asset}
             </Typography>
 
-            {values.file && (
+            {values.asset && (
                 <Box display="flex" flexDirection="column" gap={2}>
                     <>
-                        <Box key={values.file?.name} display="flex" alignItems="center" justifyContent="space-between">
+                        <Box key={values.asset?.name} display="flex" alignItems="center" justifyContent="space-between">
                             <Box display="flex" alignItems="center" gap={1}>
                                 <IconTrash color="red" onClick={handleDeleteFile} size="16" stroke={1.5} />
                                 <Img
                                     ref={imgRef}
                                     width={40}
                                     height={40}
-                                    src={values.file ? URL.createObjectURL(values.file) : ''}
+                                    src={values.asset ? URL.createObjectURL(values.asset) : ''}
                                     alt=""
                                 />
-                                <Typography>{values.file?.name}</Typography>
+                                <Typography>{values.asset?.name}</Typography>
                             </Box>
                         </Box>
                     </>
                 </Box>
             )}
 
-            {values.file && (
+            {values.asset && (
                 <Box width={400}>
                     <Typography variant="subtitle1" fontWeight={600} component="label">
                         Select a definition mode{' '}
                     </Typography>
                     <CustomSelect
                         value={values.definition}
-                        onChange={(e) => setFieldValue('definition', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setFieldValue('definition', e.target.value)
+                        }
                         fullWidth
                         variant="outlined"
                     >
@@ -197,7 +198,7 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
             )}
 
             <Box>
-                {values.file &&
+                {values.asset &&
                     values.definition &&
                     mediaDefinitions
                         .filter((item) => item.name === values.definition)
@@ -212,12 +213,12 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
                                                         {mediaDefinition.title} - {format.title} ({format.width}x
                                                         {format.height})
                                                     </Typography>
-                                                    <Crop
+                                                    {/* <Crop
                                                         key={format.name}
                                                         image={URL.createObjectURL(values.file!)}
                                                         width={format.width}
                                                         height={format.height}
-                                                    />
+                                                    /> */}
                                                 </Stack>
                                             );
                                         })}

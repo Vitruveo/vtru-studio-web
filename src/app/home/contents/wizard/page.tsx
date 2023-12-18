@@ -12,7 +12,7 @@ import FirstStep from '@/app/home/components/wizard/firstStep';
 import SecondStep from '@/app/home/components/wizard/secondStep';
 import ThirdStep from '@/app/home/components/wizard/thirdStep';
 import FifthStep from '@/app/home/components/wizard/fifthStep';
-import { Wallet } from '@/app/home/components/apps/wallet';
+
 import { StepsFormValues } from '../../components/wizard/types';
 import { stepsSchemaValidation } from './formschema';
 import { metadataDefinitions, metadataDomains } from './mock';
@@ -70,10 +70,6 @@ const steps = [
 export default function Wizard() {
     const [activeStep, setActiveStep] = useState(0);
 
-    const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    };
-
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
@@ -88,29 +84,42 @@ export default function Wizard() {
 
     const emailsCreator = useSelector(userSelector(['emails']));
 
-    const { handleSubmit, handleChange, resetForm, setFieldValue, setFieldError, setErrors, values, errors } =
-        useFormik<StepsFormValues>({
-            initialValues: {
-                username: '',
-                profile: undefined,
-                emails: emailsCreator.emails.map((item) => ({
-                    email: item.email,
-                    sentCode: false,
-                    checkedAt: item.checkedAt ? true : false,
-                })),
-                wallets: [],
-                file: undefined,
-                contract: false,
-                assetMetadata: {
-                    metadataDomains,
-                    metadataDefinitions,
-                },
-                completedSteps: {},
-                definition: '',
+    const {
+        handleSubmit,
+        handleChange,
+        resetForm,
+        submitForm,
+        setFieldValue,
+        setFieldError,
+        setErrors,
+        values,
+        errors,
+    } = useFormik<StepsFormValues>({
+        initialValues: {
+            username: '',
+            profile: undefined,
+            emails: emailsCreator.emails.map((item) => ({
+                email: item.email,
+                sentCode: false,
+                checkedAt: item.checkedAt ? true : false,
+            })),
+            wallets: [],
+            asset: undefined,
+            contract: false,
+            assetMetadata: {
+                metadataDomains,
+                metadataDefinitions,
             },
-            validationSchema: stepsSchemaValidation,
-            onSubmit: async (formValues) => {},
-        });
+            completedSteps: {},
+            definition: '',
+        },
+        validationSchema: stepsSchemaValidation,
+        onSubmit: async (formValues) => {},
+    });
+
+    const handleNext = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    };
 
     return (
         <PageContainer title="Wizard" description="this is Wizard">
@@ -123,12 +132,13 @@ export default function Wizard() {
                 finalStep={<FinalStep />}
                 completedSteps={values.completedSteps}
             >
-                <Wallet>
+                <Box>
                     {steps.map(
                         (item, index) =>
                             activeStep === index && (
                                 <>
                                     <item.render
+                                        key={index}
                                         values={values}
                                         errors={errors}
                                         setFieldError={setFieldError}
@@ -150,7 +160,7 @@ export default function Wizard() {
                                 </>
                             )
                     )}
-                </Wallet>
+                </Box>
             </HorizontalStepper>
         </PageContainer>
     );

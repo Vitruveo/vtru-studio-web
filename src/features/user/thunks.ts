@@ -1,111 +1,90 @@
-import { createAppAsyncThunk } from '@/store/asyncThunk';
-import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
-  userLoginReq,
-  userAddReq,
-  userOTPConfimReq,
-  checkCreatorUsernameExist,
-  checkCreatorEmailExist,
-  addCreatorEmailExist,
-  sendRequestUploadExist,
+    userLoginReq,
+    userAddReq,
+    userOTPConfimReq,
+    checkCreatorUsernameExist,
+    checkCreatorEmailExist,
+    addCreatorEmailExist,
+    sendRequestUploadExist,
 } from './requests';
+import { userActionsCreators } from './slice';
 import {
-  UserAddApiRes,
-  UserAddReq,
-  UserLoginApiRes,
-  UserLoginReq,
-  UserOTPConfirmReq,
-  UserOTPConfirmApiRes,
-  CreatorUsernameExistApiRes,
-  CreatorUsernameExistReq,
-  CreatorEmailExistApiRes,
-  CreatorEmailExistReq,
-  AddCreatorEmailApiRes,
-  AddCreatorEmailReq,
-  CreatorSendRequestUploadApiRes,
-  CreatorSendRequestUploadReq,
+    UserAddApiRes,
+    UserAddReq,
+    UserLoginApiRes,
+    UserLoginReq,
+    UserOTPConfirmReq,
+    UserOTPConfirmApiRes,
+    CreatorUsernameExistApiRes,
+    CreatorUsernameExistReq,
+    CreatorEmailExistApiRes,
+    CreatorEmailExistReq,
+    AddCreatorEmailApiRes,
+    AddCreatorEmailReq,
+    CreatorSendRequestUploadApiRes,
+    CreatorSendRequestUploadReq,
 } from './types';
+import { ReduxThunkAction } from '@/store';
 
-export const userLoginThunk = createAppAsyncThunk<UserLoginApiRes, UserLoginReq>(
-  'user/login',
-  async ({ email }, { rejectWithValue }) => {
-    try {
-      const response = await userLoginReq({ email });
-      return response;
-    } catch (error) {
-      return rejectWithValue(error as string);
-    }
-  },
-);
+export function userLoginThunk(payload: UserLoginReq): ReduxThunkAction<Promise<UserLoginApiRes>> {
+    return async function (dispatch, getState) {
+        const response = await userLoginReq({ email: payload.email });
 
-export const userAddThunk = createAppAsyncThunk<UserAddApiRes, UserAddReq>(
-  'user/add',
-  async ({ name, email }, { rejectWithValue }) => {
-    try {
-      const response = await userAddReq({ name, email });
-      return response;
-    } catch (error) {
-      return rejectWithValue(error as string);
-    }
-  },
-);
+        dispatch(userActionsCreators.login({ email: payload.email }));
 
-export const userOTPConfirmThunk = createAppAsyncThunk<UserOTPConfirmApiRes, UserOTPConfirmReq>(
-  'user/otpConfirm',
-  async ({ email, code }, { rejectWithValue }) => {
-    try {
-      const response = await userOTPConfimReq({ email, code });
-      return response;
-    } catch (error) {
-      return rejectWithValue(error as string);
-    }
-  },
-);
+        return response;
+    };
+}
 
-export const checkCreatorUsernameExistThunk = createAppAsyncThunk<CreatorUsernameExistApiRes, CreatorUsernameExistReq>(
-  'creator/username/exist',
-  async ({ username }, { rejectWithValue }) => {
-    try {
-      const response = await checkCreatorUsernameExist({ username });
-      return response;
-    } catch (error) {
-      return rejectWithValue(error as string);
-    }
-  },
-);
+export function userOTPConfirmThunk(payload: UserOTPConfirmReq): ReduxThunkAction<Promise<UserOTPConfirmApiRes>> {
+    return async function (dispatch, getState) {
+        const response = await userOTPConfimReq({ email: payload.email, code: payload.code });
+        dispatch(userActionsCreators.otpConfirm(response));
 
-export const checkCreatorEmailExistThunk = createAppAsyncThunk<CreatorEmailExistApiRes, CreatorEmailExistReq>(
-  'creator/email/exist',
-  async ({ email }, { rejectWithValue }) => {
-    try {
-      const response = await checkCreatorEmailExist({ email });
-      return response;
-    } catch (error) {
-      return rejectWithValue(error as string);
-    }
-  },
-);
+        return response;
+    };
+}
 
-export const addCreatorEmailThunk = createAppAsyncThunk<AddCreatorEmailApiRes, AddCreatorEmailReq>(
-  'creator/add/emaill',
-  async ({ email, id }, { rejectWithValue }) => {
-    try {
-      const response = await addCreatorEmailExist({ id, email });
-      return response;
-    } catch (error) {
-      return rejectWithValue(error as string);
-    }
-  },
-);
+export function userAddThunk(payload: UserAddReq): ReduxThunkAction<Promise<UserAddApiRes>> {
+    return async function (dispatch, getState) {
+        const response = await userAddReq({ name: payload.name, email: payload.email });
+        return response;
+    };
+}
 
-export const sendRequestUploadThunk = createAppAsyncThunk<CreatorSendRequestUploadApiRes, CreatorSendRequestUploadReq>(
-  'creator/add/emaill',
-  async ({ mimetype, originalName }, { rejectWithValue }) => {
-    try {
-      const response = await sendRequestUploadExist({ mimetype, originalName });
-      return response;
-    } catch (error) {
-      return rejectWithValue(error as string);
-    }
-  },
-);
+export function checkCreatorUsernameExistThunk(
+    payload: CreatorUsernameExistReq
+): ReduxThunkAction<Promise<CreatorUsernameExistApiRes>> {
+    return async function (dispatch, getState) {
+        const response = await checkCreatorUsernameExist({ username: payload.username });
+        return response;
+    };
+}
+
+export function checkCreatorEmailExistThunk(
+    payload: CreatorEmailExistReq
+): ReduxThunkAction<Promise<CreatorEmailExistApiRes>> {
+    return async function (dispatch, getState) {
+        const response = await checkCreatorEmailExist({ email: payload.email });
+        return response;
+    };
+}
+
+export function addCreatorEmailThunk(payload: AddCreatorEmailReq): ReduxThunkAction<Promise<AddCreatorEmailApiRes>> {
+    return async function (dispatch, getState) {
+        const response = await addCreatorEmailExist({ id: payload.id, email: payload.email });
+        return response;
+    };
+}
+
+export function sendRequestUploadThunk(
+    payload: CreatorSendRequestUploadReq
+): ReduxThunkAction<Promise<CreatorSendRequestUploadApiRes>> {
+    return async function (dispatch, getState) {
+        const response = await sendRequestUploadExist({
+            mimetype: payload.mimetype,
+            originalName: payload.originalName,
+        });
+        return response;
+    };
+}

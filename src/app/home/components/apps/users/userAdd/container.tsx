@@ -7,36 +7,37 @@ import UserAdd from './view';
 import { userAddThunk } from '@/features/user/thunks';
 
 export default function Container() {
-  const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState(false);
 
-  const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
-  const { handleSubmit, handleChange, resetForm, setFieldValue, values, errors } = useFormik({
-    initialValues: {
-      name: '',
-      email: '',
-    },
-    validationSchema: userAddSchemaValidation,
-    onSubmit: async (formValues) => {
-      formValues.email;
-      dispatch(userAddThunk(formValues));
-      toastr.success('Record created success');
-    },
-  });
+    const { handleSubmit, handleChange, resetForm, setFieldValue, setFieldError, values, errors } = useFormik({
+        initialValues: {
+            name: '',
+            email: '',
+        },
+        validationSchema: userAddSchemaValidation,
+        onSubmit: async (formValues) => {
+            formValues.email;
+            dispatch(userAddThunk(formValues));
+            toastr.success('Record created success');
+        },
+    });
 
-  const handleChangeModal = useCallback(() => {
-    setShowModal((current) => !current);
-  }, []);
+    const handleChangeModal = useCallback(() => {
+        setShowModal((current) => !current);
+    }, []);
 
-  return (
-    <UserAdd
-      values={values}
-      showModal={showModal}
-      errors={errors}
-      setFieldValue={setFieldValue}
-      handleChangeModal={handleChangeModal}
-      handleChange={handleChange}
-      handleSubmit={handleSubmit}
-    />
-  );
+    return (
+        <UserAdd
+            values={values}
+            showModal={showModal}
+            errors={errors}
+            setFieldError={setFieldError}
+            setFieldValue={setFieldValue}
+            handleChangeModal={handleChangeModal}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+        />
+    );
 }

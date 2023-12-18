@@ -4,17 +4,11 @@ import { NextAppDirEmotionCacheProvider } from '@/app/common/theme/EmotionCache'
 import { configTheme } from '@/app/common/theme/Theme';
 import '@/utils/i18n';
 import CssBaseline from '@mui/material/CssBaseline';
-import {
-    Direction,
-    Shadows,
-    ThemeProvider,
-    createTheme,
-} from '@mui/material/styles';
+import { Direction, Shadows, ThemeProvider, createTheme } from '@mui/material/styles';
 import { TypographyOptions } from '@mui/material/styles/createTypography';
 import { Inter } from 'next/font/google';
-import { Provider } from 'react-redux';
-import { store } from '../store';
-import "toastr/build/toastr.min.css";
+import 'toastr/build/toastr.min.css';
+import Providers from '@/store/Provider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -82,8 +76,7 @@ const MyApp = ({ children }: { children: React.ReactNode }) => {
                             },
                             divider: '#e5eaef',
                         },
-                        typography: theme.baseMode
-                            .typography as TypographyOptions,
+                        typography: theme.baseMode.typography as TypographyOptions,
                         shadows: theme.baseMode.shadows as Shadows,
                         shape: {
                             borderRadius: theme.baseMode.shape.borderRadius,
@@ -98,17 +91,13 @@ const MyApp = ({ children }: { children: React.ReactNode }) => {
     );
 };
 
-export default function RootLayout({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en">
             <body className={inter.className}>
-                <Provider store={store}>
+                <Providers>
                     <MyApp>{children}</MyApp>
-                </Provider>
+                </Providers>
             </body>
         </html>
     );

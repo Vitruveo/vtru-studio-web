@@ -1,3 +1,4 @@
+'use client';
 import { useState } from 'react';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
@@ -8,6 +9,7 @@ import { userLoginThunk } from '@/features/user/thunks';
 import LoginView from './view';
 import { loginSchemaValidation } from './formSchema';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
+import { codesVtruApi } from '@/services/codes';
 
 const LoginContainer = () => {
     const [toastr, setToastr] = useState<CustomizedSnackbarState>({ type: 'success', open: false, message: '' });
@@ -22,11 +24,10 @@ const LoginContainer = () => {
         validationSchema: loginSchemaValidation,
         onSubmit: async (formValues) => {
             const resUserLogin = await dispatch(userLoginThunk({ email: formValues.email }));
-            if (resUserLogin.meta.requestStatus === 'fulfilled') {
+            if (codesVtruApi.success.login.includes(resUserLogin.code)) {
                 router.push('/login/oneTimePassword');
                 return;
-            }
-            if (resUserLogin.meta.requestStatus === 'rejected') {
+            } else {
                 setToastr({ open: true, type: 'error', message: 'Something went wrong! Try again later.' });
             }
         },
