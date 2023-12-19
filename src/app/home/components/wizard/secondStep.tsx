@@ -215,7 +215,7 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
                                                     </Typography>
                                                     {/* <Crop
                                                         key={format.name}
-                                                        image={URL.createObjectURL(values.file!)}
+                                                        image={URL.createObjectURL(values.asset!)}
                                                         width={format.width}
                                                         height={format.height}
                                                     /> */}

@@ -32,8 +32,8 @@ export default function ConfirmContainer() {
                     userOTPConfirmThunk({ code: formValues.code, email: login?.email })
                 );
                 if (codesVtruApi.success.login.includes(resOTPConfirm.code)) {
-                    dispatch(connectWebSocketThunk());
-                    dispatch(loginWebSocketThunk());
+                    await dispatch(connectWebSocketThunk());
+                    await dispatch(loginWebSocketThunk());
                     setToastr({ open: true, type: 'success', message: 'OTP confirmed!' });
                     router.push('/home/contents/wizard');
                     return;

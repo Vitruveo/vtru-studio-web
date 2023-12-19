@@ -1,11 +1,12 @@
-// actions.js
 import { io } from 'socket.io-client';
-import { websocketSlice } from '.';
+
 import { ReduxThunkAction } from '@/store';
+import { WS_SERVER_URL } from '@/constants/ws';
+
+import { websocketSlice } from '.';
 
 export function connectWebSocketThunk(): ReduxThunkAction {
     return async function (dispatch, getState) {
-        const WS_SERVER_URL = `ws://localhost:${3000}`;
         const socket = io(WS_SERVER_URL);
 
         dispatch(websocketSlice.actions.websocketConnected(socket));
