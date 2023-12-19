@@ -46,9 +46,13 @@ const FirstStep = ({
 
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (handleChange) handleChange(e);
-        debouncedUsernameValidation(e.target.value, () =>
-            setErrors({ ...errors, username: 'Username already exists' })
-        );
+        try {
+            debouncedUsernameValidation(e.target.value, () =>
+                setErrors({ ...errors, username: 'Username already exists' })
+            );
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     const handleChangeEmailInput = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -58,16 +62,18 @@ const FirstStep = ({
     const handleAddEmail = useCallback(async () => {
         try {
             await validateEmailFormValue.validate({ email });
-            const checkEmailExist = await checkCreatorEmailExist({ email });
-            if (checkEmailExist.data) {
-                setEmailError('Email already exists');
-                return;
-            }
+        } catch (error) {
+            setEmailError((error as ValidationError).errors[0]);
+            return;
+        }
+        try {
+            await checkCreatorEmailExist({ email });
+            setEmailError('Email already exists');
+        } catch (error) {
+            console.log(error);
             setFieldValue('emails', [{ email, checkedAt: false, sentCode: false }, ...values.emails]);
             setEmail('');
             setEmailError('');
-        } catch (error) {
-            setEmailError((error as ValidationError).errors[0]);
         }
     }, [setFieldValue, values.emails, email]);
 

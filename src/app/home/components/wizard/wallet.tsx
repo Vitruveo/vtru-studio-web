@@ -1,83 +1,84 @@
-import React, { useEffect } from 'react';
-import Img from 'next/image';
-
-import { useAccount, useConnect, useWalletClient } from 'wagmi';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+import React, { useEffect, useState } from 'react';
+import { useAccount, useDisconnect, useNetwork } from 'wagmi';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { IconTrash } from '@tabler/icons-react';
 import Box from '@mui/material/Box';
-import { Button, Divider, Typography } from '@mui/material';
+import { Button, Divider, IconButton, Typography } from '@mui/material';
 
-import { WalletProvider } from '@/app/home/components/apps/wallet';
-import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
-import { checkCreatorEmailExist } from '@/features/user/requests';
-
-import CustomTextField from '../forms/theme-elements/CustomTextField';
 import { StepsProps } from './types';
-import BlankCard from '../shared/BlankCard';
-import { debouncedUsernameValidation, validateEmailFormValue } from '../../contents/wizard/formschema';
 
 const Wallet = ({ values, errors, handleChange, setFieldValue, setErrors }: StepsProps) => {
-    const { connector: connectedWallet, isConnected, address } = useAccount();
+    const [connectWallet, setConnectWallet] = useState(false);
 
-    const { connect, connectors, error, isLoading, pendingConnector } = useConnect();
+    const { openConnectModal } = useConnectModal();
+    const { chain: network } = useNetwork();
+    const { isConnected, address } = useAccount();
+    const { disconnectAsync } = useDisconnect();
+
+    const handleAddWallet = async () => {
+        if (isConnected) await disconnectAsync();
+        setConnectWallet(true);
+    };
+
+    const handleDeleteWallet = async (index: number) => {
+        setFieldValue(
+            'wallets',
+            values.wallets.filter((item, i) => i !== index)
+        );
+    };
 
     useEffect(() => {
-        console.log(address);
-    }, [address]);
+        if (openConnectModal && connectWallet) {
+            openConnectModal();
+            setConnectWallet(false);
+        }
+        return () => {
+            disconnectAsync();
+        };
+    }, [connectWallet, openConnectModal]);
+
+    useEffect(() => {
+        if (address && network && !values.wallets.some((item) => item.address === address)) {
+            setFieldValue('wallets', [
+                { address, network: { name: network?.name, value: network?.id } },
+                ...values.wallets,
+            ]);
+        }
+    }, [address, network]);
 
     return (
-        <ConnectButton.Custom>
-            {({ openConnectModal, openAccountModal, openChainModal, account, chain }) => {
-                if (account && chain) {
-                    return (
-                        <Box display="flex" flexDirection="column" gap={2}>
-                            {[
-                                {
-                                    walletId: account.address,
-                                    displayName: account.displayName,
-                                    iconUrl: chain.iconUrl,
-                                    name: chain.name,
-                                },
-                            ].map((item) => (
-                                <Box display="flex" flexDirection="column" gap={2} key={item.walletId}>
-                                    <Box display="flex" alignItems="center" justifyContent="space-between">
-                                        <Box display="flex" alignItems="center" gap={1}>
-                                            <Img alt="wallet" width={30} height={30} src={item.iconUrl || ''} />
-                                            <Typography>
-                                                {item.name} - {item.displayName}
-                                            </Typography>
-                                        </Box>
-
-                                        <Box display="flex" alignItems="center" gap={2}>
-                                            <Button variant="outlined" size="small" onClick={openChainModal}>
-                                                Other
-                                            </Button>
-                                            <Button variant="outlined" size="small" onClick={openAccountModal}>
-                                                Account
-                                            </Button>
-                                        </Box>
-                                    </Box>
-                                    <Divider />
-                                </Box>
-                            ))}
-                            <Button fullWidth variant="outlined" onClick={openConnectModal}>
-                                Connect Another Wallet
-                            </Button>
+        <>
+            <Box display="flex" flexDirection="column" gap={2}>
+                <Box gap={2}>
+                    {values.wallets.map((item, index) => (
+                        <Box display="flex" my={1} gap={2} key={index}>
+                            <IconButton onClick={(e) => handleDeleteWallet(index)}>
+                                <IconTrash color="red" size="16" stroke={1.5} />
+                            </IconButton>
+                            <Box>
+                                <Typography variant="subtitle2">Network</Typography>
+                                <Typography color="GrayText" variant="body1">
+                                    {item.network.name}
+                                </Typography>
+                            </Box>
+                            <Box>
+                                <Typography variant="subtitle2">Address</Typography>
+                                <Typography color="GrayText" variant="body1">
+                                    {item.address}
+                                </Typography>
+                            </Box>
                         </Box>
-                    );
-                }
+                    ))}
+                </Box>
+                <Divider />
 
-                return (
-                    <>
-                        <Button fullWidth variant="outlined" onClick={openConnectModal}>
-                            Connect Wallet
-                        </Button>
-                        {/* <Typography my={1} color="error">
-                    {errors.wallet}
-                  </Typography> */}
-                    </>
-                );
-            }}
-        </ConnectButton.Custom>
+                <Box flexDirection="row" display="flex" gap={1}>
+                    <Button fullWidth variant="outlined" onClick={handleAddWallet}>
+                        Add Wallet
+                    </Button>
+                </Box>
+            </Box>
+        </>
     );
 };
 

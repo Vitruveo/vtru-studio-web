@@ -29,40 +29,19 @@ api.interceptors.request.use(
 
 export const apiService = {
     get: async <T = unknown, E = any>(url: string): Promise<APIResponse<T, E>> => {
-        try {
-            const response: AxiosResponse = await api.get(url);
-            return response.data;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
+        const response: AxiosResponse = await api.get(url);
+        return response.data;
     },
     post: async <T = unknown, E = any>(url: string, data: any): Promise<APIResponse<T, E>> => {
-        try {
-            const response: AxiosResponse = await api.post(url, data);
-            return response.data;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
+        const response: AxiosResponse = await api.post(url, data);
+        return response.data;
     },
     put: async <T = unknown, E = any>(url: string, data: any): Promise<APIResponse<T, E>> => {
-        try {
-            const response: AxiosResponse = await api.put(url, data);
-            return response.data;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
+        const response: AxiosResponse = await api.put(url, data);
+        return response.data;
     },
-
     delete: async <T = unknown, E = any>(url: string): Promise<APIResponse<T, E>> => {
-        try {
-            const response: AxiosResponse = await api.delete(url);
-            return response.data;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
+        const response: AxiosResponse = await api.delete(url);
+        return response.data;
     },
 };

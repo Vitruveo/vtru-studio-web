@@ -26,7 +26,7 @@ export interface CompletedSteps {
 
 interface Wallet {
     address: string;
-    network: string;
+    network: { name: string; value: string };
 }
 
 export interface EmailFormValues {
