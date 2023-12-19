@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import { Box, Button, Stack } from '@mui/material';
@@ -24,27 +24,27 @@ const steps = [
         key: 'Creator: account',
         render: FirstStep,
         title: (
-            <div>
+            <span>
                 Creator <br /> account
-            </div>
+            </span>
         ),
     },
     {
         key: 'Assets Upload',
         render: SecondStep,
         title: (
-            <div>
+            <span>
                 Asset <br /> upload{' '}
-            </div>
+            </span>
         ),
     },
     {
         key: 'Assets Metadata',
         render: ThirdStep,
         title: (
-            <div>
+            <span>
                 Asset <br /> metadata{' '}
-            </div>
+            </span>
         ),
     },
 
@@ -136,7 +136,7 @@ export default function Wizard() {
                     {steps.map(
                         (item, index) =>
                             activeStep === index && (
-                                <>
+                                <React.Fragment key={index}>
                                     <item.render
                                         key={index}
                                         values={values}
@@ -157,7 +157,7 @@ export default function Wizard() {
                                             Next
                                         </Button>
                                     </Stack>
-                                </>
+                                </React.Fragment>
                             )
                     )}
                 </Box>
