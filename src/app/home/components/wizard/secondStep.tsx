@@ -259,7 +259,7 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
                                     {mediaDefinition.formats.map((format, indexFormat) => {
                                         return (
                                             <Fragment key={format.name}>
-                                                <TabPanel value={(indexFormat + 1).toString()}>
+                                                <Box display={indexFormat + 1 === Number(tab) ? 'block' : 'none'}>
                                                     <Stack
                                                         direction="column"
                                                         // alignItems="center"
@@ -365,7 +365,7 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
                                                             height={format.height}
                                                         />
                                                     </Stack>
-                                                </TabPanel>
+                                                </Box>
                                             </Fragment>
                                         );
                                     })}
