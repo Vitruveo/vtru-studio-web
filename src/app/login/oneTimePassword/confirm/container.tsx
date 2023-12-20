@@ -3,13 +3,13 @@ import { useState } from 'react';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 
-import { userLoginThunk, userOTPConfirmThunk } from '@/features/user/slice';
-import { connectWebSocketThunk, loginWebSocketThunk } from '@/features/ws';
+import { useDispatch, useSelector } from '@/store/hooks';
+import { userLoginThunk, userOTPConfirmThunk } from '@/features/user/thunks';
+import { connectWebSocketThunk, loginWebSocketThunk } from '@/features/ws/slice';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 
 import ConfirmView from './view';
 import { otpSchemaValidation } from './formSchema';
-import { useDispatch, useSelector } from '@/store/hooks';
 import { codesVtruApi } from '@/services/codes';
 
 export default function ConfirmContainer() {
