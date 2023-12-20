@@ -1,3 +1,4 @@
+import { StepsFormValues } from '@/app/home/components/wizard/types';
 import {
     userLoginReq,
     userAddReq,
@@ -6,6 +7,7 @@ import {
     checkCreatorEmailExist,
     addCreatorEmailExist,
     sendRequestUploadExist,
+    changeCreator,
 } from './requests';
 import { userActionsCreators } from './slice';
 import {
@@ -23,6 +25,7 @@ import {
     AddCreatorEmailReq,
     CreatorSendRequestUploadApiRes,
     CreatorSendRequestUploadReq,
+    SaveStepWizardReq,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 
@@ -86,5 +89,41 @@ export function sendRequestUploadThunk(
             originalName: payload.originalName,
         });
         return response;
+    };
+}
+
+export function creatorAccountThunk(payload: StepsFormValues): ReduxThunkAction<void> {
+    return async function (dispatch, getState) {
+        const user = getState().user;
+
+        let isChanged = false;
+
+        isChanged = isChanged || payload.username !== user.name;
+        isChanged = isChanged || !payload.emails.every((v) => user.emails.find((userV) => userV.email === v.email));
+        isChanged =
+            isChanged || !payload.wallets.every((v) => user.wallets.find((userV) => userV.address === v.address));
+
+        if (isChanged) {
+            // const res = await changeCreator({
+            //     userId: user._id,
+            //     data: { name: user.name, profile: user.profile, username: payload.username, wallets: payload.wallets },
+            // });
+
+            dispatch(
+                userActionsCreators.change({
+                    username: payload.username,
+                    wallets: payload.wallets,
+                    emails: payload.emails,
+                })
+            );
+        }
+    };
+}
+
+export function saveStepWizardThunk(payload: SaveStepWizardReq): ReduxThunkAction<void> {
+    return async function (dispatch, getState) {
+        if (payload.step === 0) {
+            dispatch(creatorAccountThunk(payload.values));
+        }
     };
 }

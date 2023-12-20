@@ -24,20 +24,9 @@ const Menuitems: MenuitemsType[] = [
 
     {
         id: uniqueId(),
-        title: 'Wizard',
+        title: 'Genesis Wizard',
         icon: IconAperture,
         href: '/home/contents/wizard',
-    },
-    {
-        navlabel: true,
-        subheader: 'Applications',
-    },
-
-    {
-        id: uniqueId(),
-        title: 'Assets',
-        icon: IconChartDonut3,
-        href: '/home/contents/assets',
     },
 
     // {

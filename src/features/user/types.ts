@@ -1,70 +1,121 @@
+import { StepsFormValues } from '@/app/home/components/wizard/types';
 import { APIResponse } from '../common/types';
 
 interface Email {
-  email: string;
-  checkedAt: Date | null;
+    email: string;
+    checkedAt: Date | null;
+    sentCode: boolean;
 }
 
 interface User {
-  _id: string;
-  name: string;
-  login: {
-    email: string;
-  };
-  emails: Email[];
-  profile: {
-    avatar: string | null;
-    phone: string | null;
-    language: string | null;
-    location: string | null;
-  };
-  roles: Array<string>;
+    _id: string;
+    name: string;
+    username: string;
+    login: {
+        email: string;
+    };
+    wallets: {
+        address: string;
+        network: {
+            name: string;
+            chainId: number;
+        };
+    }[];
+    emails: Email[];
+    profile: {
+        avatar: string | null;
+        phone: string | null;
+        language: string | null;
+        location: string | null;
+    };
+    roles: Array<string>;
 }
 export interface UserSliceState extends User {
-  token: string;
-  status: string;
-  error: string;
+    token: string;
+    status: string;
+    error: string;
 }
 
 export interface UserLoginReq {
-  email: string;
+    email: string;
 }
 export interface UserAddReq {
-  name: string;
-  email: string;
+    name: string;
+    email: string;
 }
 
 export interface UserAddRes {
-  name: string;
-  email: string;
+    name: string;
+    email: string;
 }
 
 export interface CreatorUsernameExistReq {
-  username: string;
+    username: string;
 }
 
 export interface CreatorEmailExistReq {
-  email: string;
+    email: string;
 }
 
 export interface AddCreatorEmailReq {
-  id: string;
-  email: string;
+    id: string;
+    email: string;
 }
 
 export interface CreatorSendRequestUploadReq {
-  mimetype: string;
-  originalName: string;
+    mimetype: string;
+    originalName: string;
 }
 
 export interface UserOTPConfirmReq {
-  email: string;
-  code: string;
+    email: string;
+    code: string;
 }
 
 export interface UserOTPConfirmRes {
-  creator: User;
-  token: string;
+    creator: User;
+    token: string;
+}
+
+export interface SaveStepWizardReq {
+    step: number;
+    values: StepsFormValues;
+}
+
+export interface CreatorSchemaType {
+    name: string;
+    username?: string | undefined;
+    login: {
+        loginHistory: Array<{
+            ip: string;
+            createdAt: Date;
+        }>;
+    };
+    emails: Array<{
+        email: string;
+        codeHash: string | null;
+        checkedAt: Date | null;
+    }>;
+    wallets: Array<{
+        address: string;
+        network: {
+            name: string;
+            chainId: number;
+        };
+    }>;
+    profile: {
+        avatar: string | null;
+        phone: string | null;
+        language: string | null;
+        location: string | null;
+    };
+    roles: string[];
+    framework: {
+        createdAt: Date;
+        updatedAt: Date;
+        createdBy: string | null;
+        updatedBy: string | null;
+    };
 }
 
 export type UserAddApiRes = APIResponse<UserAddRes>;

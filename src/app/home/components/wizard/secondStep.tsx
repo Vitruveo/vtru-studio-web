@@ -104,7 +104,7 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
             };
             setFieldValue('completedSteps', { ...values.completedSteps });
         }
-    }, [values.wallets, errors]);
+    }, [values.asset, errors]);
 
     useEffect(() => {
         if (imgRef.current) {

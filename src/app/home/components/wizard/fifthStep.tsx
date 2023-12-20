@@ -1,8 +1,10 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Box, Container, Typography, Button } from '@mui/material';
-import { StepsProps } from './types';
+import { StepsFormValues, StepsProps } from './types';
 
-const ContractScreen = ({ values, setFieldValue }: StepsProps) => {
+const currentStep = 5;
+
+const ContractScreen = ({ values, errors, setFieldValue }: StepsProps) => {
     const [scrolledToBottom, setScrolledToBottom] = useState(false);
     const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -21,6 +23,24 @@ const ContractScreen = ({ values, setFieldValue }: StepsProps) => {
     const handleChangeContract = () => {
         setFieldValue('contract', !values.contract);
     };
+
+    useEffect(() => {
+        const fields: Array<keyof StepsFormValues> = ['contract'];
+
+        if (!fields.some((field) => errors[field])) {
+            values.completedSteps[currentStep] = {
+                step: currentStep,
+                errors: false,
+            };
+            setFieldValue('completedSteps', { ...values.completedSteps });
+        } else {
+            values.completedSteps[currentStep] = {
+                step: currentStep,
+                errors: true,
+            };
+            setFieldValue('completedSteps', { ...values.completedSteps });
+        }
+    }, [values.contract, errors]);
 
     return (
         <Container>
