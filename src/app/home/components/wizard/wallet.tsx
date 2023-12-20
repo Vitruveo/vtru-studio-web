@@ -40,7 +40,7 @@ const Wallet = ({ values, errors, handleChange, setFieldValue, setErrors }: Step
     useEffect(() => {
         if (address && network && !values.wallets.some((item) => item.address === address)) {
             setFieldValue('wallets', [
-                { address, network: { name: network?.name, value: network?.id } },
+                { address, network: { name: network?.name, chainId: network?.id } },
                 ...values.wallets,
             ]);
         }
@@ -64,7 +64,9 @@ const Wallet = ({ values, errors, handleChange, setFieldValue, setErrors }: Step
                             <Box>
                                 <Typography variant="subtitle2">Address</Typography>
                                 <Typography color="GrayText" variant="body1">
-                                    {item.address}
+                                    {`${item.address.substring(0, 6)}...${item.address.substring(
+                                        item.address.length - 4
+                                    )}`}
                                 </Typography>
                             </Box>
                         </Box>
@@ -77,6 +79,9 @@ const Wallet = ({ values, errors, handleChange, setFieldValue, setErrors }: Step
                         Add Wallet
                     </Button>
                 </Box>
+                <Typography my={1} color="error">
+                    {errors?.wallets as string}
+                </Typography>
             </Box>
         </>
     );

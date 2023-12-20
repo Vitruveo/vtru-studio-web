@@ -1,6 +1,9 @@
 import * as yup from 'yup';
-import { debounce } from 'lodash';
+import { debounce, set } from 'lodash';
 import { checkCreatorEmailExist, checkCreatorUsernameExist } from '@/features/user/requests';
+import { AxiosError } from 'axios';
+import { CreatorUsernameExistApiRes } from '@/features/user/types';
+import { codesVtruApi } from '@/services/codes';
 
 export const validateEmailFormValue = yup.object({
     email: yup.string().email('Invalid email address').required('field email is required.'),
@@ -12,10 +15,14 @@ export const debouncedEmailValidation = debounce((email, setErrors) => {
     });
 }, 700);
 
-export const debouncedUsernameValidation = debounce((username, setErrors) => {
-    checkCreatorUsernameExist({ username }).then((response) => {
-        if (response.data) setErrors();
-    });
+export const debouncedUsernameValidation = debounce(async (username, setErrors) => {
+    try {
+        await checkCreatorUsernameExist({ username });
+    } catch (e) {
+        const error = e as AxiosError<CreatorUsernameExistApiRes>;
+
+        if (codesVtruApi.success.user.includes(error.response?.data.code as string)) setErrors();
+    }
 }, 700);
 
 export const stepsSchemaValidation = yup.object({
@@ -24,7 +31,7 @@ export const stepsSchemaValidation = yup.object({
             email: yup.string().email('Invalid email address').required('field email is required.'),
         })
     ),
-    wallet: yup.string().required('field wallet is required.'),
+    wallets: yup.array().min(1),
     username: yup.string().required('field username is required.'),
     profile: yup
         .mixed()

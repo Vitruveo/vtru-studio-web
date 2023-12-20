@@ -18,8 +18,8 @@ import { stepsSchemaValidation } from './formschema';
 import { metadataDefinitions, metadataDomains } from './mock';
 
 import { userSelector } from '@/features/user';
+import { saveStepWizardThunk } from '@/features/user/thunks';
 import { useDispatch } from '@/store/hooks';
-import { assetStorageThunk, sendRequestUploadThunk } from '@/features/user/thunks';
 
 const steps = [
     {
@@ -79,44 +79,30 @@ export default function Wizard() {
 
     const [activeStep, setActiveStep] = useState(0);
 
-    useEffect(() => {
-        const uploadAvatar = async () => {
-            dispatch(sendRequestUploadThunk({ originalName: values.profile!.name, mimetype: values.profile!.type }));
-        };
-
-        if (activeStep === 1 && values.profile) uploadAvatar();
-    }, [activeStep]);
-
     // useEffect(() => {
-    //     if (transactionId && url && values.profile) {
-    //         console.log({ transactionId, url });
+    //     const uploadAvatar = async () => {
+    //         dispatch(sendRequestUploadThunk({ originalName: values.profile!.name, mimetype: values.profile!.type }));
+    //     };
 
-    //         dispatch(
-    //             assetStorageThunk({
-    //                 url,
-    //                 file: values.profile,
-    //             })
-    //         );
-    //     }
-    // }, [transactionId, url]);
+    //     if (activeStep === 1 && values.profile) uploadAvatar();
+    // }, [activeStep]);
 
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
-
-    const handleStep = (value: number) => {
-        setActiveStep(value);
     };
 
     const handleReset = () => {
         setActiveStep(0);
     };
 
+    const { username, emails, wallets } = useSelector(userSelector(['username', 'emails', 'wallets']));
+
     const {
         handleSubmit,
         handleChange,
         resetForm,
         submitForm,
+        validateForm,
         setFieldValue,
         setFieldError,
         setErrors,
@@ -124,20 +110,16 @@ export default function Wizard() {
         errors,
     } = useFormik<StepsFormValues>({
         initialValues: {
-            username: '',
+            username: username,
             profile: undefined,
-            emails: emailsCreator.emails.map((item) => ({
-                email: item.email,
-                sentCode: false,
-                checkedAt: item.checkedAt ? true : false,
-            })),
-            wallets: [],
+            emails: emails,
+            wallets: wallets,
             asset: {
                 file: undefined,
                 formats: {
                     display: { height: 100, width: 100, x: 10, y: 20, unit: 'px', scale: 1, file: undefined },
-                    exhibition: { height: 100, width: 100, x: 10, y: 20, unit: 'px', scale: 1, file: undefined },
-                    preview: { height: 100, width: 100, x: 10, y: 20, unit: 'px', scale: 1, file: undefined },
+                    exhibition: { height: 300, width: 300, x: 10, y: 20, unit: 'px', scale: 1, file: undefined },
+                    preview: { height: 500, width: 500, x: 10, y: 20, unit: 'px', scale: 1, file: undefined },
                 },
             },
             contract: false,
@@ -152,13 +134,21 @@ export default function Wizard() {
         onSubmit: async (formValues) => {},
     });
 
-    const handleNext = () => {
+    const handleStep = async (value: number) => {
+        await validateForm();
+        dispatch(saveStepWizardThunk({ step: activeStep, values }));
+        setActiveStep(value);
+    };
+
+    const handleNext = async () => {
+        await validateForm();
+        dispatch(saveStepWizardThunk({ step: activeStep, values }));
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 
     return (
         <PageContainer title="Wizard" description="this is Wizard">
-            <Breadcrumb title="Wizard Application" />
+            <Breadcrumb title="Genesis Wizard" />
             <HorizontalStepper
                 steps={steps}
                 handleReset={handleReset}

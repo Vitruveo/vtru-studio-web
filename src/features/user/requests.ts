@@ -7,6 +7,7 @@ import {
     AssetStorageReq,
     CreatorEmailExistApiRes,
     CreatorEmailExistReq,
+    CreatorSchemaType,
     CreatorSendRequestUploadApiRes,
     CreatorSendRequestUploadReq,
     CreatorUsernameExistApiRes,
@@ -48,6 +49,17 @@ export async function checkCreatorEmailExist(data: CreatorEmailExistReq): Promis
 
 export async function addCreatorEmailExist(data: AddCreatorEmailReq): Promise<AddCreatorEmailApiRes> {
     const res = apiService.post<boolean>(`/creators/${data.id}/email`, { email: data.email });
+    return res;
+}
+
+export async function changeCreator({
+    data,
+    userId,
+}: {
+    data: Partial<CreatorSchemaType>;
+    userId: string;
+}): Promise<AddCreatorEmailApiRes> {
+    const res = apiService.put<boolean>(`/creators/${userId}`, data);
     return res;
 }
 

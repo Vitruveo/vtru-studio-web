@@ -110,23 +110,23 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
         onDrop,
     });
 
-    // useEffect(() => {
-    //     const fields: Array<keyof StepsFormValues> = ['asset'];
+    useEffect(() => {
+        const fields: Array<keyof StepsFormValues> = ['asset'];
 
-    //     if (!fields.some((field) => errors[field])) {
-    //         values.completedSteps[currentStep] = {
-    //             step: currentStep,
-    //             errors: false,
-    //         };
-    //         setFieldValue('completedSteps', { ...values.completedSteps });
-    //     } else {
-    //         values.completedSteps[currentStep] = {
-    //             step: currentStep,
-    //             errors: true,
-    //         };
-    //         setFieldValue('completedSteps', { ...values.completedSteps });
-    //     }
-    // }, [values.wallets, errors]);
+        if (!fields.some((field) => errors[field])) {
+            values.completedSteps[currentStep] = {
+                step: currentStep,
+                errors: false,
+            };
+            setFieldValue('completedSteps', { ...values.completedSteps });
+        } else {
+            values.completedSteps[currentStep] = {
+                step: currentStep,
+                errors: true,
+            };
+            setFieldValue('completedSteps', { ...values.completedSteps });
+        }
+    }, [values.asset, errors]);
 
     const formatBytesToMB = (bytes: number) => {
         return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
@@ -160,6 +160,10 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
         }
     };
 
+    const urlAssetFile = useMemo(() => {
+        return values.asset.file ? URL.createObjectURL(values.asset.file) : '';
+    }, [values.asset.file]);
+
     return (
         <Stack my={3} direction="column" alignItems="center" justifyContent="center" gap={2}>
             <Box width={600}>
@@ -192,12 +196,7 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
 
             {values.asset.file && (
                 <Stack direction="row" alignItems="center" gap={10}>
-                    <img
-                        src={URL.createObjectURL(values.asset.file)}
-                        style={{ display: 'none' }}
-                        alt=""
-                        onLoad={handleOnLoad}
-                    />
+                    <img src={urlAssetFile!} style={{ display: 'none' }} alt="" onLoad={handleOnLoad} />
                     <Box display="flex" flexDirection="column" gap={2}>
                         <>
                             <Box
@@ -208,7 +207,7 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
                             >
                                 <Box display="flex" alignItems="center" gap={1}>
                                     <IconTrash color="red" onClick={handleDeleteFile} size="16" stroke={1.5} />
-                                    <Img width={40} height={40} src={URL.createObjectURL(values.asset.file)} alt="" />
+                                    <Img width={40} height={40} src={urlAssetFile!} alt="" />
                                     <Typography>{values.asset.file.name}</Typography>
                                 </Box>
                             </Box>
