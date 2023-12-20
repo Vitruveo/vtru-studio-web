@@ -87,18 +87,18 @@ export default function Wizard() {
         if (activeStep === 1 && values.profile) uploadAvatar();
     }, [activeStep]);
 
-    useEffect(() => {
-        if (transactionId && url && values.profile) {
-            console.log({ transactionId, url });
+    // useEffect(() => {
+    //     if (transactionId && url && values.profile) {
+    //         console.log({ transactionId, url });
 
-            dispatch(
-                assetStorageThunk({
-                    url,
-                    file: values.profile,
-                })
-            );
-        }
-    }, [transactionId, url]);
+    //         dispatch(
+    //             assetStorageThunk({
+    //                 url,
+    //                 file: values.profile,
+    //             })
+    //         );
+    //     }
+    // }, [transactionId, url]);
 
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -132,7 +132,14 @@ export default function Wizard() {
                 checkedAt: item.checkedAt ? true : false,
             })),
             wallets: [],
-            asset: undefined,
+            asset: {
+                file: undefined,
+                formats: {
+                    display: { height: 100, width: 100, x: 10, y: 20, unit: 'px', scale: 1, file: undefined },
+                    exhibition: { height: 100, width: 100, x: 10, y: 20, unit: 'px', scale: 1, file: undefined },
+                    preview: { height: 100, width: 100, x: 10, y: 20, unit: 'px', scale: 1, file: undefined },
+                },
+            },
             contract: false,
             assetMetadata: {
                 metadataDomains,

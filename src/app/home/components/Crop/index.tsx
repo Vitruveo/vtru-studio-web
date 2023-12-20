@@ -4,50 +4,51 @@ import { useState, useCallback } from 'react';
 import Cropper, { Area } from 'react-easy-crop';
 
 interface Props {
-  image: string;
-  width: number;
-  height: number;
-  originalHeight: number;
+    image: string;
+    width: number;
+    height: number;
+    originalHeight: number | undefined;
 }
 
 export function Crop({ image, width, height }: Props) {
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
+    const [crop, setCrop] = useState({ x: 0, y: 0 });
+    const [zoom, setZoom] = useState(1);
 
-  const onCropComplete = (croppedArea: Area, croppedAreaPixels: Area) => {
-    console.log(croppedArea, croppedAreaPixels);
-  };
+    const onCropComplete = (croppedArea: Area, croppedAreaPixels: Area) => {
+        console.log(croppedArea, croppedAreaPixels);
+    };
 
-  return (
-    <Stack direction="column" alignItems="center">
-      <Box height={600} width={1200}>
-        <Box position="relative" height="100%" width="100%">
-          <Cropper
-            image={image}
-            crop={crop}
-            zoom={zoom}
-            aspect={1}
-            cropSize={{ width: width, height: height }}
-            onCropChange={setCrop}
-            onCropComplete={onCropComplete}
-            onZoomChange={setZoom}
-          />
-        </Box>
+    return (
+        <Stack direction="column" alignItems="center">
+            <Box height={600} width={1200}>
+                <Box position="relative" height="100%" width="100%">
+                    <Cropper
+                        image={image}
+                        crop={crop}
+                        zoom={zoom}
+                        aspect={1}
+                        cropSize={{ width: width, height: height }}
+                        onCropChange={setCrop}
+                        onCropComplete={onCropComplete}
+                        onZoomChange={setZoom}
+                        restrictPosition={false}
+                    />
+                </Box>
 
-        <Stack direction="row">
-          <Typography>resize</Typography>
-          <input
-            type="range"
-            value={zoom}
-            min={-3}
-            max={3}
-            step={0.1}
-            aria-labelledby="Zoom"
-            onChange={(e) => setZoom(Number(e.target.value))}
-            className="zoom-range"
-          />
+                <Stack direction="row">
+                    <Typography>resize</Typography>
+                    <input
+                        type="range"
+                        value={zoom}
+                        min={0}
+                        max={2}
+                        step={0.1}
+                        aria-labelledby="Zoom"
+                        onChange={(e) => setZoom(Number(e.target.value))}
+                        className="zoom-range"
+                    />
+                </Stack>
+            </Box>
         </Stack>
-      </Box>
-    </Stack>
-  );
+    );
 }

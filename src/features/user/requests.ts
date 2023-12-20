@@ -1,4 +1,5 @@
 import axios from 'axios';
+import FormData from 'form-data';
 import { apiService } from '@/services/api';
 import {
     AddCreatorEmailApiRes,
@@ -60,9 +61,11 @@ export async function sendRequestUploadExist(
 export async function assetStorage(data: AssetStorageReq): Promise<any> {
     const formData = new FormData();
     formData.append('file', data.file);
-    const res = axios.put(data.url, formData, {
+
+    const res = await axios.put(data.url, formData, {
+        headers: formData.getHeaders(),
         onUploadProgress: (progressEvent) => {
-            console.log('Upload progress: ', Math.round((progressEvent.loaded / progressEvent.total!) * 100));
+            console.log(Math.round((progressEvent.loaded / progressEvent.total!) * 100));
         },
     });
 

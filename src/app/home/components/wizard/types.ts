@@ -1,5 +1,6 @@
 import { FormikErrors } from 'formik';
 import { FormikDefaultProps } from '@/app/common/types';
+import { PixelCrop } from 'react-image-crop';
 
 export interface MetadataDefinitionTypes {
     domain?: string;
@@ -39,7 +40,14 @@ export interface StepsFormValues {
     profile?: File;
     emails: EmailFormValues[];
     wallets: Wallet[];
-    asset?: File;
+    asset: {
+        file: File | undefined;
+        formats: {
+            display: PixelCrop & { scale: number; file?: File };
+            exhibition: PixelCrop & { scale: number; file?: File };
+            preview: PixelCrop & { scale: number; file?: File };
+        };
+    };
     contract: boolean;
     assetMetadata: {
         metadataDefinitions: MetadataDefinitionTypes[];
