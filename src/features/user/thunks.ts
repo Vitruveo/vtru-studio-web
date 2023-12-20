@@ -6,6 +6,7 @@ import {
     checkCreatorEmailExist,
     addCreatorEmailExist,
     sendRequestUploadExist,
+    assetStorage,
 } from './requests';
 import { userActionsCreators } from './slice';
 import {
@@ -23,6 +24,7 @@ import {
     AddCreatorEmailReq,
     CreatorSendRequestUploadApiRes,
     CreatorSendRequestUploadReq,
+    AssetStorageReq,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 
@@ -85,6 +87,20 @@ export function sendRequestUploadThunk(
             mimetype: payload.mimetype,
             originalName: payload.originalName,
         });
+
+        dispatch(userActionsCreators.requestAssetUpload({ transactionId: response.transaction }));
+
+        return response;
+    };
+}
+
+export function assetStorageThunk(payload: AssetStorageReq): ReduxThunkAction<Promise<any>> {
+    return async function (dispatch, getState) {
+        const response = await assetStorage({
+            url: payload.url,
+            file: payload.file,
+        });
+
         return response;
     };
 }

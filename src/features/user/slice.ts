@@ -1,7 +1,7 @@
 'use client';
 import { createSlice } from '@reduxjs/toolkit';
 
-import { userLoginThunk, userAddThunk, userOTPConfirmThunk } from './thunks';
+import { userLoginThunk, userAddThunk, userOTPConfirmThunk, sendRequestUploadThunk } from './thunks';
 import { UserSliceState } from './types';
 
 const initialState: UserSliceState = {
@@ -19,6 +19,10 @@ const initialState: UserSliceState = {
         location: '',
     },
     roles: [],
+    requestAssetUpload: {
+        transactionId: '',
+        url: '',
+    },
     status: '',
     error: '',
 };
@@ -40,6 +44,10 @@ export const userSlice = createSlice({
             state._id = action.payload.data.creator._id;
             state.emails = action.payload.data.creator.emails;
         },
+        requestAssetUpload: (state, action) => {
+            state.requestAssetUpload.transactionId = action.payload.transactionId;
+            state.requestAssetUpload.url = action.payload.url || '';
+        },
         error: (state, action) => {
             state.status = `failed: ${action.type}`;
             state.error = action.payload;
@@ -48,4 +56,4 @@ export const userSlice = createSlice({
 });
 
 export const userActionsCreators = userSlice.actions;
-export { userOTPConfirmThunk, userAddThunk, userLoginThunk };
+export { userOTPConfirmThunk, userAddThunk, userLoginThunk, sendRequestUploadThunk };

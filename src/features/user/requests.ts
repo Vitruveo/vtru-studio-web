@@ -1,7 +1,9 @@
+import axios from 'axios';
 import { apiService } from '@/services/api';
 import {
     AddCreatorEmailApiRes,
     AddCreatorEmailReq,
+    AssetStorageReq,
     CreatorEmailExistApiRes,
     CreatorEmailExistReq,
     CreatorSendRequestUploadApiRes,
@@ -52,5 +54,17 @@ export async function sendRequestUploadExist(
     data: CreatorSendRequestUploadReq
 ): Promise<CreatorSendRequestUploadApiRes> {
     const res = apiService.post<string>('/creators/request/upload', data);
+    return res;
+}
+
+export async function assetStorage(data: AssetStorageReq): Promise<any> {
+    const formData = new FormData();
+    formData.append('file', data.file);
+    const res = axios.put(data.url, formData, {
+        onUploadProgress: (progressEvent) => {
+            console.log('Upload progress: ', Math.round((progressEvent.loaded / progressEvent.total!) * 100));
+        },
+    });
+
     return res;
 }
