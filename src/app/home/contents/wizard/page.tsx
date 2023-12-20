@@ -18,6 +18,8 @@ import { stepsSchemaValidation } from './formschema';
 import { metadataDefinitions, metadataDomains } from './mock';
 
 import { userSelector } from '@/features/user';
+import { saveStepWizardThunk } from '@/features/user/thunks';
+import { useDispatch } from '@/store/hooks';
 
 const steps = [
     {
@@ -70,25 +72,24 @@ const steps = [
 export default function Wizard() {
     const [activeStep, setActiveStep] = useState(0);
 
+    const dispatch = useDispatch();
+
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
-
-    const handleStep = (value: number) => {
-        setActiveStep(value);
     };
 
     const handleReset = () => {
         setActiveStep(0);
     };
 
-    const emailsCreator = useSelector(userSelector(['emails']));
+    const { username, emails, wallets } = useSelector(userSelector(['username', 'emails', 'wallets']));
 
     const {
         handleSubmit,
         handleChange,
         resetForm,
         submitForm,
+        validateForm,
         setFieldValue,
         setFieldError,
         setErrors,
@@ -96,14 +97,10 @@ export default function Wizard() {
         errors,
     } = useFormik<StepsFormValues>({
         initialValues: {
-            username: '',
+            username: username,
             profile: undefined,
-            emails: emailsCreator.emails.map((item) => ({
-                email: item.email,
-                sentCode: false,
-                checkedAt: item.checkedAt ? true : false,
-            })),
-            wallets: [],
+            emails: emails,
+            wallets: wallets,
             asset: undefined,
             contract: false,
             assetMetadata: {
@@ -117,13 +114,21 @@ export default function Wizard() {
         onSubmit: async (formValues) => {},
     });
 
-    const handleNext = () => {
+    const handleStep = async (value: number) => {
+        await validateForm();
+        dispatch(saveStepWizardThunk({ step: activeStep, values }));
+        setActiveStep(value);
+    };
+
+    const handleNext = async () => {
+        await validateForm();
+        dispatch(saveStepWizardThunk({ step: activeStep, values }));
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 
     return (
         <PageContainer title="Wizard" description="this is Wizard">
-            <Breadcrumb title="Wizard Application" />
+            <Breadcrumb title="Genesis Wizard" />
             <HorizontalStepper
                 steps={steps}
                 handleReset={handleReset}

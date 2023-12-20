@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import Img from 'next/image';
+
 import { ValidationError } from 'yup';
-import { useAccount } from 'wagmi';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+
 import Box from '@mui/material/Box';
-import { Avatar, Button, CardContent, Divider, IconButton, Stack, Typography } from '@mui/material';
+import { Button, Divider, IconButton, Stack, Typography } from '@mui/material';
 import { IconTrash, IconPlus } from '@tabler/icons-react';
 
 import { WalletProvider } from '@/app/home/components/apps/wallet';
@@ -12,8 +11,7 @@ import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr
 import { checkCreatorEmailExist } from '@/features/user/requests';
 
 import CustomTextField from '../forms/theme-elements/CustomTextField';
-import { StepsProps } from './types';
-import BlankCard from '../shared/BlankCard';
+import { StepsFormValues, StepsProps } from './types';
 import Wallet from './wallet';
 import { debouncedUsernameValidation, validateEmailFormValue } from '../../contents/wizard/formschema';
 
@@ -46,13 +44,10 @@ const FirstStep = ({
 
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (handleChange) handleChange(e);
-        try {
-            debouncedUsernameValidation(e.target.value, () =>
-                setErrors({ ...errors, username: 'Username already exists' })
-            );
-        } catch (error) {
-            console.log(error);
-        }
+
+        debouncedUsernameValidation(e.target.value, () =>
+            setErrors({ ...errors, username: 'Username already exists' })
+        );
     };
 
     const handleChangeEmailInput = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -60,6 +55,10 @@ const FirstStep = ({
     }, []);
 
     const handleAddEmail = useCallback(async () => {
+        if (values.emails.some((item) => item.email === email)) {
+            setEmailError('Email already exists');
+            return;
+        }
         try {
             await validateEmailFormValue.validate({ email });
         } catch (error) {
@@ -70,8 +69,7 @@ const FirstStep = ({
             await checkCreatorEmailExist({ email });
             setEmailError('Email already exists');
         } catch (error) {
-            console.log(error);
-            setFieldValue('emails', [{ email, checkedAt: false, sentCode: false }, ...values.emails]);
+            setFieldValue('emails', [{ email, checkedAt: null, sentCode: false }, ...values.emails]);
             setEmail('');
             setEmailError('');
         }
@@ -87,13 +85,33 @@ const FirstStep = ({
         [setFieldValue, values.emails]
     );
 
+    useEffect(() => {
+        const fields: Array<keyof StepsFormValues> = ['wallets', 'emails', 'username'];
+
+        if (!fields.some((field) => errors[field])) {
+            values.completedSteps[currentStep] = {
+                step: currentStep,
+                errors: false,
+            };
+            setFieldValue('completedSteps', { ...values.completedSteps });
+        } else {
+            values.completedSteps[currentStep] = {
+                step: currentStep,
+                errors: true,
+            };
+            setFieldValue('completedSteps', { ...values.completedSteps });
+        }
+    }, [values.wallets, values.emails, values.username, errors]);
+
     return (
         <Stack sx={{ width: '100%' }}>
             <Box minWidth={600} display="flex" flexDirection="column" my={3} gap={4} p={2}>
                 <Box>
-                    <Typography variant="subtitle1" fontWeight={600} component="label">
-                        Username
-                    </Typography>
+                    <Stack my={1} direction="row" display="flex" alignItems="center" justifyContent="space-between">
+                        <Typography variant="subtitle1" fontWeight={600} component="label">
+                            Username
+                        </Typography>
+                    </Stack>
                     <CustomTextField
                         placeholder="type a username..."
                         size="small"
@@ -106,60 +124,6 @@ const FirstStep = ({
                         helperText={errors.username}
                     />
                 </Box>
-                <BlankCard>
-                    <CardContent>
-                        <Typography variant="h5" mb={1}>
-                            Setup profile avatar
-                        </Typography>
-                        <Typography color="textSecondary" mb={3}>
-                            Your profile picture
-                        </Typography>
-                        <Box textAlign="center" display="flex" justifyContent="center">
-                            <Box>
-                                <Avatar
-                                    src={
-                                        values.profile
-                                            ? URL.createObjectURL(values.profile)
-                                            : '/images/profile/user-1.jpg'
-                                    }
-                                    alt={'user1'}
-                                    sx={{
-                                        width: 120,
-                                        height: 120,
-                                        margin: '0 auto',
-                                    }}
-                                />
-                                <Stack direction="row" justifyContent="center" spacing={2} my={3}>
-                                    <Button variant="contained" color="primary" component="label">
-                                        Upload
-                                        <input
-                                            hidden
-                                            accept="image/*"
-                                            multiple
-                                            type="file"
-                                            onChange={(e) =>
-                                                e.target.files && setFieldValue('profile', e.target.files[0])
-                                            }
-                                        />
-                                    </Button>
-                                    <Button
-                                        variant="outlined"
-                                        color="error"
-                                        onClick={() => setFieldValue('profile', undefined)}
-                                    >
-                                        Reset
-                                    </Button>
-                                </Stack>
-                                <Typography variant="subtitle1" color="textSecondary" mb={4}>
-                                    Allowed JPG, GIF or PNG. Max size of 2MB
-                                </Typography>
-                            </Box>
-                        </Box>
-                    </CardContent>
-                </BlankCard>
-                <Typography my={1} color="error">
-                    {errors.profile}
-                </Typography>
 
                 <Box>
                     <Stack my={1} direction="row" display="flex" alignItems="center" justifyContent="space-between">
@@ -183,10 +147,14 @@ const FirstStep = ({
                         </IconButton>
                     </Box>
                 </Box>
-
                 <Box display="flex" flexDirection="column" gap={2}>
                     {values.emails
-                        .sort((a, b) => (a.checkedAt < b.checkedAt ? 1 : -1))
+                        .slice()
+                        .sort((a, b) => {
+                            const dateA = a.checkedAt ? new Date(a.checkedAt).getTime() : 0;
+                            const dateB = b.checkedAt ? new Date(b.checkedAt).getTime() : 0;
+                            return dateB - dateA;
+                        })
                         .map((item, index) => (
                             <Box key={item.email}>
                                 <Box display="flex" alignItems="center" justifyContent="space-between" paddingY={1}>

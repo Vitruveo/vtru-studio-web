@@ -26,12 +26,12 @@ export interface CompletedSteps {
 
 interface Wallet {
     address: string;
-    network: { name: string; value: string };
+    network: { name: string; chainId: number };
 }
 
 export interface EmailFormValues {
     email: string;
-    checkedAt: boolean;
+    checkedAt: Date | null;
     sentCode: boolean;
 }
 export interface StepsFormValues {
