@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import { ValidationError } from 'yup';
 
@@ -14,6 +15,7 @@ import CustomTextField from '../forms/theme-elements/CustomTextField';
 import { StepsFormValues, StepsProps } from './types';
 import Wallet from './wallet';
 import { debouncedUsernameValidation, validateEmailFormValue } from '../../contents/wizard/formschema';
+import { userSelector } from '@/features/user';
 
 const currentStep = 1;
 
@@ -28,11 +30,16 @@ const FirstStep = ({
 }: StepsProps) => {
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
+
+    const [usernameError, setUsernameError] = useState('');
+
     const [toastr, setToastr] = useState<CustomizedSnackbarState>({
         type: 'success',
         open: false,
         message: '',
     });
+
+    const checkCurrentUserName = useSelector(userSelector(['username']));
 
     const handleSendCodeEmail = useCallback((emailSend: string, index: number) => {
         setToastr({
@@ -43,11 +50,11 @@ const FirstStep = ({
     }, []);
 
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (checkCurrentUserName.username === e.target.value) return;
+
         if (handleChange) handleChange(e);
 
-        debouncedUsernameValidation(e.target.value, () =>
-            setErrors({ ...errors, username: 'Username already exists' })
-        );
+        debouncedUsernameValidation(e.target.value, setUsernameError);
     };
 
     const handleChangeEmailInput = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -88,7 +95,7 @@ const FirstStep = ({
     useEffect(() => {
         const fields: Array<keyof StepsFormValues> = ['wallets', 'emails', 'username'];
 
-        if (!fields.some((field) => errors[field])) {
+        if (!fields.some((field) => errors[field]) && !usernameError) {
             values.completedSteps[currentStep] = {
                 step: currentStep,
                 errors: false,
@@ -101,7 +108,7 @@ const FirstStep = ({
             };
             setFieldValue('completedSteps', { ...values.completedSteps });
         }
-    }, [values.wallets, values.emails, values.username, errors]);
+    }, [values.wallets, values.emails, values.username, usernameError, errors]);
 
     return (
         <Stack sx={{ width: '100%' }}>
@@ -120,8 +127,8 @@ const FirstStep = ({
                         fullWidth
                         value={values.username}
                         onChange={handleUsernameChange}
-                        error={!!errors.username}
-                        helperText={errors.username}
+                        error={!!errors.username || !!usernameError}
+                        helperText={errors.username || usernameError}
                     />
                 </Box>
 

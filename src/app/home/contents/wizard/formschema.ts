@@ -15,13 +15,16 @@ export const debouncedEmailValidation = debounce((email, setErrors) => {
     });
 }, 700);
 
-export const debouncedUsernameValidation = debounce(async (username, setErrors) => {
+export const debouncedUsernameValidation = debounce(async (username, setFieldError) => {
     try {
-        await checkCreatorUsernameExist({ username });
+        const res = await checkCreatorUsernameExist({ username });
+
+        if (codesVtruApi.success.user.includes(res?.code as string)) {
+            setFieldError('Username already exists');
+        }
     } catch (e) {
         const error = e as AxiosError<CreatorUsernameExistApiRes>;
-
-        if (codesVtruApi.success.user.includes(error.response?.data.code as string)) setErrors();
+        setFieldError('');
     }
 }, 700);
 
