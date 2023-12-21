@@ -9,6 +9,8 @@ import {
     sendRequestUploadExist,
     assetStorage,
     changeCreator,
+    sendEmailCode,
+    verifyCode,
 } from './requests';
 import { userActionsCreators } from './slice';
 import {
@@ -28,6 +30,10 @@ import {
     CreatorSendRequestUploadReq,
     AssetStorageReq,
     SaveStepWizardReq,
+    SendEmailCodeApiRes,
+    SendEmailCodeReq,
+    VerifyCodeReq,
+    VerifyCodeApiRes,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 
@@ -45,7 +51,6 @@ export function userOTPConfirmThunk(payload: UserOTPConfirmReq): ReduxThunkActio
     return async function (dispatch, getState) {
         const response = await userOTPConfimReq({ email: payload.email, code: payload.code });
         dispatch(userActionsCreators.otpConfirm(response));
-
         return response;
     };
 }
@@ -77,7 +82,24 @@ export function checkCreatorEmailExistThunk(
 
 export function addCreatorEmailThunk(payload: AddCreatorEmailReq): ReduxThunkAction<Promise<AddCreatorEmailApiRes>> {
     return async function (dispatch, getState) {
-        const response = await addCreatorEmailExist({ id: payload.id, email: payload.email });
+        const user = getState().user;
+
+        const response = await addCreatorEmailExist({ id: user._id, email: payload.email, framework: user.framework });
+        return response;
+    };
+}
+
+export function sendEmailThunk(payload: SendEmailCodeReq): ReduxThunkAction<Promise<SendEmailCodeApiRes>> {
+    return async function (dispatch, getState) {
+        const response = await sendEmailCode({ email: payload.email });
+        return response;
+    };
+}
+
+export function verifyCodeThunk(payload: VerifyCodeReq): ReduxThunkAction<Promise<VerifyCodeApiRes>> {
+    return async function (dispatch, getState) {
+        const response = await verifyCode({ email: payload.email, code: payload.code });
+        dispatch(userActionsCreators.change({ emails: response.data?.emails }));
         return response;
     };
 }

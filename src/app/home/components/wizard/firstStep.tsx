@@ -9,13 +9,19 @@ import { IconTrash, IconPlus } from '@tabler/icons-react';
 
 import { WalletProvider } from '@/app/home/components/apps/wallet';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
-import { checkCreatorEmailExist } from '@/features/user/requests';
+import { addCreatorEmailThunk, verifyCodeThunk } from '@/features/user/thunks';
 
 import CustomTextField from '../forms/theme-elements/CustomTextField';
 import { StepsFormValues, StepsProps } from './types';
 import Wallet from './wallet';
 import { debouncedUsernameValidation, validateEmailFormValue } from '../../contents/wizard/formschema';
 import { userSelector } from '@/features/user';
+import { sendEmailThunk } from '@/features/user/thunks';
+import { useDispatch } from '@/store/hooks';
+import { checkCreatorEmailExist } from '@/features/user/requests';
+import { codesVtruApi } from '@/services/codes';
+import { AxiosError, AxiosResponse } from 'axios';
+import { CreatorEmailExistApiRes } from '@/features/user/types';
 
 const currentStep = 1;
 
@@ -40,14 +46,60 @@ const FirstStep = ({
     });
 
     const checkCurrentUserName = useSelector(userSelector(['username']));
+    const dispatch = useDispatch();
 
-    const handleSendCodeEmail = useCallback((emailSend: string, index: number) => {
-        setToastr({
-            open: true,
-            type: 'success',
-            message: 'verification code sent to email',
-        });
-    }, []);
+    const handleSendCodeEmail = useCallback(
+        async (emailSend: string) => {
+            const res = await dispatch(sendEmailThunk({ email: emailSend }));
+
+            if (codesVtruApi.success.user.includes(res.code)) {
+                setFieldValue(
+                    'emails',
+                    values.emails.map((item) => (item.email === emailSend ? { ...item, sentCode: true } : item))
+                );
+                setToastr({
+                    open: true,
+                    type: 'success',
+                    message: 'verification code sent to email',
+                });
+            } else {
+                setToastr({
+                    open: true,
+                    type: 'error',
+                    message: 'error sending verification code to email',
+                });
+            }
+        },
+        [values.emails]
+    );
+
+    const handleVerifyCode =
+        (emailVerify: string) => async (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+            try {
+                if (e.target.value.length === 6) {
+                    const res = await dispatch(verifyCodeThunk({ code: e.target.value, email: emailVerify }));
+                    if (codesVtruApi.success.user.includes(res.code)) {
+                        setFieldValue(
+                            'emails',
+                            values.emails.map((item) =>
+                                item.email === emailVerify ? { ...item, checkedAt: new Date() } : item
+                            )
+                        );
+                        setToastr({
+                            open: true,
+                            type: 'success',
+                            message: 'email verified',
+                        });
+                    }
+                }
+            } catch (error) {
+                setToastr({
+                    open: true,
+                    type: 'error',
+                    message: 'error verifying code',
+                });
+            }
+        };
 
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (checkCurrentUserName.username === e.target.value) return;
@@ -76,17 +128,24 @@ const FirstStep = ({
             await checkCreatorEmailExist({ email });
             setEmailError('Email already exists');
         } catch (error) {
-            setFieldValue('emails', [{ email, checkedAt: null, sentCode: false }, ...values.emails]);
-            setEmail('');
-            setEmailError('');
+            if (
+                codesVtruApi.notfound.user.includes(
+                    (error as AxiosError<CreatorEmailExistApiRes>).response?.data?.code as string
+                )
+            ) {
+                await dispatch(addCreatorEmailThunk({ email }));
+                setFieldValue('emails', [{ email, checkedAt: null, sentCode: false }, ...values.emails]);
+                setEmail('');
+                setEmailError('');
+            }
         }
     }, [setFieldValue, values.emails, email]);
 
     const handleDeleteEmail = useCallback(
-        (index: number) => {
+        (emailDelet: string) => {
             setFieldValue(
                 `emails`,
-                values.emails.filter((v, i) => i !== index)
+                values.emails.filter((v) => v.email !== emailDelet)
             );
         },
         [setFieldValue, values.emails]
@@ -112,7 +171,7 @@ const FirstStep = ({
 
     return (
         <Stack sx={{ width: '100%' }}>
-            <Box minWidth={600} display="flex" flexDirection="column" my={3} gap={4} p={2}>
+            <Box minWidth={600} display="flex" flexDirection="column" my={3} gap={1}>
                 <Box>
                     <Stack my={1} direction="row" display="flex" alignItems="center" justifyContent="space-between">
                         <Typography variant="subtitle1" fontWeight={600} component="label">
@@ -133,12 +192,12 @@ const FirstStep = ({
                 </Box>
 
                 <Box>
-                    <Stack my={1} direction="row" display="flex" alignItems="center" justifyContent="space-between">
+                    <Stack my={2} direction="row" display="flex" alignItems="center" justifyContent="space-between">
                         <Typography variant="subtitle1" fontWeight={600} component="label">
                             Emails
                         </Typography>
                     </Stack>
-                    <Box width="100%" display="flex" alignItems="baseline" gap={1}>
+                    <Box width="100%" display="flex">
                         <CustomTextField
                             value={email}
                             onChange={handleChangeEmailInput}
@@ -154,56 +213,48 @@ const FirstStep = ({
                         </IconButton>
                     </Box>
                 </Box>
-                <Box display="flex" flexDirection="column" gap={2}>
-                    {values.emails
-                        .slice()
-                        .sort((a, b) => {
-                            const dateA = a.checkedAt ? new Date(a.checkedAt).getTime() : 0;
-                            const dateB = b.checkedAt ? new Date(b.checkedAt).getTime() : 0;
-                            return dateB - dateA;
-                        })
-                        .map((item, index) => (
-                            <Box key={item.email}>
-                                <Box display="flex" alignItems="center" justifyContent="space-between" paddingY={1}>
-                                    <Box display="flex" alignItems="center" gap={1}>
-                                        {!item.checkedAt && (
-                                            <IconButton onClick={(e) => handleDeleteEmail(index)}>
-                                                <IconTrash color="red" size="16" stroke={1.5} />
-                                            </IconButton>
-                                        )}
-                                        <Typography>{item.email}</Typography>
-                                    </Box>
-                                    {item.checkedAt ? (
-                                        <Typography color="success.main">Verified email</Typography>
-                                    ) : item.sentCode ? (
-                                        <Box
-                                            display="flex"
-                                            flexDirection="column"
-                                            alignItems="flex-end"
-                                            justifyContent="flex-end"
-                                        >
-                                            <CustomTextField
-                                                size="small"
-                                                id="verificationCode"
-                                                variant="outlined"
-                                                placeholder="type a code..."
-                                            />
-                                            <Typography variant="caption" color="primary">
-                                                Resend code
-                                            </Typography>
-                                        </Box>
-                                    ) : (
-                                        <Button onClick={() => handleSendCodeEmail(item.email, index)}>
-                                            Verify now
-                                        </Button>
+                <Box display="flex" flexDirection="column" my={2} gap={2}>
+                    {values.emails.slice().map((item) => (
+                        <Box key={item.email}>
+                            <Box display="flex" alignItems="center" justifyContent="space-between" paddingY={1}>
+                                <Box display="flex" alignItems="center" gap={1}>
+                                    {!item.checkedAt && (
+                                        <IconButton onClick={(e) => handleDeleteEmail(item.email)}>
+                                            <IconTrash color="red" size="16" stroke={1.5} />
+                                        </IconButton>
                                     )}
+                                    <Typography>{item.email}</Typography>
                                 </Box>
-                                <Divider />
+                                {item.checkedAt ? (
+                                    <Typography color="success.main">Verified email</Typography>
+                                ) : item.sentCode ? (
+                                    <Box
+                                        display="flex"
+                                        flexDirection="column"
+                                        alignItems="flex-end"
+                                        justifyContent="flex-end"
+                                    >
+                                        <CustomTextField
+                                            onChange={handleVerifyCode(item.email)}
+                                            size="small"
+                                            id="verificationCode"
+                                            variant="outlined"
+                                            placeholder="type a code..."
+                                        />
+
+                                        <Button onClick={() => handleSendCodeEmail(item.email)}>Resend code</Button>
+                                        <Typography variant="caption" color="primary"></Typography>
+                                    </Box>
+                                ) : (
+                                    <Button onClick={() => handleSendCodeEmail(item.email)}>Verify now</Button>
+                                )}
                             </Box>
-                        ))}
+                            <Divider />
+                        </Box>
+                    ))}
                 </Box>
                 <Box display="flex" flexDirection="column">
-                    <Stack my={1} direction="row" display="flex" alignItems="center" justifyContent="space-between">
+                    <Stack my={2} direction="row" display="flex" alignItems="center" justifyContent="space-between">
                         <Typography variant="subtitle1" fontWeight={600} component="label">
                             Wallets
                         </Typography>

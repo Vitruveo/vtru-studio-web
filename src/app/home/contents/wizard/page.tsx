@@ -172,13 +172,13 @@ export default function Wizard() {
                                         handleChange={handleChange}
                                         handleSubmit={handleSubmit}
                                     />
-                                    <Stack direction="row" justifyContent="center" gap={5} marginTop={10}>
+                                    <Stack direction="row" justifyContent="center" gap={5}>
                                         {index !== 0 && (
-                                            <Button color="primary" variant="outlined" onClick={handleBack}>
+                                            <Button fullWidth color="primary" variant="outlined" onClick={handleBack}>
                                                 Previous
                                             </Button>
                                         )}
-                                        <Button color="primary" variant="contained" onClick={handleNext}>
+                                        <Button fullWidth color="primary" variant="contained" onClick={handleNext}>
                                             Next
                                         </Button>
                                     </Stack>

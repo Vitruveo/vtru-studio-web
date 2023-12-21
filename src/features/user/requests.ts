@@ -12,6 +12,8 @@ import {
     CreatorSendRequestUploadReq,
     CreatorUsernameExistApiRes,
     CreatorUsernameExistReq,
+    SendEmailCodeApiRes,
+    SendEmailCodeReq,
     UserAddApiRes,
     UserAddReq,
     UserAddRes,
@@ -20,7 +22,11 @@ import {
     UserOTPConfirmApiRes,
     UserOTPConfirmReq,
     UserOTPConfirmRes,
+    VerifyCodeApiRes,
+    VerifyCodeReq,
+    VerifyCodeRes,
 } from './types';
+import { Framework } from '../common/types';
 
 export async function userLoginReq(data: UserLoginReq): Promise<UserLoginApiRes> {
     const res = await apiService.post<string>(`/creators/login`, data);
@@ -47,8 +53,25 @@ export async function checkCreatorEmailExist(data: CreatorEmailExistReq): Promis
     return res;
 }
 
-export async function addCreatorEmailExist(data: AddCreatorEmailReq): Promise<AddCreatorEmailApiRes> {
-    const res = apiService.post<boolean>(`/creators/${data.id}/email`, { email: data.email });
+export async function addCreatorEmailExist(data: {
+    email: string;
+    id: string;
+    framework: Framework;
+}): Promise<AddCreatorEmailApiRes> {
+    const res = apiService.post<boolean>(`/creators/${data.id}/email`, {
+        email: data.email,
+        framework: data.framework,
+    });
+    return res;
+}
+
+export async function sendEmailCode(data: SendEmailCodeReq): Promise<SendEmailCodeApiRes> {
+    const res = apiService.post<string>(`/creators/${data.email}/email/sendCode`, {});
+    return res;
+}
+
+export async function verifyCode(data: VerifyCodeReq): Promise<VerifyCodeApiRes> {
+    const res = apiService.post<VerifyCodeRes>(`/creators/${data.email}/email/verifyCode`, { code: data.code });
     return res;
 }
 
