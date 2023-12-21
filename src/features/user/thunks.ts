@@ -114,13 +114,13 @@ export function creatorAccountThunk(payload: StepsFormValues): ReduxThunkAction<
 
         let isChanged = false;
 
-        isChanged = isChanged || payload.username !== user.name;
+        isChanged = isChanged || payload.username !== user.username;
         isChanged = isChanged || !payload.emails.every((v) => user.emails.find((userV) => userV.email === v.email));
         isChanged =
             isChanged || !payload.wallets.every((v) => user.wallets.find((userV) => userV.address === v.address));
 
         if (isChanged) {
-            const res = await changeCreator({
+            await changeCreator({
                 userId: user._id,
                 data: {
                     name: user.name,

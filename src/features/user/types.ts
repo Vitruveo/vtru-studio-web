@@ -133,6 +133,12 @@ export interface CreatorSchemaType {
     };
 }
 
+interface CreatorUsernameExistRes {
+    code: string;
+    message: string;
+    data: boolean;
+}
+
 export type UserAddApiRes = APIResponse<UserAddRes>;
 export type UserLoginApiRes = APIResponse<string>;
 export type UserOTPConfirmApiRes = APIResponse<UserOTPConfirmRes>;
