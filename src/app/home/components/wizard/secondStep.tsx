@@ -1,18 +1,17 @@
-import { Fragment, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, memo, useEffect, useMemo, useState } from 'react';
 import Img from 'next/image';
 import { useDropzone } from 'react-dropzone';
-import { IconTrash, IconUpload } from '@tabler/icons-react';
+import { Stack } from '@mui/system';
+import { Box, MenuItem, Tab, Typography } from '@mui/material';
+import { TabContext, TabList } from '@mui/lab';
+import { IconTrash } from '@tabler/icons-react';
 
-import { Box, Button, MenuItem, Tab, Typography } from '@mui/material';
 import { StepsFormValues, StepsProps } from './types';
 
-import { sendRequestUploadThunk } from '@/features/user/thunks';
 import { useDispatch } from '@/store/hooks';
+import { sendRequestUploadThunk } from '@/features/user/thunks';
 import { Crop } from '../Crop';
-import { Stack } from '@mui/system';
 import CustomSelect from '../forms/theme-elements/CustomSelect';
-import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Crop2 } from '../Crop2';
 import CustomFormLabel from '../forms/theme-elements/CustomFormLabel';
 
 export type FormatNames = 'display' | 'exhibition' | 'preview';
@@ -90,12 +89,32 @@ const mediaDefinitions = [
             {
                 name: 'display',
                 title: 'Display',
-                width: 600,
-                height: 400,
+                width: 400,
+                height: 600,
+            },
+            {
+                name: 'exhibition',
+                title: 'Exhibition',
+                width: 800,
+                height: 1200,
+            },
+            {
+                name: 'preview',
+                title: 'Preview',
+                width: 1200,
+                height: 1800,
             },
         ],
     },
 ];
+
+interface PreviewImageProps {
+    file: File;
+}
+
+const PreviewImage = memo(function imagePreview({ file }: PreviewImageProps) {
+    return <Img width={40} height={40} src={URL.createObjectURL(file)} alt="" />;
+});
 
 const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue }: StepsProps) => {
     const dispatch = useDispatch();
@@ -215,7 +234,7 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
                     </Box>
                     <Box width={400}>
                         <Typography variant="subtitle1" fontWeight={600} component="label">
-                            Select a definition mode{' '}
+                            Select a definition mode
                         </Typography>
                         <CustomSelect
                             value={values.definition}
@@ -259,12 +278,7 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
                                         return (
                                             <Fragment key={format.name}>
                                                 <Box display={indexFormat + 1 === Number(tab) ? 'block' : 'none'}>
-                                                    <Stack
-                                                        direction="column"
-                                                        // alignItems="center"
-                                                        justifyContent="center"
-                                                        gap={2}
-                                                    >
+                                                    <Stack direction="column" justifyContent="center" gap={2}>
                                                         <Box
                                                             display="flex"
                                                             alignItems="center"
@@ -303,15 +317,12 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
                                                                         size="16"
                                                                         stroke={1.5}
                                                                     />
-                                                                    <Img
-                                                                        width={40}
-                                                                        height={40}
-                                                                        src={URL.createObjectURL(
+                                                                    <PreviewImage
+                                                                        file={
                                                                             values.asset.formats[
                                                                                 format.name as FormatNames
                                                                             ].file!
-                                                                        )}
-                                                                        alt=""
+                                                                        }
                                                                     />
                                                                     <Typography>
                                                                         {
@@ -345,23 +356,22 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
                                                             />
                                                         </Box>
 
-                                                        <Crop2
-                                                            src={URL.createObjectURL(
+                                                        <Crop
+                                                            image={URL.createObjectURL(
                                                                 values.asset.formats[format.name as FormatNames].file ||
                                                                     values.asset.file!
                                                             )}
-                                                            scale={
+                                                            width={format.width}
+                                                            height={format.height}
+                                                            zoom={
                                                                 values.asset.formats[format.name as FormatNames].scale
                                                             }
-                                                            crop={values.asset.formats[format.name as FormatNames]}
                                                             onChange={(pixelCrop) =>
                                                                 setFieldValue(`asset.formats.${format.name}`, {
                                                                     ...values.asset.formats[format.name as FormatNames],
                                                                     ...pixelCrop,
                                                                 })
                                                             }
-                                                            width={format.width}
-                                                            height={format.height}
                                                         />
                                                     </Stack>
                                                 </Box>
