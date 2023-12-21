@@ -3,7 +3,6 @@ import FormData from 'form-data';
 import { apiService } from '@/services/api';
 import {
     AddCreatorEmailApiRes,
-    AddCreatorEmailReq,
     AssetStorageReq,
     CreatorEmailExistApiRes,
     CreatorEmailExistReq,
@@ -14,6 +13,7 @@ import {
     CreatorUsernameExistReq,
     SendEmailCodeApiRes,
     SendEmailCodeReq,
+    User,
     UserAddApiRes,
     UserAddReq,
     UserAddRes,
@@ -24,7 +24,6 @@ import {
     UserOTPConfirmRes,
     VerifyCodeApiRes,
     VerifyCodeReq,
-    VerifyCodeRes,
 } from './types';
 import { Framework } from '../common/types';
 
@@ -71,7 +70,7 @@ export async function sendEmailCode(data: SendEmailCodeReq): Promise<SendEmailCo
 }
 
 export async function verifyCode(data: VerifyCodeReq): Promise<VerifyCodeApiRes> {
-    const res = apiService.post<VerifyCodeRes>(`/creators/${data.email}/email/verifyCode`, { code: data.code });
+    const res = apiService.post<User>(`/creators/${data.email}/email/verifyCode`, { code: data.code });
     return res;
 }
 
