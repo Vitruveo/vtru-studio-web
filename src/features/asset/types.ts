@@ -1,8 +1,17 @@
+import { Licenses, MetadataDefinitionTypes, Option } from '@/app/home/components/wizard/types';
 import { APIResponse } from '../common/types';
 
-interface Asset {
+export interface Asset {
     _id: string;
-
+    contract: boolean;
+    assetMetadata: {
+        assetMetadataDefinitions: MetadataDefinitionTypes[];
+        assetMetadataDomains: Option[];
+    };
+    creatorMetadata: {
+        creatorMetadataDefinitions: MetadataDefinitionTypes[];
+    };
+    licenses: Licenses;
     framework: {
         createdAt: Date | null;
         updatedAt: Date | null;
@@ -25,3 +34,4 @@ export interface AssetStorageReq {
 export interface UpdateAssetStepReq {}
 
 export type UpdateAssetStepApiRes = APIResponse<string>;
+export type GetAssetApiRes = APIResponse<Asset>;

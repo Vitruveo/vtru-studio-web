@@ -1,8 +1,39 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Box, Container, Typography, Button } from '@mui/material';
 import { StepsFormValues, StepsProps } from './types';
+import { FormikErrors } from 'formik';
 
 const currentStep = 6;
+
+export const validateErrorsContract = ({
+    values,
+    errors,
+    setFieldValue,
+}: {
+    values: StepsFormValues;
+    errors: FormikErrors<StepsFormValues>;
+    setFieldValue: (
+        field: string,
+        value: any,
+        shouldValidate?: boolean | undefined
+    ) => Promise<void> | Promise<FormikErrors<StepsFormValues>>;
+}) => {
+    const fields: Array<keyof StepsFormValues> = ['contract'];
+
+    if (!fields.some((field) => errors[field])) {
+        values.completedSteps[currentStep] = {
+            step: currentStep,
+            errors: false,
+        };
+        setFieldValue('completedSteps', { ...values.completedSteps });
+    } else {
+        values.completedSteps[currentStep] = {
+            step: currentStep,
+            errors: true,
+        };
+        setFieldValue('completedSteps', { ...values.completedSteps });
+    }
+};
 
 const ContractScreen = ({ values, errors, setFieldValue }: StepsProps) => {
     const [scrolledToBottom, setScrolledToBottom] = useState(false);
@@ -27,23 +58,7 @@ const ContractScreen = ({ values, errors, setFieldValue }: StepsProps) => {
         setFieldValue('contract', !values.contract);
     };
 
-    useEffect(() => {
-        const fields: Array<keyof StepsFormValues> = ['contract'];
-
-        if (!fields.some((field) => errors[field])) {
-            values.completedSteps[currentStep] = {
-                step: currentStep,
-                errors: false,
-            };
-            setFieldValue('completedSteps', { ...values.completedSteps });
-        } else {
-            values.completedSteps[currentStep] = {
-                step: currentStep,
-                errors: true,
-            };
-            setFieldValue('completedSteps', { ...values.completedSteps });
-        }
-    }, [values.contract, errors]);
+    useEffect(() => {}, [values.contract, errors]);
 
     return (
         <Container>

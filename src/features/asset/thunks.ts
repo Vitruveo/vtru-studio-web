@@ -1,8 +1,9 @@
-import { StepsFormValues } from '@/app/home/components/wizard/types';
+import { Licenses, StepsFormValues } from '@/app/home/components/wizard/types';
 import { userActionsCreators } from '../user/slice';
-import { assetStorage, updateAssetStep } from './requests';
+import { assetStorage, updateAssetStep, getAsset } from './requests';
 import { AssetStorageReq } from './types';
 import { ReduxThunkAction } from '@/store';
+import { assetActionsCreators } from './slice';
 
 export function assetStorageThunk(payload: AssetStorageReq): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
@@ -18,12 +19,45 @@ export function assetStorageThunk(payload: AssetStorageReq): ReduxThunkAction<Pr
     };
 }
 
+export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
+    return async function (dispatch, getState) {
+        try {
+            const response = await getAsset();
+            if (response.data) {
+                dispatch(
+                    assetActionsCreators.change({
+                        assetMetadata: response.data.assetMetadata,
+                        creatorMetadata: response.data.creatorMetadata,
+                        licenses: response.data.licenses.map((v) => ({ ...v, added: true })) as Licenses,
+                        contract: response.data.contract,
+                    })
+                );
+            }
+
+            return response;
+        } catch (_) {
+            // TODO: implement error handling
+        }
+    };
+}
+
 export function assetUpdateStepThunk(payload: StepsFormValues): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
+        const licenses = payload.licenses.filter((item) => item.added);
+
         const response = await updateAssetStep({
             ...payload,
-            licenses: payload.licenses.filter((item) => item.added),
+            licenses,
         });
+
+        dispatch(
+            assetActionsCreators.change({
+                assetMetadata: payload.assetMetadata,
+                creatorMetadata: payload.creatorMetadata,
+                licenses: payload.licenses,
+                contract: payload.contract,
+            })
+        );
     };
 }
 

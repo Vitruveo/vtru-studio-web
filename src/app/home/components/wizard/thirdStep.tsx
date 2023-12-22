@@ -6,8 +6,39 @@ import { MenuItem } from '@mui/material';
 import { StepsFormValues, StepsProps } from './types';
 import CustomSelect from '../forms/theme-elements/CustomSelect';
 import MetadataFields from './metadataFields';
+import { FormikErrors } from 'formik';
 
 const currentStep = 3;
+
+export const validateErrorsAssetMetadata = ({
+    values,
+    errors,
+    setFieldValue,
+}: {
+    values: StepsFormValues;
+    errors: FormikErrors<StepsFormValues>;
+    setFieldValue: (
+        field: string,
+        value: any,
+        shouldValidate?: boolean | undefined
+    ) => Promise<void> | Promise<FormikErrors<StepsFormValues>>;
+}) => {
+    const fields: Array<keyof StepsFormValues> = ['assetMetadata'];
+
+    if (!fields.some((field) => errors[field])) {
+        values.completedSteps[currentStep] = {
+            step: currentStep,
+            errors: false,
+        };
+        setFieldValue('completedSteps', { ...values.completedSteps });
+    } else {
+        values.completedSteps[currentStep] = {
+            step: currentStep,
+            errors: true,
+        };
+        setFieldValue('completedSteps', { ...values.completedSteps });
+    }
+};
 
 const ThirdStep = ({
     values,
@@ -19,22 +50,9 @@ const ThirdStep = ({
     setFieldError,
 }: StepsProps) => {
     useEffect(() => {
-        const fields: Array<keyof StepsFormValues> = ['assetMetadata'];
-
-        if (!fields.some((field) => errors[field])) {
-            values.completedSteps[currentStep] = {
-                step: currentStep,
-                errors: false,
-            };
-            setFieldValue('completedSteps', { ...values.completedSteps });
-        } else {
-            values.completedSteps[currentStep] = {
-                step: currentStep,
-                errors: true,
-            };
-            setFieldValue('completedSteps', { ...values.completedSteps });
-        }
+        validateErrorsAssetMetadata({ values, errors, setFieldValue });
     }, [errors, values.assetMetadata]);
+
     return (
         <Grid mt={1} my={3} alignItems="center" width={500} lg={6} xs={12}>
             <Grid marginBottom={2}>

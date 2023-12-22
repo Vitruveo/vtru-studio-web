@@ -36,13 +36,7 @@ import {
     VerifyCodeApiRes,
 } from './types';
 import { ReduxThunkAction } from '@/store';
-import {
-    assetMetadataThunk,
-    assetUpdateStepThunk,
-    contractThunk,
-    creatorMetadataThunk,
-    licenseThunk,
-} from '../asset/thunks';
+import { assetUpdateStepThunk, getAssetThunk } from '../asset/thunks';
 
 export function userLoginThunk(payload: UserLoginReq): ReduxThunkAction<Promise<UserLoginApiRes>> {
     return async function (dispatch, getState) {
@@ -57,7 +51,11 @@ export function userLoginThunk(payload: UserLoginReq): ReduxThunkAction<Promise<
 export function userOTPConfirmThunk(payload: UserOTPConfirmReq): ReduxThunkAction<Promise<UserOTPConfirmApiRes>> {
     return async function (dispatch, getState) {
         const response = await userOTPConfimReq({ email: payload.email, code: payload.code });
-        dispatch(userActionsCreators.otpConfirm(response));
+        if (response) {
+            await dispatch(userActionsCreators.otpConfirm(response));
+            await dispatch(getAssetThunk());
+        }
+
         return response;
     };
 }

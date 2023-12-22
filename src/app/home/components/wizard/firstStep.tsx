@@ -22,8 +22,41 @@ import { checkCreatorEmailExist } from '@/features/user/requests';
 import { codesVtruApi } from '@/services/codes';
 import { AxiosError, AxiosResponse } from 'axios';
 import { CreatorEmailExistApiRes } from '@/features/user/types';
+import { FormikErrors } from 'formik';
 
 const currentStep = 1;
+
+export const validateErrorsCreatorAccount = ({
+    values,
+    usernameError,
+    errors,
+    setFieldValue,
+}: {
+    values: StepsFormValues;
+    usernameError?: string;
+    errors: FormikErrors<StepsFormValues>;
+    setFieldValue: (
+        field: string,
+        value: any,
+        shouldValidate?: boolean | undefined
+    ) => Promise<void> | Promise<FormikErrors<StepsFormValues>>;
+}) => {
+    const fields: Array<keyof StepsFormValues> = ['wallets', 'emails', 'username'];
+
+    if (!fields.some((field) => errors[field]) && !usernameError) {
+        values.completedSteps[currentStep] = {
+            step: currentStep,
+            errors: false,
+        };
+        setFieldValue('completedSteps', { ...values.completedSteps });
+    } else {
+        values.completedSteps[currentStep] = {
+            step: currentStep,
+            errors: true,
+        };
+        setFieldValue('completedSteps', { ...values.completedSteps });
+    }
+};
 
 const FirstStep = ({
     values,
@@ -114,31 +147,7 @@ const FirstStep = ({
     }, []);
 
     const handleAddEmail = useCallback(async () => {
-        if (values.emails.some((item) => item.email === email)) {
-            setEmailError('Email already exists');
-            return;
-        }
-        try {
-            await validateEmailFormValue.validate({ email });
-        } catch (error) {
-            setEmailError((error as ValidationError).errors[0]);
-            return;
-        }
-        try {
-            await checkCreatorEmailExist({ email });
-            setEmailError('Email already exists');
-        } catch (error) {
-            if (
-                codesVtruApi.notfound.user.includes(
-                    (error as AxiosError<CreatorEmailExistApiRes>).response?.data?.code as string
-                )
-            ) {
-                await dispatch(addCreatorEmailThunk({ email }));
-                setFieldValue('emails', [{ email, checkedAt: null, sentCode: false }, ...values.emails]);
-                setEmail('');
-                setEmailError('');
-            }
-        }
+        validateErrorsCreatorAccount({ values, errors, setFieldValue, usernameError });
     }, [setFieldValue, values.emails, email]);
 
     const handleDeleteEmail = useCallback(

@@ -4,8 +4,39 @@ import Grid from '@mui/material/Grid';
 import { StepsFormValues, StepsProps } from './types';
 
 import MetadataFields from './metadataFields';
+import { FormikErrors } from 'formik';
 
 const currentStep = 4;
+
+export const validateErrorsCreatorMetadata = ({
+    values,
+    errors,
+    setFieldValue,
+}: {
+    values: StepsFormValues;
+    errors: FormikErrors<StepsFormValues>;
+    setFieldValue: (
+        field: string,
+        value: any,
+        shouldValidate?: boolean | undefined
+    ) => Promise<void> | Promise<FormikErrors<StepsFormValues>>;
+}) => {
+    const fields: Array<keyof StepsFormValues> = ['creatorMetadata'];
+
+    if (!fields.some((field) => errors[field])) {
+        values.completedSteps[currentStep] = {
+            step: currentStep,
+            errors: false,
+        };
+        setFieldValue('completedSteps', { ...values.completedSteps });
+    } else {
+        values.completedSteps[currentStep] = {
+            step: currentStep,
+            errors: true,
+        };
+        setFieldValue('completedSteps', { ...values.completedSteps });
+    }
+};
 
 const SixthStep = ({
     values,
@@ -17,21 +48,7 @@ const SixthStep = ({
     setFieldError,
 }: StepsProps) => {
     useEffect(() => {
-        const fields: Array<keyof StepsFormValues> = ['creatorMetadata'];
-
-        if (!fields.some((field) => errors[field])) {
-            values.completedSteps[currentStep] = {
-                step: currentStep,
-                errors: false,
-            };
-            setFieldValue('completedSteps', { ...values.completedSteps });
-        } else {
-            values.completedSteps[currentStep] = {
-                step: currentStep,
-                errors: true,
-            };
-            setFieldValue('completedSteps', { ...values.completedSteps });
-        }
+        validateErrorsCreatorMetadata({ values, errors, setFieldValue });
     }, [errors, values.creatorMetadata]);
 
     return (

@@ -36,7 +36,7 @@ export interface License {
     title: string;
     domain: 'NFT' | 'print' | 'stream';
     version: string;
-    added: false;
+    added: boolean;
     enable: boolean;
     licenseMetadataDefinitions: MetadataDefinitionTypes[];
 }

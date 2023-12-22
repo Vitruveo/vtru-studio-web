@@ -10,6 +10,7 @@ import type { StepsFormValues, StepsProps, FormatNames } from './types';
 import CustomSelect from '../forms/theme-elements/CustomSelect';
 import { Pintura } from '../Pintura';
 import CustomFormLabel from '../forms/theme-elements/CustomFormLabel';
+import { FormikErrors } from 'formik';
 
 const currentStep = 2;
 
@@ -111,6 +112,36 @@ const PreviewImage = memo(function imagePreview({ file }: PreviewImageProps) {
     return <Img width={40} height={40} src={URL.createObjectURL(file)} alt="" />;
 });
 
+export const validateErrorsAssetUpload = ({
+    values,
+    errors,
+    setFieldValue,
+}: {
+    values: StepsFormValues;
+    errors: FormikErrors<StepsFormValues>;
+    setFieldValue: (
+        field: string,
+        value: any,
+        shouldValidate?: boolean | undefined
+    ) => Promise<void> | Promise<FormikErrors<StepsFormValues>>;
+}) => {
+    const fields: Array<keyof StepsFormValues> = ['asset'];
+
+    if (!fields.some((field) => errors[field])) {
+        values.completedSteps[currentStep] = {
+            step: currentStep,
+            errors: false,
+        };
+        setFieldValue('completedSteps', { ...values.completedSteps });
+    } else {
+        values.completedSteps[currentStep] = {
+            step: currentStep,
+            errors: true,
+        };
+        setFieldValue('completedSteps', { ...values.completedSteps });
+    }
+};
+
 const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue }: StepsProps) => {
     const [tab, setTab] = useState('1');
 
@@ -131,21 +162,7 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
     });
 
     useEffect(() => {
-        const fields: Array<keyof StepsFormValues> = ['asset'];
-
-        if (!fields.some((field) => errors[field])) {
-            values.completedSteps[currentStep] = {
-                step: currentStep,
-                errors: false,
-            };
-            setFieldValue('completedSteps', { ...values.completedSteps });
-        } else {
-            values.completedSteps[currentStep] = {
-                step: currentStep,
-                errors: true,
-            };
-            setFieldValue('completedSteps', { ...values.completedSteps });
-        }
+        validateErrorsAssetUpload({ values, errors, setFieldValue });
     }, [values.asset, errors]);
 
     const handleDeleteFile = () => {

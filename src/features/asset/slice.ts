@@ -1,12 +1,20 @@
 'use client';
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 import { assetStorageThunk } from './thunks';
 import { AssetSliceState } from './types';
 
 const initialState: AssetSliceState = {
     _id: '',
-
+    assetMetadata: {
+        assetMetadataDomains: [],
+        assetMetadataDefinitions: [],
+    },
+    creatorMetadata: {
+        creatorMetadataDefinitions: [],
+    },
+    licenses: [],
+    contract: false,
     framework: {
         createdAt: null,
         updatedAt: null,
@@ -21,6 +29,12 @@ export const assetSlice = createSlice({
     name: 'asset',
     initialState,
     reducers: {
+        change: (state, action: PayloadAction<Partial<AssetSliceState>>) => {
+            return {
+                ...state,
+                ...action.payload,
+            };
+        },
         error: (state, action) => {
             state.status = `failed: ${action.type}`;
             state.error = action.payload;

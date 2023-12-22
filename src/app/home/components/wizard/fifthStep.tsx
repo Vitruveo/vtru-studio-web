@@ -8,6 +8,7 @@ import { StepsFormValues, StepsProps } from './types';
 import CustomSelect from '../forms/theme-elements/CustomSelect';
 import MetadataFields from './metadataFields';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
+import { FormikErrors } from 'formik';
 
 export const licenseMetadataDomains = [
     { value: 'stream', label: 'Stream v1.0' },
@@ -16,6 +17,36 @@ export const licenseMetadataDomains = [
 ];
 
 const currentStep = 5;
+
+export const validateErrorsLisence = ({
+    values,
+    errors,
+    setFieldValue,
+}: {
+    values: StepsFormValues;
+    errors: FormikErrors<StepsFormValues>;
+    setFieldValue: (
+        field: string,
+        value: any,
+        shouldValidate?: boolean | undefined
+    ) => Promise<void> | Promise<FormikErrors<StepsFormValues>>;
+}) => {
+    const fields: Array<keyof StepsFormValues> = ['licenses'];
+
+    if (!fields.some((field) => errors[field])) {
+        values.completedSteps[currentStep] = {
+            step: currentStep,
+            errors: false,
+        };
+        setFieldValue('completedSteps', { ...values.completedSteps });
+    } else {
+        values.completedSteps[currentStep] = {
+            step: currentStep,
+            errors: true,
+        };
+        setFieldValue('completedSteps', { ...values.completedSteps });
+    }
+};
 
 const FifthStep = ({
     values,
@@ -59,21 +90,7 @@ const FifthStep = ({
     };
 
     useEffect(() => {
-        const fields: Array<keyof StepsFormValues> = ['licenses'];
-
-        if (!fields.some((field) => errors[field])) {
-            values.completedSteps[currentStep] = {
-                step: currentStep,
-                errors: false,
-            };
-            setFieldValue('completedSteps', { ...values.completedSteps });
-        } else {
-            values.completedSteps[currentStep] = {
-                step: currentStep,
-                errors: true,
-            };
-            setFieldValue('completedSteps', { ...values.completedSteps });
-        }
+        validateErrorsLisence({ values, errors, setFieldValue });
     }, [errors, values.licenses]);
 
     return (
