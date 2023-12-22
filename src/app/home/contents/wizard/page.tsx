@@ -11,11 +11,13 @@ import FinalStep from '@/app/home/components/wizard/finalStep';
 import FirstStep from '@/app/home/components/wizard/firstStep';
 import SecondStep from '@/app/home/components/wizard/secondStep';
 import ThirdStep from '@/app/home/components/wizard/thirdStep';
+import FourthStep from '@/app/home/components/wizard/fourthStep';
 import FifthStep from '@/app/home/components/wizard/fifthStep';
+import SixthStep from '@/app/home/components/wizard/sixthStep';
 
 import { StepsFormValues } from '../../components/wizard/types';
 import { stepsSchemaValidation } from './formschema';
-import { metadataDefinitions, metadataDomains } from './mock';
+import { assetMetadataDefinitions, assetMetadataDomains, creatorMetadataDefinitions, licenses } from './mock';
 
 import { userSelector } from '@/features/user';
 import { saveStepWizardThunk } from '@/features/user/thunks';
@@ -41,7 +43,7 @@ const steps = [
         ),
     },
     {
-        key: 'Assets Metadata',
+        key: 'Asset Metadata',
         render: ThirdStep,
         title: (
             <span>
@@ -51,14 +53,24 @@ const steps = [
     },
 
     {
+        key: 'Creator Metadata',
+        render: FourthStep,
+        title: (
+            <span>
+                Creator <br /> metadata{' '}
+            </span>
+        ),
+    },
+
+    {
         key: 'License',
-        render: ThirdStep,
+        render: FifthStep,
         title: 'License',
     },
 
     {
         key: 'Contract',
-        render: FifthStep,
+        render: SixthStep,
         title: 'Contract',
     },
 
@@ -124,9 +136,13 @@ export default function Wizard() {
             },
             contract: false,
             assetMetadata: {
-                metadataDomains,
-                metadataDefinitions,
+                assetMetadataDomains,
+                assetMetadataDefinitions,
             },
+            creatorMetadata: {
+                creatorMetadataDefinitions,
+            },
+            licenses,
             completedSteps: {},
             definition: '',
         },
