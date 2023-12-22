@@ -43,9 +43,9 @@ export interface StepsFormValues {
     asset: {
         file: File | undefined;
         formats: {
-            display: { width: number; height: number; scale: number; file?: File; area?: Area };
-            exhibition: { width: number; height: number; scale: number; file?: File; area?: Area };
-            preview: { width: number; height: number; scale: number; file?: File; area?: Area };
+            display: { file?: File; customFile?: File; transactionId?: string };
+            exhibition: { file?: File; customFile?: File; transactionId?: string };
+            preview: { file?: File; customFile?: File; transactionId?: string };
         };
     };
     contract: boolean;
@@ -64,3 +64,5 @@ export interface StepsProps extends FormikDefaultProps<StepsFormValues> {
     errors: StepsFormErros;
     setErrors: (errors: StepsFormErros) => void;
 }
+
+export type FormatNames = 'display' | 'exhibition' | 'preview';

@@ -40,6 +40,7 @@ interface User {
 interface RequestAssetUpload {
     transactionId: string;
     url: string;
+    usedAt: Date | null;
 }
 export interface UserSliceState extends User {
     requestAssetUpload: RequestAssetUpload[];

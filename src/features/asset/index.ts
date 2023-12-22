@@ -1,2 +1,2 @@
-export { userSlice } from './slice';
-export { userSelector } from './selectors';
+export { assetSlice } from './slice';
+export { assetSelector } from './selectors';
