@@ -1,6 +1,7 @@
 import axios from 'axios';
 import FormDataUpload from 'form-data';
-import { AssetStorageReq } from './types';
+import { AssetStorageReq, UpdateAssetStepApiRes, UpdateAssetStepReq } from './types';
+import { apiService } from '@/services/api';
 
 export async function assetStorage({ file, url }: AssetStorageReq): Promise<any> {
     const formDataUpload = new FormDataUpload();
@@ -14,5 +15,10 @@ export async function assetStorage({ file, url }: AssetStorageReq): Promise<any>
         },
     });
 
+    return res;
+}
+
+export async function updateAssetStep(data: UpdateAssetStepReq): Promise<UpdateAssetStepApiRes> {
+    const res = await apiService.put<string>('/assets', data);
     return res;
 }

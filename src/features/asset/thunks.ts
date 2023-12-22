@@ -1,6 +1,6 @@
 import { StepsFormValues } from '@/app/home/components/wizard/types';
 import { userActionsCreators } from '../user/slice';
-import { assetStorage } from './requests';
+import { assetStorage, updateAssetStep } from './requests';
 import { AssetStorageReq } from './types';
 import { ReduxThunkAction } from '@/store';
 
@@ -15,6 +15,15 @@ export function assetStorageThunk(payload: AssetStorageReq): ReduxThunkAction<Pr
         if (response) dispatch(userActionsCreators.requestAssetUploadUsed({ transactionId: payload.transactionId }));
 
         return response;
+    };
+}
+
+export function assetUpdateStepThunk(payload: StepsFormValues): ReduxThunkAction<Promise<any>> {
+    return async function (dispatch, getState) {
+        const response = await updateAssetStep({
+            ...payload,
+            licenses: payload.licenses.filter((item) => item.added),
+        });
     };
 }
 

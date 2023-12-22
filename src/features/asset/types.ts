@@ -1,3 +1,5 @@
+import { APIResponse } from '../common/types';
+
 interface Asset {
     _id: string;
 
@@ -19,3 +21,7 @@ export interface AssetStorageReq {
     file: File;
     transactionId: string;
 }
+
+export interface UpdateAssetStepReq {}
+
+export type UpdateAssetStepApiRes = APIResponse<string>;
