@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { debounce, set } from 'lodash';
+import { debounce } from 'lodash';
 import { checkCreatorEmailExist, checkCreatorUsernameExist } from '@/features/user/requests';
 import { AxiosError } from 'axios';
 import { CreatorUsernameExistApiRes } from '@/features/user/types';
@@ -52,4 +52,54 @@ export const stepsSchemaValidation = yup.object({
             const allowedFileTypes = ['image/jpeg', 'image/png', 'image/gif', 'video/mp4'];
             return allowedFileTypes.includes(asset.file.type);
         }),
+    contract: yup.bool().oneOf([true], 'Contract not accepted'),
+    assetMetadata: yup.object({
+        assetMetadataDefinitions: yup.array().of(
+            yup.object().shape({
+                value: yup.mixed().test('customValidation', '', (value, context) => {
+                    const validateCreateFunction = new Function(context.parent.validation.trim());
+
+                    const result = validateCreateFunction()(value, 'en');
+
+                    if (!result.isValid) throw context.createError({ path: context.path, message: result.message });
+                    return result.isValid;
+                }),
+            })
+        ),
+    }),
+    creatorMetadata: yup.object({
+        creatorMetadataDefinitions: yup.array().of(
+            yup.object().shape({
+                value: yup.mixed().test('customValidation', '', (value, context) => {
+                    const validateCreateFunction = new Function(context.parent.validation.trim());
+
+                    const result = validateCreateFunction()(value, 'en');
+
+                    if (!result.isValid) throw context.createError({ path: context.path, message: result.message });
+                    return result.isValid;
+                }),
+            })
+        ),
+    }),
+    licenses: yup
+        .array()
+        .of(
+            yup.object().shape({
+                licenseMetadataDefinitions: yup.array().of(
+                    yup.object().shape({
+                        value: yup.mixed().test('customValidation', '', (value, context) => {
+                            if (!context.parent?.parent?.added) return true;
+                            const validateCreateFunction = new Function(context.parent.validation.trim());
+
+                            const result = validateCreateFunction()(value, 'en');
+
+                            if (!result.isValid)
+                                throw context.createError({ path: context.path, message: result.message });
+                            return result.isValid;
+                        }),
+                    })
+                ),
+            })
+        )
+        .min(1),
 });

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
@@ -10,32 +10,36 @@ import { Auto, MetadataDefinitionTypes, MetadataFieldsProps, Option, StepsFormVa
 import CustomSelect from '../forms/theme-elements/CustomSelect';
 import CustomTextField from '../forms/theme-elements/CustomTextField';
 
+const handleGetValueByPath = (obj: any, path: string): any => {
+    const keys = path.split('.');
+    let value: any = obj;
+
+    keys.forEach((key) => {
+        if (value && key in value) {
+            value = value[key];
+        } else {
+            value = undefined;
+        }
+    });
+
+    return value;
+};
+
 export const AutoSelectField = ({
     metadataIndex,
     metadataItem,
     values,
+    setFieldValue,
+    formkFieldPathChange,
     handleChangeInput,
 }: {
     metadataIndex: number;
     metadataItem: MetadataDefinitionTypes;
     values: StepsFormValues;
+    setFieldValue: any;
+    formkFieldPathChange: string;
     handleChangeInput: (index: number) => (e: any) => void;
 }) => {
-    const handleGetValueByPath = (obj: any, path: string): string => {
-        const keys = path.split('.');
-        let value: any = obj;
-
-        keys.forEach((key) => {
-            if (value && key in value) {
-                value = value[key];
-            } else {
-                value = undefined;
-            }
-        });
-
-        return value;
-    };
-
     const handleCreateAutoSelectOptions = (auto: Auto): Option[] => {
         const fieldAutoValue = values[auto.nameTargetFieldValue] as any[];
 
@@ -65,18 +69,23 @@ export const AutoSelectField = ({
     };
 
     const options = handleCreateAutoSelectOptions(metadataItem.auto!);
+    const defaultValue = options[0]?.value;
+
+    useEffect(() => {
+        if (!metadataItem.value) setFieldValue(`${formkFieldPathChange}.${metadataIndex}.value`, defaultValue);
+    }, []);
 
     return (
         <CustomSelect
             key={metadataIndex}
-            value={metadataItem.value || options[0].value}
+            value={metadataItem.value || defaultValue}
             onChange={handleChangeInput(metadataIndex)}
             size="small"
             fullWidth
             variant="outlined"
         >
             {options.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
+                <MenuItem key={option.value} value={option?.value}>
                     {option.label}
                 </MenuItem>
             ))}
@@ -86,6 +95,7 @@ export const AutoSelectField = ({
 
 export const MetadataFields = ({
     values,
+    errors,
     metadataDefinitions,
     formkFieldPathChange,
     setFieldValue,
@@ -115,7 +125,7 @@ export const MetadataFields = ({
         setFieldValue(`${formkFieldPathChange}.${index}.value`, value);
     };
 
-    values;
+    const errorsByPath = (index: number) => handleGetValueByPath(errors, formkFieldPathChange)?.[index];
 
     return (
         <Grid spacing={2} container>
@@ -128,6 +138,8 @@ export const MetadataFields = ({
                             </Typography>
                             {v.auto ? (
                                 <AutoSelectField
+                                    formkFieldPathChange={formkFieldPathChange}
+                                    setFieldValue={setFieldValue}
                                     metadataItem={v}
                                     metadataIndex={i}
                                     values={values}
@@ -148,6 +160,9 @@ export const MetadataFields = ({
                                     ))}
                                 </CustomSelect>
                             )}
+                            <Typography my={1} color="error">
+                                {errorsByPath(i)?.value}
+                            </Typography>
                         </>
                     )}
                     {v.type === 'string' && (
@@ -161,6 +176,8 @@ export const MetadataFields = ({
                                 fullWidth
                                 size="small"
                                 variant="outlined"
+                                error={!!errorsByPath(i)?.value}
+                                helperText={errorsByPath(i)?.value}
                             />
                         </>
                     )}
@@ -177,6 +194,8 @@ export const MetadataFields = ({
                                 size="small"
                                 variant="outlined"
                                 onInput={handleIntegerInputChange}
+                                error={!!errorsByPath(i)?.value}
+                                helperText={errorsByPath(i)?.value}
                             />
                         </>
                     )}
@@ -193,6 +212,8 @@ export const MetadataFields = ({
                                 size="small"
                                 variant="outlined"
                                 onInput={handleCentsInputChange}
+                                error={!!errorsByPath(i)?.value}
+                                helperText={errorsByPath(i)?.value}
                                 InputProps={{
                                     startAdornment: (
                                         <Typography variant="body1" component="span" style={{ marginRight: 8 }}>
@@ -214,6 +235,9 @@ export const MetadataFields = ({
                                     checked={v.value as boolean}
                                     onChange={() => handleChangeSwitchInput(i)(!v.value)}
                                 />
+                                <Typography my={1} color="error">
+                                    {errorsByPath(i)?.value}
+                                </Typography>
                             </Box>
                         </>
                     )}
@@ -230,6 +254,9 @@ export const MetadataFields = ({
                                         onChange={handleChangeDateInput(i)}
                                     />
                                 </LocalizationProvider>
+                                <Typography my={1} color="error">
+                                    {errorsByPath(i)?.value}
+                                </Typography>
                             </Box>
                         </>
                     )}

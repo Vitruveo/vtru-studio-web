@@ -110,6 +110,9 @@ const ContractScreen = ({ values, errors, setFieldValue }: StepsProps) => {
                     bibendum varius sollicitudin.
                 </Typography>
             </Box>
+            <Typography my={1} color="error">
+                {errors.contract}
+            </Typography>
             <Box textAlign="right" mt={4} mb={2}>
                 <Button
                     variant="contained"

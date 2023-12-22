@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { IconTrash } from '@tabler/icons-react';
 import { Box, Button, IconButton, MenuItem } from '@mui/material';
 
-import { StepsProps } from './types';
+import { StepsFormValues, StepsProps } from './types';
 import CustomSelect from '../forms/theme-elements/CustomSelect';
 import MetadataFields from './metadataFields';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
@@ -14,6 +14,8 @@ export const licenseMetadataDomains = [
     { value: 'print', label: 'Print v1.0' },
     { value: 'NFT', label: 'NFT v1.0' },
 ];
+
+const currentStep = 5;
 
 const FifthStep = ({
     values,
@@ -55,6 +57,24 @@ const FifthStep = ({
     const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setLicenseDomain(e.target.value);
     };
+
+    useEffect(() => {
+        const fields: Array<keyof StepsFormValues> = ['licenses'];
+
+        if (!fields.some((field) => errors[field])) {
+            values.completedSteps[currentStep] = {
+                step: currentStep,
+                errors: false,
+            };
+            setFieldValue('completedSteps', { ...values.completedSteps });
+        } else {
+            values.completedSteps[currentStep] = {
+                step: currentStep,
+                errors: true,
+            };
+            setFieldValue('completedSteps', { ...values.completedSteps });
+        }
+    }, [errors, values.licenses]);
 
     return (
         <Grid mt={1} my={3} alignItems="center" width={500} lg={6} xs={12}>

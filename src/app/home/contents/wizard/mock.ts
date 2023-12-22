@@ -7,21 +7,6 @@ export const assetMetadataDomains = [
 
 export const assetMetadataDefinitions: MetadataDefinitionTypes[] = [
     {
-        domain: 'music',
-        order: 0,
-        name: 'title',
-        value: '',
-        title: 'Title',
-        type: 'string',
-        required: true,
-        validation: `
-      function validate(value, language) {
-        if (value.length < 3) return { message: 'Subject must be at least 3 characters long', isValid: false };
-        return { message: '', isValid: true };
-      }
-    `,
-    },
-    {
         order: 2,
         title: 'Creator ID',
         name: 'creatorId',
@@ -37,10 +22,11 @@ export const assetMetadataDefinitions: MetadataDefinitionTypes[] = [
         options: [],
         required: false,
         validation: `
-  function validate(value, language) {
-    return { message: '', isValid: true };
-  }
-`,
+        return function validate(value, language) {
+        if(!value || value.length === 0) return { message: 'field required', isValid: false };
+        return { message: '', isValid: true };
+      }
+    `,
     },
     {
         order: 2,
@@ -58,10 +44,26 @@ export const assetMetadataDefinitions: MetadataDefinitionTypes[] = [
         options: [],
         required: false,
         validation: `
-function validate(value, language) {
-  return { message: '', isValid: true };
-}
-`,
+        return function validate(value, language) {
+        if(!value || value.length === 0) return { message: 'field required', isValid: false };
+        return { message: '', isValid: true };
+      }
+    `,
+    },
+    {
+        domain: 'music',
+        order: 0,
+        name: 'title',
+        value: '',
+        title: 'Title',
+        type: 'string',
+        required: true,
+        validation: `
+      return function validate(value, language) {
+      if(!value || value.length === 0) return { message: 'field required', isValid: false };
+      return { message: '', isValid: true };
+    }
+  `,
     },
     {
         order: 2,
@@ -77,10 +79,11 @@ function validate(value, language) {
         ],
         required: false,
         validation: `
-    function validate(value, language) {
-      return { message: '', isValid: true };
-    }
-  `,
+        return function validate(value, language) {
+        if(!value || value.length === 0) return { message: 'field required', isValid: false };
+        return { message: '', isValid: true };
+      }
+    `,
     },
     {
         domain: 'music',
@@ -91,8 +94,8 @@ function validate(value, language) {
         type: 'date',
         required: true,
         validation: `
-      function validate(value, language) {
-        if (value.length < 3) return { message: 'Subject must be at least 3 characters long', isValid: false };
+        return function validate(value, language) {
+        if(!value || value.length === 0) return { message: 'field required', isValid: false };
         return { message: '', isValid: true };
       }
     `,
@@ -106,8 +109,8 @@ function validate(value, language) {
         type: 'string',
         required: true,
         validation: `
-      function validate(value, language) {
-        if (value.length < 3) return { message: 'Subject must be at least 3 characters long', isValid: false };
+        return function validate(value, language) {
+        if(!value || value.length === 0) return { message: 'field required', isValid: false };
         return { message: '', isValid: true };
       }
     `,
@@ -126,7 +129,8 @@ function validate(value, language) {
         ],
         required: false,
         validation: `
-      function validate(value, language) {
+        return function validate(value, language) {
+        if(!value || value.length === 0) return { message: 'field required', isValid: false };
         return { message: '', isValid: true };
       }
     `,
@@ -148,7 +152,8 @@ function validate(value, language) {
         ],
         required: false,
         validation: `
-      function validate(value, language) {
+        return function validate(value, language) {
+        if(!value || value.length === 0) return { message: 'field required', isValid: false };
         return { message: '', isValid: true };
       }
     `,
@@ -162,26 +167,26 @@ function validate(value, language) {
         type: 'string',
         required: true,
         validation: `
-      function validate(value, language) {
-        if (value.length < 3) return { message: 'Subject must be at least 3 characters long', isValid: false };
+        return function validate(value, language) {
         return { message: '', isValid: true };
       }
     `,
     },
-    {
-        order: 2,
-        title: 'Copyright',
-        name: 'copyright',
-        value: '',
-        type: 'select',
-        options: [],
-        required: false,
-        validation: `
-      function validate(value, language) {
-        return { message: '', isValid: true };
-      }
-    `,
-    },
+    // {
+    //     order: 2,
+    //     title: 'Copyright',
+    //     name: 'copyright',
+    //     value: '',
+    //     type: 'select',
+    //     options: [],
+    //     required: false,
+    //     validation: `
+    //     return function validate(value, language) {
+    //     if(!value || value.length === 0) return { message: 'field required', isValid: false };
+    //     return { message: '', isValid: true };
+    //   }
+    // `,
+    // },
     {
         order: 2,
         title: 'Object Type',
@@ -196,7 +201,8 @@ function validate(value, language) {
         ],
         required: false,
         validation: `
-      function validate(value, language) {
+        return function validate(value, language) {
+        if(!value || value.length === 0) return { message: 'field required', isValid: false };
         return { message: '', isValid: true };
       }
     `,
@@ -206,31 +212,17 @@ function validate(value, language) {
 export const creatorMetadataDefinitions: MetadataDefinitionTypes[] = [
     {
         order: 0,
-        name: 'creatorId',
-        value: '',
-        title: 'CreatorID',
-        type: 'string',
-        required: true,
-        validation: `
-function validate(value, language) {
-  if (value.length < 3) return { message: 'Subject must be at least 3 characters long', isValid: false };
-  return { message: '', isValid: true };
-}
-`,
-    },
-    {
-        order: 0,
         name: 'artistName',
         value: '',
         title: 'Artist Name',
         type: 'string',
         required: true,
         validation: `
-    function validate(value, language) {
-      if (value.length < 3) return { message: 'Subject must be at least 3 characters long', isValid: false };
-      return { message: '', isValid: true };
-    }
-  `,
+        return function validate(value, language) {
+        if(!value || value.length === 0) return { message: 'field required', isValid: false };
+        return { message: '', isValid: true };
+      }
+    `,
     },
     {
         order: 1,
@@ -246,10 +238,11 @@ function validate(value, language) {
         ],
         required: false,
         validation: `
-  function validate(value, language) {
-    return { message: '', isValid: true };
-  }
-`,
+        return function validate(value, language) {
+       
+        return { message: '', isValid: true };
+      }
+    `,
     },
     {
         order: 2,
@@ -259,11 +252,11 @@ function validate(value, language) {
         type: 'string',
         required: true,
         validation: `
-    function validate(value, language) {
-      if (value.length < 3) return { message: 'Subject must be at least 3 characters long', isValid: false };
-      return { message: '', isValid: true };
-    }
-  `,
+        return function validate(value, language) {
+      
+        return { message: '', isValid: true };
+      }
+    `,
     },
     {
         order: 4,
@@ -273,10 +266,11 @@ function validate(value, language) {
         type: 'string',
         required: false,
         validation: `
-    function validate(value, language) {
-      return { message: '', isValid: true };
-    }
-  `,
+        return function validate(value, language) {
+        
+        return { message: '', isValid: true };
+      }
+    `,
     },
     {
         order: 4,
@@ -286,10 +280,11 @@ function validate(value, language) {
         type: 'string',
         required: false,
         validation: `
-  function validate(value, language) {
-    return { message: '', isValid: true };
-  }
-`,
+        return function validate(value, language) {
+       
+        return { message: '', isValid: true };
+      }
+    `,
     },
     {
         order: 4,
@@ -299,10 +294,11 @@ function validate(value, language) {
         type: 'string',
         required: false,
         validation: `
-function validate(value, language) {
-  return { message: '', isValid: true };
-}
-`,
+        return function validate(value, language) {
+      
+        return { message: '', isValid: true };
+      }
+    `,
     },
     {
         order: 4,
@@ -312,10 +308,11 @@ function validate(value, language) {
         type: 'date',
         required: false,
         validation: `
-function validate(value, language) {
-  return { message: '', isValid: true };
-}
-`,
+        return function validate(value, language) {
+       
+        return { message: '', isValid: true };
+      }
+    `,
     },
     {
         order: 4,
@@ -325,10 +322,11 @@ function validate(value, language) {
         type: 'string',
         required: false,
         validation: `
-function validate(value, language) {
-return { message: '', isValid: true };
-}
-`,
+        return function validate(value, language) {
+        
+        return { message: '', isValid: true };
+      }
+    `,
     },
     {
         order: 4,
@@ -338,10 +336,11 @@ return { message: '', isValid: true };
         type: 'string',
         required: false,
         validation: `
-function validate(value, language) {
-return { message: '', isValid: true };
-}
-`,
+        return function validate(value, language) {
+        
+        return { message: '', isValid: true };
+      }
+    `,
     },
     {
         order: 4,
@@ -351,10 +350,11 @@ return { message: '', isValid: true };
         type: 'string',
         required: false,
         validation: `
-function validate(value, language) {
-return { message: '', isValid: true };
-}
-`,
+        return function validate(value, language) {
+       
+        return { message: '', isValid: true };
+      }
+    `,
     },
     {
         order: 4,
@@ -364,10 +364,11 @@ return { message: '', isValid: true };
         type: 'string',
         required: false,
         validation: `
-function validate(value, language) {
-return { message: '', isValid: true };
-}
-`,
+        return function validate(value, language) {
+       
+        return { message: '', isValid: true };
+      }
+    `,
     },
     {
         order: 4,
@@ -377,10 +378,11 @@ return { message: '', isValid: true };
         type: 'string',
         required: false,
         validation: `
-function validate(value, language) {
-return { message: '', isValid: true };
-}
-`,
+        return function validate(value, language) {
+       
+        return { message: '', isValid: true };
+      }
+    `,
     },
     {
         order: 4,
@@ -390,10 +392,11 @@ return { message: '', isValid: true };
         type: 'string',
         required: false,
         validation: `
-function validate(value, language) {
-return { message: '', isValid: true };
-}
-`,
+        return function validate(value, language) {
+       
+        return { message: '', isValid: true };
+      }
+    `,
     },
 ];
 
@@ -422,11 +425,11 @@ export const licenses: Licenses = [
                 type: 'integer',
                 required: true,
                 validation: `
-function validate(value, language) {
-if (value.length < 3) return { message: 'Subject must be at least 3 characters long', isValid: false };
-return { message: '', isValid: true };
-}
-`,
+                return function validate(value, language) {
+                if(!value || value.length === 0) return { message: 'field required', isValid: false };
+                return { message: '', isValid: true };
+              }
+            `,
             },
             {
                 domain: 'print',
@@ -437,11 +440,11 @@ return { message: '', isValid: true };
                 type: 'cents',
                 required: true,
                 validation: `
-function validate(value, language) {
-if (value.length < 3) return { message: 'Subject must be at least 3 characters long', isValid: false };
-return { message: '', isValid: true };
-}
-`,
+                return function validate(value, language) {
+                if(!value || value.length === 0) return { message: 'field required', isValid: false };
+                return { message: '', isValid: true };
+              }
+            `,
             },
         ],
     },
@@ -461,11 +464,11 @@ return { message: '', isValid: true };
                 type: 'integer',
                 required: true,
                 validation: `
-function validate(value, language) {
-  if (value.length < 3) return { message: 'Subject must be at least 3 characters long', isValid: false };
-  return { message: '', isValid: true };
-}
-`,
+                return function validate(value, language) {
+                if(!value || value.length === 0) return { message: 'field required', isValid: false };
+                return { message: '', isValid: true };
+              }
+            `,
             },
             {
                 domain: 'NFT',
@@ -476,11 +479,11 @@ function validate(value, language) {
                 type: 'cents',
                 required: true,
                 validation: `
-function validate(value, language) {
-  if (value.length < 3) return { message: 'Subject must be at least 3 characters long', isValid: false };
-  return { message: '', isValid: true };
-}
-`,
+                return function validate(value, language) {
+                if(!value || value.length === 0) return { message: 'field required', isValid: false };
+                return { message: '', isValid: true };
+              }
+            `,
             },
 
             {
@@ -492,11 +495,11 @@ function validate(value, language) {
                 type: 'boolean',
                 required: true,
                 validation: `
-function validate(value, language) {
-if (value.length < 3) return { message: 'Subject must be at least 3 characters long', isValid: false };
-return { message: '', isValid: true };
-}
-`,
+                return function validate(value, language) {
+                if(!value || value.length === 0) return { message: 'field required', isValid: false };
+                return { message: '', isValid: true };
+              }
+            `,
             },
         ],
     },
