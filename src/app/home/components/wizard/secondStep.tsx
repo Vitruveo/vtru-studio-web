@@ -1,21 +1,15 @@
-import { Fragment, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, memo, useEffect, useMemo, useState } from 'react';
 import Img from 'next/image';
 import { useDropzone } from 'react-dropzone';
-import { IconTrash, IconUpload } from '@tabler/icons-react';
-
-import { Box, Button, MenuItem, Tab, Typography } from '@mui/material';
-import { StepsFormValues, StepsProps } from './types';
-
-import { sendRequestUploadThunk } from '@/features/user/thunks';
-import { useDispatch } from '@/store/hooks';
-import { Crop } from '../Crop';
 import { Stack } from '@mui/system';
-import CustomSelect from '../forms/theme-elements/CustomSelect';
-import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Crop2 } from '../Crop2';
-import CustomFormLabel from '../forms/theme-elements/CustomFormLabel';
+import { Box, Button, IconButton, MenuItem, Tab, Typography } from '@mui/material';
+import { TabContext, TabList } from '@mui/lab';
+import { IconTrash } from '@tabler/icons-react';
 
-export type FormatNames = 'display' | 'exhibition' | 'preview';
+import type { StepsFormValues, StepsProps, FormatNames } from './types';
+import CustomSelect from '../forms/theme-elements/CustomSelect';
+import { Pintura } from '../Pintura';
+import CustomFormLabel from '../forms/theme-elements/CustomFormLabel';
 
 const currentStep = 2;
 
@@ -42,20 +36,20 @@ const mediaDefinitions = [
             {
                 name: 'display',
                 title: 'Display',
-                width: 1000,
-                height: 1000,
+                width: 3840,
+                height: 3840,
             },
             {
                 name: 'exhibition',
                 title: 'Exhibition',
-                width: 2000,
-                height: 2000,
+                width: 3000,
+                height: 3000,
             },
             {
                 name: 'preview',
                 title: 'Preview',
-                width: 3000,
-                height: 3000,
+                width: 2000,
+                height: 2000,
             },
         ],
     },
@@ -66,20 +60,20 @@ const mediaDefinitions = [
             {
                 name: 'display',
                 title: 'Display',
-                width: 600,
-                height: 400,
+                width: 3840,
+                height: 2160,
             },
             {
                 name: 'exhibition',
                 title: 'Exhibition',
-                width: 1200,
-                height: 800,
+                width: 3000,
+                height: 2000,
             },
             {
                 name: 'preview',
                 title: 'Preview',
-                width: 1800,
-                height: 1200,
+                width: 2000,
+                height: 2000,
             },
         ],
     },
@@ -90,19 +84,45 @@ const mediaDefinitions = [
             {
                 name: 'display',
                 title: 'Display',
-                width: 600,
-                height: 400,
+                width: 2160,
+                height: 3840,
+            },
+            {
+                name: 'exhibition',
+                title: 'Exhibition',
+                width: 2000,
+                height: 3000,
+            },
+            {
+                name: 'preview',
+                title: 'Preview',
+                width: 2000,
+                height: 2000,
             },
         ],
     },
 ];
 
-const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue }: StepsProps) => {
-    const dispatch = useDispatch();
+interface PreviewImageProps {
+    file: File;
+}
 
+const PreviewImage = memo(function imagePreview({ file }: PreviewImageProps) {
+    return <Img width={40} height={40} src={URL.createObjectURL(file)} alt="" />;
+});
+
+const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue }: StepsProps) => {
     const [tab, setTab] = useState('1');
 
     const onDrop = (acceptedFiles: File[]) => {
+        if (values.asset.file) {
+            setFieldValue('asset.file', undefined);
+            setFieldValue('asset.formats.display', { file: undefined, customFile: undefined });
+            setFieldValue('asset.formats.exhibition', { file: undefined, customFile: undefined });
+            setFieldValue('asset.formats.preview', { file: undefined, customFile: undefined });
+            setFieldValue('definition', '');
+        }
+
         setFieldValue('asset.file', acceptedFiles[0]);
     };
 
@@ -128,17 +148,12 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
         }
     }, [values.asset, errors]);
 
-    const formatBytesToMB = (bytes: number) => {
-        return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
-    };
-
     const handleDeleteFile = () => {
         setFieldValue('asset.file', undefined);
+        setFieldValue('asset.formats.display', { file: undefined, customFile: undefined });
+        setFieldValue('asset.formats.exhibition', { file: undefined, customFile: undefined });
+        setFieldValue('asset.formats.preview', { file: undefined, customFile: undefined });
         setFieldValue('definition', '');
-    };
-
-    const handleRequestUpload = ({ mimetype, originalName }: { mimetype: string; originalName: string }) => {
-        dispatch(sendRequestUploadThunk({ mimetype, originalName }));
     };
 
     const handleChangeTab = (event: React.SyntheticEvent, newValue: string) => {
@@ -173,7 +188,7 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
 
                 <Box
                     border="1px dashed"
-                    padding={10}
+                    padding={values.definition ? 1 : 10}
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
@@ -182,6 +197,50 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
                     <input id="asset" {...getInputProps()} />
                     {isDragActive ? (
                         <p>Drop the files here...</p>
+                    ) : values.asset.file ? (
+                        <Stack direction="row" alignItems="center" gap={10}>
+                            <img src={urlAssetFile!} style={{ display: 'none' }} alt="" onLoad={handleOnLoad} />
+                            <Box display="flex" flexDirection="column" gap={2}>
+                                <>
+                                    <Box
+                                        display="flex"
+                                        flexDirection="column"
+                                        alignItems="center"
+                                        justifyContent="space-between"
+                                    >
+                                        <Img
+                                            width={
+                                                values.definition === 'landscape'
+                                                    ? 200
+                                                    : values.definition === 'portrait'
+                                                      ? 150
+                                                      : 100
+                                            }
+                                            height={
+                                                values.definition === 'landscape'
+                                                    ? 100
+                                                    : values.definition === 'portrait'
+                                                      ? 200
+                                                      : 100
+                                            }
+                                            src={urlAssetFile!}
+                                            alt=""
+                                        />
+                                        <Box display="flex" alignItems="center" gap={1}>
+                                            <IconButton
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleDeleteFile();
+                                                }}
+                                            >
+                                                <IconTrash color="red" size="16" stroke={1.5} />
+                                            </IconButton>
+                                            <Typography>{values.asset.file.name}</Typography>
+                                        </Box>
+                                    </Box>
+                                </>
+                            </Box>
+                        </Stack>
                     ) : (
                         <Typography align="center">
                             Drag and drop files here or click to select files. Please note that only JPG, GIF, PNG, or
@@ -195,48 +254,6 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
             </Typography>
 
             {values.asset.file && (
-                <Stack direction="row" alignItems="center" gap={10}>
-                    <img src={urlAssetFile!} style={{ display: 'none' }} alt="" onLoad={handleOnLoad} />
-                    <Box display="flex" flexDirection="column" gap={2}>
-                        <>
-                            <Box
-                                key={values.asset.file.name}
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="space-between"
-                            >
-                                <Box display="flex" alignItems="center" gap={1}>
-                                    <IconTrash color="red" onClick={handleDeleteFile} size="16" stroke={1.5} />
-                                    <Img width={40} height={40} src={urlAssetFile!} alt="" />
-                                    <Typography>{values.asset.file.name}</Typography>
-                                </Box>
-                            </Box>
-                        </>
-                    </Box>
-                    <Box width={400}>
-                        <Typography variant="subtitle1" fontWeight={600} component="label">
-                            Select a definition mode{' '}
-                        </Typography>
-                        <CustomSelect
-                            value={values.definition}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                setFieldValue('definition', e.target.value)
-                            }
-                            fullWidth
-                            variant="outlined"
-                            size="small"
-                        >
-                            {definitionOptions.map((option) => (
-                                <MenuItem key={option.value} value={option.value}>
-                                    {option.label}
-                                </MenuItem>
-                            ))}
-                        </CustomSelect>
-                    </Box>
-                </Stack>
-            )}
-
-            {values.asset.file && (
                 <TabContext value={tab}>
                     {mediaDefinitions
                         .filter((item) => item.name === values.definition)
@@ -248,7 +265,7 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
                                             return (
                                                 <Tab
                                                     key={indexFormat}
-                                                    label={format.title}
+                                                    label={`${format.title} (${format.width}x${format.height})`}
                                                     value={(indexFormat + 1).toString()}
                                                 />
                                             );
@@ -257,115 +274,183 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
 
                                     {mediaDefinition.formats.map((format, indexFormat) => {
                                         return (
-                                            <Fragment key={format.name}>
-                                                <Box display={indexFormat + 1 === Number(tab) ? 'block' : 'none'}>
+                                            <Box
+                                                key={format.name}
+                                                display={indexFormat + 1 === Number(tab) ? 'block' : 'none'}
+                                            >
+                                                {!values.asset.formats[format.name as FormatNames].file ? (
                                                     <Stack
                                                         direction="column"
-                                                        // alignItems="center"
                                                         justifyContent="center"
+                                                        alignItems="center"
                                                         gap={2}
                                                     >
+                                                        {values.asset.formats[format.name as FormatNames].customFile ? (
+                                                            <Typography color="success.main">File saved</Typography>
+                                                        ) : (
+                                                            <>
+                                                                <Pintura
+                                                                    file={values.asset.file!}
+                                                                    initial={
+                                                                        values.definition === 'landscape'
+                                                                            ? { width: 16, height: 9 }
+                                                                            : values.definition === 'portrait'
+                                                                              ? { width: 3, height: 4 }
+                                                                              : { width: 1, height: 1 }
+                                                                    }
+                                                                    px={{
+                                                                        width: format.width,
+                                                                        height: format.height,
+                                                                    }}
+                                                                    onChange={(file) =>
+                                                                        setFieldValue(
+                                                                            `asset.formats.${format.name}.file`,
+                                                                            file
+                                                                        )
+                                                                    }
+                                                                />
+                                                                {!values.asset.formats[format.name as FormatNames]
+                                                                    .file && (
+                                                                    <Typography color="error">
+                                                                        Press done to save
+                                                                    </Typography>
+                                                                )}
+                                                                {values.asset.formats[format.name as FormatNames]
+                                                                    .file && (
+                                                                    <Typography color="success.main">
+                                                                        File saved
+                                                                    </Typography>
+                                                                )}
+                                                            </>
+                                                        )}
+
                                                         <Box
                                                             display="flex"
                                                             alignItems="center"
                                                             justifyContent="space-between"
                                                         >
-                                                            <Box display="flex" flexDirection="row">
-                                                                <Typography>scale</Typography>
-                                                                <input
-                                                                    id="scale-input"
-                                                                    type="range"
-                                                                    step="0.1"
-                                                                    min={0.1}
-                                                                    max={2}
-                                                                    value={
-                                                                        values.asset.formats[format.name as FormatNames]
-                                                                            .scale
-                                                                    }
-                                                                    onChange={(e) =>
-                                                                        setFieldValue(
-                                                                            `asset.formats.${format.name}.scale`,
-                                                                            Number(e.target.value)
-                                                                        )
-                                                                    }
-                                                                />
-                                                            </Box>
-                                                            {values.asset.formats[format.name as FormatNames].file && (
+                                                            {values.asset.formats[format.name as FormatNames]
+                                                                .customFile && (
                                                                 <Box display="flex" alignItems="center" gap={1}>
                                                                     <IconTrash
                                                                         color="red"
                                                                         onClick={() =>
                                                                             setFieldValue(
-                                                                                `asset.formats.${format.name}.file`,
+                                                                                `asset.formats.${format.name}.customFile`,
                                                                                 undefined
                                                                             )
                                                                         }
                                                                         size="16"
                                                                         stroke={1.5}
                                                                     />
-                                                                    <Img
-                                                                        width={40}
-                                                                        height={40}
-                                                                        src={URL.createObjectURL(
+                                                                    <PreviewImage
+                                                                        file={
                                                                             values.asset.formats[
                                                                                 format.name as FormatNames
-                                                                            ].file!
-                                                                        )}
-                                                                        alt=""
+                                                                            ].customFile!
+                                                                        }
                                                                     />
                                                                     <Typography>
                                                                         {
                                                                             values.asset.formats[
                                                                                 format.name as FormatNames
-                                                                            ].file!.name
+                                                                            ].customFile!.name
                                                                         }
                                                                     </Typography>
                                                                 </Box>
                                                             )}
-                                                            <Box display="flex" alignItems="center">
-                                                                <CustomFormLabel
-                                                                    color="primary"
-                                                                    htmlFor={`file.${format.name}`}
-                                                                    style={{ marginBottom: 0, marginTop: 0 }}
-                                                                >
-                                                                    Upload here
-                                                                </CustomFormLabel>
-                                                            </Box>
-                                                            <input
-                                                                id={`file.${format.name}`}
-                                                                type="file"
-                                                                onChange={(e) =>
-                                                                    e.target.files &&
-                                                                    setFieldValue(
-                                                                        `asset.formats.${format.name}.file`,
-                                                                        e.target.files[0]
-                                                                    )
-                                                                }
-                                                                style={{ display: 'none' }}
+                                                            {!values.asset.formats[format.name as FormatNames]
+                                                                .customFile && (
+                                                                <>
+                                                                    <Box display="flex" alignItems="center">
+                                                                        <CustomFormLabel
+                                                                            color="primary"
+                                                                            htmlFor={`file.${format.name}`}
+                                                                            style={{ marginBottom: 0, marginTop: 0 }}
+                                                                        >
+                                                                            Upload custom media here (
+                                                                            {`${format.width}x${format.height}`})
+                                                                        </CustomFormLabel>
+                                                                    </Box>
+                                                                    <input
+                                                                        id={`file.${format.name}`}
+                                                                        type="file"
+                                                                        onChange={(e) =>
+                                                                            e.target.files &&
+                                                                            setFieldValue(
+                                                                                `asset.formats.${format.name}.customFile`,
+                                                                                e.target.files[0]
+                                                                            )
+                                                                        }
+                                                                        style={{ display: 'none' }}
+                                                                    />
+                                                                </>
+                                                            )}
+                                                        </Box>
+                                                    </Stack>
+                                                ) : (
+                                                    <Stack
+                                                        direction="row"
+                                                        boxShadow={`0 0 10px #763EBD`}
+                                                        height={500}
+                                                        width={800}
+                                                    >
+                                                        <Box
+                                                            width="70%"
+                                                            display="flex"
+                                                            alignItems="center"
+                                                            justifyContent="center"
+                                                        >
+                                                            <Img
+                                                                src={URL.createObjectURL(
+                                                                    values.asset.formats[format.name as FormatNames]
+                                                                        .file!
+                                                                )}
+                                                                alt=""
+                                                                width={format.width / 8}
+                                                                height={format.height / 8}
                                                             />
                                                         </Box>
+                                                        <Stack
+                                                            width="30%"
+                                                            direction="column"
+                                                            alignItems="center"
+                                                            justifyContent="space-between"
+                                                            borderLeft="1px dashed #763EBD"
+                                                            paddingY={5}
+                                                        >
+                                                            <Box
+                                                                display="flex"
+                                                                flexDirection="column"
+                                                                alignItems="center"
+                                                            >
+                                                                <Typography variant="h4">{format.title}</Typography>
+                                                                <Typography>
+                                                                    {format.width}x{format.height}
+                                                                </Typography>
+                                                                <Typography color="success.main">File Saved</Typography>
+                                                            </Box>
 
-                                                        <Crop2
-                                                            src={URL.createObjectURL(
-                                                                values.asset.formats[format.name as FormatNames].file ||
-                                                                    values.asset.file!
-                                                            )}
-                                                            scale={
-                                                                values.asset.formats[format.name as FormatNames].scale
-                                                            }
-                                                            crop={values.asset.formats[format.name as FormatNames]}
-                                                            onChange={(pixelCrop) =>
-                                                                setFieldValue(`asset.formats.${format.name}`, {
-                                                                    ...values.asset.formats[format.name as FormatNames],
-                                                                    ...pixelCrop,
-                                                                })
-                                                            }
-                                                            width={format.width}
-                                                            height={format.height}
-                                                        />
+                                                            <Button
+                                                                variant="outlined"
+                                                                size="small"
+                                                                onClick={() => {
+                                                                    setFieldValue(
+                                                                        `asset.formats.${format.name}.file`,
+                                                                        undefined
+                                                                    );
+                                                                    setFieldValue(
+                                                                        `asset.formats.${format.name}.customFile`,
+                                                                        undefined
+                                                                    );
+                                                                }}
+                                                            >
+                                                                edit now
+                                                            </Button>
+                                                        </Stack>
                                                     </Stack>
-                                                </Box>
-                                            </Fragment>
+                                                )}
+                                            </Box>
                                         );
                                     })}
                                 </Fragment>

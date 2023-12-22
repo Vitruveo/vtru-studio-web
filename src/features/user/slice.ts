@@ -21,10 +21,7 @@ const initialState: UserSliceState = {
         location: '',
     },
     roles: [],
-    requestAssetUpload: {
-        transactionId: '',
-        url: '',
-    },
+    requestAssetUpload: [],
     framework: {
         createdAt: null,
         updatedAt: null,
@@ -64,8 +61,32 @@ export const userSlice = createSlice({
             };
         },
         requestAssetUpload: (state, action) => {
-            state.requestAssetUpload.transactionId = action.payload.transactionId;
-            state.requestAssetUpload.url = action.payload.url || '';
+            if (action.payload.url) {
+                const transactionItem = state.requestAssetUpload.findIndex(
+                    (v) => v.transactionId === action.payload.transactionId
+                );
+                if (transactionItem !== -1) state.requestAssetUpload[transactionItem].url = action.payload.url;
+
+                return;
+            }
+
+            state.requestAssetUpload = [
+                ...state.requestAssetUpload,
+                {
+                    transactionId: action.payload.transactionId,
+                    url: '',
+                    usedAt: null,
+                },
+            ];
+
+            // state.requestAssetUpload.transactionId = action.payload.transactionId;
+            // state.requestAssetUpload.url = action.payload.url || '';
+        },
+        requestAssetUploadUsed: (state, action) => {
+            const transactionItem = state.requestAssetUpload.findIndex(
+                (v) => v.transactionId === action.payload.transactionId
+            );
+            if (transactionItem !== -1) state.requestAssetUpload[transactionItem].usedAt = new Date();
         },
         error: (state, action) => {
             state.status = `failed: ${action.type}`;

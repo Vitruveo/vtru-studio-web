@@ -31,11 +31,14 @@ export interface User {
     roles: Array<string>;
     framework: Framework;
 }
+
+interface RequestAssetUpload {
+    transactionId: string;
+    url: string;
+    usedAt: Date | null;
+}
 export interface UserSliceState extends User {
-    requestAssetUpload: {
-        transactionId: string;
-        url: string;
-    };
+    requestAssetUpload: RequestAssetUpload[];
     token: string;
     status: string;
     error: string;

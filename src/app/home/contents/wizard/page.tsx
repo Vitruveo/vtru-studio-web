@@ -20,8 +20,9 @@ import { stepsSchemaValidation } from './formschema';
 import { assetMetadataDefinitions, assetMetadataDomains, creatorMetadataDefinitions, licenses } from './mock';
 
 import { userSelector } from '@/features/user';
-import { saveStepWizardThunk } from '@/features/user/thunks';
+import { saveStepWizardThunk, sendRequestUploadThunk } from '@/features/user/thunks';
 import { useDispatch } from '@/store/hooks';
+import { assetStorageThunk } from '@/features/asset/thunks';
 
 const steps = [
     {
@@ -85,19 +86,57 @@ export default function Wizard() {
     const dispatch = useDispatch();
 
     const emailsCreator = useSelector(userSelector(['emails']));
-    const {
-        requestAssetUpload: { transactionId, url },
-    } = useSelector(userSelector(['requestAssetUpload']));
-
+    const { requestAssetUpload } = useSelector(userSelector(['requestAssetUpload']));
     const [activeStep, setActiveStep] = useState(0);
 
-    // useEffect(() => {
-    //     const uploadAvatar = async () => {
-    //         dispatch(sendRequestUploadThunk({ originalName: values.profile!.name, mimetype: values.profile!.type }));
-    //     };
+    useEffect(() => {
+        const uploadAsset = async () => {
+            return Promise.all(
+                Object.entries(values.asset.formats).map(async ([key, format]) => {
+                    if (format.transactionId) return;
 
-    //     if (activeStep === 1 && values.profile) uploadAvatar();
-    // }, [activeStep]);
+                    if (format.file) {
+                        const response = await dispatch(
+                            sendRequestUploadThunk({
+                                originalName: format.file.name,
+                                mimetype: format.file.type,
+                            })
+                        );
+
+                        console.log(response, key, format);
+
+                        setFieldValue(`asset.formats.${key}.transactionId`, response.transaction);
+
+                        return;
+                    }
+                })
+            );
+        };
+
+        if (activeStep === 2 && values.asset.file) uploadAsset();
+    }, [activeStep]);
+
+    useEffect(() => {
+        const requestAssetUploadNotUsed = requestAssetUpload.filter(
+            (item) => item.transactionId && item.url && !item.usedAt
+        );
+        if (!requestAssetUploadNotUsed.length) return console.log('no requestAssetUploadNotUsed');
+
+        requestAssetUploadNotUsed.forEach(async (item) => {
+            const format = Object.values(values.asset.formats).find(
+                (formatItem) => formatItem.transactionId === item.transactionId
+            );
+            if (!format) return console.log('no format');
+
+            dispatch(
+                assetStorageThunk({
+                    url: item.url,
+                    file: format.file!,
+                    transactionId: format.transactionId!,
+                })
+            );
+        });
+    }, [requestAssetUpload, activeStep]);
 
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -129,9 +168,9 @@ export default function Wizard() {
             asset: {
                 file: undefined,
                 formats: {
-                    display: { height: 100, width: 100, x: 10, y: 20, unit: 'px', scale: 1, file: undefined },
-                    exhibition: { height: 300, width: 300, x: 10, y: 20, unit: 'px', scale: 1, file: undefined },
-                    preview: { height: 500, width: 500, x: 10, y: 20, unit: 'px', scale: 1, file: undefined },
+                    display: { file: undefined, customFile: undefined, transactionId: undefined },
+                    exhibition: { file: undefined, customFile: undefined, transactionId: undefined },
+                    preview: { file: undefined, customFile: undefined, transactionId: undefined },
                 },
             },
             contract: false,

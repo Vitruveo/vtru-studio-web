@@ -5,26 +5,29 @@ import { websocketSlice } from '@/features/ws';
 import { userSlice } from '../features/user';
 import { customizerSlice } from '../features/customizer';
 import { roleSlice } from '../features/role';
+import { assetSlice } from '@/features/asset';
 
 interface RootState {
-  user: ReturnType<typeof userSlice.reducer>;
-  customizer: ReturnType<typeof customizerSlice.reducer>;
-  role: ReturnType<typeof roleSlice.reducer>;
-  websocket: ReturnType<typeof websocketSlice.reducer>;
+    user: ReturnType<typeof userSlice.reducer>;
+    customizer: ReturnType<typeof customizerSlice.reducer>;
+    role: ReturnType<typeof roleSlice.reducer>;
+    websocket: ReturnType<typeof websocketSlice.reducer>;
+    asset: ReturnType<typeof assetSlice.reducer>;
 }
 
 const appReducer = combineReducers<RootState>({
-  user: userSlice.reducer,
-  customizer: customizerSlice.reducer,
-  role: roleSlice.reducer,
-  websocket: websocketSlice.reducer,
+    user: userSlice.reducer,
+    customizer: customizerSlice.reducer,
+    role: roleSlice.reducer,
+    websocket: websocketSlice.reducer,
+    asset: assetSlice.reducer,
 });
 
 export const reducer: Reducer<RootState, AnyAction> = (state: RootState | undefined, action: AnyAction) => {
-  if (state && action.type === 'user/logout') {
-    state.websocket.connection?.close();
-    state = undefined;
-  }
+    if (state && action.type === 'user/logout') {
+        state.websocket.connection?.close();
+        state = undefined;
+    }
 
-  return appReducer(state, action);
+    return appReducer(state, action);
 };

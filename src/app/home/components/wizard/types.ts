@@ -1,6 +1,6 @@
 import { FormikErrors } from 'formik';
 import { FormikDefaultProps } from '@/app/common/types';
-import { PixelCrop } from 'react-image-crop';
+import { Area } from 'react-easy-crop';
 
 export interface MetadataDefinitionTypes {
     domain?: string;
@@ -56,9 +56,9 @@ export interface StepsFormValues {
     asset: {
         file: File | undefined;
         formats: {
-            display: PixelCrop & { scale: number; file?: File };
-            exhibition: PixelCrop & { scale: number; file?: File };
-            preview: PixelCrop & { scale: number; file?: File };
+            display: { file?: File; customFile?: File; transactionId?: string };
+            exhibition: { file?: File; customFile?: File; transactionId?: string };
+            preview: { file?: File; customFile?: File; transactionId?: string };
         };
     };
     contract: boolean;
@@ -89,6 +89,8 @@ export interface StepsProps extends FormikDefaultProps<StepsFormValues> {
     errors: StepsFormErros;
     setErrors: (errors: StepsFormErros) => void;
 }
+
+export type FormatNames = 'display' | 'exhibition' | 'preview';
 
 export interface MetadataFieldsProps extends StepsProps {
     formkFieldPathChange: string;
