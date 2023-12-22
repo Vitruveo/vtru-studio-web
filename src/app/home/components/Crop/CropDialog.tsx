@@ -14,12 +14,12 @@ const definitions = {
         height: 400,
     },
     landscape: {
-        width: 400,
+        width: 500,
         height: 300,
     },
     portrait: {
         width: 300,
-        height: 400,
+        height: 500,
     },
 };
 

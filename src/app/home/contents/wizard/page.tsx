@@ -18,7 +18,7 @@ import { stepsSchemaValidation } from './formschema';
 import { metadataDefinitions, metadataDomains } from './mock';
 
 import { userSelector } from '@/features/user';
-import { saveStepWizardThunk } from '@/features/user/thunks';
+import { saveStepWizardThunk, sendRequestUploadThunk } from '@/features/user/thunks';
 import { useDispatch } from '@/store/hooks';
 
 const steps = [
@@ -73,19 +73,33 @@ export default function Wizard() {
     const dispatch = useDispatch();
 
     const emailsCreator = useSelector(userSelector(['emails']));
-    const {
-        requestAssetUpload: { transactionId, url },
-    } = useSelector(userSelector(['requestAssetUpload']));
-
     const [activeStep, setActiveStep] = useState(0);
 
-    // useEffect(() => {
-    //     const uploadAvatar = async () => {
-    //         dispatch(sendRequestUploadThunk({ originalName: values.profile!.name, mimetype: values.profile!.type }));
-    //     };
+    useEffect(() => {
+        const uploadAsset = async () => {
+            Object.values(values.asset.formats).forEach((format) => {
+                if (format.file) {
+                    dispatch(
+                        sendRequestUploadThunk({
+                            originalName: format.file.name,
+                            mimetype: format.file.type,
+                        })
+                    );
 
-    //     if (activeStep === 1 && values.profile) uploadAvatar();
-    // }, [activeStep]);
+                    return;
+                }
+
+                dispatch(
+                    sendRequestUploadThunk({
+                        originalName: values.asset.file!.name,
+                        mimetype: values.asset.file!.type,
+                    })
+                );
+            });
+        };
+
+        if (activeStep === 2 && values.asset.file) uploadAsset();
+    }, [activeStep]);
 
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -117,9 +131,9 @@ export default function Wizard() {
             asset: {
                 file: undefined,
                 formats: {
-                    display: { height: 100, width: 100, x: 10, y: 20, unit: 'px', scale: 1, file: undefined },
-                    exhibition: { height: 300, width: 300, x: 10, y: 20, unit: 'px', scale: 1, file: undefined },
-                    preview: { height: 500, width: 500, x: 10, y: 20, unit: 'px', scale: 1, file: undefined },
+                    display: { height: 100, width: 100, scale: 1, file: undefined, area: undefined },
+                    exhibition: { height: 300, width: 300, scale: 1, file: undefined, area: undefined },
+                    preview: { height: 500, width: 500, scale: 1, file: undefined, area: undefined },
                 },
             },
             contract: false,

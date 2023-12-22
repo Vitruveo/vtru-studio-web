@@ -5,17 +5,12 @@ import { Box } from '@mui/system';
 import { IconEye } from '@tabler/icons-react';
 import { CropDialog } from './CropDialog';
 
-interface CropProps {
-    x: number;
-    y: number;
-}
-
 interface Props {
     image: string;
     width: number;
     height: number;
     zoom: number;
-    onChange(crop: CropProps): void;
+    onChange(crop: Area): void;
 }
 
 interface GetCroppedImgProps {
@@ -23,17 +18,17 @@ interface GetCroppedImgProps {
     pixelCrop: Area;
 }
 
-const createImage = (url: string) =>
+export const createImage = (url: string): Promise<CanvasImageSource> =>
     new Promise((resolve, reject) => {
         const image = new Image();
         image.addEventListener('load', () => resolve(image));
         image.addEventListener('error', (error) => reject(error));
-        image.setAttribute('crossOrigin', 'anonymous'); // needed to avoid cross-origin issues on CodeSandbox
+        image.setAttribute('crossOrigin', 'anonymous');
         image.src = url;
     });
 
-async function getCroppedImg({ imageSrc, pixelCrop }: GetCroppedImgProps) {
-    const image: any = await createImage(imageSrc);
+export async function getCroppedImg({ imageSrc, pixelCrop }: GetCroppedImgProps) {
+    const image = await createImage(imageSrc);
     const canvas = document.createElement('canvas');
     canvas.width = pixelCrop.width;
     canvas.height = pixelCrop.height;
@@ -55,7 +50,7 @@ async function getCroppedImg({ imageSrc, pixelCrop }: GetCroppedImgProps) {
         );
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         canvas.toBlob((file) => {
             if (file) resolve(URL.createObjectURL(file));
         }, 'image/jpeg');
@@ -68,11 +63,8 @@ export function Crop({ image, width, height, zoom, onChange }: Props) {
     const [croppedImage, setCroppedImage] = useState('');
     const [showCroppedImage, setShowCroppedImage] = useState(false);
 
-    const onCropComplete = (croppedArea: Area, croppedAreaPixels: Area) => {
-        onChange({
-            x: croppedAreaPixels.x,
-            y: croppedAreaPixels.y,
-        });
+    const onCropComplete = (_: Area, croppedAreaPixels: Area) => {
+        onChange(croppedAreaPixels);
 
         setCroppedPixels(croppedAreaPixels);
     };

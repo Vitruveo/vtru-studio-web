@@ -1,6 +1,6 @@
 import { FormikErrors } from 'formik';
 import { FormikDefaultProps } from '@/app/common/types';
-import { PixelCrop } from 'react-image-crop';
+import { Area } from 'react-easy-crop';
 
 export interface MetadataDefinitionTypes {
     domain?: string;
@@ -43,9 +43,9 @@ export interface StepsFormValues {
     asset: {
         file: File | undefined;
         formats: {
-            display: PixelCrop & { scale: number; file?: File };
-            exhibition: PixelCrop & { scale: number; file?: File };
-            preview: PixelCrop & { scale: number; file?: File };
+            display: { width: number; height: number; scale: number; file?: File; area?: Area };
+            exhibition: { width: number; height: number; scale: number; file?: File; area?: Area };
+            preview: { width: number; height: number; scale: number; file?: File; area?: Area };
         };
     };
     contract: boolean;

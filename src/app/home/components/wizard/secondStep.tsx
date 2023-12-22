@@ -367,10 +367,10 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
                                                                 values.asset.formats[format.name as FormatNames].scale
                                                             }
                                                             onChange={(pixelCrop) =>
-                                                                setFieldValue(`asset.formats.${format.name}`, {
-                                                                    ...values.asset.formats[format.name as FormatNames],
-                                                                    ...pixelCrop,
-                                                                })
+                                                                setFieldValue(
+                                                                    `asset.formats.${format.name}.area`,
+                                                                    pixelCrop
+                                                                )
                                                             }
                                                         />
                                                     </Stack>
