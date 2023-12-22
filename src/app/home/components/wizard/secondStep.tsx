@@ -225,6 +225,9 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
                                             }
                                             src={urlAssetFile!}
                                             alt=""
+                                            style={{
+                                                objectFit: 'contain',
+                                            }}
                                         />
                                         <Box display="flex" alignItems="center" gap={1}>
                                             <IconButton
@@ -291,13 +294,10 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
                                                             <>
                                                                 <Pintura
                                                                     file={values.asset.file!}
-                                                                    initial={
-                                                                        values.definition === 'landscape'
-                                                                            ? { width: 16, height: 9 }
-                                                                            : values.definition === 'portrait'
-                                                                              ? { width: 3, height: 4 }
-                                                                              : { width: 1, height: 1 }
-                                                                    }
+                                                                    initial={{
+                                                                        width: 1,
+                                                                        height: format.height / format.width,
+                                                                    }}
                                                                     px={{
                                                                         width: format.width,
                                                                         height: format.height,
@@ -400,15 +400,19 @@ const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue 
                                                             display="flex"
                                                             alignItems="center"
                                                             justifyContent="center"
+                                                            p={2}
                                                         >
-                                                            <Img
+                                                            <img
                                                                 src={URL.createObjectURL(
                                                                     values.asset.formats[format.name as FormatNames]
                                                                         .file!
                                                                 )}
                                                                 alt=""
-                                                                width={format.width / 8}
-                                                                height={format.height / 8}
+                                                                width="100%"
+                                                                height="100%"
+                                                                style={{
+                                                                    objectFit: 'contain',
+                                                                }}
                                                             />
                                                         </Box>
                                                         <Stack

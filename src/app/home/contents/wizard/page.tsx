@@ -23,6 +23,7 @@ import { userSelector } from '@/features/user';
 import { saveStepWizardThunk, sendRequestUploadThunk } from '@/features/user/thunks';
 import { useDispatch } from '@/store/hooks';
 import { assetStorageThunk } from '@/features/asset/thunks';
+import SeventhStep from '../../components/wizard/seventhStep';
 
 const steps = [
     {
@@ -77,7 +78,7 @@ const steps = [
 
     {
         key: 'Publish',
-        render: ThirdStep,
+        render: SeventhStep,
         title: 'Publish',
     },
 ];

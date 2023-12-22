@@ -78,6 +78,7 @@ export function Pintura({ file, initial, px, onChange }: PinturaProps) {
                         fit: 'force',
                     },
                 })}
+                imageCropAspectRatio={initial.width / initial.height}
                 className={pintura}
                 src={file}
                 onLoad={handleEditorLoad}
