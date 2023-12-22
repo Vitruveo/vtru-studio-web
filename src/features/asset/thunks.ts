@@ -1,3 +1,4 @@
+import { StepsFormValues } from '@/app/home/components/wizard/types';
 import { userActionsCreators } from '../user/slice';
 import { assetStorage } from './requests';
 import { AssetStorageReq } from './types';
@@ -15,4 +16,20 @@ export function assetStorageThunk(payload: AssetStorageReq): ReduxThunkAction<Pr
 
         return response;
     };
+}
+
+export function assetMetadataThunk(payload: StepsFormValues): ReduxThunkAction<Promise<any>> {
+    return async function (dispatch, getState) {};
+}
+
+export function creatorMetadataThunk(payload: StepsFormValues): ReduxThunkAction<Promise<any>> {
+    return async function (dispatch, getState) {};
+}
+
+export function licenseThunk(payload: StepsFormValues): ReduxThunkAction<Promise<any>> {
+    return async function (dispatch, getState) {};
+}
+
+export function contractThunk(payload: StepsFormValues): ReduxThunkAction<Promise<any>> {
+    return async function (dispatch, getState) {};
 }

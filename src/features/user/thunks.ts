@@ -36,6 +36,7 @@ import {
     VerifyCodeApiRes,
 } from './types';
 import { ReduxThunkAction } from '@/store';
+import { assetMetadataThunk, contractThunk, creatorMetadataThunk, licenseThunk } from '../asset/thunks';
 
 export function userLoginThunk(payload: UserLoginReq): ReduxThunkAction<Promise<UserLoginApiRes>> {
     return async function (dispatch, getState) {
@@ -168,6 +169,19 @@ export function saveStepWizardThunk(payload: SaveStepWizardReq): ReduxThunkActio
     return async function (dispatch, getState) {
         if (payload.step === 0) {
             dispatch(creatorAccountThunk(payload.values));
+            return;
+        }
+        if (payload.step === 2) {
+            dispatch(assetMetadataThunk(payload.values));
+        }
+        if (payload.step === 3) {
+            dispatch(creatorMetadataThunk(payload.values));
+        }
+        if (payload.step === 4) {
+            dispatch(licenseThunk(payload.values));
+        }
+        if (payload.step === 5) {
+            dispatch(contractThunk(payload.values));
         }
     };
 }

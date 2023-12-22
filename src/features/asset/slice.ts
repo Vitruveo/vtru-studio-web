@@ -6,6 +6,7 @@ import { AssetSliceState } from './types';
 
 const initialState: AssetSliceState = {
     _id: '',
+
     framework: {
         createdAt: null,
         updatedAt: null,
