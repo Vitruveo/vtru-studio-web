@@ -1,124 +1,124 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Box, Container, Typography, Button } from '@mui/material';
-import { StepsFormValues, StepsProps } from './types';
+import React, { useState } from 'react';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import { IconTrash } from '@tabler/icons-react';
+import { Box, Button, IconButton, MenuItem } from '@mui/material';
 
-const currentStep = 5;
+import { StepsProps } from './types';
+import CustomSelect from '../forms/theme-elements/CustomSelect';
+import MetadataFields from './metadataFields';
+import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 
-const ContractScreen = ({ values, errors, setFieldValue }: StepsProps) => {
-    const [scrolledToBottom, setScrolledToBottom] = useState(false);
-    const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+export const licenseMetadataDomains = [
+    { value: 'stream', label: 'Stream v1.0' },
+    { value: 'print', label: 'Print v1.0' },
+    { value: 'NFT', label: 'NFT v1.0' },
+];
 
-    const handleScroll = useCallback(() => {
-        const scrollContainer = scrollContainerRef.current;
-        if (
-            scrollContainer &&
-            scrollContainer.scrollTop + scrollContainer.clientHeight === scrollContainer.scrollHeight
-        ) {
-            setScrolledToBottom(true);
+const FifthStep = ({
+    values,
+    errors,
+    handleChange,
+    setFieldValue,
+    handleSubmit,
+    setErrors,
+    setFieldError,
+}: StepsProps) => {
+    const [toastr, setToastr] = useState<CustomizedSnackbarState>({
+        type: 'success',
+        open: false,
+        message: '',
+    });
+    const [licenseDomain, setLicenseDomain] = useState('stream');
+
+    const licensesAdded = values.licenses.filter((v) => v.added);
+
+    const findIndexLicense = values.licenses.findIndex((license) => license.domain === licenseDomain);
+    const licenseMetadataDefinitions = values.licenses[findIndexLicense]?.licenseMetadataDefinitions;
+
+    const handleAddLicense = () => {
+        if (!values.licenses[findIndexLicense]?.added) {
+            setFieldValue(`licenses[${findIndexLicense}].added`, true);
         } else {
-            setScrolledToBottom(false);
+            setToastr({
+                type: 'error',
+                open: true,
+                message: 'License already added',
+            });
         }
-    }, []);
-
-    const handleChangeContract = () => {
-        setFieldValue('contract', !values.contract);
     };
 
-    useEffect(() => {
-        const fields: Array<keyof StepsFormValues> = ['contract'];
+    const handleRemoveLicense = (domain: string) => {
+        setFieldValue(`licenses[${values.licenses.findIndex((license) => license.domain === domain)}].added`, false);
+    };
 
-        if (!fields.some((field) => errors[field])) {
-            values.completedSteps[currentStep] = {
-                step: currentStep,
-                errors: false,
-            };
-            setFieldValue('completedSteps', { ...values.completedSteps });
-        } else {
-            values.completedSteps[currentStep] = {
-                step: currentStep,
-                errors: true,
-            };
-            setFieldValue('completedSteps', { ...values.completedSteps });
-        }
-    }, [values.contract, errors]);
+    const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setLicenseDomain(e.target.value);
+    };
 
     return (
-        <Container>
-            <Box
-                mt={4}
-                ref={scrollContainerRef}
-                onScroll={handleScroll}
-                maxHeight={380}
-                padding={2}
-                style={{
-                    textAlign: 'justify',
-                    overflowY: 'auto',
-                    border: '1px solid #ccc',
-                }}
-            >
-                <Typography variant="h4" gutterBottom>
-                    Contract
+        <Grid mt={1} my={3} alignItems="center" width={500} lg={6} xs={12}>
+            <Grid marginBottom={2}>
+                <Typography variant="subtitle1" fontWeight={600} component="label">
+                    License
                 </Typography>
-                <Typography paragraph>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque aliquam consequat urna, sed
-                    dignissim risus vestibulum sed. Nam ut urna quis erat facilisis consectetur quis a augue. Nam non
-                    posuere risus. Donec congue nunc tempor nisi egestas, eget laoreet mauris accumsan. Aenean sed lorem
-                    lacus. Nullam quis hendrerit sapien. Praesent placerat interdum diam, eu condimentum odio pretium a.
-                </Typography>
-
-                <Typography paragraph>
-                    Phasellus pellentesque non massa quis imperdiet. Maecenas vel odio metus. Donec tincidunt enim vitae
-                    libero euismod fermentum. Sed nec semper libero, in feugiat purus. Morbi viverra nisl erat, vitae
-                    maximus elit finibus ut. Donec elementum velit dui, sit amet porttitor ex tempus vel. Etiam vitae
-                    magna mattis, laoreet nisi vitae, aliquam ligula. Class aptent taciti sociosqu ad litora torquent
-                    per conubia nostra, per inceptos himenaeos. Duis gravida placerat varius. Nullam lacinia libero
-                    rhoncus sem blandit mollis. Praesent tempus tristique diam, sit amet gravida est mattis sit amet.
-                    Mauris maximus diam lobortis sem placerat, at bibendum erat imperdiet. Phasellus quam orci, bibendum
-                    sit amet risus quis, accumsan sagittis nibh.
-                </Typography>
-
-                <Typography paragraph>
-                    Etiam pellentesque tempus purus, quis blandit dolor mollis euismod. Suspendisse maximus ipsum
-                    tristique turpis tincidunt, ut dignissim dui vulputate. Aliquam tempor pretium rhoncus. Ut tempus
-                    molestie vehicula. Nulla lacus massa, suscipit dignissim pharetra sed, fringilla vel quam. Interdum
-                    et malesuada fames ac ante ipsum primis in faucibus. Curabitur rhoncus felis sit amet scelerisque
-                    pretium. Fusce porttitor nec justo vitae aliquet. Nunc posuere, neque vitae scelerisque maximus,
-                    metus nibh tempor augue, non rhoncus purus nulla et lacus. Cras efficitur dolor vel sem ornare, non
-                    tempor dolor posuere.
-                </Typography>
-
-                <Typography paragraph>
-                    Sed id ultricies nibh. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
-                    inceptos himenaeos. Sed a aliquet tortor. Sed non consequat libero. Integer mattis lectus tellus, id
-                    vehicula lacus viverra sed. Phasellus ac dolor gravida, porta felis quis, cursus sapien. Mauris
-                    ullamcorper volutpat ex. Praesent et eros ut quam pellentesque ultrices sit amet vitae odio. Quisque
-                    molestie massa a urna maximus mollis.
-                </Typography>
-                <Typography paragraph>
-                    Phasellus ligula est, dictum laoreet consectetur rhoncus, laoreet sit amet felis. Vivamus at felis
-                    id sem fermentum cursus vehicula a dolor. Nulla erat ex, imperdiet vitae feugiat quis, blandit in
-                    diam. Suspendisse tincidunt, eros eu consectetur condimentum, purus sapien laoreet tellus, in
-                    facilisis enim ante in mauris. Vivamus scelerisque lacinia tellus eget porta. Curabitur fringilla,
-                    risus in aliquet suscipit, neque neque laoreet libero, in dignissim nulla orci volutpat magna.
-                    Phasellus feugiat sapien id sapien vehicula egestas. Duis tempus enim id dolor efficitur rutrum.
-                    Nulla volutpat odio mauris, ac condimentum risus finibus nec. Pellentesque ut sem tincidunt, porta
-                    felis ut, maximus nisl. Morbi a augue non metus consequat vehicula ac sit amet odio. Aliquam lorem
-                    nunc, porttitor nec euismod nec, finibus ac tortor. Cras in finibus sem. Morbi pulvinar eros
-                    bibendum varius sollicitudin.
-                </Typography>
-            </Box>
-            <Box textAlign="right" mt={4} mb={2}>
-                <Button
-                    variant="contained"
-                    color={values.contract ? 'success' : 'primary'}
-                    onClick={handleChangeContract}
-                    disabled={!scrolledToBottom && !values.contract}
-                >
-                    {values.contract ? 'Contract accepted' : scrolledToBottom ? 'Accept Contract' : 'Scroll to the End'}
+                <Box display="flex" alignItems="center" width="100%">
+                    <CustomSelect
+                        defaultValue="stream"
+                        size="small"
+                        name="domain"
+                        onChange={handleChangeInput}
+                        fullWidth
+                        variant="outlined"
+                    >
+                        {licenseMetadataDomains?.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                            </MenuItem>
+                        ))}
+                    </CustomSelect>
+                </Box>
+            </Grid>
+            <MetadataFields
+                key={licenseDomain}
+                formkFieldPathChange={`licenses[${findIndexLicense}].licenseMetadataDefinitions`}
+                values={values}
+                errors={errors}
+                metadataDefinitions={licenseMetadataDefinitions}
+                setFieldValue={setFieldValue}
+                handleChange={handleChange}
+                handleSubmit={handleSubmit}
+                setErrors={setErrors}
+                setFieldError={setFieldError}
+            />
+            <Box my={2}>
+                <Button size="small" fullWidth color="primary" variant="contained" onClick={handleAddLicense}>
+                    Add license
                 </Button>
             </Box>
-        </Container>
+            {licensesAdded.length > 0 && (
+                <Box my={3}>
+                    <Typography variant="subtitle1" fontWeight={600} component="label">
+                        Added licenses
+                    </Typography>
+                    {licensesAdded.map((license, index) => (
+                        <Box display="flex" alignItems="center" key={index}>
+                            <IconButton onClick={(e) => handleRemoveLicense(license.domain)}>
+                                <IconTrash color="red" size="16" stroke={1.5} />
+                            </IconButton>
+                            <Box>{license.title}</Box>
+                        </Box>
+                    ))}
+                </Box>
+            )}
+            <CustomizedSnackbar
+                type={toastr.type}
+                open={toastr.open}
+                message={toastr.message}
+                setOpentate={setToastr}
+            />
+        </Grid>
     );
 };
 
-export default ContractScreen;
+export default FifthStep;

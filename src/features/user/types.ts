@@ -1,5 +1,5 @@
 import { StepsFormValues } from '@/app/home/components/wizard/types';
-import { APIResponse } from '../common/types';
+import { APIResponse, Framework } from '../common/types';
 
 interface Email {
     email: string;
@@ -7,7 +7,7 @@ interface Email {
     sentCode: boolean;
 }
 
-interface User {
+export interface User {
     _id: string;
     name: string;
     username: string;
@@ -29,12 +29,7 @@ interface User {
         location: string | null;
     };
     roles: Array<string>;
-    framework: {
-        createdAt: Date | null;
-        updatedAt: Date | null;
-        createdBy: string | null;
-        updatedBy: string | null;
-    };
+    framework: Framework;
 }
 
 interface RequestAssetUpload {
@@ -71,7 +66,6 @@ export interface CreatorEmailExistReq {
 }
 
 export interface AddCreatorEmailReq {
-    id: string;
     email: string;
 }
 
@@ -128,18 +122,16 @@ export interface CreatorSchemaType {
         location: string | null;
     };
     roles: string[];
-    framework: {
-        createdAt: Date | null;
-        updatedAt: Date | null;
-        createdBy: string | null;
-        updatedBy: string | null;
-    };
+    framework: Framework;
 }
 
-interface CreatorUsernameExistRes {
+export interface SendEmailCodeReq {
+    email: string;
+}
+
+export interface VerifyCodeReq {
+    email: string;
     code: string;
-    message: string;
-    data: boolean;
 }
 
 export type UserAddApiRes = APIResponse<UserAddRes>;
@@ -149,3 +141,5 @@ export type CreatorUsernameExistApiRes = APIResponse<boolean>;
 export type CreatorEmailExistApiRes = APIResponse<boolean>;
 export type AddCreatorEmailApiRes = APIResponse<boolean>;
 export type CreatorSendRequestUploadApiRes = APIResponse<string>;
+export type SendEmailCodeApiRes = APIResponse<string>;
+export type VerifyCodeApiRes = APIResponse<User>;

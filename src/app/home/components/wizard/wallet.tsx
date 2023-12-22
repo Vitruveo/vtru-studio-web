@@ -7,7 +7,7 @@ import { Button, Divider, IconButton, Typography } from '@mui/material';
 
 import { StepsProps } from './types';
 
-const Wallet = ({ values, errors, handleChange, setFieldValue, setErrors }: StepsProps) => {
+const Wallet = ({ values, errors, setFieldValue }: StepsProps) => {
     const [connectWallet, setConnectWallet] = useState(false);
 
     const { openConnectModal } = useConnectModal();
@@ -55,7 +55,7 @@ const Wallet = ({ values, errors, handleChange, setFieldValue, setErrors }: Step
                             <IconButton onClick={(e) => handleDeleteWallet(index)}>
                                 <IconTrash color="red" size="16" stroke={1.5} />
                             </IconButton>
-                            <Box>
+                            <Box width={110}>
                                 <Typography variant="subtitle2">Network</Typography>
                                 <Typography color="GrayText" variant="body1">
                                     {item.network.name}
