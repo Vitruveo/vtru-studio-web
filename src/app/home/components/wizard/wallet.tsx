@@ -73,7 +73,6 @@ const Wallet = ({ values, errors, setFieldValue }: StepsProps) => {
                     ))}
                 </Box>
                 <Divider />
-
                 <Box flexDirection="row" display="flex" gap={1}>
                     <Button fullWidth variant="outlined" onClick={handleAddWallet}>
                         Add Wallet
