@@ -85,9 +85,7 @@ export async function changeCreator({
     return res;
 }
 
-export async function sendRequestUploadExist(
-    data: CreatorSendRequestUploadReq
-): Promise<CreatorSendRequestUploadApiRes> {
+export async function sendRequestUpload(data: CreatorSendRequestUploadReq): Promise<CreatorSendRequestUploadApiRes> {
     const res = apiService.post<string>('/creators/request/upload', data);
     return res;
 }

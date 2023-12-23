@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Box, Button, Stack } from '@mui/material';
+import { nanoid } from '@reduxjs/toolkit';
 
 import PageContainer from '@/app/home/components/container/PageContainer';
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
@@ -16,16 +17,17 @@ import FourthStep, { validateErrorsCreatorMetadata } from '@/app/home/components
 import FifthStep, { validateErrorsLisence } from '@/app/home/components/wizard/fifthStep';
 import SixthStep, { validateErrorsContract } from '@/app/home/components/wizard/sixthStep';
 
-import { StepsFormValues } from '../../components/wizard/types';
+import { Formats, StepsFormValues } from '../../components/wizard/types';
 import { stepsSchemaValidation } from './formschema';
 import { assetMetadataDefinitions, assetMetadataDomains, creatorMetadataDefinitions, licenses } from './mock';
 
 import { userSelector } from '@/features/user';
 import { saveStepWizardThunk, sendRequestUploadThunk } from '@/features/user/thunks';
 import { useDispatch } from '@/store/hooks';
-import { assetStorageThunk } from '@/features/asset/thunks';
+import { assetStorageThunk, assetUpdateStepThunk } from '@/features/asset/thunks';
 import SeventhStep from '../../components/wizard/seventhStep';
 import { assetSelector } from '@/features/asset';
+import { userActionsCreators } from '@/features/user/slice';
 
 const steps = [
     {
@@ -88,14 +90,15 @@ const steps = [
 export default function Wizard() {
     const dispatch = useDispatch();
 
-    const { username, emails, wallets } = useSelector(userSelector(['username', 'emails', 'wallets']));
+    const { username, emails, wallets, requestAssetUpload } = useSelector(
+        userSelector(['username', 'emails', 'wallets', 'requestAssetUpload'])
+    );
     const {
         assetMetadata,
         creatorMetadata,
         licenses: licensesState,
         contract,
     } = useSelector(assetSelector(['assetMetadata', 'creatorMetadata', 'licenses', 'contract']));
-    const { requestAssetUpload } = useSelector(userSelector(['requestAssetUpload']));
     const [activeStep, setActiveStep] = useState(0);
 
     const { handleSubmit, handleChange, validateForm, setFieldValue, setFieldError, setErrors, values, errors } =
@@ -154,53 +157,96 @@ export default function Wizard() {
     };
 
     useEffect(() => {
+        const requestUploadAsset = async () => {
+            const files = Object.entries(values.asset.formats)
+                .filter(([__, { file }]) => file)
+                .map(([key, item]) => ({ key, file: item.file }));
+
+            const codes = Array.from({ length: 3 }).map(() => nanoid());
+
+            files.forEach(async (item, index) => {
+                await dispatch(
+                    userActionsCreators.requestAssetUpload({
+                        key: item.key,
+                        status: 'requested',
+                        transactionId: codes[index],
+                    })
+                );
+            });
+
+            files.forEach((item, index) => {
+                dispatch(
+                    sendRequestUploadThunk({
+                        mimetype: item.file!.type,
+                        originalName: item.file!.name,
+                        transactionId: codes[index],
+                    })
+                );
+
+                setFieldValue(`asset.formats.${item.key}.transactionId`, codes[index]);
+            });
+        };
+
+        if (activeStep === 2 && values.asset.file) requestUploadAsset();
+    }, [activeStep]);
+
+    useEffect(() => {
+        const requestAssetUploadNotUsed = Object.values(requestAssetUpload)?.every(
+            (item) => item.transactionId && item.url && item.status === 'ready'
+        );
+        if (!requestAssetUploadNotUsed) return;
+
+        const requestUploadReady = Object.values(requestAssetUpload);
+
         const uploadAsset = async () => {
-            return Promise.all(
-                Object.entries(values.asset.formats).map(async ([key, format]) => {
-                    if (format.transactionId) return;
+            const responseUpload = await Promise.all(
+                requestUploadReady.map(async (item) => {
+                    const url = item.url;
+                    dispatch(
+                        userActionsCreators.requestAssetUpload({
+                            transactionId: item.transactionId,
+                            status: 'uploading',
+                        })
+                    );
 
-                    if (format.file) {
-                        const response = await dispatch(
-                            sendRequestUploadThunk({
-                                originalName: format.file.name,
-                                mimetype: format.file.type,
-                            })
-                        );
+                    const formatByTransaction = Object.entries(values.asset.formats).find(
+                        ([_, format]) => format.transactionId === item.transactionId
+                    );
 
-                        console.log(response, key, format);
+                    if (!formatByTransaction) return;
 
-                        setFieldValue(`asset.formats.${key}.transactionId`, response.transaction);
+                    const [key, value] = formatByTransaction;
 
-                        return;
-                    }
+                    await dispatch(
+                        assetStorageThunk({
+                            file: value.file!,
+                            url,
+                        })
+                    );
+
+                    return {
+                        [key]: {
+                            path: item.path,
+                            name: value.file!.name,
+                        },
+                    };
+                })
+            );
+
+            // save asset
+            await dispatch(
+                assetUpdateStepThunk({
+                    values: {
+                        ...values,
+                        formats: responseUpload.reduce((acc, cur) => ({ ...acc, ...cur }), {} as Formats),
+                    },
+                    stepName: 'assetUpload',
                 })
             );
         };
 
-        if (activeStep === 2 && values.asset.file) uploadAsset();
-    }, [activeStep]);
-
-    useEffect(() => {
-        const requestAssetUploadNotUsed = requestAssetUpload?.filter(
-            (item) => item.transactionId && item.url && !item.usedAt
-        );
-        if (!requestAssetUploadNotUsed.length) return console.log('no requestAssetUploadNotUsed');
-
-        requestAssetUploadNotUsed.forEach(async (item) => {
-            const format = Object.values(values.asset.formats).find(
-                (formatItem) => formatItem.transactionId === item.transactionId
-            );
-            if (!format) return console.log('no format');
-
-            dispatch(
-                assetStorageThunk({
-                    url: item.url,
-                    file: format.file!,
-                    transactionId: format.transactionId!,
-                })
-            );
-        });
-    }, [requestAssetUpload, activeStep]);
+        if (requestUploadReady.length) uploadAsset();
+    }, [requestAssetUpload]);
 
     const forceValidate = async () => {
         try {

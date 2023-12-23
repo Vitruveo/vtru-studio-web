@@ -6,7 +6,7 @@ import {
     checkCreatorUsernameExist,
     checkCreatorEmailExist,
     addCreatorEmailExist,
-    sendRequestUploadExist,
+    sendRequestUpload,
     assetStorage,
     changeCreator,
     sendEmailCode,
@@ -113,12 +113,11 @@ export function sendRequestUploadThunk(
     payload: CreatorSendRequestUploadReq
 ): ReduxThunkAction<Promise<CreatorSendRequestUploadApiRes>> {
     return async function (dispatch, getState) {
-        const response = await sendRequestUploadExist({
+        const response = await sendRequestUpload({
             mimetype: payload.mimetype,
             originalName: payload.originalName,
+            transactionId: payload.transactionId,
         });
-
-        dispatch(userActionsCreators.requestAssetUpload({ transactionId: response.transaction }));
 
         return response;
     };
@@ -176,16 +175,16 @@ export function saveStepWizardThunk(payload: SaveStepWizardReq): ReduxThunkActio
             return;
         }
         if (payload.step === 2) {
-            dispatch(assetUpdateStepThunk(payload.values));
+            dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'assetMetadata' }));
         }
         if (payload.step === 3) {
-            dispatch(assetUpdateStepThunk(payload.values));
+            dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'creatorMetadata' }));
         }
         if (payload.step === 4) {
-            dispatch(assetUpdateStepThunk(payload.values));
+            dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'license' }));
         }
         if (payload.step === 5) {
-            dispatch(assetUpdateStepThunk(payload.values));
+            dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'contract' }));
         }
     };
 }

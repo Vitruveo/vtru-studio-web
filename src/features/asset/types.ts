@@ -28,7 +28,6 @@ export interface AssetSliceState extends Asset {
 export interface AssetStorageReq {
     url: string;
     file: File;
-    transactionId: string;
 }
 
 export interface UpdateAssetStepReq {}

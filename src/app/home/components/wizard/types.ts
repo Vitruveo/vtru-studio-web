@@ -48,6 +48,22 @@ export interface EmailFormValues {
     checkedAt: Date | null;
     sentCode: boolean;
 }
+
+export interface Formats {
+    landscape?: {
+        name: string;
+        path: string;
+    };
+    portrait?: {
+        name: string;
+        path: string;
+    };
+    square?: {
+        name: string;
+        path: string;
+    };
+}
+
 export interface StepsFormValues {
     username: string;
     profile?: File;

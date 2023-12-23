@@ -35,10 +35,11 @@ export interface User {
 interface RequestAssetUpload {
     transactionId: string;
     url: string;
-    usedAt: Date | null;
+    path: string;
+    status: string;
 }
 export interface UserSliceState extends User {
-    requestAssetUpload: RequestAssetUpload[];
+    requestAssetUpload: { [key: string]: RequestAssetUpload };
     token: string;
     status: string;
     error: string;
@@ -72,6 +73,7 @@ export interface AddCreatorEmailReq {
 export interface CreatorSendRequestUploadReq {
     mimetype: string;
     originalName: string;
+    transactionId: string;
 }
 
 export interface AssetStorageReq {

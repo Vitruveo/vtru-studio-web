@@ -1,4 +1,4 @@
-import { Licenses, StepsFormValues } from '@/app/home/components/wizard/types';
+import { Licenses, StepsFormValues, Formats } from '@/app/home/components/wizard/types';
 import { userActionsCreators } from '../user/slice';
 import { assetStorage, updateAssetStep, getAsset } from './requests';
 import { AssetStorageReq } from './types';
@@ -10,10 +10,9 @@ export function assetStorageThunk(payload: AssetStorageReq): ReduxThunkAction<Pr
         const response = await assetStorage({
             url: payload.url,
             file: payload.file,
-            transactionId: payload.transactionId,
         });
 
-        if (response) dispatch(userActionsCreators.requestAssetUploadUsed({ transactionId: payload.transactionId }));
+        // if (response) dispatch(userActionsCreators.requestAssetUploadUsed({ transactionId: payload.transactionId }));
 
         return response;
     };
@@ -41,21 +40,28 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
     };
 }
 
-export function assetUpdateStepThunk(payload: StepsFormValues): ReduxThunkAction<Promise<any>> {
+export function assetUpdateStepThunk({
+    values,
+    stepName,
+}: {
+    stepName: string;
+    values: StepsFormValues & { formats?: Formats };
+}): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
-        const licenses = payload.licenses.filter((item) => item.added);
+        const licenses = values.licenses.filter((item) => item.added);
 
         const response = await updateAssetStep({
-            ...payload,
+            ...values,
             licenses,
+            stepName,
         });
 
         dispatch(
             assetActionsCreators.change({
-                assetMetadata: payload.assetMetadata,
-                creatorMetadata: payload.creatorMetadata,
-                licenses: payload.licenses,
-                contract: payload.contract,
+                assetMetadata: values.assetMetadata,
+                creatorMetadata: values.creatorMetadata,
+                licenses: values.licenses,
+                contract: values.contract,
             })
         );
     };
