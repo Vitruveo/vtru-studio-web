@@ -29,6 +29,7 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
                         creatorMetadata: response.data.creatorMetadata,
                         licenses: response.data.licenses,
                         contract: response.data.contract,
+                        status: response.data.status,
                     })
                 );
             }
@@ -68,6 +69,7 @@ export function assetUpdateStepThunk({
                 creatorMetadata: values.creatorMetadata,
                 licenses: values.licenses,
                 contract: values.contract,
+                status: values.status,
             })
         );
     };

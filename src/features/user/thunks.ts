@@ -176,15 +176,27 @@ export function saveStepWizardThunk(payload: SaveStepWizardReq): ReduxThunkActio
         }
         if (payload.step === 2) {
             dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'assetMetadata' }));
+            return;
         }
         if (payload.step === 3) {
             dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'creatorMetadata' }));
+            return;
         }
         if (payload.step === 4) {
             dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'license' }));
+            return;
         }
         if (payload.step === 5) {
             dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'contract' }));
+            return;
+        }
+        if (payload.step === 5) {
+            dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'contract' }));
+            return;
+        }
+        if (payload.step === 6) {
+            dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'publish' }));
+            return;
         }
     };
 }

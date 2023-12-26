@@ -21,7 +21,7 @@ const initialState: AssetSliceState = {
         createdBy: null,
         updatedBy: null,
     },
-    status: '',
+    status: 'draft',
     error: '',
 };
 
@@ -36,7 +36,6 @@ export const assetSlice = createSlice({
             };
         },
         error: (state, action) => {
-            state.status = `failed: ${action.type}`;
             state.error = action.payload;
         },
     },

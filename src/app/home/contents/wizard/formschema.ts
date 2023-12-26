@@ -36,14 +36,6 @@ export const stepsSchemaValidation = yup.object({
     ),
     wallets: yup.array().min(1),
     username: yup.string().required('field username is required.'),
-    profile: yup
-        .mixed()
-        .required('field profile is required.')
-        .test('checkFileType', 'Invalid file type. Please upload a valid file.', (file) => {
-            if (!file) return false;
-            const allowedFileTypes = ['image/jpeg', 'image/png', 'image/gif', 'video/mp4'];
-            return allowedFileTypes.includes(file.type);
-        }),
     asset: yup
         .mixed()
         .required('field asset is required.')
@@ -85,21 +77,27 @@ export const stepsSchemaValidation = yup.object({
         .array()
         .of(
             yup.object().shape({
-                licenseMetadataDefinitions: yup.array().of(
-                    yup.object().shape({
-                        value: yup.mixed().test('customValidation', '', (value, context) => {
-                            if (!context.parent?.parent?.added) return true;
-                            const validateCreateFunction = new Function(context.parent.validation.trim());
+                licenseMetadataDefinitions: yup.array().when('added', {
+                    is: true,
+                    then: yup.array().of(
+                        yup.object().shape({
+                            value: yup.mixed().test('customValidation', '', (value, context) => {
+                                const validateCreateFunction = new Function(context.parent.validation.trim());
 
-                            const result = validateCreateFunction()(value, 'en');
+                                const result = validateCreateFunction()(value, 'en');
 
-                            if (!result.isValid)
-                                throw context.createError({ path: context.path, message: result.message });
-                            return result.isValid;
-                        }),
-                    })
-                ),
+                                if (!result.isValid)
+                                    throw context.createError({ path: context.path, message: result.message });
+                                return result.isValid;
+                            }),
+                        })
+                    ),
+                }),
             })
         )
-        .min(1),
+        .test('containsAddedTrue', 'Add a license', function (value) {
+            if (!value) return false;
+            const hasAddedTrue = value.some((obj) => obj.added === true);
+            return hasAddedTrue;
+        }),
 });

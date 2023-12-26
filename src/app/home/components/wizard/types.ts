@@ -86,6 +86,7 @@ export interface StepsFormValues {
         creatorMetadataDefinitions: MetadataDefinitionTypes[];
     };
     licenses: Licenses;
+    status: 'draft' | 'published' | 'archived';
     completedSteps: CompletedSteps;
     definition: string;
 }

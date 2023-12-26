@@ -15,19 +15,10 @@ interface Props {
     activeStep: number;
     handleReset: (event: React.SyntheticEvent | Event) => void;
     handleStep: (value: number) => void;
-    finalStep: JSX.Element | JSX.Element[];
     completedSteps?: CompletedSteps;
 }
 
-const HorizontalStepper = ({
-    children,
-    steps,
-    activeStep,
-    completedSteps,
-    handleReset,
-    handleStep,
-    finalStep,
-}: Props) => {
+const HorizontalStepper = ({ children, steps, activeStep, completedSteps, handleReset, handleStep }: Props) => {
     return (
         <Box sx={{ width: '100%' }}>
             <Stepper nonLinear activeStep={activeStep} alternativeLabel>
@@ -49,11 +40,11 @@ const HorizontalStepper = ({
             </Stepper>
             {activeStep === steps.length ? (
                 <React.Fragment>
-                    <Box>{finalStep}</Box>
+                    {/* <Box>{finalStep}</Box>
                     <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2, gap: 3 }}>
                         <Button variant="contained">Finished</Button>
                         <Button onClick={handleReset}>Reset</Button>
-                    </Box>
+                    </Box> */}
                 </React.Fragment>
             ) : (
                 <React.Fragment>

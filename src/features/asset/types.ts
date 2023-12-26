@@ -12,6 +12,7 @@ export interface Asset {
         creatorMetadataDefinitions: MetadataDefinitionTypes[];
     };
     licenses: Licenses;
+    status: 'draft' | 'published' | 'archived';
     framework: {
         createdAt: Date | null;
         updatedAt: Date | null;
@@ -21,7 +22,6 @@ export interface Asset {
 }
 
 export interface AssetSliceState extends Asset {
-    status: string;
     error: string;
 }
 

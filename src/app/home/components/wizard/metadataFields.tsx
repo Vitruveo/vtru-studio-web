@@ -15,7 +15,16 @@ const handleGetValueByPath = (obj: any, path: string): any => {
     let value: any = obj;
 
     keys.forEach((key) => {
-        if (value && key in value) {
+        if (value && key.includes('[')) {
+            const arrayKey = key.split('[')[0];
+            const index = parseInt(key.split('[')[1].replace(']', ''), 10);
+
+            if (value[arrayKey] && Array.isArray(value[arrayKey])) {
+                value = value[arrayKey][index];
+            } else {
+                value = undefined;
+            }
+        } else if (value && key in value) {
             value = value[key];
         } else {
             value = undefined;

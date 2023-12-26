@@ -1,9 +1,26 @@
 import React from 'react';
 import Grid from '@mui/material/Grid';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 import { StepsProps } from './types';
-import { Box, Typography } from '@mui/material';
-const SeventhStep = ({ values }: StepsProps) => {
+import { Box, Button, Typography } from '@mui/material';
+import { useDispatch, useSelector } from '@/store/hooks';
+import { saveStepWizardThunk } from '@/features/user/thunks';
+import { assetSelector } from '@/features/asset';
+
+const SeventhStep = ({ values, errors, setFieldValue }: StepsProps) => {
+    const dispatch = useDispatch();
+    const { status } = useSelector(assetSelector(['status']));
+
+    const completedSteps = Object.values(values.completedSteps);
+    const disablePublish =
+        status === 'published' || completedSteps.length !== 6 || completedSteps.some((item) => item.errors);
+
+    const handlePublish = () => {
+        setFieldValue('status', 'published');
+        dispatch(saveStepWizardThunk({ step: 6, values: { ...values, status: 'published' } }));
+    };
+
     return (
         <Grid mt={1} my={3} alignItems="center" width={500} lg={6} xs={12}>
             <Typography variant="h6" mb={2} fontWeight={600}>
@@ -184,6 +201,31 @@ const SeventhStep = ({ values }: StepsProps) => {
                     </Typography>
                 </Grid>
             </Grid>
+            {status === 'published' ? (
+                <Grid justifyContent="center" container alignItems="center" spacing={1}>
+                    <Grid item>
+                        <CheckCircleOutlineIcon color="success" />
+                    </Grid>
+                    <Grid item>
+                        <Typography variant="body1" color="success">
+                            Published successfully!
+                        </Typography>
+                    </Grid>
+                </Grid>
+            ) : (
+                <Box my={2}>
+                    <Button
+                        size="small"
+                        disabled={disablePublish}
+                        fullWidth
+                        color="primary"
+                        variant="contained"
+                        onClick={handlePublish}
+                    >
+                        Publish
+                    </Button>
+                </Box>
+            )}
         </Grid>
     );
 };

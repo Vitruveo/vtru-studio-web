@@ -128,6 +128,9 @@ const FifthStep = ({
                 setErrors={setErrors}
                 setFieldError={setFieldError}
             />
+            <Typography my={1} color="error">
+                {typeof errors.licenses === 'string' && errors.licenses}
+            </Typography>
             <Box my={2}>
                 <Button size="small" fullWidth color="primary" variant="contained" onClick={handleAddLicense}>
                     Add license

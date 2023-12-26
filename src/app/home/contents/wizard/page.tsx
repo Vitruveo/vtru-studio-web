@@ -88,18 +88,20 @@ const steps = [
 ];
 
 export default function Wizard() {
+    const [activeStep, setActiveStep] = useState(0);
     const dispatch = useDispatch();
 
     const { username, emails, wallets, requestAssetUpload } = useSelector(
         userSelector(['username', 'emails', 'wallets', 'requestAssetUpload'])
     );
+
     const {
+        status,
         assetMetadata,
         creatorMetadata,
         licenses: licensesState,
         contract,
-    } = useSelector(assetSelector(['assetMetadata', 'creatorMetadata', 'licenses', 'contract']));
-    const [activeStep, setActiveStep] = useState(0);
+    } = useSelector(assetSelector(['assetMetadata', 'creatorMetadata', 'licenses', 'contract', 'status']));
 
     const { handleSubmit, handleChange, validateForm, setFieldValue, setFieldError, setErrors, values, errors } =
         useFormik<StepsFormValues>({
@@ -129,6 +131,7 @@ export default function Wizard() {
                         : creatorMetadataDefinitions,
                 },
                 licenses: licensesState.length ? licensesState : licenses,
+                status: status || 'draft',
                 completedSteps: {},
                 definition: '',
             },
@@ -280,44 +283,69 @@ export default function Wizard() {
     return (
         <PageContainer title="Wizard" description="this is Wizard">
             <Breadcrumb title="Genesis Wizard" />
-            <HorizontalStepper
-                steps={steps}
-                handleReset={handleReset}
-                handleStep={handleStep}
-                activeStep={activeStep}
-                finalStep={<FinalStep />}
-                completedSteps={values.completedSteps}
-            >
-                <Box>
-                    {steps.map(
-                        (item, index) =>
-                            activeStep === index && (
-                                <React.Fragment key={index}>
-                                    <item.render
-                                        key={index}
-                                        values={values}
-                                        errors={errors}
-                                        setFieldError={setFieldError}
-                                        setErrors={setErrors}
-                                        setFieldValue={setFieldValue}
-                                        handleChange={handleChange}
-                                        handleSubmit={handleSubmit}
-                                    />
-                                    <Stack direction="row" justifyContent="center" gap={5}>
-                                        {index !== 0 && (
-                                            <Button fullWidth color="primary" variant="outlined" onClick={handleBack}>
-                                                Previous
-                                            </Button>
-                                        )}
-                                        <Button fullWidth color="primary" variant="contained" onClick={handleNext}>
-                                            Next
-                                        </Button>
-                                    </Stack>
-                                </React.Fragment>
-                            )
-                    )}
+            {status === 'published' ? (
+                <Box width="100%" justifyContent="center" display="flex">
+                    <SeventhStep
+                        values={values}
+                        errors={errors}
+                        setFieldError={setFieldError}
+                        setErrors={setErrors}
+                        setFieldValue={setFieldValue}
+                        handleChange={handleChange}
+                        handleSubmit={handleSubmit}
+                    />
                 </Box>
-            </HorizontalStepper>
+            ) : (
+                <HorizontalStepper
+                    steps={steps}
+                    handleReset={handleReset}
+                    handleStep={handleStep}
+                    activeStep={activeStep}
+                    completedSteps={values.completedSteps}
+                >
+                    <Box>
+                        {steps.map(
+                            (item, index) =>
+                                activeStep === index && (
+                                    <React.Fragment key={index}>
+                                        <item.render
+                                            key={index}
+                                            values={values}
+                                            errors={errors}
+                                            setFieldError={setFieldError}
+                                            setErrors={setErrors}
+                                            setFieldValue={setFieldValue}
+                                            handleChange={handleChange}
+                                            handleSubmit={handleSubmit}
+                                        />
+                                        <Stack direction="row" justifyContent="center" gap={5}>
+                                            {index !== 0 && (
+                                                <Button
+                                                    fullWidth
+                                                    color="primary"
+                                                    variant="outlined"
+                                                    onClick={handleBack}
+                                                >
+                                                    Previous
+                                                </Button>
+                                            )}
+                                            {index !== steps.length - 1 && (
+                                                <Button
+                                                    fullWidth
+                                                    color="primary"
+                                                    variant="contained"
+                                                    onClick={handleNext}
+                                                >
+                                                    Next
+                                                </Button>
+                                            )}
+                                        </Stack>
+                                    </React.Fragment>
+                                )
+                        )}
+                    </Box>
+                </HorizontalStepper>
+            )}
         </PageContainer>
     );
 }
