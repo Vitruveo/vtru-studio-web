@@ -121,16 +121,16 @@ export default function Wizard() {
                 contract: contract || false,
                 assetMetadata: {
                     assetMetadataDomains,
-                    assetMetadataDefinitions: assetMetadata.assetMetadataDefinitions.length
+                    assetMetadataDefinitions: assetMetadata?.assetMetadataDefinitions.length
                         ? assetMetadata.assetMetadataDefinitions
                         : assetMetadataDefinitions,
                 },
                 creatorMetadata: {
-                    creatorMetadataDefinitions: creatorMetadata.creatorMetadataDefinitions.length
+                    creatorMetadataDefinitions: creatorMetadata?.creatorMetadataDefinitions.length
                         ? creatorMetadata.creatorMetadataDefinitions
                         : creatorMetadataDefinitions,
                 },
-                licenses: licensesState.length ? licensesState : licenses,
+                licenses: licensesState?.length ? licensesState : licenses,
                 status: status || 'draft',
                 completedSteps: {},
                 definition: '',
