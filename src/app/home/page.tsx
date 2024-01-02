@@ -15,10 +15,10 @@ export default function Home() {
     return (
         <PageContainer title="Home" description="this is Dashboard">
             <Breadcrumb title="Home" />
-            <Box width={800} padding={3} mt={3}>
+            <Box maxWidth={800} padding={3} mt={3}>
                 <Box>
                     <Typography variant="h2" display="inline">
-                        Welcome to <VtruTitle />
+                        Welcome to <VtruTitle copyRem="3.5rem" />
                     </Typography>
                 </Box>
                 <Box marginTop={4}>

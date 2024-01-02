@@ -8,11 +8,13 @@ export default function VtruTitle({
     vtru = 'h2',
     studio = 'h1',
     copy = 'h1',
+    copyRem = '2.5rem',
 }: {
     login?: boolean;
     vtru?: Variant;
     studio?: Variant;
     copy?: Variant;
+    copyRem?: string;
 }) {
     const style = login ? { fontSize: '4em' } : {};
     return (
@@ -23,8 +25,14 @@ export default function VtruTitle({
             <Typography style={style} variant={studio} fontWeight="bold" display="inline">
                 Studio
             </Typography>
-            <Typography style={style} color="primary" variant={copy} display="inline">
-                &copy;
+            <Typography
+                variant={copy}
+                fontWeight="400"
+                style={{ ...style, fontSize: login ? '6rem' : copyRem, fontFamily: 'Saira' }}
+                color="primary"
+                display="inline"
+            >
+                &alpha;
             </Typography>
         </Typography>
     );

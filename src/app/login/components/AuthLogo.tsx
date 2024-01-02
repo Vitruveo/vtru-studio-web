@@ -44,8 +44,8 @@ export default function AuthLogo() {
                         <Image
                             src={'/images/logos/logo-icon-vtru.png'}
                             alt="bg"
-                            width={120}
-                            height={120}
+                            width={160}
+                            height={160}
                             style={{
                                 width: '100%',
                                 maxWidth: '500px',

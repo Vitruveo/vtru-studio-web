@@ -53,7 +53,7 @@ const Logo = () => {
                             priority
                         />
 
-                        <VtruTitle vtru="h4" studio="h3" copy="h3" />
+                        <VtruTitle vtru="h4" studio="h3" copy="h3" copyRem="2.2rem" />
                     </Box>
                 )}
             </LinkStyled>
