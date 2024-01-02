@@ -43,8 +43,15 @@ const Logo = () => {
                         priority
                     />
                 ) : (
-                    <Box display="flex" marginTop={1} alignItems="center">
-                        <Image src={'/images/logos/logo-icon-vtru.png'} alt="logo" height={40} width={40} priority />
+                    <Box display="flex" marginTop={2} alignItems="center">
+                        <Image
+                            style={{ marginRight: '5px' }}
+                            src={'/images/logos/logo-icon-vtru.png'}
+                            alt="logo"
+                            height={40}
+                            width={40}
+                            priority
+                        />
 
                         <VtruTitle vtru="h4" studio="h3" copy="h3" />
                     </Box>
