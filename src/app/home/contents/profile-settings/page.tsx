@@ -86,7 +86,7 @@ export default function ProfileSettings() {
                             <Box textAlign="center" display="flex" justifyContent="center">
                                 <Box>
                                     <Avatar
-                                        src={'/images/profile/user-1.jpg'}
+                                        src={'/images/profile/profileDefault.png'}
                                         alt={'user1'}
                                         sx={{
                                             width: 120,
