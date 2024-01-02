@@ -17,14 +17,14 @@ interface MenuitemsType {
 import { IconPackage, IconChartDonut3, IconAperture } from '@tabler/icons-react';
 
 const Menuitems: MenuitemsType[] = [
-    {
-        navlabel: true,
-        subheader: 'Home',
-    },
+    // {
+    //     navlabel: true,
+    //     subheader: 'Home',
+    // },
 
     {
         id: uniqueId(),
-        title: 'Genesis Wizard',
+        title: 'Consign Artwork',
         icon: IconAperture,
         href: '/home/contents/wizard',
     },

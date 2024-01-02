@@ -282,7 +282,7 @@ export default function Wizard() {
 
     return (
         <PageContainer title="Wizard" description="this is Wizard">
-            <Breadcrumb title="Genesis Wizard" />
+            <Breadcrumb title="Consign Artwork" />
             {status === 'published' ? (
                 <Box width="100%" justifyContent="center" display="flex">
                     <SeventhStep

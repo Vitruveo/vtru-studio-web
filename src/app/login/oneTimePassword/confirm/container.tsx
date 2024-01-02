@@ -35,7 +35,7 @@ export default function ConfirmContainer() {
                     await dispatch(connectWebSocketThunk());
                     await dispatch(loginWebSocketThunk());
                     setToastr({ open: true, type: 'success', message: 'OTP confirmed!' });
-                    router.push('/home/contents/wizard');
+                    router.push('/home');
                     return;
                 } else {
                     setToastr({ open: true, type: 'error', message: 'Login failed: invalid code' });

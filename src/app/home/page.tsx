@@ -1,83 +1,60 @@
-"use client";
-import { useEffect, useState } from "react";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
+'use client';
 
-import PageContainer from "@/app/home/components/container/PageContainer";
-// components
-import YearlyBreakup from "@/app/home/components/dashboards/modern/YearlyBreakup";
-import MonthlyEarnings from "@/app/home/components/dashboards/modern/MonthlyEarnings";
-import TopCards from "@/app/home/components/dashboards/modern/TopCards";
-import RevenueUpdates from "@/app/home/components/dashboards/modern/RevenueUpdates";
-import EmployeeSalary from "@/app/home/components/dashboards/modern/EmployeeSalary";
-import Customers from "@/app/home/components/dashboards/modern/Customers";
-import Projects from "@/app/home/components/dashboards/modern/Projects";
-import Social from "@/app/home/components/dashboards/modern/Social";
-import SellingProducts from "@/app/home/components/dashboards/modern/SellingProducts";
-import WeeklyStats from "@/app/home/components/dashboards/modern/WeeklyStats";
-import TopPerformers from "@/app/home/components/dashboards/modern/TopPerformers";
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import Link from 'next/link';
 
-export default function Dashboard() {
-  const [isLoading, setLoading] = useState(true);
-  useEffect(() => {
-    setLoading(false);
-  }, []);
+import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
+import PageContainer from '@/app/home/components/container/PageContainer';
 
-  return (
-    <PageContainer title="Dashboard" description="this is Dashboard">
-      <Box mt={3}>
-        <Grid container spacing={3}>
-          {/* column */}
-          <Grid item xs={12} lg={12}>
-            <TopCards />
-          </Grid>
-          {/* column */}
-          <Grid item xs={12} lg={8}>
-            <RevenueUpdates isLoading={isLoading} />
-          </Grid>
-          {/* column */}
-          <Grid item xs={12} lg={4}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={6} lg={12}>
-                <YearlyBreakup isLoading={isLoading} />
-              </Grid>
-              <Grid item xs={12} sm={6} lg={12}>
-                <MonthlyEarnings isLoading={isLoading} />
-              </Grid>
-            </Grid>
-          </Grid>
-          {/* column */}
-          <Grid item xs={12} lg={4}>
-            <EmployeeSalary isLoading={isLoading} />
-          </Grid>
-          {/* column */}
-          <Grid item xs={12} lg={4}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={6}>
-                <Customers isLoading={isLoading} />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Projects isLoading={isLoading} />
-              </Grid>
-              <Grid item xs={12}>
-                <Social />
-              </Grid>
-            </Grid>
-          </Grid>
-          {/* column */}
-          <Grid item xs={12} lg={4}>
-            <SellingProducts />
-          </Grid>
-          {/* column */}
-          <Grid item xs={12} lg={4}>
-            <WeeklyStats isLoading={isLoading} />
-          </Grid>
-          {/* column */}
-          <Grid item xs={12} lg={8}>
-            <TopPerformers />
-          </Grid>
-        </Grid>
-      </Box>
-    </PageContainer>
-  );
+import { Button } from '@mui/material';
+import VtruTitle from '@/app/home/components/vtruTItle';
+
+export default function Home() {
+    return (
+        <PageContainer title="Home" description="this is Dashboard">
+            <Breadcrumb title="Home" />
+            <Box width={800} padding={3} mt={3}>
+                <Box>
+                    <Typography variant="h2" display="inline">
+                        Welcome to <VtruTitle />
+                    </Typography>
+                </Box>
+                <Box marginTop={4}>
+                    <Typography variant="h4" color="primary">
+                        Congrats on being selected as a Vitruveo Genesis Artist 🎉
+                    </Typography>
+                </Box>
+                <Box marginTop={4}>
+                    <Typography variant="h4" color="primary">
+                        Vitruveo is transforming Web3 art, and that means all-new software like this “Alpha” version of
+                        vtruStudio. Alpha means the software is not fully ready and you’re helping us test it so it can
+                        be improved.
+                    </Typography>
+                </Box>
+                <Box marginTop={4}>
+                    <Typography variant="h4" color="primary">
+                        The software currently has two features you can access with the buttons below:
+                    </Typography>
+                </Box>
+                <Grid marginTop={3} container spacing={2}>
+                    <Grid item xs={3}>
+                        <Link href="/home/contents/profile-settings" passHref>
+                            <Button variant="contained" fullWidth>
+                                My Profile
+                            </Button>
+                        </Link>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Link href="/home/contents/wizard" passHref>
+                            <Button variant="contained" fullWidth>
+                                Consign Artwork
+                            </Button>
+                        </Link>
+                    </Grid>
+                </Grid>
+            </Box>
+        </PageContainer>
+    );
 }
