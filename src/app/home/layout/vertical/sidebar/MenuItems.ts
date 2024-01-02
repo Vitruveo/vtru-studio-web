@@ -1,4 +1,5 @@
 import { uniqueId } from 'lodash';
+import { IconPhotoUp } from '@tabler/icons-react';
 
 interface MenuitemsType {
     [x: string]: any;
@@ -25,7 +26,7 @@ const Menuitems: MenuitemsType[] = [
     {
         id: uniqueId(),
         title: 'Consign Artwork',
-        icon: IconAperture,
+        icon: IconPhotoUp,
         href: '/home/contents/wizard',
     },
 

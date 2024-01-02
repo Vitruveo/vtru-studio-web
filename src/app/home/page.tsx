@@ -39,14 +39,14 @@ export default function Home() {
                     </Typography>
                 </Box>
                 <Grid marginTop={3} container spacing={2}>
-                    <Grid item xs={3}>
+                    <Grid item xs={12} sm={6} md={3}>
                         <Link href="/home/contents/profile-settings" passHref>
                             <Button variant="contained" fullWidth>
                                 My Profile
                             </Button>
                         </Link>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={12} sm={6} md={3}>
                         <Link href="/home/contents/wizard" passHref>
                             <Button variant="contained" fullWidth>
                                 Consign Artwork
