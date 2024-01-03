@@ -42,7 +42,7 @@ function LoginView({ values, errors, handleChange, handleSubmit }: LoginViewProp
                 </Stack>
                 <Box>
                     <Button color="primary" variant="contained" size="large" fullWidth type="submit">
-                        Sign In
+                        Sign In / Register
                     </Button>
                 </Box>
             </form>
