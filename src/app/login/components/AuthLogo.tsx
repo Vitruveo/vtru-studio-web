@@ -27,7 +27,32 @@ export default function AuthLogo() {
             }}
         >
             <Box position="relative">
-                <Box px={3}></Box>
+                <Box
+                    my={2}
+                    justifyContent={'center'}
+                    alignItems={'center'}
+                    flexDirection={'column'}
+                    sx={{
+                        display: {
+                            xs: 'flex',
+                            lg: 'none',
+                        },
+                    }}
+                >
+                    <Image
+                        src={'/images/logos/logo-icon-vtru.png'}
+                        alt="bg"
+                        width={60}
+                        height={60}
+                        style={{
+                            maxWidth: '120px',
+                            maxHeight: '120px',
+                        }}
+                    />
+                    <Box>
+                        <VtruTitle vtru="h5" studio="h3" copy="h3" />
+                    </Box>
+                </Box>
                 <Box
                     flexDirection="column"
                     alignItems="center"
@@ -44,12 +69,12 @@ export default function AuthLogo() {
                         <Image
                             src={'/images/logos/logo-icon-vtru.png'}
                             alt="bg"
-                            width={160}
-                            height={160}
+                            width={500}
+                            height={500}
                             style={{
                                 width: '100%',
-                                maxWidth: '500px',
-                                maxHeight: '500px',
+                                maxWidth: '140px',
+                                maxHeight: '140px',
                             }}
                         />
                     </Box>

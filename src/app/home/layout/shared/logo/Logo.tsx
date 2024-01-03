@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { styled } from '@mui/material/styles';
 
 import Image from 'next/image';
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import VtruTitle from '@/app/home/components/vtruTItle';
 
 const Logo = () => {
@@ -23,12 +23,15 @@ const Logo = () => {
         isCardShadow: true,
         borderRadius: 7,
     };
+
+    const theme = useTheme();
+
     const LinkStyled = styled(Link)(() => ({
         height: customizer.TopbarHeight,
         width: customizer.isCollapse ? '40px' : '190px',
         overflow: 'hidden',
         display: 'block',
-        color: 'black',
+        color: theme.palette.text.primary,
     }));
 
     if (customizer.activeDir === 'ltr') {
@@ -53,7 +56,7 @@ const Logo = () => {
                             priority
                         />
 
-                        <VtruTitle vtru="h4" studio="h3" copy="h3" copyRem="2.2rem" />
+                        <VtruTitle vtru="h5" studio="h3" copy="h3" copyRem="2.5rem" />
                     </Box>
                 )}
             </LinkStyled>

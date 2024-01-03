@@ -10,7 +10,6 @@ import { Inter } from 'next/font/google';
 import 'toastr/build/toastr.min.css';
 import 'react-image-crop/dist/ReactCrop.css';
 import Providers from '@/store/Provider';
-import '../../styles/globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 

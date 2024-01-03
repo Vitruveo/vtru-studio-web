@@ -25,19 +25,29 @@ export default function ConfirmContainer() {
         useFormik({
             initialValues: {
                 code: '',
+                disableSubmitButton: false,
             },
+            validateOnChange: false,
             validationSchema: otpSchemaValidation,
             onSubmit: async (formValues) => {
-                const resOTPConfirm = await dispatch(
-                    userOTPConfirmThunk({ code: formValues.code, email: login?.email })
-                );
-                if (codesVtruApi.success.login.includes(resOTPConfirm.code)) {
-                    await dispatch(connectWebSocketThunk());
-                    await dispatch(loginWebSocketThunk());
-                    setToastr({ open: true, type: 'success', message: 'OTP confirmed!' });
-                    router.push('/home');
-                    return;
-                } else {
+                try {
+                    await validateForm();
+                    setFieldValue('disableSubmitButton', true);
+                    const resOTPConfirm = await dispatch(
+                        userOTPConfirmThunk({ code: formValues.code, email: login?.email })
+                    );
+                    if (codesVtruApi.success.login.includes(resOTPConfirm.code)) {
+                        await dispatch(connectWebSocketThunk());
+                        await dispatch(loginWebSocketThunk());
+                        setToastr({ open: true, type: 'success', message: 'OTP confirmed!' });
+                        router.push('/home');
+                        return;
+                    } else {
+                        setFieldValue('disableSubmitButton', false);
+                        setToastr({ open: true, type: 'error', message: 'Login failed: invalid code' });
+                    }
+                } catch (error) {
+                    setFieldValue('disableSubmitButton', false);
                     setToastr({ open: true, type: 'error', message: 'Login failed: invalid code' });
                 }
             },
@@ -45,8 +55,9 @@ export default function ConfirmContainer() {
 
     const handleCustomChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         handleChange(e);
-        await validateForm();
+
         if (e.target.value.length === 6) {
+            await validateForm();
             submitForm();
         }
     };

@@ -17,21 +17,25 @@ const LoginContainer = () => {
     const router = useRouter();
     const dispatch = useDispatch();
 
-    const { handleSubmit, handleChange, resetForm, setFieldValue, setFieldError, values, errors } = useFormik({
-        initialValues: {
-            email: '',
-        },
-        validationSchema: loginSchemaValidation,
-        onSubmit: async (formValues) => {
-            const resUserLogin = await dispatch(userLoginThunk({ email: formValues.email }));
-            if (codesVtruApi.success.login.includes(resUserLogin.code)) {
-                router.push('/login/oneTimePassword');
-                return;
-            } else {
-                setToastr({ open: true, type: 'error', message: 'Something went wrong! Try again later.' });
-            }
-        },
-    });
+    const { handleSubmit, handleChange, resetForm, setFieldValue, setFieldError, validateForm, values, errors } =
+        useFormik({
+            initialValues: {
+                email: '',
+            },
+            validateOnChange: false,
+            validationSchema: loginSchemaValidation,
+            onSubmit: async (formValues) => {
+                await validateForm();
+
+                const resUserLogin = await dispatch(userLoginThunk({ email: formValues.email }));
+                if (codesVtruApi.success.login.includes(resUserLogin.code)) {
+                    router.push('/login/oneTimePassword');
+                    return;
+                } else {
+                    setToastr({ open: true, type: 'error', message: 'Something went wrong! Try again later.' });
+                }
+            },
+        });
 
     return (
         <>

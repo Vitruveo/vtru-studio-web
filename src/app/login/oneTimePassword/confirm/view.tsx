@@ -1,4 +1,4 @@
-import { Box, Typography, Button, Stack } from '@mui/material';
+import { Box, Typography, Button, Stack, Grid } from '@mui/material';
 
 import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
 import CustomFormLabel from '@/app/home/components/forms/theme-elements/CustomFormLabel';
@@ -13,7 +13,7 @@ export default function ConfirmView({
     handleResendCode,
 }: OTPConfirmViewProps) {
     return (
-        <>
+        <Grid height="70vh" alignContent="center" display="grid" minWidth={{ xl: '400px', lg: '400px', sm: '500px' }}>
             <Typography fontWeight="700" variant="h3" mb={1}>
                 Validate OTP
             </Typography>
@@ -35,8 +35,16 @@ export default function ConfirmView({
                     </Box>
                 </Stack>
                 <Box my={2} mt={3}>
-                    <Button color="primary" variant="contained" size="large" fullWidth href="" type="submit">
-                        Verify
+                    <Button
+                        color="primary"
+                        disabled={values.disableSubmitButton}
+                        variant="contained"
+                        size="large"
+                        fullWidth
+                        href=""
+                        type="submit"
+                    >
+                        {values.disableSubmitButton ? 'Verifying…' : 'Verify'}
                     </Button>
                 </Box>
             </form>
@@ -56,6 +64,6 @@ export default function ConfirmView({
                     Resend code
                 </Typography>
             </Stack>
-        </>
+        </Grid>
     );
 }

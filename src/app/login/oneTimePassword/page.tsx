@@ -11,7 +11,7 @@ export default function OneTimePassword() {
             <Grid container spacing={0} justifyContent="center" sx={{ height: '100vh' }}>
                 <AuthLogo />
                 <Grid item xs={12} sm={12} lg={5} xl={4} display="flex" justifyContent="center" alignItems="center">
-                    <Box flex={1} p={{ xs: 4, sm: 4, md: 10, lg: 10, xl: 10 }}>
+                    <Box p={4}>
                         <Confirm />
                     </Box>
                 </Grid>

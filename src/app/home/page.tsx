@@ -18,7 +18,7 @@ export default function Home() {
             <Box maxWidth={800} padding={3} mt={3}>
                 <Box>
                     <Typography variant="h2" display="inline">
-                        Welcome to <VtruTitle copyRem="3.5rem" />
+                        Welcome to <VtruTitle vtru="h3" studio="h2" copyRem="3rem" />
                     </Typography>
                 </Box>
                 <Box marginTop={4}>
