@@ -1,5 +1,6 @@
 import { StepsFormValues } from '@/app/home/components/wizard/types';
 import { APIResponse, Framework } from '../common/types';
+import { AccountSettingsFormValues } from '@/app/home/contents/profile-settings/types';
 
 interface Email {
     email: string;
@@ -93,7 +94,7 @@ export interface UserOTPConfirmRes {
 
 export interface SaveStepWizardReq {
     step: number;
-    values: StepsFormValues;
+    values: StepsFormValues | AccountSettingsFormValues;
 }
 
 export interface CreatorSchemaType {

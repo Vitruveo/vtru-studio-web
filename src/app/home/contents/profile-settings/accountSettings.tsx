@@ -9,9 +9,9 @@ import { IconTrash, IconPlus } from '@tabler/icons-react';
 
 import { WalletProvider } from '@/app/home/components/apps/wallet';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
-import { addCreatorEmailThunk, verifyCodeThunk } from '@/features/user/thunks';
+import { addCreatorEmailThunk, saveStepWizardThunk, verifyCodeThunk } from '@/features/user/thunks';
 
-import { AccountSettingsFormValues, AccountSettingsProps } from './types';
+import { AccountSettingsFormValues } from './types';
 
 import { debouncedUsernameValidation, validateEmailFormValue } from '../wizard/formschema';
 import { userSelector } from '@/features/user';
@@ -19,13 +19,12 @@ import { sendEmailThunk } from '@/features/user/thunks';
 import { useDispatch } from '@/store/hooks';
 import { checkCreatorEmailExist } from '@/features/user/requests';
 import { codesVtruApi } from '@/services/codes';
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 import { CreatorEmailExistApiRes } from '@/features/user/types';
-import { FormikErrors, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import CustomTextField from '../../components/forms/theme-elements/CustomTextField';
 import Wallet from '../../components/wizard/wallet';
-
-const currentStep = 1;
+import { FooterForm } from '../../components/footerForm';
 
 const AccountSettings = () => {
     const [email, setEmail] = useState('');
@@ -119,7 +118,33 @@ const AccountSettings = () => {
         setEmail(e.target.value);
     }, []);
 
-    const handleAddEmail = useCallback(async () => {}, [setFieldValue, values.emails, email]);
+    const handleAddEmail = useCallback(async () => {
+        if (values.emails.some((item) => item.email === email)) {
+            setEmailError('Email already exists');
+            return;
+        }
+        try {
+            await validateEmailFormValue.validate({ email });
+        } catch (error) {
+            setEmailError((error as ValidationError).errors[0]);
+            return;
+        }
+        try {
+            await checkCreatorEmailExist({ email });
+            setEmailError('Email already exists');
+        } catch (error) {
+            if (
+                codesVtruApi.notfound.user.includes(
+                    (error as AxiosError<CreatorEmailExistApiRes>).response?.data?.code as string
+                )
+            ) {
+                await dispatch(addCreatorEmailThunk({ email }));
+                setFieldValue('emails', [{ email, checkedAt: null, sentCode: true }, ...values.emails]);
+                setEmail('');
+                setEmailError('');
+            }
+        }
+    }, [setFieldValue, values.emails, email]);
 
     const handleDeleteEmail = useCallback(
         (emailDelet: string) => {
@@ -131,10 +156,14 @@ const AccountSettings = () => {
         [setFieldValue, values.emails]
     );
 
+    const handleSave = () => {
+        dispatch(saveStepWizardThunk({ step: 0, values }));
+    };
+
     return (
         <Stack sx={{ width: '100%' }}>
-            <Box minWidth={600} display="flex" flexDirection="column" my={3} gap={1}>
-                <Box>
+            <Box display="flex" flexDirection="column" my={3} gap={1}>
+                <Box maxWidth={450}>
                     <Stack my={1} direction="row" display="flex" alignItems="center" justifyContent="space-between">
                         <Typography variant="subtitle1" fontWeight={600} component="label">
                             Username
@@ -153,7 +182,7 @@ const AccountSettings = () => {
                     />
                 </Box>
 
-                <Box>
+                {/* <Box maxWidth={440}>
                     <Stack my={2} direction="row" display="flex" alignItems="center" justifyContent="space-between">
                         <Typography variant="subtitle1" fontWeight={600} component="label">
                             Emails
@@ -174,22 +203,30 @@ const AccountSettings = () => {
                             <IconPlus />
                         </IconButton>
                     </Box>
-                </Box>
-                <Box display="flex" flexDirection="column" my={2} gap={2}>
+                </Box> */}
+                <Box maxWidth={450} display="flex" flexDirection="column" my={2} gap={2}>
                     {values.emails.slice().map((item) => (
                         <Box key={item.email}>
                             <Box display="flex" alignItems="center" justifyContent="space-between" paddingY={1}>
                                 <Box display="flex" alignItems="center" gap={1}>
-                                    {!item.checkedAt && (
+                                    {/* {!item.checkedAt && (
                                         <IconButton onClick={(e) => handleDeleteEmail(item.email)}>
                                             <IconTrash color="red" size="16" stroke={1.5} />
                                         </IconButton>
-                                    )}
+                                    )} */}
                                     <Typography>{item.email}</Typography>
                                 </Box>
                                 {item.checkedAt ? (
-                                    <Typography color="success.main">Verified email</Typography>
-                                ) : item.sentCode ? (
+                                    <Button
+                                        size="small"
+                                        variant="contained"
+                                        style={{ width: '80px' }}
+                                        // onClick={() => handleSendCodeEmail(item.email)}
+                                    >
+                                        Delete
+                                    </Button>
+                                ) : // <Typography color="success.main">Verified email</Typography>
+                                item.sentCode ? (
                                     <Box
                                         display="flex"
                                         flexDirection="column"
@@ -197,6 +234,7 @@ const AccountSettings = () => {
                                         justifyContent="flex-end"
                                     >
                                         <CustomTextField
+                                            style={{ width: 130 }}
                                             onChange={handleVerifyCode(item.email)}
                                             size="small"
                                             id="verificationCode"
@@ -211,9 +249,32 @@ const AccountSettings = () => {
                                     <Button onClick={() => handleSendCodeEmail(item.email)}>Verify now</Button>
                                 )}
                             </Box>
-                            <Divider />
                         </Box>
                     ))}
+                </Box>
+                <Box maxWidth={450}>
+                    <Box width="100%" display="flex" alignItems="center">
+                        <CustomTextField
+                            value={email}
+                            onChange={handleChangeEmailInput}
+                            size="small"
+                            fullWidth
+                            variant="outlined"
+                            placeholder="type a email..."
+                            error={!!emailError}
+                            helperText={emailError}
+                        />
+                        <Box>
+                            <Button
+                                style={{ marginLeft: '10px', width: '80px' }}
+                                size="small"
+                                variant="contained"
+                                onClick={handleAddEmail}
+                            >
+                                Verify
+                            </Button>
+                        </Box>
+                    </Box>
                 </Box>
                 <Box display="flex" flexDirection="column">
                     <Stack my={2} direction="row" display="flex" alignItems="center" justifyContent="space-between">
@@ -221,7 +282,7 @@ const AccountSettings = () => {
                             Wallets
                         </Typography>
                     </Stack>
-                    {/* <WalletProvider>
+                    <WalletProvider>
                         <Wallet
                             values={values}
                             errors={errors}
@@ -231,7 +292,7 @@ const AccountSettings = () => {
                             setErrors={setErrors}
                             setFieldError={setFieldError}
                         />
-                    </WalletProvider> */}
+                    </WalletProvider>
                 </Box>
             </Box>
             <CustomizedSnackbar
@@ -240,6 +301,7 @@ const AccountSettings = () => {
                 message={toastr.message}
                 setOpentate={setToastr}
             />
+            <FooterForm saveOnClick={handleSave} />
         </Stack>
     );
 };

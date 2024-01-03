@@ -37,6 +37,7 @@ import {
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { assetUpdateStepThunk, getAssetThunk } from '../asset/thunks';
+import { AccountSettingsFormValues } from '@/app/home/contents/profile-settings/types';
 
 export function userLoginThunk(payload: UserLoginReq): ReduxThunkAction<Promise<UserLoginApiRes>> {
     return async function (dispatch, getState) {
@@ -90,6 +91,7 @@ export function addCreatorEmailThunk(payload: AddCreatorEmailReq): ReduxThunkAct
         const user = getState().user;
 
         const response = await addCreatorEmailExist({ id: user._id, email: payload.email, framework: user.framework });
+
         return response;
     };
 }
@@ -134,7 +136,7 @@ export function assetStorageThunk(payload: AssetStorageReq): ReduxThunkAction<Pr
     };
 }
 
-export function creatorAccountThunk(payload: StepsFormValues): ReduxThunkAction<void> {
+export function creatorAccountThunk(payload: StepsFormValues | AccountSettingsFormValues): ReduxThunkAction<void> {
     return async function (dispatch, getState) {
         const user = getState().user;
 
@@ -174,29 +176,29 @@ export function saveStepWizardThunk(payload: SaveStepWizardReq): ReduxThunkActio
             dispatch(creatorAccountThunk(payload.values));
             return;
         }
-        if (payload.step === 2) {
-            dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'assetMetadata' }));
-            return;
-        }
-        if (payload.step === 3) {
-            dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'creatorMetadata' }));
-            return;
-        }
-        if (payload.step === 4) {
-            dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'license' }));
-            return;
-        }
-        if (payload.step === 5) {
-            dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'contract' }));
-            return;
-        }
-        if (payload.step === 5) {
-            dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'contract' }));
-            return;
-        }
-        if (payload.step === 6) {
-            dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'publish' }));
-            return;
-        }
+        // if (payload.step === 2) {
+        //     dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'assetMetadata' }));
+        //     return;
+        // }
+        // if (payload.step === 3) {
+        //     dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'creatorMetadata' }));
+        //     return;
+        // }
+        // if (payload.step === 4) {
+        //     dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'license' }));
+        //     return;
+        // }
+        // if (payload.step === 5) {
+        //     dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'contract' }));
+        //     return;
+        // }
+        // if (payload.step === 5) {
+        //     dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'contract' }));
+        //     return;
+        // }
+        // if (payload.step === 6) {
+        //     dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'publish' }));
+        //     return;
+        // }
     };
 }

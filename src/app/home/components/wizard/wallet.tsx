@@ -5,9 +5,9 @@ import { IconTrash } from '@tabler/icons-react';
 import Box from '@mui/material/Box';
 import { Button, Divider, IconButton, Typography } from '@mui/material';
 
-import { StepsProps } from './types';
+import { AccountSettingsProps } from '../../contents/profile-settings/types';
 
-const Wallet = ({ values, errors, setFieldValue }: StepsProps) => {
+const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
     const [connectWallet, setConnectWallet] = useState(false);
 
     const { openConnectModal } = useConnectModal();
@@ -52,9 +52,9 @@ const Wallet = ({ values, errors, setFieldValue }: StepsProps) => {
                 <Box gap={2}>
                     {values.wallets.map((item, index) => (
                         <Box display="flex" my={1} gap={2} key={index}>
-                            <IconButton onClick={(e) => handleDeleteWallet(index)}>
+                            {/* <IconButton onClick={(e) => handleDeleteWallet(index)}>
                                 <IconTrash color="red" size="16" stroke={1.5} />
-                            </IconButton>
+                            </IconButton> */}
                             <Box width={110}>
                                 <Typography variant="subtitle2">Network</Typography>
                                 <Typography color="GrayText" variant="body1">
@@ -74,8 +74,8 @@ const Wallet = ({ values, errors, setFieldValue }: StepsProps) => {
                 </Box>
                 <Divider />
                 <Box flexDirection="row" display="flex" gap={1}>
-                    <Button fullWidth variant="outlined" onClick={handleAddWallet}>
-                        Add Wallet
+                    <Button style={{ width: 200 }} variant="outlined" onClick={handleAddWallet}>
+                        Connect new wallet
                     </Button>
                 </Box>
                 <Typography my={1} color="error">
