@@ -13,8 +13,7 @@ const SeventhStep = ({ values, errors, setFieldValue }: StepsProps) => {
     const { status } = useSelector(assetSelector(['status']));
 
     const completedSteps = Object.values(values.completedSteps);
-    const disablePublish =
-        status === 'published' || completedSteps.length !== 6 || completedSteps.some((item) => item.errors);
+    const disablePublish = status === 'published' || completedSteps.length !== 6;
 
     const handlePublish = () => {
         setFieldValue('status', 'published');

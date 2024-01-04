@@ -43,19 +43,19 @@ export const validateErrorsCreatorAccount = ({
 }) => {
     const fields: Array<keyof StepsFormValues> = ['wallets', 'emails', 'username'];
 
-    if (!fields.some((field) => errors[field]) && !usernameError) {
-        values.completedSteps[currentStep] = {
-            step: currentStep,
-            errors: false,
-        };
-        setFieldValue('completedSteps', { ...values.completedSteps });
-    } else {
-        values.completedSteps[currentStep] = {
-            step: currentStep,
-            errors: true,
-        };
-        setFieldValue('completedSteps', { ...values.completedSteps });
-    }
+    // if (!fields.some((field) => errors[field]) && !usernameError) {
+    //     values.completedSteps[currentStep] = {
+    //         step: currentStep,
+    //         errors: false,
+    //     };
+    //     setFieldValue('completedSteps', { ...values.completedSteps });
+    // } else {
+    //     values.completedSteps[currentStep] = {
+    //         step: currentStep,
+    //         errors: true,
+    //     };
+    //     setFieldValue('completedSteps', { ...values.completedSteps });
+    // }
 };
 
 const FirstStep = ({
@@ -163,19 +163,19 @@ const FirstStep = ({
     useEffect(() => {
         const fields: Array<keyof StepsFormValues> = ['wallets', 'emails', 'username'];
 
-        if (!fields.some((field) => errors[field]) && !usernameError) {
-            values.completedSteps[currentStep] = {
-                step: currentStep,
-                errors: false,
-            };
-            setFieldValue('completedSteps', { ...values.completedSteps });
-        } else {
-            values.completedSteps[currentStep] = {
-                step: currentStep,
-                errors: true,
-            };
-            setFieldValue('completedSteps', { ...values.completedSteps });
-        }
+        // if (!fields.some((field) => errors[field]) && !usernameError) {
+        //     values.completedSteps[currentStep] = {
+        //         step: currentStep,
+        //         errors: false,
+        //     };
+        //     setFieldValue('completedSteps', { ...values.completedSteps });
+        // } else {
+        //     values.completedSteps[currentStep] = {
+        //         step: currentStep,
+        //         errors: true,
+        //     };
+        //     setFieldValue('completedSteps', { ...values.completedSteps });
+        // }
     }, [values.wallets, values.emails, values.username, usernameError, errors]);
 
     return (

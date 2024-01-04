@@ -127,19 +127,19 @@ export const validateErrorsAssetUpload = ({
 }) => {
     const fields: Array<keyof StepsFormValues> = ['asset'];
 
-    if (!fields.some((field) => errors[field])) {
-        values.completedSteps[currentStep] = {
-            step: currentStep,
-            errors: false,
-        };
-        setFieldValue('completedSteps', { ...values.completedSteps });
-    } else {
-        values.completedSteps[currentStep] = {
-            step: currentStep,
-            errors: true,
-        };
-        setFieldValue('completedSteps', { ...values.completedSteps });
-    }
+    // if (!fields.some((field) => errors[field])) {
+    //     values.completedSteps[currentStep] = {
+    //         step: currentStep,
+    //         errors: false,
+    //     };
+    //     setFieldValue('completedSteps', { ...values.completedSteps });
+    // } else {
+    //     values.completedSteps[currentStep] = {
+    //         step: currentStep,
+    //         errors: true,
+    //     };
+    //     setFieldValue('completedSteps', { ...values.completedSteps });
+    // }
 };
 
 const SecondStep = ({ values, errors, handleChange, handleSubmit, setFieldValue }: StepsProps) => {

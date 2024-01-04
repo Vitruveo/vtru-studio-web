@@ -24,7 +24,7 @@ const HorizontalStepper = ({ children, steps, activeStep, completedSteps, handle
             <Stepper nonLinear activeStep={activeStep} alternativeLabel>
                 {steps.map((label, index) => {
                     const step = index + 1;
-                    const error = completedSteps?.[step]?.errors;
+                    const error = completedSteps?.[step] || (false as any);
 
                     return (
                         <Step completed={error === false} key={label.key}>

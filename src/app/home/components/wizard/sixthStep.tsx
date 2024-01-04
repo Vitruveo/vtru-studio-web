@@ -20,19 +20,19 @@ export const validateErrorsContract = ({
 }) => {
     const fields: Array<keyof StepsFormValues> = ['contract'];
 
-    if (!fields.some((field) => errors[field])) {
-        values.completedSteps[currentStep] = {
-            step: currentStep,
-            errors: false,
-        };
-        setFieldValue('completedSteps', { ...values.completedSteps });
-    } else {
-        values.completedSteps[currentStep] = {
-            step: currentStep,
-            errors: true,
-        };
-        setFieldValue('completedSteps', { ...values.completedSteps });
-    }
+    // if (!fields.some((field) => errors[field])) {
+    //     values.completedSteps[currentStep] = {
+    //         step: currentStep,
+    //         errors: false,
+    //     };
+    //     setFieldValue('completedSteps', { ...values.completedSteps });
+    // } else {
+    //     values.completedSteps[currentStep] = {
+    //         step: currentStep,
+    //         errors: true,
+    //     };
+    //     setFieldValue('completedSteps', { ...values.completedSteps });
+    // }
 };
 
 const ContractScreen = ({ values, errors, setFieldValue }: StepsProps) => {

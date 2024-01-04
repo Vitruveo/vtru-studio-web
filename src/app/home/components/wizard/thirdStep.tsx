@@ -25,19 +25,19 @@ export const validateErrorsAssetMetadata = ({
 }) => {
     const fields: Array<keyof StepsFormValues> = ['assetMetadata'];
 
-    if (!fields.some((field) => errors[field])) {
-        values.completedSteps[currentStep] = {
-            step: currentStep,
-            errors: false,
-        };
-        setFieldValue('completedSteps', { ...values.completedSteps });
-    } else {
-        values.completedSteps[currentStep] = {
-            step: currentStep,
-            errors: true,
-        };
-        setFieldValue('completedSteps', { ...values.completedSteps });
-    }
+    // if (!fields.some((field) => errors[field])) {
+    //     values.completedSteps[currentStep] = {
+    //         step: currentStep,
+    //         errors: false,
+    //     };
+    //     setFieldValue('completedSteps', { ...values.completedSteps });
+    // } else {
+    //     values.completedSteps[currentStep] = {
+    //         step: currentStep,
+    //         errors: true,
+    //     };
+    //     setFieldValue('completedSteps', { ...values.completedSteps });
+    // }
 };
 
 const ThirdStep = ({

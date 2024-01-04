@@ -23,19 +23,19 @@ export const validateErrorsCreatorMetadata = ({
 }) => {
     const fields: Array<keyof StepsFormValues> = ['creatorMetadata'];
 
-    if (!fields.some((field) => errors[field])) {
-        values.completedSteps[currentStep] = {
-            step: currentStep,
-            errors: false,
-        };
-        setFieldValue('completedSteps', { ...values.completedSteps });
-    } else {
-        values.completedSteps[currentStep] = {
-            step: currentStep,
-            errors: true,
-        };
-        setFieldValue('completedSteps', { ...values.completedSteps });
-    }
+    // if (!fields.some((field) => errors[field])) {
+    //     values.completedSteps[currentStep] = {
+    //         step: currentStep,
+    //         errors: false,
+    //     };
+    //     setFieldValue('completedSteps', { ...values.completedSteps });
+    // } else {
+    //     values.completedSteps[currentStep] = {
+    //         step: currentStep,
+    //         errors: true,
+    //     };
+    //     setFieldValue('completedSteps', { ...values.completedSteps });
+    // }
 };
 
 const SixthStep = ({
