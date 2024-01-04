@@ -1,15 +1,19 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
+
 import { useRouter } from 'next/navigation';
-import { Box, Button, Divider, Stack } from '@mui/material';
+import { Box, Button, Stack } from '@mui/material';
 
 export function FooterForm({
-    backRouter = '',
+    submitText,
+    submitDisabled,
+    backPathRouter,
     backOnclick,
 }: {
-    backRouter?: string;
+    submitText?: string;
+    submitDisabled?: boolean;
+    backPathRouter?: string;
     backOnclick?: () => void;
     saveOnClick?: () => void;
 }) {
@@ -17,8 +21,8 @@ export function FooterForm({
 
     const handleBackClick = () => {
         if (backOnclick) backOnclick();
-        if (backRouter) {
-            router.push(backRouter);
+        if (backPathRouter) {
+            router.push(backPathRouter);
         } else {
             router.back();
         }
@@ -32,11 +36,17 @@ export function FooterForm({
             flexGrow={1}
             position="relative"
             bgcolor="#fff"
-            p={2}
+            my={4}
         >
             <Stack direction="row" spacing={2} flexDirection="row-reverse">
-                <Button type="submit" style={{ width: 120 }} color="primary" variant="contained">
-                    Save
+                <Button
+                    disabled={submitDisabled}
+                    type="submit"
+                    style={{ width: 120 }}
+                    color="primary"
+                    variant="contained"
+                >
+                    {submitText || 'Save'}
                 </Button>
                 <Button onClick={handleBackClick} variant="text">
                     Back

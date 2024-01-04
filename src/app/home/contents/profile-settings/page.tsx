@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useFormik } from 'formik';
+import { useRouter } from 'next/navigation';
 
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -45,6 +46,7 @@ export default function ProfileSettings() {
     const { username, emails, wallets } = useSelector(userSelector(['username', 'emails', 'wallets']));
 
     const dispatch = useDispatch();
+    const router = useRouter();
 
     const { handleSubmit, handleChange, setFieldValue, setFieldError, setErrors, values, errors } =
         useFormik<AccountSettingsFormValues>({
@@ -56,11 +58,16 @@ export default function ProfileSettings() {
             // validationSchema: stepsSchemaValidation,
             onSubmit: async (formValues) => {
                 await dispatch(saveStepWizardThunk({ step: 0, values }));
+
                 setToastr({
                     open: true,
                     type: 'success',
                     message: 'Data saved successfully',
                 });
+
+                setTimeout(() => {
+                    router.push('/home');
+                }, 500);
             },
         });
 
@@ -130,7 +137,7 @@ export default function ProfileSettings() {
                             </BlankCard>
                         </Grid>
                     </Grid>
-                    <FooterForm />
+                    <FooterForm backPathRouter="/home" />
                 </Box>
             </form>
             <CustomizedSnackbar
