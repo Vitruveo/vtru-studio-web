@@ -92,6 +92,8 @@ export function addCreatorEmailThunk(payload: AddCreatorEmailReq): ReduxThunkAct
 
         const response = await addCreatorEmailExist({ id: user._id, email: payload.email, framework: user.framework });
 
+        await sendEmailThunk({ email: payload.email });
+
         return response;
     };
 }

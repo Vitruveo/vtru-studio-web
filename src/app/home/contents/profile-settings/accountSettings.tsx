@@ -139,7 +139,7 @@ const AccountSettings = () => {
                 )
             ) {
                 await dispatch(addCreatorEmailThunk({ email }));
-                setFieldValue('emails', [{ email, checkedAt: null, sentCode: true }, ...values.emails]);
+                setFieldValue('emails', [...values.emails, { email, checkedAt: null, sentCode: true }]);
                 setEmail('');
                 setEmailError('');
             }
@@ -162,9 +162,15 @@ const AccountSettings = () => {
 
     return (
         <Stack sx={{ width: '100%' }}>
-            <Box display="flex" flexDirection="column" my={3} gap={1}>
+            <Box display="flex" flexDirection="column" gap={1}>
                 <Box maxWidth={450}>
-                    <Stack my={1} direction="row" display="flex" alignItems="center" justifyContent="space-between">
+                    <Stack
+                        marginBottom={1}
+                        direction="row"
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="space-between"
+                    >
                         <Typography variant="subtitle1" fontWeight={600} component="label">
                             Username
                         </Typography>
@@ -204,7 +210,7 @@ const AccountSettings = () => {
                         </IconButton>
                     </Box>
                 </Box> */}
-                <Box maxWidth={450} display="flex" flexDirection="column" my={2} gap={2}>
+                <Box maxWidth={450} display="flex" flexDirection="column" my={1} gap={2}>
                     {values.emails.slice().map((item) => (
                         <Box key={item.email}>
                             <Box display="flex" alignItems="center" justifyContent="space-between" paddingY={1}>
@@ -246,7 +252,13 @@ const AccountSettings = () => {
                                         <Typography variant="caption" color="primary"></Typography>
                                     </Box>
                                 ) : (
-                                    <Button onClick={() => handleSendCodeEmail(item.email)}>Verify now</Button>
+                                    <Button
+                                        size="small"
+                                        variant="contained"
+                                        onClick={() => handleSendCodeEmail(item.email)}
+                                    >
+                                        Verify
+                                    </Button>
                                 )}
                             </Box>
                         </Box>
