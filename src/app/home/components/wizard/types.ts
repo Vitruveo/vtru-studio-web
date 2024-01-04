@@ -29,7 +29,6 @@ export interface CompletedSteps {
 
 interface Wallet {
     address: string;
-    network: { name: string; chainId: number };
 }
 
 export interface License {

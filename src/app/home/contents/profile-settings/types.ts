@@ -3,7 +3,6 @@ import { FormikDefaultProps } from '@/app/common/types';
 
 interface Wallet {
     address: string;
-    network: { name: string; chainId: number };
 }
 
 export interface EmailFormValues {

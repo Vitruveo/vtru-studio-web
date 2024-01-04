@@ -53,9 +53,7 @@ const SeventhStep = ({ values, errors, setFieldValue }: StepsProps) => {
                     </Typography>
                     <Typography variant="subtitle1" mb={0.5} fontWeight={600}>
                         {values.wallets.map((item) => (
-                            <span key={item.address}>
-                                {item.network.name} {item.address}
-                            </span>
+                            <span key={item.address}>{item.address}</span>
                         ))}
                     </Typography>
                 </Grid>

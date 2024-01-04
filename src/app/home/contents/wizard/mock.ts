@@ -36,8 +36,8 @@ export const assetMetadataDefinitions: MetadataDefinitionTypes[] = [
         auto: {
             nameTargetFieldValue: 'wallets',
             selectOptions: {
-                labelOptionField: ['network.name', 'address'],
-                valueOptionField: ['network.name', 'address'],
+                labelOptionField: ['address'],
+                valueOptionField: ['address'],
             },
         },
         type: 'select',

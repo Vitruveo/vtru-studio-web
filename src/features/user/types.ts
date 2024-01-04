@@ -17,10 +17,6 @@ export interface User {
     };
     wallets: {
         address: string;
-        network: {
-            name: string;
-            chainId: number;
-        };
     }[];
     emails: Email[];
     profile: {
@@ -113,10 +109,6 @@ export interface CreatorSchemaType {
     }>;
     wallets: Array<{
         address: string;
-        network: {
-            name: string;
-            chainId: number;
-        };
     }>;
     profile: {
         avatar: string | null;

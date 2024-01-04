@@ -92,7 +92,7 @@ export function addCreatorEmailThunk(payload: AddCreatorEmailReq): ReduxThunkAct
 
         const response = await addCreatorEmailExist({ id: user._id, email: payload.email, framework: user.framework });
 
-        await sendEmailThunk({ email: payload.email });
+        await dispatch(sendEmailThunk({ email: payload.email }));
 
         return response;
     };
@@ -142,33 +142,25 @@ export function creatorAccountThunk(payload: StepsFormValues | AccountSettingsFo
     return async function (dispatch, getState) {
         const user = getState().user;
 
-        let isChanged = false;
+        await changeCreator({
+            userId: user._id,
+            data: {
+                name: user.name,
+                profile: user.profile,
+                username: payload.username,
+                emails: payload.emails as any,
+                wallets: payload.wallets,
+                framework: user.framework,
+            },
+        });
 
-        isChanged = isChanged || payload.username !== user.username;
-        isChanged = isChanged || !payload.emails.every((v) => user.emails.find((userV) => userV.email === v.email));
-        isChanged =
-            isChanged || !payload.wallets.every((v) => user.wallets.find((userV) => userV.address === v.address));
-
-        if (isChanged) {
-            await changeCreator({
-                userId: user._id,
-                data: {
-                    name: user.name,
-                    profile: user.profile,
-                    username: payload.username,
-                    wallets: payload.wallets,
-                    framework: user.framework,
-                },
-            });
-
-            dispatch(
-                userActionsCreators.change({
-                    username: payload.username,
-                    wallets: payload.wallets,
-                    emails: payload.emails,
-                })
-            );
-        }
+        dispatch(
+            userActionsCreators.change({
+                username: payload.username,
+                wallets: payload.wallets,
+                emails: payload.emails,
+            })
+        );
     };
 }
 

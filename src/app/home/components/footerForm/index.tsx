@@ -8,7 +8,6 @@ import { Box, Button, Divider, Stack } from '@mui/material';
 export function FooterForm({
     backRouter = '',
     backOnclick,
-    saveOnClick,
 }: {
     backRouter?: string;
     backOnclick?: () => void;
@@ -26,9 +25,17 @@ export function FooterForm({
     };
 
     return (
-        <Box position="fixed" bottom={0} width="83vw" bgcolor="#fff" p={2} borderTop={1} borderColor="divider">
+        <Box
+            display="flex"
+            marginTop="auto"
+            flexDirection="column"
+            flexGrow={1}
+            position="relative"
+            bgcolor="#fff"
+            p={2}
+        >
             <Stack direction="row" spacing={2} flexDirection="row-reverse">
-                <Button onClick={saveOnClick} style={{ width: 120 }} color="primary" variant="contained">
+                <Button type="submit" style={{ width: 120 }} color="primary" variant="contained">
                     Save
                 </Button>
                 <Button onClick={handleBackClick} variant="text">
