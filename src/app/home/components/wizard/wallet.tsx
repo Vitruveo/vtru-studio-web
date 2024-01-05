@@ -3,7 +3,7 @@ import { useAccount, useDisconnect } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 import Box from '@mui/material/Box';
-import { Button, Typography } from '@mui/material';
+import { Button, Divider, Typography } from '@mui/material';
 
 import { AccountSettingsProps } from '../../contents/profile-settings/types';
 
@@ -49,31 +49,37 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
                     {values.wallets.map((item, index) => (
                         <Box
                             display="flex"
-                            alignItems="center"
+                            flexDirection="column"
                             justifyContent="space-between"
                             mb={2}
                             gap={1}
                             key={index}
                         >
-                            <Typography color="GrayText">
-                                {`${item.address.substring(0, 6)}...${item.address.substring(item.address.length - 4)}`}
-                            </Typography>
+                            <Box display="flex" alignItems="center" justifyContent="space-between" mb={2} gap={1}>
+                                <Typography color="GrayText">
+                                    {`${item.address.substring(0, 6)}...${item.address.substring(
+                                        item.address.length - 4
+                                    )}`}
+                                </Typography>
 
-                            <Button
-                                size="small"
-                                style={{ width: 122 }}
-                                variant="contained"
-                                onClick={() => handleDeleteWallet(index)}
-                            >
-                                Delete
-                            </Button>
+                                <Button
+                                    variant="outlined"
+                                    color="error"
+                                    size="small"
+                                    style={{ width: 122 }}
+                                    onClick={() => handleDeleteWallet(index)}
+                                >
+                                    Delete
+                                </Button>
+                            </Box>
+                            {index !== values.wallets.length - 1 && <Divider style={{ width: '100%' }} />}
                         </Box>
                     ))}
                 </Box>
 
-                <Box flexDirection="row" display="flex" gap={1}>
-                    <Button style={{ width: 200 }} variant="outlined" onClick={handleAddWallet}>
-                        Connect new wallet
+                <Box flexDirection="row" display="flex" justifyContent="flex-end" gap={1}>
+                    <Button size="small" style={{ width: 122 }} variant="contained" onClick={handleAddWallet}>
+                        Connect
                     </Button>
                 </Box>
                 <Typography my={1} color="error">

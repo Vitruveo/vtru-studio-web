@@ -1,3 +1,4 @@
+import { useSelector } from '@/store/hooks';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -25,27 +26,9 @@ interface Props {
     setCategory(category: string): void;
 }
 
-export default function RoleFilter({
-    categories,
-    category,
-    setCategory,
-}: Props) {
-    const customizer = {
-        activeDir: 'ltr',
-        activeMode: 'light', // This can be light or dark
-        activeTheme: 'BLUE_THEME', // BLUE_THEME, GREEN_THEME, BLACK_THEME, PURPLE_THEME, ORANGE_THEME
-        SidebarWidth: 270,
-        MiniSidebarWidth: 87,
-        TopbarHeight: 70,
-        isLayout: 'full', // This can be full or boxed
-        isCollapse: false, // to make sidebar Mini by default
-        isSidebarHover: false,
-        isMobileSidebar: false,
-        isHorizontal: false,
-        isLanguage: 'en',
-        isCardShadow: true,
-        borderRadius: 7,
-    };
+export default function RoleFilter({ categories, category, setCategory }: Props) {
+    const customizer = useSelector((state) => state.customizer);
+
     const br = `${customizer.borderRadius}px`;
 
     const filterData: DataType[] = [
@@ -81,8 +64,7 @@ export default function RoleFilter({
         filterbyTitle: false,
         devider: false,
         sort: item,
-        onClick: () =>
-            category === item ? setCategory('') : setCategory(item),
+        onClick: () => (category === item ? setCategory('') : setCategory(item)),
     }));
 
     return (
@@ -91,14 +73,7 @@ export default function RoleFilter({
                 {[...filterData, ...permissions].map((filter) => {
                     if (filter.filterbyTitle) {
                         return (
-                            <Typography
-                                variant="subtitle1"
-                                fontWeight={600}
-                                pl={5.1}
-                                mt={1}
-                                pb={2}
-                                key={filter.id}
-                            >
+                            <Typography variant="subtitle1" fontWeight={600} pl={5.1} mt={1} pb={2} key={filter.id}>
                                 {filter.filterbyTitle}
                             </Typography>
                         );

@@ -8,6 +8,7 @@ import Sidebar from './layout/vertical/sidebar/Sidebar';
 import Customizer from './layout/shared/customizer/Customizer';
 import Navigation from './layout/horizontal/navbar/Navigation';
 import HorizontalHeader from './layout/horizontal/header/Header';
+import { useSelector } from '@/store/hooks';
 
 const MainWrapper = styled('div')(() => ({
     display: 'flex',
@@ -31,22 +32,9 @@ interface Props {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     const [isSidebarOpen, setSidebarOpen] = useState(true);
     const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
-    const customizer = {
-        activeDir: 'ltr',
-        activeMode: 'light', // This can be light or dark
-        activeTheme: 'BLUE_THEME', // BLUE_THEME, GREEN_THEME, BLACK_THEME, PURPLE_THEME, ORANGE_THEME
-        SidebarWidth: 270,
-        MiniSidebarWidth: 87,
-        TopbarHeight: 70,
-        isLayout: 'full', // This can be full or boxed
-        isCollapse: false, // to make sidebar Mini by default
-        isSidebarHover: false,
-        isMobileSidebar: false,
-        isHorizontal: false,
-        isLanguage: 'en',
-        isCardShadow: true,
-        borderRadius: 7,
-    };
+
+    const customizer = useSelector((state) => state.customizer);
+
     const theme = useTheme();
 
     return (

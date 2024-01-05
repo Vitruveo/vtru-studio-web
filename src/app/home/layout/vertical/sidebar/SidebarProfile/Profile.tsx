@@ -5,22 +5,7 @@ import { IconPower } from '@tabler/icons-react';
 import Link from 'next/link';
 
 export const Profile = () => {
-    const customizer = {
-        activeDir: 'ltr',
-        activeMode: 'light', // This can be light or dark
-        activeTheme: 'BLUE_THEME', // BLUE_THEME, GREEN_THEME, BLACK_THEME, PURPLE_THEME, ORANGE_THEME
-        SidebarWidth: 270,
-        MiniSidebarWidth: 87,
-        TopbarHeight: 70,
-        isLayout: 'full', // This can be full or boxed
-        isCollapse: false, // to make sidebar Mini by default
-        isSidebarHover: false,
-        isMobileSidebar: false,
-        isHorizontal: false,
-        isLanguage: 'en',
-        isCardShadow: true,
-        borderRadius: 7,
-    };
+    const customizer = useSelector((state) => state.customizer);
     const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
     const hideMenu = lgUp ? customizer.isCollapse && !customizer.isSidebarHover : '';
 

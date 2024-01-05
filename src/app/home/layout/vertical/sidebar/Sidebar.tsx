@@ -5,40 +5,29 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Logo from '../../shared/logo/Logo';
 import SidebarItems from './SidebarItems';
+import { useDispatch, useSelector } from '@/store/hooks';
+import { hoverSidebar, toggleMobileSidebar } from '@/features/customizer/slice';
 // import { AppState } from '@/store';
 
 const Sidebar = () => {
     const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
-    const customizer = {
-        activeDir: 'ltr',
-        activeMode: 'light', // This can be light or dark
-        activeTheme: 'BLUE_THEME', // BLUE_THEME, GREEN_THEME, BLACK_THEME, PURPLE_THEME, ORANGE_THEME
-        SidebarWidth: 270,
-        MiniSidebarWidth: 87,
-        TopbarHeight: 70,
-        isLayout: 'full', // This can be full or boxed
-        isCollapse: false, // to make sidebar Mini by default
-        isSidebarHover: false,
-        isMobileSidebar: false,
-        isHorizontal: false,
-        isLanguage: 'en',
-        isCardShadow: true,
-        borderRadius: 7,
-    };
+
+    const dispatch = useDispatch();
+
+    const customizer = useSelector((state) => state.customizer);
+
     const theme = useTheme();
     const toggleWidth =
-        customizer.isCollapse && !customizer.isSidebarHover
-            ? customizer.MiniSidebarWidth
-            : customizer.SidebarWidth;
+        customizer.isCollapse && !customizer.isSidebarHover ? customizer.MiniSidebarWidth : customizer.SidebarWidth;
 
     const onHoverEnter = () => {
         if (customizer.isCollapse) {
-            // dispatch(hoverSidebar(true));
+            dispatch(hoverSidebar(true));
         }
     };
 
     const onHoverLeave = () => {
-        // dispatch(hoverSidebar(false));
+        dispatch(hoverSidebar(false));
     };
 
     if (lgUp) {
@@ -102,7 +91,7 @@ const Sidebar = () => {
         <Drawer
             anchor="left"
             open={customizer.isMobileSidebar}
-            // onClose={() => dispatch(toggleMobileSidebar())}
+            onClose={() => dispatch(toggleMobileSidebar())}
             variant="temporary"
             PaperProps={{
                 sx: {

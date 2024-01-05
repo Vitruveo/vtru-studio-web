@@ -33,6 +33,7 @@ export default function ConfirmContainer() {
                 try {
                     await validateForm();
                     setFieldValue('disableSubmitButton', true);
+
                     const resOTPConfirm = await dispatch(
                         userOTPConfirmThunk({ code: formValues.code, email: login?.email })
                     );

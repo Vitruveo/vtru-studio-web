@@ -103,7 +103,6 @@ export default function ProfileSettings() {
                                                     Username
                                                 </Typography>
                                             </Box>
-
                                             <CustomTextField
                                                 placeholder="type a username..."
                                                 size="small"
@@ -117,7 +116,7 @@ export default function ProfileSettings() {
                                             />
                                         </Box>
                                         <Box my={3}>
-                                            <Typography color="textSecondary" mb={3}>
+                                            <Typography variant="subtitle1" fontWeight={600} component="label" mb={3}>
                                                 Change your profile picture from here
                                             </Typography>
                                             <Box textAlign="center" display="flex" justifyContent="center">

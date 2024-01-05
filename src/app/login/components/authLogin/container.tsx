@@ -12,6 +12,7 @@ import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr
 import { codesVtruApi } from '@/services/codes';
 
 const LoginContainer = () => {
+    const [disabled, setDiabled] = useState<boolean>(false);
     const [toastr, setToastr] = useState<CustomizedSnackbarState>({ type: 'success', open: false, message: '' });
 
     const router = useRouter();
@@ -27,11 +28,14 @@ const LoginContainer = () => {
             onSubmit: async (formValues) => {
                 await validateForm();
 
+                setDiabled(true);
+
                 const resUserLogin = await dispatch(userLoginThunk({ email: formValues.email }));
                 if (codesVtruApi.success.login.includes(resUserLogin.code)) {
                     router.push('/login/oneTimePassword');
                     return;
                 } else {
+                    setDiabled(false);
                     setToastr({ open: true, type: 'error', message: 'Something went wrong! Try again later.' });
                 }
             },
@@ -42,6 +46,7 @@ const LoginContainer = () => {
             <LoginView
                 values={values}
                 errors={errors}
+                disabled={disabled}
                 setFieldError={setFieldError}
                 setFieldValue={setFieldValue}
                 handleSubmit={handleSubmit}

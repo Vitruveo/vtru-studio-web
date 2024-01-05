@@ -6,35 +6,22 @@ import Toolbar from '@mui/material/Toolbar';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { styled } from '@mui/material/styles';
 import { IconMenu2 } from '@tabler/icons-react';
-import Notifications from './Notification';
 import Profile from './Profile';
-import Cart from './Cart';
-import Search from './Search';
 import Language from './Language';
-import Navigation from './Navigation';
+
 import MobileRightSidebar from './MobileRightSidebar';
+import { useDispatch } from 'react-redux';
+import { toggleMobileSidebar, toggleSidebar } from '@/features/customizer/slice';
+import { useSelector } from '@/store/hooks';
 
 const Header = () => {
     const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
     const lgDown = useMediaQuery((theme: any) => theme.breakpoints.down('lg'));
 
+    const dispatch = useDispatch();
+
     // drawer
-    const customizer = {
-        activeDir: 'ltr',
-        activeMode: 'light', // This can be light or dark
-        activeTheme: 'BLUE_THEME', // BLUE_THEME, GREEN_THEME, BLACK_THEME, PURPLE_THEME, ORANGE_THEME
-        SidebarWidth: 270,
-        MiniSidebarWidth: 87,
-        TopbarHeight: 70,
-        isLayout: 'full', // This can be full or boxed
-        isCollapse: false, // to make sidebar Mini by default
-        isSidebarHover: false,
-        isMobileSidebar: false,
-        isHorizontal: false,
-        isLanguage: 'en',
-        isCardShadow: true,
-        borderRadius: 7,
-    };
+    const customizer = useSelector((state) => state.customizer);
 
     const AppBarStyled = styled(AppBar)(({ theme }) => ({
         boxShadow: 'none',
@@ -59,7 +46,7 @@ const Header = () => {
                 <IconButton
                     color="inherit"
                     aria-label="menu"
-                    // onClick={lgUp ? () => dispatch(toggleSidebar()) : () => dispatch(toggleMobileSidebar())}
+                    onClick={lgUp ? () => dispatch(toggleSidebar()) : () => dispatch(toggleMobileSidebar())}
                 >
                     <IconMenu2 size="20" />
                 </IconButton>
@@ -77,7 +64,7 @@ const Header = () => {
                     {/* ------------------------------------------- */}
                     {/* Toggle Right Sidebar for mobile */}
                     {/* ------------------------------------------- */}
-                    {lgDown ? <MobileRightSidebar /> : null}
+
                     <Profile />
                 </Stack>
             </ToolbarStyled>

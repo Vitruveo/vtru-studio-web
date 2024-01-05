@@ -8,7 +8,7 @@ import CustomFormLabel from '@/app/home/components/forms/theme-elements/CustomFo
 import { LoginViewProps } from './types';
 import VtruTitle from '@/app/home/components/vtruTItle';
 
-function LoginView({ values, errors, handleChange, handleSubmit }: LoginViewProps) {
+function LoginView({ values, errors, disabled, handleChange, handleSubmit }: LoginViewProps) {
     return (
         <Grid height="70vh" alignContent="center" display="grid" minWidth={{ xl: '400px', lg: '400px', sm: '500px' }}>
             <Typography fontWeight="700" variant="h3" mb={1}>
@@ -21,6 +21,7 @@ function LoginView({ values, errors, handleChange, handleSubmit }: LoginViewProp
                             <CustomFormLabel htmlFor="email">Email</CustomFormLabel>
                             <CustomTextField
                                 id="email"
+                                disabled={disabled}
                                 error={!!errors.email}
                                 value={values.email}
                                 variant="outlined"
@@ -34,15 +35,22 @@ function LoginView({ values, errors, handleChange, handleSubmit }: LoginViewProp
                     <Stack justifyContent="space-between" direction="row" alignItems="center" my={2}>
                         <FormGroup>
                             <FormControlLabel
-                                control={<CustomCheckbox defaultChecked />}
+                                control={<CustomCheckbox disabled={disabled} defaultChecked />}
                                 label="Remember this Device"
                             />
                         </FormGroup>
                     </Stack>
                 </Stack>
                 <Box>
-                    <Button color="primary" variant="contained" size="large" fullWidth type="submit">
-                        Sign In / Register
+                    <Button
+                        color="primary"
+                        disabled={disabled}
+                        variant="contained"
+                        size="large"
+                        fullWidth
+                        type="submit"
+                    >
+                        {disabled ? 'Processing...' : 'Sign In / Register'}
                     </Button>
                 </Box>
             </form>

@@ -58,7 +58,7 @@ interface Props {
 export function WalletProvider({ children }: Props) {
     return (
         <WagmiConfig config={wagmiConfig}>
-            <RainbowKitProvider appInfo={demoAppInfo} chains={chains} locale="en-US">
+            <RainbowKitProvider appInfo={demoAppInfo} chains={chains} locale="en">
                 {children}
             </RainbowKitProvider>
         </WagmiConfig>

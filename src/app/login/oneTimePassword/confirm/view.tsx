@@ -15,15 +15,16 @@ export default function ConfirmView({
     return (
         <Grid height="70vh" alignContent="center" display="grid" minWidth={{ xl: '400px', lg: '400px', sm: '500px' }}>
             <Typography fontWeight="700" variant="h3" mb={1}>
-                Validate OTP
+                Verification Code
             </Typography>
-            Please enter the OTP (one time password) to verify your email.
+            Please enter your code to verify your email.
             <form onSubmit={handleSubmit}>
                 <Stack my={1}>
                     <Box>
                         <CustomFormLabel htmlFor="code">Code</CustomFormLabel>
                         <CustomTextField
                             id="code"
+                            disabled={values.disableSubmitButton}
                             inputProps={{ maxLength: 6 }}
                             error={!!errors.code}
                             value={values.code}
@@ -48,21 +49,13 @@ export default function ConfirmView({
                     </Button>
                 </Box>
             </form>
-            <Stack direction="row" spacing={1} mt={3}>
+            <Stack alignItems="baseline" direction="row" spacing={1} mt={2}>
                 <Typography color="textSecondary" variant="h6" fontWeight="500">
-                    Not received your code?
+                    Did not receive your code?
                 </Typography>
-                <Typography
-                    onClick={handleResendCode}
-                    fontWeight="500"
-                    sx={{
-                        textDecoration: 'none',
-                        color: 'primary.main',
-                        cursor: 'pointer',
-                    }}
-                >
+                <Button type="reset" disabled={values.disableSubmitButton} onClick={handleResendCode}>
                     Resend code
-                </Typography>
+                </Button>
             </Stack>
         </Grid>
     );

@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { ValidationError } from 'yup';
 
 import Box from '@mui/material/Box';
-import { Button, Stack, Typography } from '@mui/material';
+import { Button, Divider, Stack, Typography } from '@mui/material';
 
 import { WalletProvider } from '@/app/home/components/apps/wallet';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
@@ -19,7 +19,7 @@ import { codesVtruApi } from '@/services/codes';
 import { AxiosError } from 'axios';
 import { CreatorEmailExistApiRes } from '@/features/user/types';
 
-import CustomTextField from '../../components/forms/theme-elements/CustomTextField';
+import CustomTextField, { CustomTextFieldYellow } from '../../components/forms/theme-elements/CustomTextField';
 import Wallet from '../../components/wizard/wallet';
 
 import { userSelector } from '@/features/user';
@@ -149,7 +149,7 @@ const AccountSettings = ({
                         Emails
                     </Typography>
 
-                    {values.emails.slice().map((item) => (
+                    {values.emails.slice().map((item, index) => (
                         <Box
                             key={item.email}
                             flexWrap="wrap"
@@ -159,7 +159,7 @@ const AccountSettings = ({
                             mb={2}
                             gap={1}
                         >
-                            <Box display="flex" width="100%">
+                            <Box display="flex" alignItems="center" width="100%">
                                 <Box width="100%">
                                     <Typography
                                         color="GrayText"
@@ -173,47 +173,49 @@ const AccountSettings = ({
                                     >
                                         {item.email}
                                     </Typography>
-                                    {!item.checkedAt && (
-                                        <Box marginTop={1} width="100%" display="flex" alignItems="center">
-                                            <CustomTextField
-                                                fullWidth
-                                                onChange={handleVerifyCode(item.email)}
-                                                size="small"
-                                                id="verificationCode"
-                                                variant="outlined"
-                                                placeholder="type a code..."
-                                            />
-                                            <Box>
-                                                <Button
-                                                    style={{ width: '122px', marginLeft: '10px' }}
-                                                    size="small"
-                                                    variant="contained"
-                                                    onClick={() => handleSendCodeEmail(item.email)}
-                                                >
-                                                    Send new code
-                                                </Button>
-                                            </Box>
-                                        </Box>
-                                    )}
                                 </Box>
-                                {item.checkedAt && (
+
+                                <Box>
+                                    <Button
+                                        variant="outlined"
+                                        color="error"
+                                        size="small"
+                                        style={{ width: '122px', marginLeft: '10px' }}
+                                        onClick={() => handleDeleteEmail(item.email)}
+                                    >
+                                        Delete
+                                    </Button>
+                                </Box>
+                            </Box>
+                            {!item.checkedAt && (
+                                <Box marginTop={1} width="100%" display="flex" alignItems="center">
+                                    <CustomTextFieldYellow
+                                        // style={{ marginLeft: '20px' }}
+                                        fullWidth
+                                        onChange={handleVerifyCode(item.email)}
+                                        size="small"
+                                        id="verificationCode"
+                                        variant="outlined"
+                                        placeholder="type a code..."
+                                    />
                                     <Box>
                                         <Button
-                                            variant="outlined"
-                                            color="error"
-                                            size="small"
+                                            color="warning"
                                             style={{ width: '122px', marginLeft: '10px' }}
-                                            onClick={() => handleDeleteEmail(item.email)}
+                                            size="small"
+                                            variant="contained"
+                                            onClick={() => handleSendCodeEmail(item.email)}
                                         >
-                                            Delete
+                                            Send new code
                                         </Button>
                                     </Box>
-                                )}
-                            </Box>
+                                </Box>
+                            )}
+                            <Divider style={{ width: '100%' }} />
                         </Box>
                     ))}
 
-                    <Box width="100%" display="flex" alignItems="center">
+                    <Box marginTop={1} width="100%" display="flex" alignItems="center">
                         <CustomTextField
                             value={email}
                             onChange={handleChangeEmailInput}
@@ -221,12 +223,6 @@ const AccountSettings = ({
                             fullWidth
                             variant="outlined"
                             placeholder="type a email..."
-                            FormHelperTextProps={{
-                                style: {
-                                    position: 'absolute',
-                                    bottom: '-20px', // Ajuste conforme necessário
-                                },
-                            }}
                             error={!!emailError}
                             helperText={emailError}
                         />

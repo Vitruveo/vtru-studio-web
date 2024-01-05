@@ -11,29 +11,16 @@ const Languages = [
     {
         flagname: 'English (US)',
         icon: '/images/flag/icon-flag-en-us.png',
-        value: 'en-US',
+        value: 'en',
     },
 ];
 
 const Language = () => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
-    const customizer = {
-        activeDir: 'ltr',
-        activeMode: 'light', // This can be light or dark
-        activeTheme: 'BLUE_THEME', // BLUE_THEME, GREEN_THEME, BLACK_THEME, PURPLE_THEME, ORANGE_THEME
-        SidebarWidth: 270,
-        MiniSidebarWidth: 87,
-        TopbarHeight: 70,
-        isLayout: 'full', // This can be full or boxed
-        isCollapse: false, // to make sidebar Mini by default
-        isSidebarHover: false,
-        isMobileSidebar: false,
-        isHorizontal: false,
-        isLanguage: 'en-US',
-        isCardShadow: true,
-        borderRadius: 7,
-    };
+
+    const customizer = useSelector((state) => state.customizer);
+
     const currentLang = Languages.find((_lang) => _lang.value === customizer.isLanguage) || Languages[1];
     const { i18n } = useTranslation();
     const handleClick = (event: any) => {

@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { styled, useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from '@/store/hooks';
 
 type NavGroup = {
     [x: string]: any;
@@ -40,22 +41,8 @@ interface ItemType {
 
 export default function NavItem({ item, level, pathDirect, hideMenu, onClick }: ItemType) {
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
-    const customizer = {
-        activeDir: 'ltr',
-        activeMode: 'light', // This can be light or dark
-        activeTheme: 'BLUE_THEME', // BLUE_THEME, GREEN_THEME, BLACK_THEME, PURPLE_THEME, ORANGE_THEME
-        SidebarWidth: 270,
-        MiniSidebarWidth: 87,
-        TopbarHeight: 70,
-        isLayout: 'full', // This can be full or boxed
-        isCollapse: false, // to make sidebar Mini by default
-        isSidebarHover: false,
-        isMobileSidebar: false,
-        isHorizontal: false,
-        isLanguage: 'en',
-        isCardShadow: true,
-        borderRadius: 7,
-    };
+    const customizer = useSelector((state) => state.customizer);
+
     const Icon = item?.icon;
     const theme = useTheme();
     const { t } = useTranslation();
