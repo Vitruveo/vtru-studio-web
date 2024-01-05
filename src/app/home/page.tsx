@@ -47,7 +47,7 @@ export default function Home() {
                         </Link>
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>
-                        <Link href="/home/contents/wizard/consignArtwork" passHref>
+                        <Link href="/home/contents/consignArtwork" passHref>
                             <Button variant="contained" fullWidth>
                                 Consign Artwork
                             </Button>

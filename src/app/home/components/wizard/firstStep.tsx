@@ -14,7 +14,7 @@ import { addCreatorEmailThunk, verifyCodeThunk } from '@/features/user/thunks';
 import CustomTextField from '../forms/theme-elements/CustomTextField';
 import { StepsFormValues, StepsProps } from './types';
 import Wallet from './wallet';
-import { debouncedUsernameValidation, validateEmailFormValue } from '../../contents/wizard/formschema';
+import { debouncedUsernameValidation, validateEmailFormValue } from '../../contents/consignArtwork/formschema';
 import { userSelector } from '@/features/user';
 import { sendEmailThunk } from '@/features/user/thunks';
 import { useDispatch } from '@/store/hooks';

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -11,6 +12,7 @@ import { useDispatch } from '@/store/hooks';
 
 import * as dropdownData from './data';
 import { userActionsCreators } from '@/features/user/slice';
+import { userSelector } from '@/features/user';
 
 const Profile = () => {
     const [anchorEl2, setAnchorEl2] = useState(null);
@@ -31,6 +33,8 @@ const Profile = () => {
             dispatch(userActionsCreators.logout());
         }, 1000);
     };
+
+    const { username } = useSelector(userSelector(['username']));
 
     return (
         <Box>
@@ -74,7 +78,7 @@ const Profile = () => {
                     },
                 }}
             >
-                <Typography variant="h5">User Profile</Typography>
+                <Typography variant="h5">User Account</Typography>
                 <Stack direction="row" py={3} spacing={2} alignItems="center">
                     <Avatar
                         src={'/images/profile/profileDefault.png'}
@@ -83,20 +87,10 @@ const Profile = () => {
                     />
                     <Box>
                         <Typography variant="subtitle2" color="textPrimary" fontWeight={600}>
-                            Mathew Anderson
+                            {username}
                         </Typography>
                         <Typography variant="subtitle2" color="textSecondary">
-                            Designer
-                        </Typography>
-                        <Typography
-                            variant="subtitle2"
-                            color="textSecondary"
-                            display="flex"
-                            alignItems="center"
-                            gap={1}
-                        >
-                            <IconMail width={15} height={15} />
-                            info@modernize.com
+                            Creator
                         </Typography>
                     </Box>
                 </Stack>

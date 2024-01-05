@@ -7,11 +7,13 @@ import { Box, Button, Stack } from '@mui/material';
 
 export function FooterForm({
     submitText,
+    children,
     submitDisabled,
     backPathRouter,
     backOnclick,
 }: {
     submitText?: string;
+    children?: React.ReactNode;
     submitDisabled?: boolean;
     backPathRouter?: string;
     backOnclick?: () => void;
@@ -29,29 +31,26 @@ export function FooterForm({
     };
 
     return (
-        <Box
-            display="flex"
-            marginTop="auto"
-            flexDirection="column"
-            flexGrow={1}
-            position="relative"
-            bgcolor="#fff"
-            my={4}
-        >
-            <Stack direction="row" spacing={2} flexDirection="row-reverse">
-                <Button
-                    disabled={submitDisabled}
-                    type="submit"
-                    style={{ width: 120 }}
-                    color="primary"
-                    variant="contained"
-                >
-                    {submitText || 'Save'}
-                </Button>
-                <Button onClick={handleBackClick} variant="text">
-                    Back
-                </Button>
-            </Stack>
+        <Box display="flex" flexDirection="column">
+            <Box marginBottom={5} minHeight="80vh" flexGrow={1}>
+                {children}
+            </Box>
+            <Box margin="auto 0" display="flex" flexDirection="column" flexGrow={1} position="relative" bgcolor="#fff">
+                <Stack direction="row" spacing={4} flexDirection="row-reverse">
+                    <Button
+                        disabled={submitDisabled}
+                        type="submit"
+                        style={{ width: 120, marginLeft: '10px' }}
+                        color="primary"
+                        variant="contained"
+                    >
+                        {submitText || 'Save'}
+                    </Button>
+                    <Button style={{ width: 120 }} variant="outlined" color="error" onClick={handleBackClick}>
+                        Back
+                    </Button>
+                </Stack>
+            </Box>
         </Box>
     );
 }

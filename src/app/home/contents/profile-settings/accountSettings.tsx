@@ -11,7 +11,7 @@ import { addCreatorEmailThunk, verifyCodeThunk } from '@/features/user/thunks';
 
 import { AccountSettingsProps } from './types';
 
-import { debouncedUsernameValidation, validateEmailFormValue } from '../wizard/formschema';
+import { debouncedUsernameValidation, validateEmailFormValue } from '@/app/home/contents/consignArtwork/formschema';
 import { sendEmailThunk } from '@/features/user/thunks';
 import { useDispatch } from '@/store/hooks';
 import { checkCreatorEmailExist } from '@/features/user/requests';
@@ -35,8 +35,6 @@ const AccountSettings = ({
 }: AccountSettingsProps) => {
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
-
-    const [usernameError, setUsernameError] = useState('');
 
     const [toastr, setToastr] = useState<CustomizedSnackbarState>({
         type: 'success',
@@ -101,12 +99,6 @@ const AccountSettings = ({
             }
         };
 
-    const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (handleChange) handleChange(e);
-        if (e.target.value === username) return;
-        debouncedUsernameValidation(e.target.value, setUsernameError);
-    };
-
     const handleChangeEmailInput = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setEmail(e.target.value);
     }, []);
@@ -152,26 +144,6 @@ const AccountSettings = ({
     return (
         <Stack sx={{ width: '100%' }}>
             <Box display="flex" flexDirection="column" gap={1}>
-                <Box maxWidth={450}>
-                    <Box mb={2}>
-                        <Typography mb={2} variant="subtitle1" fontWeight={600} component="label">
-                            Username
-                        </Typography>
-                    </Box>
-
-                    <CustomTextField
-                        placeholder="type a username..."
-                        size="small"
-                        id="username"
-                        variant="outlined"
-                        fullWidth
-                        value={values.username}
-                        onChange={handleUsernameChange}
-                        error={!!errors.username || !!usernameError}
-                        helperText={errors.username || usernameError}
-                    />
-                </Box>
-
                 <Box maxWidth={450} display="flex" flexDirection="column" my={2}>
                     <Typography mb={2} variant="subtitle1" fontWeight={600} component="label">
                         Emails
@@ -182,62 +154,62 @@ const AccountSettings = ({
                             key={item.email}
                             flexWrap="wrap"
                             display="flex"
-                            alignItems="center"
+                            alignItems={'center'}
                             justifyContent="space-between"
                             mb={2}
                             gap={1}
                         >
-                            <Typography
-                                color="GrayText"
-                                title={item.email}
-                                style={{
-                                    maxWidth: '70%',
-                                    minWidth: '200px',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                }}
-                            >
-                                {item.email}
-                            </Typography>
-
-                            {item.checkedAt ? (
-                                <Button
-                                    size="small"
-                                    variant="contained"
-                                    style={{ width: '105px' }}
-                                    onClick={() => handleDeleteEmail(item.email)}
-                                >
-                                    Delete
-                                </Button>
-                            ) : item.sentCode ? (
-                                <Box
-                                    display="flex"
-                                    flexDirection="column"
-                                    alignItems="flex-end"
-                                    justifyContent="flex-end"
-                                >
-                                    <CustomTextField
-                                        style={{ width: 120 }}
-                                        onChange={handleVerifyCode(item.email)}
-                                        size="small"
-                                        id="verificationCode"
-                                        variant="outlined"
-                                        placeholder="type a code..."
-                                    />
-
-                                    <Button onClick={() => handleSendCodeEmail(item.email)}>Resend code</Button>
-                                    <Typography variant="caption" color="primary"></Typography>
+                            <Box display="flex" width="100%">
+                                <Box width="100%">
+                                    <Typography
+                                        color="GrayText"
+                                        title={item.email}
+                                        style={{
+                                            maxWidth: '70%',
+                                            minWidth: '200px',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                        }}
+                                    >
+                                        {item.email}
+                                    </Typography>
+                                    {!item.checkedAt && (
+                                        <Box marginTop={1} width="100%" display="flex" alignItems="center">
+                                            <CustomTextField
+                                                fullWidth
+                                                onChange={handleVerifyCode(item.email)}
+                                                size="small"
+                                                id="verificationCode"
+                                                variant="outlined"
+                                                placeholder="type a code..."
+                                            />
+                                            <Box>
+                                                <Button
+                                                    style={{ width: '122px', marginLeft: '10px' }}
+                                                    size="small"
+                                                    variant="contained"
+                                                    onClick={() => handleSendCodeEmail(item.email)}
+                                                >
+                                                    Send new code
+                                                </Button>
+                                            </Box>
+                                        </Box>
+                                    )}
                                 </Box>
-                            ) : (
-                                <Button
-                                    style={{ width: '105px' }}
-                                    size="small"
-                                    variant="contained"
-                                    onClick={() => handleSendCodeEmail(item.email)}
-                                >
-                                    Resend code
-                                </Button>
-                            )}
+                                {item.checkedAt && (
+                                    <Box>
+                                        <Button
+                                            variant="outlined"
+                                            color="error"
+                                            size="small"
+                                            style={{ width: '122px', marginLeft: '10px' }}
+                                            onClick={() => handleDeleteEmail(item.email)}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </Box>
+                                )}
+                            </Box>
                         </Box>
                     ))}
 
@@ -249,12 +221,18 @@ const AccountSettings = ({
                             fullWidth
                             variant="outlined"
                             placeholder="type a email..."
+                            FormHelperTextProps={{
+                                style: {
+                                    position: 'absolute',
+                                    bottom: '-20px', // Ajuste conforme necessário
+                                },
+                            }}
                             error={!!emailError}
                             helperText={emailError}
                         />
                         <Box>
                             <Button
-                                style={{ marginLeft: '10px', width: '105px' }}
+                                style={{ marginLeft: '10px', width: '122px' }}
                                 size="small"
                                 variant="contained"
                                 onClick={handleAddEmail}

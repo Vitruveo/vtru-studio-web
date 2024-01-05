@@ -27,7 +27,7 @@ const Menuitems: MenuitemsType[] = [
         id: uniqueId(),
         title: 'Consign Artwork',
         icon: IconPhotoUp,
-        href: '/home/contents/wizard/consignArtwork',
+        href: '/home/contents/consignArtwork',
     },
 
     // {

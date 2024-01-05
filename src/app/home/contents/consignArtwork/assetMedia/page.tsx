@@ -9,7 +9,7 @@ import { Box, Button, IconButton, MenuItem, Tab, Typography } from '@mui/materia
 import { TabContext, TabList } from '@mui/lab';
 import { IconTrash } from '@tabler/icons-react';
 
-import type { StepsFormValues, StepsProps, FormatNames } from '../../types';
+import type { StepsFormValues, StepsProps, FormatNames } from '../types';
 
 import CustomSelect from '@/app/home/components/forms/theme-elements/CustomSelect';
 import { Pintura } from '@/app/home/components/Pintura';

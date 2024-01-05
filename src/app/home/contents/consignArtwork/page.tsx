@@ -17,8 +17,8 @@ import { FooterForm } from '@/app/home/components/footerForm';
 
 import { StepsFormValues } from '@/app/home/components/wizard/types';
 
-import { assetMetadataDefinitions, assetMetadataDomains, creatorMetadataDefinitions, licenses } from '../mock';
-import { stepsSchemaValidation } from '../formschema';
+import { assetMetadataDefinitions, assetMetadataDomains, creatorMetadataDefinitions, licenses } from './mock';
+import { stepsSchemaValidation } from './formschema';
 
 const ConsignArtwork = () => {
     // const pathname = usePathname();
@@ -146,57 +146,56 @@ const ConsignArtwork = () => {
 
     return (
         <PageContainer title="Wizard" description="this is Wizard">
-            <Breadcrumb title="Consign Artwork" />
-            <Grid item xs={12} lg={6}>
-                <Box>
-                    <Typography variant="h6" fontWeight="normal" color="GrayText">
-                        Complete all tasks and publish your artwork
-                    </Typography>
-                </Box>
-                <Box maxWidth={700} p={2}>
-                    {Object.values(values.completedSteps).map((v: any) => (
-                        <Grid alignItems="center" justifyContent="space-between" container key={v.stepId}>
-                            <Grid item>
-                                <Typography my={2} variant="h6" fontWeight="normal" color="GrayText">
-                                    {v.stepName}
-                                </Typography>
-                            </Grid>
-                            <Grid display="flex" flexWrap="wrap" width={300} item>
-                                <Box width={100} display="flex" alignItems="center">
-                                    <Box
-                                        display="flex"
-                                        alignItems="center"
-                                        justifyContent="center"
-                                        height="100%"
-                                        width="100%"
-                                        color="white"
-                                        bgcolor={
-                                            (v.status === 'completed' && successColor) ||
-                                            (v.status === 'notStarted' && grayColor) ||
-                                            warningColor
-                                        }
-                                    >
-                                        {v.statusName}
+            <FooterForm submitDisabled submitText="Publish">
+                <Breadcrumb title="Consign Artwork" />
+                <Grid item xs={12} lg={6}>
+                    <Box>
+                        <Typography variant="h6" fontWeight="normal" color="GrayText">
+                            Complete all tasks and publish your artwork
+                        </Typography>
+                    </Box>
+                    <Box maxWidth={700} p={2}>
+                        {Object.values(values.completedSteps).map((v: any) => (
+                            <Grid alignItems="center" justifyContent="space-between" container key={v.stepId}>
+                                <Grid item>
+                                    <Typography my={2} variant="h6" fontWeight="normal" color="GrayText">
+                                        {v.stepName}
+                                    </Typography>
+                                </Grid>
+                                <Grid display="flex" flexWrap="wrap" width={300} item>
+                                    <Box width={100} display="flex" alignItems="center">
+                                        <Box
+                                            display="flex"
+                                            alignItems="center"
+                                            justifyContent="center"
+                                            height="100%"
+                                            width="100%"
+                                            color="white"
+                                            bgcolor={
+                                                (v.status === 'completed' && successColor) ||
+                                                (v.status === 'notStarted' && grayColor) ||
+                                                warningColor
+                                            }
+                                        >
+                                            {v.statusName}
+                                        </Box>
                                     </Box>
-                                </Box>
-                                <Box width={100} marginLeft={1}>
-                                    <Button
-                                        onClick={() => handleChangePage(v.stepId)}
-                                        size="small"
-                                        variant="contained"
-                                        fullWidth
-                                    >
-                                        {v.status !== 'notStarted' ? 'Edit' : 'Start'}
-                                    </Button>
-                                </Box>
+                                    <Box width={100} marginLeft={1}>
+                                        <Button
+                                            onClick={() => handleChangePage(v.stepId)}
+                                            size="small"
+                                            variant="contained"
+                                            fullWidth
+                                        >
+                                            {v.status !== 'notStarted' ? 'Edit' : 'Start'}
+                                        </Button>
+                                    </Box>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    ))}
-                </Box>
-            </Grid>
-            <Box position="absolute" alignSelf="flex-end" bottom={0} right={25}>
-                <FooterForm submitDisabled submitText="Publish" />
-            </Box>
+                        ))}
+                    </Box>
+                </Grid>
+            </FooterForm>
         </PageContainer>
     );
 };

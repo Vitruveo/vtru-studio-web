@@ -61,7 +61,7 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
 
                             <Button
                                 size="small"
-                                style={{ width: 105 }}
+                                style={{ width: 122 }}
                                 variant="contained"
                                 onClick={() => handleDeleteWallet(index)}
                             >

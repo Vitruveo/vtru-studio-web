@@ -3,7 +3,7 @@ import { assetStorage, updateAssetStep, getAsset } from './requests';
 import { AssetStorageReq } from './types';
 import { ReduxThunkAction } from '@/store';
 import { assetActionsCreators } from './slice';
-import { licenses } from '@/app/home/contents/wizard/mock';
+import { licenses } from '@/app/home/contents/consignArtwork/mock';
 
 export function assetStorageThunk(payload: AssetStorageReq): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {

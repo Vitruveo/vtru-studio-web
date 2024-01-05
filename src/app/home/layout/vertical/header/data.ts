@@ -62,7 +62,7 @@ const profile: ProfileType[] = [
     {
         href: '/home/contents/profile-settings',
         title: 'My Profile',
-        subtitle: 'Profile Settings',
+        subtitle: 'User Settings',
         icon: '/images/svgs/icon-account.svg',
     },
 ];
