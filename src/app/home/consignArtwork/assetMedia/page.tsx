@@ -7,9 +7,10 @@ import { useSelector } from '@/store/hooks';
 
 import { useDropzone } from 'react-dropzone';
 import { Stack } from '@mui/system';
-import { Box, Button, IconButton, MenuItem, Tab, Typography } from '@mui/material';
+import { Box, Button, Card, IconButton, MenuItem, Tab, Typography } from '@mui/material';
 import { TabContext, TabList } from '@mui/lab';
 import { IconTrash } from '@tabler/icons-react';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 import type { StepsFormValues, StepsProps, FormatNames } from '../types';
 
@@ -18,10 +19,13 @@ import { Pintura } from '@/app/home/components/Pintura';
 import CustomFormLabel from '@/app/home/components/forms/theme-elements/CustomFormLabel';
 
 import { useRouter, useSearchParams } from 'next/navigation';
+import SvgIcon from '@mui/material/SvgIcon';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { AssetMediaFormErros, AssetMediaFormValues } from './types';
 import { AssetMediaSchemaValidation } from './formschema';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 const currentStep = 2;
 
@@ -262,82 +266,205 @@ export default function AssetMedia() {
             backPathRouter="/home/consignArtwork"
         >
             <Breadcrumb title="Consign Artwork" items={BCrumb} />
-            <Stack my={3} direction="column" alignItems="center" justifyContent="center" gap={2}>
-                <Box width={600}>
-                    <Typography variant="subtitle1" fontWeight={600} component="label">
-                        Asset
-                    </Typography>
-
-                    <Box
-                        border="1px dashed"
-                        padding={values.definition ? 1 : 10}
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                        {...getRootProps()}
-                    >
-                        <input id="asset" {...getInputProps()} />
-                        {isDragActive ? (
-                            <p>Drop the files here...</p>
-                        ) : values.asset.file ? (
-                            <Stack direction="row" alignItems="center" gap={10}>
-                                <img src={urlAssetFile!} style={{ display: 'none' }} alt="" onLoad={handleOnLoad} />
-                                <Box display="flex" flexDirection="column" gap={2}>
-                                    <>
-                                        <Box
-                                            display="flex"
-                                            flexDirection="column"
-                                            alignItems="center"
-                                            justifyContent="space-between"
-                                        >
-                                            <Img
-                                                width={
-                                                    values.definition === 'landscape'
-                                                        ? 200
-                                                        : values.definition === 'portrait'
-                                                          ? 150
-                                                          : 100
-                                                }
-                                                height={
-                                                    values.definition === 'landscape'
-                                                        ? 100
-                                                        : values.definition === 'portrait'
-                                                          ? 200
-                                                          : 100
-                                                }
-                                                src={urlAssetFile!}
-                                                alt=""
-                                                style={{
-                                                    objectFit: 'contain',
-                                                }}
-                                            />
-                                            <Box display="flex" alignItems="center" gap={1}>
-                                                <IconButton
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        handleDeleteFile();
-                                                    }}
-                                                >
-                                                    <IconTrash color="red" size="16" stroke={1.5} />
-                                                </IconButton>
-                                                <Typography>{values.asset.file.name}</Typography>
-                                            </Box>
-                                        </Box>
-                                    </>
-                                </Box>
-                            </Stack>
-                        ) : (
-                            <Typography align="center">
-                                Drag and drop files here or click to select files. Please note that only JPG, GIF, PNG,
-                                or MP4 file types are accepted.
+            <Stack my={3} direction="column" gap={1}>
+                <Typography variant="h6" fontWeight="normal" color="GrayText">
+                    Upload media assets for the artwork being consigned.
+                </Typography>
+                <Typography variant="h5" color="grey" fontWeight="500" marginTop={2}>
+                    Asset Media
+                </Typography>
+                {urlAssetFile && (
+                    <Box>
+                        <Typography padding={2} bgcolor="#FFF2CC">
+                            Looks amazing! For your artwork to look great on different devices, we need three more media
+                            files. Don’t worry, we’ll help you crop your original media file.
+                            <Typography marginTop={2}>
+                                If you’re concerned about loss of quality, don’t use the crop feature and upload media
+                                directly in the required size.
                             </Typography>
-                        )}
+                        </Typography>
+                        <Typography marginTop={2} color="grey" variant="h6" fontWeight="bold">
+                            Portrait Media Assets
+                        </Typography>
+                        <Box marginLeft={1} width={150}>
+                            <Box marginTop={2} display="flex" alignItems="center" justifyContent="space-between">
+                                <Box display="flex" alignItems="center">
+                                    <SvgIcon style={{ width: 20 }}>
+                                        <rect width="24" height="24" rx="4" fill="#4CAF50" />
+                                        <CheckCircleOutlineIcon
+                                            fontSize="small"
+                                            style={{
+                                                color: '#FFFFFF',
+                                                position: 'absolute',
+                                                top: '50%',
+                                                left: '50%',
+                                                transform: 'translate(-50%, -50%)',
+                                            }}
+                                        />
+                                    </SvgIcon>
+                                    <Typography marginLeft={1} color="grey" variant="h6" fontWeight="normal">
+                                        Original
+                                    </Typography>
+                                </Box>
+                                <IconButton
+                                    size="small"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDeleteFile();
+                                    }}
+                                >
+                                    <IconTrash color="red" size="16" stroke={1.5} />
+                                </IconButton>
+                            </Box>
+                            <Box
+                                display="flex"
+                                flexDirection="column"
+                                alignItems="center"
+                                marginTop={2}
+                                height={220}
+                                border="2px solid"
+                                borderRadius={2}
+                                borderColor="#D5D5D5"
+                            >
+                                <Box
+                                    borderBottom="1px solid #D5D5D5"
+                                    padding={2}
+                                    borderColor="#D5D5D5"
+                                    borderRadius="10px 10px 0px 0px"
+                                    bgcolor="#EFEFEF"
+                                    height={70}
+                                >
+                                    <Typography color="GrayText" textAlign="center">
+                                        JPEG image 2316 X 3088 7.1 MB
+                                    </Typography>
+                                </Box>
+                                <Box display="flex" justifyContent="center" alignItems="center" height={190}>
+                                    <Img
+                                        width={
+                                            values.definition === 'landscape'
+                                                ? 200
+                                                : values.definition === 'portrait'
+                                                  ? 150
+                                                  : 100
+                                        }
+                                        height={
+                                            values.definition === 'landscape'
+                                                ? 100
+                                                : values.definition === 'portrait'
+                                                  ? 200
+                                                  : 100
+                                        }
+                                        src={urlAssetFile!}
+                                        alt=""
+                                        style={{
+                                            objectFit: 'contain',
+                                        }}
+                                    />
+                                </Box>
+                            </Box>
+                        </Box>
                     </Box>
-                </Box>
-                <Typography my={1} color="error">
+                )}
+
+                {!urlAssetFile && (
+                    <Box marginTop={2} display="flex" alignItems="center" justifyContent="center" width="100%">
+                        <Box
+                            width="80vw"
+                            height="40vh"
+                            border="1px dashed"
+                            padding={values.definition ? 1 : 2}
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            {...getRootProps()}
+                        >
+                            <input id="asset" {...getInputProps()} />
+                            {isDragActive ? (
+                                <p>Drop the files here...</p>
+                            ) : values.asset.file ? (
+                                <Stack direction="row" alignItems="center" gap={2}>
+                                    <img src={urlAssetFile!} style={{ display: 'none' }} alt="" onLoad={handleOnLoad} />
+                                    <Box display="flex" flexDirection="column" gap={2}>
+                                        <>
+                                            <Box
+                                                display="flex"
+                                                flexDirection="column"
+                                                alignItems="center"
+                                                justifyContent="space-between"
+                                            >
+                                                <Img
+                                                    width={
+                                                        values.definition === 'landscape'
+                                                            ? 200
+                                                            : values.definition === 'portrait'
+                                                              ? 150
+                                                              : 100
+                                                    }
+                                                    height={
+                                                        values.definition === 'landscape'
+                                                            ? 100
+                                                            : values.definition === 'portrait'
+                                                              ? 200
+                                                              : 100
+                                                    }
+                                                    src={urlAssetFile!}
+                                                    alt=""
+                                                    style={{
+                                                        objectFit: 'contain',
+                                                    }}
+                                                />
+                                                <Box display="flex" alignItems="center" gap={1}>
+                                                    <IconButton
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleDeleteFile();
+                                                        }}
+                                                    >
+                                                        <IconTrash color="red" size="16" stroke={1.5} />
+                                                    </IconButton>
+                                                    <Typography>{values.asset.file.name}</Typography>
+                                                </Box>
+                                            </Box>
+                                        </>
+                                    </Box>
+                                </Stack>
+                            ) : (
+                                <Box
+                                    padding={1}
+                                    maxWidth="450px"
+                                    display="flex"
+                                    flexDirection={'column'}
+                                    alignItems="flex-start"
+                                    width="100%"
+                                >
+                                    <Typography
+                                        sx={{ fontSize: { xs: '0.8rem', sm: '0.8rem', md: '1rem' } }}
+                                        variant="h6"
+                                    >
+                                        Drag and drop a single media asset file or click to upload.
+                                    </Typography>
+                                    <Typography
+                                        sx={{ fontSize: { xs: '0.8rem', sm: '0.8rem', md: '1rem' } }}
+                                        marginTop={2}
+                                        variant="h6"
+                                    >
+                                        Image: JPEG, PNG, GIF, SVG, WEBP
+                                    </Typography>
+                                    <Typography
+                                        sx={{ fontSize: { xs: '0.8rem', sm: '0.8rem', md: '1rem' } }}
+                                        variant="h6"
+                                    >
+                                        Video: MP4, WEBM
+                                    </Typography>
+                                </Box>
+                            )}
+                        </Box>
+                    </Box>
+                )}
+
+                {/* <Typography my={1} color="error">
                     {errors?.asset?.file}
                 </Typography>
-
                 {values.asset.file && (
                     <TabContext value={tab}>
                         {mediaDefinitions
@@ -549,7 +676,7 @@ export default function AssetMedia() {
                                 );
                             })}
                     </TabContext>
-                )}
+                )} */}
             </Stack>
         </PageContainerFooter>
     );
