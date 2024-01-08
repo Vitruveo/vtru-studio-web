@@ -1,27 +1,24 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import { ValidationError } from 'yup';
-
 import Box from '@mui/material/Box';
 import { Button, Divider, IconButton, Stack, Typography } from '@mui/material';
 import { IconTrash, IconPlus } from '@tabler/icons-react';
 
 import { WalletProvider } from '@/app/home/components/apps/wallet';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
-import { addCreatorEmailThunk, verifyCodeThunk } from '@/features/user/thunks';
+import { verifyCodeThunk } from '@/features/user/thunks';
 
 import CustomTextField from '../forms/theme-elements/CustomTextField';
 import { StepsFormValues, StepsProps } from './types';
 import Wallet from './wallet';
-import { debouncedUsernameValidation, validateEmailFormValue } from '../../contents/consignArtwork/formschema';
+import { debouncedUsernameValidation } from '../../consignArtwork/formschema';
 import { userSelector } from '@/features/user';
 import { sendEmailThunk } from '@/features/user/thunks';
 import { useDispatch } from '@/store/hooks';
-import { checkCreatorEmailExist } from '@/features/user/requests';
+
 import { codesVtruApi } from '@/services/codes';
-import { AxiosError, AxiosResponse } from 'axios';
-import { CreatorEmailExistApiRes } from '@/features/user/types';
+
 import { FormikErrors } from 'formik';
 
 const currentStep = 1;

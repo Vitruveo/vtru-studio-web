@@ -11,7 +11,7 @@ import { addCreatorEmailThunk, verifyCodeThunk } from '@/features/user/thunks';
 
 import { AccountSettingsProps } from './types';
 
-import { debouncedUsernameValidation, validateEmailFormValue } from '@/app/home/contents/consignArtwork/formschema';
+import { debouncedUsernameValidation, validateEmailFormValue } from '@/app/home/consignArtwork/formschema';
 import { sendEmailThunk } from '@/features/user/thunks';
 import { useDispatch } from '@/store/hooks';
 import { checkCreatorEmailExist } from '@/features/user/requests';
@@ -19,8 +19,8 @@ import { codesVtruApi } from '@/services/codes';
 import { AxiosError } from 'axios';
 import { CreatorEmailExistApiRes } from '@/features/user/types';
 
-import CustomTextField, { CustomTextFieldYellow } from '../../components/forms/theme-elements/CustomTextField';
-import Wallet from '../../components/wizard/wallet';
+import CustomTextField, { CustomTextFieldYellow } from '../components/forms/theme-elements/CustomTextField';
+import Wallet from '../components/wizard/wallet';
 
 import { userSelector } from '@/features/user';
 
@@ -176,15 +176,17 @@ const AccountSettings = ({
                                 </Box>
 
                                 <Box>
-                                    <Button
-                                        variant="outlined"
-                                        color="error"
-                                        size="small"
-                                        style={{ width: '122px', marginLeft: '10px' }}
-                                        onClick={() => handleDeleteEmail(item.email)}
-                                    >
-                                        Delete
-                                    </Button>
+                                    {values.emails.filter((v) => v.checkedAt).length !== 1 && (
+                                        <Button
+                                            variant="outlined"
+                                            color="error"
+                                            size="small"
+                                            style={{ width: '122px', marginLeft: '10px' }}
+                                            onClick={() => handleDeleteEmail(item.email)}
+                                        >
+                                            Delete
+                                        </Button>
+                                    )}
                                 </Box>
                             </Box>
                             {!item.checkedAt && (
@@ -222,7 +224,7 @@ const AccountSettings = ({
                             size="small"
                             fullWidth
                             variant="outlined"
-                            placeholder="type a email..."
+                            placeholder="Enter new email address"
                             error={!!emailError}
                             helperText={emailError}
                         />

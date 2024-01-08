@@ -60,7 +60,7 @@ interface ProfileType {
 }
 const profile: ProfileType[] = [
     {
-        href: '/home/contents/profile-settings',
+        href: '/home/myProfile',
         title: 'My Profile',
         subtitle: 'User Settings',
         icon: '/images/svgs/icon-account.svg',
@@ -154,7 +154,7 @@ const pageLinks: LinkType[] = [
         title: 'Notes App',
     },
     {
-        href: '/home/contents/profile-settings',
+        href: '/home/myProfile',
         title: 'User Application',
     },
     {

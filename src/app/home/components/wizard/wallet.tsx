@@ -5,7 +5,8 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Box from '@mui/material/Box';
 import { Button, Divider, Typography } from '@mui/material';
 
-import { AccountSettingsProps } from '../../contents/profile-settings/types';
+import { AccountSettingsProps } from '../../myProfile/types';
+import CustomTextField from '../forms/theme-elements/CustomTextField';
 
 const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
     const [connectWallet, setConnectWallet] = useState(false);
@@ -55,33 +56,45 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
                             gap={1}
                             key={index}
                         >
-                            <Box display="flex" alignItems="center" justifyContent="space-between" mb={2} gap={1}>
+                            <Box display="flex" alignItems="center" justifyContent="space-between" gap={1}>
                                 <Typography color="GrayText">
                                     {`${item.address.substring(0, 6)}...${item.address.substring(
                                         item.address.length - 4
                                     )}`}
                                 </Typography>
-
-                                <Button
-                                    variant="outlined"
-                                    color="error"
-                                    size="small"
-                                    style={{ width: 122 }}
-                                    onClick={() => handleDeleteWallet(index)}
-                                >
-                                    Delete
-                                </Button>
+                                {values.wallets.length > 1 && (
+                                    <Button
+                                        variant="outlined"
+                                        color="error"
+                                        size="small"
+                                        style={{ width: 122 }}
+                                        onClick={() => handleDeleteWallet(index)}
+                                    >
+                                        Delete
+                                    </Button>
+                                )}
                             </Box>
-                            {index !== values.wallets.length - 1 && <Divider style={{ width: '100%' }} />}
+                            <Divider style={{ width: '100%' }} />
                         </Box>
                     ))}
                 </Box>
 
-                <Box flexDirection="row" display="flex" justifyContent="flex-end" gap={1}>
-                    <Button size="small" style={{ width: 122 }} variant="contained" onClick={handleAddWallet}>
-                        Connect
-                    </Button>
+                <Box width="100%" display="flex" alignItems="center">
+                    <CustomTextField
+                        value=""
+                        disabled
+                        size="small"
+                        fullWidth
+                        variant="outlined"
+                        placeholder="Connect new wallet"
+                    />
+                    <Box marginLeft={1} flexDirection="row" display="flex" justifyContent="flex-end" gap={1}>
+                        <Button size="small" style={{ width: 122 }} variant="contained" onClick={handleAddWallet}>
+                            Connect
+                        </Button>
+                    </Box>
                 </Box>
+
                 <Typography my={1} color="error">
                     {errors?.wallets as string}
                 </Typography>

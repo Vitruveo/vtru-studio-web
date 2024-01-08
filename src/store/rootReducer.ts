@@ -1,14 +1,17 @@
 import { combineReducers, Reducer, AnyAction } from '@reduxjs/toolkit';
 
+import webSocketService from '@/services/websocket';
 import { websocketSlice } from '@/features/ws';
 
 import { userSlice } from '../features/user';
+import { consignArtworkSlice } from '../features/consignArtwork';
 import { customizerSlice } from '../features/customizer';
 import { roleSlice } from '../features/role';
 import { assetSlice } from '@/features/asset';
 
 interface RootState {
     user: ReturnType<typeof userSlice.reducer>;
+    consignArtwork: ReturnType<typeof consignArtworkSlice.reducer>;
     customizer: ReturnType<typeof customizerSlice.reducer>;
     role: ReturnType<typeof roleSlice.reducer>;
     websocket: ReturnType<typeof websocketSlice.reducer>;
@@ -17,6 +20,7 @@ interface RootState {
 
 const appReducer = combineReducers<RootState>({
     user: userSlice.reducer,
+    consignArtwork: consignArtworkSlice.reducer,
     customizer: customizerSlice.reducer,
     role: roleSlice.reducer,
     websocket: websocketSlice.reducer,
@@ -25,7 +29,7 @@ const appReducer = combineReducers<RootState>({
 
 export const reducer: Reducer<RootState, AnyAction> = (state: RootState | undefined, action: AnyAction) => {
     if (state && action.type === 'user/logout') {
-        state.websocket.connection?.close();
+        webSocketService?.disconnect();
         state = undefined;
     }
 

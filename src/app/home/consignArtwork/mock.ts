@@ -1,4 +1,4 @@
-import { Licenses, MetadataDefinitionTypes } from '../../components/wizard/types';
+import { Licenses, MetadataDefinitionTypes } from '../components/wizard/types';
 
 export const assetMetadataDomains = [
     { value: 'artwork', label: 'Artwork' },

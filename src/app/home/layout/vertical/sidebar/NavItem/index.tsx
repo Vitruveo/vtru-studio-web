@@ -12,7 +12,8 @@ import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { styled, useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from '@/store/hooks';
+import { useDispatch, useSelector } from '@/store/hooks';
+import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 
 type NavGroup = {
     [x: string]: any;
@@ -45,7 +46,9 @@ export default function NavItem({ item, level, pathDirect, hideMenu, onClick }: 
 
     const Icon = item?.icon;
     const theme = useTheme();
+    const dispatch = useDispatch();
     const { t } = useTranslation();
+    const isCompletedProfile = useSelector((state) => state.consignArtwork.isCompletedProfile);
     const itemIcon = level > 1 ? <Icon stroke={1.5} size="1rem" /> : <Icon stroke={1.5} size="1.3rem" />;
 
     const ListItemStyled = styled(ListItemButton)(() => ({
@@ -88,12 +91,17 @@ export default function NavItem({ item, level, pathDirect, hideMenu, onClick }: 
 
     return (
         <List component="li" disablePadding key={item?.id && item.title}>
-            <Link href={item.href} style={{ textDecoration: 'none' }}>
+            <Link
+                href={item.href === '/home/consignArtwork' && !isCompletedProfile ? '/home/myProfile' : item.href}
+                style={{ textDecoration: 'none' }}
+            >
                 <ListItemStyled
                     // {...listItemProps}
                     disabled={item?.disabled}
                     selected={pathDirect === item?.href}
-                    onClick={lgDown ? onClick : undefined}
+                    onClick={
+                        lgDown ? onClick : () => dispatch(consignArtworkActionsCreators.changeGoToConsignArtwork(true))
+                    }
                 >
                     <ListItemIcon
                         sx={{

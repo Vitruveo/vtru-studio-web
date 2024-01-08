@@ -16,7 +16,7 @@ const ProfileTab = () => {
         {
             label: 'Profile',
             icon: <IconUserCircle size="20" />,
-            to: '/home/contents/profile-settings',
+            to: '/home/myProfile',
         },
         {
             label: 'Followers',
@@ -36,15 +36,8 @@ const ProfileTab = () => {
     ];
 
     return (
-        <Box
-            mt={1}
-            sx={{ mt: 1, backgroundColor: (theme) => theme.palette.grey[100] }}
-        >
-            <Box
-                justifyContent={'end'}
-                display="flex"
-                sx={{ maxWidth: { xs: 320, sm: '100%' } }}
-            >
+        <Box mt={1} sx={{ mt: 1, backgroundColor: (theme) => theme.palette.grey[100] }}>
+            <Box justifyContent={'end'} display="flex" sx={{ maxWidth: { xs: 320, sm: '100%' } }}>
                 <Tabs
                     value={value}
                     onChange={handleChange}

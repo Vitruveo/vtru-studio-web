@@ -2,13 +2,14 @@
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import { styled, useTheme } from '@mui/material/styles';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from './layout/vertical/header/Header';
 import Sidebar from './layout/vertical/sidebar/Sidebar';
 import Customizer from './layout/shared/customizer/Customizer';
 import Navigation from './layout/horizontal/navbar/Navigation';
 import HorizontalHeader from './layout/horizontal/header/Header';
 import { useSelector } from '@/store/hooks';
+import { useRouter } from 'next/navigation';
 
 const MainWrapper = styled('div')(() => ({
     display: 'flex',
@@ -25,17 +26,40 @@ const PageWrapper = styled('div')(() => ({
     backgroundColor: 'transparent',
 }));
 
+const PageFooterWrapper = styled('div')(() => ({
+    display: 'flex',
+    flexGrow: 1,
+    flexDirection: 'column',
+    zIndex: 1,
+    backgroundColor: 'transparent',
+}));
+
 interface Props {
     children: React.ReactNode;
 }
+
+const isValidToken = (token: string) => {
+    // Sua lógica de validação do token aqui
+    return token !== null && token !== undefined && token !== '';
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     const [isSidebarOpen, setSidebarOpen] = useState(true);
     const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
+    const router = useRouter();
     const customizer = useSelector((state) => state.customizer);
+    const token = useSelector((state) => state.user.token);
+
+    useEffect(() => {
+        if (!isValidToken(token)) {
+            router.push('/login');
+        }
+    }, [token, router]);
 
     const theme = useTheme();
+
+    if (!isValidToken(token)) return <div />;
 
     return (
         <MainWrapper>
@@ -47,7 +71,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {/* ------------------------------------------- */}
             {/* Main Wrapper */}
             {/* ------------------------------------------- */}
-            <PageWrapper
+            <PageFooterWrapper
                 className="page-wrapper"
                 sx={{
                     ...(customizer.isCollapse && {
@@ -63,7 +87,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 {customizer.isHorizontal ? <HorizontalHeader /> : <Header />}
                 {/* PageContent */}
                 {customizer.isHorizontal ? <Navigation /> : ''}
-                <Container
+                <Box
                     sx={{
                         maxWidth: customizer.isLayout === 'boxed' ? 'lg' : '100%!important',
                     }}
@@ -81,8 +105,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     {/* ------------------------------------------- */}
                     {/* End Page */}
                     {/* ------------------------------------------- */}
-                </Container>
-            </PageWrapper>
+                </Box>
+            </PageFooterWrapper>
         </MainWrapper>
     );
 }

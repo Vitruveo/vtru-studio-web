@@ -37,7 +37,8 @@ import {
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { assetUpdateStepThunk, getAssetThunk } from '../asset/thunks';
-import { AccountSettingsFormValues } from '@/app/home/contents/profile-settings/types';
+import { AccountSettingsFormValues } from '@/app/home/myProfile/types';
+import { consignArtworkActionsCreators } from '../consignArtwork/slice';
 
 export function userLoginThunk(payload: UserLoginReq): ReduxThunkAction<Promise<UserLoginApiRes>> {
     return async function (dispatch, getState) {
@@ -53,8 +54,11 @@ export function userOTPConfirmThunk(payload: UserOTPConfirmReq): ReduxThunkActio
     return async function (dispatch, getState) {
         const response = await userOTPConfimReq({ email: payload.email, code: payload.code });
         if (response) {
+            response.data?.creator;
             await dispatch(userActionsCreators.otpConfirm(response));
             await dispatch(getAssetThunk());
+            if (response.data?.creator)
+                dispatch(consignArtworkActionsCreators.checkIsCompletedProfile(response.data?.creator));
         }
 
         return response;

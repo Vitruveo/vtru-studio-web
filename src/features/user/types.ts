@@ -1,11 +1,15 @@
 import { StepsFormValues } from '@/app/home/components/wizard/types';
 import { APIResponse, Framework } from '../common/types';
-import { AccountSettingsFormValues } from '@/app/home/contents/profile-settings/types';
+import { AccountSettingsFormValues } from '@/app/home/myProfile/types';
 
-interface Email {
+export interface Email {
     email: string;
     checkedAt: Date | null;
     sentCode: boolean;
+}
+
+export interface Wallet {
+    address: string;
 }
 
 export interface User {
@@ -15,9 +19,7 @@ export interface User {
     login: {
         email: string;
     };
-    wallets: {
-        address: string;
-    }[];
+    wallets: Wallet[];
     emails: Email[];
     profile: {
         avatar: string | null;

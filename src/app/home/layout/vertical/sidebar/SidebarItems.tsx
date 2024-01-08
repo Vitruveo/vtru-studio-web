@@ -6,9 +6,12 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import NavItem from './NavItem';
 import NavCollapse from './NavCollapse';
 import NavGroup from './NavGroup/NavGroup';
-import { useSelector } from '@/store/hooks';
+import { useDispatch, useSelector } from '@/store/hooks';
+import { toggleMobileSidebar } from '@/features/customizer/slice';
+import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 
 const SidebarItems = () => {
+    const dispatch = useDispatch();
     const pathname = usePathname();
     const pathDirect = pathname;
     const pathWithoutLastPart = pathname.slice(0, pathname.lastIndexOf('/'));
@@ -37,7 +40,7 @@ const SidebarItems = () => {
                                 pathWithoutLastPart={pathWithoutLastPart}
                                 level={1}
                                 key={item.id}
-                                onClick={() => {}}
+                                onClick={() => dispatch(toggleMobileSidebar())}
                             />
                         );
 
@@ -49,7 +52,10 @@ const SidebarItems = () => {
                                 key={item.id}
                                 pathDirect={pathDirect}
                                 hideMenu={hideMenu}
-                                onClick={() => {}}
+                                onClick={() => {
+                                    dispatch(consignArtworkActionsCreators.changeGoToConsignArtwork(true));
+                                    dispatch(toggleMobileSidebar());
+                                }}
                             />
                         );
                     }

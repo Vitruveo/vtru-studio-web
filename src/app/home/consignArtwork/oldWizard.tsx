@@ -17,7 +17,7 @@ import FourthStep, { validateErrorsCreatorMetadata } from '@/app/home/components
 import FifthStep, { validateErrorsLisence } from '@/app/home/components/wizard/fifthStep';
 import SixthStep, { validateErrorsContract } from '@/app/home/components/wizard/sixthStep';
 
-import { Formats, StepsFormValues } from '../../components/wizard/types';
+import { Formats, StepsFormValues } from '../components/wizard/types';
 import { stepsSchemaValidation } from './formschema';
 import { assetMetadataDefinitions, assetMetadataDomains, creatorMetadataDefinitions, licenses } from './mock';
 
@@ -25,7 +25,7 @@ import { userSelector } from '@/features/user';
 import { saveStepWizardThunk, sendRequestUploadThunk } from '@/features/user/thunks';
 import { useDispatch } from '@/store/hooks';
 import { assetStorageThunk, assetUpdateStepThunk } from '@/features/asset/thunks';
-import SeventhStep from '../../components/wizard/seventhStep';
+import SeventhStep from '../components/wizard/seventhStep';
 import { assetSelector } from '@/features/asset';
 import { userActionsCreators } from '@/features/user/slice';
 

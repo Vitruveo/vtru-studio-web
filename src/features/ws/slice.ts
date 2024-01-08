@@ -4,7 +4,6 @@ import { connectWebSocketThunk, loginWebSocketThunk } from './thunks';
 import { WebsocketSliceState } from './types';
 
 const initialState: WebsocketSliceState = {
-    connection: null,
     messages: [],
 };
 
@@ -12,9 +11,6 @@ export const websocketSlice = createSlice({
     name: 'websocket',
     initialState,
     reducers: {
-        websocketConnected: (state, action) => {
-            state.connection = action.payload;
-        },
         websocketAddMessage: (state, action) => {
             if (!state.messages.includes(action.payload)) state.messages.push(action.payload);
         },
@@ -23,9 +19,6 @@ export const websocketSlice = createSlice({
         },
         websocketClearMessages: (state) => {
             state.messages = [];
-        },
-        websocketDisconnected: (state) => {
-            state.connection = null;
         },
     },
 });

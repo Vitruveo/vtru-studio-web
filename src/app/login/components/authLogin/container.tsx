@@ -32,7 +32,7 @@ const LoginContainer = () => {
 
                 const resUserLogin = await dispatch(userLoginThunk({ email: formValues.email }));
                 if (codesVtruApi.success.login.includes(resUserLogin.code)) {
-                    router.push('/login/oneTimePassword');
+                    router.push('/login/verificationCode');
                     return;
                 } else {
                     setDiabled(false);

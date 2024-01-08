@@ -1,24 +1,25 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
+import Container from '@mui/material/Container';
 
 import { useRouter } from 'next/navigation';
-import { Box, Button, Stack } from '@mui/material';
+import { Box, Button, Stack, Typography, useTheme } from '@mui/material';
+import { useSelector } from '@/store/hooks';
 
-export function FooterForm({
-    submitText,
-    children,
-    submitDisabled,
-    backPathRouter,
-    backOnclick,
-}: {
+export interface FooterFormProps {
     submitText?: string;
     children?: React.ReactNode;
     submitDisabled?: boolean;
-    backPathRouter?: string;
+    backPathRouter: string;
     backOnclick?: () => void;
     saveOnClick?: () => void;
-}) {
+}
+
+export function FooterForm({ submitText, children, submitDisabled, backPathRouter, backOnclick }: FooterFormProps) {
+    const theme = useTheme();
+    const customizer = useSelector((state) => state.customizer);
     const router = useRouter();
 
     const handleBackClick = () => {
@@ -33,22 +34,49 @@ export function FooterForm({
     return (
         <Box display="flex" flexDirection="column">
             <Box marginBottom={5} minHeight="80vh" flexGrow={1}>
-                {children}
+                <Container
+                    sx={{
+                        maxWidth: customizer.isLayout === 'boxed' ? 'lg' : '100%!important',
+                    }}
+                >
+                    {children}
+                </Container>
             </Box>
-            <Box margin="auto 0" display="flex" flexDirection="column" flexGrow={1} position="relative" bgcolor="#fff">
-                <Stack direction="row" spacing={4} flexDirection="row-reverse">
+            <Box
+                height="8.2vh"
+                justifyContent="center"
+                boxSizing="border-box"
+                display="flex"
+                flexDirection="column"
+                flexGrow={1}
+                position="relative"
+                bgcolor={'#EFEFEF'}
+            >
+                <Stack marginInline={4} direction="row" alignItems="center" spacing={4} flexDirection="row-reverse">
                     <Button
                         disabled={submitDisabled}
                         type="submit"
-                        style={{ width: 120, marginLeft: '10px' }}
+                        style={{ width: 120, marginLeft: '20px' }}
                         color="primary"
                         variant="contained"
                     >
                         {submitText || 'Save'}
                     </Button>
-                    <Button style={{ width: 120 }} variant="outlined" color="error" onClick={handleBackClick}>
+
+                    <Link href={backPathRouter} className="hover-text-primary">
+                        <Typography variant="subtitle2" color="textPrimary" className="text-hover">
+                            Back
+                        </Typography>
+                    </Link>
+
+                    {/* <Link >
+                        <Button variant="contained" fullWidth>
+                            Back
+                        </Button>
+                    </Link> */}
+                    {/* <Button style={{ width: 120 }} variant="outlined" color="error" onClick={handleBackClick}>
                         Back
-                    </Button>
+                    </Button> */}
                 </Stack>
             </Box>
         </Box>
