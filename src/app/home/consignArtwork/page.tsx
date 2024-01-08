@@ -27,6 +27,8 @@ const ConsignArtwork = () => {
 
     const { completedSteps } = useSelector((state) => state.consignArtwork);
 
+    const checkAllCompletedSteps = Object.values(completedSteps).every((v) => v.status === 'completed');
+
     const handleChangePage = (page: string) => {
         router.push(`${pathname}/${page}`);
     };
@@ -37,6 +39,7 @@ const ConsignArtwork = () => {
 
     return (
         <PageContainerFooter
+            submitDisabled={!checkAllCompletedSteps}
             backPathRouter="/home"
             title="Consign Artwork"
             description="this is Wizard"
