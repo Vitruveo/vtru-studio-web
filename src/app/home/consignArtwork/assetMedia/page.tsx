@@ -159,7 +159,11 @@ const BCrumb = [
         title: 'Home',
     },
     {
+        to: '/home/consignArtwork',
         title: 'Consign Artwork',
+    },
+    {
+        title: 'Asset Media',
     },
 ];
 
@@ -251,7 +255,12 @@ export default function AssetMedia() {
     }, [values.asset.file]);
 
     return (
-        <PageContainerFooter title="Consign Artwork" backPathRouter="/home/consignArtwork">
+        <PageContainerFooter
+            stepStatus="inProgress"
+            stepNumber={1}
+            title="Consign Artwork"
+            backPathRouter="/home/consignArtwork"
+        >
             <Breadcrumb title="Consign Artwork" items={BCrumb} />
             <Stack my={3} direction="column" alignItems="center" justifyContent="center" gap={2}>
                 <Box width={600}>

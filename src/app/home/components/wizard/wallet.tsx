@@ -79,7 +79,7 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
                     ))}
                 </Box>
 
-                <Box width="100%" display="flex" alignItems="center">
+                <Box marginTop={1} width="100%" display="flex" alignItems="center">
                     <CustomTextField
                         value=""
                         disabled

@@ -55,7 +55,11 @@ const BCrumb = [
         title: 'Home',
     },
     {
+        to: '/home/consignArtwork',
         title: 'Consign Artwork',
+    },
+    {
+        title: 'Asset Metadata',
     },
 ];
 
@@ -75,7 +79,12 @@ export default function AssetMetadata() {
     }, [errors, values.assetMetadata]);
 
     return (
-        <PageContainerFooter title="Consign Artwork" backPathRouter="/home/consignArtwork">
+        <PageContainerFooter
+            stepStatus="inProgress"
+            stepNumber={2}
+            title="Consign Artwork"
+            backPathRouter="/home/consignArtwork"
+        >
             <Breadcrumb title="Consign Artwork" items={BCrumb} />
             <Grid mt={1} my={3} alignItems="center" width={500} lg={6} xs={12}>
                 <Grid marginBottom={2}>

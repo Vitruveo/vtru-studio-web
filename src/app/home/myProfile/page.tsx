@@ -96,7 +96,7 @@ export default function ProfileSettings() {
                     'To access the consign artwork, it is necessary to fill in all the mandatory fields in the user profile',
             });
         }
-    }, [isCompletedProfile]);
+    }, [isCompletedProfile, goToConsignArtwork]);
 
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (handleChange) handleChange(e);

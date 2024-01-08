@@ -14,12 +14,16 @@ const PageContainerFooter = ({
     description,
     submitText,
     children,
+    stepStatus,
+    stepNumber,
     backOnclick,
     backPathRouter,
     saveOnClick,
     submitDisabled,
 }: Props) => (
     <FooterForm
+        stepStatus={stepStatus}
+        stepNumber={stepNumber}
         submitText={submitText}
         backPathRouter={backPathRouter}
         submitDisabled={submitDisabled}

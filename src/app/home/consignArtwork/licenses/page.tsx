@@ -62,7 +62,11 @@ const BCrumb = [
         title: 'Home',
     },
     {
+        to: '/home/consignArtwork',
         title: 'Consign Artwork',
+    },
+    {
+        title: 'Licenses',
     },
 ];
 
@@ -115,7 +119,12 @@ export default function Licenses() {
     }, [errors, values.licenses]);
 
     return (
-        <PageContainerFooter title="Consign Artwork" backPathRouter="/home/consignArtwork">
+        <PageContainerFooter
+            title="Consign Artwork"
+            stepStatus="inProgress"
+            stepNumber={3}
+            backPathRouter="/home/consignArtwork"
+        >
             <Breadcrumb title="Consign Artwork" items={BCrumb} />
             <Grid mt={1} my={3} alignItems="center" width={500} lg={6} xs={12}>
                 <Grid marginBottom={2}>

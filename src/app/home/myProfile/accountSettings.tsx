@@ -42,8 +42,6 @@ const AccountSettings = ({
         message: '',
     });
 
-    const { username } = useSelector(userSelector(['username']));
-
     const dispatch = useDispatch();
 
     const handleSendCodeEmail = useCallback(
@@ -176,7 +174,7 @@ const AccountSettings = ({
                                 </Box>
 
                                 <Box>
-                                    {values.emails.filter((v) => v.checkedAt).length !== 1 && (
+                                    {(values.emails.filter((v) => v.checkedAt).length !== 1 || !item.checkedAt) && (
                                         <Button
                                             variant="outlined"
                                             color="error"
@@ -223,6 +221,14 @@ const AccountSettings = ({
                             onChange={handleChangeEmailInput}
                             size="small"
                             fullWidth
+                            FormHelperTextProps={{
+                                style: {
+                                    position: 'absolute',
+                                    bottom: '-22px',
+                                    left: 0,
+                                    fontSize: '0.75rem',
+                                },
+                            }}
                             variant="outlined"
                             placeholder="Enter new email address"
                             error={!!emailError}

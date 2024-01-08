@@ -49,7 +49,11 @@ const BCrumb = [
         title: 'Home',
     },
     {
+        to: '/home/consignArtwork',
         title: 'Consign Artwork',
+    },
+    {
+        title: 'Terms of Use',
     },
 ];
 
@@ -89,7 +93,12 @@ export default function ContractScreen() {
     useEffect(() => {}, [values.contract, errors]);
 
     return (
-        <PageContainerFooter title="Consign Artwork" backPathRouter="/home/consignArtwork">
+        <PageContainerFooter
+            stepStatus="inProgress"
+            stepNumber={4}
+            title="Consign Artwork"
+            backPathRouter="/home/consignArtwork"
+        >
             <Breadcrumb title="Consign Artwork" items={BCrumb} />
             <Container>
                 <Box
