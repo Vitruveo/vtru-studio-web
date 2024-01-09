@@ -32,29 +32,83 @@ export interface MediaConfig {
 }
 
 export const mediaConfigs = {
-    display: {
-        width: 2160,
-        height: 3840,
-        sizeMB: 10,
-        required: true,
+    landscape: {
+        display: {
+            width: 3840,
+            height: 2160,
+            sizeMB: 10,
+            required: true,
+        },
+        exhibition: {
+            width: 3000,
+            height: 2000,
+            sizeMB: 10,
+            required: true,
+        },
+        preview: {
+            width: 2000,
+            height: 2000,
+            sizeMB: 10,
+            required: true,
+        },
+        print: {
+            width: 12000,
+            height: 8000,
+            sizeMB: 500,
+            required: false,
+        },
     },
-    exhibition: {
-        width: 2000,
-        height: 3000,
-        sizeMB: 10,
-        required: true,
+    square: {
+        display: {
+            width: 3840,
+            height: 3840,
+            sizeMB: 10,
+            required: true,
+        },
+        exhibition: {
+            width: 3000,
+            height: 3000,
+            sizeMB: 10,
+            required: true,
+        },
+        preview: {
+            width: 2000,
+            height: 2000,
+            sizeMB: 10,
+            required: true,
+        },
+        print: {
+            width: 12000,
+            height: 12000,
+            sizeMB: 500,
+            required: false,
+        },
     },
-    preview: {
-        width: 2000,
-        height: 2000,
-        sizeMB: 10,
-        required: true,
-    },
-    print: {
-        width: 8000,
-        height: 12000,
-        sizeMB: 500,
-        required: false,
+    portrait: {
+        display: {
+            width: 2160,
+            height: 3840,
+            sizeMB: 10,
+            required: true,
+        },
+        exhibition: {
+            width: 2000,
+            height: 3000,
+            sizeMB: 10,
+            required: true,
+        },
+        preview: {
+            width: 2000,
+            height: 2000,
+            sizeMB: 10,
+            required: true,
+        },
+        print: {
+            width: 8000,
+            height: 12000,
+            sizeMB: 500,
+            required: false,
+        },
     },
 };
 
@@ -71,9 +125,18 @@ export default function MediaCard({
     const [mediaWidth, setMediaWidth] = useState(0);
     const [mediaHeight, setMediaHeight] = useState(0);
 
+    const mediaConfig =
+        mediaConfigs[definition as keyof typeof mediaConfigs]?.[
+            formatType as keyof (typeof mediaConfigs)['landscape']
+        ] || {};
+
     const handleDeleteFile = () => {
         if (formatType === 'original') {
             setFieldValue('asset.file', undefined);
+            setFieldValue('asset.formats.display', { file: undefined, customFile: undefined });
+            setFieldValue('asset.formats.exhibition', { file: undefined, customFile: undefined });
+            setFieldValue('asset.formats.preview', { file: undefined, customFile: undefined });
+            setFieldValue('asset.formats.print', { file: undefined, customFile: undefined });
             setFieldValue('definition', '');
         } else {
             setFieldValue(`asset.formats.${formatType}`, { file: undefined, customFile: undefined });
@@ -81,10 +144,15 @@ export default function MediaCard({
     };
 
     const onDrop = useCallback(
-        (acceptedFiles: File[]) => {
-            setMediaCrop(acceptedFiles[0]);
-            setShowCrop(true);
-            // setFieldValue(`asset.formats.${formatType}`, { file: acceptedFiles[0] });
+        async (acceptedFiles: File[]) => {
+            const imgWidthAndHeight = await handleGetFileWidthAndHeight(acceptedFiles[0]);
+
+            if (imgWidthAndHeight.width === mediaConfig.width && imgWidthAndHeight.height === mediaConfig.height) {
+                setFieldValue(`asset.formats.${formatType}`, { file: acceptedFiles[0] });
+            } else {
+                setMediaCrop(acceptedFiles[0]);
+                setShowCrop(true);
+            }
         },
         [setFieldValue]
     );
@@ -94,8 +162,6 @@ export default function MediaCard({
     const urlAssetFile = useMemo(() => {
         return formatValue.file ? URL.createObjectURL(formatValue.file) : '';
     }, [formatValue.file]);
-
-    const mediaConfig = mediaConfigs[formatType as keyof typeof mediaConfigs];
 
     useEffect(() => {
         if (formatType === 'original') {
