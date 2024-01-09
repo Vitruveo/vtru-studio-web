@@ -139,9 +139,14 @@ export default function AssetMedia() {
         return values.asset.file ? URL.createObjectURL(values.asset.file) : '';
     }, [values.asset.file]);
 
+    const checkStepProgress =
+        values.asset.formats.display.file && values.asset.formats.exhibition.file && values.asset.formats.preview.file
+            ? 'completed'
+            : 'inProgress';
+
     return (
         <PageContainerFooter
-            stepStatus="inProgress"
+            stepStatus={checkStepProgress}
             stepNumber={1}
             title="Consign Artwork"
             backPathRouter="/home/consignArtwork"

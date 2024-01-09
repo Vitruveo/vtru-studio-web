@@ -54,7 +54,24 @@ export function FooterForm({
                     {children}
                 </Container>
             </Box>
-            {stepStatus && stepStatus !== 'completed' && (
+
+            {stepStatus && stepStatus === 'completed' ? (
+                <Box
+                    width="100%"
+                    justifyContent="center"
+                    display="flex"
+                    alignItems="center"
+                    height={30}
+                    bgcolor="#B6D7A8"
+                >
+                    <Typography variant="h6" fontWeight="normal">
+                        This step has been{' '}
+                        <Typography display="inline" fontWeight={600}>
+                            Completed
+                        </Typography>
+                    </Typography>
+                </Box>
+            ) : (
                 <Box
                     width="100%"
                     justifyContent="center"
@@ -72,6 +89,7 @@ export function FooterForm({
                     </Typography>
                 </Box>
             )}
+
             <Box
                 height="8.2vh"
                 justifyContent="center"
