@@ -6,6 +6,31 @@ import { AssetSliceState } from './types';
 
 const initialState: AssetSliceState = {
     _id: '',
+    asset: {
+        file: undefined,
+        formats: {
+            display: {
+                file: undefined,
+                customFile: undefined,
+                transactionId: undefined,
+            },
+            exhibition: {
+                file: undefined,
+                customFile: undefined,
+                transactionId: undefined,
+            },
+            preview: {
+                file: undefined,
+                customFile: undefined,
+                transactionId: undefined,
+            },
+            print: {
+                file: undefined,
+                customFile: undefined,
+                transactionId: undefined,
+            },
+        },
+    },
     assetMetadata: {
         assetMetadataDomains: [],
         assetMetadataDefinitions: [],

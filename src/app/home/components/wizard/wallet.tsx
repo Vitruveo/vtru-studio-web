@@ -45,7 +45,7 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
 
     return (
         <>
-            <Box maxWidth={450} display="flex" flexDirection="column" gap={2}>
+            <Box maxWidth={450} display="flex" flexDirection="column">
                 <Box gap={2}>
                     {values.wallets.map((item, index) => (
                         <Box
@@ -95,9 +95,7 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
                     </Box>
                 </Box>
 
-                <Typography my={1} color="error">
-                    {errors?.wallets as string}
-                </Typography>
+                <Typography color="error">{errors?.wallets as string}</Typography>
             </Box>
         </>
     );

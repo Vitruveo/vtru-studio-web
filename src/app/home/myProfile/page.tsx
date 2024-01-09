@@ -35,7 +35,7 @@ const BCrumb = [
         title: 'Home',
     },
     {
-        title: 'Profile',
+        title: 'My Profile',
     },
 ];
 
@@ -62,7 +62,7 @@ export default function ProfileSettings() {
             },
             // validationSchema: stepsSchemaValidation,
             onSubmit: async (formValues) => {
-                if (username.length && formValues.username.length === 0) setUsernameError('Username is required');
+                if (!formValues.username || formValues.username?.length === 0) setUsernameError('Username is required');
                 else {
                     await dispatch(saveStepWizardThunk({ step: 0, values }));
                     dispatch(

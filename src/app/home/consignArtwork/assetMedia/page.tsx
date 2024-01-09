@@ -18,6 +18,7 @@ import PageContainerFooter from '../../components/container/PageContainerFooter'
 import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
 import MediaCard from './mediaCard';
 import SelectMedia from './selectMedia';
+import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 
 function validateErrorsAssetUpload({
     errors,
@@ -108,18 +109,22 @@ export default function AssetMedia() {
         },
     });
 
-    useEffect(() => {
-        validateErrorsAssetUpload({ values, errors, setFieldValue });
-    }, [values.asset, errors]);
-
-    const urlAssetFile = useMemo(() => {
-        return values.asset.file ? URL.createObjectURL(values.asset.file) : '';
-    }, [values.asset.file]);
-
     const checkStepProgress =
         values.asset.formats.display.file && values.asset.formats.exhibition.file && values.asset.formats.preview.file
             ? 'completed'
             : 'inProgress';
+
+    useEffect(() => {
+        validateErrorsAssetUpload({ values, errors, setFieldValue });
+    }, [values.asset, errors]);
+
+    useEffect(() => {
+        dispatch(consignArtworkActionsCreators.changeStatusStep({ stepId: 'assetMedia', status: checkStepProgress }));
+    }, [checkStepProgress]);
+
+    const urlAssetFile = useMemo(() => {
+        return values.asset.file ? URL.createObjectURL(values.asset.file) : '';
+    }, [values.asset.file]);
 
     return (
         <form onSubmit={handleSubmit}>

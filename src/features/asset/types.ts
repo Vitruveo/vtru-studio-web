@@ -3,6 +3,15 @@ import { APIResponse } from '../common/types';
 
 export interface Asset {
     _id: string;
+    asset: {
+        file: File | undefined;
+        formats: {
+            display: { file?: File; customFile?: File; transactionId?: string };
+            exhibition: { file?: File; customFile?: File; transactionId?: string };
+            preview: { file?: File; customFile?: File; transactionId?: string };
+            print: { file?: File; customFile?: File; transactionId?: string };
+        };
+    };
     contract: boolean;
     assetMetadata: {
         assetMetadataDefinitions: MetadataDefinitionTypes[];
