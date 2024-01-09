@@ -1,15 +1,20 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
 import Img from 'next/image';
 import HelpIcon from '@mui/icons-material/Help';
 import { IconTrash } from '@tabler/icons-react';
-import { Box, SvgIcon, Typography, IconButton, Button } from '@mui/material';
+import { Box, SvgIcon, Typography, IconButton, Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { AssetMediaFormErros, AssetMediaFormValues, FormatMedia } from './types';
 import { format } from 'path';
+import Crop from './crop';
+import { getFileSize, handleGetFileWidthAndHeight } from './helpers';
 
 interface MediaCardProps {
     formatType: string;
     formatValue: FormatMedia;
+    errors: AssetMediaFormErros;
+    formats: AssetMediaFormValues['asset']['formats'];
     urlAssetFile: string;
     definition: AssetMediaFormValues['definition'];
     setFieldValue: (
@@ -19,7 +24,14 @@ interface MediaCardProps {
     ) => Promise<void> | Promise<AssetMediaFormErros>;
 }
 
-const mediaConfigs = {
+export interface MediaConfig {
+    width: number;
+    height: number;
+    sizeMB: number;
+    required: boolean;
+}
+
+export const mediaConfigs = {
     display: {
         width: 2160,
         height: 3840,
@@ -46,17 +58,38 @@ const mediaConfigs = {
     },
 };
 
-export default function MediaCard({ formatType, formatValue, definition, setFieldValue }: MediaCardProps) {
+export default function MediaCard({
+    formatType,
+    formatValue,
+    definition,
+    errors,
+    formats,
+    setFieldValue,
+}: MediaCardProps) {
+    const [mediaCrop, setMediaCrop] = useState<File | undefined>(undefined);
+    const [showCrop, setShowCrop] = useState(false);
     const [mediaWidth, setMediaWidth] = useState(0);
     const [mediaHeight, setMediaHeight] = useState(0);
 
     const handleDeleteFile = () => {
-        setFieldValue('asset.file', undefined);
-        setFieldValue('asset.formats.display', { file: undefined, customFile: undefined });
-        setFieldValue('asset.formats.exhibition', { file: undefined, customFile: undefined });
-        setFieldValue('asset.formats.preview', { file: undefined, customFile: undefined });
-        setFieldValue('definition', '');
+        if (formatType === 'original') {
+            setFieldValue('asset.file', undefined);
+            setFieldValue('definition', '');
+        } else {
+            setFieldValue(`asset.formats.${formatType}`, { file: undefined, customFile: undefined });
+        }
     };
+
+    const onDrop = useCallback(
+        (acceptedFiles: File[]) => {
+            setMediaCrop(acceptedFiles[0]);
+            setShowCrop(true);
+            // setFieldValue(`asset.formats.${formatType}`, { file: acceptedFiles[0] });
+        },
+        [setFieldValue]
+    );
+
+    const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
     const urlAssetFile = useMemo(() => {
         return formatValue.file ? URL.createObjectURL(formatValue.file) : '';
@@ -64,55 +97,24 @@ export default function MediaCard({ formatType, formatValue, definition, setFiel
 
     const mediaConfig = mediaConfigs[formatType as keyof typeof mediaConfigs];
 
-    function handleGetFileWidthAndHeight(): Promise<{ width: number; height: number }> {
-        return new Promise((resolve, reject) => {
-            const file = formatValue.file;
-
-            if (!file) {
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                if (!e.target) {
-                    return;
-                }
-
-                const img = new Image();
-                img.src = e.target.result as string;
-
-                img.onload = function () {
-                    const width = img.width;
-                    const height = img.height;
-
-                    resolve({ width, height });
-                };
-            };
-
-            reader.readAsDataURL(file);
-        });
-    }
-
-    function getFileSize() {
-        const bytes = formatValue.file?.size || 0;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-
-        if (bytes === 0) return '0 Byte';
-
-        const i = parseInt(String(Math.floor(Math.log(bytes) / Math.log(1024))));
-
-        return Math.round(bytes / Math.pow(1024, i)) + ' ' + sizes[i];
-    }
-
     useEffect(() => {
         if (formatType === 'original') {
             (async () => {
-                const imgWidthAndHeight = await handleGetFileWidthAndHeight();
+                const imgWidthAndHeight = await handleGetFileWidthAndHeight(formatValue.file!);
                 setMediaWidth(imgWidthAndHeight.width);
                 setMediaHeight(imgWidthAndHeight.height);
             })();
         }
     }, []);
+
+    const handleChangeCrop = (fileChange: File) => {
+        setShowCrop(false);
+        setFieldValue(`asset.formats.${formatType}.file`, fileChange);
+    };
+
+    const handleClose = () => {
+        setShowCrop(false);
+    };
 
     return (
         <Box marginLeft={1} width={150}>
@@ -183,7 +185,7 @@ export default function MediaCard({ formatType, formatValue, definition, setFiel
                             {mediaConfig?.width || mediaWidth} X {mediaConfig?.height || mediaHeight}
                         </Typography>
                         <Typography fontSize="0.8rem">
-                            {mediaConfig?.sizeMB ? `${mediaConfig?.sizeMB} MB maximum` : getFileSize()}
+                            {mediaConfig?.sizeMB ? `${mediaConfig?.sizeMB} MB maximum` : getFileSize(formatValue.file!)}
                         </Typography>
                     </Typography>
                 </Box>
@@ -202,7 +204,14 @@ export default function MediaCard({ formatType, formatValue, definition, setFiel
                         </Box>
                     ) : (
                         <Box>
-                            <Box height={80} width="100%" display="flex" justifyContent="center" alignItems="center">
+                            <Box
+                                {...getRootProps()}
+                                height={80}
+                                width="100%"
+                                display="flex"
+                                justifyContent="center"
+                                alignItems="center"
+                            >
                                 <Button size="small" variant="contained">
                                     Upload
                                 </Button>
@@ -218,6 +227,20 @@ export default function MediaCard({ formatType, formatValue, definition, setFiel
                     )}
                 </Box>
             </Box>
+
+            <Dialog maxWidth="lg" open={showCrop} onClose={handleClose}>
+                <DialogTitle color="GrayText">
+                    {`Crop media for Display to ${mediaConfig?.width} x ${mediaConfig?.height} pixels. Click “Done” to save.`}
+                </DialogTitle>
+                <DialogContent>
+                    <Crop
+                        file={mediaCrop}
+                        mediaConfig={mediaConfig}
+                        definition={definition}
+                        onChange={handleChangeCrop}
+                    />
+                </DialogContent>
+            </Dialog>
         </Box>
     );
 }

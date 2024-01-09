@@ -182,6 +182,8 @@ export default function AssetMedia() {
                             <Box style={{ marginRight: '10px' }}>
                                 <MediaCard
                                     formatType="original"
+                                    errors={errors}
+                                    formats={values.asset.formats}
                                     formatValue={{ file: values.asset.file }}
                                     urlAssetFile={urlAssetFile}
                                     definition={values.definition}
@@ -193,6 +195,8 @@ export default function AssetMedia() {
                                 <Box style={{ marginRight: '10px' }} key={index}>
                                     <MediaCard
                                         key={index}
+                                        errors={errors}
+                                        formats={values.asset.formats}
                                         formatType={formatType}
                                         formatValue={value}
                                         urlAssetFile={urlAssetFile}
@@ -214,14 +218,6 @@ export default function AssetMedia() {
                         setFieldValue={setFieldValue}
                     />
                 )}
-                {/* 
-                <Crop
-                    file={values.asset.file}
-                    definition={values.definition}
-                    errors={errors}
-                    formats={values.asset.formats}
-                    setFieldValue={setFieldValue}
-                /> */}
             </Stack>
         </PageContainerFooter>
     );
