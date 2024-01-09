@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { MenuItem } from '@mui/material';
@@ -66,12 +67,16 @@ const BCrumb = [
 export default function AssetMetadata() {
     const { assetMetadata } = useSelector((state) => state.asset);
 
-    const { values, errors, setFieldValue } = useFormik<AssetMetadataFormValues>({
+    const router = useRouter();
+
+    const { values, errors, setFieldValue, handleSubmit } = useFormik<AssetMetadataFormValues>({
         initialValues: {
             assetMetadata,
         },
-        validationSchema: AssetMetadataSchemaValidation,
-        onSubmit: async (formValues) => {},
+        // validationSchema: AssetMetadataSchemaValidation,
+        onSubmit: async (formValues) => {
+            router.push(`/home/consignArtwork/licenses`);
+        },
     });
 
     useEffect(() => {
@@ -79,34 +84,37 @@ export default function AssetMetadata() {
     }, [errors, values.assetMetadata]);
 
     return (
-        <PageContainerFooter
-            stepStatus="inProgress"
-            stepNumber={2}
-            title="Consign Artwork"
-            backPathRouter="/home/consignArtwork"
-        >
-            <Breadcrumb title="Consign Artwork" items={BCrumb} />
-            <Grid maxHeight={500} overflow="auto" mt={1} my={3} alignItems="center" width={500} lg={6} xs={12}>
-                <Grid marginBottom={2}>
-                    <Typography variant="subtitle1" fontWeight={600} component="label">
-                        Domain
-                    </Typography>
-                    <CustomSelect defaultValue="artwork" size="small" name="domain" fullWidth variant="outlined">
-                        {values.assetMetadata?.assetMetadataDomains?.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </CustomSelect>
+        <form onSubmit={handleSubmit}>
+            <PageContainerFooter
+                submitText="Next"
+                stepStatus="inProgress"
+                stepNumber={2}
+                title="Consign Artwork"
+                backPathRouter="/home/consignArtwork"
+            >
+                <Breadcrumb title="Consign Artwork" items={BCrumb} />
+                <Grid maxHeight={500} overflow="auto" mt={1} my={3} alignItems="center" width={500} lg={6} xs={12}>
+                    <Grid marginBottom={2}>
+                        <Typography variant="subtitle1" fontWeight={600} component="label">
+                            Domain
+                        </Typography>
+                        <CustomSelect defaultValue="artwork" size="small" name="domain" fullWidth variant="outlined">
+                            {values.assetMetadata?.assetMetadataDomains?.map((option) => (
+                                <MenuItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </MenuItem>
+                            ))}
+                        </CustomSelect>
+                    </Grid>
+                    <MetadataFields
+                        formkFieldPathChange="assetMetadata.assetMetadataDefinitions"
+                        values={values}
+                        errors={errors}
+                        metadataDefinitions={values.assetMetadata?.assetMetadataDefinitions}
+                        setFieldValue={setFieldValue}
+                    />
                 </Grid>
-                <MetadataFields
-                    formkFieldPathChange="assetMetadata.assetMetadataDefinitions"
-                    values={values}
-                    errors={errors}
-                    metadataDefinitions={values.assetMetadata?.assetMetadataDefinitions}
-                    setFieldValue={setFieldValue}
-                />
-            </Grid>
-        </PageContainerFooter>
+            </PageContainerFooter>
+        </form>
     );
 }

@@ -20,5 +20,4 @@ export interface ConsignArtworkSliceState {
 export interface ChangeStatusPayload {
     stepId: StepId;
     status: StepStatus;
-    statusName: StepStatusName;
 }

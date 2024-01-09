@@ -1,26 +1,16 @@
 'use client';
 
-import { Fragment, memo, useEffect, useMemo, useState } from 'react';
-import Img from 'next/image';
-import { FormikErrors, useFormik } from 'formik';
-import { useSelector } from '@/store/hooks';
+import { useEffect, useMemo, useState } from 'react';
 
-import { useDropzone } from 'react-dropzone';
+import { useFormik } from 'formik';
+import { useDispatch, useSelector } from '@/store/hooks';
+
 import { Stack } from '@mui/system';
-import { Box, Button, Card, IconButton, MenuItem, Tab, Typography } from '@mui/material';
-import { TabContext, TabList } from '@mui/lab';
-import { IconTrash } from '@tabler/icons-react';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { Box, IconButton, Typography } from '@mui/material';
 
-import type { StepsFormValues, StepsProps, FormatNames } from '../types';
-
-import CustomSelect from '@/app/home/components/forms/theme-elements/CustomSelect';
-
-import CustomFormLabel from '@/app/home/components/forms/theme-elements/CustomFormLabel';
+import type { StepsFormValues } from '../types';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import SvgIcon from '@mui/material/SvgIcon';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import CloseIcon from '@mui/icons-material/Close';
 import { AssetMediaFormErros, AssetMediaFormValues } from './types';
 import { AssetMediaSchemaValidation } from './formschema';
@@ -28,24 +18,6 @@ import PageContainerFooter from '../../components/container/PageContainerFooter'
 import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
 import MediaCard from './mediaCard';
 import SelectMedia from './selectMedia';
-import Crop from './crop';
-
-const currentStep = 2;
-
-const definitionOptions = [
-    {
-        value: 'square',
-        label: 'Square',
-    },
-    {
-        value: 'landscape',
-        label: 'Landscape',
-    },
-    {
-        value: 'portrait',
-        label: 'Portrait',
-    },
-];
 
 function validateErrorsAssetUpload({
     errors,
@@ -98,7 +70,10 @@ export default function AssetMedia() {
 
     const asset = useSelector((state) => state.asset);
 
-    const { values, errors, setFieldValue } = useFormik<AssetMediaFormValues>({
+    const router = useRouter();
+    const dispatch = useDispatch();
+
+    const { values, errors, setFieldValue, handleSubmit } = useFormik<AssetMediaFormValues>({
         initialValues: {
             definition: '',
             asset: {
@@ -127,8 +102,10 @@ export default function AssetMedia() {
                 },
             },
         },
-        validationSchema: AssetMediaSchemaValidation,
-        onSubmit: async (formValues) => {},
+        // validationSchema: AssetMediaSchemaValidation,
+        onSubmit: async (formValues) => {
+            router.push(`/home/consignArtwork/assetMetadata`);
+        },
     });
 
     useEffect(() => {
@@ -145,85 +122,89 @@ export default function AssetMedia() {
             : 'inProgress';
 
     return (
-        <PageContainerFooter
-            stepStatus={checkStepProgress}
-            stepNumber={1}
-            title="Consign Artwork"
-            backPathRouter="/home/consignArtwork"
-        >
-            <Breadcrumb title="Consign Artwork" items={BCrumb} />
-            <Stack my={3} direction="column" gap={1}>
-                <Typography variant="h6" fontWeight="normal" color="GrayText">
-                    Upload media assets for the artwork being consigned.
-                </Typography>
-                <Typography variant="h5" color="grey" fontWeight="500" marginTop={2}>
-                    Asset Media
-                </Typography>
-                {urlAssetFile && (
-                    <Box>
-                        {showFormtsInfo && (
-                            <Box padding={2} bgcolor="#FFF2CC" position="relative">
-                                <IconButton
-                                    style={{ position: 'absolute', top: 8, right: 8 }}
-                                    onClick={() => setShowFormatsInfo(false)}
-                                >
-                                    <CloseIcon />
-                                </IconButton>
-                                <Typography>
-                                    Looks amazing! For your artwork to look great on different devices, we need three
-                                    more media files. Don’t worry, we’ll help you crop your original media file.
-                                    <Typography marginTop={2}>
-                                        If you’re concerned about loss of quality, don’t use the crop feature and upload
-                                        media directly in the required size.
+        <form onSubmit={handleSubmit}>
+            <PageContainerFooter
+                submitText="Next"
+                stepStatus={checkStepProgress}
+                stepNumber={1}
+                title="Consign Artwork"
+                backPathRouter="/home/consignArtwork"
+            >
+                <Breadcrumb title="Consign Artwork" items={BCrumb} />
+                <Stack my={3} direction="column" gap={1}>
+                    <Typography variant="h6" fontWeight="normal" color="GrayText">
+                        Upload media assets for the artwork being consigned.
+                    </Typography>
+                    <Typography variant="h5" color="grey" fontWeight="500" marginTop={2}>
+                        Asset Media
+                    </Typography>
+                    {urlAssetFile && (
+                        <Box>
+                            {showFormtsInfo && (
+                                <Box padding={2} bgcolor="#FFF2CC" position="relative">
+                                    <IconButton
+                                        style={{ position: 'absolute', top: 8, right: 8 }}
+                                        onClick={() => setShowFormatsInfo(false)}
+                                    >
+                                        <CloseIcon />
+                                    </IconButton>
+                                    <Typography>
+                                        Looks amazing! For your artwork to look great on different devices, we need
+                                        three more media files. Don’t worry, we’ll help you crop your original media
+                                        file.
+                                        <Typography marginTop={2}>
+                                            If you’re concerned about loss of quality, don’t use the crop feature and
+                                            upload media directly in the required size.
+                                        </Typography>
                                     </Typography>
-                                </Typography>
-                            </Box>
-                        )}
+                                </Box>
+                            )}
 
-                        <Typography marginTop={2} color="grey" variant="h6" fontWeight="bold">
-                            {values.definition.charAt(0).toUpperCase() + values.definition.slice(1)} Media Assets
-                        </Typography>
-                        <Box display="flex">
-                            <Box style={{ marginRight: '10px' }}>
-                                <MediaCard
-                                    formatType="original"
-                                    errors={errors}
-                                    formats={values.asset.formats}
-                                    formatValue={{ file: values.asset.file }}
-                                    urlAssetFile={urlAssetFile}
-                                    definition={values.definition}
-                                    setFieldValue={setFieldValue}
-                                />
-                            </Box>
-
-                            {Object.entries(values.asset.formats).map(([formatType, value], index) => (
-                                <Box style={{ marginRight: '10px' }} key={index}>
+                            <Typography marginTop={2} color="grey" variant="h6" fontWeight="bold">
+                                {values.definition.charAt(0).toUpperCase() + values.definition.slice(1)} Media Assets
+                            </Typography>
+                            <Box display="flex">
+                                <Box style={{ marginRight: '10px' }}>
                                     <MediaCard
-                                        key={index}
+                                        formatType="original"
                                         errors={errors}
                                         formats={values.asset.formats}
-                                        formatType={formatType}
-                                        formatValue={value}
+                                        formatValue={{ file: values.asset.file }}
                                         urlAssetFile={urlAssetFile}
                                         definition={values.definition}
                                         setFieldValue={setFieldValue}
                                     />
                                 </Box>
-                            ))}
-                        </Box>
-                    </Box>
-                )}
 
-                {!urlAssetFile && (
-                    <SelectMedia
-                        file={values.asset.file}
-                        definition={values.definition}
-                        urlAssetFile={urlAssetFile}
-                        errors={errors}
-                        setFieldValue={setFieldValue}
-                    />
-                )}
-            </Stack>
-        </PageContainerFooter>
+                                {Object.entries(values.asset.formats).map(([formatType, value], index) => (
+                                    <Box style={{ marginRight: '10px' }} key={index}>
+                                        <MediaCard
+                                            key={index}
+                                            errors={errors}
+                                            formats={values.asset.formats}
+                                            formatType={formatType}
+                                            formatValue={value}
+                                            urlAssetFile={urlAssetFile}
+                                            definition={values.definition}
+                                            setFieldValue={setFieldValue}
+                                        />
+                                    </Box>
+                                ))}
+                            </Box>
+                        </Box>
+                    )}
+
+                    {!urlAssetFile && (
+                        <SelectMedia
+                            file={values.asset.file}
+                            definition={values.definition}
+                            urlAssetFile={urlAssetFile}
+                            errors={errors}
+                            setFieldValue={setFieldValue}
+                        />
+                    )}
+                </Stack>
+            </PageContainerFooter>
+        </form>
     );
 }

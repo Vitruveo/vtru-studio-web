@@ -17,6 +17,7 @@ import { LicensesFormErros, LicensesFormValues } from './types';
 import { LicensesSchemaValidation } from './formschema';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
+import { useRouter } from 'next/navigation';
 
 const licenseMetadataDomains = [
     { value: 'stream', label: 'Stream v1.0' },
@@ -79,14 +80,17 @@ export default function Licenses() {
 
     const [licenseDomain, setLicenseDomain] = useState('stream');
 
+    const router = useRouter();
     const { licenses } = useSelector((state) => state.asset);
 
-    const { values, errors, setFieldValue } = useFormik<LicensesFormValues>({
+    const { values, errors, setFieldValue, handleSubmit } = useFormik<LicensesFormValues>({
         initialValues: {
             licenses,
         },
-        validationSchema: LicensesSchemaValidation,
-        onSubmit: async (formValues) => {},
+        // validationSchema: LicensesSchemaValidation,
+        onSubmit: async (formValues) => {
+            router.push(`/home/consignArtwork/termsOfUse`);
+        },
     });
 
     const licensesAdded = values.licenses.filter((v) => v.added);
@@ -119,73 +123,76 @@ export default function Licenses() {
     }, [errors, values.licenses]);
 
     return (
-        <PageContainerFooter
-            title="Consign Artwork"
-            stepStatus="inProgress"
-            stepNumber={3}
-            backPathRouter="/home/consignArtwork"
-        >
-            <Breadcrumb title="Consign Artwork" items={BCrumb} />
-            <Grid mt={1} my={3} alignItems="center" width={500} lg={6} xs={12}>
-                <Grid marginBottom={2}>
-                    <Typography variant="subtitle1" fontWeight={600} component="label">
-                        License
-                    </Typography>
-                    <Box display="flex" alignItems="center" width="100%">
-                        <CustomSelect
-                            defaultValue="stream"
-                            size="small"
-                            name="domain"
-                            onChange={handleChangeInput}
-                            fullWidth
-                            variant="outlined"
-                        >
-                            {licenseMetadataDomains?.map((option) => (
-                                <MenuItem key={option.value} value={option.value}>
-                                    {option.label}
-                                </MenuItem>
-                            ))}
-                        </CustomSelect>
-                    </Box>
-                </Grid>
-                <MetadataFields
-                    key={licenseDomain}
-                    formkFieldPathChange={`licenses[${findIndexLicense}].licenseMetadataDefinitions`}
-                    values={values}
-                    errors={errors}
-                    metadataDefinitions={licenseMetadataDefinitions}
-                    setFieldValue={setFieldValue}
-                />
-                <Typography my={1} color="error">
-                    {typeof errors.licenses === 'string' && errors.licenses}
-                </Typography>
-                <Box my={2}>
-                    <Button size="small" fullWidth color="primary" variant="contained" onClick={handleAddLicense}>
-                        Add license
-                    </Button>
-                </Box>
-                {licensesAdded.length > 0 && (
-                    <Box my={3}>
+        <form onSubmit={handleSubmit}>
+            <PageContainerFooter
+                submitText="Next"
+                title="Consign Artwork"
+                stepStatus="inProgress"
+                stepNumber={3}
+                backPathRouter="/home/consignArtwork"
+            >
+                <Breadcrumb title="Consign Artwork" items={BCrumb} />
+                <Grid mt={1} my={3} alignItems="center" width={500} lg={6} xs={12}>
+                    <Grid marginBottom={2}>
                         <Typography variant="subtitle1" fontWeight={600} component="label">
-                            Added licenses
+                            License
                         </Typography>
-                        {licensesAdded.map((license, index) => (
-                            <Box display="flex" alignItems="center" key={index}>
-                                <IconButton onClick={(e) => handleRemoveLicense(license.domain)}>
-                                    <IconTrash color="red" size="16" stroke={1.5} />
-                                </IconButton>
-                                <Box>{license.title}</Box>
-                            </Box>
-                        ))}
+                        <Box display="flex" alignItems="center" width="100%">
+                            <CustomSelect
+                                defaultValue="stream"
+                                size="small"
+                                name="domain"
+                                onChange={handleChangeInput}
+                                fullWidth
+                                variant="outlined"
+                            >
+                                {licenseMetadataDomains?.map((option) => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </CustomSelect>
+                        </Box>
+                    </Grid>
+                    <MetadataFields
+                        key={licenseDomain}
+                        formkFieldPathChange={`licenses[${findIndexLicense}].licenseMetadataDefinitions`}
+                        values={values}
+                        errors={errors}
+                        metadataDefinitions={licenseMetadataDefinitions}
+                        setFieldValue={setFieldValue}
+                    />
+                    <Typography my={1} color="error">
+                        {typeof errors.licenses === 'string' && errors.licenses}
+                    </Typography>
+                    <Box my={2}>
+                        <Button size="small" fullWidth color="primary" variant="contained" onClick={handleAddLicense}>
+                            Add license
+                        </Button>
                     </Box>
-                )}
-                <CustomizedSnackbar
-                    type={toastr.type}
-                    open={toastr.open}
-                    message={toastr.message}
-                    setOpentate={setToastr}
-                />
-            </Grid>
-        </PageContainerFooter>
+                    {licensesAdded.length > 0 && (
+                        <Box my={3}>
+                            <Typography variant="subtitle1" fontWeight={600} component="label">
+                                Added licenses
+                            </Typography>
+                            {licensesAdded.map((license, index) => (
+                                <Box display="flex" alignItems="center" key={index}>
+                                    <IconButton onClick={(e) => handleRemoveLicense(license.domain)}>
+                                        <IconTrash color="red" size="16" stroke={1.5} />
+                                    </IconButton>
+                                    <Box>{license.title}</Box>
+                                </Box>
+                            ))}
+                        </Box>
+                    )}
+                    <CustomizedSnackbar
+                        type={toastr.type}
+                        open={toastr.open}
+                        message={toastr.message}
+                        setOpentate={setToastr}
+                    />
+                </Grid>
+            </PageContainerFooter>
+        </form>
     );
 }

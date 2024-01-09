@@ -49,10 +49,12 @@ export const consignArtworkSlice = createSlice({
         changeGoToConsignArtwork: (state, action: PayloadAction<boolean>) => {
             state.goToConsignArtwork = action.payload;
         },
-        changeStatus: (state, action: PayloadAction<ChangeStatusPayload>) => {
-            const { stepId, status, statusName } = action.payload;
+        changeStatusStep: (state, action: PayloadAction<ChangeStatusPayload>) => {
+            const { stepId, status } = action.payload;
+            if (status === 'completed') state.completedSteps[stepId].statusName = 'Completed';
+            if (status === 'inProgress') state.completedSteps[stepId].statusName = 'In Progress';
+            if (status === 'notStarted') state.completedSteps[stepId].statusName = 'Not Started';
             state.completedSteps[stepId].status = status;
-            state.completedSteps[stepId].statusName = statusName;
         },
     },
 });

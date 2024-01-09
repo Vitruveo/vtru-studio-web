@@ -94,6 +94,8 @@ export default function ContractScreen() {
 
     return (
         <PageContainerFooter
+            submitDisabled
+            submitText="Next"
             stepStatus="inProgress"
             stepNumber={4}
             title="Consign Artwork"
