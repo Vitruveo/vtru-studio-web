@@ -55,7 +55,7 @@ export function FooterForm({
                 </Container>
             </Box>
 
-            {stepStatus && stepStatus === 'completed' ? (
+            {stepStatus && stepStatus === 'completed' && (
                 <Box
                     width="100%"
                     justifyContent="center"
@@ -71,7 +71,8 @@ export function FooterForm({
                         </Typography>
                     </Typography>
                 </Box>
-            ) : (
+            )}
+            {stepStatus && stepStatus !== 'completed' && (
                 <Box
                     width="100%"
                     justifyContent="center"

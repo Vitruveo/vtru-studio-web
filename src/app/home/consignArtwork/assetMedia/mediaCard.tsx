@@ -8,7 +8,8 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { AssetMediaFormErros, AssetMediaFormValues, FormatMedia } from './types';
 import { format } from 'path';
 import Crop from './crop';
-import { getFileSize, handleGetFileWidthAndHeight } from './helpers';
+import { getFileSize, handleGetFileWidthAndHeight, mediaConfigs } from './helpers';
+import ModalError from './modalError';
 
 interface MediaCardProps {
     formatType: string;
@@ -31,87 +32,6 @@ export interface MediaConfig {
     required: boolean;
 }
 
-export const mediaConfigs = {
-    landscape: {
-        display: {
-            width: 3840,
-            height: 2160,
-            sizeMB: 10,
-            required: true,
-        },
-        exhibition: {
-            width: 3000,
-            height: 2000,
-            sizeMB: 10,
-            required: true,
-        },
-        preview: {
-            width: 2000,
-            height: 2000,
-            sizeMB: 10,
-            required: true,
-        },
-        print: {
-            width: 12000,
-            height: 8000,
-            sizeMB: 500,
-            required: false,
-        },
-    },
-    square: {
-        display: {
-            width: 3840,
-            height: 3840,
-            sizeMB: 10,
-            required: true,
-        },
-        exhibition: {
-            width: 3000,
-            height: 3000,
-            sizeMB: 10,
-            required: true,
-        },
-        preview: {
-            width: 2000,
-            height: 2000,
-            sizeMB: 10,
-            required: true,
-        },
-        print: {
-            width: 12000,
-            height: 12000,
-            sizeMB: 500,
-            required: false,
-        },
-    },
-    portrait: {
-        display: {
-            width: 2160,
-            height: 3840,
-            sizeMB: 10,
-            required: true,
-        },
-        exhibition: {
-            width: 2000,
-            height: 3000,
-            sizeMB: 10,
-            required: true,
-        },
-        preview: {
-            width: 2000,
-            height: 2000,
-            sizeMB: 10,
-            required: true,
-        },
-        print: {
-            width: 8000,
-            height: 12000,
-            sizeMB: 500,
-            required: false,
-        },
-    },
-};
-
 export default function MediaCard({
     formatType,
     formatValue,
@@ -120,6 +40,7 @@ export default function MediaCard({
     formats,
     setFieldValue,
 }: MediaCardProps) {
+    const [modalErrorOpen, setModalErrorOpen] = useState(false);
     const [mediaCrop, setMediaCrop] = useState<File | undefined>(undefined);
     const [showCrop, setShowCrop] = useState(false);
     const [mediaWidth, setMediaWidth] = useState(0);
@@ -129,19 +50,6 @@ export default function MediaCard({
         mediaConfigs[definition as keyof typeof mediaConfigs]?.[
             formatType as keyof (typeof mediaConfigs)['landscape']
         ] || {};
-
-    const handleDeleteFile = () => {
-        if (formatType === 'original') {
-            setFieldValue('asset.file', undefined);
-            setFieldValue('asset.formats.display', { file: undefined, customFile: undefined });
-            setFieldValue('asset.formats.exhibition', { file: undefined, customFile: undefined });
-            setFieldValue('asset.formats.preview', { file: undefined, customFile: undefined });
-            setFieldValue('asset.formats.print', { file: undefined, customFile: undefined });
-            setFieldValue('definition', '');
-        } else {
-            setFieldValue(`asset.formats.${formatType}`, { file: undefined, customFile: undefined });
-        }
-    };
 
     const onDrop = useCallback(
         async (acceptedFiles: File[]) => {
@@ -163,15 +71,18 @@ export default function MediaCard({
         return formatValue.file ? URL.createObjectURL(formatValue.file) : '';
     }, [formatValue.file]);
 
-    useEffect(() => {
+    const handleDeleteFile = () => {
         if (formatType === 'original') {
-            (async () => {
-                const imgWidthAndHeight = await handleGetFileWidthAndHeight(formatValue.file!);
-                setMediaWidth(imgWidthAndHeight.width);
-                setMediaHeight(imgWidthAndHeight.height);
-            })();
+            setFieldValue('asset.file', undefined);
+            setFieldValue('asset.formats.display', { file: undefined, customFile: undefined });
+            setFieldValue('asset.formats.exhibition', { file: undefined, customFile: undefined });
+            setFieldValue('asset.formats.preview', { file: undefined, customFile: undefined });
+            setFieldValue('asset.formats.print', { file: undefined, customFile: undefined });
+            setFieldValue('definition', '');
+        } else {
+            setFieldValue(`asset.formats.${formatType}`, { file: undefined, customFile: undefined });
         }
-    }, []);
+    };
 
     const handleChangeCrop = (fileChange: File) => {
         setShowCrop(false);
@@ -181,6 +92,20 @@ export default function MediaCard({
     const handleClose = () => {
         setShowCrop(false);
     };
+
+    const handleCloseModalError = () => {
+        setModalErrorOpen(false);
+    };
+
+    useEffect(() => {
+        if (formatType === 'original') {
+            (async () => {
+                const imgWidthAndHeight = await handleGetFileWidthAndHeight(formatValue.file!);
+                setMediaWidth(imgWidthAndHeight.width);
+                setMediaHeight(imgWidthAndHeight.height);
+            })();
+        }
+    }, []);
 
     return (
         <Box marginLeft={1} width={150}>
@@ -307,6 +232,13 @@ export default function MediaCard({
                     />
                 </DialogContent>
             </Dialog>
+
+            <ModalError
+                format={formatType}
+                open={modalErrorOpen}
+                definition={definition}
+                setClose={handleCloseModalError}
+            />
         </Box>
     );
 }

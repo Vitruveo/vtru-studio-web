@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Img from 'next/image';
 import { IconTrash } from '@tabler/icons-react';
 import { Box, SvgIcon, Typography, IconButton, Stack } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { AssetMediaFormErros, AssetMediaFormValues } from './types';
 import { useDropzone } from 'react-dropzone';
-import { handleGetFileWidthAndHeight } from './helpers';
+import { handleGetFileWidthAndHeight, mediaConfigs } from './helpers';
+import ModalError from './modalError';
 
 interface SelectMediaProps {
     urlAssetFile: string;
@@ -20,6 +21,8 @@ interface SelectMediaProps {
 }
 
 export default function SelectMedia({ definition, file, urlAssetFile, errors, setFieldValue }: SelectMediaProps) {
+    const [modalErrorOpen, setModalErrorOpen] = useState(false);
+
     const handleDeleteFile = () => {
         setFieldValue('asset.file', undefined);
         setFieldValue('asset.formats.display', { file: undefined, customFile: undefined });
@@ -38,6 +41,8 @@ export default function SelectMedia({ definition, file, urlAssetFile, errors, se
         }
 
         const imgWidthAndHeight = await handleGetFileWidthAndHeight(acceptedFiles[0]);
+
+        mediaConfigs;
 
         if (imgWidthAndHeight.width > imgWidthAndHeight.height) {
             setFieldValue('definition', 'landscape');
@@ -67,6 +72,10 @@ export default function SelectMedia({ definition, file, urlAssetFile, errors, se
         } else {
             setFieldValue('definition', 'square');
         }
+    };
+
+    const handleCloseModalError = () => {
+        setModalErrorOpen(false);
     };
 
     return (
@@ -149,6 +158,12 @@ export default function SelectMedia({ definition, file, urlAssetFile, errors, se
             <Typography my={1} color="error">
                 {errors?.asset?.file}
             </Typography>
+            <ModalError
+                format="original"
+                open={modalErrorOpen}
+                definition={definition}
+                setClose={handleCloseModalError}
+            />
         </Box>
     );
 }

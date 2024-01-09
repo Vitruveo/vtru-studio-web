@@ -5,7 +5,6 @@ import { Box, Typography, Tab, Stack, Button } from '@mui/material';
 
 import { AssetMediaFormErros, AssetMediaFormValues, FormatMedia } from './types';
 import { TabContext, TabList } from '@mui/lab';
-import { mediaDefinitions } from './mediaDefinitions';
 import { FormatNames } from '../types';
 import { Pintura } from '@/app/home/components/Pintura';
 import CustomFormLabel from '../../components/forms/theme-elements/CustomFormLabel';
