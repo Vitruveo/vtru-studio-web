@@ -27,7 +27,6 @@ const PreviewImage = memo(function imagePreview({ file }: PreviewImageProps) {
 });
 
 export default function Crop({ mediaConfig, file, onChange }: CropProps) {
-    console.log({ mediaConfig });
     return (
         <>
             <Box>
