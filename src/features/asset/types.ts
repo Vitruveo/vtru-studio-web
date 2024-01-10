@@ -3,17 +3,19 @@ import { License } from '@/app/home/consignArtwork/licenses/types';
 import { APIResponse } from '../common/types';
 
 export type AssetStatus = 'draft' | 'published' | 'archived';
+
+export type FileType = File | string;
 export interface Asset {
     _id: string;
-    asset: {
-        formats: {
-            original: { file?: File; customFile?: File; transactionId?: string };
-            display: { file?: File; customFile?: File; transactionId?: string };
-            exhibition: { file?: File; customFile?: File; transactionId?: string };
-            preview: { file?: File; customFile?: File; transactionId?: string };
-            print: { file?: File; customFile?: File; transactionId?: string };
-        };
+
+    formats: {
+        original: { file?: FileType; customFile?: FileType; transactionId?: string };
+        display: { file?: FileType; customFile?: FileType; transactionId?: string };
+        exhibition: { file?: FileType; customFile?: FileType; transactionId?: string };
+        preview: { file?: FileType; customFile?: FileType; transactionId?: string };
+        print: { file?: FileType; customFile?: FileType; transactionId?: string };
     };
+
     contract: boolean;
     assetMetadata: AssetMetadata;
     // creatorMetadata: {

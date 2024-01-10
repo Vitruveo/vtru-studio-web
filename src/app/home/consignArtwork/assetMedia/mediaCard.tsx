@@ -1,12 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import Img from 'next/image';
-import HelpIcon from '@mui/icons-material/Help';
 import { IconTrash } from '@tabler/icons-react';
 import { Box, SvgIcon, Typography, IconButton, Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { AssetMediaFormErros, AssetMediaFormValues, FormatMedia } from './types';
-import { format } from 'path';
 import Crop from './crop';
 import { getFileSize, handleGetFileWidthAndHeight, mediaConfigs } from './helpers';
 import ModalError from './modalError';
@@ -15,7 +13,7 @@ interface MediaCardProps {
     formatType: string;
     formatValue: FormatMedia;
     errors: AssetMediaFormErros;
-    formats: AssetMediaFormValues['asset']['formats'];
+    formats: AssetMediaFormValues['formats'];
     urlAssetFile: string;
     definition: AssetMediaFormValues['definition'];
     handleUploadFile: ({ formatUpload, file }: { formatUpload: string; file: File }) => Promise<void>;
@@ -37,8 +35,6 @@ export default function MediaCard({
     formatType,
     formatValue,
     definition,
-    errors,
-    formats,
     setFieldValue,
     handleUploadFile,
 }: MediaCardProps) {
@@ -59,7 +55,7 @@ export default function MediaCard({
 
             if (imgWidthAndHeight.width === mediaConfig.width && imgWidthAndHeight.height === mediaConfig.height) {
                 handleUploadFile({ formatUpload: formatType, file: acceptedFiles[0] });
-                setFieldValue(`asset.formats.${formatType}`, { file: acceptedFiles[0] });
+                setFieldValue(`formats.${formatType}`, { file: acceptedFiles[0] });
             } else {
                 setMediaCrop(acceptedFiles[0]);
                 setShowCrop(true);
@@ -71,26 +67,28 @@ export default function MediaCard({
     const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
     const urlAssetFile = useMemo(() => {
-        return formatValue.file ? URL.createObjectURL(formatValue.file) : '';
+        return formatValue.file && typeof formatValue.file !== 'string'
+            ? URL.createObjectURL(formatValue.file)
+            : formatValue.file;
     }, [formatValue.file]);
 
     const handleDeleteFile = () => {
         if (formatType === 'original') {
-            setFieldValue('asset.formats.original', { file: undefined, customFile: undefined });
-            setFieldValue('asset.formats.display', { file: undefined, customFile: undefined });
-            setFieldValue('asset.formats.exhibition', { file: undefined, customFile: undefined });
-            setFieldValue('asset.formats.preview', { file: undefined, customFile: undefined });
-            setFieldValue('asset.formats.print', { file: undefined, customFile: undefined });
+            setFieldValue('formats.original', { file: undefined, customFile: undefined });
+            setFieldValue('formats.display', { file: undefined, customFile: undefined });
+            setFieldValue('formats.exhibition', { file: undefined, customFile: undefined });
+            setFieldValue('formats.preview', { file: undefined, customFile: undefined });
+            setFieldValue('formats.print', { file: undefined, customFile: undefined });
             setFieldValue('definition', '');
         } else {
-            setFieldValue(`asset.formats.${formatType}`, { file: undefined, customFile: undefined });
+            setFieldValue(`formats.${formatType}`, { file: undefined, customFile: undefined });
         }
     };
 
     const handleChangeCrop = (fileChange: File) => {
         setShowCrop(false);
         handleUploadFile({ formatUpload: formatType, file: fileChange });
-        setFieldValue(`asset.formats.${formatType}.file`, fileChange);
+        setFieldValue(`formats.${formatType}.file`, fileChange);
     };
 
     const handleClose = () => {

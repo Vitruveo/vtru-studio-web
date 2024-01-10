@@ -9,9 +9,9 @@ import { handleGetFileWidthAndHeight, mediaConfigs } from './helpers';
 import ModalError from './modalError';
 
 interface SelectMediaProps {
-    urlAssetFile: string;
+    urlAssetFile?: string;
     errors: AssetMediaFormErros;
-    file?: File;
+    file?: File | string;
     definition: AssetMediaFormValues['definition'];
     handleUploadFile: ({ formatUpload, file }: { formatUpload: string; file: File }) => Promise<void>;
     setFieldValue: (
@@ -32,19 +32,19 @@ export default function SelectMedia({
     const [modalErrorOpen, setModalErrorOpen] = useState(false);
 
     const handleDeleteFile = () => {
-        setFieldValue('asset.formats.original', { file: undefined, customFile: undefined });
-        setFieldValue('asset.formats.display', { file: undefined, customFile: undefined });
-        setFieldValue('asset.formats.exhibition', { file: undefined, customFile: undefined });
-        setFieldValue('asset.formats.preview', { file: undefined, customFile: undefined });
+        setFieldValue('formats.original', { file: undefined, customFile: undefined });
+        setFieldValue('formats.display', { file: undefined, customFile: undefined });
+        setFieldValue('formats.exhibition', { file: undefined, customFile: undefined });
+        setFieldValue('formats.preview', { file: undefined, customFile: undefined });
         setFieldValue('definition', '');
     };
 
     const onDrop = async (acceptedFiles: File[]) => {
         if (file) {
-            setFieldValue('asset.formats.original', { file: undefined, customFile: undefined });
-            setFieldValue('asset.formats.display', { file: undefined, customFile: undefined });
-            setFieldValue('asset.formats.exhibition', { file: undefined, customFile: undefined });
-            setFieldValue('asset.formats.preview', { file: undefined, customFile: undefined });
+            setFieldValue('formats.original', { file: undefined, customFile: undefined });
+            setFieldValue('formats.display', { file: undefined, customFile: undefined });
+            setFieldValue('formats.exhibition', { file: undefined, customFile: undefined });
+            setFieldValue('formats.preview', { file: undefined, customFile: undefined });
             setFieldValue('definition', '');
         }
 
@@ -59,7 +59,7 @@ export default function SelectMedia({
         }
 
         handleUploadFile({ formatUpload: 'original', file: acceptedFiles[0] });
-        setFieldValue('asset.formats.original.file', acceptedFiles[0]);
+        setFieldValue('formats.original.file', acceptedFiles[0]);
     };
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -131,7 +131,6 @@ export default function SelectMedia({
                                         >
                                             <IconTrash color="red" size="16" stroke={1.5} />
                                         </IconButton>
-                                        <Typography>{file.name}</Typography>
                                     </Box>
                                 </Box>
                             </>

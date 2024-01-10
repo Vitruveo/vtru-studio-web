@@ -7,28 +7,28 @@ export interface FormatMediaSave {
     };
 }
 export interface FormatValue {
-    file?: File;
+    file?: File | string;
     customFile?: File;
     transactionId?: string;
 }
 
 export interface FormatMedia {
-    file?: File;
-    customFile?: File;
+    file?: File | string;
+    customFile?: File | string;
     transactionId?: string;
+}
+
+export interface FormatsMedia {
+    original: FormatMedia;
+    display: FormatMedia;
+    exhibition: FormatMedia;
+    preview: FormatMedia;
+    print: FormatMedia;
 }
 
 export interface AssetMediaFormValues {
     definition: string;
-    asset: {
-        formats: {
-            original: FormatMedia;
-            display: FormatMedia;
-            exhibition: FormatMedia;
-            preview: FormatMedia;
-            print: FormatMedia;
-        };
-    };
+    formats: FormatsMedia;
 }
 
 export type AssetMediaFormErros = FormikErrors<AssetMediaFormValues>;

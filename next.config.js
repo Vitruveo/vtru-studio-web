@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    images: {
+        domains: ['vitruveo-studio-dev-general.s3.amazonaws.com', 'vitruveo-studio-qa-assets.s3.amazonaws.com'],
+    },
     reactStrictMode: false,
     async redirects() {
         return [

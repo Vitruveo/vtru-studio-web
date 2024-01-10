@@ -91,70 +91,97 @@ export const mediaConfigs = {
     },
 };
 
-export function handleGetFileWidthAndHeight(file: File): Promise<{ width: number; height: number }> {
+export function handleGetFileWidthAndHeight(fileOrUrl: File | string): Promise<{ width: number; height: number }> {
     return new Promise((resolve, reject) => {
-        if (!file) {
-            return;
+        const img = new Image();
+
+        img.onload = function () {
+            const width = img.width;
+            const height = img.height;
+
+            resolve({ width, height });
+        };
+
+        img.onerror = function (error) {
+            reject(error);
+        };
+
+        try {
+            if (fileOrUrl instanceof File) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    if (!e.target) {
+                        return;
+                    }
+                    img.src = e.target.result as string;
+                };
+
+                reader.readAsDataURL(fileOrUrl);
+            } else if (typeof fileOrUrl === 'string') {
+                img.src = fileOrUrl;
+            } else {
+                throw new Error('Invalid input. Expecting a File or a URL string.');
+            }
+        } catch (error) {
+            reject(error);
         }
-
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            if (!e.target) {
-                return;
-            }
-
-            const img = new Image();
-            img.src = e.target.result as string;
-
-            img.onload = function () {
-                const width = img.width;
-                const height = img.height;
-
-                resolve({ width, height });
-            };
-        };
-
-        reader.readAsDataURL(file);
     });
 }
 
-export function getFileSize(file: File) {
-    const bytes = file?.size || 0;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+// function formatSize(bytes: number): string {
 
-    if (bytes === 0) return '0 Byte';
+// }
 
-    const i = parseInt(String(Math.floor(Math.log(bytes) / Math.log(1024))));
+export function getFileSize(fileOrUrl: File | string): string {
+    const isFile = fileOrUrl instanceof File;
 
-    return Math.round(bytes / Math.pow(1024, i)) + ' ' + sizes[i];
+    if (isFile) {
+        const bytes = (fileOrUrl as File).size || 0;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        if (bytes === 0) return '0 Byte';
+        const i = parseInt(String(Math.floor(Math.log(bytes) / Math.log(1024))));
+        return Math.round(bytes / Math.pow(1024, i)) + ' ' + sizes[i];
+    }
+
+    return '';
 }
 
-export function calculatePPIOfFile(file: File): Promise<number | null> {
+export function calculatePPI(fileOrUrl: File | string): Promise<number | null> {
     return new Promise((resolve) => {
-        const reader = new FileReader();
+        const image = new Image();
 
-        reader.onload = function (e) {
-            const image = new Image();
-            if (!e.target) {
-                return;
-            }
-            image.src = e.target.result as string;
+        image.onload = function () {
+            const widthInPixels = image.width;
+            const widthInInches = widthInPixels / image.naturalWidth;
 
-            image.onload = function () {
-                const widthInPixels = image.width;
-                const widthInInches = widthInPixels / image.naturalWidth;
-
-                const ppi = widthInPixels / widthInInches;
-                resolve(ppi);
-            };
+            const ppi = widthInPixels / widthInInches;
+            resolve(ppi);
         };
 
-        reader.readAsDataURL(file);
+        image.onerror = function (error) {
+            resolve(null);
+        };
+
+        if (fileOrUrl instanceof File) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                if (!e.target) {
+                    return;
+                }
+                image.src = e.target.result as string;
+            };
+
+            reader.readAsDataURL(fileOrUrl);
+        } else if (typeof fileOrUrl === 'string') {
+            image.src = fileOrUrl;
+        } else {
+            resolve(null);
+        }
     });
 }
 
-export async function getMediaDefinition({ file }: { file: File }): Promise<string> {
-    const imgWidthAndHeight = await handleGetFileWidthAndHeight(file);
+export async function getMediaDefinition({ fileOrUrl }: { fileOrUrl: File | string }): Promise<string> {
+    const imgWidthAndHeight = await handleGetFileWidthAndHeight(fileOrUrl);
 
     if (imgWidthAndHeight.width > imgWidthAndHeight.height) {
         return 'landscape';

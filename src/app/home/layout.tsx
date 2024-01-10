@@ -8,8 +8,9 @@ import Sidebar from './layout/vertical/sidebar/Sidebar';
 import Customizer from './layout/shared/customizer/Customizer';
 import Navigation from './layout/horizontal/navbar/Navigation';
 import HorizontalHeader from './layout/horizontal/header/Header';
-import { useSelector } from '@/store/hooks';
+import { useDispatch, useSelector } from '@/store/hooks';
 import { useRouter } from 'next/navigation';
+import { userActionsCreators } from '@/features/user/slice';
 
 const MainWrapper = styled('div')(() => ({
     display: 'flex',
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     const [isSidebarOpen, setSidebarOpen] = useState(true);
     const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
+    const dispatch = useDispatch();
     const router = useRouter();
     const customizer = useSelector((state) => state.customizer);
     const token = useSelector((state) => state.user.token);
@@ -54,6 +56,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     useEffect(() => {
         if (!isValidToken(token)) {
             router.push('/login');
+            setTimeout(() => {
+                dispatch(userActionsCreators.logout());
+            }, 1000);
         }
     }, [token, router]);
 

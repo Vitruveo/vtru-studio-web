@@ -6,35 +6,35 @@ import { AssetSliceState } from './types';
 
 const initialState: AssetSliceState = {
     _id: '',
-    asset: {
-        formats: {
-            original: {
-                file: undefined,
-                customFile: undefined,
-                transactionId: undefined,
-            },
-            display: {
-                file: undefined,
-                customFile: undefined,
-                transactionId: undefined,
-            },
-            exhibition: {
-                file: undefined,
-                customFile: undefined,
-                transactionId: undefined,
-            },
-            preview: {
-                file: undefined,
-                customFile: undefined,
-                transactionId: undefined,
-            },
-            print: {
-                file: undefined,
-                customFile: undefined,
-                transactionId: undefined,
-            },
+
+    formats: {
+        original: {
+            file: undefined,
+            customFile: undefined,
+            transactionId: undefined,
+        },
+        display: {
+            file: undefined,
+            customFile: undefined,
+            transactionId: undefined,
+        },
+        exhibition: {
+            file: undefined,
+            customFile: undefined,
+            transactionId: undefined,
+        },
+        preview: {
+            file: undefined,
+            customFile: undefined,
+            transactionId: undefined,
+        },
+        print: {
+            file: undefined,
+            customFile: undefined,
+            transactionId: undefined,
         },
     },
+
     assetMetadata: {
         assetMetadataDomains: [],
         assetMetadataDefinitions: [],
@@ -58,6 +58,15 @@ export const assetSlice = createSlice({
     name: 'asset',
     initialState,
     reducers: {
+        changeFormats: (state, action: PayloadAction<Partial<AssetSliceState['formats']>>) => {
+            return {
+                ...state,
+                formats: {
+                    ...state.formats,
+                    ...action.payload,
+                },
+            };
+        },
         change: (state, action: PayloadAction<Partial<AssetSliceState>>) => {
             return {
                 ...state,

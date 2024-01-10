@@ -95,7 +95,9 @@ export async function assetStorage(data: AssetStorageReq): Promise<any> {
     formData.append('file', data.file);
 
     const res = await axios.put(data.url, formData, {
-        headers: formData.getHeaders(),
+        headers: {
+            'Content-Type': data.file.type,
+        },
         onUploadProgress: (progressEvent) => {
             console.log(Math.round((progressEvent.loaded / progressEvent.total!) * 100));
         },
