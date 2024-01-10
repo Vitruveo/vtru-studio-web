@@ -6,52 +6,67 @@ export const assetMetadataDomains = [
 ];
 
 export const assetMetadataDefinitions: MetadataDefinitionTypes[] = [
+    // {
+    //     order: 2,
+    //     title: 'Creator ID',
+    //     name: 'creatorId',
+    //     value: '',
+    //     auto: {
+    //         nameTargetFieldValue: 'emails',
+    //         selectOptions: {
+    //             labelOptionField: ['email'],
+    //             valueOptionField: ['email'],
+    //         },
+    //     },
+    //     type: 'select',
+    //     options: [],
+    //     required: false,
+    //     validation: `
+    //     return function validate(value, language) {
+    //     if(!value || value.length === 0) return { message: 'field required', isValid: false };
+    //     return { message: '', isValid: true };
+    //   }
+    // `,
+    // },
+    // {
+    //     order: 2,
+    //     title: 'Wallet ID',
+    //     name: 'walletId',
+    //     value: '',
+    //     auto: {
+    //         nameTargetFieldValue: 'wallets',
+    //         selectOptions: {
+    //             labelOptionField: ['address'],
+    //             valueOptionField: ['address'],
+    //         },
+    //     },
+    //     type: 'select',
+    //     options: [],
+    //     required: false,
+    //     validation: `
+    //     return function validate(value, language) {
+    //     if(!value || value.length === 0) return { message: 'field required', isValid: false };
+    //     return { message: '', isValid: true };
+    //   }
+    // `,
+    // },
     {
-        order: 2,
-        title: 'Creator ID',
-        name: 'creatorId',
+        domain: 'artwork',
+        order: 0,
+        name: 'artistName',
         value: '',
-        auto: {
-            nameTargetFieldValue: 'emails',
-            selectOptions: {
-                labelOptionField: ['email'],
-                valueOptionField: ['email'],
-            },
-        },
-        type: 'select',
-        options: [],
-        required: false,
+        title: 'Artist Name',
+        type: 'string',
+        required: true,
         validation: `
-        return function validate(value, language) {
-        if(!value || value.length === 0) return { message: 'field required', isValid: false };
-        return { message: '', isValid: true };
-      }
-    `,
+    return function validate(value, language) {
+    if(!value || value.length === 0) return { message: 'field required', isValid: false };
+    return { message: '', isValid: true };
+  }
+`,
     },
     {
-        order: 2,
-        title: 'Wallet ID',
-        name: 'walletId',
-        value: '',
-        auto: {
-            nameTargetFieldValue: 'wallets',
-            selectOptions: {
-                labelOptionField: ['address'],
-                valueOptionField: ['address'],
-            },
-        },
-        type: 'select',
-        options: [],
-        required: false,
-        validation: `
-        return function validate(value, language) {
-        if(!value || value.length === 0) return { message: 'field required', isValid: false };
-        return { message: '', isValid: true };
-      }
-    `,
-    },
-    {
-        domain: 'music',
+        domain: 'artwork',
         order: 0,
         name: 'title',
         value: '',
@@ -66,42 +81,7 @@ export const assetMetadataDefinitions: MetadataDefinitionTypes[] = [
   `,
     },
     {
-        order: 2,
-        title: 'Category',
-        name: 'category',
-        value: '',
-        type: 'select',
-        options: [
-            { value: 'photography', label: 'Photography' },
-            { value: 'painting', label: 'Painting' },
-            { value: '3D', label: '3D' },
-            { value: 'animation', label: 'Animation' },
-        ],
-        required: false,
-        validation: `
-        return function validate(value, language) {
-        if(!value || value.length === 0) return { message: 'field required', isValid: false };
-        return { message: '', isValid: true };
-      }
-    `,
-    },
-    {
-        domain: 'music',
-        order: 0,
-        name: 'date',
-        value: '',
-        title: 'Date',
-        type: 'date',
-        required: true,
-        validation: `
-        return function validate(value, language) {
-        if(!value || value.length === 0) return { message: 'field required', isValid: false };
-        return { message: '', isValid: true };
-      }
-    `,
-    },
-    {
-        domain: 'music',
+        domain: 'artwork',
         order: 0,
         name: 'description',
         value: '',
@@ -109,13 +89,79 @@ export const assetMetadataDefinitions: MetadataDefinitionTypes[] = [
         type: 'string',
         required: true,
         validation: `
-        return function validate(value, language) {
-        if(!value || value.length === 0) return { message: 'field required', isValid: false };
-        return { message: '', isValid: true };
-      }
-    `,
+      return function validate(value, language) {
+      if(!value || value.length === 0) return { message: 'field required', isValid: false };
+      return { message: '', isValid: true };
+    }
+  `,
     },
     {
+        domain: 'artwork',
+        order: 0,
+        name: 'date',
+        value: '',
+        title: 'Date',
+        type: 'date',
+        required: true,
+        validation: `
+      return function validate(value, language) {
+      if(!value || value.length === 0) return { message: 'field required', isValid: false };
+      return { message: '', isValid: true };
+    }
+  `,
+    },
+    {
+        domain: 'artwork',
+        order: 0,
+        name: 'place',
+        value: '',
+        title: 'Place',
+        type: 'string',
+        required: false,
+        validation: `
+      return function validate(value, language) {
+      return { message: '', isValid: true };
+    }
+  `,
+    },
+    {
+        domain: 'artwork',
+        order: 2,
+        title: 'Object Type',
+        value: '',
+        name: 'objectType',
+        type: 'select',
+        options: [
+            { value: 'video', label: 'video' },
+            { value: '2D', label: '2D' },
+            { value: '3D', label: '3D' },
+            { value: 'phygital', label: 'Phygital' },
+            { value: 'other', label: 'Other' },
+        ],
+        required: false,
+        validation: `
+      return function validate(value, language) {
+      if(!value || value.length === 0) return { message: 'field required', isValid: false };
+      return { message: '', isValid: true };
+    }
+  `,
+    },
+    {
+        domain: 'artwork',
+        order: 0,
+        name: 'dimensions',
+        value: '',
+        title: 'Dimensions',
+        type: 'string',
+        required: true,
+        validation: `
+    return function validate(value, language) {
+    return { message: '', isValid: true };
+  }
+`,
+    },
+    {
+        domain: 'artwork',
         order: 2,
         title: 'Category',
         name: 'category',
@@ -125,7 +171,12 @@ export const assetMetadataDefinitions: MetadataDefinitionTypes[] = [
             { value: 'photography', label: 'Photography' },
             { value: 'painting', label: 'Painting' },
             { value: '3D', label: '3D' },
-            { value: 'animation', label: 'Animation' },
+            { value: 'video', label: 'video' },
+            { value: 'mixedMedia', label: 'Mixed Media' },
+            { value: 'illustration', label: 'Illustration' },
+            { value: 'collage', label: 'Collage' },
+            { value: 'ai', label: 'AI' },
+            { value: 'other', label: 'Other' },
         ],
         required: false,
         validation: `
@@ -135,20 +186,29 @@ export const assetMetadataDefinitions: MetadataDefinitionTypes[] = [
       }
     `,
     },
+
     {
+        domain: 'artwork',
         order: 2,
         title: 'Medium',
         name: 'medium',
         value: '',
         type: 'select',
         options: [
-            { value: 'oil', label: 'oil' },
-            { value: 'watercolour', label: 'watercolour' },
-            { value: 'digital', label: 'digital' },
-            { value: 'photography', label: 'photography' },
-            { value: 'analog', label: 'analog' },
-            { value: 'bronze', label: 'bronze' },
-            { value: 'clay', label: 'clay' },
+            { value: 'oil', label: 'Oil' },
+            { value: 'watercolour', label: 'Watercolour' },
+            { value: 'acrylic', label: 'Acrylic' },
+            { value: 'ink', label: 'Ink' },
+            { value: 'illustration', label: 'Illustration' },
+            { value: 'collage', label: 'Collage' },
+            { value: 'AI', label: 'AI' },
+            { value: 'mixedMedia', label: 'Mixed media' },
+            { value: 'film', label: 'Film' },
+            { value: 'photography', label: 'Photography' },
+            { value: 'analogPhotography', label: 'Analog photography' },
+            { value: 'digitalPhotography', label: 'Digital photography' },
+            { value: 'compositePhotography', label: 'Composite Photography' },
+            { value: 'other', label: 'Other' },
         ],
         required: false,
         validation: `
@@ -158,20 +218,22 @@ export const assetMetadataDefinitions: MetadataDefinitionTypes[] = [
       }
     `,
     },
+
     {
-        domain: 'music',
-        order: 0,
-        name: 'place',
-        value: '',
-        title: 'Place',
-        type: 'string',
-        required: true,
+        domain: 'artwork',
+        order: 2,
+        title: 'Tags',
+        name: 'tags',
+        value: [],
+        type: 'tags',
+        required: false,
         validation: `
         return function validate(value, language) {
-        return { message: '', isValid: true };
-      }
-    `,
+          return { message: '', isValid: true };
+        }
+  `,
     },
+
     // {
     //     order: 2,
     //     title: 'Copyright',
@@ -187,26 +249,6 @@ export const assetMetadataDefinitions: MetadataDefinitionTypes[] = [
     //   }
     // `,
     // },
-    {
-        order: 2,
-        title: 'Object Type',
-        value: '',
-        name: 'objecttype',
-        type: 'select',
-        options: [
-            { value: 'video', label: 'video' },
-            { value: 'painting', label: 'painting' },
-            { value: 'print', label: 'print' },
-            { value: 'digital', label: 'digital' },
-        ],
-        required: false,
-        validation: `
-        return function validate(value, language) {
-        if(!value || value.length === 0) return { message: 'field required', isValid: false };
-        return { message: '', isValid: true };
-      }
-    `,
-    },
 ];
 
 export const creatorMetadataDefinitions: MetadataDefinitionTypes[] = [

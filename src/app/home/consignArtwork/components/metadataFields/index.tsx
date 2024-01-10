@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
+import { Button, Chip } from '@mui/material';
 import { Box, MenuItem } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -109,6 +110,8 @@ export const MetadataFields = ({
     formkFieldPathChange,
     setFieldValue,
 }: MetadataFieldsProps) => {
+    const [inputTags, setInputTags] = useState({});
+
     const handleIntegerInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.target.value = event.target.value.replace(/[^0-9]/g, '');
     };
@@ -136,140 +139,233 @@ export const MetadataFields = ({
 
     const errorsByPath = (index: number) => handleGetValueByPath(errors, formkFieldPathChange)?.[index];
 
+    const onChangeInputTags = (index: number, value: string) => {
+        setInputTags({ ...inputTags, [index]: value });
+    };
+
+    const handleAddTag = (index: number) => {
+        const tags = values.assetMetadata.assetMetadataDefinitions[index].value as string[];
+        const newTags = [...tags, inputTags[index as keyof typeof inputTags]];
+        setFieldValue(`${formkFieldPathChange}.${index}.value`, newTags);
+        onChangeInputTags(index, '');
+    };
+
+    const handleRemoveTag = (index: number, tagIndex: number) => {
+        const tags = values.assetMetadata.assetMetadataDefinitions[index].value as string[];
+        const newTags = tags.filter((v, i) => i !== tagIndex);
+        setFieldValue(`${formkFieldPathChange}.${index}.value`, newTags);
+    };
+
     return (
-        <Grid spacing={2} container>
+        <Grid padding={1} spacing={2} container>
             {metadataDefinitions?.map((v, i) => (
-                <Grid item lg={6} xs={12} key={v.name}>
-                    {v.type === 'select' && (
-                        <>
+                <Fragment key={i}>
+                    {v.type === 'tags' ? (
+                        <Grid item lg={12} xs={12}>
                             <Typography variant="subtitle1" fontWeight={600} component="label">
                                 {v.title}
                             </Typography>
-                            {v.auto ? (
-                                <AutoSelectField
-                                    formkFieldPathChange={formkFieldPathChange}
-                                    setFieldValue={setFieldValue}
-                                    metadataItem={v}
-                                    metadataIndex={i}
-                                    values={values}
-                                    handleChangeInput={handleChangeInput}
-                                />
-                            ) : (
-                                <CustomSelect
-                                    value={v.value}
-                                    onChange={handleChangeInput(i)}
-                                    size="small"
-                                    fullWidth
-                                    variant="outlined"
-                                >
-                                    {v.options?.map((option) => (
-                                        <MenuItem key={option.value} value={option.value}>
-                                            {option.label}
-                                        </MenuItem>
-                                    ))}
-                                </CustomSelect>
-                            )}
-                            <Typography my={1} color="error">
-                                {errorsByPath(i)?.value}
-                            </Typography>
-                        </>
-                    )}
-                    {v.type === 'string' && (
-                        <>
-                            <Typography variant="subtitle1" fontWeight={600} component="label">
-                                {v.title}
-                            </Typography>
-                            <CustomTextField
-                                value={v.value}
-                                onChange={handleChangeInput(i)}
-                                fullWidth
-                                size="small"
-                                variant="outlined"
-                                error={!!errorsByPath(i)?.value}
-                                helperText={errorsByPath(i)?.value}
-                            />
-                        </>
-                    )}
-                    {v.type === 'integer' && (
-                        <>
-                            <Typography variant="subtitle1" fontWeight={600} component="label">
-                                {v.title}
-                            </Typography>
-                            <CustomTextField
-                                type="text"
-                                fullWidth
-                                value={v.value}
-                                onChange={handleChangeInput(i)}
-                                size="small"
-                                variant="outlined"
-                                onInput={handleIntegerInputChange}
-                                error={!!errorsByPath(i)?.value}
-                                helperText={errorsByPath(i)?.value}
-                            />
-                        </>
-                    )}
-                    {v.type === 'cents' && (
-                        <>
-                            <Typography variant="subtitle1" fontWeight={600} component="label">
-                                {v.title} (¢)
-                            </Typography>
-                            <CustomTextField
-                                type="text"
-                                fullWidth
-                                value={v.value}
-                                onChange={handleChangeInput(i)}
-                                size="small"
-                                variant="outlined"
-                                onInput={handleCentsInputChange}
-                                error={!!errorsByPath(i)?.value}
-                                helperText={errorsByPath(i)?.value}
-                                InputProps={{
-                                    startAdornment: (
-                                        <Typography variant="body1" component="span" style={{ marginRight: 8 }}>
-                                            ¢
-                                        </Typography>
-                                    ),
-                                }}
-                            />
-                        </>
-                    )}
-                    {v.type === 'boolean' && (
-                        <>
-                            <Typography variant="subtitle1" fontWeight={600} component="label">
-                                {v.title}
-                            </Typography>
-                            <Box>
-                                <Switch
-                                    name={`assetMetadata.${i}.${v.name}`}
-                                    checked={v.value as boolean}
-                                    onChange={() => handleChangeSwitchInput(i)(!v.value)}
-                                />
-                                <Typography my={1} color="error">
-                                    {errorsByPath(i)?.value}
-                                </Typography>
-                            </Box>
-                        </>
-                    )}
-                    {v.type === 'date' && (
-                        <>
-                            <Typography variant="subtitle1" fontWeight={600} component="label">
-                                {v.title}
-                            </Typography>
-                            <Box>
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <DateTimePicker
-                                        renderInput={(params) => <CustomTextField size="small" {...params} />}
-                                        value={v.value}
-                                        onChange={handleChangeDateInput(i)}
+                            <Box
+                                marginBottom={1}
+                                display="flex"
+                                flexWrap="wrap"
+                                gap={1}
+                                maxHeight={50} // Set your maximum height for the container
+                                overflow="auto"
+                            >
+                                {(v.value as any[]).map((tag, index) => (
+                                    <Chip
+                                        key={index}
+                                        label={tag}
+                                        onDelete={() => handleRemoveTag(i, index)}
+                                        variant="outlined"
+                                        size="small"
                                     />
-                                </LocalizationProvider>
-                                <Typography my={1} color="error">
-                                    {errorsByPath(i)?.value}
-                                </Typography>
+                                ))}
                             </Box>
-                        </>
+                            <Box display="flex" alignItems="center">
+                                <CustomTextField
+                                    value={inputTags[i as keyof typeof inputTags]}
+                                    style={{ marginRight: 8 }}
+                                    fullWidth
+                                    onChange={(e) => onChangeInputTags(i, e.target.value)}
+                                    size="small"
+                                    placeholder="Add Tag"
+                                    inputProps={{
+                                        'aria-label': 'add tag',
+                                    }}
+                                />
+                                <Button size="small" variant="outlined" onClick={() => handleAddTag(i)}>
+                                    Add
+                                </Button>
+                            </Box>
+                        </Grid>
+                    ) : (
+                        <Grid marginBottom={2} item lg={6} xs={12}>
+                            {v.type === 'select' && (
+                                <div style={{ position: 'relative' }}>
+                                    <Typography variant="subtitle1" fontWeight={600} component="label">
+                                        {v.title}
+                                    </Typography>
+                                    {v.auto ? (
+                                        <AutoSelectField
+                                            formkFieldPathChange={formkFieldPathChange}
+                                            setFieldValue={setFieldValue}
+                                            metadataItem={v}
+                                            metadataIndex={i}
+                                            values={values}
+                                            handleChangeInput={handleChangeInput}
+                                        />
+                                    ) : (
+                                        <CustomSelect
+                                            value={v.value}
+                                            onChange={handleChangeInput(i)}
+                                            size="small"
+                                            fullWidth
+                                            variant="outlined"
+                                        >
+                                            {v.options?.map((option) => (
+                                                <MenuItem key={option.value} value={option.value}>
+                                                    {option.label}
+                                                </MenuItem>
+                                            ))}
+                                        </CustomSelect>
+                                    )}
+                                    {errorsByPath(i)?.value && (
+                                        <Typography
+                                            color="error"
+                                            style={{
+                                                position: 'absolute',
+                                                bottom: -22,
+                                                left: 0,
+                                            }}
+                                        >
+                                            {errorsByPath(i)?.value}
+                                        </Typography>
+                                    )}
+                                </div>
+                            )}
+                            {v.type === 'string' && (
+                                <>
+                                    <Typography variant="subtitle1" fontWeight={600} component="label">
+                                        {v.title}
+                                    </Typography>
+                                    <CustomTextField
+                                        value={v.value}
+                                        onChange={handleChangeInput(i)}
+                                        fullWidth
+                                        size="small"
+                                        FormHelperTextProps={{
+                                            style: {
+                                                position: 'absolute',
+                                                bottom: '-22px',
+                                                left: -10,
+                                                fontSize: '0.75rem',
+                                            },
+                                        }}
+                                        variant="outlined"
+                                        error={!!errorsByPath(i)?.value}
+                                        helperText={errorsByPath(i)?.value}
+                                    />
+                                </>
+                            )}
+                            {v.type === 'integer' && (
+                                <>
+                                    <Typography variant="subtitle1" fontWeight={600} component="label">
+                                        {v.title}
+                                    </Typography>
+                                    <CustomTextField
+                                        type="text"
+                                        fullWidth
+                                        value={v.value}
+                                        onChange={handleChangeInput(i)}
+                                        size="small"
+                                        variant="outlined"
+                                        FormHelperTextProps={{
+                                            style: {
+                                                position: 'absolute',
+                                                bottom: '-22px',
+                                                left: 0,
+                                                fontSize: '0.75rem',
+                                            },
+                                        }}
+                                        onInput={handleIntegerInputChange}
+                                        error={!!errorsByPath(i)?.value}
+                                        helperText={errorsByPath(i)?.value}
+                                    />
+                                </>
+                            )}
+                            {v.type === 'cents' && (
+                                <>
+                                    <Typography variant="subtitle1" fontWeight={600} component="label">
+                                        {v.title} (¢)
+                                    </Typography>
+                                    <CustomTextField
+                                        type="text"
+                                        fullWidth
+                                        value={v.value}
+                                        onChange={handleChangeInput(i)}
+                                        size="small"
+                                        variant="outlined"
+                                        onInput={handleCentsInputChange}
+                                        error={!!errorsByPath(i)?.value}
+                                        helperText={errorsByPath(i)?.value}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <Typography variant="body1" component="span" style={{ marginRight: 8 }}>
+                                                    ¢
+                                                </Typography>
+                                            ),
+                                        }}
+                                    />
+                                </>
+                            )}
+                            {v.type === 'boolean' && (
+                                <>
+                                    <Typography variant="subtitle1" fontWeight={600} component="label">
+                                        {v.title}
+                                    </Typography>
+                                    <Box>
+                                        <Switch
+                                            name={`assetMetadata.${i}.${v.name}`}
+                                            checked={v.value as boolean}
+                                            onChange={() => handleChangeSwitchInput(i)(!v.value)}
+                                        />
+                                        <Typography color="error">{errorsByPath(i)?.value}</Typography>
+                                    </Box>
+                                </>
+                            )}
+                            {v.type === 'date' && (
+                                <div style={{ position: 'relative' }}>
+                                    <Typography variant="subtitle1" fontWeight={600} component="label">
+                                        {v.title}
+                                    </Typography>
+                                    <Box>
+                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                            <DateTimePicker
+                                                renderInput={(params) => <CustomTextField size="small" {...params} />}
+                                                value={v.value}
+                                                onChange={handleChangeDateInput(i)}
+                                            />
+                                        </LocalizationProvider>
+                                        {errorsByPath(i)?.value && (
+                                            <Typography
+                                                color="error"
+                                                style={{
+                                                    position: 'absolute',
+                                                    bottom: -22,
+                                                    left: 0,
+                                                }}
+                                            >
+                                                {errorsByPath(i)?.value}
+                                            </Typography>
+                                        )}
+                                    </Box>
+                                </div>
+                            )}
+                        </Grid>
                     )}
-                </Grid>
+                </Fragment>
             ))}
         </Grid>
     );

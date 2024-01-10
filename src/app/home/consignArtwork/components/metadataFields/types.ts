@@ -17,7 +17,7 @@ export interface MetadataDefinitionTypes {
     value: unknown;
     name: string;
     title: string;
-    type: 'string' | 'date' | 'select' | 'integer' | 'cents' | 'boolean';
+    type: 'string' | 'date' | 'select' | 'integer' | 'cents' | 'boolean' | 'tags';
     required: boolean;
     validation: string;
     options?: Option[];

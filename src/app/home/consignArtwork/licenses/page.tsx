@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { FormikErrors, useFormik } from 'formik';
-import { useSelector } from '@/store/hooks';
+import { useDispatch, useSelector } from '@/store/hooks';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { IconTrash } from '@tabler/icons-react';
@@ -18,6 +18,9 @@ import { LicensesSchemaValidation } from './formschema';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
 import { useRouter } from 'next/navigation';
+import { licenses } from '../mock';
+import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
+import { licenseThunk } from '@/features/asset/thunks';
 
 const licenseMetadataDomains = [
     { value: 'stream', label: 'Stream v1.0' },
@@ -81,14 +84,23 @@ export default function Licenses() {
     const [licenseDomain, setLicenseDomain] = useState('stream');
 
     const router = useRouter();
-    const { licenses } = useSelector((state) => state.asset);
+    const dispatch = useDispatch();
+    const { licenses: licensesState } = useSelector((state) => state.asset);
 
-    const { values, errors, setFieldValue, handleSubmit } = useFormik<LicensesFormValues>({
+    const { values, errors, setFieldValue, handleSubmit, validateForm } = useFormik<LicensesFormValues>({
         initialValues: {
-            licenses,
+            licenses: licensesState?.length ? licensesState : licenses,
         },
-        // validationSchema: LicensesSchemaValidation,
+        validationSchema: LicensesSchemaValidation,
         onSubmit: async (formValues) => {
+            await validateForm();
+            dispatch(licenseThunk({ licenses: values.licenses }));
+            dispatch(
+                consignArtworkActionsCreators.changeStatusStep({
+                    stepId: 'licenses',
+                    status: 'completed',
+                })
+            );
             router.push(`/home/consignArtwork/termsOfUse`);
         },
     });
@@ -119,15 +131,20 @@ export default function Licenses() {
     };
 
     useEffect(() => {
-        validateErrorsLisence({ values, errors, setFieldValue });
-    }, [errors, values.licenses]);
+        dispatch(
+            consignArtworkActionsCreators.changeStatusStep({
+                stepId: 'licenses',
+                status: licensesAdded.length > 0 ? 'completed' : 'inProgress',
+            })
+        );
+    }, [licensesAdded, values]);
 
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
                 submitText="Next"
                 title="Consign Artwork"
-                stepStatus="inProgress"
+                stepStatus={licensesAdded.length > 0 ? 'completed' : 'inProgress'}
                 stepNumber={3}
                 backPathRouter="/home/consignArtwork"
             >

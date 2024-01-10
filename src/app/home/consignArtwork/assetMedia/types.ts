@@ -1,5 +1,11 @@
 import { FormikErrors } from 'formik';
 
+export interface FormatMediaSave {
+    [key: string]: {
+        name: string;
+        path: string;
+    };
+}
 export interface FormatValue {
     file?: File;
     customFile?: File;
@@ -15,8 +21,8 @@ export interface FormatMedia {
 export interface AssetMediaFormValues {
     definition: string;
     asset: {
-        file: File | undefined;
         formats: {
+            original: FormatMedia;
             display: FormatMedia;
             exhibition: FormatMedia;
             preview: FormatMedia;

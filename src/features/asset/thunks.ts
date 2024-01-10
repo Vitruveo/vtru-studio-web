@@ -1,9 +1,14 @@
 import { StepsFormValues, Formats } from '@/app/home/components/wizard/types';
 import { assetStorage, updateAssetStep, getAsset } from './requests';
-import { AssetStorageReq } from './types';
+import { AssetStatus, AssetStorageReq } from './types';
 import { ReduxThunkAction } from '@/store';
 import { assetActionsCreators } from './slice';
 import { licenses } from '@/app/home/consignArtwork/mock';
+import { AssetMediaFormValues, FormatMediaSave } from '@/app/home/consignArtwork/assetMedia/types';
+import { AssetMetadataFormValues } from '@/app/home/consignArtwork/assetMetadata/types';
+import { LicensesFormValues } from '@/app/home/consignArtwork/licenses/types';
+import { TermsOfUseFormValues } from '@/app/home/consignArtwork/termsOfUse/types';
+import { StepStatus } from '../consignArtwork/types';
 
 export function assetStorageThunk(payload: AssetStorageReq): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
@@ -26,7 +31,7 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
                 dispatch(
                     assetActionsCreators.change({
                         assetMetadata: response.data.assetMetadata,
-                        creatorMetadata: response.data.creatorMetadata,
+                        // creatorMetadata: response.data.creatorMetadata,
                         licenses: response.data.licenses,
                         contract: response.data.contract,
                         status: response.data.status,
@@ -41,17 +46,49 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
     };
 }
 
-export function assetUpdateStepThunk({
-    values,
-    stepName,
-}: {
-    stepName: string;
-    values: StepsFormValues & { formats?: Formats };
-}): ReduxThunkAction<Promise<any>> {
+export function assetMediaThunk(
+    payload: AssetMediaFormValues & { formats?: FormatMediaSave }
+): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
         const response = await updateAssetStep({
-            ...values,
-            licenses: values.licenses.map((v) =>
+            formats: payload.formats,
+            stepName: 'assetUpload',
+        });
+
+        dispatch(
+            assetActionsCreators.change({
+                asset: {
+                    formats: payload.asset.formats,
+                },
+            })
+        );
+    };
+}
+
+export function assetMetadataThunk(payload: AssetMetadataFormValues): ReduxThunkAction<Promise<any>> {
+    return async function (dispatch, getState) {
+        const response = await updateAssetStep({
+            ...payload,
+            stepName: 'assetMetadata',
+        });
+
+        dispatch(
+            assetActionsCreators.change({
+                assetMetadata: payload.assetMetadata,
+            })
+        );
+    };
+}
+
+// export function creatorMetadataThunk(payload: StepsFormValues): ReduxThunkAction<Promise<any>> {
+//     return async function (dispatch, getState) {};
+// }
+
+export function licenseThunk(payload: LicensesFormValues): ReduxThunkAction<Promise<any>> {
+    return async function (dispatch, getState) {
+        const response = await updateAssetStep({
+            ...payload,
+            licenses: payload.licenses.map((v) =>
                 !v.added
                     ? {
                           ...v,
@@ -60,33 +97,43 @@ export function assetUpdateStepThunk({
                       }
                     : v
             ),
-            stepName,
+            stepName: 'license',
         });
 
         dispatch(
             assetActionsCreators.change({
-                assetMetadata: values.assetMetadata,
-                creatorMetadata: values.creatorMetadata,
-                licenses: values.licenses,
-                contract: values.contract,
-                status: values.status,
+                licenses: payload.licenses,
             })
         );
     };
 }
 
-export function assetMetadataThunk(payload: StepsFormValues): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch, getState) {};
+export function contractThunk(payload: TermsOfUseFormValues): ReduxThunkAction<Promise<any>> {
+    return async function (dispatch, getState) {
+        const response = await updateAssetStep({
+            ...payload,
+            stepName: 'contract',
+        });
+
+        dispatch(
+            assetActionsCreators.change({
+                contract: payload.contract,
+            })
+        );
+    };
 }
 
-export function creatorMetadataThunk(payload: StepsFormValues): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch, getState) {};
-}
+export function publishThunk(payload: { status: AssetStatus }): ReduxThunkAction<Promise<any>> {
+    return async function (dispatch, getState) {
+        const response = await updateAssetStep({
+            ...payload,
+            stepName: 'publish',
+        });
 
-export function licenseThunk(payload: StepsFormValues): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch, getState) {};
-}
-
-export function contractThunk(payload: StepsFormValues): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch, getState) {};
+        dispatch(
+            assetActionsCreators.change({
+                status: payload.status,
+            })
+        );
+    };
 }

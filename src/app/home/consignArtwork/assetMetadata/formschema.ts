@@ -5,6 +5,7 @@ export const AssetMetadataSchemaValidation = yup.object({
         assetMetadataDefinitions: yup.array().of(
             yup.object().shape({
                 value: yup.mixed().test('customValidation', '', (value, context) => {
+                    if (context.parent.name === 'tags') return true;
                     const validateCreateFunction = new Function(context.parent.validation.trim());
 
                     const result = validateCreateFunction()(value, 'en');

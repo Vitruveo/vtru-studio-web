@@ -152,3 +152,15 @@ export function calculatePPIOfFile(file: File): Promise<number | null> {
         reader.readAsDataURL(file);
     });
 }
+
+export async function getMediaDefinition({ file }: { file: File }): Promise<string> {
+    const imgWidthAndHeight = await handleGetFileWidthAndHeight(file);
+
+    if (imgWidthAndHeight.width > imgWidthAndHeight.height) {
+        return 'landscape';
+    } else if (imgWidthAndHeight.height > imgWidthAndHeight.width) {
+        return 'portrait';
+    } else {
+        return 'square';
+    }
+}

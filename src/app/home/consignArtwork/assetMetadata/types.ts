@@ -6,11 +6,13 @@ export interface Option {
     label: string;
 }
 
+export interface AssetMetadata {
+    assetMetadataDefinitions: MetadataDefinitionTypes[];
+    assetMetadataDomains: Option[];
+}
+
 export interface AssetMetadataFormValues {
-    assetMetadata: {
-        assetMetadataDefinitions: MetadataDefinitionTypes[];
-        assetMetadataDomains: Option[];
-    };
+    assetMetadata: AssetMetadata;
 }
 
 export type AssetMetadataFormErros = FormikErrors<AssetMetadataFormValues>;

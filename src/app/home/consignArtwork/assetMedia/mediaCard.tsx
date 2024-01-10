@@ -18,6 +18,7 @@ interface MediaCardProps {
     formats: AssetMediaFormValues['asset']['formats'];
     urlAssetFile: string;
     definition: AssetMediaFormValues['definition'];
+    handleUploadFile: ({ formatUpload, file }: { formatUpload: string; file: File }) => Promise<void>;
     setFieldValue: (
         field: string,
         value: any,
@@ -39,6 +40,7 @@ export default function MediaCard({
     errors,
     formats,
     setFieldValue,
+    handleUploadFile,
 }: MediaCardProps) {
     const [modalErrorOpen, setModalErrorOpen] = useState(false);
     const [mediaCrop, setMediaCrop] = useState<File | undefined>(undefined);
@@ -56,6 +58,7 @@ export default function MediaCard({
             const imgWidthAndHeight = await handleGetFileWidthAndHeight(acceptedFiles[0]);
 
             if (imgWidthAndHeight.width === mediaConfig.width && imgWidthAndHeight.height === mediaConfig.height) {
+                handleUploadFile({ formatUpload: formatType, file: acceptedFiles[0] });
                 setFieldValue(`asset.formats.${formatType}`, { file: acceptedFiles[0] });
             } else {
                 setMediaCrop(acceptedFiles[0]);
@@ -73,7 +76,7 @@ export default function MediaCard({
 
     const handleDeleteFile = () => {
         if (formatType === 'original') {
-            setFieldValue('asset.file', undefined);
+            setFieldValue('asset.formats.original', { file: undefined, customFile: undefined });
             setFieldValue('asset.formats.display', { file: undefined, customFile: undefined });
             setFieldValue('asset.formats.exhibition', { file: undefined, customFile: undefined });
             setFieldValue('asset.formats.preview', { file: undefined, customFile: undefined });
@@ -86,6 +89,7 @@ export default function MediaCard({
 
     const handleChangeCrop = (fileChange: File) => {
         setShowCrop(false);
+        handleUploadFile({ formatUpload: formatType, file: fileChange });
         setFieldValue(`asset.formats.${formatType}.file`, fileChange);
     };
 

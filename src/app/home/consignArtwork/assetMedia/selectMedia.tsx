@@ -11,8 +11,9 @@ import ModalError from './modalError';
 interface SelectMediaProps {
     urlAssetFile: string;
     errors: AssetMediaFormErros;
-    file: AssetMediaFormValues['asset']['file'];
+    file?: File;
     definition: AssetMediaFormValues['definition'];
+    handleUploadFile: ({ formatUpload, file }: { formatUpload: string; file: File }) => Promise<void>;
     setFieldValue: (
         field: string,
         value: any,
@@ -20,11 +21,18 @@ interface SelectMediaProps {
     ) => Promise<void> | Promise<AssetMediaFormErros>;
 }
 
-export default function SelectMedia({ definition, file, urlAssetFile, errors, setFieldValue }: SelectMediaProps) {
+export default function SelectMedia({
+    definition,
+    file,
+    urlAssetFile,
+    errors,
+    setFieldValue,
+    handleUploadFile,
+}: SelectMediaProps) {
     const [modalErrorOpen, setModalErrorOpen] = useState(false);
 
     const handleDeleteFile = () => {
-        setFieldValue('asset.file', undefined);
+        setFieldValue('asset.formats.original', { file: undefined, customFile: undefined });
         setFieldValue('asset.formats.display', { file: undefined, customFile: undefined });
         setFieldValue('asset.formats.exhibition', { file: undefined, customFile: undefined });
         setFieldValue('asset.formats.preview', { file: undefined, customFile: undefined });
@@ -33,7 +41,7 @@ export default function SelectMedia({ definition, file, urlAssetFile, errors, se
 
     const onDrop = async (acceptedFiles: File[]) => {
         if (file) {
-            setFieldValue('asset.file', undefined);
+            setFieldValue('asset.formats.original', { file: undefined, customFile: undefined });
             setFieldValue('asset.formats.display', { file: undefined, customFile: undefined });
             setFieldValue('asset.formats.exhibition', { file: undefined, customFile: undefined });
             setFieldValue('asset.formats.preview', { file: undefined, customFile: undefined });
@@ -41,8 +49,6 @@ export default function SelectMedia({ definition, file, urlAssetFile, errors, se
         }
 
         const imgWidthAndHeight = await handleGetFileWidthAndHeight(acceptedFiles[0]);
-
-        mediaConfigs;
 
         if (imgWidthAndHeight.width > imgWidthAndHeight.height) {
             setFieldValue('definition', 'landscape');
@@ -52,7 +58,8 @@ export default function SelectMedia({ definition, file, urlAssetFile, errors, se
             setFieldValue('definition', 'square');
         }
 
-        setFieldValue('asset.file', acceptedFiles[0]);
+        handleUploadFile({ formatUpload: 'original', file: acceptedFiles[0] });
+        setFieldValue('asset.formats.original.file', acceptedFiles[0]);
     };
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -155,9 +162,9 @@ export default function SelectMedia({ definition, file, urlAssetFile, errors, se
                     </Box>
                 )}
             </Box>
-            <Typography my={1} color="error">
+            {/* <Typography my={1} color="error">
                 {errors?.asset?.file}
-            </Typography>
+            </Typography> */}
             <ModalError
                 format="original"
                 open={modalErrorOpen}

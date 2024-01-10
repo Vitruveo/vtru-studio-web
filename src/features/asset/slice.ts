@@ -7,8 +7,12 @@ import { AssetSliceState } from './types';
 const initialState: AssetSliceState = {
     _id: '',
     asset: {
-        file: undefined,
         formats: {
+            original: {
+                file: undefined,
+                customFile: undefined,
+                transactionId: undefined,
+            },
             display: {
                 file: undefined,
                 customFile: undefined,
@@ -35,9 +39,9 @@ const initialState: AssetSliceState = {
         assetMetadataDomains: [],
         assetMetadataDefinitions: [],
     },
-    creatorMetadata: {
-        creatorMetadataDefinitions: [],
-    },
+    // creatorMetadata: {
+    //     creatorMetadataDefinitions: [],
+    // },
     licenses: [],
     contract: false,
     framework: {

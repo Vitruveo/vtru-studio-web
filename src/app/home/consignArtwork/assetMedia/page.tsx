@@ -12,13 +12,21 @@ import type { StepsFormValues } from '../types';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import CloseIcon from '@mui/icons-material/Close';
-import { AssetMediaFormErros, AssetMediaFormValues } from './types';
+import { AssetMediaFormErros, AssetMediaFormValues, FormatMediaSave } from './types';
 import { AssetMediaSchemaValidation } from './formschema';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
 import MediaCard from './mediaCard';
 import SelectMedia from './selectMedia';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
+import { StepStatus } from '@/features/consignArtwork/types';
+import { sendRequestUploadThunk, userActionsCreators } from '@/features/user/slice';
+import { nanoid } from '@reduxjs/toolkit';
+import { userSelector } from '@/features/user';
+import { assetMediaThunk } from '@/features/asset/thunks';
+import { assetStorageThunk } from '@/features/user/thunks';
+import { assetActionsCreators } from '@/features/asset/slice';
+import { getMediaDefinition } from './helpers';
 
 function validateErrorsAssetUpload({
     errors,
@@ -69,7 +77,9 @@ export default function AssetMedia() {
     const params = useSearchParams();
     params.values();
 
-    const asset = useSelector((state) => state.asset);
+    const asset = useSelector((state) => state.asset.asset);
+
+    const { requestAssetUpload } = useSelector(userSelector(['requestAssetUpload']));
 
     const router = useRouter();
     const dispatch = useDispatch();
@@ -77,31 +87,7 @@ export default function AssetMedia() {
     const { values, errors, setFieldValue, handleSubmit } = useFormik<AssetMediaFormValues>({
         initialValues: {
             definition: '',
-            asset: {
-                file: undefined,
-                formats: {
-                    display: {
-                        file: undefined,
-                        customFile: undefined,
-                        transactionId: undefined,
-                    },
-                    exhibition: {
-                        file: undefined,
-                        customFile: undefined,
-                        transactionId: undefined,
-                    },
-                    preview: {
-                        file: undefined,
-                        customFile: undefined,
-                        transactionId: undefined,
-                    },
-                    print: {
-                        file: undefined,
-                        customFile: undefined,
-                        transactionId: undefined,
-                    },
-                },
-            },
+            asset,
         },
         // validationSchema: AssetMediaSchemaValidation,
         onSubmit: async (formValues) => {
@@ -109,10 +95,36 @@ export default function AssetMedia() {
         },
     });
 
-    const checkStepProgress =
-        values.asset.formats.display.file && values.asset.formats.exhibition.file && values.asset.formats.preview.file
-            ? 'completed'
-            : 'inProgress';
+    const handleUploadFile = async ({ formatUpload, file }: { formatUpload: string; file: File }) => {
+        const transactionId = nanoid();
+
+        await dispatch(
+            userActionsCreators.requestAssetUpload({
+                key: formatUpload,
+                status: 'requested',
+                transactionId,
+            })
+        );
+
+        dispatch(
+            sendRequestUploadThunk({
+                mimetype: file!.type,
+                originalName: file!.name,
+                transactionId,
+            })
+        );
+
+        setFieldValue(`asset.formats.${formatUpload}.transactionId`, transactionId);
+    };
+
+    const checkStepProgress = Object.entries(values?.asset?.formats || {})
+        .filter(([key, value]) => key !== 'print')
+        .every(([key, value]) => value.file)
+        ? 'completed'
+        : Object.values(values?.asset?.formats || {}).some((format) => format.file) ||
+            values.asset.formats.original.file
+          ? 'inProgress'
+          : 'notStarted';
 
     useEffect(() => {
         validateErrorsAssetUpload({ values, errors, setFieldValue });
@@ -122,9 +134,80 @@ export default function AssetMedia() {
         dispatch(consignArtworkActionsCreators.changeStatusStep({ stepId: 'assetMedia', status: checkStepProgress }));
     }, [checkStepProgress]);
 
+    useEffect(() => {
+        const requestAssetUploadNotUsed = Object.values(requestAssetUpload)?.every(
+            (item) => item.transactionId && item.url && item.status === 'ready'
+        );
+        if (!requestAssetUploadNotUsed) return;
+
+        const requestUploadReady = Object.values(requestAssetUpload);
+
+        const uploadAsset = async () => {
+            const responseUpload = await Promise.all(
+                requestUploadReady.map(async (item) => {
+                    const url = item.url;
+                    dispatch(
+                        userActionsCreators.requestAssetUpload({
+                            transactionId: item.transactionId,
+                            status: 'uploading',
+                        })
+                    );
+
+                    const formatByTransaction = Object.entries(values.asset.formats).find(
+                        ([_, format]) => format.transactionId === item.transactionId
+                    );
+
+                    if (!formatByTransaction) return;
+
+                    const [key, value] = formatByTransaction;
+
+                    await dispatch(
+                        assetStorageThunk({
+                            file: value.file!,
+                            url,
+                        })
+                    );
+
+                    return {
+                        [key]: {
+                            path: item.path,
+                            name: value.file!.name,
+                        },
+                    };
+                })
+            );
+
+            // save asset
+            await dispatch(
+                assetMediaThunk({
+                    ...values,
+                    formats: responseUpload.reduce((acc, cur) => ({ ...acc, ...cur }), {} as FormatMediaSave),
+                })
+            );
+        };
+
+        if (requestUploadReady.length) uploadAsset();
+    }, [requestAssetUpload]);
+
+    // useEffect(() => {
+    //     dispatch(assetActionsCreators.change({ asset: values.asset }));
+    // }, [values.asset]);
+
+    useEffect(() => {
+        if (values.asset.formats.original.file && !values.definition) {
+            (async () => {
+                const definition = await getMediaDefinition({ file: values.asset.formats.original.file! });
+
+                setFieldValue('definition', definition);
+            })();
+        }
+    }, [values.asset.formats.original.file]);
+
     const urlAssetFile = useMemo(() => {
-        return values.asset.file ? URL.createObjectURL(values.asset.file) : '';
-    }, [values.asset.file]);
+        return values.asset.formats.original.file && values.asset.formats.original.file instanceof Blob
+            ? URL.createObjectURL(values.asset.formats.original.file)
+            : '';
+    }, [values.asset.formats.original.file]);
 
     return (
         <form onSubmit={handleSubmit}>
@@ -169,18 +252,6 @@ export default function AssetMedia() {
                                 {values.definition.charAt(0).toUpperCase() + values.definition.slice(1)} Media Assets
                             </Typography>
                             <Box display="flex">
-                                <Box style={{ marginRight: '10px' }}>
-                                    <MediaCard
-                                        formatType="original"
-                                        errors={errors}
-                                        formats={values.asset.formats}
-                                        formatValue={{ file: values.asset.file }}
-                                        urlAssetFile={urlAssetFile}
-                                        definition={values.definition}
-                                        setFieldValue={setFieldValue}
-                                    />
-                                </Box>
-
                                 {Object.entries(values.asset.formats).map(([formatType, value], index) => (
                                     <Box style={{ marginRight: '10px' }} key={index}>
                                         <MediaCard
@@ -192,6 +263,7 @@ export default function AssetMedia() {
                                             urlAssetFile={urlAssetFile}
                                             definition={values.definition}
                                             setFieldValue={setFieldValue}
+                                            handleUploadFile={handleUploadFile}
                                         />
                                     </Box>
                                 ))}
@@ -201,11 +273,12 @@ export default function AssetMedia() {
 
                     {!urlAssetFile && (
                         <SelectMedia
-                            file={values.asset.file}
+                            file={values.asset.formats.original.file}
                             definition={values.definition}
                             urlAssetFile={urlAssetFile}
                             errors={errors}
                             setFieldValue={setFieldValue}
+                            handleUploadFile={handleUploadFile}
                         />
                     )}
                 </Stack>

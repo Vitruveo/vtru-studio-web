@@ -5,8 +5,8 @@ export const AssetMediaSchemaValidation = yup.object({
         .mixed()
         .required('field asset is required.')
         .test('checkFileType', 'Invalid file type. Please upload a valid file.', (asset) => {
-            if (!asset.file) return false;
+            if (!asset.formats.original.file) return false;
             const allowedFileTypes = ['image/jpeg', 'image/png', 'image/gif', 'video/mp4'];
-            return allowedFileTypes.includes(asset.file.type);
+            return allowedFileTypes.includes(asset.formats.original.file.type);
         }),
 });

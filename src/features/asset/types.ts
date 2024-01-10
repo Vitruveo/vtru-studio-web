@@ -1,11 +1,13 @@
-import { Licenses, MetadataDefinitionTypes, Option } from '@/app/home/components/wizard/types';
+import { AssetMetadata } from '@/app/home/consignArtwork/assetMetadata/types';
+import { License } from '@/app/home/consignArtwork/licenses/types';
 import { APIResponse } from '../common/types';
 
+export type AssetStatus = 'draft' | 'published' | 'archived';
 export interface Asset {
     _id: string;
     asset: {
-        file: File | undefined;
         formats: {
+            original: { file?: File; customFile?: File; transactionId?: string };
             display: { file?: File; customFile?: File; transactionId?: string };
             exhibition: { file?: File; customFile?: File; transactionId?: string };
             preview: { file?: File; customFile?: File; transactionId?: string };
@@ -13,15 +15,12 @@ export interface Asset {
         };
     };
     contract: boolean;
-    assetMetadata: {
-        assetMetadataDefinitions: MetadataDefinitionTypes[];
-        assetMetadataDomains: Option[];
-    };
-    creatorMetadata: {
-        creatorMetadataDefinitions: MetadataDefinitionTypes[];
-    };
-    licenses: Licenses;
-    status: 'draft' | 'published' | 'archived';
+    assetMetadata: AssetMetadata;
+    // creatorMetadata: {
+    //     creatorMetadataDefinitions: MetadataDefinitionTypes[];
+    // };
+    licenses: License[];
+    status: AssetStatus;
     framework: {
         createdAt: Date | null;
         updatedAt: Date | null;
