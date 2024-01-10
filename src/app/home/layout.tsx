@@ -10,7 +10,7 @@ import Navigation from './layout/horizontal/navbar/Navigation';
 import HorizontalHeader from './layout/horizontal/header/Header';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useRouter } from 'next/navigation';
-import { userActionsCreators } from '@/features/user/slice';
+// import { userActionsCreators } from '@/features/user/slice';
 
 const MainWrapper = styled('div')(() => ({
     display: 'flex',
@@ -56,9 +56,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     useEffect(() => {
         if (!isValidToken(token)) {
             router.push('/login');
-            setTimeout(() => {
-                dispatch(userActionsCreators.logout());
-            }, 1000);
+            // setTimeout(() => {
+            //     dispatch(userActionsCreators.logout());
+            // }, 1000);
         }
     }, [token, router]);
 
