@@ -92,6 +92,7 @@ export async function sendRequestUpload(data: CreatorSendRequestUploadReq): Prom
 
 export async function assetStorage(data: AssetStorageReq): Promise<any> {
     const formData = new FormData();
+
     formData.append('file', data.file);
 
     const res = await axios.put(data.url, formData, {

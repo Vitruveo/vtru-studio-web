@@ -1,6 +1,7 @@
 import { ReduxThunkAction } from '@/store';
 import { userActionsCreators } from '../user/slice';
 import webSocketService from '@/services/websocket';
+import { TOKEN_CREATORS } from '@/constants/ws';
 
 export function connectWebSocketThunk(): ReduxThunkAction {
     return async function (dispatch, getState) {
@@ -15,7 +16,7 @@ export function loginWebSocketThunk(): ReduxThunkAction {
         webSocketService.emit('login', {
             id: creator._id,
             email: creator.login.email,
-            token: 'creator',
+            token: TOKEN_CREATORS,
         });
 
         webSocketService.on('preSignedURL', (data) => {

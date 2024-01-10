@@ -5,15 +5,22 @@ import { APIResponse } from '../common/types';
 export type AssetStatus = 'draft' | 'published' | 'archived';
 
 export type FileType = File | string;
+
+interface Format {
+    file?: FileType;
+    name?: string;
+    customFile?: FileType;
+    transactionId?: string;
+}
 export interface Asset {
     _id: string;
 
     formats: {
-        original: { file?: FileType; customFile?: FileType; transactionId?: string };
-        display: { file?: FileType; customFile?: FileType; transactionId?: string };
-        exhibition: { file?: FileType; customFile?: FileType; transactionId?: string };
-        preview: { file?: FileType; customFile?: FileType; transactionId?: string };
-        print: { file?: FileType; customFile?: FileType; transactionId?: string };
+        original: Format;
+        display: Format;
+        exhibition: Format;
+        preview: Format;
+        print: Format;
     };
 
     contract: boolean;

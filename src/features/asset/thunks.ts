@@ -58,6 +58,7 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
                         return {
                             ...acc,
                             [key]: {
+                                name: value.name,
                                 file: `${ASSET_STORAGE_URL}/${value.path}`,
                                 customFile: undefined,
                                 transactionId: undefined,
@@ -91,15 +92,34 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
 
 export function assetMediaThunk(payload: { formats?: FormatMediaSave }): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
+        const formatsState = getState().asset.formats;
+
+        const formatsPersist = Object.entries(formatsState)
+            .filter(([key, value]) => value.file)
+            .reduce((acc, [key, value]) => {
+                return {
+                    ...acc,
+                    [key]: {
+                        path: (value.file as string)?.replace(new RegExp(`${ASSET_STORAGE_URL}/`, 'g'), ''),
+                        name: value.name,
+                    },
+                };
+            }, {});
+
         const formatAssetsFormats = Object.entries(payload.formats || {}).reduce((acc, [key, value]) => {
             return {
                 ...acc,
-                [key]: { file: `${ASSET_STORAGE_URL}/${value.path}`, customFile: undefined, transactionId: undefined },
+                [key]: {
+                    file: `${ASSET_STORAGE_URL}/${value.path}`,
+                    name: value.name,
+                    customFile: undefined,
+                    transactionId: undefined,
+                },
             };
         }, {} as FormatsMedia);
 
         const response = await updateAssetStep({
-            formats: payload.formats,
+            formats: { ...formatsPersist, ...payload.formats },
             stepName: 'assetUpload',
         });
 

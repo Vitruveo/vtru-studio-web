@@ -86,7 +86,7 @@ export default function AssetMedia() {
             formats: asset.formats,
         },
         // validationSchema: AssetMediaSchemaValidation,
-        onSubmit: (formValues) => {
+        onSubmit: async (formValues) => {
             router.push(`/home/consignArtwork/assetMetadata`);
         },
     });
@@ -94,7 +94,7 @@ export default function AssetMedia() {
     const handleUploadFile = async ({ formatUpload, file }: { formatUpload: string; file: File }) => {
         const transactionId = nanoid();
 
-        dispatch(
+        await dispatch(
             userActionsCreators.requestAssetUpload({
                 key: formatUpload,
                 status: 'requested',
@@ -126,18 +126,18 @@ export default function AssetMedia() {
     }, [checkStepProgress]);
 
     useEffect(() => {
-        const requestAssetUploadNotUsed = Object.values(requestAssetUpload)?.every(
+        const requestAssetUploadNotUsed = Object.values(requestAssetUpload)?.filter(
             (item) => item.transactionId && item.url && item.status === 'ready'
         );
-        if (!requestAssetUploadNotUsed) return;
 
-        const requestUploadReady = Object.values(requestAssetUpload);
+        if (!requestAssetUploadNotUsed || !requestAssetUploadNotUsed?.length) return;
 
-        const uploadAsset = () => {
-            const responseUpload = Promise.all(
-                requestUploadReady.map((item) => {
+        const requestUploadReady = Object.values(requestAssetUploadNotUsed);
+
+        const uploadAsset = async () => {
+            const responseUpload = await Promise.all(
+                requestUploadReady.map(async (item) => {
                     const url = item.url;
-
                     dispatch(
                         userActionsCreators.requestAssetUpload({
                             transactionId: item.transactionId,
@@ -149,35 +149,33 @@ export default function AssetMedia() {
                         ([_, format]) => format.transactionId === item.transactionId
                     );
 
-                    if (!formatByTransaction) return Promise.resolve(null);
+                    if (!formatByTransaction) return;
 
                     const [key, value] = formatByTransaction;
 
-                    return dispatch(
+                    await dispatch(
                         assetStorageThunk({
                             file: value.file!,
                             url,
                         })
-                    ).then(() => {
-                        return {
-                            [key]: {
-                                path: item.path,
-                                name: value.file!.name,
-                            },
-                        };
-                    });
+                    );
+
+                    return {
+                        [key]: {
+                            path: item.path,
+                            name: value.file!.name,
+                        },
+                    };
                 })
             );
 
-            responseUpload.then((results) => {
-                if (results && results.length)
-                    dispatch(
-                        assetMediaThunk({
-                            ...values,
-                            formats: results.reduce((acc, cur) => ({ ...acc, ...cur }), {} as FormatMediaSave)!,
-                        })
-                    );
-            });
+            // save asset
+            await dispatch(
+                assetMediaThunk({
+                    ...values,
+                    formats: responseUpload.reduce((acc, cur) => ({ ...acc, ...cur }), {} as FormatMediaSave),
+                })
+            );
         };
 
         if (requestUploadReady.length) uploadAsset();
@@ -185,9 +183,11 @@ export default function AssetMedia() {
 
     useEffect(() => {
         if (values.formats.original.file && !values.definition) {
-            getMediaDefinition({ fileOrUrl: values.formats.original.file! }).then((definition) => {
+            (async () => {
+                const definition = await getMediaDefinition({ fileOrUrl: values.formats.original.file! });
+
                 setFieldValue('definition', definition);
-            });
+            })();
         }
     }, [values.formats.original.file]);
 

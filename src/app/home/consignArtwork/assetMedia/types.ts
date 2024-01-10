@@ -7,6 +7,7 @@ export interface FormatMediaSave {
     };
 }
 export interface FormatValue {
+    name?: string;
     file?: File | string;
     customFile?: File;
     transactionId?: string;
