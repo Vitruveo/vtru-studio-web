@@ -22,7 +22,6 @@ import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { StepStatus } from '@/features/consignArtwork/types';
 import { sendRequestUploadThunk, userActionsCreators } from '@/features/user/slice';
 import { nanoid } from '@reduxjs/toolkit';
-import { userSelector } from '@/features/user';
 import { assetMediaThunk } from '@/features/asset/thunks';
 import { assetStorageThunk } from '@/features/user/thunks';
 import { assetActionsCreators } from '@/features/asset/slice';
@@ -79,7 +78,7 @@ export default function AssetMedia() {
 
     const asset = useSelector((state) => state.asset.asset);
 
-    const { requestAssetUpload } = useSelector(userSelector(['requestAssetUpload']));
+    const { requestAssetUpload } = useSelector((state) => state.user);
 
     const router = useRouter();
     const dispatch = useDispatch();

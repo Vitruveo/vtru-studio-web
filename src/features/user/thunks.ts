@@ -36,7 +36,7 @@ import {
     VerifyCodeApiRes,
 } from './types';
 import { ReduxThunkAction } from '@/store';
-import { assetUpdateStepThunk, getAssetThunk } from '../asset/thunks';
+import { getAssetThunk } from '../asset/thunks';
 import { AccountSettingsFormValues } from '@/app/home/myProfile/types';
 import { consignArtworkActionsCreators } from '../consignArtwork/slice';
 
@@ -174,29 +174,5 @@ export function saveStepWizardThunk(payload: SaveStepWizardReq): ReduxThunkActio
             dispatch(creatorAccountThunk(payload.values));
             return;
         }
-        // if (payload.step === 2) {
-        //     dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'assetMetadata' }));
-        //     return;
-        // }
-        // if (payload.step === 3) {
-        //     dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'creatorMetadata' }));
-        //     return;
-        // }
-        // if (payload.step === 4) {
-        //     dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'license' }));
-        //     return;
-        // }
-        // if (payload.step === 5) {
-        //     dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'contract' }));
-        //     return;
-        // }
-        // if (payload.step === 5) {
-        //     dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'contract' }));
-        //     return;
-        // }
-        // if (payload.step === 6) {
-        //     dispatch(assetUpdateStepThunk({ values: payload.values, stepName: 'publish' }));
-        //     return;
-        // }
     };
 }
