@@ -24,36 +24,6 @@ import { assetMediaThunk } from '@/features/asset/thunks';
 import { assetStorageThunk } from '@/features/user/thunks';
 import { getMediaDefinition } from './helpers';
 
-function validateErrorsAssetUpload({
-    errors,
-    values,
-    setFieldValue,
-}: {
-    values: AssetMediaFormValues;
-    errors: AssetMediaFormErros;
-    setFieldValue: (
-        field: string,
-        value: any,
-        shouldValidate?: boolean | undefined
-    ) => Promise<void> | Promise<AssetMediaFormErros>;
-}) {
-    const fields: Array<keyof StepsFormValues> = ['asset'];
-
-    // if (!fields.some((field) => errors[field])) {
-    //     values.completedSteps[currentStep] = {
-    //         ...values.completedSteps[currentStep],
-    //         status: 'completed',
-    //     };
-    //     setFieldValue('completedSteps', { ...values.completedSteps });
-    // } else {
-    //     values.completedSteps[currentStep] = {
-    //         ...values.completedSteps[currentStep],
-    //         status: 'inProgress',
-    //     };
-    //     setFieldValue('completedSteps', { ...values.completedSteps });
-    // }
-}
-
 const BCrumb = [
     {
         to: '/home',
@@ -85,7 +55,6 @@ export default function AssetMedia() {
             definition: '',
             formats: asset.formats,
         },
-        // validationSchema: AssetMediaSchemaValidation,
         onSubmit: async (formValues) => {
             router.push(`/home/consignArtwork/assetMetadata`);
         },
