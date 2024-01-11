@@ -21,38 +21,6 @@ import { assetMetadataDefinitions, assetMetadataDomains } from '../mock';
 import { assetMetadataThunk } from '@/features/asset/thunks';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 
-const currentStep = 3;
-
-const validateErrorsAssetMetadata = ({
-    values,
-    errors,
-    setFieldValue,
-}: {
-    values: AssetMetadataFormValues;
-    errors: AssetMetadataFormErros;
-    setFieldValue: (
-        field: string,
-        value: any,
-        shouldValidate?: boolean | undefined
-    ) => Promise<void> | Promise<AssetMetadataFormErros>;
-}) => {
-    const fields: Array<keyof StepsFormValues> = ['assetMetadata'];
-
-    // if (!fields.some((field) => errors[field])) {
-    //     values.completedSteps[currentStep] = {
-    //         step: currentStep,
-    //         errors: false,
-    //     };
-    //     setFieldValue('completedSteps', { ...values.completedSteps });
-    // } else {
-    //     values.completedSteps[currentStep] = {
-    //         step: currentStep,
-    //         errors: true,
-    //     };
-    //     setFieldValue('completedSteps', { ...values.completedSteps });
-    // }
-};
-
 const BCrumb = [
     {
         to: '/home',
@@ -120,10 +88,6 @@ export default function AssetMetadata() {
         })();
     }, [assetMetadata?.assetMetadataDefinitions.length]);
 
-    // useEffect(() => {
-    //     validateErrorsAssetMetadata({ values, errors, setFieldValue });
-    // }, [errors, values.assetMetadata]);
-
     useEffect(() => {}, []);
 
     return (
@@ -140,18 +104,6 @@ export default function AssetMetadata() {
                     Complete all tasks and publish your artwork
                 </Typography>
                 <Box maxHeight={500} overflow="auto" mt={1} alignItems="center" maxWidth={500}>
-                    {/* <Grid marginBottom={2}>
-                        <Typography variant="subtitle1" fontWeight={600} component="label">
-                            Domain
-                        </Typography>
-                        <CustomSelect defaultValue="artwork" size="small" name="domain" fullWidth variant="outlined">
-                            {values.assetMetadata?.assetMetadataDomains?.map((option) => (
-                                <MenuItem key={option.value} value={option.value}>
-                                    {option.label}
-                                </MenuItem>
-                            ))}
-                        </CustomSelect>
-                    </Grid> */}
                     <MetadataFields
                         formkFieldPathChange="assetMetadata.assetMetadataDefinitions"
                         values={values}
