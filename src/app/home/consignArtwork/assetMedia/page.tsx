@@ -10,7 +10,7 @@ import { Box, Grid, IconButton, Typography, Button } from '@mui/material';
 
 import type { StepsFormValues } from '../types';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import CloseIcon from '@mui/icons-material/Close';
 import { AssetMediaFormErros, AssetMediaFormValues, FormatMediaSave } from './types';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
@@ -40,8 +40,6 @@ const BCrumb = [
 
 export default function AssetMedia() {
     const [showFormtsInfo, setShowFormatsInfo] = useState(true);
-    const params = useSearchParams();
-    params.values();
 
     const asset = useSelector((state) => state.asset);
 
