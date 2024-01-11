@@ -1,5 +1,18 @@
 import * as yup from 'yup';
 
+export const licenseMetadataDefinitionsSchemaValidation = yup.array().of(
+    yup.object().shape({
+        value: yup.mixed().test('customValidation', '', (value, context) => {
+            const validateCreateFunction = new Function(context.parent.validation.trim());
+
+            const result = validateCreateFunction()(value, 'en');
+
+            if (!result.isValid) throw context.createError({ path: context.path, message: result.message });
+            return result.isValid;
+        }),
+    })
+);
+
 export const LicensesSchemaValidation = yup.object({
     licenses: yup
         .array()

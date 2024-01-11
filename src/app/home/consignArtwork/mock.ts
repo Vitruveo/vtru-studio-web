@@ -148,20 +148,6 @@ export const assetMetadataDefinitions: MetadataDefinitionTypes[] = [
     },
     {
         domain: 'artwork',
-        order: 0,
-        name: 'dimensions',
-        value: '',
-        title: 'Dimensions',
-        type: 'string',
-        required: true,
-        validation: `
-    return function validate(value, language) {
-    return { message: '', isValid: true };
-  }
-`,
-    },
-    {
-        domain: 'artwork',
         order: 2,
         title: 'Category',
         name: 'category',
@@ -218,7 +204,6 @@ export const assetMetadataDefinitions: MetadataDefinitionTypes[] = [
       }
     `,
     },
-
     {
         domain: 'artwork',
         order: 2,

@@ -6,10 +6,11 @@ import { Button, Chip } from '@mui/material';
 import { Box, MenuItem } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Auto, MetadataDefinitionTypes, MetadataFieldsProps, Option } from './types';
 import CustomSelect from '@/app/home/components/forms/theme-elements/CustomSelect';
 import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
+import { CustomTextareaAutosize } from '@/app/home/components/forms/theme-elements/CustomTextarea';
 
 const handleGetValueByPath = (obj: any, path: string): any => {
     const keys = path.split('.');
@@ -160,13 +161,59 @@ export const MetadataFields = ({
         <Grid padding={1} spacing={2} container>
             {metadataDefinitions?.map((v, i) => (
                 <Fragment key={i}>
-                    {v.type === 'tags' ? (
+                    {v.type === 'string' && v.name === 'description' ? (
+                        <Grid item lg={12} xs={12}>
+                            <>
+                                <Typography variant="subtitle1" fontWeight={600} component="label">
+                                    {v.title}
+                                </Typography>
+                                <CustomTextField
+                                    multiline
+                                    rows={3}
+                                    maxRows={3}
+                                    value={v.value}
+                                    inputProps={{ maxLength: 185 }}
+                                    onChange={handleChangeInput(i)}
+                                    fullWidth
+                                    size="small"
+                                    FormHelperTextProps={{
+                                        style: {
+                                            position: 'absolute',
+                                            bottom: '-22px',
+                                            left: -10,
+                                            fontSize: '0.75rem',
+                                        },
+                                    }}
+                                    variant="outlined"
+                                    error={!!errorsByPath(i)?.value}
+                                    helperText={errorsByPath(i)?.value}
+                                />
+                            </>
+                        </Grid>
+                    ) : v.type === 'tags' ? (
                         <Grid item lg={12} xs={12}>
                             <Typography variant="subtitle1" fontWeight={600} component="label">
                                 {v.title}
                             </Typography>
+
+                            <Box display="flex" alignItems="center">
+                                <CustomTextField
+                                    value={inputTags[i as keyof typeof inputTags]}
+                                    style={{ marginRight: 8 }}
+                                    fullWidth
+                                    onChange={(e) => onChangeInputTags(i, e.target.value)}
+                                    size="small"
+                                    placeholder="Add Tag"
+                                    inputProps={{
+                                        'aria-label': 'add tag',
+                                    }}
+                                />
+                                <Button size="small" variant="contained" onClick={() => handleAddTag(i)}>
+                                    Add
+                                </Button>
+                            </Box>
                             <Box
-                                marginBottom={1}
+                                marginTop={1}
                                 display="flex"
                                 flexWrap="wrap"
                                 gap={1}
@@ -182,22 +229,6 @@ export const MetadataFields = ({
                                         size="small"
                                     />
                                 ))}
-                            </Box>
-                            <Box display="flex" alignItems="center">
-                                <CustomTextField
-                                    value={inputTags[i as keyof typeof inputTags]}
-                                    style={{ marginRight: 8 }}
-                                    fullWidth
-                                    onChange={(e) => onChangeInputTags(i, e.target.value)}
-                                    size="small"
-                                    placeholder="Add Tag"
-                                    inputProps={{
-                                        'aria-label': 'add tag',
-                                    }}
-                                />
-                                <Button size="small" variant="outlined" onClick={() => handleAddTag(i)}>
-                                    Add
-                                </Button>
                             </Box>
                         </Grid>
                     ) : (
@@ -342,7 +373,7 @@ export const MetadataFields = ({
                                     </Typography>
                                     <Box>
                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                            <DateTimePicker
+                                            <DatePicker
                                                 renderInput={(params) => <CustomTextField size="small" {...params} />}
                                                 value={v.value}
                                                 onChange={handleChangeDateInput(i)}

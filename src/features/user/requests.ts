@@ -91,17 +91,9 @@ export async function sendRequestUpload(data: CreatorSendRequestUploadReq): Prom
 }
 
 export async function assetStorage(data: AssetStorageReq): Promise<any> {
-    const formData = new FormData();
-
-    formData.append('file', data.file);
-
-    const res = await axios.put(data.url, formData, {
-        headers: {
-            'Content-Type': data.file.type,
-        },
-        onUploadProgress: (progressEvent) => {
-            console.log(Math.round((progressEvent.loaded / progressEvent.total!) * 100));
-        },
+    const res = await fetch(data.url, {
+        method: 'PUT',
+        body: data.file,
     });
 
     return res;

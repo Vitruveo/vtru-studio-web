@@ -4,15 +4,9 @@ import { Asset, AssetStorageReq, GetAssetApiRes, UpdateAssetStepApiRes, UpdateAs
 import { apiService } from '@/services/api';
 
 export async function assetStorage({ file, url }: AssetStorageReq): Promise<any> {
-    const formDataUpload = new FormDataUpload();
-    formDataUpload.append('file', file);
-
-    const res = await axios.put(url, formDataUpload, {
-        // headers: formDataUpload.getHeaders(),
-        onUploadProgress: (progressEvent) => {
-            const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total!);
-            console.log(percentCompleted);
-        },
+    const res = await fetch(url, {
+        method: 'PUT',
+        body: file,
     });
 
     return res;

@@ -136,7 +136,10 @@ export default function AssetMetadata() {
                 backPathRouter="/home/consignArtwork"
             >
                 <Breadcrumb title="Consign Artwork" items={BCrumb} />
-                <Box maxHeight={578} overflow="auto" mt={1} alignItems="center" maxWidth={500}>
+                <Typography fontSize="1rem" fontWeight="normal" color="GrayText">
+                    Complete all tasks and publish your artwork
+                </Typography>
+                <Box maxHeight={500} overflow="auto" mt={1} alignItems="center" maxWidth={500}>
                     {/* <Grid marginBottom={2}>
                         <Typography variant="subtitle1" fontWeight={600} component="label">
                             Domain

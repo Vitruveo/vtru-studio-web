@@ -88,7 +88,7 @@ export default function SelectMedia({
     return (
         <Box marginTop={2} display="flex" alignItems="center" justifyContent="center" width="100%">
             <Box
-                width="80vw"
+                width="90vw"
                 height="40vh"
                 border="1px dashed"
                 padding={definition ? 1 : 2}
@@ -145,17 +145,17 @@ export default function SelectMedia({
                         alignItems="flex-start"
                         width="100%"
                     >
-                        <Typography sx={{ fontSize: { xs: '0.8rem', sm: '0.8rem', md: '1rem' } }} variant="h6">
+                        <Typography sx={{ fontSize: { xs: '1rem', sm: '1rem', md: '1rem' } }} variant="h6">
                             Drag and drop a single media asset file or click to upload.
                         </Typography>
                         <Typography
-                            sx={{ fontSize: { xs: '0.8rem', sm: '0.8rem', md: '1rem' } }}
+                            sx={{ fontSize: { xs: '1rem', sm: '1rem', md: '1rem' } }}
                             marginTop={2}
                             variant="h6"
                         >
                             Image: JPEG, PNG, GIF, SVG, WEBP
                         </Typography>
-                        <Typography sx={{ fontSize: { xs: '0.8rem', sm: '0.8rem', md: '1rem' } }} variant="h6">
+                        <Typography sx={{ fontSize: { xs: '1rem', sm: '1rem', md: '1rem' } }} variant="h6">
                             Video: MP4, WEBM
                         </Typography>
                     </Box>

@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import { useDispatch, useSelector } from '@/store/hooks';
 
 import { Stack } from '@mui/system';
-import { Box, IconButton, Typography } from '@mui/material';
+import { Box, Grid, IconButton, Typography, Button } from '@mui/material';
 
 import type { StepsFormValues } from '../types';
 
@@ -117,7 +117,7 @@ export default function AssetMedia() {
         .filter(([key, value]) => key !== 'print')
         .every(([key, value]) => value.file)
         ? 'completed'
-        : Object.values(values?.formats || {}).some((format) => format.file) || values.formats.original.file
+        : Object.values(values?.formats || {}).some((format) => format.file) || values?.formats?.original?.file
           ? 'inProgress'
           : 'notStarted';
 
@@ -182,20 +182,24 @@ export default function AssetMedia() {
     }, [requestAssetUpload]);
 
     useEffect(() => {
-        if (values.formats.original.file && !values.definition) {
+        if (values?.formats?.original?.file && !values?.definition) {
             (async () => {
-                const definition = await getMediaDefinition({ fileOrUrl: values.formats.original.file! });
+                if (values?.formats?.original?.file) {
+                    const definition = await getMediaDefinition({ fileOrUrl: values?.formats?.original?.file });
 
-                setFieldValue('definition', definition);
+                    setFieldValue('definition', definition);
+                }
             })();
         }
-    }, [values.formats.original.file]);
+    }, [values.formats?.original?.file]);
 
-    const urlAssetFile = useMemo(() => {
-        return values.formats.original.file && values.formats.original.file instanceof Blob
-            ? URL.createObjectURL(values.formats.original.file)
-            : values.formats.original.file;
-    }, [values.formats.original.file]);
+    const urlAssetFile: string = useMemo(() => {
+        return values?.formats?.original?.file && typeof values?.formats?.original?.file === 'string'
+            ? values?.formats?.original?.file
+            : values?.formats?.original?.file
+              ? URL.createObjectURL(values?.formats?.original?.file as Blob)
+              : '';
+    }, [values?.formats?.original?.file]);
 
     return (
         <form onSubmit={handleSubmit}>
@@ -207,11 +211,16 @@ export default function AssetMedia() {
                 backPathRouter="/home/consignArtwork"
             >
                 <Breadcrumb title="Consign Artwork" items={BCrumb} />
-                <Stack my={3} direction="column" gap={1}>
-                    <Typography variant="h6" fontWeight="normal" color="GrayText">
+
+                <Stack
+                    overflow="auto"
+                    maxWidth={{ xs: 'calc(90vw)', sm: 'calc(90vw)', md: 'calc(83vw)' }}
+                    maxHeight={{ xs: 'calc(65vh - 64px)', sm: 'calc(65vh - 64px)', md: 'calc(65vh - 64px)' }}
+                >
+                    <Typography fontSize="1rem" fontWeight="normal" color="GrayText">
                         Upload media assets for the artwork being consigned.
                     </Typography>
-                    <Typography variant="h5" color="grey" fontWeight="500" marginTop={2}>
+                    <Typography marginBottom={2} fontSize="1.1rem" color="grey" fontWeight="500" marginTop={2}>
                         Asset Media
                     </Typography>
                     {urlAssetFile && (
@@ -224,11 +233,11 @@ export default function AssetMedia() {
                                     >
                                         <CloseIcon />
                                     </IconButton>
-                                    <Typography>
+                                    <Typography fontSize="0.9">
                                         Looks amazing! For your artwork to look great on different devices, we need
                                         three more media files. Don’t worry, we’ll help you crop your original media
                                         file.
-                                        <Typography marginTop={2}>
+                                        <Typography fontSize="0.9" marginTop={2}>
                                             If you’re concerned about loss of quality, don’t use the crop feature and
                                             upload media directly in the required size.
                                         </Typography>
@@ -236,10 +245,10 @@ export default function AssetMedia() {
                                 </Box>
                             )}
 
-                            <Typography marginTop={2} color="grey" variant="h6" fontWeight="bold">
+                            <Typography marginTop={2} color="grey" fontSize="1rem" fontWeight="bold">
                                 {values.definition.charAt(0).toUpperCase() + values.definition.slice(1)} Media Assets
                             </Typography>
-                            <Box display="flex">
+                            <Box display="flex" flexWrap="wrap">
                                 {Object.entries(values.formats).map(([formatType, value], index) => (
                                     <Box style={{ marginRight: '10px' }} key={index}>
                                         <MediaCard
@@ -261,7 +270,7 @@ export default function AssetMedia() {
 
                     {!urlAssetFile && (
                         <SelectMedia
-                            file={values.formats.original.file}
+                            file={values?.formats?.original?.file}
                             definition={values.definition}
                             urlAssetFile={urlAssetFile}
                             errors={errors}

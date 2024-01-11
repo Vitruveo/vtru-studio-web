@@ -118,6 +118,9 @@ export default function ContractScreen() {
                 backPathRouter="/home/consignArtwork"
             >
                 <Breadcrumb title="Consign Artwork" items={BCrumb} />
+                <Typography fontSize="1rem" fontWeight="normal" color="GrayText">
+                    Complete all tasks and publish your artwork
+                </Typography>
                 <Container>
                     <Box
                         mt={4}

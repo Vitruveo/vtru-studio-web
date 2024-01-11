@@ -8,7 +8,7 @@ export interface MetadataDefinitionTypes {
     value: unknown;
     name: string;
     title: string;
-    type: 'string' | 'date' | 'select' | 'integer' | 'cents' | 'boolean' | 'tags';
+    type: 'string' | 'date' | 'select' | 'integer' | 'cents' | 'boolean' | 'tags' | 'textarea';
     required: boolean;
     validation: string;
     options?: Option[];
