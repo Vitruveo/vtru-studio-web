@@ -8,8 +8,6 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { Stack } from '@mui/system';
 import { Box, Grid, IconButton, Typography, Button } from '@mui/material';
 
-import type { StepsFormValues } from '../types';
-
 import { useRouter } from 'next/navigation';
 import CloseIcon from '@mui/icons-material/Close';
 import { AssetMediaFormErros, AssetMediaFormValues, FormatMediaSave } from './types';
@@ -161,10 +159,10 @@ export default function AssetMedia() {
     }, [values.formats?.original?.file]);
 
     const urlAssetFile: string = useMemo(() => {
-        return values?.formats?.original?.file && typeof values?.formats?.original?.file === 'string'
-            ? values?.formats?.original?.file
+        return values?.formats?.original?.file && values?.formats?.original?.file instanceof File
+            ? URL.createObjectURL(values?.formats?.original?.file)
             : values?.formats?.original?.file
-              ? URL.createObjectURL(values?.formats?.original?.file as Blob)
+              ? (values?.formats?.original?.file as string)
               : '';
     }, [values?.formats?.original?.file]);
 
