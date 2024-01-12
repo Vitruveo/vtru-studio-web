@@ -2,7 +2,7 @@ import { io, Socket } from 'socket.io-client';
 import { WS_SERVER_URL } from '@/constants/ws';
 
 class WebSocketService {
-    private socket: Socket | null = null;
+    public socket: Socket | null = null;
 
     connect(): void {
         this.socket = io(WS_SERVER_URL);

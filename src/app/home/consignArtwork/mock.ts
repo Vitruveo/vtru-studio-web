@@ -99,7 +99,7 @@ export const assetMetadataDefinitions: MetadataDefinitionTypes[] = [
         domain: 'artwork',
         order: 0,
         name: 'date',
-        value: '',
+        value: null,
         title: 'Date',
         type: 'date',
         required: true,

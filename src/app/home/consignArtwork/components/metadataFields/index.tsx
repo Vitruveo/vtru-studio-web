@@ -375,7 +375,7 @@ export const MetadataFields = ({
                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                                             <DatePicker
                                                 renderInput={(params) => <CustomTextField size="small" {...params} />}
-                                                value={v.value}
+                                                value={v.value || null}
                                                 onChange={handleChangeDateInput(i)}
                                             />
                                         </LocalizationProvider>

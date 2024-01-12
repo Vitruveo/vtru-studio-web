@@ -22,6 +22,7 @@ import { useRouter } from 'next/navigation';
 import { licenses } from '../mock';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { licenseThunk } from '@/features/asset/thunks';
+import { ModalBackConfirm } from '../modalBackConfirm';
 
 const licenseMetadataDomains = [
     { value: 'stream', label: 'Stream v1.0' },
@@ -93,6 +94,8 @@ const BCrumb = [
 ];
 
 export default function Licenses() {
+    const [errorLicense, setErrorLicense] = useState('');
+    const [showBackModal, setShowBackModal] = useState(false);
     const [toastr, setToastr] = useState<CustomizedSnackbarState>({
         type: 'success',
         open: false,
@@ -110,36 +113,39 @@ export default function Licenses() {
             initialValues: {
                 licenses: licensesState?.length ? licensesState : licenses,
             },
-            //validationSchema: LicensesSchemaValidation,
             onSubmit: async (formValues) => {
                 try {
-                    if (values.licenses[findIndexLicense].added) {
-                        await licenseMetadataDefinitionsSchemaValidation.validate(
-                            values.licenses[findIndexLicense].licenseMetadataDefinitions,
-                            { abortEarly: false }
+                    const checkAddLicense = values.licenses.find((license) => license.added);
+
+                    if (checkAddLicense) {
+                        const licensesAdded = values.licenses.filter((v) => v.added);
+                        const check = licensesAdded.map((v) => {
+                            return licenseMetadataDefinitionsSchemaValidation.validate(v.licenseMetadataDefinitions, {
+                                abortEarly: false,
+                            });
+                        });
+
+                        await Promise.all(check);
+
+                        dispatch(licenseThunk({ licenses: values.licenses }));
+                        dispatch(
+                            consignArtworkActionsCreators.changeStatusStep({
+                                stepId: 'licenses',
+                                status: 'completed',
+                            })
                         );
+                        router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/termsOfUse`);
+                    } else {
+                        setShowBackModal(false);
+                        setErrorLicense('Please add at least one license');
                     }
-                    dispatch(licenseThunk({ licenses: values.licenses }));
-                    dispatch(
-                        consignArtworkActionsCreators.changeStatusStep({
-                            stepId: 'licenses',
-                            status: 'completed',
-                        })
-                    );
-                    router.push(`/home/consignArtwork/termsOfUse`);
                 } catch (err) {
-                    const yupErrors: Record<string, string> = {};
-
-                    (err as Yup.ValidationError).inner.forEach((error) => {
-                        if (error.path && !yupErrors[error.path]) {
-                            yupErrors[`licenses[${findIndexLicense}].licenseMetadataDefinitions${error.path}`] =
-                                error.message;
-                        }
+                    setShowBackModal(false);
+                    setToastr({
+                        type: 'error',
+                        open: true,
+                        message: 'Fill in the fields correctly.',
                     });
-
-                    const convertErrors = transformErrors(yupErrors);
-
-                    setErrors(convertErrors);
                 }
             },
         });
@@ -188,11 +194,30 @@ export default function Licenses() {
         setLicenseDomain(e.target.value);
     };
 
+    const handleCloseBackModal = () => {
+        setShowBackModal(false);
+    };
+
+    const handleOpenBackModal = () => {
+        setShowBackModal(true);
+    };
+
+    const handleSaveData = async () => {
+        const validate = await validateForm();
+        if (validate && Object.values(validate).length === 0) {
+            handleSubmit();
+        } else {
+            setShowBackModal(false);
+        }
+    };
+
     useEffect(() => {
+        if (licensesAdded.length > 0) setErrorLicense('');
+        const checkStateLicenses = licensesState.filter((v) => v.added);
         dispatch(
             consignArtworkActionsCreators.changeStatusStep({
                 stepId: 'licenses',
-                status: licensesAdded.length > 0 ? 'completed' : 'inProgress',
+                status: checkStateLicenses || licensesAdded.length > 0 ? 'completed' : 'inProgress',
             })
         );
     }, [licensesAdded, values]);
@@ -204,7 +229,7 @@ export default function Licenses() {
                 title="Consign Artwork"
                 stepStatus={licensesAdded.length > 0 ? 'completed' : 'inProgress'}
                 stepNumber={3}
-                backPathRouter="/home/consignArtwork"
+                backOnclick={handleOpenBackModal}
             >
                 <Breadcrumb title="Consign Artwork" items={BCrumb} />
                 <Typography fontSize="1rem" fontWeight="normal" color="GrayText">
@@ -302,7 +327,7 @@ export default function Licenses() {
                         </Box>
                     </Box>
                     <Typography my={1} color="error">
-                        {typeof errors.licenses === 'string' && errors.licenses}
+                        {errorLicense}
                     </Typography>
 
                     <CustomizedSnackbar
@@ -312,6 +337,7 @@ export default function Licenses() {
                         setOpentate={setToastr}
                     />
                 </Grid>
+                <ModalBackConfirm show={showBackModal} handleClose={handleCloseBackModal} yesClick={handleSaveData} />
             </PageContainerFooter>
         </form>
     );

@@ -14,7 +14,7 @@ export interface FooterFormProps {
     progress?: number;
     children?: React.ReactNode;
     submitDisabled?: boolean;
-    backPathRouter: string;
+    backPathRouter?: string;
     stepStatus?: StepStatus;
     stepNumber?: number;
     backOnclick?: () => void;
@@ -35,11 +35,14 @@ export function FooterForm({
     const router = useRouter();
 
     const handleBackClick = () => {
-        if (backOnclick) backOnclick();
-        if (backPathRouter) {
-            router.push(backPathRouter);
+        if (backOnclick) {
+            backOnclick();
         } else {
-            router.back();
+            if (backPathRouter) {
+                router.push(backPathRouter);
+            } else {
+                router.back();
+            }
         }
     };
 
@@ -120,11 +123,11 @@ export function FooterForm({
                                 {submitText || 'Save'}
                             </Button>
 
-                            <Link href={backPathRouter} className="hover-text-primary">
+                            <Button onClick={!backPathRouter ? handleBackClick : undefined} variant="text">
                                 <Typography variant="subtitle2" color="GrayText" className="text-hover">
                                     Back
                                 </Typography>
-                            </Link>
+                            </Button>
                         </Stack>
                     </Box>
                 ) : (
@@ -139,7 +142,7 @@ export function FooterForm({
                             {submitText || 'Save'}
                         </Button>
 
-                        <Link href={backPathRouter} className="hover-text-primary">
+                        <Link href={backPathRouter || '/home'} className="hover-text-primary">
                             <Typography variant="subtitle2" color="GrayText" className="text-hover">
                                 Back
                             </Typography>

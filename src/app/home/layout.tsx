@@ -10,6 +10,8 @@ import Navigation from './layout/horizontal/navbar/Navigation';
 import HorizontalHeader from './layout/horizontal/header/Header';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useRouter } from 'next/navigation';
+import webSocketService from '@/services/websocket';
+import { connectWebSocketThunk, loginWebSocketThunk } from '@/features/ws/thunks';
 // import { userActionsCreators } from '@/features/user/slice';
 
 const MainWrapper = styled('div')(() => ({
@@ -61,6 +63,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             // }, 1000);
         }
     }, [token, router]);
+
+    useEffect(() => {
+        if (!webSocketService.socket) {
+            (async () => {
+                await dispatch(connectWebSocketThunk());
+                await dispatch(loginWebSocketThunk());
+            })();
+        }
+    }, [webSocketService]);
 
     const theme = useTheme();
 

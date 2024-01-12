@@ -16,11 +16,12 @@ import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
 import MediaCard from './mediaCard';
 import SelectMedia from './selectMedia';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
-import { sendRequestUploadThunk, userActionsCreators } from '@/features/user/slice';
+import { userActionsCreators } from '@/features/user/slice';
 import { nanoid } from '@reduxjs/toolkit';
 import { assetMediaThunk } from '@/features/asset/thunks';
-import { assetStorageThunk } from '@/features/user/thunks';
+import { assetStorageThunk, sendRequestUploadThunk } from '@/features/user/thunks';
 import { getMediaDefinition } from './helpers';
+import { ModalBackConfirm } from '../modalBackConfirm';
 
 const BCrumb = [
     {
@@ -37,6 +38,7 @@ const BCrumb = [
 ];
 
 export default function AssetMedia() {
+    const [showBackModal, setShowBackModal] = useState(false);
     const [showFormtsInfo, setShowFormatsInfo] = useState(true);
 
     const asset = useSelector((state) => state.asset);
@@ -52,7 +54,11 @@ export default function AssetMedia() {
             formats: asset.formats,
         },
         onSubmit: async (formValues) => {
-            router.push(`/home/consignArtwork/assetMetadata`);
+            const deleteFormats = Object.entries(formValues.formats)
+                .filter(([_, value]) => !value.file)
+                .map(([key, _]) => key);
+            if (deleteFormats.length) await dispatch(assetMediaThunk({ deleteFormats }));
+            router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/assetMetadata`);
         },
     });
 
@@ -76,6 +82,18 @@ export default function AssetMedia() {
         );
 
         setFieldValue(`formats.${formatUpload}.transactionId`, transactionId);
+    };
+
+    const handleCloseBackModal = () => {
+        setShowBackModal(false);
+    };
+
+    const handleOpenBackModal = () => {
+        setShowBackModal(true);
+    };
+
+    const handleSaveData = () => {
+        handleSubmit();
     };
 
     const checkStepProgress = Object.entries(values?.formats || {})
@@ -134,7 +152,6 @@ export default function AssetMedia() {
                 })
             );
 
-            // save asset
             await dispatch(
                 assetMediaThunk({
                     ...values,
@@ -146,11 +163,13 @@ export default function AssetMedia() {
         if (requestUploadReady.length) uploadAsset();
     }, [requestAssetUpload]);
 
+    const file = values?.formats?.original?.file;
+
     useEffect(() => {
-        if (values?.formats?.original?.file && !values?.definition) {
+        if (file && !values?.definition) {
             (async () => {
-                if (values?.formats?.original?.file) {
-                    const definition = await getMediaDefinition({ fileOrUrl: values?.formats?.original?.file });
+                if (file) {
+                    const definition = await getMediaDefinition({ fileOrUrl: file });
 
                     setFieldValue('definition', definition);
                 }
@@ -159,21 +178,17 @@ export default function AssetMedia() {
     }, [values.formats?.original?.file]);
 
     const urlAssetFile: string = useMemo(() => {
-        return values?.formats?.original?.file && values?.formats?.original?.file instanceof File
-            ? URL.createObjectURL(values?.formats?.original?.file)
-            : values?.formats?.original?.file
-              ? (values?.formats?.original?.file as string)
-              : '';
-    }, [values?.formats?.original?.file]);
+        return file && file instanceof File ? URL.createObjectURL(file) : file ? (file as string) : '';
+    }, [file]);
 
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
+                backOnclick={handleOpenBackModal}
                 submitText="Next"
                 stepStatus={checkStepProgress}
                 stepNumber={1}
                 title="Consign Artwork"
-                backPathRouter="/home/consignArtwork"
             >
                 <Breadcrumb title="Consign Artwork" items={BCrumb} />
 
@@ -244,6 +259,7 @@ export default function AssetMedia() {
                         />
                     )}
                 </Stack>
+                <ModalBackConfirm show={showBackModal} handleClose={handleCloseBackModal} yesClick={handleSaveData} />
             </PageContainerFooter>
         </form>
     );

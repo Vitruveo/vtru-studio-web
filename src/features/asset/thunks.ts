@@ -9,6 +9,7 @@ import { LicensesFormValues } from '@/app/home/consignArtwork/licenses/types';
 import { TermsOfUseFormValues } from '@/app/home/consignArtwork/termsOfUse/types';
 import { consignArtworkActionsCreators } from '../consignArtwork/slice';
 import { ASSET_STORAGE_URL } from '@/constants/asset';
+import { StepStatus } from '../consignArtwork/types';
 
 export function assetStorageThunk(payload: AssetStorageReq): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
@@ -17,9 +18,41 @@ export function assetStorageThunk(payload: AssetStorageReq): ReduxThunkAction<Pr
             file: payload.file,
         });
 
-        // if (response) dispatch(userActionsCreators.requestAssetUploadUsed({ transactionId: payload.transactionId }));
-
         return response;
+    };
+}
+
+export function validateStepsThunk(): ReduxThunkAction<Promise<any>> {
+    return async function (dispatch, getState) {
+        try {
+            const asset = getState().asset;
+
+            if (asset.assetMetadata && asset.assetMetadata.assetMetadataDefinitions?.length)
+                dispatch(
+                    consignArtworkActionsCreators.changeStatusStep({ stepId: 'assetMetadata', status: 'completed' })
+                );
+            if (asset.licenses && asset.licenses.length)
+                dispatch(consignArtworkActionsCreators.changeStatusStep({ stepId: 'licenses', status: 'completed' }));
+            if (asset.contract)
+                dispatch(consignArtworkActionsCreators.changeStatusStep({ stepId: 'termsOfUse', status: 'completed' }));
+
+            const formats = asset.formats;
+            const hasCompletedFormats = Object.entries(formats)
+                .filter(([key]) => key !== 'print')
+                .every(([key, value]) => value.file);
+
+            let status: StepStatus = 'notStarted';
+
+            if (formats.original.file && Object.entries(formats).length < 4) {
+                status = 'inProgress';
+            } else if (hasCompletedFormats) {
+                status = 'completed';
+            }
+
+            dispatch(consignArtworkActionsCreators.changeStatusStep({ stepId: 'assetMedia', status }));
+        } catch (_) {
+            // TODO: implement error handling
+        }
     };
 }
 
@@ -90,12 +123,16 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
     };
 }
 
-export function assetMediaThunk(payload: { formats?: FormatMediaSave }): ReduxThunkAction<Promise<any>> {
+export function assetMediaThunk(payload: {
+    formats?: FormatMediaSave;
+    deleteFormats?: string[];
+}): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
         const formatsState = getState().asset.formats;
 
         const formatsPersist = Object.entries(formatsState)
             .filter(([key, value]) => value.file)
+            .filter(([key, value]) => !payload.deleteFormats?.includes(key))
             .reduce((acc, [key, value]) => {
                 return {
                     ...acc,
@@ -105,6 +142,11 @@ export function assetMediaThunk(payload: { formats?: FormatMediaSave }): ReduxTh
                     },
                 };
             }, {});
+
+        await updateAssetStep({
+            formats: { ...formatsPersist, ...payload.formats },
+            stepName: 'assetUpload',
+        });
 
         const formatAssetsFormats = Object.entries(payload.formats || {}).reduce((acc, [key, value]) => {
             return {
@@ -118,12 +160,8 @@ export function assetMediaThunk(payload: { formats?: FormatMediaSave }): ReduxTh
             };
         }, {} as FormatsMedia);
 
-        const response = await updateAssetStep({
-            formats: { ...formatsPersist, ...payload.formats },
-            stepName: 'assetUpload',
-        });
-
         dispatch(assetActionsCreators.changeFormats(formatAssetsFormats));
+        if (payload.deleteFormats?.length) dispatch(assetActionsCreators.removeFormats(payload.deleteFormats));
     };
 }
 

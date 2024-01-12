@@ -1,7 +1,6 @@
 'use client';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { userLoginThunk, userAddThunk, userOTPConfirmThunk, sendRequestUploadThunk } from './thunks';
 import { UserSliceState } from './types';
 
 const initialState: UserSliceState = {
@@ -74,4 +73,3 @@ export const userSlice = createSlice({
 });
 
 export const userActionsCreators = userSlice.actions;
-export { userOTPConfirmThunk, userAddThunk, userLoginThunk, sendRequestUploadThunk };

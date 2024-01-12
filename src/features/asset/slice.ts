@@ -1,7 +1,6 @@
 'use client';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import { assetStorageThunk } from './thunks';
 import { AssetSliceState } from './types';
 
 const initialState: AssetSliceState = {
@@ -67,6 +66,29 @@ export const assetSlice = createSlice({
                 },
             };
         },
+        removeFormats: (state, action: PayloadAction<string[]>) => {
+            return {
+                ...state,
+                formats: Object.entries(state.formats).reduce(
+                    (acc, [key, value]) => {
+                        if (action.payload.includes(key))
+                            return {
+                                ...acc,
+                                [key]: {
+                                    file: undefined,
+                                    customFile: undefined,
+                                    transactionId: undefined,
+                                },
+                            };
+                        return {
+                            ...acc,
+                            [key]: value,
+                        };
+                    },
+                    {} as AssetSliceState['formats']
+                ),
+            };
+        },
         change: (state, action: PayloadAction<Partial<AssetSliceState>>) => {
             return {
                 ...state,
@@ -80,4 +102,3 @@ export const assetSlice = createSlice({
 });
 
 export const assetActionsCreators = assetSlice.actions;
-export { assetStorageThunk };

@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 
@@ -10,6 +10,7 @@ import LoginView from './view';
 import { loginSchemaValidation } from './formSchema';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 import { codesVtruApi } from '@/services/codes';
+import { userActionsCreators } from '@/features/user/slice';
 
 const LoginContainer = () => {
     const [disabled, setDiabled] = useState<boolean>(false);
@@ -40,6 +41,10 @@ const LoginContainer = () => {
                 }
             },
         });
+
+    useEffect(() => {
+        dispatch(userActionsCreators.logout());
+    }, []);
 
     return (
         <>

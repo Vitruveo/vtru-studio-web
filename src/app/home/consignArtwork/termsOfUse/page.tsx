@@ -13,38 +13,9 @@ import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { contractThunk } from '@/features/asset/thunks';
 import { useRouter } from 'next/navigation';
-
-// const currentStep = 6;
-
-// const validateErrorsContract = ({
-//     values,
-//     errors,
-//     setFieldValue,
-// }: {
-//     values: TermsOfUseFormValues;
-//     errors: FormikErrors<TermsOfUseFormValues>;
-//     setFieldValue: (
-//         field: string,
-//         value: any,
-//         shouldValidate?: boolean | undefined
-//     ) => Promise<void> | Promise<FormikErrors<TermsOfUseFormValues>>;
-// }) => {
-//     const fields: Array<keyof TermsOfUseFormValues> = ['contract'];
-
-//     // if (!fields.some((field) => errors[field])) {
-//     //     values.completedSteps[currentStep] = {
-//     //         step: currentStep,
-//     //         errors: false,
-//     //     };
-//     //     setFieldValue('completedSteps', { ...values.completedSteps });
-//     // } else {
-//     //     values.completedSteps[currentStep] = {
-//     //         step: currentStep,
-//     //         errors: true,
-//     //     };
-//     //     setFieldValue('completedSteps', { ...values.completedSteps });
-//     // }
-// };
+import { ModalBackConfirm } from '../modalBackConfirm';
+import Head from 'next/head';
+import { Contract } from './contract';
 
 const BCrumb = [
     {
@@ -61,6 +32,7 @@ const BCrumb = [
 ];
 
 export default function ContractScreen() {
+    const [showBackModal, setShowBackModal] = useState(false);
     const [scrolledToBottom, setScrolledToBottom] = useState(false);
     const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -97,6 +69,23 @@ export default function ContractScreen() {
         setFieldValue('contract', !values.contract);
     };
 
+    const handleCloseBackModal = () => {
+        setShowBackModal(false);
+    };
+
+    const handleOpenBackModal = () => {
+        setShowBackModal(true);
+    };
+
+    const handleSaveData = async () => {
+        const validate = await validateForm();
+        if (validate && Object.values(validate).length === 0) {
+            handleSubmit();
+        } else {
+            setShowBackModal(false);
+        }
+    };
+
     useEffect(() => {
         dispatch(contractThunk({ contract: values.contract }));
 
@@ -115,7 +104,7 @@ export default function ContractScreen() {
                 stepStatus={values.contract ? 'completed' : 'inProgress'}
                 stepNumber={4}
                 title="Consign Artwork"
-                backPathRouter="/home/consignArtwork"
+                backOnclick={handleOpenBackModal}
             >
                 <Breadcrumb title="Consign Artwork" items={BCrumb} />
                 <Typography fontSize="1rem" fontWeight="normal" color="GrayText">
@@ -126,7 +115,7 @@ export default function ContractScreen() {
                         mt={4}
                         ref={scrollContainerRef}
                         onScroll={handleScroll}
-                        maxHeight={380}
+                        maxHeight={400}
                         padding={2}
                         style={{
                             textAlign: 'justify',
@@ -134,58 +123,7 @@ export default function ContractScreen() {
                             border: '1px solid #ccc',
                         }}
                     >
-                        <Typography variant="h4" gutterBottom>
-                            Contract
-                        </Typography>
-                        <Typography paragraph>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque aliquam consequat
-                            urna, sed dignissim risus vestibulum sed. Nam ut urna quis erat facilisis consectetur quis a
-                            augue. Nam non posuere risus. Donec congue nunc tempor nisi egestas, eget laoreet mauris
-                            accumsan. Aenean sed lorem lacus. Nullam quis hendrerit sapien. Praesent placerat interdum
-                            diam, eu condimentum odio pretium a.
-                        </Typography>
-
-                        <Typography paragraph>
-                            Phasellus pellentesque non massa quis imperdiet. Maecenas vel odio metus. Donec tincidunt
-                            enim vitae libero euismod fermentum. Sed nec semper libero, in feugiat purus. Morbi viverra
-                            nisl erat, vitae maximus elit finibus ut. Donec elementum velit dui, sit amet porttitor ex
-                            tempus vel. Etiam vitae magna mattis, laoreet nisi vitae, aliquam ligula. Class aptent
-                            taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Duis gravida
-                            placerat varius. Nullam lacinia libero rhoncus sem blandit mollis. Praesent tempus tristique
-                            diam, sit amet gravida est mattis sit amet. Mauris maximus diam lobortis sem placerat, at
-                            bibendum erat imperdiet. Phasellus quam orci, bibendum sit amet risus quis, accumsan
-                            sagittis nibh.
-                        </Typography>
-
-                        <Typography paragraph>
-                            Etiam pellentesque tempus purus, quis blandit dolor mollis euismod. Suspendisse maximus
-                            ipsum tristique turpis tincidunt, ut dignissim dui vulputate. Aliquam tempor pretium
-                            rhoncus. Ut tempus molestie vehicula. Nulla lacus massa, suscipit dignissim pharetra sed,
-                            fringilla vel quam. Interdum et malesuada fames ac ante ipsum primis in faucibus. Curabitur
-                            rhoncus felis sit amet scelerisque pretium. Fusce porttitor nec justo vitae aliquet. Nunc
-                            posuere, neque vitae scelerisque maximus, metus nibh tempor augue, non rhoncus purus nulla
-                            et lacus. Cras efficitur dolor vel sem ornare, non tempor dolor posuere.
-                        </Typography>
-
-                        <Typography paragraph>
-                            Sed id ultricies nibh. Class aptent taciti sociosqu ad litora torquent per conubia nostra,
-                            per inceptos himenaeos. Sed a aliquet tortor. Sed non consequat libero. Integer mattis
-                            lectus tellus, id vehicula lacus viverra sed. Phasellus ac dolor gravida, porta felis quis,
-                            cursus sapien. Mauris ullamcorper volutpat ex. Praesent et eros ut quam pellentesque
-                            ultrices sit amet vitae odio. Quisque molestie massa a urna maximus mollis.
-                        </Typography>
-                        <Typography paragraph>
-                            Phasellus ligula est, dictum laoreet consectetur rhoncus, laoreet sit amet felis. Vivamus at
-                            felis id sem fermentum cursus vehicula a dolor. Nulla erat ex, imperdiet vitae feugiat quis,
-                            blandit in diam. Suspendisse tincidunt, eros eu consectetur condimentum, purus sapien
-                            laoreet tellus, in facilisis enim ante in mauris. Vivamus scelerisque lacinia tellus eget
-                            porta. Curabitur fringilla, risus in aliquet suscipit, neque neque laoreet libero, in
-                            dignissim nulla orci volutpat magna. Phasellus feugiat sapien id sapien vehicula egestas.
-                            Duis tempus enim id dolor efficitur rutrum. Nulla volutpat odio mauris, ac condimentum risus
-                            finibus nec. Pellentesque ut sem tincidunt, porta felis ut, maximus nisl. Morbi a augue non
-                            metus consequat vehicula ac sit amet odio. Aliquam lorem nunc, porttitor nec euismod nec,
-                            finibus ac tortor. Cras in finibus sem. Morbi pulvinar eros bibendum varius sollicitudin.
-                        </Typography>
+                        <Contract />
                     </Box>
                     {/* <Typography my={1} color="error">
                     {errors.contract}
@@ -205,6 +143,7 @@ export default function ContractScreen() {
                         </Button>
                     </Box>
                 </Container>
+                <ModalBackConfirm show={showBackModal} handleClose={handleCloseBackModal} yesClick={handleSaveData} />
             </PageContainerFooter>
         </form>
     );
