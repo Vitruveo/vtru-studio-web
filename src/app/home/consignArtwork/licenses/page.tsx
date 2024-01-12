@@ -217,7 +217,7 @@ export default function Licenses() {
         dispatch(
             consignArtworkActionsCreators.changeStatusStep({
                 stepId: 'licenses',
-                status: checkStateLicenses || licensesAdded.length > 0 ? 'completed' : 'inProgress',
+                status: checkStateLicenses.length > 0 || licensesAdded.length > 0 ? 'completed' : 'inProgress',
             })
         );
     }, [licensesAdded, values]);
