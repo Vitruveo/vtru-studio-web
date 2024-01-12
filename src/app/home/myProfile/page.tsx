@@ -17,7 +17,6 @@ import PageContainer from '../components/container/PageContainer';
 import BlankCard from '../components/shared/BlankCard';
 import AccountSettings from './accountSettings';
 
-// images
 import { Stack } from '@mui/system';
 import { FooterForm } from '../components/footerForm';
 import { saveStepWizardThunk } from '@/features/user/thunks';
@@ -28,16 +27,7 @@ import CustomTextField from '../components/forms/theme-elements/CustomTextField'
 import { debouncedUsernameValidation } from '../consignArtwork/formschema';
 import PageContainerFooter from '../components/container/PageContainerFooter';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
-
-const BCrumb = [
-    {
-        to: '/home',
-        title: 'Home',
-    },
-    {
-        title: 'My Profile',
-    },
-];
+import { useI18n } from '@/app/hooks/useI18n';
 
 export default function ProfileSettings() {
     const [usernameError, setUsernameError] = useState('');
@@ -53,6 +43,33 @@ export default function ProfileSettings() {
     const dispatch = useDispatch();
     const router = useRouter();
 
+    const { language } = useI18n();
+
+    const texts = {
+        title: language['studio.myProfile.title'],
+        subtitle: language['studio.myProfile.subtitle'],
+        home: language['studio.myProfile.home'],
+        usernameTitle: language['studio.myProfile.form.username.title'],
+        usernamePlaceholder: language['studio.myProfile.form.username.placeholder'],
+        saveMessage: language['studio.myProfile.saveMessage'],
+        usernameRequiredError: language['studio.myProfile.form.usernameRequired.error'],
+        accessConsignMessage: language['studio.myProfile.accessConsignMessage'],
+        profileTitle: language['studio.myProfile.form.profile.title'],
+        profileResetButton: language['studio.myProfile.form.profile.reset.button'],
+        profileUploadButton: language['studio.myProfile.form.profile.upload.button'],
+        profileDescription: language['studio.myProfile.form.profile.description'],
+    } as { [key: string]: string };
+
+    const BCrumb = [
+        {
+            to: '/home',
+            title: texts.home,
+        },
+        {
+            title: texts.title,
+        },
+    ];
+
     const { handleSubmit, handleChange, setFieldValue, setFieldError, setErrors, values, errors } =
         useFormik<AccountSettingsFormValues>({
             initialValues: {
@@ -62,7 +79,8 @@ export default function ProfileSettings() {
             },
             // validationSchema: stepsSchemaValidation,
             onSubmit: async (formValues) => {
-                if (!formValues.username || formValues.username?.length === 0) setUsernameError('Username is required');
+                if (!formValues.username || formValues.username?.length === 0)
+                    setUsernameError(texts.usernameRequiredError);
                 else {
                     await dispatch(saveStepWizardThunk({ step: 0, values }));
                     dispatch(
@@ -76,7 +94,7 @@ export default function ProfileSettings() {
                     setToastr({
                         open: true,
                         type: 'success',
-                        message: 'Data saved successfully',
+                        message: texts.saveMessage,
                     });
 
                     setTimeout(() => {
@@ -92,8 +110,7 @@ export default function ProfileSettings() {
             setToastr({
                 open: true,
                 type: 'warning',
-                message:
-                    'To access the consign artwork, it is necessary to fill in all the mandatory fields in the user profile',
+                message: texts.accessConsignMessage,
             });
         }
     }, [isCompletedProfile, goToConsignArtwork]);
@@ -106,13 +123,13 @@ export default function ProfileSettings() {
 
     return (
         <form onSubmit={handleSubmit}>
-            <PageContainerFooter backPathRouter="/home" title="My Profile" description="this is Account Settings">
+            <PageContainerFooter backPathRouter="/home" title={texts.title}>
                 <Box margin="auto 0" display="relative">
-                    <Breadcrumb title="My Profile" items={BCrumb} />
+                    <Breadcrumb title={texts.title} items={BCrumb} />
 
                     <Box my={3}>
                         <Typography variant="h5" fontWeight="normal" color="GrayText">
-                            Customize your Vitruveo profile with multiple email and wallet addresses.
+                            {texts.subtitle}
                         </Typography>
                     </Box>
 
@@ -123,11 +140,11 @@ export default function ProfileSettings() {
                                     <Box my={2} maxWidth={250}>
                                         <Box mb={2}>
                                             <Typography variant="subtitle1" fontWeight={600} component="label">
-                                                Username
+                                                {texts.usernameTitle}
                                             </Typography>
                                         </Box>
                                         <CustomTextField
-                                            placeholder="Enter username"
+                                            placeholder={texts.usernamePlaceholder}
                                             size="small"
                                             id="username"
                                             variant="outlined"
@@ -140,7 +157,7 @@ export default function ProfileSettings() {
                                     </Box>
                                     <Box my={3}>
                                         <Typography variant="subtitle1" fontWeight={600} component="label" mb={3}>
-                                            Change your profile picture from here
+                                            {texts.profileTitle}
                                         </Typography>
                                         <Box textAlign="center" display="flex" justifyContent="center">
                                             <Box>
@@ -155,15 +172,15 @@ export default function ProfileSettings() {
                                                 />
                                                 <Stack direction="row" justifyContent="center" spacing={2} my={3}>
                                                     <Button variant="outlined" color="error">
-                                                        Reset
+                                                        {texts.profileResetButton}
                                                     </Button>
                                                     <Button variant="contained" color="primary" component="label">
-                                                        Upload
+                                                        {texts.profileUploadButton}
                                                         <input hidden accept="image/*" multiple type="file" />
                                                     </Button>
                                                 </Stack>
                                                 <Typography variant="subtitle1" color="textSecondary" mb={4}>
-                                                    Allowed JPG, GIF or PNG. Max size of 800K
+                                                    {texts.profileDescription}
                                                 </Typography>
                                             </Box>
                                         </Box>

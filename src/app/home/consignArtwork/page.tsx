@@ -12,16 +12,8 @@ import { StepId, StepStatus } from '@/features/consignArtwork/types';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { publishThunk } from '@/features/asset/thunks';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
-
-const BCrumb = [
-    {
-        to: '/home',
-        title: 'Home',
-    },
-    {
-        title: 'Consign Artwork',
-    },
-];
+import { useI18n } from '@/app/hooks/useI18n';
+import { TranslateFunction } from '@/i18n/types';
 
 const ConsignArtwork = () => {
     const [toastr, setToastr] = useState<CustomizedSnackbarState>({
@@ -33,6 +25,8 @@ const ConsignArtwork = () => {
     const pathname = usePathname();
     const router = useRouter();
 
+    const { language } = useI18n();
+
     const theme = useTheme();
     const dispatch = useDispatch();
 
@@ -40,6 +34,23 @@ const ConsignArtwork = () => {
     const { completedSteps } = useSelector((state) => state.consignArtwork);
 
     const checkAllCompletedSteps = Object.values(completedSteps).every((v) => v.status === 'completed');
+
+    const texts = {
+        homeTitle: language['studio.home.title'],
+        stepPublishMessageSuccess: language['studio.consignArtwork.stepPublishMessageSuccess'],
+        consignArtworkTitle: language['studio.consignArtwork.title'],
+        consignArtworkSubtitle: language['studio.consignArtwork.subtitle'],
+    } as { [key: string]: string };
+
+    const BCrumb = [
+        {
+            to: '/home',
+            title: texts.homeTitle,
+        },
+        {
+            title: texts.consignArtworkTitle,
+        },
+    ];
 
     const handleChangePage = (page: StepId, stepStatus: StepStatus) => {
         router.push(`${pathname}/${page}`);
@@ -50,12 +61,13 @@ const ConsignArtwork = () => {
         setToastr({
             type: 'success',
             open: true,
-            message: 'Published successfully!',
+            message: texts.stepPublishMessageSuccess,
         });
     };
 
     const successColor = '#93C47D';
     const warningColor = '#F6B26B';
+
     const grayColor = theme.palette.text.disabled;
 
     return (
@@ -63,15 +75,16 @@ const ConsignArtwork = () => {
             <PageContainerFooter
                 submitDisabled={!checkAllCompletedSteps || status === 'published'}
                 backPathRouter="/home"
-                title="Consign Artwork"
-                description="this is Wizard"
-                submitText={status === 'published' ? 'Published' : 'Publish'}
+                title={texts.consignArtworkTitle}
+                submitText={(language['studio.consignArtwork.publishButton'] as TranslateFunction)({
+                    data: { status },
+                })}
             >
-                <Breadcrumb title="Consign Artwork" items={BCrumb} />
+                <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
                 <Grid item xs={12} lg={6}>
                     <Box>
                         <Typography variant="h6" fontWeight="normal" color="GrayText">
-                            Complete all tasks and publish your artwork
+                            {texts.consignArtworkSubtitle}
                         </Typography>
                     </Box>
                     <Box maxWidth={700} p={2}>
@@ -79,11 +92,11 @@ const ConsignArtwork = () => {
                             <Grid alignItems="center" justifyContent="space-between" container key={v.stepId}>
                                 <Grid item>
                                     <Typography my={2} variant="h6" fontWeight="normal" color="GrayText">
-                                        {v.stepName}
+                                        {language[v.stepName] as string}
                                     </Typography>
                                 </Grid>
-                                <Grid display="flex" flexWrap="wrap" width={300} item>
-                                    <Box width={100} display="flex" alignItems="center">
+                                <Grid display="flex" flexWrap="wrap" width={350} item>
+                                    <Box width={110} display="flex" alignItems="center">
                                         <Box
                                             display="flex"
                                             alignItems="center"
@@ -97,7 +110,7 @@ const ConsignArtwork = () => {
                                                 warningColor
                                             }
                                         >
-                                            {v.statusName}
+                                            {language[v.statusName] as string}
                                         </Box>
                                     </Box>
                                     <Box width={100} marginLeft={1}>
@@ -108,7 +121,9 @@ const ConsignArtwork = () => {
                                             variant="contained"
                                             fullWidth
                                         >
-                                            {v.status !== 'notStarted' ? 'Edit' : 'Start'}
+                                            {(language['studio.consignArtwork.stepButton'] as TranslateFunction)({
+                                                data: { status: v.status },
+                                            })}
                                         </Button>
                                     </Box>
                                 </Grid>

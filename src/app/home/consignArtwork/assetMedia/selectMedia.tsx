@@ -5,8 +5,9 @@ import { Box, SvgIcon, Typography, IconButton, Stack } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { AssetMediaFormErros, AssetMediaFormValues } from './types';
 import { useDropzone } from 'react-dropzone';
-import { handleGetFileWidthAndHeight, mediaConfigs } from './helpers';
+import { handleGetFileWidthAndHeight } from './helpers';
 import ModalError from './modalError';
+import { useI18n } from '@/app/hooks/useI18n';
 
 interface SelectMediaProps {
     urlAssetFile?: string;
@@ -30,6 +31,14 @@ export default function SelectMedia({
     handleUploadFile,
 }: SelectMediaProps) {
     const [modalErrorOpen, setModalErrorOpen] = useState(false);
+
+    const { language } = useI18n();
+
+    const texts = {
+        dragAndDrop: language['studio.consignArtwork.assetMedia.dragAndDrop'],
+        imageTypes: language['studio.consignArtwork.assetMedia.imageTypes'],
+        videoTypes: language['studio.consignArtwork.assetMedia.videoTypes'],
+    } as { [key: string]: string };
 
     const handleDeleteFile = () => {
         setFieldValue('formats.original', { file: undefined, customFile: undefined });
@@ -98,11 +107,8 @@ export default function SelectMedia({
                 {...getRootProps()}
             >
                 <input id="asset" {...getInputProps()} />
-                {isDragActive ? (
-                    <p>Drop the files here...</p>
-                ) : file ? (
+                {file ? (
                     <Stack direction="row" alignItems="center" gap={2}>
-                        <img src={urlAssetFile!} style={{ display: 'none' }} alt="" onLoad={handleOnLoad} />
                         <Box display="flex" flexDirection="column" gap={2}>
                             <>
                                 <Box
@@ -146,24 +152,21 @@ export default function SelectMedia({
                         width="100%"
                     >
                         <Typography sx={{ fontSize: { xs: '1rem', sm: '1rem', md: '1rem' } }} variant="h6">
-                            Drag and drop a single media asset file or click to upload.
+                            {texts.dragAndDrop}
                         </Typography>
                         <Typography
                             sx={{ fontSize: { xs: '1rem', sm: '1rem', md: '1rem' } }}
                             marginTop={2}
                             variant="h6"
                         >
-                            Image: JPEG, PNG, GIF, SVG, WEBP
+                            {texts.imageTypes}
                         </Typography>
                         <Typography sx={{ fontSize: { xs: '1rem', sm: '1rem', md: '1rem' } }} variant="h6">
-                            Video: MP4, WEBM
+                            {texts.videoTypes}
                         </Typography>
                     </Box>
                 )}
             </Box>
-            {/* <Typography my={1} color="error">
-                {errors?.asset?.file}
-            </Typography> */}
             <ModalError
                 format="original"
                 open={modalErrorOpen}

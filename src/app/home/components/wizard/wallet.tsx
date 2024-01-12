@@ -7,6 +7,7 @@ import { Button, Divider, Typography } from '@mui/material';
 
 import { AccountSettingsProps } from '../../myProfile/types';
 import CustomTextField from '../forms/theme-elements/CustomTextField';
+import { useI18n } from '@/app/hooks/useI18n';
 
 const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
     const [connectWallet, setConnectWallet] = useState(false);
@@ -14,6 +15,14 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
     const { openConnectModal } = useConnectModal();
     const { isConnected, address } = useAccount();
     const { disconnectAsync } = useDisconnect();
+
+    const { language } = useI18n();
+
+    const texts = {
+        deleteButton: language['studio.myProfile.form.delete.button'],
+        walletPlaceholder: language['studio.myProfile.form.wallet.placeholder'],
+        connectButton: language['studio.myProfile.form.connect.button'],
+    } as { [key: string]: string };
 
     const handleAddWallet = async () => {
         if (isConnected) await disconnectAsync();
@@ -70,7 +79,7 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
                                         style={{ width: 122 }}
                                         onClick={() => handleDeleteWallet(index)}
                                     >
-                                        Delete
+                                        {texts.deleteButton}
                                     </Button>
                                 )}
                             </Box>
@@ -86,11 +95,11 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
                         size="small"
                         fullWidth
                         variant="outlined"
-                        placeholder="Connect new wallet"
+                        placeholder={texts.walletPlaceholder}
                     />
                     <Box marginLeft={1} flexDirection="row" display="flex" justifyContent="flex-end" gap={1}>
                         <Button size="small" style={{ width: 122 }} variant="contained" onClick={handleAddWallet}>
-                            Connect
+                            {texts.connectButton}
                         </Button>
                     </Box>
                 </Box>

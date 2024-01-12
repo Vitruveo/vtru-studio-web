@@ -5,13 +5,19 @@ import { useSelector, useDispatch } from '@/store/hooks';
 import { Stack } from '@mui/system';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
+import { setLanguage } from '@/features/customizer/slice';
 // import { AppState } from '@/store';
 
 const Languages = [
     {
         flagname: 'English (US)',
         icon: '/images/flag/icon-flag-en-us.png',
-        value: 'en',
+        value: 'en_US',
+    },
+    {
+        flagname: 'Português PT-BR',
+        icon: '/images/flag/icon-flag-br.png',
+        value: 'pt_BR',
     },
 ];
 
@@ -21,16 +27,20 @@ const Language = () => {
 
     const customizer = useSelector((state) => state.customizer);
 
-    const currentLang = Languages.find((_lang) => _lang.value === customizer.isLanguage) || Languages[1];
+    const currentLang = Languages.find((_lang) => _lang.value === customizer.currentLanguage) || Languages[1];
     const { i18n } = useTranslation();
+    const dispatch = useDispatch();
+
     const handleClick = (event: any) => {
         setAnchorEl(event.currentTarget);
     };
+
     const handleClose = () => {
         setAnchorEl(null);
     };
+
     useEffect(() => {
-        i18n.changeLanguage(customizer.isLanguage);
+        i18n.changeLanguage(customizer.currentLanguage);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -58,11 +68,7 @@ const Language = () => {
                 }}
             >
                 {Languages.map((option, index) => (
-                    <MenuItem
-                        key={index}
-                        sx={{ py: 2, px: 3 }}
-                        // onClick={() => dispatch(setLanguage(option.value))}
-                    >
+                    <MenuItem key={index} sx={{ py: 2, px: 3 }} onClick={() => dispatch(setLanguage(option.value))}>
                         <Stack direction="row" spacing={1} alignItems="center">
                             <Avatar src={option.icon} alt={option.icon} sx={{ width: 20, height: 20 }} />
                             <Typography> {option.flagname}</Typography>

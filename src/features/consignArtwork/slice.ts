@@ -4,33 +4,46 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ChangeStatusPayload, ConsignArtworkSliceState } from './types';
 import { Email, User, Wallet } from '../user/types';
 
+export const stepsNames = {
+    assetMedia: 'studio.consignArtwork.stepName.assetMedia',
+    assetMetadata: 'studio.consignArtwork.stepName.assetMetadata',
+    licenses: 'studio.consignArtwork.stepName.licenses',
+    termsOfUse: 'studio.consignArtwork.stepName.termsOfUse',
+};
+
+export const statusName = {
+    completed: 'studio.consignArtwork.stepStatus.completed',
+    inProgress: 'studio.consignArtwork.stepStatus.inProgress',
+    notStarted: 'studio.consignArtwork.stepStatus.notStarted',
+};
+
 const initialState: ConsignArtworkSliceState = {
     isCompletedProfile: false,
     goToConsignArtwork: false,
     completedSteps: {
         assetMedia: {
             stepId: 'assetMedia',
-            stepName: 'Asset Media',
+            stepName: stepsNames.assetMedia,
             status: 'notStarted',
-            statusName: 'Not Started',
+            statusName: statusName.notStarted,
         },
         assetMetadata: {
             stepId: 'assetMetadata',
-            stepName: 'Asset Metadata',
+            stepName: stepsNames.assetMetadata,
             status: 'notStarted',
-            statusName: 'Not Started',
+            statusName: statusName.notStarted,
         },
         licenses: {
             stepId: 'licenses',
-            stepName: 'Licenses',
+            stepName: stepsNames.licenses,
             status: 'notStarted',
-            statusName: 'Not Started',
+            statusName: statusName.notStarted,
         },
         termsOfUse: {
             stepId: 'termsOfUse',
-            stepName: 'Terms of Use',
+            stepName: stepsNames.termsOfUse,
             status: 'notStarted',
-            statusName: 'Not Started',
+            statusName: statusName.notStarted,
         },
     },
 };
@@ -51,9 +64,9 @@ export const consignArtworkSlice = createSlice({
         },
         changeStatusStep: (state, action: PayloadAction<ChangeStatusPayload>) => {
             const { stepId, status } = action.payload;
-            if (status === 'completed') state.completedSteps[stepId].statusName = 'Completed';
-            if (status === 'inProgress') state.completedSteps[stepId].statusName = 'In Progress';
-            if (status === 'notStarted') state.completedSteps[stepId].statusName = 'Not Started';
+            if (status === 'completed') state.completedSteps[stepId].statusName = statusName.completed;
+            if (status === 'inProgress') state.completedSteps[stepId].statusName = statusName.inProgress;
+            if (status === 'notStarted') state.completedSteps[stepId].statusName = statusName.notStarted;
             state.completedSteps[stepId].status = status;
         },
     },

@@ -1,5 +1,7 @@
-import { Dialog, DialogContent, Typography } from '@mui/material';
 import React from 'react';
+import { useI18n } from '@/app/hooks/useI18n';
+import { Dialog, DialogContent, Typography } from '@mui/material';
+import { TranslateFunction } from '@/i18n/types';
 
 interface ModalErrorProps {
     dimensionError?: { width: number; height: number };
@@ -11,24 +13,38 @@ interface ModalErrorProps {
 }
 
 const ModalError = ({ definition, dimensionError, format, sizeError, open, setClose }: ModalErrorProps) => {
+    const { language } = useI18n();
+
+    const texts = {
+        sizeTitle: language['studio.consignArtwork.assetMedia.modalErrorSize.title'],
+        modalErrorTitle: language['studio.consignArtwork.assetMedia.modalError.title'],
+        dimensionsTitle: language['studio.consignArtwork.assetMedia.modalErrorDimensions.title'],
+    } as { [key: string]: string };
+
     return (
         <Dialog open={open} onClose={setClose}>
             <DialogContent>
-                <Typography color="red">Uh oh! The media file you uploaded has the following issues:</Typography>
+                <Typography color="red">{texts.modalErrorTitle}</Typography>
                 {dimensionError && (
                     <Typography color="red">
                         <Typography color="red" fontWeight="bold">
-                            Dimensions
+                            {texts.dimensionsTitle}
                         </Typography>{' '}
-                        {`— The media file for a ${definition} Image (${format}) must be at least ${dimensionError.width} x ${dimensionError.height} pixels`}
+                        {(
+                            language[
+                                'studio.consignArtwork.assetMedia.modalErrorDimensions.description'
+                            ] as TranslateFunction
+                        )({ width: dimensionError.width, height: dimensionError.height, definition, format })}
                     </Typography>
                 )}
                 {sizeError && (
                     <Typography color="red">
                         <Typography color="red" fontWeight="bold">
-                            Size
+                            {texts.sizeTitle}
                         </Typography>{' '}
-                        {`— The media file size for a ${definition} Image (${format}) cannot exceed ${sizeError}`}
+                        {(language['studio.consignArtwork.assetMedia.modalErrorSize.description'] as TranslateFunction)(
+                            { sizeError, definition, format }
+                        )}
                     </Typography>
                 )}
             </DialogContent>

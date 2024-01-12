@@ -8,6 +8,8 @@ import { AssetMediaFormErros, AssetMediaFormValues, FormatMedia } from './types'
 import Crop from './crop';
 import { getFileSize, handleGetFileWidthAndHeight, mediaConfigs } from './helpers';
 import ModalError from './modalError';
+import { useI18n } from '@/app/hooks/useI18n';
+import { TranslateFunction } from '@/i18n/types';
 
 interface MediaCardProps {
     formatType: string;
@@ -44,10 +46,19 @@ export default function MediaCard({
     const [mediaWidth, setMediaWidth] = useState(0);
     const [mediaHeight, setMediaHeight] = useState(0);
 
+    const { language } = useI18n();
+
     const mediaConfig =
         mediaConfigs[definition as keyof typeof mediaConfigs]?.[
             formatType as keyof (typeof mediaConfigs)['landscape']
         ] || {};
+
+    const texts = {
+        image: language['studio.consignArtwork.assetMedia.image'],
+        max: language['studio.consignArtwork.assetMedia.max'],
+        mediaIs: language['studio.consignArtwork.assetMedia.mediaIs'],
+        uploadButton: language['studio.consignArtwork.assetMedia.upload.button'],
+    } as { [key: string]: string };
 
     const onDrop = useCallback(
         async (acceptedFiles: File[]) => {
@@ -73,15 +84,16 @@ export default function MediaCard({
     }, [formatValue.file]);
 
     const handleDeleteFile = () => {
+        const newValue = { file: undefined, customFile: undefined };
         if (formatType === 'original') {
-            setFieldValue('formats.original', { file: undefined, customFile: undefined });
-            setFieldValue('formats.display', { file: undefined, customFile: undefined });
-            setFieldValue('formats.exhibition', { file: undefined, customFile: undefined });
-            setFieldValue('formats.preview', { file: undefined, customFile: undefined });
-            setFieldValue('formats.print', { file: undefined, customFile: undefined });
+            setFieldValue('formats.original', newValue);
+            setFieldValue('formats.display', newValue);
+            setFieldValue('formats.exhibition', newValue);
+            setFieldValue('formats.preview', newValue);
+            setFieldValue('formats.print', newValue);
             setFieldValue('definition', '');
         } else {
-            setFieldValue(`formats.${formatType}`, { file: undefined, customFile: undefined });
+            setFieldValue(`formats.${formatType}`, newValue);
         }
     };
 
@@ -134,7 +146,9 @@ export default function MediaCard({
                     )}
 
                     <Typography marginLeft={1} color="grey" variant="h6" fontWeight="normal">
-                        {formatType.charAt(0).toUpperCase() + formatType.slice(1)}
+                        {(language['studio.consignArtwork.assetMedia.formats'] as TranslateFunction)({
+                            format: formatType,
+                        })}
                     </Typography>
                 </Box>
                 {formatValue.file && (
@@ -173,12 +187,14 @@ export default function MediaCard({
                     height={70}
                 >
                     <Typography fontSize="0.8rem" color="GrayText" textAlign="center">
-                        JPEG image
+                        JPEG {texts.image}
                         <Typography fontSize="0.8rem">
                             {mediaConfig?.width || mediaWidth} X {mediaConfig?.height || mediaHeight}
                         </Typography>
                         <Typography fontSize="0.8rem">
-                            {mediaConfig?.sizeMB ? `${mediaConfig?.sizeMB} MB maximum` : getFileSize(formatValue.file!)}
+                            {mediaConfig?.sizeMB
+                                ? `${mediaConfig?.sizeMB} MB ${texts.max}`
+                                : getFileSize(formatValue.file!)}
                         </Typography>
                     </Typography>
                 </Box>
@@ -206,14 +222,16 @@ export default function MediaCard({
                                 alignItems="center"
                             >
                                 <Button size="small" variant="contained">
-                                    Upload
+                                    {texts.uploadButton}
                                 </Button>
                             </Box>
 
                             <Box>
-                                <Typography>This media is</Typography>
+                                <Typography>{texts.mediaIs}</Typography>
                                 <Typography textAlign="center" fontWeight="bold">
-                                    {mediaConfig.required ? 'Required' : 'Optional'}
+                                    {(language['studio.consignArtwork.assetMedia.mediaRequired'] as TranslateFunction)({
+                                        required: mediaConfig.required,
+                                    })}
                                 </Typography>
                             </Box>
                         </Box>
@@ -223,7 +241,10 @@ export default function MediaCard({
 
             <Dialog maxWidth="lg" open={showCrop} onClose={handleClose}>
                 <DialogTitle color="GrayText">
-                    {`Crop media for Display to ${mediaConfig?.width} x ${mediaConfig?.height} pixels. Click “Done” to save.`}
+                    {(language['studio.consignArtwork.assetMedia.cropModal.title'] as TranslateFunction)({
+                        width: mediaConfig.width,
+                        height: mediaConfig.height,
+                    })}
                 </DialogTitle>
                 <DialogContent>
                     <Crop

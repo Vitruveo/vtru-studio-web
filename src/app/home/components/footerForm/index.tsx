@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { Box, Button, Stack, Typography, useTheme } from '@mui/material';
 import { useSelector } from '@/store/hooks';
 import { StepStatus } from '@/features/consignArtwork/types';
+import { useI18n } from '@/app/hooks/useI18n';
 
 export interface FooterFormProps {
     submitText?: string;
@@ -33,6 +34,19 @@ export function FooterForm({
     const theme = useTheme();
     const customizer = useSelector((state) => state.customizer);
     const router = useRouter();
+
+    const { language } = useI18n();
+
+    const texts = {
+        thisStep: language['studio.footer.thisStep'],
+        completed: language['studio.footer.completed'],
+        inProgress: language['studio.footer.inProgress'],
+        notYet: language['studio.footer.notYet'],
+        step: language['studio.footer.step'],
+        of: language['studio.footer.of'],
+        save: language['studio.footer.save'],
+        back: language['studio.footer.back'],
+    } as { [key: string]: string };
 
     const handleBackClick = () => {
         if (backOnclick) {
@@ -68,9 +82,9 @@ export function FooterForm({
                     bgcolor="#B6D7A8"
                 >
                     <Typography variant="h6" fontWeight="normal">
-                        This step has been{' '}
+                        {texts.thisStep}{' '}
                         <Typography display="inline" fontWeight={600}>
-                            Completed
+                            {texts.completed}
                         </Typography>
                     </Typography>
                 </Box>
@@ -85,11 +99,11 @@ export function FooterForm({
                     bgcolor="#F6B26B"
                 >
                     <Typography variant="h6" fontWeight="normal">
-                        This step is{' '}
+                        {texts.thisStep}{' '}
                         <Typography display="inline" fontWeight={600}>
-                            In Progress
+                            {texts.inProgress}
                         </Typography>{' '}
-                        and is not yet complete
+                        {texts.notYet}
                     </Typography>
                 </Box>
             )}
@@ -108,7 +122,7 @@ export function FooterForm({
                     <Box marginInline={4} display="flex" alignItems="center" justifyContent="space-between">
                         {stepNumber && (
                             <Typography flexDirection="row" fontWeight="400" variant="h4">
-                                Step {stepNumber} of 4
+                                {texts.step} {stepNumber} {texts.of} 4
                             </Typography>
                         )}
 
@@ -125,7 +139,7 @@ export function FooterForm({
 
                             <Button onClick={!backPathRouter ? handleBackClick : undefined} variant="text">
                                 <Typography variant="subtitle2" color="GrayText" className="text-hover">
-                                    Back
+                                    {texts.back}
                                 </Typography>
                             </Button>
                         </Stack>
@@ -139,12 +153,12 @@ export function FooterForm({
                             color="primary"
                             variant="contained"
                         >
-                            {submitText || 'Save'}
+                            {submitText || texts.save}
                         </Button>
 
                         <Link href={backPathRouter || '/home'} className="hover-text-primary">
                             <Typography variant="subtitle2" color="GrayText" className="text-hover">
-                                Back
+                                {texts.back}
                             </Typography>
                         </Link>
                     </Stack>

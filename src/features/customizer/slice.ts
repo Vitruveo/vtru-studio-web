@@ -12,7 +12,7 @@ interface StateType {
     isSidebarHover?: boolean;
     isMobileSidebar?: boolean;
     isHorizontal?: boolean;
-    isLanguage?: string;
+    currentLanguage: 'en_US' | 'pt_BR' | 'es_ES';
     isCardShadow?: boolean;
     borderRadius?: number | any;
 }
@@ -29,7 +29,7 @@ const initialState: StateType = {
     isSidebarHover: false,
     isMobileSidebar: false,
     isHorizontal: false,
-    isLanguage: 'en',
+    currentLanguage: 'en_US',
     isCardShadow: true,
     borderRadius: 7,
 };
@@ -49,7 +49,7 @@ export const customizerSlice = createSlice({
             state.activeDir = action.payload;
         },
         setLanguage: (state: StateType, action) => {
-            state.isLanguage = action.payload;
+            state.currentLanguage = action.payload;
         },
         setCardShadow: (state: StateType, action) => {
             state.isCardShadow = action.payload;

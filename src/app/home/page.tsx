@@ -15,11 +15,24 @@ import { Button, Container } from '@mui/material';
 import VtruTitle from '@/app/home/components/vtruTItle';
 import { useSelector } from '@/store/hooks';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
+import { useI18n } from '../hooks/useI18n';
 
 export default function Home() {
+    const { language } = useI18n();
     const dispatch = useDispatch();
+
     const isCompletedProfile = useSelector((state) => state.consignArtwork.isCompletedProfile);
     const customizer = useSelector((state) => state.customizer);
+
+    const texts = {
+        title: language['studio.home.title'],
+        welcome: language['studio.home.wellcome'],
+        congrats: language['studio.home.congrats'],
+        transform: language['studio.home.transforming'],
+        software: language['studio.home.software'],
+        consign: language['studio.home.consign'],
+        myProfile: language['studio.home.myProfile'],
+    } as { [key: string]: string };
 
     return (
         <Container
@@ -27,40 +40,38 @@ export default function Home() {
                 maxWidth: customizer.isLayout === 'boxed' ? 'lg' : '100%!important',
             }}
         >
-            <PageContainer title="Home" description="this is Dashboard">
-                <Breadcrumb title="Home" />
+            <PageContainer title={texts.title}>
+                <Breadcrumb title={texts.title} />
                 <Box maxWidth={800} padding={3} mt={3}>
                     <Box>
                         <Typography variant="h2" display="inline">
-                            Welcome to <VtruTitle vtru="h3" studio="h2" copyRem="3rem" />
+                            {texts.welcome} <VtruTitle vtru="h3" studio="h2" copyRem="3rem" />
                         </Typography>
                     </Box>
                     <Box marginTop={4}>
                         <Typography variant="h4" color="primary">
-                            Congrats on being selected as a Vitruveo Genesis Artist 🎉
+                            {texts.congrats} 🎉
                         </Typography>
                     </Box>
                     <Box marginTop={4}>
                         <Typography variant="h4" color="primary">
-                            Vitruveo is transforming Web3 art, and that means all-new software like this “Alpha” version
-                            of vtruStudio. Alpha means the software is not fully ready and you’re helping us test it so
-                            it can be improved.
+                            {texts.transform}
                         </Typography>
                     </Box>
                     <Box marginTop={4}>
                         <Typography variant="h4" color="primary">
-                            The software currently has two features you can access with the buttons below:
+                            {texts.software}
                         </Typography>
                     </Box>
                     <Grid marginTop={3} container spacing={2}>
-                        <Grid item xs={12} sm={6} md={3}>
+                        <Grid item xs={12} sm={6} md={3.5}>
                             <Link href="/home/myProfile" passHref>
                                 <Button variant="contained" fullWidth>
-                                    My Profile
+                                    {texts.myProfile}
                                 </Button>
                             </Link>
                         </Grid>
-                        <Grid item xs={12} sm={6} md={3}>
+                        <Grid item xs={12} sm={6} md={3.5}>
                             <Link href={isCompletedProfile ? '/home/consignArtwork' : '/home/myProfile'} passHref>
                                 <Button
                                     variant="contained"
@@ -69,7 +80,7 @@ export default function Home() {
                                     }
                                     fullWidth
                                 >
-                                    Consign Artwork
+                                    {texts.consign}
                                 </Button>
                             </Link>
                         </Grid>

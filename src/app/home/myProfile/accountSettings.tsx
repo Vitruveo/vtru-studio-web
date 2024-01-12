@@ -11,7 +11,7 @@ import { addCreatorEmailThunk, verifyCodeThunk } from '@/features/user/thunks';
 
 import { AccountSettingsProps } from './types';
 
-import { debouncedUsernameValidation, validateEmailFormValue } from '@/app/home/consignArtwork/formschema';
+import { validateEmailFormValue } from '@/app/home/consignArtwork/formschema';
 import { sendEmailThunk } from '@/features/user/thunks';
 import { useDispatch } from '@/store/hooks';
 import { checkCreatorEmailExist } from '@/features/user/requests';
@@ -21,8 +21,7 @@ import { CreatorEmailExistApiRes } from '@/features/user/types';
 
 import CustomTextField, { CustomTextFieldYellow } from '../components/forms/theme-elements/CustomTextField';
 import Wallet from '../components/wizard/wallet';
-
-import { userSelector } from '@/features/user';
+import { useI18n } from '@/app/hooks/useI18n';
 
 const AccountSettings = ({
     values,
@@ -42,6 +41,22 @@ const AccountSettings = ({
         message: '',
     });
 
+    const { language } = useI18n();
+
+    const texts = {
+        emailsTitle: language['studio.myProfile.form.emails.title'],
+        deleteButton: language['studio.myProfile.form.delete.button'],
+        verifyButton: language['studio.myProfile.form.verify.button'],
+        addEmailsPlaceholder: language['studio.myProfile.form.addEmails.placeholder'],
+        walletsTitle: language['studio.myProfile.form.wallets.title'],
+        codePlaceholder: language['studio.myProfile.form.code.placeholder'],
+        emailsExistError: language['studio.myProfile.form.emailsExists.error'],
+        verificationCodeSuccess: language['studio.myProfile.verificationCodeSentMessageSuccess'],
+        verificationCodeError: language['studio.myProfile.verificationCodeSentMessageError'],
+        emailVerificationSuccess: language['studio.myProfile.emailVerificationMessageSuccess'],
+        emailVerificationError: language['studio.myProfile.emailVerificationMessageError'],
+    } as { [key: string]: string };
+
     const dispatch = useDispatch();
 
     const handleSendCodeEmail = useCallback(
@@ -56,13 +71,13 @@ const AccountSettings = ({
                 setToastr({
                     open: true,
                     type: 'success',
-                    message: 'verification code sent to email',
+                    message: texts.verificationCodeSuccess,
                 });
             } else {
                 setToastr({
                     open: true,
                     type: 'error',
-                    message: 'error sending verification code to email',
+                    message: texts.verificationCodeError,
                 });
             }
         },
@@ -84,7 +99,7 @@ const AccountSettings = ({
                         setToastr({
                             open: true,
                             type: 'success',
-                            message: 'email verified',
+                            message: texts.emailVerificationSuccess,
                         });
                     }
                 }
@@ -92,7 +107,7 @@ const AccountSettings = ({
                 setToastr({
                     open: true,
                     type: 'error',
-                    message: 'error verifying code',
+                    message: texts.emailVerificationError,
                 });
             }
         };
@@ -103,7 +118,7 @@ const AccountSettings = ({
 
     const handleAddEmail = useCallback(async () => {
         if (values.emails.some((item) => item.email === email)) {
-            setEmailError('Email already exists');
+            setEmailError(texts.emailsExistError);
             return;
         }
         try {
@@ -114,7 +129,7 @@ const AccountSettings = ({
         }
         try {
             await checkCreatorEmailExist({ email });
-            setEmailError('Email already exists');
+            setEmailError(texts.emailsExistError);
         } catch (error) {
             if (
                 codesVtruApi.notfound.user.includes(
@@ -144,7 +159,7 @@ const AccountSettings = ({
             <Box display="flex" flexDirection="column" gap={1}>
                 <Box maxWidth={450} display="flex" flexDirection="column" my={2}>
                     <Typography mb={2} variant="subtitle1" fontWeight={600} component="label">
-                        Emails
+                        {texts.emailsTitle}
                     </Typography>
 
                     {values.emails.slice().map((item, index) => (
@@ -182,7 +197,7 @@ const AccountSettings = ({
                                             style={{ width: '122px', marginLeft: '10px' }}
                                             onClick={() => handleDeleteEmail(item.email)}
                                         >
-                                            Delete
+                                            {texts.deleteButton}
                                         </Button>
                                     )}
                                 </Box>
@@ -196,7 +211,7 @@ const AccountSettings = ({
                                         size="small"
                                         id="verificationCode"
                                         variant="outlined"
-                                        placeholder="type a code..."
+                                        placeholder={texts.codePlaceholder}
                                     />
                                     <Box>
                                         <Button
@@ -230,7 +245,7 @@ const AccountSettings = ({
                                 },
                             }}
                             variant="outlined"
-                            placeholder="Enter new email address"
+                            placeholder={texts.addEmailsPlaceholder}
                             error={!!emailError}
                             helperText={emailError}
                         />
@@ -241,7 +256,7 @@ const AccountSettings = ({
                                 variant="contained"
                                 onClick={handleAddEmail}
                             >
-                                Verify
+                                {texts.verifyButton}
                             </Button>
                         </Box>
                     </Box>
@@ -249,7 +264,7 @@ const AccountSettings = ({
 
                 <Box my={1} display="flex" flexDirection="column">
                     <Typography mb={2} variant="subtitle1" fontWeight={600} component="label">
-                        Wallets
+                        {texts.walletsTitle}
                     </Typography>
 
                     <WalletProvider>

@@ -6,11 +6,11 @@ import { useFormik } from 'formik';
 import { useDispatch, useSelector } from '@/store/hooks';
 
 import { Stack } from '@mui/system';
-import { Box, Grid, IconButton, Typography, Button } from '@mui/material';
+import { Box, IconButton, Typography } from '@mui/material';
 
 import { useRouter } from 'next/navigation';
 import CloseIcon from '@mui/icons-material/Close';
-import { AssetMediaFormErros, AssetMediaFormValues, FormatMediaSave } from './types';
+import { AssetMediaFormValues, FormatMediaSave } from './types';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
 import MediaCard from './mediaCard';
@@ -22,24 +22,39 @@ import { assetMediaThunk } from '@/features/asset/thunks';
 import { assetStorageThunk, sendRequestUploadThunk } from '@/features/user/thunks';
 import { getMediaDefinition } from './helpers';
 import { ModalBackConfirm } from '../modalBackConfirm';
-
-const BCrumb = [
-    {
-        to: '/home',
-        title: 'Home',
-    },
-    {
-        to: '/home/consignArtwork',
-        title: 'Consign Artwork',
-    },
-    {
-        title: 'Asset Media',
-    },
-];
+import { useI18n } from '@/app/hooks/useI18n';
+import { TranslateFunction } from '@/i18n/types';
 
 export default function AssetMedia() {
     const [showBackModal, setShowBackModal] = useState(false);
     const [showFormtsInfo, setShowFormatsInfo] = useState(true);
+
+    const { language } = useI18n();
+
+    const texts = {
+        nextButton: language['studio.consignArtwork.form.next.button'],
+        homeTitle: language['studio.home.title'],
+        consignArtworkTitle: language['studio.consignArtwork.title'],
+        assetMediaTitle: language['studio.consignArtwork.assetMedia.title'],
+        assetMediaDescription: language['studio.consignArtwork.assetMedia.description'],
+        assetMediaAmazing: language['studio.consignArtwork.assetMedia.amazing'],
+        assetMediaConcerned: language['studio.consignArtwork.assetMedia.concerned'],
+        assets: language['studio.consignArtwork.assetMedia.assets'],
+    } as { [key: string]: string };
+
+    const BCrumb = [
+        {
+            to: '/home',
+            title: texts.homeTitle,
+        },
+        {
+            to: '/home/consignArtwork',
+            title: texts.consignArtworkTitle,
+        },
+        {
+            title: texts.assetMediaTitle,
+        },
+    ];
 
     const asset = useSelector((state) => state.asset);
 
@@ -185,12 +200,12 @@ export default function AssetMedia() {
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
                 backOnclick={handleOpenBackModal}
-                submitText="Next"
+                submitText={texts.nextButton}
                 stepStatus={checkStepProgress}
                 stepNumber={1}
-                title="Consign Artwork"
+                title={texts.consignArtworkTitle}
             >
-                <Breadcrumb title="Consign Artwork" items={BCrumb} />
+                <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
 
                 <Stack
                     overflow="auto"
@@ -198,10 +213,10 @@ export default function AssetMedia() {
                     maxHeight={{ xs: 'calc(65vh - 64px)', sm: 'calc(65vh - 64px)', md: 'calc(65vh - 64px)' }}
                 >
                     <Typography fontSize="1rem" fontWeight="normal" color="GrayText">
-                        Upload media assets for the artwork being consigned.
+                        {texts.assetMediaDescription}
                     </Typography>
                     <Typography marginBottom={2} fontSize="1.1rem" color="grey" fontWeight="500" marginTop={2}>
-                        Asset Media
+                        {texts.assetMediaTitle}
                     </Typography>
                     {urlAssetFile && (
                         <Box>
@@ -214,19 +229,19 @@ export default function AssetMedia() {
                                         <CloseIcon />
                                     </IconButton>
                                     <Typography fontSize="0.9">
-                                        Looks amazing! For your artwork to look great on different devices, we need
-                                        three more media files. Don’t worry, we’ll help you crop your original media
-                                        file.
+                                        {texts.assetMediaAmazing}
                                         <Typography fontSize="0.9" marginTop={2}>
-                                            If you’re concerned about loss of quality, don’t use the crop feature and
-                                            upload media directly in the required size.
+                                            {texts.assetMediaConcerned}
                                         </Typography>
                                     </Typography>
                                 </Box>
                             )}
 
                             <Typography marginTop={2} color="grey" fontSize="1rem" fontWeight="bold">
-                                {values.definition.charAt(0).toUpperCase() + values.definition.slice(1)} Media Assets
+                                {(language['studio.consignArtwork.assetMedia.definition'] as TranslateFunction)({
+                                    definition: values.definition,
+                                })}{' '}
+                                {texts.assets}
                             </Typography>
                             <Box display="flex" flexWrap="wrap">
                                 {Object.entries(values.formats).map(([formatType, value], index) => (

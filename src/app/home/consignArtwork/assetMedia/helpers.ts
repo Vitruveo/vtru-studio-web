@@ -128,10 +128,6 @@ export function handleGetFileWidthAndHeight(fileOrUrl: File | string): Promise<{
     });
 }
 
-// function formatSize(bytes: number): string {
-
-// }
-
 export function getFileSize(fileOrUrl: File | string): string {
     const isFile = fileOrUrl instanceof File;
 

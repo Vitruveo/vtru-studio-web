@@ -45,15 +45,17 @@ export default function AssetMetadata() {
     const router = useRouter();
     const dispatch = useDispatch();
 
-    const { values, errors, setFieldValue, handleSubmit, validateForm } = useFormik<AssetMetadataFormValues>({
-        initialValues: {
-            assetMetadata: {
-                assetMetadataDomains: assetMetadataDomains,
-                assetMetadataDefinitions: assetMetadata?.assetMetadataDefinitions.length
-                    ? assetMetadata.assetMetadataDefinitions
-                    : assetMetadataDefinitions,
-            },
+    const initialValues = {
+        assetMetadata: {
+            assetMetadataDomains: assetMetadataDomains,
+            assetMetadataDefinitions: assetMetadata?.assetMetadataDefinitions.length
+                ? assetMetadata.assetMetadataDefinitions
+                : assetMetadataDefinitions,
         },
+    };
+
+    const { values, errors, setFieldValue, handleSubmit, validateForm } = useFormik<AssetMetadataFormValues>({
+        initialValues,
         validateOnChange: false,
         validationSchema: AssetMetadataSchemaValidation,
         onSubmit: async (formValues) => {
