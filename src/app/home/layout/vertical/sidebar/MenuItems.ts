@@ -25,7 +25,7 @@ const Menuitems: MenuitemsType[] = [
 
     {
         id: uniqueId(),
-        title: 'Consign Artwork',
+        title: 'studio.sidebar.consign',
         icon: IconPhotoUp,
         href: '/home/consignArtwork',
     },

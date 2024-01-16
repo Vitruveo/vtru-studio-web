@@ -21,20 +21,7 @@ import { assetMetadataDefinitions, assetMetadataDomains } from '../mock';
 import { assetMetadataThunk } from '@/features/asset/thunks';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { ModalBackConfirm } from '../modalBackConfirm';
-
-const BCrumb = [
-    {
-        to: '/home',
-        title: 'Home',
-    },
-    {
-        to: '/home/consignArtwork',
-        title: 'Consign Artwork',
-    },
-    {
-        title: 'Asset Metadata',
-    },
-];
+import { useI18n } from '@/app/hooks/useI18n';
 
 export default function AssetMetadata() {
     const [showBackModal, setShowBackModal] = useState(false);
@@ -44,6 +31,30 @@ export default function AssetMetadata() {
 
     const router = useRouter();
     const dispatch = useDispatch();
+
+    const { language } = useI18n();
+
+    const texts = {
+        nextButton: language['studio.consignArtwork.form.next.button'],
+        homeTitle: language['studio.home.title'],
+        consignArtworkTitle: language['studio.consignArtwork.title'],
+        assetMetadataTitle: language['studio.consignArtwork.stepName.assetMetadata'],
+        assetMetadataDescription: language['studio.consignArtwork.assetMetadata.description'],
+    } as { [key: string]: string };
+
+    const BCrumb = [
+        {
+            to: '/home',
+            title: texts.homeTitle,
+        },
+        {
+            to: '/home/consignArtwork',
+            title: texts.consignArtworkTitle,
+        },
+        {
+            title: texts.assetMetadataTitle,
+        },
+    ];
 
     const initialValues = {
         assetMetadata: {
@@ -115,18 +126,19 @@ export default function AssetMetadata() {
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
-                submitText="Next"
+                submitText={texts.nextButton}
                 stepStatus={status}
                 stepNumber={2}
-                title="Consign Artwork"
+                title={texts.consignArtworkTitle}
                 backOnclick={handleOpenBackModal}
             >
-                <Breadcrumb title="Consign Artwork" items={BCrumb} />
+                <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
                 <Typography fontSize="1rem" fontWeight="normal" color="GrayText">
-                    Complete all tasks and publish your artwork
+                    {texts.assetMetadataDescription}
                 </Typography>
                 <Box maxHeight={500} overflow="auto" mt={1} alignItems="center" maxWidth={500}>
                     <MetadataFields
+                        translatePath="studio.consignArtwork.assetMetadata.field"
                         formkFieldPathChange="assetMetadata.assetMetadataDefinitions"
                         values={values}
                         errors={errors}

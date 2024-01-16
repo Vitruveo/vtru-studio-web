@@ -1,6 +1,9 @@
 import { FormikErrors } from 'formik';
 
 export interface TermsOfUseFormValues {
+    isOriginal: boolean;
+    generatedArtworkAI: boolean;
+    notMintedOtherBlockchain: boolean;
     contract: boolean;
 }
 

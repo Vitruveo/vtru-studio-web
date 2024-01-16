@@ -33,7 +33,6 @@ const initialState: AssetSliceState = {
             transactionId: undefined,
         },
     },
-
     assetMetadata: {
         assetMetadataDomains: [],
         assetMetadataDefinitions: [],
@@ -42,6 +41,9 @@ const initialState: AssetSliceState = {
     //     creatorMetadataDefinitions: [],
     // },
     licenses: [],
+    isOriginal: false,
+    generatedArtworkAI: false,
+    notMintedOtherBlockchain: false,
     contract: false,
     framework: {
         createdAt: null,

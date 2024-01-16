@@ -61,8 +61,8 @@ interface ProfileType {
 const profile: ProfileType[] = [
     {
         href: '/home/myProfile',
-        title: 'My Profile',
-        subtitle: 'User Settings',
+        title: 'studio.userAccount.menu.title',
+        subtitle: 'studio.userAccount.menu.subtitle',
         icon: '/images/svgs/icon-account.svg',
     },
 ];

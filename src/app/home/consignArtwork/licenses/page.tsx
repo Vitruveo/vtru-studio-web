@@ -23,6 +23,8 @@ import { licenses } from '../mock';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { licenseThunk } from '@/features/asset/thunks';
 import { ModalBackConfirm } from '../modalBackConfirm';
+import { useI18n } from '@/app/hooks/useI18n';
+import { TranslateFunction } from '@/i18n/types';
 
 const licenseMetadataDomains = [
     { value: 'stream', label: 'Stream v1.0' },
@@ -79,20 +81,6 @@ const transformErrors = (yupErrors: YupErrors): Result => {
     return result;
 };
 
-const BCrumb = [
-    {
-        to: '/home',
-        title: 'Home',
-    },
-    {
-        to: '/home/consignArtwork',
-        title: 'Consign Artwork',
-    },
-    {
-        title: 'Licenses',
-    },
-];
-
 export default function Licenses() {
     const [errorLicense, setErrorLicense] = useState('');
     const [showBackModal, setShowBackModal] = useState(false);
@@ -104,9 +92,38 @@ export default function Licenses() {
 
     const [licenseDomain, setLicenseDomain] = useState('stream');
 
+    const { language } = useI18n();
     const router = useRouter();
     const dispatch = useDispatch();
+
     const { licenses: licensesState } = useSelector((state) => state.asset);
+
+    const texts = {
+        nextButton: language['studio.consignArtwork.form.next.button'],
+        homeTitle: language['studio.home.title'],
+        consignArtworkTitle: language['studio.consignArtwork.title'],
+        licensesTitle: language['studio.consignArtwork.licenses.title'],
+        licensesDescription: language['studio.consignArtwork.licenses.description'],
+        oneLicenseError: language['studio.consignArtwork.licenses.oneLicense.error'],
+        fillFieldsError: language['studio.consignArtwork.licenses.fillFields.error'],
+        alreadyAdded: language['studio.consignArtwork.licenses.alreadyAdded'],
+        deleteButton: language['studio.consignArtwork.licenses.delete.button'],
+        addButton: language['studio.consignArtwork.licenses.add.button'],
+    } as { [key: string]: string };
+
+    const BCrumb = [
+        {
+            to: '/home',
+            title: texts.homeTitle,
+        },
+        {
+            to: '/home/consignArtwork',
+            title: texts.consignArtworkTitle,
+        },
+        {
+            title: texts.licensesTitle,
+        },
+    ];
 
     const { values, errors, setFieldValue, handleSubmit, setErrors, setFieldError, validateForm } =
         useFormik<LicensesFormValues>({
@@ -137,14 +154,14 @@ export default function Licenses() {
                         router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/termsOfUse`);
                     } else {
                         setShowBackModal(false);
-                        setErrorLicense('Please add at least one license');
+                        setErrorLicense(texts.oneLicenseError);
                     }
                 } catch (err) {
                     setShowBackModal(false);
                     setToastr({
                         type: 'error',
                         open: true,
-                        message: 'Fill in the fields correctly.',
+                        message: texts.fillFieldsError,
                     });
                 }
             },
@@ -168,7 +185,7 @@ export default function Licenses() {
                 setToastr({
                     type: 'error',
                     open: true,
-                    message: 'License already added',
+                    message: texts.alreadyAdded,
                 });
             }
         } catch (err) {
@@ -225,19 +242,19 @@ export default function Licenses() {
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
-                submitText="Next"
-                title="Consign Artwork"
+                submitText={texts.nextButton}
+                title={texts.consignArtworkTitle}
                 stepStatus={licensesAdded.length > 0 ? 'completed' : 'inProgress'}
                 stepNumber={3}
                 backOnclick={handleOpenBackModal}
             >
-                <Breadcrumb title="Consign Artwork" items={BCrumb} />
+                <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
                 <Typography fontSize="1rem" fontWeight="normal" color="GrayText">
-                    Complete all tasks and publish your artwork
+                    {texts.licensesDescription}
                 </Typography>
                 <Grid mt={1} my={3} alignItems="center" width={500} lg={6} xs={12}>
                     <Typography fontSize="1.1rem" color="grey" fontWeight="500" variant="subtitle1" component="label">
-                        Licenses
+                        {texts.licensesTitle}
                     </Typography>
                     <Box
                         alignItems="baseline"
@@ -258,7 +275,7 @@ export default function Licenses() {
                                 >
                                     {licenseMetadataDomains?.map((option) => (
                                         <MenuItem key={option.value} value={option.value}>
-                                            {option.label}
+                                            {language[`studio.consignArtwork.licenses.field.${option.value}`] as string}
                                         </MenuItem>
                                     ))}
                                 </CustomSelect>
@@ -268,12 +285,13 @@ export default function Licenses() {
                                         style={{ marginLeft: 10, width: '122px' }}
                                         variant="contained"
                                         size="small"
-                                    >{`Add >> `}</Button>
+                                    >{`${texts.addButton} >> `}</Button>
                                 </Box>
                             </Box>
                             <Box marginTop={2}>
                                 <MetadataFields
                                     key={licenseDomain}
+                                    translatePath="studio.consignArtwork.licenses.field"
                                     formkFieldPathChange={`licenses[${findIndexLicense}].licenseMetadataDefinitions`}
                                     values={values}
                                     errors={errors}
@@ -296,17 +314,23 @@ export default function Licenses() {
                                         >
                                             <Box>
                                                 <Typography color="grey" fontSize="1.1rem">
-                                                    {license.title}
+                                                    {
+                                                        language[
+                                                            `studio.consignArtwork.licenses.field.${license.domain}`
+                                                        ] as string
+                                                    }
                                                 </Typography>
                                                 {license.licenseMetadataDefinitions.map((v, i) => (
                                                     <Box key={i}>
-                                                        <Typography color="GrayText">{`${v.title}: ${
-                                                            v.value === true
-                                                                ? 'yes'
-                                                                : v.value === false
-                                                                  ? 'no'
-                                                                  : v.value
-                                                        }`}</Typography>
+                                                        <Typography color="GrayText">{`${
+                                                            language[
+                                                                `studio.consignArtwork.licenses.field.${v.name}`
+                                                            ] as string
+                                                        }: ${(
+                                                            language[
+                                                                'studio.consignArtwork.licenses.field.checkBoolean'
+                                                            ] as TranslateFunction
+                                                        )({ checkBoolean: v.value })}`}</Typography>
                                                     </Box>
                                                 ))}
                                             </Box>
@@ -317,7 +341,7 @@ export default function Licenses() {
                                                     variant="contained"
                                                     size="small"
                                                 >
-                                                    Delete
+                                                    {texts.deleteButton}
                                                 </Button>
                                             </Box>
                                         </Box>

@@ -13,12 +13,21 @@ import { useDispatch } from '@/store/hooks';
 import * as dropdownData from './data';
 import { userActionsCreators } from '@/features/user/slice';
 import { userSelector } from '@/features/user';
+import { useI18n } from '@/app/hooks/useI18n';
 
 const Profile = () => {
     const [anchorEl2, setAnchorEl2] = useState(null);
 
     const router = useRouter();
     const dispatch = useDispatch();
+
+    const { language } = useI18n();
+
+    const texts = {
+        title: language['studio.userAccount.title'],
+        creator: language['studio.userAccount.creator'],
+        logout: language['studio.userAccount.logout.button'],
+    } as { [key: string]: string };
 
     const handleClick2 = (event: any) => {
         setAnchorEl2(event.currentTarget);
@@ -78,7 +87,7 @@ const Profile = () => {
                     },
                 }}
             >
-                <Typography variant="h5">User Account</Typography>
+                <Typography variant="h5">{texts.title}</Typography>
                 <Stack direction="row" py={3} spacing={2} alignItems="center">
                     <Avatar
                         src={'/images/profile/profileDefault.png'}
@@ -90,7 +99,7 @@ const Profile = () => {
                             {username}
                         </Typography>
                         <Typography variant="subtitle2" color="textSecondary">
-                            Creator
+                            {texts.creator}
                         </Typography>
                     </Box>
                 </Stack>
@@ -130,7 +139,7 @@ const Profile = () => {
                                                 width: '240px',
                                             }}
                                         >
-                                            {profile.title}
+                                            {language[profile.title] as string}
                                         </Typography>
                                         <Typography
                                             color="textSecondary"
@@ -140,7 +149,7 @@ const Profile = () => {
                                             }}
                                             noWrap
                                         >
-                                            {profile.subtitle}
+                                            {language[profile.subtitle] as string}
                                         </Typography>
                                     </Box>
                                 </Stack>
@@ -150,7 +159,7 @@ const Profile = () => {
                 ))}
                 <Box mt={2}>
                     <Button onClick={handleLogout} variant="outlined" color="primary" fullWidth>
-                        Logout
+                        {texts.logout}
                     </Button>
                 </Box>
             </Menu>

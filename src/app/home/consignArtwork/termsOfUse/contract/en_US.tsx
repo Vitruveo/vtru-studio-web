@@ -1,17 +1,17 @@
 /* eslint-disable */
 
-export const Contract = () => {
+export default function Contract() {
     return (
         <>
             <p style={{ textAlign: 'center' }}>
                 <strong>CREATOR AGREEMENT</strong>
             </p>
             <p style={{ textAlign: 'justify' }}>
-                This Creator Agreement ("<strong>Agreement</strong>") is entered into as of the date signed between VTRU
-                (BVI) PTE LTD (“<strong>Vitruveo</strong>”), incorporated at British Virgin Island under the BVI company
-                number: 2134193 having its registered office address c/o Hermes Corporate Service (BVI) Ltd., 6th Floor,
-                Waters Edge, Building 1, Wickham’s Cay 2, Road Town, Tortola, British Virgin Islands (“
-                <strong>the Company</strong>”), and&nbsp; the signing Creator (<strong>“You”),</strong>
+                Welcome to our Creator Agreement ("<strong>Agreement</strong>") by and between VTRU (BVI) PTE LTD (“
+                <strong>Vitruveo</strong>”), incorporated at British Virgin Island under the BVI company number: 2134193
+                having its registered office address c/o Hermes Corporate Service (BVI) Ltd., 6th Floor, Waters Edge,
+                Building 1, Wickham’s Cay 2, Road Town, Tortola, British Virgin Islands (“
+                <strong>the Company</strong>”), and&nbsp;(<strong>“You”),</strong>
                 &nbsp;collectively referred to as "<strong>Parties</strong>."
             </p>
             <p style={{ textAlign: 'justify' }}>
@@ -260,4 +260,4 @@ export const Contract = () => {
             </p>
         </>
     );
-};
+}

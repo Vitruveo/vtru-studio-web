@@ -1,34 +1,49 @@
 import React from 'react';
 import { Avatar, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { useSelector, useDispatch } from '@/store/hooks';
-// import { setLanguage } from '@/store/customizer/CustomizerSlice';
 import { Stack } from '@mui/system';
-import { useTranslation } from 'react-i18next';
-import { useEffect } from 'react';
 import { setLanguage } from '@/features/customizer/slice';
-// import { AppState } from '@/store';
-
-const Languages = [
-    {
-        flagname: 'English (US)',
-        icon: '/images/flag/icon-flag-en-us.png',
-        value: 'en_US',
-    },
-    {
-        flagname: 'Português PT-BR',
-        icon: '/images/flag/icon-flag-br.png',
-        value: 'pt_BR',
-    },
-];
+import { useI18n } from '@/app/hooks/useI18n';
 
 const Language = () => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
 
     const customizer = useSelector((state) => state.customizer);
+    const { language } = useI18n();
+
+    const texts = {
+        portuguesePTBR: language['studio.languages.portuguesePTBR'],
+        englishUS: language['studio.languages.englishUS'],
+        spanish: language['studio.languages.spanishES'],
+        farsi: language['studio.languages.farsiFA'],
+    } as { [key: string]: string };
+
+    const Languages = [
+        {
+            flagname: texts.englishUS,
+            icon: '/images/flag/icon-flag-en-us.png',
+            value: 'en_US',
+        },
+        {
+            flagname: texts.portuguesePTBR,
+            icon: '/images/flag/icon-flag-br.png',
+            value: 'pt_BR',
+        },
+        {
+            flagname: texts.spanish,
+            icon: '/images/flag/icon-flag-es-ES.png',
+            value: 'es_ES',
+        },
+        {
+            flagname: texts.farsi,
+            icon: '/images/flag/icon-flag-fa.png',
+            value: 'fa_IR',
+        },
+    ];
 
     const currentLang = Languages.find((_lang) => _lang.value === customizer.currentLanguage) || Languages[1];
-    const { i18n } = useTranslation();
+
     const dispatch = useDispatch();
 
     const handleClick = (event: any) => {
@@ -38,11 +53,6 @@ const Language = () => {
     const handleClose = () => {
         setAnchorEl(null);
     };
-
-    useEffect(() => {
-        i18n.changeLanguage(customizer.currentLanguage);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     return (
         <>

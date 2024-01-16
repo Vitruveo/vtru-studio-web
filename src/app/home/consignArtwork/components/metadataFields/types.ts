@@ -29,5 +29,6 @@ export interface MetadataFieldsProps {
     errors: any;
     setFieldValue: (field: string, value: any, shouldValidate?: boolean | undefined) => void;
     formkFieldPathChange: string;
+    translatePath: string;
     metadataDefinitions?: MetadataDefinitionTypes[];
 }

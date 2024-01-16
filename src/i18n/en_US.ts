@@ -2,14 +2,12 @@ import { Translation } from './types';
 
 const language: Translation = {
     /* Login */
-    'studio.login.wellcome': 'Wellcome to',
-    'studio.login.form.email': 'Email',
-    'studio.login.form.remeber': 'Remember this device',
-    'studio.login.form.wrongEmail': 'this field must be a valid email',
-    'studio.login.form.submit': 'Signin / Signup',
-    'studio.consignArtwork.license.value': (data: { value: number }) =>
-        data.value === 1 ? 'One single license' : 'Until {{data.value}} licenses',
-    'studio.login.api.error': (data: { error: Error }) => `We found an error in your request: ${data.error}`,
+
+    /* Languages */
+    'studio.languages.portuguesePTBR': 'Portuguese (pt-BR)',
+    'studio.languages.englishUS': 'English (US)',
+    'studio.languages.spanishES': 'Spanish (es-ES)',
+    'studio.languages.farsiFA': 'Farsi (fa-IR)',
 
     /* Home */
     'studio.home.wellcome': 'Wellcome to',
@@ -20,6 +18,13 @@ const language: Translation = {
     'studio.home.software': 'The software currently has two features you can access with the buttons below:',
     'studio.home.consign': 'Consign Artwork',
     'studio.home.myProfile': 'My Profile',
+
+    /* User Account */
+    'studio.userAccount.title': 'User Account',
+    'studio.userAccount.creator': 'Creator',
+    'studio.userAccount.logout.button': 'Logout',
+    'studio.userAccount.menu.title': 'My Profile',
+    'studio.userAccount.menu.subtitle': 'User Settings',
 
     /* My Profile */
     'studio.myProfile.title': 'My Profile',
@@ -128,10 +133,95 @@ const language: Translation = {
     'studio.consignArtwork.assetMedia.videoTypes': 'Video: MP4, WEBM',
 
     /* Asset Metadata */
+    'studio.consignArtwork.assetMetadata.title': 'Asset Metadata',
+    'studio.consignArtwork.assetMetadata.description': 'Complete all tasks and publish your artwork',
+    'studio.consignArtwork.assetMetadata.field.artistName': 'Artist Name',
+    'studio.consignArtwork.assetMetadata.field.title': 'Title',
+    'studio.consignArtwork.assetMetadata.field.description': 'Description',
+    'studio.consignArtwork.assetMetadata.field.date': 'Date',
+    'studio.consignArtwork.assetMetadata.field.place': 'Place',
+
+    'studio.consignArtwork.assetMetadata.field.objectType': 'Object Type',
+    'studio.consignArtwork.assetMetadata.field.objectType.video': 'Video',
+    'studio.consignArtwork.assetMetadata.field.objectType.2D': '2D',
+    'studio.consignArtwork.assetMetadata.field.objectType.3D': '3D',
+    'studio.consignArtwork.assetMetadata.field.objectType.phygital': 'Phygital',
+    'studio.consignArtwork.assetMetadata.field.objectType.other': 'Other',
+
+    'studio.consignArtwork.assetMetadata.field.category': 'Category',
+    'studio.consignArtwork.assetMetadata.field.category.photography': 'Photography',
+    'studio.consignArtwork.assetMetadata.field.category.painting': 'Painting',
+    'studio.consignArtwork.assetMetadata.field.category.3D': '3D',
+    'studio.consignArtwork.assetMetadata.field.category.video': 'Video',
+    'studio.consignArtwork.assetMetadata.field.category.mixedMedia': 'Mixed Media',
+    'studio.consignArtwork.assetMetadata.field.category.illustration': 'Illustration',
+    'studio.consignArtwork.assetMetadata.field.category.collage': 'Collage',
+    'studio.consignArtwork.assetMetadata.field.category.ai': 'AI',
+    'studio.consignArtwork.assetMetadata.field.category.other': 'Other',
+
+    'studio.consignArtwork.assetMetadata.field.medium': 'Medium',
+    'studio.consignArtwork.assetMetadata.field.medium.oil': 'Oil',
+    'studio.consignArtwork.assetMetadata.field.medium.watercolour': 'Watercolour',
+    'studio.consignArtwork.assetMetadata.field.medium.acrylic': 'Acrylic',
+    'studio.consignArtwork.assetMetadata.field.medium.ink': 'Ink',
+    'studio.consignArtwork.assetMetadata.field.medium.illustration': 'Illustration',
+    'studio.consignArtwork.assetMetadata.field.medium.collage': 'Collage',
+    'studio.consignArtwork.assetMetadata.field.medium.AI': 'AI',
+    'studio.consignArtwork.assetMetadata.field.medium.mixedMedia': 'Mixed media',
+    'studio.consignArtwork.assetMetadata.field.medium.film': 'Film',
+    'studio.consignArtwork.assetMetadata.field.medium.photography': 'Photography',
+    'studio.consignArtwork.assetMetadata.field.medium.analogPhotography': 'Analog photography',
+    'studio.consignArtwork.assetMetadata.field.medium.digitalPhotography': 'Digital photography',
+    'studio.consignArtwork.assetMetadata.field.medium.compositePhotography': 'Composite Photography',
+    'studio.consignArtwork.assetMetadata.field.medium.other': 'Other',
+    'studio.consignArtwork.assetMetadata.field.tags': 'Tags',
+    'studio.consignArtwork.assetMetadata.field.tags.button': 'Add',
+    'studio.consignArtwork.assetMetadata.field.tags.placeholder': 'Add tag',
+
+    'studio.consignArtwork.assetMetadata.field.errors': (data: { message: string }) =>
+        `${data.message === 'field required' ? 'field required' : ''}`,
 
     /* Licenses */
+    'studio.consignArtwork.licenses.title': 'Licenses',
+    'studio.consignArtwork.licenses.description': 'Complete all tasks and publish your artwork',
+    'studio.consignArtwork.licenses.oneLicense.error': 'Please add at least one license',
+    'studio.consignArtwork.licenses.fillFields.error': 'Fill in the fields correctly.',
+    'studio.consignArtwork.licenses.alreadyAdded': 'License already added',
+    'studio.consignArtwork.licenses.delete.button': 'Delete',
+    'studio.consignArtwork.licenses.add.button': 'Add',
+
+    'studio.consignArtwork.licenses.field.checkBoolean': (data: { checkBoolean: unknown }) =>
+        `${data.checkBoolean === true ? 'yes' : data.checkBoolean === false ? 'no' : data.checkBoolean}`,
+    'studio.consignArtwork.licenses.field.errors': (data: { message: string }) =>
+        `${data.message === 'field required' ? 'field required' : ''}`,
+    'studio.consignArtwork.licenses.field.stream': 'Stream v1.0',
+    'studio.consignArtwork.licenses.field.print': 'Print v1.0',
+    'studio.consignArtwork.licenses.field.NFT': 'NFT v1.0',
+    'studio.consignArtwork.licenses.field.maximumUnits': 'Maximum Units',
+    'studio.consignArtwork.licenses.field.unitPrice': 'Unit Price',
+    'studio.consignArtwork.licenses.field.maximumEditions': 'Maximum Editions',
+    'studio.consignArtwork.licenses.field.editionPrice': 'Edition Price',
+    'studio.consignArtwork.licenses.field.elasticEditions': 'Elastic Editions',
 
     /* Terms of Use */
+    'studio.consignArtwork.termsOfUse.title': 'Terms of Use',
+    'studio.consignArtwork.termsOfUse.description': 'Complete all tasks and publish your artwork',
+    'studio.consignArtwork.termsOfUse.accept.button': (data: { contract: boolean; scrolledToBottom: boolean }) =>
+        data.contract ? 'Contract accepted' : data.scrolledToBottom ? 'Accept Contract' : 'Scroll to the End',
+    'studio.consignArtwork.termsOfUse.isOriginal':
+        'I hereby agree that the Asset and Auxiliary Media files are original, authentic works that have been created by the creators indicated in the metadata submission and not copied, stolen, or plagiarized from any other source.',
+    'studio.consignArtwork.termsOfUse.generatedArtworkAI':
+        'I hereby agree that if any portion of the Asset and Auxiliary Media files were created using Artificial Intelligence, I have answered "Yes" in the Metadata field for "AI-Generated Artwork."',
+    'studio.consignArtwork.termsOfUse.notMintedOtherBlockchain':
+        'I hereby agree that this work is not minted on any other blockchain, offered, consigned, or listed for sale on any other platform, and will not be minted, offered, consigned, or listed as long as the listing is active on this platform.',
+
+    /* BackModalConfirm */
+    'studio.consignArtwork.backModal.title': 'Would you like to save the information?',
+    'studio.consignArtwork.backModal.confirm.button': 'Save',
+    'studio.consignArtwork.backModal.cancel.button': 'No',
+
+    /* Sidebar */
+    'studio.sidebar.consign': 'Consign Artwork',
 
     /* Footer */
     'studio.footer.thisStep': 'This step has been',

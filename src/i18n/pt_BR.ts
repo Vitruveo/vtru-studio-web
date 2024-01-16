@@ -1,6 +1,12 @@
 import { Translation } from './types';
 
 const language: Translation = {
+    /* Languages */
+    'studio.languages.portuguesePTBR': 'Português (pt-BR)',
+    'studio.languages.englishUS': 'Inglês (US)',
+    'studio.languages.spanishES': 'Espanhol (es-ES)',
+    'studio.languages.farsiFA': 'Farsi (fa-IR)',
+
     /* Home */
     'studio.home.wellcome': 'Bem-vindo a',
     'studio.home.title': 'Início',
@@ -10,6 +16,13 @@ const language: Translation = {
     'studio.home.software': 'O software atualmente tem dois recursos que você pode acessar com os botões abaixo:',
     'studio.home.consign': 'Consignar Obra de Arte',
     'studio.home.myProfile': 'Meu Perfil',
+
+    /* User Account */
+    'studio.userAccount.title': 'Conta do Usuário',
+    'studio.userAccount.creator': 'Criador',
+    'studio.userAccount.logout.button': 'Sair',
+    'studio.userAccount.menu.title': 'Meu Perfil',
+    'studio.userAccount.menu.subtitle': 'Configurações do Usuário',
 
     /* My Profile */
     'studio.myProfile.title': 'Meu Perfil',
@@ -122,10 +135,95 @@ const language: Translation = {
     'studio.consignArtwork.assetMedia.videoTypes': 'Vídeo: MP4, WEBM',
 
     /* Asset Metadata */
+    'studio.consignArtwork.assetMetadata.title': 'Metadados do Ativo',
+    'studio.consignArtwork.assetMetadata.description': 'Complete todas as tarefas e publique sua obra de arte',
+    'studio.consignArtwork.assetMetadata.field.artistName': 'Nome do Artista',
+    'studio.consignArtwork.assetMetadata.field.title': 'Título',
+    'studio.consignArtwork.assetMetadata.field.description': 'Descrição',
+    'studio.consignArtwork.assetMetadata.field.date': 'Data',
+    'studio.consignArtwork.assetMetadata.field.place': 'Local',
 
-    /* Licenses */
+    'studio.consignArtwork.assetMetadata.field.objectType': 'Tipo de Objeto',
+    'studio.consignArtwork.assetMetadata.field.objectType.video': 'Vídeo',
+    'studio.consignArtwork.assetMetadata.field.objectType.2D': '2D',
+    'studio.consignArtwork.assetMetadata.field.objectType.3D': '3D',
+    'studio.consignArtwork.assetMetadata.field.objectType.phygital': 'Físgital',
+    'studio.consignArtwork.assetMetadata.field.objectType.other': 'Outro',
 
-    /* Terms of Use */
+    'studio.consignArtwork.assetMetadata.field.category': 'Categoria',
+    'studio.consignArtwork.assetMetadata.field.category.photography': 'Fotografia',
+    'studio.consignArtwork.assetMetadata.field.category.painting': 'Pintura',
+    'studio.consignArtwork.assetMetadata.field.category.3D': '3D',
+    'studio.consignArtwork.assetMetadata.field.category.video': 'Vídeo',
+    'studio.consignArtwork.assetMetadata.field.category.mixedMedia': 'Mídia Mista',
+    'studio.consignArtwork.assetMetadata.field.category.illustration': 'Ilustração',
+    'studio.consignArtwork.assetMetadata.field.category.collage': 'Colagem',
+    'studio.consignArtwork.assetMetadata.field.category.ai': 'IA',
+    'studio.consignArtwork.assetMetadata.field.category.other': 'Outro',
+
+    'studio.consignArtwork.assetMetadata.field.medium': 'Médio',
+    'studio.consignArtwork.assetMetadata.field.medium.oil': 'Óleo',
+    'studio.consignArtwork.assetMetadata.field.medium.watercolour': 'Aquarela',
+    'studio.consignArtwork.assetMetadata.field.medium.acrylic': 'Acrílico',
+    'studio.consignArtwork.assetMetadata.field.medium.ink': 'Tinta',
+    'studio.consignArtwork.assetMetadata.field.medium.illustration': 'Ilustração',
+    'studio.consignArtwork.assetMetadata.field.medium.collage': 'Colagem',
+    'studio.consignArtwork.assetMetadata.field.medium.AI': 'IA',
+    'studio.consignArtwork.assetMetadata.field.medium.mixedMedia': 'Mídia Mista',
+    'studio.consignArtwork.assetMetadata.field.medium.film': 'Filme',
+    'studio.consignArtwork.assetMetadata.field.medium.photography': 'Fotografia',
+    'studio.consignArtwork.assetMetadata.field.medium.analogPhotography': 'Fotografia Analógica',
+    'studio.consignArtwork.assetMetadata.field.medium.digitalPhotography': 'Fotografia Digital',
+    'studio.consignArtwork.assetMetadata.field.medium.compositePhotography': 'Fotografia Composta',
+    'studio.consignArtwork.assetMetadata.field.medium.other': 'Outro',
+    'studio.consignArtwork.assetMetadata.field.tags': 'Tags',
+    'studio.consignArtwork.assetMetadata.field.tags.button': 'Adicionar',
+    'studio.consignArtwork.assetMetadata.field.tags.placeholder': 'Adicionar tag',
+
+    'studio.consignArtwork.assetMetadata.field.errors': (data: { message: string }) =>
+        `${data.message === 'field required' ? 'campo obrigatório' : ''}`,
+
+    /* Licenças */
+    'studio.consignArtwork.licenses.title': 'Licenças',
+    'studio.consignArtwork.licenses.description': 'Complete todas as tarefas e publique sua obra de arte',
+    'studio.consignArtwork.licenses.oneLicense.error': 'Por favor, adicione pelo menos uma licença',
+    'studio.consignArtwork.licenses.fillFields.error': 'Preencha os campos corretamente.',
+    'studio.consignArtwork.licenses.alreadyAdded': 'Licença já adicionada',
+    'studio.consignArtwork.licenses.delete.button': 'Deletar',
+    'studio.consignArtwork.licenses.add.button': 'Adicionar',
+
+    'studio.consignArtwork.licenses.field.checkBoolean': (data: { checkBoolean: unknown }) =>
+        `${data.checkBoolean === true ? 'sim' : data.checkBoolean === false ? 'não' : data.checkBoolean}`,
+    'studio.consignArtwork.licenses.field.errors': (data: { message: string }) =>
+        `${data.message === 'field required' ? 'campo obrigatório' : ''}`,
+    'studio.consignArtwork.licenses.field.stream': 'Stream v1.0',
+    'studio.consignArtwork.licenses.field.print': 'Print v1.0',
+    'studio.consignArtwork.licenses.field.NFT': 'NFT v1.0',
+    'studio.consignArtwork.licenses.field.maximumUnits': 'Unidades Máximas',
+    'studio.consignArtwork.licenses.field.unitPrice': 'Preço Unitário',
+    'studio.consignArtwork.licenses.field.maximumEditions': 'Edições Máximas',
+    'studio.consignArtwork.licenses.field.editionPrice': 'Preço da Edição',
+    'studio.consignArtwork.licenses.field.elasticEditions': 'Edições Elásticas',
+
+    /* Termos de Uso */
+    'studio.consignArtwork.termsOfUse.title': 'Termos de Uso',
+    'studio.consignArtwork.termsOfUse.description': 'Complete todas as tarefas e publique sua obra de arte',
+    'studio.consignArtwork.termsOfUse.accept.button': (data: { contract: boolean; scrolledToBottom: boolean }) =>
+        data.contract ? 'Contrato aceito' : data.scrolledToBottom ? 'Aceitar Contrato' : 'Role até o final',
+    'studio.consignArtwork.termsOfUse.isOriginal':
+        'Eu concordo que o Ativo e os arquivos de Mídia Auxiliar são obras originais e autênticas que foram criadas pelos criadores indicados na submissão de metadados e não foram copiados, roubados ou plagiados de qualquer outra fonte.',
+    'studio.consignArtwork.termsOfUse.generatedArtworkAI':
+        'Eu concordo que se qualquer parte do Ativo e dos arquivos de Mídia Auxiliar foram criados usando Inteligência Artificial, eu respondi "Sim" no campo de Metadados para "Obra de Arte Gerada por IA".',
+    'studio.consignArtwork.termsOfUse.notMintedOtherBlockchain':
+        'Eu concordo que esta obra não está cunhada em qualquer outra blockchain, oferecida, consignada ou listada para venda em qualquer outra plataforma, e não será cunhada, oferecida, consignada ou listada enquanto a listagem estiver ativa nesta plataforma.',
+
+    /* BackModalConfirm */
+    'studio.consignArtwork.backModal.title': 'Gostaria de salvar as informações?',
+    'studio.consignArtwork.backModal.confirm.button': 'Salvar',
+    'studio.consignArtwork.backModal.cancel.button': 'Não',
+
+    /* Sidebar */
+    'studio.sidebar.consign': 'Consignar Obra de Arte',
 
     /* Footer */
     'studio.footer.thisStep': 'Esta etapa está',

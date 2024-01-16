@@ -11,6 +11,8 @@ import { Auto, MetadataDefinitionTypes, MetadataFieldsProps, Option } from './ty
 import CustomSelect from '@/app/home/components/forms/theme-elements/CustomSelect';
 import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
 import { CustomTextareaAutosize } from '@/app/home/components/forms/theme-elements/CustomTextarea';
+import { useI18n } from '@/app/hooks/useI18n';
+import { TranslateFunction } from '@/i18n/types';
 
 const handleGetValueByPath = (obj: any, path: string): any => {
     const keys = path.split('.');
@@ -41,6 +43,7 @@ export const AutoSelectField = ({
     metadataItem,
     values,
     setFieldValue,
+    translatePath,
     formkFieldPathChange,
     handleChangeInput,
 }: {
@@ -48,9 +51,11 @@ export const AutoSelectField = ({
     metadataItem: MetadataDefinitionTypes;
     values: any;
     setFieldValue: any;
+    translatePath: string;
     formkFieldPathChange: string;
     handleChangeInput: (index: number) => (e: any) => void;
 }) => {
+    const { language } = useI18n();
     const handleCreateAutoSelectOptions = (auto: Auto): Option[] => {
         const fieldAutoValue = values[auto.nameTargetFieldValue] as any[];
 
@@ -97,7 +102,7 @@ export const AutoSelectField = ({
         >
             {options.map((option) => (
                 <MenuItem key={option.value} value={option?.value}>
-                    {option.label}
+                    {language[`${translatePath}.${metadataItem.name}.${option.value}`] as string}
                 </MenuItem>
             ))}
         </CustomSelect>
@@ -109,9 +114,12 @@ export const MetadataFields = ({
     errors,
     metadataDefinitions,
     formkFieldPathChange,
+    translatePath,
     setFieldValue,
 }: MetadataFieldsProps) => {
     const [inputTags, setInputTags] = useState({});
+
+    const { language } = useI18n();
 
     const handleIntegerInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.target.value = event.target.value.replace(/[^0-9]/g, '');
@@ -157,6 +165,11 @@ export const MetadataFields = ({
         setFieldValue(`${formkFieldPathChange}.${index}.value`, newTags);
     };
 
+    const handleGetMessageError = (index: number): string => {
+        const error = errorsByPath(index)?.value;
+        return (language[`${translatePath}.errors`] as TranslateFunction)({ message: error });
+    };
+
     return (
         <Grid padding={1} spacing={2} container>
             {metadataDefinitions?.map((v, i) => (
@@ -165,7 +178,7 @@ export const MetadataFields = ({
                         <Grid item lg={12} xs={12}>
                             <>
                                 <Typography variant="subtitle1" fontWeight={600} component="label">
-                                    {v.title}
+                                    {language[`${translatePath}.${v.name}`] as string}
                                 </Typography>
                                 <CustomTextField
                                     multiline
@@ -185,15 +198,15 @@ export const MetadataFields = ({
                                         },
                                     }}
                                     variant="outlined"
-                                    error={!!errorsByPath(i)?.value}
-                                    helperText={errorsByPath(i)?.value}
+                                    error={!!handleGetMessageError(i)}
+                                    helperText={handleGetMessageError(i)}
                                 />
                             </>
                         </Grid>
                     ) : v.type === 'tags' ? (
                         <Grid item lg={12} xs={12}>
                             <Typography variant="subtitle1" fontWeight={600} component="label">
-                                {v.title}
+                                {language[`${translatePath}.${v.name}`] as string}
                             </Typography>
 
                             <Box display="flex" alignItems="center">
@@ -203,13 +216,13 @@ export const MetadataFields = ({
                                     fullWidth
                                     onChange={(e) => onChangeInputTags(i, e.target.value)}
                                     size="small"
-                                    placeholder="Add Tag"
+                                    placeholder={language[`${translatePath}.${v.name}.placeholder`] as string}
                                     inputProps={{
                                         'aria-label': 'add tag',
                                     }}
                                 />
                                 <Button size="small" variant="contained" onClick={() => handleAddTag(i)}>
-                                    Add
+                                    {language[`${translatePath}.${v.name}.button`] as string}
                                 </Button>
                             </Box>
                             <Box
@@ -236,10 +249,11 @@ export const MetadataFields = ({
                             {v.type === 'select' && (
                                 <div style={{ position: 'relative' }}>
                                     <Typography variant="subtitle1" fontWeight={600} component="label">
-                                        {v.title}
+                                        {language[`${translatePath}.${v.name}`] as string}
                                     </Typography>
                                     {v.auto ? (
                                         <AutoSelectField
+                                            translatePath={translatePath}
                                             formkFieldPathChange={formkFieldPathChange}
                                             setFieldValue={setFieldValue}
                                             metadataItem={v}
@@ -257,12 +271,12 @@ export const MetadataFields = ({
                                         >
                                             {v.options?.map((option) => (
                                                 <MenuItem key={option.value} value={option.value}>
-                                                    {option.label}
+                                                    {language[`${translatePath}.${v.name}.${option.value}`] as string}
                                                 </MenuItem>
                                             ))}
                                         </CustomSelect>
                                     )}
-                                    {errorsByPath(i)?.value && (
+                                    {handleGetMessageError(i) && (
                                         <Typography
                                             color="error"
                                             style={{
@@ -271,7 +285,7 @@ export const MetadataFields = ({
                                                 left: 0,
                                             }}
                                         >
-                                            {errorsByPath(i)?.value}
+                                            {handleGetMessageError(i)}
                                         </Typography>
                                     )}
                                 </div>
@@ -279,7 +293,7 @@ export const MetadataFields = ({
                             {v.type === 'string' && (
                                 <>
                                     <Typography variant="subtitle1" fontWeight={600} component="label">
-                                        {v.title}
+                                        {language[`${translatePath}.${v.name}`] as string}
                                     </Typography>
                                     <CustomTextField
                                         value={v.value}
@@ -295,15 +309,15 @@ export const MetadataFields = ({
                                             },
                                         }}
                                         variant="outlined"
-                                        error={!!errorsByPath(i)?.value}
-                                        helperText={errorsByPath(i)?.value}
+                                        error={!!handleGetMessageError(i)}
+                                        helperText={handleGetMessageError(i)}
                                     />
                                 </>
                             )}
                             {v.type === 'integer' && (
                                 <>
                                     <Typography variant="subtitle1" fontWeight={600} component="label">
-                                        {v.title}
+                                        {language[`${translatePath}.${v.name}`] as string}
                                     </Typography>
                                     <CustomTextField
                                         type="text"
@@ -321,15 +335,15 @@ export const MetadataFields = ({
                                             },
                                         }}
                                         onInput={handleIntegerInputChange}
-                                        error={!!errorsByPath(i)?.value}
-                                        helperText={errorsByPath(i)?.value}
+                                        error={!!handleGetMessageError(i)}
+                                        helperText={handleGetMessageError(i)}
                                     />
                                 </>
                             )}
                             {v.type === 'cents' && (
                                 <>
                                     <Typography variant="subtitle1" fontWeight={600} component="label">
-                                        {v.title} (¢)
+                                        {language[`${translatePath}.${v.name}`] as string} (¢)
                                     </Typography>
                                     <CustomTextField
                                         type="text"
@@ -339,8 +353,8 @@ export const MetadataFields = ({
                                         size="small"
                                         variant="outlined"
                                         onInput={handleCentsInputChange}
-                                        error={!!errorsByPath(i)?.value}
-                                        helperText={errorsByPath(i)?.value}
+                                        error={!!handleGetMessageError(i)}
+                                        helperText={handleGetMessageError(i)}
                                         InputProps={{
                                             startAdornment: (
                                                 <Typography variant="body1" component="span" style={{ marginRight: 8 }}>
@@ -354,7 +368,7 @@ export const MetadataFields = ({
                             {v.type === 'boolean' && (
                                 <>
                                     <Typography variant="subtitle1" fontWeight={600} component="label">
-                                        {v.title}
+                                        {language[`${translatePath}.${v.name}`] as string}
                                     </Typography>
                                     <Box>
                                         <Switch
@@ -362,14 +376,14 @@ export const MetadataFields = ({
                                             checked={v.value as boolean}
                                             onChange={() => handleChangeSwitchInput(i)(!v.value)}
                                         />
-                                        <Typography color="error">{errorsByPath(i)?.value}</Typography>
+                                        <Typography color="error">{handleGetMessageError(i)}</Typography>
                                     </Box>
                                 </>
                             )}
                             {v.type === 'date' && (
                                 <div style={{ position: 'relative' }}>
                                     <Typography variant="subtitle1" fontWeight={600} component="label">
-                                        {v.title}
+                                        {language[`${translatePath}.${v.name}`] as string}
                                     </Typography>
                                     <Box>
                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -379,7 +393,7 @@ export const MetadataFields = ({
                                                 onChange={handleChangeDateInput(i)}
                                             />
                                         </LocalizationProvider>
-                                        {errorsByPath(i)?.value && (
+                                        {handleGetMessageError(i) && (
                                             <Typography
                                                 color="error"
                                                 style={{
@@ -388,7 +402,7 @@ export const MetadataFields = ({
                                                     left: 0,
                                                 }}
                                             >
-                                                {errorsByPath(i)?.value}
+                                                {handleGetMessageError(i)}
                                             </Typography>
                                         )}
                                     </Box>

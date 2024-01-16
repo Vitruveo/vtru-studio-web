@@ -22,7 +22,9 @@ export interface Asset {
         preview: Format;
         print: Format;
     };
-
+    isOriginal: boolean;
+    generatedArtworkAI: boolean;
+    notMintedOtherBlockchain: boolean;
     contract: boolean;
     assetMetadata: AssetMetadata;
     // creatorMetadata: {

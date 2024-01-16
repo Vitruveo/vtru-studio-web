@@ -11,9 +11,9 @@ import { Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { styled, useTheme } from '@mui/material/styles';
-import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
+import { useI18n } from '@/app/hooks/useI18n';
 
 type NavGroup = {
     [x: string]: any;
@@ -47,7 +47,9 @@ export default function NavItem({ item, level, pathDirect, hideMenu, onClick }: 
     const Icon = item?.icon;
     const theme = useTheme();
     const dispatch = useDispatch();
-    const { t } = useTranslation();
+
+    const { language } = useI18n();
+
     const isCompletedProfile = useSelector((state) => state.consignArtwork.isCompletedProfile);
     const itemIcon = level > 1 ? <Icon stroke={1.5} size="1rem" /> : <Icon stroke={1.5} size="1.3rem" />;
 
@@ -116,10 +118,12 @@ export default function NavItem({ item, level, pathDirect, hideMenu, onClick }: 
                         {itemIcon}
                     </ListItemIcon>
                     <ListItemText>
-                        {hideMenu ? '' : <>{t(`${item?.title}`)}</>}
+                        {hideMenu ? '' : <>{language[item?.title || ''] as string}</>}
                         <br />
                         {item?.subtitle ? (
-                            <Typography variant="caption">{hideMenu ? '' : item?.subtitle}</Typography>
+                            <Typography variant="caption">
+                                {hideMenu ? '' : (language[item?.subtitle] as string)}
+                            </Typography>
                         ) : (
                             ''
                         )}
