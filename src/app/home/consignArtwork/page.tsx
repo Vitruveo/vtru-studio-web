@@ -9,7 +9,6 @@ import Box from '@mui/material/Box';
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 import PageContainerFooter from '../components/container/PageContainerFooter';
 import { StepId, StepStatus } from '@/features/consignArtwork/types';
-import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { publishThunk } from '@/features/asset/thunks';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 import { useI18n } from '@/app/hooks/useI18n';

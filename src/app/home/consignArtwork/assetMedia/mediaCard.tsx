@@ -6,7 +6,7 @@ import { Box, SvgIcon, Typography, IconButton, Button, Dialog, DialogContent, Di
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { AssetMediaFormErros, AssetMediaFormValues, FormatMedia } from './types';
 import Crop from './crop';
-import { getFileSize, handleGetFileWidthAndHeight, mediaConfigs } from './helpers';
+import { getFileSize, handleGetFileType, handleGetFileWidthAndHeight, mediaConfigs } from './helpers';
 import ModalError from './modalError';
 import { useI18n } from '@/app/hooks/useI18n';
 import { TranslateFunction } from '@/i18n/types';
@@ -29,12 +29,16 @@ interface MediaCardProps {
 export interface MediaConfig {
     width: number;
     height: number;
-    sizeMB: number;
+    sizeMB: {
+        image: number;
+        video: number;
+    };
     required: boolean;
 }
 
 export default function MediaCard({
     formatType,
+    formats,
     formatValue,
     definition,
     setFieldValue,
@@ -54,17 +58,24 @@ export default function MediaCard({
         ] || {};
 
     const texts = {
+        video: language['studio.consignArtwork.assetMedia.video'],
         image: language['studio.consignArtwork.assetMedia.image'],
         max: language['studio.consignArtwork.assetMedia.max'],
         mediaIs: language['studio.consignArtwork.assetMedia.mediaIs'],
         uploadButton: language['studio.consignArtwork.assetMedia.upload.button'],
     } as { [key: string]: string };
 
+    const originalMediaInfo = handleGetFileType(formats.original.file!);
+
     const onDrop = useCallback(
         async (acceptedFiles: File[]) => {
+            const checkType = handleGetFileType(acceptedFiles[0]);
             const imgWidthAndHeight = await handleGetFileWidthAndHeight(acceptedFiles[0]);
 
-            if (imgWidthAndHeight.width === mediaConfig.width && imgWidthAndHeight.height === mediaConfig.height) {
+            if (
+                originalMediaInfo.mediaType === 'video' ||
+                (imgWidthAndHeight.width === mediaConfig.width && imgWidthAndHeight.height === mediaConfig.height)
+            ) {
                 handleUploadFile({ formatUpload: formatType, file: acceptedFiles[0] });
                 setFieldValue(`formats.${formatType}`, { file: acceptedFiles[0] });
             } else {
@@ -187,13 +198,18 @@ export default function MediaCard({
                     height={70}
                 >
                     <Typography fontSize="0.8rem" color="GrayText" textAlign="center">
-                        JPEG {texts.image}
+                        {originalMediaInfo.contentType}{' '}
+                        {originalMediaInfo.mediaType === 'video' ? texts.video : texts.image}
                         <Typography fontSize="0.8rem">
                             {mediaConfig?.width || mediaWidth} X {mediaConfig?.height || mediaHeight}
                         </Typography>
                         <Typography fontSize="0.8rem">
                             {mediaConfig?.sizeMB
-                                ? `${mediaConfig?.sizeMB} MB ${texts.max}`
+                                ? `${
+                                      originalMediaInfo.mediaType === 'video'
+                                          ? mediaConfig?.sizeMB.video
+                                          : mediaConfig?.sizeMB.image
+                                  } MB ${texts.max}`
                                 : getFileSize(formatValue.file!)}
                         </Typography>
                     </Typography>
@@ -201,15 +217,27 @@ export default function MediaCard({
                 <Box display="flex" width="100%" justifyContent="center" alignItems="center" height={190}>
                     {formatValue.file ? (
                         <Box display="flex" justifyContent="center" alignItems="center" width={120}>
-                            <Img
-                                width={definition === 'landscape' ? 120 : definition === 'portrait' ? 100 : 50}
-                                height={definition === 'landscape' ? 100 : definition === 'portrait' ? 120 : 100}
-                                src={urlAssetFile!}
-                                alt=""
-                                style={{
-                                    objectFit: 'contain',
-                                }}
-                            />
+                            {originalMediaInfo.mediaType === 'video' ? (
+                                <video
+                                    controls
+                                    width={definition === 'landscape' ? 120 : definition === 'portrait' ? 100 : 50}
+                                    height={definition === 'landscape' ? 100 : definition === 'portrait' ? 120 : 100}
+                                    src={urlAssetFile!}
+                                    style={{
+                                        objectFit: 'contain',
+                                    }}
+                                />
+                            ) : (
+                                <Img
+                                    width={definition === 'landscape' ? 120 : definition === 'portrait' ? 100 : 50}
+                                    height={definition === 'landscape' ? 100 : definition === 'portrait' ? 120 : 100}
+                                    src={urlAssetFile!}
+                                    alt=""
+                                    style={{
+                                        objectFit: 'contain',
+                                    }}
+                                />
+                            )}
                         </Box>
                     ) : (
                         <Box>

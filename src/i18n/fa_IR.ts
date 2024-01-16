@@ -91,6 +91,7 @@ const language: Translation = {
         return `${data.definition === 'landscape' ? 'لنداسکیپ' : data.definition === 'portrait' ? 'پرتره' : 'مربع'}`;
     },
     'studio.consignArtwork.assetMedia.image': 'تصویر',
+    'studio.consignArtwork.assetMedia.video': 'ویدیو',
     'studio.consignArtwork.assetMedia.max': 'حداکثر',
 
     'studio.consignArtwork.assetMedia.mediaRequired': (data: { required: boolean }) =>

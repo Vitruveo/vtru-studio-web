@@ -1,19 +1,16 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
 
-import webSocketService from '@/services/websocket';
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 import PageContainer from '@/app/home/components/container/PageContainer';
 
 import { Button, Container } from '@mui/material';
 import VtruTitle from '@/app/home/components/vtruTItle';
-import { useSelector } from '@/store/hooks';
+import { useDispatch, useSelector } from '@/store/hooks';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { useI18n } from '../hooks/useI18n';
 
@@ -42,6 +39,7 @@ export default function Home() {
         >
             <PageContainer title={texts.title}>
                 <Breadcrumb title={texts.title} />
+
                 <Box maxWidth={800} padding={3} mt={3}>
                     <Box>
                         <Typography variant="h2" display="inline">

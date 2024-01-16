@@ -10,6 +10,7 @@ import { TermsOfUseFormValues } from '@/app/home/consignArtwork/termsOfUse/types
 import { consignArtworkActionsCreators } from '../consignArtwork/slice';
 import { ASSET_STORAGE_URL } from '@/constants/asset';
 import { StepStatus } from '../consignArtwork/types';
+import { AssetMetadataSchemaValidation } from '@/app/home/consignArtwork/assetMetadata/formschema';
 
 export function assetStorageThunk(payload: AssetStorageReq): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
@@ -27,10 +28,12 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
         try {
             const response = await getAsset();
             if (response.data) {
-                if (response.data.assetMetadata && response.data.assetMetadata.assetMetadataDefinitions?.length)
+                if (response.data.assetMetadata && response.data.assetMetadata.assetMetadataDefinitions?.length) {
                     dispatch(
                         consignArtworkActionsCreators.changeStatusStep({ stepId: 'assetMetadata', status: 'completed' })
                     );
+                }
+
                 if (response.data.licenses && response.data.licenses.length)
                     dispatch(
                         consignArtworkActionsCreators.changeStatusStep({ stepId: 'licenses', status: 'completed' })

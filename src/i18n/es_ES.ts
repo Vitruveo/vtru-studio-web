@@ -94,6 +94,7 @@ const language: Translation = {
         }`;
     },
     'studio.consignArtwork.assetMedia.image': 'imagen',
+    'studio.consignArtwork.assetMedia.video': 'video',
     'studio.consignArtwork.assetMedia.max': 'máximo',
 
     'studio.consignArtwork.assetMedia.mediaRequired': (data: { required: boolean }) =>

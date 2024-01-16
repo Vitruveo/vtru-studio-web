@@ -57,11 +57,11 @@ export default function SelectMedia({
             setFieldValue('definition', '');
         }
 
-        const imgWidthAndHeight = await handleGetFileWidthAndHeight(acceptedFiles[0]);
+        const mediaWidthAndHeight = await handleGetFileWidthAndHeight(acceptedFiles[0]);
 
-        if (imgWidthAndHeight.width > imgWidthAndHeight.height) {
+        if (mediaWidthAndHeight.width > mediaWidthAndHeight.height) {
             setFieldValue('definition', 'landscape');
-        } else if (imgWidthAndHeight.height > imgWidthAndHeight.width) {
+        } else if (mediaWidthAndHeight.height > mediaWidthAndHeight.width) {
             setFieldValue('definition', 'portrait');
         } else {
             setFieldValue('definition', 'square');

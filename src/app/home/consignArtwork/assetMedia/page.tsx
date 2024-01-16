@@ -20,7 +20,7 @@ import { userActionsCreators } from '@/features/user/slice';
 import { nanoid } from '@reduxjs/toolkit';
 import { assetMediaThunk } from '@/features/asset/thunks';
 import { assetStorageThunk, sendRequestUploadThunk } from '@/features/user/thunks';
-import { getMediaDefinition } from './helpers';
+import { getMediaDefinition, handleGetFileType } from './helpers';
 import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
 import { TranslateFunction } from '@/i18n/types';
@@ -196,6 +196,8 @@ export default function AssetMedia() {
         return file && file instanceof File ? URL.createObjectURL(file) : file ? (file as string) : '';
     }, [file]);
 
+    const originalMediaInfo = handleGetFileType(values.formats.original.file!);
+
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
@@ -244,21 +246,25 @@ export default function AssetMedia() {
                                 {texts.assets}
                             </Typography>
                             <Box display="flex" flexWrap="wrap">
-                                {Object.entries(values.formats).map(([formatType, value], index) => (
-                                    <Box style={{ marginRight: '10px' }} key={index}>
-                                        <MediaCard
-                                            key={index}
-                                            errors={errors}
-                                            formats={values.formats}
-                                            formatType={formatType}
-                                            formatValue={value}
-                                            urlAssetFile={urlAssetFile}
-                                            definition={values.definition}
-                                            setFieldValue={setFieldValue}
-                                            handleUploadFile={handleUploadFile}
-                                        />
-                                    </Box>
-                                ))}
+                                {Object.entries(values.formats)
+                                    .filter(([formatType]) =>
+                                        originalMediaInfo.mediaType === 'video' ? formatType !== 'print' : formatType
+                                    )
+                                    .map(([formatType, value], index) => (
+                                        <Box style={{ marginRight: '10px' }} key={index}>
+                                            <MediaCard
+                                                key={index}
+                                                errors={errors}
+                                                formats={values.formats}
+                                                formatType={formatType}
+                                                formatValue={value}
+                                                urlAssetFile={urlAssetFile}
+                                                definition={values.definition}
+                                                setFieldValue={setFieldValue}
+                                                handleUploadFile={handleUploadFile}
+                                            />
+                                        </Box>
+                                    ))}
                             </Box>
                         </Box>
                     )}

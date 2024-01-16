@@ -3,9 +3,9 @@
 import React from 'react';
 import Link from 'next/link';
 import Container from '@mui/material/Container';
-
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useRouter } from 'next/navigation';
-import { Box, Button, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Button, Stack, Theme, Typography, useTheme } from '@mui/material';
 import { useSelector } from '@/store/hooks';
 import { StepStatus } from '@/features/consignArtwork/types';
 import { useI18n } from '@/app/hooks/useI18n';
@@ -60,6 +60,8 @@ export function FooterForm({
         }
     };
 
+    const lgUp = useMediaQuery((th: Theme) => th.breakpoints.up('lg'));
+
     return (
         <Box display="flex" flexDirection="column">
             <Box marginBottom={5} minHeight={stepStatus ? '77vh' : '80vh'} flexGrow={1}>
@@ -72,61 +74,87 @@ export function FooterForm({
                 </Container>
             </Box>
 
-            {stepStatus && stepStatus === 'completed' && (
-                <Box
-                    width="100%"
-                    justifyContent="center"
-                    display="flex"
-                    alignItems="center"
-                    height={30}
-                    bgcolor="#B6D7A8"
-                >
-                    <Typography variant="h6" fontWeight="normal">
-                        {texts.thisStep}{' '}
-                        <Typography display="inline" fontWeight={600}>
-                            {texts.completed}
-                        </Typography>
-                    </Typography>
-                </Box>
-            )}
-            {stepStatus && stepStatus !== 'completed' && (
-                <Box
-                    width="100%"
-                    justifyContent="center"
-                    display="flex"
-                    alignItems="center"
-                    height={30}
-                    bgcolor="#F6B26B"
-                >
-                    <Typography variant="h6" fontWeight="normal">
-                        {texts.thisStep}{' '}
-                        <Typography display="inline" fontWeight={600}>
-                            {texts.inProgress}
-                        </Typography>{' '}
-                        {texts.notYet}
-                    </Typography>
-                </Box>
-            )}
-
-            <Box
-                height="8.2vh"
-                justifyContent="center"
-                boxSizing="border-box"
-                display="flex"
-                flexDirection="column"
-                flexGrow={1}
-                position="relative"
-                bgcolor={'#EFEFEF'}
-            >
-                {stepNumber ? (
-                    <Box marginInline={4} display="flex" alignItems="center" justifyContent="space-between">
-                        {stepNumber && (
-                            <Typography flexDirection="row" fontWeight="400" variant="h4">
-                                {texts.step} {stepNumber} {texts.of} 4
+            <Stack position="fixed" bottom={0} width={'100%'} maxWidth={lgUp ? '86vw' : '100%'}>
+                {stepStatus && stepStatus === 'completed' && (
+                    <Box
+                        width="100%"
+                        justifyContent="center"
+                        display="flex"
+                        alignItems="center"
+                        padding={1}
+                        bgcolor="#B6D7A8"
+                    >
+                        <Typography fontSize="0.9rem" fontWeight="normal">
+                            {texts.thisStep}{' '}
+                            <Typography fontSize="0.9rem" display="inline" fontWeight={600}>
+                                {texts.completed}
                             </Typography>
-                        )}
+                        </Typography>
+                    </Box>
+                )}
+                {stepStatus && stepStatus !== 'completed' && (
+                    <Box
+                        width="100%"
+                        textAlign="center"
+                        justifyContent="center"
+                        display="flex"
+                        alignItems="center"
+                        padding={0.5}
+                        bgcolor="#F6B26B"
+                    >
+                        <Typography fontSize="0.9rem" fontWeight="normal">
+                            {texts.thisStep}{' '}
+                            <Typography fontSize="0.9rem" display="inline" fontWeight={600}>
+                                {texts.inProgress}
+                            </Typography>{' '}
+                            {texts.notYet}
+                        </Typography>
+                    </Box>
+                )}
 
-                        <Stack direction="row" alignItems="center" spacing={4} flexDirection="row-reverse">
+                <Box
+                    justifyContent="center"
+                    boxSizing="border-box"
+                    display="flex"
+                    flexDirection="column"
+                    flexGrow={1}
+                    padding={2}
+                    bgcolor={'#EFEFEF'}
+                >
+                    {stepNumber ? (
+                        <Box marginInline={4} display="flex" alignItems="center" justifyContent="space-between">
+                            {stepNumber && (
+                                <Typography flexDirection="row" fontWeight="400" fontSize="1.1rem">
+                                    {texts.step} {stepNumber} {texts.of} 4
+                                </Typography>
+                            )}
+
+                            <Stack direction="row" alignItems="center" spacing={4} flexDirection="row-reverse">
+                                <Button
+                                    disabled={submitDisabled}
+                                    type="submit"
+                                    style={{ width: 120, marginLeft: '20px' }}
+                                    color="primary"
+                                    variant="contained"
+                                >
+                                    {submitText || 'Save'}
+                                </Button>
+
+                                <Button onClick={!backPathRouter ? handleBackClick : undefined} variant="text">
+                                    <Typography variant="subtitle2" color="GrayText" className="text-hover">
+                                        {texts.back}
+                                    </Typography>
+                                </Button>
+                            </Stack>
+                        </Box>
+                    ) : (
+                        <Stack
+                            marginInline={4}
+                            direction="row"
+                            alignItems="center"
+                            spacing={4}
+                            flexDirection="row-reverse"
+                        >
                             <Button
                                 disabled={submitDisabled}
                                 type="submit"
@@ -134,36 +162,18 @@ export function FooterForm({
                                 color="primary"
                                 variant="contained"
                             >
-                                {submitText || 'Save'}
+                                {submitText || texts.save}
                             </Button>
 
-                            <Button onClick={!backPathRouter ? handleBackClick : undefined} variant="text">
+                            <Link href={backPathRouter || '/home'} className="hover-text-primary">
                                 <Typography variant="subtitle2" color="GrayText" className="text-hover">
                                     {texts.back}
                                 </Typography>
-                            </Button>
+                            </Link>
                         </Stack>
-                    </Box>
-                ) : (
-                    <Stack marginInline={4} direction="row" alignItems="center" spacing={4} flexDirection="row-reverse">
-                        <Button
-                            disabled={submitDisabled}
-                            type="submit"
-                            style={{ width: 120, marginLeft: '20px' }}
-                            color="primary"
-                            variant="contained"
-                        >
-                            {submitText || texts.save}
-                        </Button>
-
-                        <Link href={backPathRouter || '/home'} className="hover-text-primary">
-                            <Typography variant="subtitle2" color="GrayText" className="text-hover">
-                                {texts.back}
-                            </Typography>
-                        </Link>
-                    </Stack>
-                )}
-            </Box>
+                    )}
+                </Box>
+            </Stack>
         </Box>
     );
 }
