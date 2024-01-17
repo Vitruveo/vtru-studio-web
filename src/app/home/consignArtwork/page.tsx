@@ -121,7 +121,7 @@ const ConsignArtwork = () => {
                                             fullWidth
                                         >
                                             {(language['studio.consignArtwork.stepButton'] as TranslateFunction)({
-                                                data: { status: v.status },
+                                                status: v.status,
                                             })}
                                         </Button>
                                     </Box>

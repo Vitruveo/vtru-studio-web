@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FormikErrors, useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from '@/store/hooks';
@@ -125,36 +125,48 @@ export default function Licenses() {
         },
     ];
 
+    const initialValues = useMemo(
+        () => ({
+            licenses: licensesState?.length ? licensesState : licenses,
+        }),
+        []
+    );
+
     const { values, errors, setFieldValue, handleSubmit, setErrors, setFieldError, validateForm } =
         useFormik<LicensesFormValues>({
-            initialValues: {
-                licenses: licensesState?.length ? licensesState : licenses,
-            },
+            initialValues,
             onSubmit: async (formValues) => {
                 try {
-                    const checkAddLicense = values.licenses.find((license) => license.added);
-
-                    if (checkAddLicense) {
-                        const licensesAdded = values.licenses.filter((v) => v.added);
-                        const check = licensesAdded.map((v) => {
-                            return licenseMetadataDefinitionsSchemaValidation.validate(v.licenseMetadataDefinitions, {
-                                abortEarly: false,
-                            });
-                        });
-
-                        await Promise.all(check);
-
-                        dispatch(licenseThunk({ licenses: values.licenses }));
-                        dispatch(
-                            consignArtworkActionsCreators.changeStatusStep({
-                                stepId: 'licenses',
-                                status: 'completed',
-                            })
-                        );
+                    if (JSON.stringify(initialValues) === JSON.stringify(values)) {
                         router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/termsOfUse`);
                     } else {
-                        setShowBackModal(false);
-                        setErrorLicense(texts.oneLicenseError);
+                        const checkAddLicense = values.licenses.find((license) => license.added);
+
+                        if (checkAddLicense) {
+                            const licensesAdded = values.licenses.filter((v) => v.added);
+                            const check = licensesAdded.map((v) => {
+                                return licenseMetadataDefinitionsSchemaValidation.validate(
+                                    v.licenseMetadataDefinitions,
+                                    {
+                                        abortEarly: false,
+                                    }
+                                );
+                            });
+
+                            await Promise.all(check);
+
+                            dispatch(licenseThunk({ licenses: values.licenses }));
+                            dispatch(
+                                consignArtworkActionsCreators.changeStatusStep({
+                                    stepId: 'licenses',
+                                    status: 'completed',
+                                })
+                            );
+                            router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/termsOfUse`);
+                        } else {
+                            setShowBackModal(false);
+                            setErrorLicense(texts.oneLicenseError);
+                        }
                     }
                 } catch (err) {
                     setShowBackModal(false);
@@ -216,31 +228,40 @@ export default function Licenses() {
     };
 
     const handleOpenBackModal = () => {
-        setShowBackModal(true);
-    };
-
-    const handleSaveData = async () => {
-        const validate = await validateForm();
-        if (validate && Object.values(validate).length === 0) {
-            handleSubmit();
+        if (JSON.stringify(initialValues) === JSON.stringify(values)) {
+            router.push(`/home/consignArtwork`);
         } else {
-            setShowBackModal(false);
+            setShowBackModal(true);
         }
     };
 
-    useEffect(() => {
-        if (licensesAdded.length > 0) setErrorLicense('');
-        const checkStateLicenses = licensesState?.filter((v) => v.added);
-        dispatch(
-            consignArtworkActionsCreators.changeStatusStep({
-                stepId: 'licenses',
-                status: checkStateLicenses?.length > 0 || licensesAdded.length > 0 ? 'completed' : 'inProgress',
-            })
-        );
-    }, [licensesAdded, values]);
+    const handleSaveData = async (event?: React.FormEvent) => {
+        if (event) event.preventDefault();
+        if (JSON.stringify(initialValues) === JSON.stringify(values)) {
+            router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/termsOfUse`);
+        } else {
+            const validate = await validateForm();
+            if (validate && Object.values(validate).length === 0) {
+                handleSubmit();
+            } else {
+                setShowBackModal(false);
+            }
+        }
+    };
+
+    // useEffect(() => {
+    //     if (licensesAdded.length > 0) setErrorLicense('');
+    //     const checkStateLicenses = licensesState?.filter((v) => v.added);
+    //     dispatch(
+    //         consignArtworkActionsCreators.changeStatusStep({
+    //             stepId: 'licenses',
+    //             status: checkStateLicenses?.length > 0 || licensesAdded.length > 0 ? 'completed' : 'inProgress',
+    //         })
+    //     );
+    // }, [licensesAdded, values]);
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSaveData}>
             <PageContainerFooter
                 submitText={texts.nextButton}
                 title={texts.consignArtworkTitle}

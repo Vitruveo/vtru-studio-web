@@ -58,9 +58,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     useEffect(() => {
         if (!isValidToken(token)) {
             router.push('/login');
-            // setTimeout(() => {
-            //     dispatch(userActionsCreators.logout());
-            // }, 1000);
         }
     }, [token, router]);
 

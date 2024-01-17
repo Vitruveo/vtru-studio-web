@@ -4,11 +4,12 @@ import { useI18n } from '@/app/hooks/useI18n';
 
 interface ModalBackConfirmProps {
     yesClick: () => void;
+    noClick?: () => void;
     show: boolean;
     handleClose: () => void;
 }
 
-export const ModalBackConfirm = ({ handleClose, yesClick, show }: ModalBackConfirmProps) => {
+export const ModalBackConfirm = ({ handleClose, yesClick, noClick, show }: ModalBackConfirmProps) => {
     const router = useRouter();
     const { language } = useI18n();
 
@@ -19,7 +20,8 @@ export const ModalBackConfirm = ({ handleClose, yesClick, show }: ModalBackConfi
     } as { [key: string]: string };
 
     const handleChangePage = () => {
-        router.push('/home/consignArtwork');
+        if (noClick) noClick();
+        else router.push('/home/consignArtwork');
     };
 
     return (

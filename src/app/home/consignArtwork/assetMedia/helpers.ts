@@ -1,3 +1,5 @@
+import { FormatsMedia } from './types';
+
 export const mediaConfigs = {
     landscape: {
         display: {
@@ -267,4 +269,14 @@ export async function getMediaDefinition({ fileOrUrl }: { fileOrUrl: File | stri
     } else {
         return 'square';
     }
+}
+
+export function getStepStatus({ formats }: { formats: FormatsMedia }) {
+    return Object.entries(formats || {})
+        .filter(([key, value]) => key !== 'print')
+        .every(([key, value]) => value.file)
+        ? 'completed'
+        : Object.values(formats || {}).some((format) => format.file) || formats?.original?.file
+          ? 'inProgress'
+          : 'notStarted';
 }

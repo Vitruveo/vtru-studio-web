@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useMemo } from 'react';
 
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from '@/store/hooks';
@@ -7,7 +7,6 @@ import { Box, Container, Typography, Button } from '@mui/material';
 
 import { TermsOfUseFormValues } from './types';
 
-import { TermsOfUseSchemaValidation } from './formschema';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
@@ -58,36 +57,44 @@ export default function ContractScreen() {
         },
     ];
 
-    const { values, errors, setFieldValue, validateForm, handleSubmit } = useFormik<TermsOfUseFormValues>({
-        initialValues: {
+    const initialValues = useMemo(
+        () => ({
             isOriginal,
             generatedArtworkAI,
             notMintedOtherBlockchain,
             contract: contract || false,
-        },
-        validationSchema: TermsOfUseSchemaValidation,
+        }),
+        []
+    );
+
+    const { values, errors, setFieldValue, validateForm, handleSubmit } = useFormik<TermsOfUseFormValues>({
+        initialValues,
         onSubmit: async (formValues) => {
-            dispatch(
-                contractThunk({
-                    contract: values.contract,
-                    isOriginal: values.isOriginal,
-                    generatedArtworkAI: values.generatedArtworkAI,
-                    notMintedOtherBlockchain: values.notMintedOtherBlockchain,
-                })
-            );
-            dispatch(
-                consignArtworkActionsCreators.changeStatusStep({
-                    stepId: 'termsOfUse',
-                    status:
-                        values.contract &&
-                        values.isOriginal &&
-                        values.generatedArtworkAI &&
-                        values.notMintedOtherBlockchain
-                            ? 'completed'
-                            : checkStatus,
-                })
-            );
-            router.push(`/home/consignArtwork`);
+            if (JSON.stringify(initialValues) === JSON.stringify(values)) {
+                router.push(`/home/consignArtwork`);
+            } else {
+                dispatch(
+                    contractThunk({
+                        contract: values.contract,
+                        isOriginal: values.isOriginal,
+                        generatedArtworkAI: values.generatedArtworkAI,
+                        notMintedOtherBlockchain: values.notMintedOtherBlockchain,
+                    })
+                );
+                dispatch(
+                    consignArtworkActionsCreators.changeStatusStep({
+                        stepId: 'termsOfUse',
+                        status:
+                            values.contract &&
+                            values.isOriginal &&
+                            values.generatedArtworkAI &&
+                            values.notMintedOtherBlockchain
+                                ? 'completed'
+                                : checkStatus,
+                    })
+                );
+                router.push(`/home/consignArtwork`);
+            }
         },
     });
 
@@ -120,7 +127,11 @@ export default function ContractScreen() {
     };
 
     const handleOpenBackModal = () => {
-        setShowBackModal(true);
+        if (JSON.stringify(initialValues) === JSON.stringify(values)) {
+            router.push(`/home/consignArtwork`);
+        } else {
+            setShowBackModal(true);
+        }
     };
 
     const handleSaveData = async () => {

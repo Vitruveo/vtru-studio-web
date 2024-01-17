@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -56,30 +56,37 @@ export default function AssetMetadata() {
         },
     ];
 
-    const initialValues = {
-        assetMetadata: {
-            assetMetadataDomains: assetMetadataDomains,
-            assetMetadataDefinitions: assetMetadata?.assetMetadataDefinitions.length
-                ? assetMetadata.assetMetadataDefinitions
-                : assetMetadataDefinitions,
-        },
-    };
+    const initialValues = useMemo(
+        () => ({
+            assetMetadata: {
+                assetMetadataDomains: assetMetadataDomains,
+                assetMetadataDefinitions: assetMetadata?.assetMetadataDefinitions.length
+                    ? assetMetadata.assetMetadataDefinitions
+                    : assetMetadataDefinitions,
+            },
+        }),
+        []
+    );
 
     const { values, errors, setFieldValue, handleSubmit, validateForm } = useFormik<AssetMetadataFormValues>({
         initialValues,
         validateOnChange: false,
         validationSchema: AssetMetadataSchemaValidation,
         onSubmit: async (formValues) => {
-            await validateForm();
+            if (JSON.stringify(initialValues) === JSON.stringify(values))
+                router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/licenses`);
+            else {
+                await validateForm();
 
-            dispatch(assetMetadataThunk({ assetMetadata: values.assetMetadata }));
-            dispatch(
-                consignArtworkActionsCreators.changeStatusStep({
-                    stepId: 'assetMetadata',
-                    status: 'completed',
-                })
-            );
-            router.push(`/home/consignArtwork/licenses`);
+                dispatch(assetMetadataThunk({ assetMetadata: values.assetMetadata }));
+                dispatch(
+                    consignArtworkActionsCreators.changeStatusStep({
+                        stepId: 'assetMetadata',
+                        status: 'completed',
+                    })
+                );
+                router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/licenses`);
+            }
         },
     });
 
@@ -88,15 +95,25 @@ export default function AssetMetadata() {
     };
 
     const handleOpenBackModal = () => {
-        setShowBackModal(true);
+        if (JSON.stringify(initialValues) === JSON.stringify(values)) {
+            router.push(`/home/consignArtwork`);
+        } else {
+            setShowBackModal(true);
+        }
     };
 
-    const handleSaveData = async () => {
-        const validate = await validateForm();
-        if (validate && Object.values(validate).length === 0) {
-            handleSubmit();
+    const handleSaveData = async (event?: React.FormEvent) => {
+        if (event) event.preventDefault();
+
+        if (JSON.stringify(initialValues) === JSON.stringify(values)) {
+            router.push(`/home/consignArtwork/licenses`);
         } else {
-            setShowBackModal(false);
+            const validate = await validateForm();
+            if (validate && Object.values(validate).length === 0) {
+                handleSubmit();
+            } else {
+                setShowBackModal(false);
+            }
         }
     };
 
@@ -124,7 +141,7 @@ export default function AssetMetadata() {
     }, [assetMetadata?.assetMetadataDefinitions.length]);
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSaveData}>
             <PageContainerFooter
                 submitText={texts.nextButton}
                 stepStatus={status}

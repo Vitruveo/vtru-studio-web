@@ -66,14 +66,14 @@ export default function MediaCard({
     } as { [key: string]: string };
 
     const originalMediaInfo = handleGetFileType(formats.original.file!);
+    const isVideo = originalMediaInfo.mediaType === 'video' && formatType !== 'print';
 
     const onDrop = useCallback(
         async (acceptedFiles: File[]) => {
-            const checkType = handleGetFileType(acceptedFiles[0]);
             const imgWidthAndHeight = await handleGetFileWidthAndHeight(acceptedFiles[0]);
 
             if (
-                originalMediaInfo.mediaType === 'video' ||
+                isVideo ||
                 (imgWidthAndHeight.width === mediaConfig.width && imgWidthAndHeight.height === mediaConfig.height)
             ) {
                 handleUploadFile({ formatUpload: formatType, file: acceptedFiles[0] });
@@ -146,7 +146,6 @@ export default function MediaCard({
                                     position: 'absolute',
                                     top: '50%',
                                     left: '50%',
-                                    transform: 'translate(-50%, -50%)',
                                 }}
                             />
                         </SvgIcon>
@@ -198,18 +197,14 @@ export default function MediaCard({
                     height={70}
                 >
                     <Typography fontSize="0.8rem" color="GrayText" textAlign="center">
-                        {originalMediaInfo.contentType}{' '}
-                        {originalMediaInfo.mediaType === 'video' ? texts.video : texts.image}
+                        {isVideo ? originalMediaInfo.contentType : handleGetFileType(formatValue.file).contentType}{' '}
+                        {isVideo ? texts.video : texts.image}
                         <Typography fontSize="0.8rem">
                             {mediaConfig?.width || mediaWidth} X {mediaConfig?.height || mediaHeight}
                         </Typography>
                         <Typography fontSize="0.8rem">
                             {mediaConfig?.sizeMB
-                                ? `${
-                                      originalMediaInfo.mediaType === 'video'
-                                          ? mediaConfig?.sizeMB.video
-                                          : mediaConfig?.sizeMB.image
-                                  } MB ${texts.max}`
+                                ? `${isVideo ? mediaConfig?.sizeMB.video : mediaConfig?.sizeMB.image} MB ${texts.max}`
                                 : getFileSize(formatValue.file!)}
                         </Typography>
                     </Typography>
@@ -217,7 +212,7 @@ export default function MediaCard({
                 <Box display="flex" width="100%" justifyContent="center" alignItems="center" height={190}>
                     {formatValue.file ? (
                         <Box display="flex" justifyContent="center" alignItems="center" width={120}>
-                            {originalMediaInfo.mediaType === 'video' ? (
+                            {formatType !== 'print' && originalMediaInfo.mediaType === 'video' ? (
                                 <video
                                     controls
                                     width={definition === 'landscape' ? 120 : definition === 'portrait' ? 100 : 50}
@@ -241,15 +236,9 @@ export default function MediaCard({
                         </Box>
                     ) : (
                         <Box>
-                            <Box
-                                {...getRootProps()}
-                                height={80}
-                                width="100%"
-                                display="flex"
-                                justifyContent="center"
-                                alignItems="center"
-                            >
-                                <Button size="small" variant="contained">
+                            <Box height={80} width="100%" display="flex" justifyContent="center" alignItems="center">
+                                <input id="asset" {...getInputProps()} />
+                                <Button {...getRootProps()} size="small" variant="contained">
                                     {texts.uploadButton}
                                 </Button>
                             </Box>

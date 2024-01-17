@@ -10,7 +10,7 @@ import { Box, IconButton, Typography } from '@mui/material';
 
 import { useRouter } from 'next/navigation';
 import CloseIcon from '@mui/icons-material/Close';
-import { AssetMediaFormValues, FormatMediaSave } from './types';
+import { AssetMediaFormValues, FormatMediaSave, FormatsMedia } from './types';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
 import MediaCard from './mediaCard';
@@ -20,7 +20,7 @@ import { userActionsCreators } from '@/features/user/slice';
 import { nanoid } from '@reduxjs/toolkit';
 import { assetMediaThunk } from '@/features/asset/thunks';
 import { assetStorageThunk, sendRequestUploadThunk } from '@/features/user/thunks';
-import { getMediaDefinition, handleGetFileType } from './helpers';
+import { getMediaDefinition, getStepStatus, handleGetFileType } from './helpers';
 import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
 import { TranslateFunction } from '@/i18n/types';
@@ -63,17 +63,37 @@ export default function AssetMedia() {
     const router = useRouter();
     const dispatch = useDispatch();
 
-    const { values, errors, setFieldValue, handleSubmit } = useFormik<AssetMediaFormValues>({
-        initialValues: {
+    const initialValues = useMemo(
+        () => ({
             definition: '',
             formats: asset.formats,
-        },
+        }),
+        []
+    );
+
+    const { values, errors, setFieldValue, handleSubmit } = useFormik<AssetMediaFormValues>({
+        initialValues,
         onSubmit: async (formValues) => {
-            const deleteFormats = Object.entries(formValues.formats)
-                .filter(([_, value]) => !value.file)
-                .map(([key, _]) => key);
-            if (deleteFormats.length) await dispatch(assetMediaThunk({ deleteFormats }));
-            router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/assetMetadata`);
+            if (JSON.stringify(initialValues) === JSON.stringify(values))
+                router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/assetMetadata`);
+            else {
+                dispatch(
+                    consignArtworkActionsCreators.changeStatusStep({
+                        stepId: 'assetMedia',
+                        status: getStepStatus({
+                            formats:
+                                JSON.stringify(initialValues.formats) === JSON.stringify(values.formats)
+                                    ? asset.formats
+                                    : values.formats,
+                        }),
+                    })
+                );
+                const deleteFormats = Object.entries(formValues.formats)
+                    .filter(([_, value]) => !value.file)
+                    .map(([key, _]) => key);
+                if (deleteFormats.length) await dispatch(assetMediaThunk({ deleteFormats }));
+                router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/assetMetadata`);
+            }
         },
     });
 
@@ -104,20 +124,37 @@ export default function AssetMedia() {
     };
 
     const handleOpenBackModal = () => {
-        setShowBackModal(true);
+        if (JSON.stringify(initialValues.formats) === JSON.stringify(values.formats)) {
+            router.push(`/home/consignArtwork`);
+        } else {
+            setShowBackModal(true);
+        }
     };
 
     const handleSaveData = () => {
         handleSubmit();
     };
 
-    const checkStepProgress = Object.entries(values?.formats || {})
-        .filter(([key, value]) => key !== 'print')
-        .every(([key, value]) => value.file)
-        ? 'completed'
-        : Object.values(values?.formats || {}).some((format) => format.file) || values?.formats?.original?.file
-          ? 'inProgress'
-          : 'notStarted';
+    const handleCancelBackModal = async () => {
+        await dispatch(
+            consignArtworkActionsCreators.changeStatusStep({
+                stepId: 'assetMedia',
+                status: getStepStatus({
+                    formats: initialValues.formats,
+                }),
+            })
+        );
+
+        const deleteFormats = Object.entries(values.formats)
+            .filter(([key, value]) => !initialValues.formats[key as keyof FormatsMedia].file)
+            .map(([key, _]) => key);
+
+        if (deleteFormats.length) await dispatch(assetMediaThunk({ deleteFormats }));
+
+        router.push('/home/consignArtwork');
+    };
+
+    const checkStepProgress = getStepStatus({ formats: values.formats });
 
     useEffect(() => {
         dispatch(consignArtworkActionsCreators.changeStatusStep({ stepId: 'assetMedia', status: checkStepProgress }));
@@ -196,8 +233,6 @@ export default function AssetMedia() {
         return file && file instanceof File ? URL.createObjectURL(file) : file ? (file as string) : '';
     }, [file]);
 
-    const originalMediaInfo = handleGetFileType(values.formats.original.file!);
-
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
@@ -246,25 +281,21 @@ export default function AssetMedia() {
                                 {texts.assets}
                             </Typography>
                             <Box display="flex" flexWrap="wrap">
-                                {Object.entries(values.formats)
-                                    .filter(([formatType]) =>
-                                        originalMediaInfo.mediaType === 'video' ? formatType !== 'print' : formatType
-                                    )
-                                    .map(([formatType, value], index) => (
-                                        <Box style={{ marginRight: '10px' }} key={index}>
-                                            <MediaCard
-                                                key={index}
-                                                errors={errors}
-                                                formats={values.formats}
-                                                formatType={formatType}
-                                                formatValue={value}
-                                                urlAssetFile={urlAssetFile}
-                                                definition={values.definition}
-                                                setFieldValue={setFieldValue}
-                                                handleUploadFile={handleUploadFile}
-                                            />
-                                        </Box>
-                                    ))}
+                                {Object.entries(values.formats).map(([formatType, value], index) => (
+                                    <Box style={{ marginRight: '10px' }} key={index}>
+                                        <MediaCard
+                                            key={index}
+                                            errors={errors}
+                                            formats={values.formats}
+                                            formatType={formatType}
+                                            formatValue={value}
+                                            urlAssetFile={urlAssetFile}
+                                            definition={values.definition}
+                                            setFieldValue={setFieldValue}
+                                            handleUploadFile={handleUploadFile}
+                                        />
+                                    </Box>
+                                ))}
                             </Box>
                         </Box>
                     )}
@@ -280,7 +311,12 @@ export default function AssetMedia() {
                         />
                     )}
                 </Stack>
-                <ModalBackConfirm show={showBackModal} handleClose={handleCloseBackModal} yesClick={handleSaveData} />
+                <ModalBackConfirm
+                    show={showBackModal}
+                    handleClose={handleCloseBackModal}
+                    yesClick={handleSaveData}
+                    noClick={handleCancelBackModal}
+                />
             </PageContainerFooter>
         </form>
     );
