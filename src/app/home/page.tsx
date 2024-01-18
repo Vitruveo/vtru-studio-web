@@ -34,6 +34,8 @@ export default function Home() {
     return (
         <Container
             sx={{
+                overflow: 'auto',
+                maxHeight: '85vh',
                 maxWidth: customizer.isLayout === 'boxed' ? 'lg' : '100%!important',
             }}
         >

@@ -17,6 +17,7 @@ const Language = () => {
         englishUS: language['studio.languages.englishUS'],
         spanish: language['studio.languages.spanishES'],
         farsi: language['studio.languages.farsiFA'],
+        russian: language['studio.languages.russianRU'],
     } as { [key: string]: string };
 
     const Languages = [
@@ -39,6 +40,11 @@ const Language = () => {
             flagname: texts.farsi,
             icon: '/images/flag/icon-flag-fa.png',
             value: 'fa_IR',
+        },
+        {
+            flagname: texts.russian,
+            icon: '/images/flag/icon-flag-ru.png',
+            value: 'ru_RU',
         },
     ];
 

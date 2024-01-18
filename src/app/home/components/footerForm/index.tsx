@@ -63,20 +63,24 @@ export function FooterForm({
     const lgUp = useMediaQuery((th: Theme) => th.breakpoints.up('lg'));
 
     return (
-        <Box display="flex" flexDirection="column">
-            <Box marginBottom={5} minHeight={stepStatus ? '77vh' : '80vh'} flexGrow={1}>
+        <Box position="relative" display="flex" flexDirection="column">
+            <Box marginBottom={5} flexGrow={1}>
                 <Container
                     sx={{
                         maxWidth: customizer.isLayout === 'boxed' ? 'lg' : '100%!important',
+                        height: lgUp ? 'calc(100vh - 70px)' : 'calc(100vh - 140px)',
+                        overflowY: 'auto',
+                        overflowX: 'hidden',
                     }}
                 >
                     {children}
                 </Container>
             </Box>
 
-            <Stack position="fixed" bottom={0} width={'100%'} maxWidth={lgUp ? '86vw' : '100%'}>
+            <Stack marginTop="auto" position={lgUp ? 'sticky' : 'fixed'} bottom={0} right={0} width="100%">
                 {stepStatus && stepStatus === 'completed' && (
                     <Box
+                        height={25}
                         width="100%"
                         justifyContent="center"
                         display="flex"
@@ -84,7 +88,7 @@ export function FooterForm({
                         padding={1}
                         bgcolor="#B6D7A8"
                     >
-                        <Typography fontSize="0.9rem" fontWeight="normal">
+                        <Typography textAlign="center" fontSize="0.9rem" fontWeight="normal">
                             {texts.thisStep}{' '}
                             <Typography fontSize="0.9rem" display="inline" fontWeight={600}>
                                 {texts.completed}
@@ -94,6 +98,7 @@ export function FooterForm({
                 )}
                 {stepStatus && stepStatus !== 'completed' && (
                     <Box
+                        height={25}
                         width="100%"
                         textAlign="center"
                         justifyContent="center"
@@ -118,7 +123,7 @@ export function FooterForm({
                     display="flex"
                     flexDirection="column"
                     flexGrow={1}
-                    padding={2}
+                    height={70}
                     bgcolor={'#EFEFEF'}
                 >
                     {stepNumber ? (

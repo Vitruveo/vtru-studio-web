@@ -6,6 +6,7 @@ const language: Translation = {
     'studio.languages.englishUS': 'Inglês (US)',
     'studio.languages.spanishES': 'Espanhol (es-ES)',
     'studio.languages.farsiFA': 'Farsi (fa-IR)',
+    'studio.languages.russianRU': 'Russo (ru-RU)',
 
     /* Home */
     'studio.home.wellcome': 'Bem-vindo a',

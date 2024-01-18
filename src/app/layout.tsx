@@ -95,7 +95,7 @@ const MyApp = ({ children }: { children: React.ReactNode }) => {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en">
-            <body className={inter.className}>
+            <body style={{ overflow: 'hidden' }} className={inter.className}>
                 <Providers>
                     <MyApp>{children}</MyApp>
                 </Providers>
