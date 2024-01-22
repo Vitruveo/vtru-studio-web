@@ -97,7 +97,7 @@ export default function SelectMedia({
     return (
         <Box marginTop={2} display="flex" alignItems="center" justifyContent="center" width="100%">
             <Box
-                width="90vw"
+                width="100%"
                 height="40vh"
                 border="1px dashed"
                 padding={definition ? 1 : 2}

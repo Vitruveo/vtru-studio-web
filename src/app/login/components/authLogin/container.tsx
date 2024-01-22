@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
+import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 
 import { useDispatch } from '@/store/hooks';
@@ -11,6 +12,12 @@ import { loginSchemaValidation } from './formSchema';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 import { codesVtruApi } from '@/services/codes';
 import { userActionsCreators } from '@/features/user/slice';
+import { findEmailInAllowList } from '@/features/allowList/requests';
+import {
+    createAttemptInWaitingList,
+    findEmailInWaitingList,
+    updateAttemptInWaitingList,
+} from '@/features/waitingLIst/requests';
 
 const LoginContainer = () => {
     const [disabled, setDiabled] = useState<boolean>(false);
@@ -30,6 +37,26 @@ const LoginContainer = () => {
                 await validateForm();
 
                 setDiabled(true);
+
+                try {
+                    await findEmailInAllowList(formValues.email);
+                } catch (error) {
+                    const axiosError = error as AxiosError;
+                    if (axiosError.response?.status === 404) {
+                        try {
+                            await findEmailInWaitingList(formValues.email);
+                            updateAttemptInWaitingList(formValues.email);
+                        } catch (_) {
+                            createAttemptInWaitingList(formValues.email);
+                        }
+                        setDiabled(false);
+                        setToastr({ open: true, type: 'info', message: 'Wait for approval' });
+                        return;
+                    }
+                    setDiabled(false);
+                    setToastr({ open: true, type: 'error', message: 'Something went wrong! Try again later.' });
+                    return;
+                }
 
                 const resUserLogin = await dispatch(userLoginThunk({ email: formValues.email }));
                 if (codesVtruApi.success.login.includes(resUserLogin.code)) {

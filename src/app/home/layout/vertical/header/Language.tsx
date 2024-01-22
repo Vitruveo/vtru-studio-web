@@ -38,7 +38,7 @@ const Language = () => {
         },
         {
             flagname: texts.farsi,
-            icon: '/images/flag/icon-flag-fa.png',
+            icon: '/images/flag/iran-old-flag.jpg',
             value: 'fa_IR',
         },
         {
@@ -70,7 +70,7 @@ const Language = () => {
                 aria-haspopup="true"
                 onClick={handleClick}
             >
-                <Avatar src={currentLang.icon} alt={currentLang.value} sx={{ width: 30, height: 30 }} />
+                <Avatar src={currentLang.icon} alt={currentLang.value} sx={{ width: 35, height: 35 }} />
             </IconButton>
             <Menu
                 id="long-menu"
@@ -86,7 +86,7 @@ const Language = () => {
                 {Languages.map((option, index) => (
                     <MenuItem key={index} sx={{ py: 2, px: 3 }} onClick={() => dispatch(setLanguage(option.value))}>
                         <Stack direction="row" spacing={1} alignItems="center">
-                            <Avatar src={option.icon} alt={option.icon} sx={{ width: 20, height: 20 }} />
+                            <Avatar src={option.icon} alt={option.icon} sx={{ width: 25, height: 25 }} />
                             <Typography> {option.flagname}</Typography>
                         </Stack>
                     </MenuItem>

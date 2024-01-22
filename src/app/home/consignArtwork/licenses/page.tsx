@@ -1,30 +1,29 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
-import { FormikErrors, useFormik } from 'formik';
+import React, { useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useDispatch, useSelector } from '@/store/hooks';
+
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { IconTrash } from '@tabler/icons-react';
-import { Box, Button, IconButton, MenuItem } from '@mui/material';
+import { Box, Button, MenuItem, Theme, useMediaQuery } from '@mui/material';
 
+import { useDispatch, useSelector } from '@/store/hooks';
 import CustomSelect from '@/app/home/components/forms/theme-elements/CustomSelect';
-import MetadataFields from '../components/metadataFields';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
-
-import { LicensesFormErros, LicensesFormValues } from './types';
-
-import { LicensesSchemaValidation, licenseMetadataDefinitionsSchemaValidation } from './formschema';
-import PageContainerFooter from '../../components/container/PageContainerFooter';
-import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
-import { useRouter } from 'next/navigation';
-import { licenses } from '../mock';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { licenseThunk } from '@/features/asset/thunks';
-import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
 import { TranslateFunction } from '@/i18n/types';
+
+import { LicensesFormValues } from './types';
+import MetadataFields from '../components/metadataFields';
+import { licenseMetadataDefinitionsSchemaValidation } from './formschema';
+import PageContainerFooter from '../../components/container/PageContainerFooter';
+import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
+import { licenses } from '../mock';
+import { ModalBackConfirm } from '../modalBackConfirm';
 
 const licenseMetadataDomains = [
     { value: 'stream', label: 'Stream v1.0' },
@@ -95,6 +94,7 @@ export default function Licenses() {
     const { language } = useI18n();
     const router = useRouter();
     const dispatch = useDispatch();
+    const lgUp = useMediaQuery((th: Theme) => th.breakpoints.up('lg'));
 
     const { licenses: licensesState } = useSelector((state) => state.asset);
 
@@ -249,17 +249,6 @@ export default function Licenses() {
         }
     };
 
-    // useEffect(() => {
-    //     if (licensesAdded.length > 0) setErrorLicense('');
-    //     const checkStateLicenses = licensesState?.filter((v) => v.added);
-    //     dispatch(
-    //         consignArtworkActionsCreators.changeStatusStep({
-    //             stepId: 'licenses',
-    //             status: checkStateLicenses?.length > 0 || licensesAdded.length > 0 ? 'completed' : 'inProgress',
-    //         })
-    //     );
-    // }, [licensesAdded, values]);
-
     return (
         <form onSubmit={handleSaveData}>
             <PageContainerFooter
@@ -273,8 +262,8 @@ export default function Licenses() {
                 <Typography fontSize="1rem" fontWeight="normal" color="GrayText">
                     {texts.licensesDescription}
                 </Typography>
-                <Grid mt={1} my={3} alignItems="center" width={500} lg={6} xs={12}>
-                    <Typography fontSize="1.1rem" color="grey" fontWeight="500" variant="subtitle1" component="label">
+                <Grid mt={1} my={3} alignItems="center" lg={6} xs={12}>
+                    <Typography fontSize="1rem" color="grey" fontWeight="500" variant="subtitle1" component="label">
                         {texts.licensesTitle}
                     </Typography>
                     <Box
@@ -282,10 +271,10 @@ export default function Licenses() {
                         justifyContent="space-between"
                         display="flex"
                         flexWrap="wrap"
-                        width="50vw"
+                        maxWidth={{ xl: '50%', lg: '70%', sm: '300px' }}
                     >
-                        <Box width="25vw">
-                            <Box display="flex" alignItems="center" width="100%">
+                        <Box maxWidth={lgUp ? '48%' : '100%'}>
+                            <Box display="flex" alignItems="center">
                                 <CustomSelect
                                     defaultValue="stream"
                                     size="small"
@@ -306,7 +295,7 @@ export default function Licenses() {
                                         style={{ marginLeft: 10, width: '122px' }}
                                         variant="contained"
                                         size="small"
-                                    >{`${texts.addButton} >> `}</Button>
+                                    >{`${texts.addButton} ${lgUp ? '>>' : ''} `}</Button>
                                 </Box>
                             </Box>
                             <Box marginTop={2}>
@@ -321,12 +310,12 @@ export default function Licenses() {
                                 />
                             </Box>
                         </Box>
-                        <Box width="22vw">
+                        <Box width={lgUp ? '48%' : '100%'} maxWidth={lgUp ? '48%' : '100%'}>
                             {licensesAdded.length > 0 && (
                                 <Box my={3}>
                                     {licensesAdded.map((license, index) => (
                                         <Box
-                                            width={300}
+                                            width="100%"
                                             marginBottom={4}
                                             display="flex"
                                             justifyContent="space-between"
@@ -334,7 +323,7 @@ export default function Licenses() {
                                             key={index}
                                         >
                                             <Box>
-                                                <Typography color="grey" fontSize="1.1rem">
+                                                <Typography color="grey" fontSize="1rem">
                                                     {
                                                         language[
                                                             `studio.consignArtwork.licenses.field.${license.domain}`

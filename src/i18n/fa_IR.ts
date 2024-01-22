@@ -5,7 +5,7 @@ const language: Translation = {
 
     /* Languages */
     'studio.languages.portuguesePTBR': 'پرتغالی (pt-BR)',
-    'studio.languages.englishUS': 'انگلیسی (US)',
+    'studio.languages.englishUS': 'انگلیسی (en-US)',
     'studio.languages.spanishES': 'اسپانیایی (es-ES)',
     'studio.languages.farsiFA': 'فارسی (fa-IR)',
     'studio.languages.russianRU': 'روسی (ru-RU)',

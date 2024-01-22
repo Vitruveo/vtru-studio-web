@@ -3,7 +3,7 @@ import { Translation } from './types';
 const language: Translation = {
     /* Languages */
     'studio.languages.portuguesePTBR': 'Português (pt-BR)',
-    'studio.languages.englishUS': 'Inglês (US)',
+    'studio.languages.englishUS': 'Inglês (en-US)',
     'studio.languages.spanishES': 'Espanhol (es-ES)',
     'studio.languages.farsiFA': 'Farsi (fa-IR)',
     'studio.languages.russianRU': 'Russo (ru-RU)',

@@ -1,15 +1,14 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-
+import { nanoid } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
-import { useDispatch, useSelector } from '@/store/hooks';
-
+import { useRouter } from 'next/navigation';
+import CloseIcon from '@mui/icons-material/Close';
 import { Stack } from '@mui/system';
 import { Box, IconButton, Typography } from '@mui/material';
 
-import { useRouter } from 'next/navigation';
-import CloseIcon from '@mui/icons-material/Close';
+import { useDispatch, useSelector } from '@/store/hooks';
 import { AssetMediaFormValues, FormatMediaSave, FormatsMedia } from './types';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
@@ -17,10 +16,10 @@ import MediaCard from './mediaCard';
 import SelectMedia from './selectMedia';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { userActionsCreators } from '@/features/user/slice';
-import { nanoid } from '@reduxjs/toolkit';
+
 import { assetMediaThunk } from '@/features/asset/thunks';
 import { assetStorageThunk, sendRequestUploadThunk } from '@/features/user/thunks';
-import { getMediaDefinition, getStepStatus, handleGetFileType } from './helpers';
+import { getMediaDefinition, getStepStatus } from './helpers';
 import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
 import { TranslateFunction } from '@/i18n/types';
@@ -244,11 +243,7 @@ export default function AssetMedia() {
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
 
-                <Stack
-                    overflow="auto"
-                    maxWidth={{ xs: 'calc(90vw)', sm: 'calc(90vw)', md: 'calc(83vw)' }}
-                    maxHeight={{ xs: 'calc(65vh - 64px)', sm: 'calc(65vh - 64px)', md: 'calc(65vh - 64px)' }}
-                >
+                <Stack marginBottom={3} overflow="auto" maxWidth={{ xs: '100%', sm: '100%', md: '100%' }}>
                     <Typography fontSize="1rem" fontWeight="normal" color="GrayText">
                         {texts.assetMediaDescription}
                     </Typography>
@@ -260,10 +255,11 @@ export default function AssetMedia() {
                             {showFormtsInfo && (
                                 <Box padding={2} bgcolor="#FFF2CC" position="relative">
                                     <IconButton
-                                        style={{ position: 'absolute', top: 8, right: 8 }}
+                                        size="small"
+                                        style={{ position: 'absolute', top: 1, right: 1 }}
                                         onClick={() => setShowFormatsInfo(false)}
                                     >
-                                        <CloseIcon />
+                                        <CloseIcon fontSize="small" />
                                     </IconButton>
                                     <Typography fontSize="0.9">
                                         {texts.assetMediaAmazing}

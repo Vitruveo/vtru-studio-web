@@ -171,7 +171,7 @@ export const MetadataFields = ({
     };
 
     return (
-        <Grid padding={1} spacing={2} container>
+        <Grid spacing={2} container>
             {metadataDefinitions?.map((v, i) => (
                 <Fragment key={i}>
                     {v.type === 'string' && v.name === 'description' ? (

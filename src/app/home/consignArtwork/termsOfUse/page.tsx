@@ -151,21 +151,21 @@ export default function ContractScreen() {
                 <Typography fontSize="1rem" fontWeight="normal" color="GrayText" marginBottom={2}>
                     {texts.termsOfUseDescription}
                 </Typography>
-                <Box alignItems="center" display="flex">
+                <Box marginBlock={1} alignItems="center" display="flex">
                     <CustomCheckbox
                         checked={values.isOriginal}
                         onChange={(event) => setFieldValue('isOriginal', event.target.checked)}
                     />
                     <Typography>{texts.isOriginal}</Typography>
                 </Box>
-                <Box alignItems="center" display="flex">
+                <Box marginBlock={1} alignItems="center" display="flex">
                     <CustomCheckbox
                         checked={values.generatedArtworkAI}
                         onChange={(event) => setFieldValue('generatedArtworkAI', event.target.checked)}
                     />
                     <Typography>{texts.generatedArtworkAI}</Typography>
                 </Box>
-                <Box alignItems="center" display="flex">
+                <Box marginBlock={1} alignItems="center" display="flex">
                     <CustomCheckbox
                         checked={values.notMintedOtherBlockchain}
                         onChange={(event) => setFieldValue('notMintedOtherBlockchain', event.target.checked)}
@@ -178,7 +178,7 @@ export default function ContractScreen() {
                         ref={scrollContainerRef}
                         onScroll={handleScroll}
                         maxHeight={300}
-                        padding={2}
+                        padding={1}
                         style={{
                             textAlign: 'justify',
                             overflowY: 'auto',
