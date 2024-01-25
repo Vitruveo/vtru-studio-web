@@ -70,6 +70,7 @@ const language: Translation = {
     'studio.consignArtwork.stepStatus.completed': 'Завершено',
     'studio.consignArtwork.stepStatus.inProgress': 'В процессе',
     'studio.consignArtwork.stepStatus.notStarted': 'Не начато',
+    'studio.consignArtwork.stepStatus.error': 'Ошибка',
     'studio.consignArtwork.stepPublishMessageSuccess': 'Успешно опубликовано!',
 
     'studio.consignArtwork.stepButton': (data: { status: string }) =>
@@ -137,7 +138,8 @@ const language: Translation = {
 
     /* Asset Metadata */
     'studio.consignArtwork.assetMetadata.title': 'Метаданные активов',
-    'studio.consignArtwork.assetMetadata.description': 'Завершите все задачи и опубликуйте свое произведение искусства',
+    'studio.consignArtwork.assetMetadata.description': 'Все метаданные ресурса видны публике.',
+
     'studio.consignArtwork.assetMetadata.field.artistName': 'Имя художника',
     'studio.consignArtwork.assetMetadata.field.title': 'Название',
     'studio.consignArtwork.assetMetadata.field.description': 'Описание',
@@ -182,7 +184,7 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.tags.placeholder': 'Добавить тег',
 
     'studio.consignArtwork.assetMetadata.field.errors': (data: { message: string }) =>
-        `${data.message === 'field required' ? 'поле обязательно для заполнения' : ''}`,
+        `${data.message === 'required' ? 'поле обязательно для заполнения' : ''}`,
 
     /* Licenses */
     'studio.consignArtwork.licenses.title': 'Лицензии',

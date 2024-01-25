@@ -11,6 +11,7 @@ import { StepStatus } from '@/features/consignArtwork/types';
 import { useI18n } from '@/app/hooks/useI18n';
 
 export interface FooterFormProps {
+    maxHeight?: string;
     submitText?: string;
     progress?: number;
     children?: React.ReactNode;

@@ -68,6 +68,7 @@ const language: Translation = {
     'studio.consignArtwork.stepStatus.completed': 'Completed',
     'studio.consignArtwork.stepStatus.inProgress': 'In Progress',
     'studio.consignArtwork.stepStatus.notStarted': 'Not Started',
+    'studio.consignArtwork.stepStatus.error': 'Error',
     'studio.consignArtwork.stepPublishMessageSuccess': 'Published successfully!',
 
     'studio.consignArtwork.stepButton': (data: { status: string }) =>
@@ -136,7 +137,7 @@ const language: Translation = {
 
     /* Asset Metadata */
     'studio.consignArtwork.assetMetadata.title': 'Asset Metadata',
-    'studio.consignArtwork.assetMetadata.description': 'Complete all tasks and publish your artwork',
+    'studio.consignArtwork.assetMetadata.description': 'All Asset Metadata is viewable to the public.',
     'studio.consignArtwork.assetMetadata.field.artistName': 'Artist Name',
     'studio.consignArtwork.assetMetadata.field.title': 'Title',
     'studio.consignArtwork.assetMetadata.field.description': 'Description',
@@ -181,7 +182,7 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.tags.placeholder': 'Add tag',
 
     'studio.consignArtwork.assetMetadata.field.errors': (data: { message: string }) =>
-        `${data.message === 'field required' ? 'field required' : ''}`,
+        `${data.message === 'required' ? 'Field required' : ''}`,
 
     /* Licenses */
     'studio.consignArtwork.licenses.title': 'Licenses',

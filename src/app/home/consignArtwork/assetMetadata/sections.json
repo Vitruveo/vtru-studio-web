@@ -1,0 +1,155 @@
+{
+    "section1": {
+        "formData": {},
+        "schema": {
+            "type": "object",
+            "required": ["artistName", "title", "description"],
+            "properties": {
+                "artistName": {
+                    "type": "string",
+                    "title": "artistName",
+                    "description": "A sample artistName"
+                },
+                "title": {
+                    "type": "string",
+                    "title": "title",
+                    "description": "A sample title"
+                },
+                "description": {
+                    "type": "string",
+                    "title": "description",
+                    "description": "A sample description"
+                }
+            }
+        },
+        "uiSchema": {
+            "artistName": {
+                "ui:options": {
+                    "label": false,
+                    "placeholder": "A sample artistName"
+                }
+            },
+            "title": {
+                "ui:options": {
+                    "label": false,
+                    "placeholder": "A sample title"
+                }
+            },
+            "description": {
+                "ui:options": {
+                    "label": false,
+                    "placeholder": "A sample description"
+                }
+            }
+        }
+    },
+    "section2": {
+        "formData": {},
+        "schema": {
+            "type": "object",
+            "required": ["date"],
+            "properties": {
+                "date": {
+                    "type": "string",
+                    "title": "date",
+                    "description": "A sample date",
+                    "format": "date"
+                },
+                "place": {
+                    "type": "string",
+                    "title": "place",
+                    "description": "A sample place",
+                    "default": ""
+                },
+                "objectType": {
+                    "type": "string",
+                    "title": "objectType",
+                    "description": "A sample objectType",
+                    "enum": ["video", "2D", "3D", "phygital", "other"],
+                    "default": ""
+                }
+            }
+        },
+        "uiSchema": {
+            "date": {
+                "ui:options": {
+                    "label": false,
+                    "placeholder": "A sample date"
+                }
+            },
+            "place": {
+                "ui:options": {
+                    "label": false,
+                    "placeholder": "A sample place"
+                }
+            },
+            "objectType": {
+                "ui:options": {
+                    "label": false,
+                    "placeholder": "A sample objectType"
+                }
+            }
+        }
+    },
+    "section3": {
+        "formData": {},
+        "schema": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "string",
+                    "title": "category",
+                    "description": "A sample category",
+                    "default": "",
+                    "enum": [
+                        "photography",
+                        "painting",
+                        "3D",
+                        "video",
+                        "mixedMedia",
+                        "illustration",
+                        "collage",
+                        "ai",
+                        "other"
+                    ]
+                },
+                "medium": {
+                    "type": "string",
+                    "title": "medium",
+                    "description": "A sample medium",
+                    "default": "",
+                    "enum": [
+                        "oil",
+                        "watercolour",
+                        "acrylic",
+                        "ink",
+                        "illustration",
+                        "collage",
+                        "AI",
+                        "mixedMedia",
+                        "film",
+                        "photography",
+                        "analogPhotography",
+                        "digitalPhotography",
+                        "compositePhotography",
+                        "other"
+                    ]
+                }
+            }
+        },
+        "uiSchema": {
+            "category": {
+                "ui:options": {
+                    "label": false,
+                    "placeholder": "A sample category"
+                }
+            },
+            "medium": {
+                "ui:options": {
+                    "label": false,
+                    "placeholder": "A sample medium"
+                }
+            }
+        }
+    }
+}

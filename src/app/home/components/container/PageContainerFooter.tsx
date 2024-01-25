@@ -3,6 +3,7 @@ import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { FooterForm, FooterFormProps } from '../footerForm';
 
 type Props = {
+    maxHeight?: string;
     description?: string;
     children: JSX.Element | JSX.Element[];
     title?: string;

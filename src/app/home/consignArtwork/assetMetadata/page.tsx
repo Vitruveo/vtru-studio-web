@@ -2,18 +2,13 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Grid from '@mui/material/Grid';
+
 import Typography from '@mui/material/Typography';
-import { Box, MenuItem } from '@mui/material';
+import { Box } from '@mui/material';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from '@/store/hooks';
 
-import { StepsFormValues } from '../types';
-import CustomSelect from '@/app/home/components/forms/theme-elements/CustomSelect';
-import MetadataFields from '../components/metadataFields';
-
-import { AssetMetadataFormErros, AssetMetadataFormValues } from './types';
-import { assetSelector } from '@/features/asset';
+import { AssetMetadataFormValues } from './types';
 import { AssetMetadataSchemaValidation } from './formschema';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
@@ -23,10 +18,34 @@ import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
 
+import Section, { SectionOnChangeParams } from './section';
+import { ErrorSchema, RJSFSchema } from '@rjsf/utils';
+import { useAssetMetadataSchemasTest } from './useSchemasTest';
+
+import ajv8Validator from '@rjsf/validator-ajv8';
+import { TranslateFunction } from '@/i18n/types';
+
+export type SectionName = 'section1';
+
 export default function AssetMetadata() {
+    const { sections: sectionsJSON } = useAssetMetadataSchemasTest();
+    const { assetMetadata } = useSelector((state) => state.asset);
+
+    type SectionsJSONType = typeof sectionsJSON;
+    type SectionType = SectionsJSONType[keyof SectionsJSONType];
+
+    type SectionFormatType = {
+        [key in keyof SectionsJSONType]: Omit<SectionType, 'schema'> & { schema: RJSFSchema; errors: ErrorSchema<any> };
+    };
+
+    const sectionsFormat = Object.entries(sectionsJSON).reduce(
+        (acc, [key, value]) => ({ ...acc, [key as keyof typeof sectionsJSON]: { ...value, errors: {} } }),
+        {}
+    ) as SectionFormatType;
+
+    const [sections, setSections] = useState(sectionsFormat);
     const [showBackModal, setShowBackModal] = useState(false);
 
-    const { assetMetadata } = useSelector((state) => state.asset);
     const { status } = useSelector((state) => state.consignArtwork.completedSteps['assetMetadata']);
 
     const router = useRouter();
@@ -68,7 +87,7 @@ export default function AssetMetadata() {
         []
     );
 
-    const { values, errors, setFieldValue, handleSubmit, validateForm } = useFormik<AssetMetadataFormValues>({
+    const { values, setFieldValue, handleSubmit, validateForm } = useFormik<AssetMetadataFormValues>({
         initialValues,
         validateOnChange: false,
         validationSchema: AssetMetadataSchemaValidation,
@@ -102,19 +121,58 @@ export default function AssetMetadata() {
         }
     };
 
+    const handleUpdateErrors = ({
+        errors,
+        sectionName,
+    }: {
+        errors: ErrorSchema<any>;
+        sectionName: keyof typeof sections;
+    }) => {
+        setSections((prevSections) => ({ ...prevSections, [sectionName]: { ...prevSections[sectionName], errors } }));
+    };
+
     const handleSaveData = async (event?: React.FormEvent) => {
         if (event) event.preventDefault();
 
-        if (JSON.stringify(initialValues) === JSON.stringify(values)) {
-            router.push(`/home/consignArtwork/licenses`);
-        } else {
-            const validate = await validateForm();
-            if (validate && Object.values(validate).length === 0) {
-                handleSubmit();
-            } else {
-                setShowBackModal(false);
+        const isValid: boolean[] = [];
+
+        Object.entries(sections).forEach(([key, value]) => {
+            const ajvValidator = ajv8Validator.rawValidation(value.schema, value.formData);
+
+            if (ajvValidator.errors?.length) {
+                isValid.push(false);
+                const errorSchema = ajvValidator.errors?.reduce((acc, error) => {
+                    let path = error.instancePath.substring(1);
+                    if (!path && error.params && 'missingProperty' in error.params) {
+                        path = error.params.missingProperty;
+                    }
+
+                    const message = (language[`studio.consignArtwork.assetMetadata.field.errors`] as TranslateFunction)(
+                        { message: error.keyword }
+                    );
+
+                    if (message) return { ...acc, [path]: { __errors: [message] } };
+                    return acc;
+                }, {});
+
+                handleUpdateErrors({ errors: errorSchema as ErrorSchema<any>, sectionName: key as SectionName });
+                return;
             }
+            isValid.push(true);
+        });
+
+        if (!isValid.length || !isValid.includes(false)) {
+            router.push(`/home/consignArtwork/licenses`);
+            // await validateForm();
+            // handleSubmit();
         }
+    };
+
+    const handleOnChange = ({ data, sectionName }: SectionOnChangeParams) => {
+        setSections((prevSections) => ({
+            ...prevSections,
+            [sectionName]: { ...prevSections[sectionName], formData: data.formData },
+        }));
     };
 
     useEffect(() => {
@@ -153,15 +211,25 @@ export default function AssetMetadata() {
                 <Typography fontSize="1rem" fontWeight="normal" color="GrayText">
                     {texts.assetMetadataDescription}
                 </Typography>
-                <Box maxHeight={500} overflow="auto" mt={1} alignItems="center" maxWidth={500}>
-                    <MetadataFields
-                        translatePath="studio.consignArtwork.assetMetadata.field"
-                        formkFieldPathChange="assetMetadata.assetMetadataDefinitions"
-                        values={values}
-                        errors={errors}
-                        metadataDefinitions={values.assetMetadata?.assetMetadataDefinitions}
-                        setFieldValue={setFieldValue}
-                    />
+                <Typography marginTop={2} fontSize="1.1rem" color="grey" fontWeight="500">
+                    {texts.assetMetadataTitle}
+                </Typography>
+                <Box marginBottom={5} maxWidth={500} mt={2} alignItems="center">
+                    <Box display="flex" flexDirection="column" gap={3}>
+                        {Object.entries(sections).map(([key, value]) => (
+                            <Box key={key}>
+                                <Section
+                                    sectionName={key as SectionName}
+                                    formData={value.formData}
+                                    errors={value.errors}
+                                    schema={value.schema}
+                                    uiSchema={value.uiSchema}
+                                    onChange={handleOnChange}
+                                    updateErrors={handleUpdateErrors}
+                                />
+                            </Box>
+                        ))}
+                    </Box>
                 </Box>
                 <ModalBackConfirm show={showBackModal} handleClose={handleCloseBackModal} yesClick={handleSaveData} />
             </PageContainerFooter>

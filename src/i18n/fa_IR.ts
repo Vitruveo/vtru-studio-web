@@ -69,6 +69,7 @@ const language: Translation = {
     'studio.consignArtwork.stepStatus.completed': 'تکمیل شده',
     'studio.consignArtwork.stepStatus.inProgress': 'در حال انجام',
     'studio.consignArtwork.stepStatus.notStarted': 'شروع نشده',
+    'studio.consignArtwork.stepStatus.error': 'خطا',
     'studio.consignArtwork.stepPublishMessageSuccess': 'با موفقیت منتشر شد!',
 
     'studio.consignArtwork.stepButton': (data: { status: string }) =>
@@ -138,7 +139,8 @@ const language: Translation = {
 
     /* Asset Metadata */
     'studio.consignArtwork.assetMetadata.title': 'فهرست دارایی',
-    'studio.consignArtwork.assetMetadata.description': 'تمام وظایف را کامل کنید و آثار هنری خود را منتشر کنید',
+    'studio.consignArtwork.assetMetadata.description': 'تمام متادیتاهای دارایی به عموم قابل مشاهده هستند.',
+
     'studio.consignArtwork.assetMetadata.field.artistName': 'نام هنرمند',
     'studio.consignArtwork.assetMetadata.field.title': 'عنوان',
     'studio.consignArtwork.assetMetadata.field.description': 'توضیحات',
@@ -183,7 +185,7 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.tags.placeholder': 'برچسب افزودن',
 
     'studio.consignArtwork.assetMetadata.field.errors': (data: { message: string }) =>
-        `${data.message === 'field required' ? 'فیلد ضروری است' : ''}`,
+        `${data.message === 'required' ? 'فیلد ضروری است' : ''}`,
 
     /* Licenses */
     'studio.consignArtwork.licenses.title': 'لایسنس‌ها',

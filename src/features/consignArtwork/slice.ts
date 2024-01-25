@@ -15,6 +15,7 @@ export const statusName = {
     completed: 'studio.consignArtwork.stepStatus.completed',
     inProgress: 'studio.consignArtwork.stepStatus.inProgress',
     notStarted: 'studio.consignArtwork.stepStatus.notStarted',
+    error: 'studio.consignArtwork.stepStatus.error',
 };
 
 const initialState: ConsignArtworkSliceState = {
