@@ -20,7 +20,7 @@ import { useI18n } from '@/app/hooks/useI18n';
 
 import Section, { SectionOnChangeParams } from './section';
 import { ErrorSchema, RJSFSchema } from '@rjsf/utils';
-import { useAssetMetadataSchemasTest } from './useSchemasTest';
+import { useAssetMetadataSchemas } from './useSchemas';
 
 import ajv8Validator from '@rjsf/validator-ajv8';
 import { TranslateFunction } from '@/i18n/types';
@@ -28,7 +28,7 @@ import { TranslateFunction } from '@/i18n/types';
 export type SectionName = 'section1';
 
 export default function AssetMetadata() {
-    const { sections: sectionsJSON } = useAssetMetadataSchemasTest();
+    const { sections: sectionsJSON } = useAssetMetadataSchemas();
     const { assetMetadata } = useSelector((state) => state.asset);
 
     type SectionsJSONType = typeof sectionsJSON;
