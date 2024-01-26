@@ -192,7 +192,7 @@ const language: Translation = {
 
     /* Licenses */
     'studio.consignArtwork.licenses.title': 'Licencias',
-    'studio.consignArtwork.licenses.description': 'Completa todas las tareas y publica tu obra de arte',
+    'studio.consignArtwork.licenses.description': 'Seleccione una o más licencias para esta obra de arte',
     'studio.consignArtwork.licenses.oneLicense.error': 'Por favor, añade al menos una licencia',
     'studio.consignArtwork.licenses.fillFields.error': 'Rellena los campos correctamente.',
     'studio.consignArtwork.licenses.alreadyAdded': 'Licencia ya añadida',

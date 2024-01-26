@@ -25,11 +25,10 @@ import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
 import { licenses } from '../mock';
 import { ModalBackConfirm } from '../modalBackConfirm';
 
-const licenseMetadataDomains = [
-    { value: 'stream', label: 'Stream v1.0' },
-    { value: 'print', label: 'Print v1.0' },
-    { value: 'NFT', label: 'NFT v1.0' },
-];
+import Nft from './nft';
+import Print from './print';
+import Stream from './stream';
+import Remix from './remix';
 
 type YupErrors = {
     [key: string]: string;
@@ -39,48 +38,15 @@ type Result = {
     [key: string]: any;
 };
 
-const transformErrors = (yupErrors: YupErrors): Result => {
-    const result: Result = {};
-
-    for (const key in yupErrors) {
-        const path = key.split('.');
-        const errorValue = yupErrors[key];
-
-        let currentLevel = result;
-
-        path.forEach((segment, index) => {
-            const [property, arrayIndex] = segment.includes('[') ? segment.split(/[[\]]/).filter(Boolean) : [segment];
-
-            if (index === path.length - 1) {
-                if (arrayIndex) {
-                    if (!currentLevel[property]) {
-                        currentLevel[property] = [];
-                    }
-                    currentLevel[property][arrayIndex] = errorValue;
-                } else {
-                    currentLevel[property] = errorValue;
-                }
-            } else {
-                if (!currentLevel[property]) {
-                    currentLevel[property] = arrayIndex ? [] : {};
-                }
-
-                if (arrayIndex) {
-                    if (!currentLevel[property][arrayIndex]) {
-                        currentLevel[property][arrayIndex] = {};
-                    }
-                    currentLevel = currentLevel[property][arrayIndex];
-                } else {
-                    currentLevel = currentLevel[property];
-                }
-            }
-        });
-    }
-
-    return result;
+const allLicenses = {
+    NFT: Nft,
+    Stream: Stream,
+    Print: Print,
+    Remix: Remix,
 };
 
 export default function Licenses() {
+    const [currentLicense, setCurrentLicense] = useState<keyof typeof allLicenses>('NFT');
     const [errorLicense, setErrorLicense] = useState('');
     const [showBackModal, setShowBackModal] = useState(false);
     const [toastr, setToastr] = useState<CustomizedSnackbarState>({
@@ -209,9 +175,9 @@ export default function Licenses() {
                 }
             });
 
-            const convertErrors = transformErrors(yupErrors);
+            // const convertErrors = transformErrors(yupErrors);
 
-            setErrors(convertErrors);
+            // setErrors(convertErrors);
         }
     };
 
@@ -249,6 +215,8 @@ export default function Licenses() {
         }
     };
 
+    const License = allLicenses[currentLicense];
+
     return (
         <form onSubmit={handleSaveData}>
             <PageContainerFooter
@@ -263,106 +231,31 @@ export default function Licenses() {
                     {texts.licensesDescription}
                 </Typography>
                 <Grid mt={1} my={3} alignItems="center" lg={6} xs={12}>
-                    <Typography fontSize="1rem" color="grey" fontWeight="500" variant="subtitle1" component="label">
-                        {texts.licensesTitle}
-                    </Typography>
-                    <Box
-                        alignItems="baseline"
-                        justifyContent="space-between"
-                        display="flex"
-                        flexWrap="wrap"
-                        maxWidth={{ xl: '50%', lg: '70%', sm: '300px' }}
-                    >
-                        <Box maxWidth={lgUp ? '48%' : '100%'}>
-                            <Box display="flex" alignItems="center">
-                                <CustomSelect
-                                    defaultValue="stream"
-                                    size="small"
-                                    name="domain"
-                                    onChange={handleChangeInput}
-                                    fullWidth
-                                    variant="outlined"
-                                >
-                                    {licenseMetadataDomains?.map((option) => (
-                                        <MenuItem key={option.value} value={option.value}>
-                                            {language[`studio.consignArtwork.licenses.field.${option.value}`] as string}
-                                        </MenuItem>
-                                    ))}
-                                </CustomSelect>
-                                <Box>
-                                    <Button
-                                        onClick={handleAddLicense}
-                                        style={{ marginLeft: 10, width: '122px' }}
-                                        variant="contained"
-                                        size="small"
-                                    >{`${texts.addButton} ${lgUp ? '>>' : ''} `}</Button>
-                                </Box>
-                            </Box>
-                            <Box marginTop={2}>
-                                <MetadataFields
-                                    key={licenseDomain}
-                                    translatePath="studio.consignArtwork.licenses.field"
-                                    formkFieldPathChange={`licenses[${findIndexLicense}].licenseMetadataDefinitions`}
-                                    values={values}
-                                    errors={errors}
-                                    metadataDefinitions={licenseMetadataDefinitions}
-                                    setFieldValue={setFieldValue}
-                                />
-                            </Box>
-                        </Box>
-                        <Box width={lgUp ? '48%' : '100%'} maxWidth={lgUp ? '48%' : '100%'}>
-                            {licensesAdded.length > 0 && (
-                                <Box my={3}>
-                                    {licensesAdded.map((license, index) => (
-                                        <Box
-                                            width="100%"
-                                            marginBottom={4}
-                                            display="flex"
-                                            justifyContent="space-between"
-                                            alignItems="center"
-                                            key={index}
-                                        >
-                                            <Box>
-                                                <Typography color="grey" fontSize="1rem">
-                                                    {
-                                                        language[
-                                                            `studio.consignArtwork.licenses.field.${license.domain}`
-                                                        ] as string
-                                                    }
-                                                </Typography>
-                                                {license.licenseMetadataDefinitions.map((v, i) => (
-                                                    <Box key={i}>
-                                                        <Typography color="GrayText">{`${
-                                                            language[
-                                                                `studio.consignArtwork.licenses.field.${v.name}`
-                                                            ] as string
-                                                        }: ${(
-                                                            language[
-                                                                'studio.consignArtwork.licenses.field.checkBoolean'
-                                                            ] as TranslateFunction
-                                                        )({ checkBoolean: v.value })}`}</Typography>
-                                                    </Box>
-                                                ))}
-                                            </Box>
-                                            <Box>
-                                                <Button
-                                                    style={{ width: '122px' }}
-                                                    onClick={() => handleRemoveLicense(license.domain)}
-                                                    variant="contained"
-                                                    size="small"
-                                                >
-                                                    {texts.deleteButton}
-                                                </Button>
-                                            </Box>
-                                        </Box>
-                                    ))}
-                                </Box>
-                            )}
-                        </Box>
+                    <Box alignItems="center" gap={2} display="flex">
+                        <Typography
+                            marginRight={2}
+                            display="flex"
+                            fontSize="1.1rem"
+                            color="grey"
+                            fontWeight="500"
+                            variant="subtitle1"
+                            component="label"
+                        >
+                            {texts.licensesTitle}
+                        </Typography>
+                        {Object.entries(allLicenses).map(([key, Component]) => (
+                            <Typography
+                                onClick={() => setCurrentLicense(key as keyof typeof allLicenses)}
+                                style={{ color: '#007BFF', cursor: 'pointer', textDecoration: 'underline' }}
+                                fontSize="1.1rem"
+                                key={key}
+                            >
+                                {key}
+                            </Typography>
+                        ))}
                     </Box>
-                    <Typography my={1} color="error">
-                        {errorLicense}
-                    </Typography>
+
+                    <License />
 
                     <CustomizedSnackbar
                         type={toastr.type}

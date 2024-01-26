@@ -140,7 +140,6 @@ export default function AssetMetadata() {
             const ajvValidator = ajv8Validator.rawValidation(value.schema, value.formData);
 
             if (ajvValidator.errors?.length) {
-                isValid.push(false);
                 const errorSchema = ajvValidator.errors?.reduce((acc, error) => {
                     let path = error.instancePath.substring(1);
                     if (!path && error.params && 'missingProperty' in error.params) {
@@ -151,7 +150,11 @@ export default function AssetMetadata() {
                         { message: error.keyword }
                     );
 
-                    if (message) return { ...acc, [path]: { __errors: [message] } };
+                    if (message) {
+                        isValid.push(false);
+                        return { ...acc, [path]: { __errors: [message] } };
+                    }
+
                     return acc;
                 }, {});
 

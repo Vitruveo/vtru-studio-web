@@ -189,7 +189,7 @@ const language: Translation = {
 
     /* Licenses */
     'studio.consignArtwork.licenses.title': 'لایسنس‌ها',
-    'studio.consignArtwork.licenses.description': 'تمام وظایف را کامل کنید و آثار هنری خود را منتشر کنید',
+    'studio.consignArtwork.licenses.description': 'یک یا چند مجوز برای این اثر هنری انتخاب کنید',
     'studio.consignArtwork.licenses.oneLicense.error': 'لطفاً حداقل یک لایسنس اضافه کنید',
     'studio.consignArtwork.licenses.fillFields.error': 'فیلدها را به درستی پر کنید.',
     'studio.consignArtwork.licenses.alreadyAdded': 'لایسنس از قبل اضافه شده است',
