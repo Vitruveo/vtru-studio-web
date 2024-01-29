@@ -2,15 +2,12 @@ import { assetStorage, updateAssetStep, getAsset } from './requests';
 import { AssetStatus, AssetStorageReq } from './types';
 import { ReduxThunkAction } from '@/store';
 import { assetActionsCreators } from './slice';
-import { licenses } from '@/app/home/consignArtwork/mock';
 import { FormatMediaSave, FormatsMedia } from '@/app/home/consignArtwork/assetMedia/types';
-import { AssetMetadataFormValues } from '@/app/home/consignArtwork/assetMetadata/types';
 import { LicensesFormValues } from '@/app/home/consignArtwork/licenses/types';
 import { TermsOfUseFormValues } from '@/app/home/consignArtwork/termsOfUse/types';
 import { consignArtworkActionsCreators } from '../consignArtwork/slice';
 import { ASSET_STORAGE_URL } from '@/constants/asset';
-import { StepStatus } from '../consignArtwork/types';
-import { AssetMetadataSchemaValidation } from '@/app/home/consignArtwork/assetMetadata/formschema';
+import { SectionFormatType, SectionsFormData } from '@/app/home/consignArtwork/assetMetadata/page';
 
 export function assetStorageThunk(payload: AssetStorageReq): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
@@ -28,7 +25,7 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
         try {
             const response = await getAsset();
             if (response.data) {
-                if (response.data.assetMetadata && response.data.assetMetadata.assetMetadataDefinitions?.length) {
+                if (response.data.assetMetadata && Object.values(response.data.assetMetadata)?.length) {
                     dispatch(
                         consignArtworkActionsCreators.changeStatusStep({ stepId: 'assetMetadata', status: 'completed' })
                     );
@@ -151,16 +148,18 @@ export function assetMediaThunk(payload: {
     };
 }
 
-export function assetMetadataThunk(payload: AssetMetadataFormValues): ReduxThunkAction<Promise<any>> {
+export function assetMetadataThunk(payload: SectionsFormData): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
         const response = await updateAssetStep({
-            ...payload,
+            assetMetadata: {
+                ...payload,
+            },
             stepName: 'assetMetadata',
         });
 
         dispatch(
             assetActionsCreators.change({
-                assetMetadata: payload.assetMetadata,
+                assetMetadata: payload,
             })
         );
     };

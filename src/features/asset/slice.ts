@@ -33,10 +33,7 @@ const initialState: AssetSliceState = {
             transactionId: undefined,
         },
     },
-    assetMetadata: {
-        assetMetadataDomains: [],
-        assetMetadataDefinitions: [],
-    },
+    assetMetadata: undefined,
     // creatorMetadata: {
     //     creatorMetadataDefinitions: [],
     // },
