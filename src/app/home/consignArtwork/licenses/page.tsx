@@ -140,7 +140,7 @@ export default function Licenses() {
                 dispatch(
                     consignArtworkActionsCreators.changeStatusStep({
                         stepId: 'licenses',
-                        status: Object.values(values).filter((v) => v.added).length ? 'completed' : 'inProgress',
+                        status: Object.values(values).filter((v) => v?.added).length ? 'completed' : 'inProgress',
                     })
                 );
 
@@ -148,7 +148,7 @@ export default function Licenses() {
             },
         });
 
-    const licensesAdded = Object.values(values).filter((v) => v.added);
+    const licensesAdded = Object.values(values).filter((v) => v?.added);
 
     const handleCloseBackModal = () => {
         setShowBackModal(false);
