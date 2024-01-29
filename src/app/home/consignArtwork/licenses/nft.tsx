@@ -5,35 +5,14 @@ import CustomSelect from '@/app/home/components/forms/theme-elements/CustomSelec
 import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
 import CustomCheckbox from '@/app/home/components/forms/theme-elements/CustomCheckbox';
 import Card from './common/card';
+import { LicenseProps } from './types';
 
-function Nft() {
-    const initialValues = {
-        license: '',
-        elastic: {
-            editionPrice: 0,
-            numberOfEditions: 0,
-            totalPrice: 0,
-            editionDiscount: false,
-        },
-        single: {
-            editionPrice: 0,
-        },
-        unlimited: {
-            editionPrice: 0,
-        },
-        added: false,
-        editionOption: '',
-    };
-
-    const { values, errors, setFieldValue, handleSubmit, setErrors, setFieldError, validateForm, handleChange } =
-        useFormik({
-            initialValues,
-            onSubmit: async (formValues) => {},
-        });
+function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
+    const values = allValues.nft;
 
     const handleAdded = (added: boolean) => {
         if (added == false) setFieldValue('editionOption', '');
-        setFieldValue('added', added);
+        setFieldValue('nft.added', added);
     };
 
     return (
@@ -67,7 +46,8 @@ function Nft() {
                                             backgroundColor: '#fff',
                                         },
                                     }}
-                                    name="license"
+                                    name="nft.license"
+                                    value={values.license}
                                     onChange={handleChange}
                                     size="small"
                                     fullWidth
@@ -95,7 +75,7 @@ function Nft() {
                         </Box>
                         <RadioGroup
                             aria-label="options"
-                            name="editionOption"
+                            name="nft.editionOption"
                             value={values.editionOption}
                             onChange={handleChange}
                         >
@@ -110,7 +90,7 @@ function Nft() {
                                             Edition Price (USD)
                                         </Typography>
                                         <CustomTextField
-                                            name="elastic.editionPrice"
+                                            name="nft.elastic.editionPrice"
                                             type="number"
                                             InputProps={{
                                                 sx: {
@@ -139,7 +119,7 @@ function Nft() {
                                             Number of Editions
                                         </Typography>
                                         <CustomTextField
-                                            name="elastic.numberOfEditions"
+                                            name="nft.elastic.numberOfEditions"
                                             type="number"
                                             InputProps={{
                                                 sx: {
@@ -194,7 +174,7 @@ function Nft() {
                                             <Box>
                                                 <CustomCheckbox
                                                     sx={{ padding: 0 }}
-                                                    name="elastic.editionDiscount"
+                                                    name="nft.elastic.editionDiscount"
                                                     checked={values.elastic.editionDiscount}
                                                     onChange={handleChange}
                                                 />
@@ -223,7 +203,7 @@ function Nft() {
                                         Edition Price (USD)
                                     </Typography>
                                     <CustomTextField
-                                        name="single.editionPrice"
+                                        name="nft.single.editionPrice"
                                         type="number"
                                         InputProps={{
                                             sx: {
@@ -251,7 +231,7 @@ function Nft() {
                                         Edition Price (USD)
                                     </Typography>
                                     <CustomTextField
-                                        name="unlimited.editionPrice"
+                                        name="nft.unlimited.editionPrice"
                                         type="number"
                                         InputProps={{
                                             sx: {

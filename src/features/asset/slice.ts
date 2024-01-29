@@ -40,7 +40,7 @@ const initialState: AssetSliceState = {
     // creatorMetadata: {
     //     creatorMetadataDefinitions: [],
     // },
-    licenses: [],
+    licenses: undefined,
     isOriginal: false,
     generatedArtworkAI: false,
     notMintedOtherBlockchain: false,

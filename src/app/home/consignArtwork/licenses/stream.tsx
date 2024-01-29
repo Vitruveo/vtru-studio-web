@@ -2,21 +2,13 @@ import { Box, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
 import Card from './common/card';
+import { LicenseProps } from './types';
 
-function Stream() {
-    const initialValues = {
-        unitPrice: '',
-        added: false,
-    };
-
-    const { values, errors, setFieldValue, handleSubmit, setErrors, setFieldError, validateForm, handleChange } =
-        useFormik({
-            initialValues,
-            onSubmit: async (formValues) => {},
-        });
+function Stream({ allValues, handleChange, setFieldValue }: LicenseProps) {
+    const values = allValues.stream;
 
     const handleAdded = (added: boolean) => {
-        setFieldValue('added', added);
+        setFieldValue('stream.added', added);
     };
 
     return (

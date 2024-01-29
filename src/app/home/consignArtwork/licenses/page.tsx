@@ -47,15 +47,12 @@ const allLicenses = {
 
 export default function Licenses() {
     const [currentLicense, setCurrentLicense] = useState<keyof typeof allLicenses>('NFT');
-    const [errorLicense, setErrorLicense] = useState('');
     const [showBackModal, setShowBackModal] = useState(false);
     const [toastr, setToastr] = useState<CustomizedSnackbarState>({
         type: 'success',
         open: false,
         message: '',
     });
-
-    const [licenseDomain, setLicenseDomain] = useState('stream');
 
     const { language } = useI18n();
     const router = useRouter();
@@ -92,102 +89,66 @@ export default function Licenses() {
     ];
 
     const initialValues = useMemo(
-        () => ({
-            licenses: licensesState?.length ? licensesState : licenses,
-        }),
+        () =>
+            licensesState
+                ? licensesState
+                : {
+                      nft: {
+                          version: '1',
+                          added: false,
+                          license: '',
+                          elastic: {
+                              editionPrice: 0,
+                              numberOfEditions: 0,
+                              totalPrice: 0,
+                              editionDiscount: false,
+                          },
+                          single: {
+                              editionPrice: 0,
+                          },
+                          unlimited: {
+                              editionPrice: 0,
+                          },
+
+                          editionOption: '',
+                      },
+                      stream: {
+                          version: '1',
+                          added: false,
+                      },
+                      print: {
+                          version: '1',
+                          added: false,
+
+                          unitPrice: 0,
+                      },
+                      remix: {
+                          version: '1',
+                          added: false,
+                          unitPrice: 0,
+                      },
+                  },
+
         []
     );
 
-    const { values, errors, setFieldValue, handleSubmit, setErrors, setFieldError, validateForm } =
+    const { values, errors, setFieldValue, handleSubmit, setErrors, setFieldError, validateForm, handleChange } =
         useFormik<LicensesFormValues>({
-            initialValues,
+            initialValues: initialValues,
             onSubmit: async (formValues) => {
-                try {
-                    if (JSON.stringify(initialValues) === JSON.stringify(values)) {
-                        router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/termsOfUse`);
-                    } else {
-                        const checkAddLicense = values.licenses.find((license) => license.added);
+                dispatch(licenseThunk(values));
+                dispatch(
+                    consignArtworkActionsCreators.changeStatusStep({
+                        stepId: 'licenses',
+                        status: Object.values(values).filter((v) => v.added).length ? 'completed' : 'inProgress',
+                    })
+                );
 
-                        if (checkAddLicense) {
-                            const licensesAdded = values.licenses.filter((v) => v.added);
-                            const check = licensesAdded.map((v) => {
-                                return licenseMetadataDefinitionsSchemaValidation.validate(
-                                    v.licenseMetadataDefinitions,
-                                    {
-                                        abortEarly: false,
-                                    }
-                                );
-                            });
-
-                            await Promise.all(check);
-
-                            dispatch(licenseThunk({ licenses: values.licenses }));
-                            dispatch(
-                                consignArtworkActionsCreators.changeStatusStep({
-                                    stepId: 'licenses',
-                                    status: 'completed',
-                                })
-                            );
-                            router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/termsOfUse`);
-                        } else {
-                            setShowBackModal(false);
-                            setErrorLicense(texts.oneLicenseError);
-                        }
-                    }
-                } catch (err) {
-                    setShowBackModal(false);
-                    setToastr({
-                        type: 'error',
-                        open: true,
-                        message: texts.fillFieldsError,
-                    });
-                }
+                router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/termsOfUse`);
             },
         });
 
-    const licensesAdded = values.licenses.filter((v) => v.added);
-
-    const findIndexLicense = values.licenses.findIndex((license) => license.domain === licenseDomain);
-    const licenseMetadataDefinitions = values.licenses[findIndexLicense]?.licenseMetadataDefinitions;
-
-    const handleAddLicense = async () => {
-        try {
-            await licenseMetadataDefinitionsSchemaValidation.validate(
-                values.licenses[findIndexLicense].licenseMetadataDefinitions,
-                { abortEarly: false }
-            );
-
-            if (!values.licenses[findIndexLicense]?.added) {
-                setFieldValue(`licenses[${findIndexLicense}].added`, true);
-            } else {
-                setToastr({
-                    type: 'error',
-                    open: true,
-                    message: texts.alreadyAdded,
-                });
-            }
-        } catch (err) {
-            const yupErrors: Record<string, string> = {};
-
-            (err as Yup.ValidationError).inner.forEach((error) => {
-                if (error.path && !yupErrors[error.path]) {
-                    yupErrors[`licenses[${findIndexLicense}].licenseMetadataDefinitions${error.path}`] = error.message;
-                }
-            });
-
-            // const convertErrors = transformErrors(yupErrors);
-
-            // setErrors(convertErrors);
-        }
-    };
-
-    const handleRemoveLicense = (domain: string) => {
-        setFieldValue(`licenses[${values.licenses.findIndex((license) => license.domain === domain)}].added`, false);
-    };
-
-    const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setLicenseDomain(e.target.value);
-    };
+    const licensesAdded = Object.values(values).filter((v) => v.added);
 
     const handleCloseBackModal = () => {
         setShowBackModal(false);
@@ -255,7 +216,13 @@ export default function Licenses() {
                         ))}
                     </Box>
 
-                    <License />
+                    <License
+                        allValues={values}
+                        setFieldValue={setFieldValue}
+                        handleChange={handleChange}
+                        handleSubmit={handleSubmit}
+                        setFieldError={setFieldError}
+                    />
 
                     <CustomizedSnackbar
                         type={toastr.type}

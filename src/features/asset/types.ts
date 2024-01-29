@@ -1,5 +1,5 @@
 import { AssetMetadata } from '@/app/home/consignArtwork/assetMetadata/types';
-import { License } from '@/app/home/consignArtwork/licenses/types';
+import { LicensesFormValues } from '@/app/home/consignArtwork/licenses/types';
 import { APIResponse } from '../common/types';
 
 export type AssetStatus = 'draft' | 'published' | 'archived';
@@ -30,7 +30,7 @@ export interface Asset {
     // creatorMetadata: {
     //     creatorMetadataDefinitions: MetadataDefinitionTypes[];
     // };
-    licenses: License[];
+    licenses?: LicensesFormValues;
     status: AssetStatus;
     framework: {
         createdAt: Date | null;

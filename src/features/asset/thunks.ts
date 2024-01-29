@@ -34,7 +34,7 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
                     );
                 }
 
-                if (response.data.licenses && response.data.licenses.length)
+                if (response.data.licenses && Object.values(response.data.licenses).filter((v) => v.added)?.length)
                     dispatch(
                         consignArtworkActionsCreators.changeStatusStep({ stepId: 'licenses', status: 'completed' })
                     );
@@ -174,21 +174,13 @@ export function licenseThunk(payload: LicensesFormValues): ReduxThunkAction<Prom
     return async function (dispatch, getState) {
         const response = await updateAssetStep({
             ...payload,
-            licenses: payload.licenses.map((v) =>
-                !v.added
-                    ? {
-                          ...v,
-                          licenseMetadataDefinitions: licenses?.find((license) => license.domain === v.domain)
-                              ?.licenseMetadataDefinitions,
-                      }
-                    : v
-            ),
+            licenses: payload,
             stepName: 'license',
         });
 
         dispatch(
             assetActionsCreators.change({
-                licenses: payload.licenses,
+                licenses: payload,
             })
         );
     };

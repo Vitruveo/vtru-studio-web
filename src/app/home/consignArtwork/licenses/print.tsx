@@ -2,21 +2,13 @@ import { Box, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
 import Card from './common/card';
+import { LicenseProps } from './types';
 
-function Print() {
-    const initialValues = {
-        unitPrice: '',
-        added: false,
-    };
-
-    const { values, errors, setFieldValue, handleSubmit, setErrors, setFieldError, validateForm, handleChange } =
-        useFormik({
-            initialValues,
-            onSubmit: async (formValues) => {},
-        });
+function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
+    const values = allValues.print;
 
     const handleAdded = (added: boolean) => {
-        setFieldValue('added', added);
+        setFieldValue('print.added', added);
     };
 
     return (
@@ -49,7 +41,7 @@ function Print() {
                     >
                         <Typography sx={{ whiteSpace: 'nowrap', marginRight: 3 }}>Unit Price (USD)</Typography>
                         <CustomTextField
-                            name="unitPrice"
+                            name="print.unitPrice"
                             type="number"
                             InputProps={{
                                 sx: {
