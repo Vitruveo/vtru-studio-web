@@ -13,7 +13,7 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
 
     return (
         <Box width={700} display="flex" justifyContent="space-between" marginTop={2}>
-            <Card title="PRINT-ART-1" added={values.added} setAdded={handleAdded} width={320} height={400}>
+            <Card title="PRINT-ART-1" added={values?.added} setAdded={handleAdded} width={320} height={400}>
                 {!values.added ? (
                     <Box paddingLeft={7} paddingTop={3} paddingRight={1}>
                         <Typography

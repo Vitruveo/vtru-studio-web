@@ -17,7 +17,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
 
     return (
         <Box width={700} display="flex" justifyContent="space-between" marginTop={2}>
-            <Card title="NFT-ART-1" added={values.added} setAdded={handleAdded} width={320} height={400}>
+            <Card title="NFT-ART-1" added={values?.added} setAdded={handleAdded} width={320} height={400}>
                 {!values.added ? (
                     <Box paddingLeft={7} paddingTop={3} paddingRight={3}>
                         <Typography

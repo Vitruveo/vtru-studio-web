@@ -13,7 +13,7 @@ function Remix({ allValues, setFieldValue, handleChange }: LicenseProps) {
 
     return (
         <Box width={700} display="flex" justifyContent="space-between" marginTop={2}>
-            <Card title="REMIX-ART-1" added={values.added} setAdded={handleAdded} width={320} height={400}>
+            <Card title="REMIX-ART-1" added={values?.added} setAdded={handleAdded} width={320} height={400}>
                 {!values.added ? (
                     <Box paddingLeft={7} paddingTop={3} paddingRight={3}>
                         <Typography

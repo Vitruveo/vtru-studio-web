@@ -13,7 +13,7 @@ function Stream({ allValues, handleChange, setFieldValue }: LicenseProps) {
 
     return (
         <Box width={700} display="flex" justifyContent="space-between" marginTop={2}>
-            <Card title="STREAM-ART-1" added={values.added} setAdded={handleAdded} width={320} height={400}>
+            <Card title="STREAM-ART-1" added={values?.added} setAdded={handleAdded} width={320} height={400}>
                 <Box paddingLeft={7} paddingTop={3} paddingRight={3}>
                     <Typography
                         style={{ wordWrap: 'break-word' }}
