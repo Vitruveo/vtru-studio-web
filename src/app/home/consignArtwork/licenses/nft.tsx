@@ -8,7 +8,7 @@ import Card from './common/card';
 import { LicenseProps } from './types';
 
 function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
-    const values = allValues.nft;
+    const values = allValues.nft || {};
 
     const handleAdded = (added: boolean) => {
         if (added == false) setFieldValue('editionOption', '');
@@ -18,7 +18,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
     return (
         <Box width={700} display="flex" justifyContent="space-between" marginTop={2}>
             <Card title="NFT-ART-1" added={values?.added} setAdded={handleAdded} width={320} height={400}>
-                {!values.added ? (
+                {!values?.added ? (
                     <Box paddingLeft={7} paddingTop={3} paddingRight={3}>
                         <Typography
                             style={{ wordWrap: 'break-word' }}
@@ -254,13 +254,13 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
             </Card>
             <Box marginTop={2} width={300}>
                 <Typography color="gray" fontSize="1.1rem" fontWeight="bold">
-                    {values.editionOption === 'elastic'
+                    {values?.editionOption === 'elastic'
                         ? 'Elastic Editions'
-                        : values.editionOption === 'single'
+                        : values?.editionOption === 'single'
                           ? 'Single Edition'
-                          : values.editionOption === 'unlimited'
+                          : values?.editionOption === 'unlimited'
                             ? 'Unlimited Editions'
-                            : values.added
+                            : values?.added
                               ? 'Select Edition'
                               : 'NFT-ART-1 License'}
                 </Typography>
