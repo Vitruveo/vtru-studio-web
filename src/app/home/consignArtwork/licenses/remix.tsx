@@ -5,7 +5,7 @@ import Card from './common/card';
 import { LicenseProps } from './types';
 
 function Remix({ allValues, setFieldValue, handleChange }: LicenseProps) {
-    const values = allValues.remix;
+    const values = allValues.remix || {};
 
     const handleAdded = (added: boolean) => {
         setFieldValue('remix.added', added);
@@ -14,7 +14,7 @@ function Remix({ allValues, setFieldValue, handleChange }: LicenseProps) {
     return (
         <Box width={700} display="flex" justifyContent="space-between" marginTop={2}>
             <Card title="REMIX-ART-1" added={values?.added} setAdded={handleAdded} width={320} height={400}>
-                {!values.added ? (
+                {!values?.added ? (
                     <Box paddingLeft={7} paddingTop={3} paddingRight={3}>
                         <Typography
                             style={{ wordWrap: 'break-word' }}
@@ -56,7 +56,7 @@ function Remix({ allValues, setFieldValue, handleChange }: LicenseProps) {
                                     backgroundColor: '#fff',
                                 },
                             }}
-                            value={values.unitPrice}
+                            value={values?.unitPrice}
                             inputProps={{ maxLength: 185 }}
                             onChange={handleChange}
                             fullWidth
@@ -68,10 +68,10 @@ function Remix({ allValues, setFieldValue, handleChange }: LicenseProps) {
             </Card>
             <Box marginTop={2} width={300}>
                 <Typography color="gray" fontSize="1.1rem" fontWeight="bold">
-                    {values.added ? 'Single Remix' : 'REMIX-ART-1 License'}
+                    {values?.added ? 'Single Remix' : 'REMIX-ART-1 License'}
                 </Typography>
                 <Typography marginTop={2} color="GrayText" fontSize="0.9rem">
-                    {values.added
+                    {values?.added
                         ? '“Unit Price” is the price of the artwork in U.S. dollars for a single remix.'
                         : 'Enable this license if you want end-users to use your art in Remix applications. The remix output may only be used for non-commercial purposes.'}
                 </Typography>

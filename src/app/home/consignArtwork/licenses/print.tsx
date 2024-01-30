@@ -5,7 +5,7 @@ import Card from './common/card';
 import { LicenseProps } from './types';
 
 function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
-    const values = allValues.print;
+    const values = allValues.print || {};
 
     const handleAdded = (added: boolean) => {
         setFieldValue('print.added', added);
@@ -14,7 +14,7 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
     return (
         <Box width={700} display="flex" justifyContent="space-between" marginTop={2}>
             <Card title="PRINT-ART-1" added={values?.added} setAdded={handleAdded} width={320} height={400}>
-                {!values.added ? (
+                {!values?.added ? (
                     <Box paddingLeft={7} paddingTop={3} paddingRight={1}>
                         <Typography
                             style={{ wordWrap: 'break-word' }}
@@ -48,7 +48,7 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                     backgroundColor: '#fff',
                                 },
                             }}
-                            value={values.unitPrice}
+                            value={values?.unitPrice}
                             inputProps={{ maxLength: 185 }}
                             onChange={handleChange}
                             fullWidth
@@ -60,10 +60,10 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
             </Card>
             <Box marginTop={2} width={300}>
                 <Typography color="gray" fontSize="1.1rem" fontWeight="bold">
-                    {values.added ? 'Single Print' : 'PRINT-ART-1 License'}
+                    {values?.added ? 'Single Print' : 'PRINT-ART-1 License'}
                 </Typography>
                 <Typography marginTop={2} color="GrayText" fontSize="0.9rem">
-                    {values.added
+                    {values?.added
                         ? '“Unit Price” is the price of the artwork in U.S. dollars for a single print.'
                         : 'Enable this license if you want end-users to use your art for print-on-demand (POD) applications. This license is for individual printing; bulk printing is not permitted.'}
                 </Typography>

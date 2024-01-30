@@ -31,14 +31,14 @@ export interface User {
     framework: Framework;
 }
 
-interface RequestAssetUpload {
+interface RequestAvatarUpload {
     transactionId: string;
     url: string;
     path: string;
     status: string;
 }
 export interface UserSliceState extends User {
-    requestAssetUpload: { [key: string]: RequestAssetUpload };
+    requestAvatarUpload: RequestAvatarUpload;
     token: string;
     status: string;
     error: string;
@@ -72,12 +72,14 @@ export interface AddCreatorEmailReq {
 export interface CreatorSendRequestUploadReq {
     mimetype: string;
     originalName: string;
-    transactionId: string;
+    transactionId?: string;
 }
 
-export interface AssetStorageReq {
+export interface GeneralStorageAvatarReq {
+    transactionId?: string;
     url: string;
     file: File;
+    path: string;
 }
 
 export interface UserOTPConfirmReq {
@@ -131,6 +133,13 @@ export interface VerifyCodeReq {
     code: string;
 }
 
+export interface ChangeAvatarReq {
+    fileId: string;
+    transactionId?: string;
+}
+
+export type ChangeAvatarRes = string;
+
 export type UserAddApiRes = APIResponse<UserAddRes>;
 export type UserLoginApiRes = APIResponse<string>;
 export type UserOTPConfirmApiRes = APIResponse<UserOTPConfirmRes>;
@@ -140,3 +149,4 @@ export type AddCreatorEmailApiRes = APIResponse<boolean>;
 export type CreatorSendRequestUploadApiRes = APIResponse<string>;
 export type SendEmailCodeApiRes = APIResponse<string>;
 export type VerifyCodeApiRes = APIResponse<User>;
+export type ChangeAvatarApiRes = APIResponse<ChangeAvatarRes>;

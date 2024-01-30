@@ -2,6 +2,8 @@ import { ReduxThunkAction } from '@/store';
 import { userActionsCreators } from '../user/slice';
 import webSocketService from '@/services/websocket';
 import { TOKEN_CREATORS } from '@/constants/ws';
+import { assetActionsCreators } from '../asset/slice';
+import { PreSignedURLPayload } from './types';
 
 export function connectWebSocketThunk(): ReduxThunkAction {
     return async function (dispatch, getState) {
@@ -19,15 +21,26 @@ export function loginWebSocketThunk(): ReduxThunkAction {
             token: TOKEN_CREATORS,
         });
 
-        webSocketService.on('preSignedURL', (data) => {
-            dispatch(
-                userActionsCreators.requestAssetUpload({
-                    url: data.preSignedURL,
-                    transactionId: data.transactionId,
-                    path: data.path,
-                    status: 'ready',
-                })
-            );
+        webSocketService.on('preSignedURL', (data: PreSignedURLPayload) => {
+            if (data.origin === 'asset')
+                dispatch(
+                    assetActionsCreators.requestAssetUpload({
+                        url: data.preSignedURL,
+                        transactionId: data.transactionId,
+                        path: data.path,
+                        status: 'ready',
+                    })
+                );
+            if (data.origin === 'profile') {
+                dispatch(
+                    userActionsCreators.requestAvatarUpload({
+                        url: data.preSignedURL,
+                        transactionId: data.transactionId,
+                        path: data.path,
+                        status: 'ready',
+                    })
+                );
+            }
         });
     };
 }

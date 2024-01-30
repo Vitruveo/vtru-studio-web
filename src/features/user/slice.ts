@@ -20,7 +20,12 @@ const initialState: UserSliceState = {
         location: '',
     },
     roles: [],
-    requestAssetUpload: {},
+    requestAvatarUpload: {
+        path: '',
+        status: '',
+        transactionId: '',
+        url: '',
+    },
     framework: {
         createdAt: null,
         updatedAt: null,
@@ -59,11 +64,11 @@ export const userSlice = createSlice({
                 ...action.payload,
             };
         },
-        requestAssetUpload: (state, action) => {
-            state.requestAssetUpload[action.payload.transactionId] = action.payload;
+        changeAvatar: (state, action: PayloadAction<{ fileId: string }>) => {
+            state.profile.avatar = action.payload.fileId;
         },
-        requestAssetUploadUsed: (state, action) => {
-            delete state.requestAssetUpload[action.payload.transactionId];
+        requestAvatarUpload: (state, action) => {
+            state.requestAvatarUpload = action.payload;
         },
         error: (state, action) => {
             state.status = `failed: ${action.type}`;

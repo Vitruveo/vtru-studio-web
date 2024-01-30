@@ -15,14 +15,13 @@ import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
 import MediaCard from './mediaCard';
 import SelectMedia from './selectMedia';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
-import { userActionsCreators } from '@/features/user/slice';
 
-import { assetMediaThunk } from '@/features/asset/thunks';
-import { assetStorageThunk, sendRequestUploadThunk } from '@/features/user/thunks';
+import { assetMediaThunk, assetStorageThunk, sendRequestUploadThunk } from '@/features/asset/thunks';
 import { getMediaDefinition, getStepStatus } from './helpers';
 import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
 import { TranslateFunction } from '@/i18n/types';
+import { assetActionsCreators } from '@/features/asset/slice';
 
 export default function AssetMedia() {
     const [showBackModal, setShowBackModal] = useState(false);
@@ -56,8 +55,6 @@ export default function AssetMedia() {
     ];
 
     const asset = useSelector((state) => state.asset);
-
-    const { requestAssetUpload } = useSelector((state) => state.user);
 
     const router = useRouter();
     const dispatch = useDispatch();
@@ -100,7 +97,7 @@ export default function AssetMedia() {
         const transactionId = nanoid();
 
         await dispatch(
-            userActionsCreators.requestAssetUpload({
+            assetActionsCreators.requestAssetUpload({
                 key: formatUpload,
                 status: 'requested',
                 transactionId,
@@ -160,7 +157,7 @@ export default function AssetMedia() {
     }, [checkStepProgress]);
 
     useEffect(() => {
-        const requestAssetUploadNotUsed = Object.values(requestAssetUpload)?.filter(
+        const requestAssetUploadNotUsed = Object.values(asset.requestAssetUpload)?.filter(
             (item) => item.transactionId && item.url && item.status === 'ready'
         );
 
@@ -173,7 +170,7 @@ export default function AssetMedia() {
                 requestUploadReady.map(async (item) => {
                     const url = item.url;
                     dispatch(
-                        userActionsCreators.requestAssetUpload({
+                        assetActionsCreators.requestAssetUpload({
                             transactionId: item.transactionId,
                             status: 'uploading',
                         })
@@ -212,7 +209,7 @@ export default function AssetMedia() {
         };
 
         if (requestUploadReady.length) uploadAsset();
-    }, [requestAssetUpload]);
+    }, [asset.requestAssetUpload]);
 
     const file = values?.formats?.original?.file;
 

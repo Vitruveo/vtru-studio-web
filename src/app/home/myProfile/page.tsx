@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 
@@ -19,7 +19,7 @@ import AccountSettings from './accountSettings';
 
 import { Stack } from '@mui/system';
 import { FooterForm } from '../components/footerForm';
-import { saveStepWizardThunk } from '@/features/user/thunks';
+import { generalStorageAvatarThunk, saveStepWizardThunk, sendRequestUploadThunk } from '@/features/user/thunks';
 import { userSelector } from '@/features/user';
 import { AccountSettingsFormValues } from './types';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
@@ -28,8 +28,11 @@ import { debouncedUsernameValidation } from '../consignArtwork/formschema';
 import PageContainerFooter from '../components/container/PageContainerFooter';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { useI18n } from '@/app/hooks/useI18n';
+import { GENERAL_STORAGE_URL } from '@/constants/asset';
+import { useAvatar } from './useAvatar';
 
 export default function ProfileSettings() {
+    const [changeAvatarFile, setChangeAvatarFile] = useState<File>();
     const [usernameError, setUsernameError] = useState('');
     const [toastr, setToastr] = useState<CustomizedSnackbarState>({
         type: 'success',
@@ -37,7 +40,12 @@ export default function ProfileSettings() {
         message: '',
     });
 
-    const { username, emails, wallets } = useSelector(userSelector(['username', 'emails', 'wallets']));
+    const { username, emails, wallets, requestAvatarUpload } = useSelector(
+        userSelector(['username', 'emails', 'wallets', 'requestAvatarUpload'])
+    );
+
+    const { avatarSrc } = useAvatar();
+
     const { isCompletedProfile, goToConsignArtwork } = useSelector((state) => state.consignArtwork);
 
     const dispatch = useDispatch();
@@ -91,15 +99,24 @@ export default function ProfileSettings() {
                         })
                     );
 
-                    setToastr({
-                        open: true,
-                        type: 'success',
-                        message: texts.saveMessage,
-                    });
+                    if (changeAvatarFile) {
+                        dispatch(
+                            sendRequestUploadThunk({
+                                mimetype: changeAvatarFile!.type,
+                                originalName: changeAvatarFile!.name,
+                            })
+                        );
+                    } else {
+                        setToastr({
+                            open: true,
+                            type: 'success',
+                            message: texts.saveMessage,
+                        });
 
-                    setTimeout(() => {
-                        router.push('/home');
-                    }, 500);
+                        setTimeout(() => {
+                            router.push('/home');
+                        }, 500);
+                    }
                 }
             },
         });
@@ -120,6 +137,35 @@ export default function ProfileSettings() {
         if (e.target.value === username) return;
         debouncedUsernameValidation(e.target.value, setUsernameError);
     };
+
+    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        setChangeAvatarFile(file);
+    };
+
+    useEffect(() => {
+        if (requestAvatarUpload.status === 'ready') {
+            dispatch(
+                generalStorageAvatarThunk({
+                    file: changeAvatarFile!,
+                    path: requestAvatarUpload.path,
+                    url: requestAvatarUpload.url,
+                    transactionId: requestAvatarUpload.transactionId,
+                })
+            );
+            setToastr({
+                open: true,
+                type: 'success',
+                message: texts.saveMessage,
+            });
+
+            setTimeout(() => {
+                router.push('/home');
+            }, 500);
+        }
+    }, [requestAvatarUpload.status]);
+
+    const isNewAvatar = changeAvatarFile instanceof File ? URL.createObjectURL(changeAvatarFile) : avatarSrc;
 
     return (
         <form onSubmit={handleSubmit}>
@@ -162,7 +208,7 @@ export default function ProfileSettings() {
                                         <Box textAlign="center" display="flex" justifyContent="center">
                                             <Box>
                                                 <Avatar
-                                                    src={'/images/profile/profileDefault.png'}
+                                                    src={isNewAvatar}
                                                     alt={'user1'}
                                                     sx={{
                                                         width: 120,
@@ -176,7 +222,12 @@ export default function ProfileSettings() {
                                                     </Button>
                                                     <Button variant="contained" color="primary" component="label">
                                                         {texts.profileUploadButton}
-                                                        <input hidden accept="image/*" multiple type="file" />
+                                                        <input
+                                                            onChange={handleFileChange}
+                                                            hidden
+                                                            accept="image/*"
+                                                            type="file"
+                                                        />
                                                     </Button>
                                                 </Stack>
                                                 <Typography variant="subtitle1" color="textSecondary" mb={4}>

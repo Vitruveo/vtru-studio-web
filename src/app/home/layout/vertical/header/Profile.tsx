@@ -14,11 +14,13 @@ import * as dropdownData from './data';
 import { userActionsCreators } from '@/features/user/slice';
 import { userSelector } from '@/features/user';
 import { useI18n } from '@/app/hooks/useI18n';
+import { useAvatar } from '@/app/home/myProfile/useAvatar';
 
 const Profile = () => {
     const [anchorEl2, setAnchorEl2] = useState(null);
 
     const router = useRouter();
+    const { avatarSrc } = useAvatar();
     const dispatch = useDispatch();
 
     const { language } = useI18n();
@@ -61,7 +63,7 @@ const Profile = () => {
                 onClick={handleClick2}
             >
                 <Avatar
-                    src={'/images/profile/profileDefault.png'}
+                    src={avatarSrc}
                     alt={'ProfileImg'}
                     sx={{
                         width: 35,
@@ -89,11 +91,7 @@ const Profile = () => {
             >
                 <Typography variant="h5">{texts.title}</Typography>
                 <Stack direction="row" py={3} spacing={2} alignItems="center">
-                    <Avatar
-                        src={'/images/profile/profileDefault.png'}
-                        alt={'ProfileImg'}
-                        sx={{ width: 95, height: 95 }}
-                    />
+                    <Avatar src={avatarSrc} alt={'ProfileImg'} sx={{ width: 95, height: 95 }} />
                     <Box>
                         <Typography variant="subtitle2" color="textPrimary" fontWeight={600}>
                             {username}

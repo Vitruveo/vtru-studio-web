@@ -13,9 +13,15 @@ interface Format {
     customFile?: FileType;
     transactionId?: string;
 }
+
+interface RequestAssetUpload {
+    transactionId: string;
+    url: string;
+    path: string;
+    status: string;
+}
 export interface Asset {
     _id: string;
-
     formats: {
         original: Format;
         display: Format;
@@ -28,6 +34,7 @@ export interface Asset {
     notMintedOtherBlockchain: boolean;
     contract: boolean;
     assetMetadata?: SectionsFormData;
+    requestAssetUpload: { [key: string]: RequestAssetUpload };
     // creatorMetadata: {
     //     creatorMetadataDefinitions: MetadataDefinitionTypes[];
     // };
@@ -39,6 +46,12 @@ export interface Asset {
         createdBy: string | null;
         updatedBy: string | null;
     };
+}
+
+export interface AssetSendRequestUploadReq {
+    mimetype: string;
+    originalName: string;
+    transactionId: string;
 }
 
 export interface AssetSliceState extends Asset {
@@ -54,3 +67,4 @@ export interface UpdateAssetStepReq {}
 
 export type UpdateAssetStepApiRes = APIResponse<string>;
 export type GetAssetApiRes = APIResponse<Asset>;
+export type AssetSendRequestUploadApiRes = APIResponse<string>;

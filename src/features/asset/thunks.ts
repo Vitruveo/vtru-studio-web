@@ -1,5 +1,5 @@
-import { assetStorage, updateAssetStep, getAsset } from './requests';
-import { AssetStatus, AssetStorageReq } from './types';
+import { assetStorage, updateAssetStep, getAsset, sendRequestUpload } from './requests';
+import { AssetSendRequestUploadApiRes, AssetSendRequestUploadReq, AssetStatus, AssetStorageReq } from './types';
 import { ReduxThunkAction } from '@/store';
 import { assetActionsCreators } from './slice';
 import { FormatMediaSave, FormatsMedia } from '@/app/home/consignArtwork/assetMedia/types';
@@ -215,5 +215,19 @@ export function publishThunk(payload: { status: AssetStatus }): ReduxThunkAction
                 status: payload.status,
             })
         );
+    };
+}
+
+export function sendRequestUploadThunk(
+    payload: AssetSendRequestUploadReq
+): ReduxThunkAction<Promise<AssetSendRequestUploadApiRes>> {
+    return async function (dispatch, getState) {
+        const response = await sendRequestUpload({
+            mimetype: payload.mimetype,
+            originalName: payload.originalName,
+            transactionId: payload.transactionId,
+        });
+
+        return response;
     };
 }

@@ -1,3 +1,4 @@
+import { nanoid } from '@reduxjs/toolkit';
 import { StepsFormValues } from '@/app/home/components/wizard/types';
 import {
     userLoginReq,
@@ -7,10 +8,11 @@ import {
     checkCreatorEmailExist,
     addCreatorEmailExist,
     sendRequestUpload,
-    assetStorage,
     changeCreator,
     sendEmailCode,
     verifyCode,
+    changeAvatar,
+    generalStorage,
 } from './requests';
 import { userActionsCreators } from './slice';
 import {
@@ -28,12 +30,14 @@ import {
     AddCreatorEmailReq,
     CreatorSendRequestUploadApiRes,
     CreatorSendRequestUploadReq,
-    AssetStorageReq,
     SaveStepWizardReq,
     SendEmailCodeApiRes,
     SendEmailCodeReq,
     VerifyCodeReq,
     VerifyCodeApiRes,
+    ChangeAvatarReq,
+    ChangeAvatarApiRes,
+    GeneralStorageAvatarReq,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { getAssetThunk } from '../asset/thunks';
@@ -121,21 +125,19 @@ export function sendRequestUploadThunk(
     payload: CreatorSendRequestUploadReq
 ): ReduxThunkAction<Promise<CreatorSendRequestUploadApiRes>> {
     return async function (dispatch, getState) {
+        const transactionId = nanoid();
+
+        await dispatch(
+            userActionsCreators.requestAvatarUpload({
+                status: 'requested',
+                transactionId,
+            })
+        );
+
         const response = await sendRequestUpload({
             mimetype: payload.mimetype,
             originalName: payload.originalName,
-            transactionId: payload.transactionId,
-        });
-
-        return response;
-    };
-}
-
-export function assetStorageThunk(payload: AssetStorageReq): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch, getState) {
-        const response = await assetStorage({
-            url: payload.url,
-            file: payload.file,
+            transactionId: transactionId,
         });
 
         return response;
@@ -174,5 +176,41 @@ export function saveStepWizardThunk(payload: SaveStepWizardReq): ReduxThunkActio
             dispatch(creatorAccountThunk(payload.values));
             return;
         }
+    };
+}
+
+export function changeAvatarThunk(payload: ChangeAvatarReq): ReduxThunkAction<Promise<ChangeAvatarApiRes>> {
+    return async function (dispatch, getState) {
+        const response = await changeAvatar({
+            fileId: payload.fileId,
+        });
+
+        dispatch(
+            userActionsCreators.requestAvatarUpload({
+                transactionId: payload.transactionId,
+                status: 'finished',
+            })
+        );
+
+        dispatch(userActionsCreators.changeAvatar({ fileId: payload.fileId }));
+
+        return response;
+    };
+}
+
+export function generalStorageAvatarThunk(payload: GeneralStorageAvatarReq): ReduxThunkAction<Promise<any>> {
+    return async function (dispatch, getState) {
+        dispatch(
+            userActionsCreators.requestAvatarUpload({
+                transactionId: payload.transactionId,
+                status: 'uploading',
+            })
+        );
+
+        const res = await generalStorage(payload);
+
+        await dispatch(changeAvatarThunk({ fileId: payload.path, transactionId: payload.transactionId }));
+
+        return res;
     };
 }

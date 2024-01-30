@@ -5,7 +5,6 @@ import { AssetSliceState } from './types';
 
 const initialState: AssetSliceState = {
     _id: '',
-
     formats: {
         original: {
             file: undefined,
@@ -38,6 +37,7 @@ const initialState: AssetSliceState = {
     //     creatorMetadataDefinitions: [],
     // },
     licenses: undefined,
+    requestAssetUpload: {},
     isOriginal: false,
     generatedArtworkAI: false,
     notMintedOtherBlockchain: false,
@@ -93,6 +93,12 @@ export const assetSlice = createSlice({
                 ...state,
                 ...action.payload,
             };
+        },
+        requestAssetUpload: (state, action) => {
+            state.requestAssetUpload[action.payload.transactionId] = action.payload;
+        },
+        requestAssetUploadUsed: (state, action) => {
+            delete state.requestAssetUpload[action.payload.transactionId];
         },
         error: (state, action) => {
             state.error = action.payload;

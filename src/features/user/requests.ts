@@ -3,7 +3,10 @@ import FormData from 'form-data';
 import { apiService } from '@/services/api';
 import {
     AddCreatorEmailApiRes,
-    AssetStorageReq,
+    GeneralStorageAvatarReq,
+    ChangeAvatarApiRes,
+    ChangeAvatarReq,
+    ChangeAvatarRes,
     CreatorEmailExistApiRes,
     CreatorEmailExistReq,
     CreatorSchemaType,
@@ -90,7 +93,12 @@ export async function sendRequestUpload(data: CreatorSendRequestUploadReq): Prom
     return res;
 }
 
-export async function assetStorage(data: AssetStorageReq): Promise<any> {
+export async function changeAvatar(data: ChangeAvatarReq): Promise<ChangeAvatarApiRes> {
+    const res = apiService.put<ChangeAvatarRes>(`/creators/profile/avatar`, data);
+    return res;
+}
+
+export async function generalStorage(data: GeneralStorageAvatarReq): Promise<any> {
     const res = await fetch(data.url, {
         method: 'PUT',
         body: data.file,
