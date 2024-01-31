@@ -13,12 +13,12 @@ const language: Translation = {
     /* Home */
     'studio.home.wellcome': 'Добро пожаловать в',
     'studio.home.title': 'Главная',
-    'studio.home.congrats': 'Поздравляем с выбором в качестве художника Vitruveo Genesis',
+    'studio.home.congrats': 'Поздравляем с выбором в качестве Genesis художника Vitruveo',
     'studio.home.transforming':
-        'Vitruveo трансформирует искусство Web3, и это означает совершенно новое программное обеспечение, такое как эта "Alpha" версия vtruStudio. Alpha означает, что программное обеспечение еще не полностью готово, и вы помогаете нам его тестировать, чтобы оно могло быть улучшено.',
+        'Vitruveo трансформирует искусство Web3, и это означает совершенно новое программное обеспечение, такое как эта "Alpha" версия vtruStudio. Alpha означает, что программное обеспечение еще не полностью готово, и вы помогаете нам его тестировать, чтобы оно стало лучше.',
     'studio.home.software':
         'У программного обеспечения в настоящее время есть две функции, к которым вы можете получить доступ с помощью кнопок ниже:',
-    'studio.home.consign': 'Отправить арт',
+    'studio.home.consign': 'Подать Работу',
     'studio.home.myProfile': 'Мой профиль',
 
     /* User Account */
@@ -35,7 +35,7 @@ const language: Translation = {
     'studio.myProfile.home': 'Главная',
     'studio.myProfile.saveMessage': 'Данные успешно сохранены',
     'studio.myProfile.accessConsignMessage':
-        'Для доступа к передаче произведения искусства необходимо заполнить все обязательные поля в профиле пользователя',
+        'Для доступа к подаче произведения искусства необходимо заполнить все обязательные поля в профиле пользователя',
     'studio.myProfile.form.username.title': 'Имя пользователя',
     'studio.myProfile.form.username.placeholder': 'Введите имя пользователя',
     'studio.myProfile.form.usernameRequired.error': 'Имя пользователя обязательно',
@@ -53,17 +53,17 @@ const language: Translation = {
     'studio.myProfile.verificationCodeSentMessageSuccess': 'Код подтверждения отправлен на электронную почту',
     'studio.myProfile.verificationCodeSentMessageError': 'Ошибка отправки кода подтверждения на электронную почту',
     'studio.myProfile.emailVerificationMessageSuccess': 'Электронная почта подтверждена',
-    'studio.myProfile.emailVerificationMessageError': 'Ошибка подтверждения кода',
+    'studio.myProfile.emailVerificationMessageError': 'Неверный код подтверждения',
     'studio.myProfile.form.wallet.placeholder': 'Подключить новый кошелек',
     'studio.myProfile.form.connect.button': 'Подключить',
 
     /* Consign Artwork */
     'studio.consignArtwork.form.next.button': 'Далее',
-    'studio.consignArtwork.title': 'Отправить арт',
-    'studio.consignArtwork.subtitle': 'Завершите все задачи и опубликуйте свое произведение искусства',
+    'studio.consignArtwork.title': 'Подать Работу',
+    'studio.consignArtwork.subtitle': 'Завершите все задачи и опубликуйте своё произведение искусства',
 
-    'studio.consignArtwork.stepName.assetMedia': 'Медиа активы',
-    'studio.consignArtwork.stepName.assetMetadata': 'Метаданные активов',
+    'studio.consignArtwork.stepName.assetMedia': 'Медиафайлы',
+    'studio.consignArtwork.stepName.assetMetadata': 'Метаданные мадиафайлов',
     'studio.consignArtwork.stepName.licenses': 'Лицензии',
     'studio.consignArtwork.stepName.termsOfUse': 'Условия использования',
 
@@ -80,14 +80,14 @@ const language: Translation = {
         `${data.status === 'published' ? 'Опубликовано' : 'Опубликовать'}`,
 
     /* Asset Media */
-    'studio.consignArtwork.assetMedia.title': 'Медиа активы',
-    'studio.consignArtwork.assetMedia.description': 'Загрузите медиа активы для порученного произведения искусства.',
+    'studio.consignArtwork.assetMedia.title': 'Медиафайлы',
+    'studio.consignArtwork.assetMedia.description': 'Загрузите Ваше произведение искусства.',
     'studio.consignArtwork.assetMedia.amazing':
         'Выглядит потрясающе! Чтобы ваше произведение искусства выглядело отлично на разных устройствах, нам нужно еще три медиафайла. Не волнуйтесь, мы поможем вам обрезать ваш оригинальный медиафайл.',
     'studio.consignArtwork.assetMedia.concerned':
-        'Если вы беспокоитесь о потере качества, не используйте функцию обрезки и загружайте медиа напрямую в требуемом размере.',
+        'Если вы беспокоитесь о потере качества, не используйте функцию обрезки и загрузите медиа напрямую в требуемом размере.',
     'studio.consignArtwork.assetMedia.upload.button': 'Загрузить',
-    'studio.consignArtwork.assetMedia.assets': 'Медиа активы',
+    'studio.consignArtwork.assetMedia.assets': 'Медиафайлы',
 
     'studio.consignArtwork.assetMedia.definition': (data: { definition: 'landscape' | 'square' | 'portrait' }) => {
         return `${data.definition === 'landscape' ? 'Пейзаж' : data.definition === 'portrait' ? 'Портрет' : 'Квадрат'}`;
@@ -137,8 +137,8 @@ const language: Translation = {
     'studio.consignArtwork.assetMedia.videoTypes': 'Видео: MP4, WEBM',
 
     /* Asset Metadata */
-    'studio.consignArtwork.assetMetadata.title': 'Метаданные активов',
-    'studio.consignArtwork.assetMetadata.description': 'Все метаданные ресурса видны публике.',
+    'studio.consignArtwork.assetMetadata.title': 'Метаданные медиафайлов',
+    'studio.consignArtwork.assetMetadata.description': 'Все метаданные видны публике.',
 
     'studio.consignArtwork.assetMetadata.field.artistName': 'Имя художника',
     'studio.consignArtwork.assetMetadata.field.title': 'Название',
@@ -150,7 +150,7 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.objectType.video': 'Видео',
     'studio.consignArtwork.assetMetadata.field.objectType.2D': '2D',
     'studio.consignArtwork.assetMetadata.field.objectType.3D': '3D',
-    'studio.consignArtwork.assetMetadata.field.objectType.phygital': 'Фигитал',
+    'studio.consignArtwork.assetMetadata.field.objectType.phygital': 'Фиджитал',
     'studio.consignArtwork.assetMetadata.field.objectType.other': 'Другое',
 
     'studio.consignArtwork.assetMetadata.field.category': 'Категория',
@@ -164,7 +164,7 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.category.ai': 'AI',
     'studio.consignArtwork.assetMetadata.field.category.other': 'Другое',
 
-    'studio.consignArtwork.assetMetadata.field.medium': 'Среда',
+    'studio.consignArtwork.assetMetadata.field.medium': 'Тип',
     'studio.consignArtwork.assetMetadata.field.medium.oil': 'Масло',
     'studio.consignArtwork.assetMetadata.field.medium.watercolour': 'Акварель',
     'studio.consignArtwork.assetMetadata.field.medium.acrylic': 'Акрил',
@@ -177,7 +177,7 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.medium.photography': 'Фотография',
     'studio.consignArtwork.assetMetadata.field.medium.analogPhotography': 'Аналоговая фотография',
     'studio.consignArtwork.assetMetadata.field.medium.digitalPhotography': 'Цифровая фотография',
-    'studio.consignArtwork.assetMetadata.field.medium.compositePhotography': 'Композитная фотография',
+    'studio.consignArtwork.assetMetadata.field.medium.compositePhotography': 'Фотоколлаж',
     'studio.consignArtwork.assetMetadata.field.medium.other': 'Другое',
     'studio.consignArtwork.assetMetadata.field.tags': 'Теги',
     'studio.consignArtwork.assetMetadata.field.tags.button': 'Добавить',
@@ -200,8 +200,8 @@ const language: Translation = {
         `${data.checkBoolean === true ? 'да' : data.checkBoolean === false ? 'нет' : data.checkBoolean}`,
     'studio.consignArtwork.licenses.field.errors': (data: { message: string }) =>
         `${data.message === 'field required' ? 'поле обязательно для заполнения' : ''}`,
-    'studio.consignArtwork.licenses.field.stream': 'Stream v1.0',
-    'studio.consignArtwork.licenses.field.print': 'Print v1.0',
+    'studio.consignArtwork.licenses.field.stream': 'Потоковая (Stream) v1.0',
+    'studio.consignArtwork.licenses.field.print': 'Печать (Print) v1.0',
     'studio.consignArtwork.licenses.field.NFT': 'NFT v1.0',
     'studio.consignArtwork.licenses.field.maximumUnits': 'Максимальное количество единиц',
     'studio.consignArtwork.licenses.field.unitPrice': 'Цена за единицу',
@@ -215,11 +215,11 @@ const language: Translation = {
     'studio.consignArtwork.termsOfUse.accept.button': (data: { contract: boolean; scrolledToBottom: boolean }) =>
         data.contract ? 'Договор принят' : data.scrolledToBottom ? 'Принять договор' : 'Прокрутите до конца',
     'studio.consignArtwork.termsOfUse.isOriginal':
-        'Я подтверждаю, что актив и вспомогательные медиафайлы являются оригинальными, подлинными работами, созданными указанными в заявке на метаданные создателями, и не скопированы, украдены или плагиатствованы из какого-либо другого источника.',
+        'Я подтверждаю, что основной и вспомогательные медиафайлы являются оригинальными, подлинными работами, созданными указанными в метаданных создателями, и не скопированы или украдены (не являются плагиатом) из какого-либо другого источника.',
     'studio.consignArtwork.termsOfUse.generatedArtworkAI':
-        'Я подтверждаю, что если какая-либо часть актива и вспомогательных медиафайлов была создана с использованием искусственного интеллекта, я ответил "Да" в поле метаданных "Произведение искусства, созданное AI".',
+        'Я подтверждаю, что если какая-либо часть основного и вспомогательных медиафайлов была создана с использованием искусственного интеллекта, я ответил "Да" в поле метаданных "Произведение искусства, созданное AI".',
     'studio.consignArtwork.termsOfUse.notMintedOtherBlockchain':
-        'Я подтверждаю, что это произведение не отчеканено на любой другой блокчейн, не предлагается, не передается или не выставляется на продажу на любой другой платформе и не будет отчеканено, предложено, передано или выставлено на продажу, пока листинг активен на этой платформе.',
+        'Я подтверждаю, что это произведение не чеканилось (mint) на любой другой платформе и/или сети, не предлагается, не подано и не выставляется на продажу на любой другой платформе или сети и не будет отчеканено, предложено, подано или выставлено на продажу, пока листинг активен на этой платформе.',
 
     /* BackModalConfirm */
     'studio.consignArtwork.backModal.title': 'Хотите сохранить информацию?',
@@ -227,7 +227,7 @@ const language: Translation = {
     'studio.consignArtwork.backModal.cancel.button': 'Нет',
 
     /* Sidebar */
-    'studio.sidebar.consign': 'Отправить арт',
+    'studio.sidebar.consign': 'Подать Работу',
 
     /* Footer */
     'studio.footer.thisStep': 'Этот шаг был',
