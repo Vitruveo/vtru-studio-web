@@ -185,12 +185,13 @@ export function changeAvatarThunk(payload: ChangeAvatarReq): ReduxThunkAction<Pr
             fileId: payload.fileId,
         });
 
-        dispatch(
-            userActionsCreators.requestAvatarUpload({
-                transactionId: payload.transactionId,
-                status: 'finished',
-            })
-        );
+        if (payload.transactionId)
+            dispatch(
+                userActionsCreators.requestAvatarUpload({
+                    transactionId: payload.transactionId,
+                    status: 'finished',
+                })
+            );
 
         dispatch(userActionsCreators.changeAvatar({ fileId: payload.fileId }));
 

@@ -71,7 +71,7 @@ export default function AssetMedia() {
         initialValues,
         onSubmit: async (formValues) => {
             if (JSON.stringify(initialValues) === JSON.stringify(values))
-                router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/assetMetadata`);
+                router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/auxiliaryMedia`);
             else {
                 dispatch(
                     consignArtworkActionsCreators.changeStatusStep({
@@ -88,7 +88,7 @@ export default function AssetMedia() {
                     .filter(([_, value]) => !value.file)
                     .map(([key, _]) => key);
                 if (deleteFormats.length) await dispatch(assetMediaThunk({ deleteFormats }));
-                router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/assetMetadata`);
+                router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/auxiliaryMedia`);
             }
         },
     });

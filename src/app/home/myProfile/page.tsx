@@ -19,7 +19,12 @@ import AccountSettings from './accountSettings';
 
 import { Stack } from '@mui/system';
 import { FooterForm } from '../components/footerForm';
-import { generalStorageAvatarThunk, saveStepWizardThunk, sendRequestUploadThunk } from '@/features/user/thunks';
+import {
+    changeAvatarThunk,
+    generalStorageAvatarThunk,
+    saveStepWizardThunk,
+    sendRequestUploadThunk,
+} from '@/features/user/thunks';
 import { userSelector } from '@/features/user';
 import { AccountSettingsFormValues } from './types';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
@@ -28,10 +33,10 @@ import { debouncedUsernameValidation } from '../consignArtwork/formschema';
 import PageContainerFooter from '../components/container/PageContainerFooter';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { useI18n } from '@/app/hooks/useI18n';
-import { GENERAL_STORAGE_URL } from '@/constants/asset';
 import { useAvatar } from './useAvatar';
 
 export default function ProfileSettings() {
+    const [resetAvatar, setResetAvatar] = useState(false);
     const [changeAvatarFile, setChangeAvatarFile] = useState<File>();
     const [usernameError, setUsernameError] = useState('');
     const [toastr, setToastr] = useState<CustomizedSnackbarState>({
@@ -99,7 +104,18 @@ export default function ProfileSettings() {
                         })
                     );
 
-                    if (changeAvatarFile) {
+                    if (resetAvatar) {
+                        dispatch(changeAvatarThunk({ fileId: '' }));
+                        setToastr({
+                            open: true,
+                            type: 'success',
+                            message: texts.saveMessage,
+                        });
+
+                        setTimeout(() => {
+                            router.push('/home');
+                        }, 500);
+                    } else if (changeAvatarFile) {
                         dispatch(
                             sendRequestUploadThunk({
                                 mimetype: changeAvatarFile!.type,
@@ -139,8 +155,13 @@ export default function ProfileSettings() {
     };
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+        if (resetAvatar) setResetAvatar(false);
         const file = event.target.files?.[0];
         setChangeAvatarFile(file);
+    };
+
+    const handleOnClickReset = () => {
+        setResetAvatar(true);
     };
 
     useEffect(() => {
@@ -153,6 +174,7 @@ export default function ProfileSettings() {
                     transactionId: requestAvatarUpload.transactionId,
                 })
             );
+
             setToastr({
                 open: true,
                 type: 'success',
@@ -165,7 +187,11 @@ export default function ProfileSettings() {
         }
     }, [requestAvatarUpload.status]);
 
-    const isNewAvatar = changeAvatarFile instanceof File ? URL.createObjectURL(changeAvatarFile) : avatarSrc;
+    const isNewAvatar = resetAvatar
+        ? '/images/profile/profileDefault.png'
+        : changeAvatarFile instanceof File
+          ? URL.createObjectURL(changeAvatarFile)
+          : avatarSrc;
 
     return (
         <form onSubmit={handleSubmit}>
@@ -217,7 +243,11 @@ export default function ProfileSettings() {
                                                     }}
                                                 />
                                                 <Stack direction="row" justifyContent="center" spacing={2} my={3}>
-                                                    <Button variant="outlined" color="error">
+                                                    <Button
+                                                        onClick={handleOnClickReset}
+                                                        variant="outlined"
+                                                        color="error"
+                                                    >
                                                         {texts.profileResetButton}
                                                     </Button>
                                                     <Button variant="contained" color="primary" component="label">

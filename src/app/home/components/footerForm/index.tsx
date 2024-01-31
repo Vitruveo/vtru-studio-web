@@ -131,7 +131,7 @@ export function FooterForm({
                         <Box marginInline={4} display="flex" alignItems="center" justifyContent="space-between">
                             {stepNumber && (
                                 <Typography flexDirection="row" fontWeight="400" fontSize="1.1rem">
-                                    {texts.step} {stepNumber} {texts.of} 4
+                                    {texts.step} {stepNumber} {texts.of} 5
                                 </Typography>
                             )}
 
