@@ -3,23 +3,23 @@ import { useDropzone } from 'react-dropzone';
 import Img from 'next/image';
 import { IconTrash } from '@tabler/icons-react';
 import { Box, SvgIcon, Typography, IconButton, Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { AssetMediaFormErros, AssetMediaFormValues, FormatMedia } from './types';
 import Crop from '../components/crop';
-import { getFileSize, handleGetFileType, handleGetFileWidthAndHeight, mediaConfigs } from './helpers';
+import { mediaConfigs } from './helpers';
 import ModalError from './modalError';
 import { useI18n } from '@/app/hooks/useI18n';
 import { TranslateFunction } from '@/i18n/types';
-import { useSelector } from '@/store/hooks';
+import { handleGetFileType, handleGetFileWidthAndHeight } from '../assetMedia/helpers';
 import UploadProgressBar from '../components/uploadProgress';
+import { useSelector } from '@/store/hooks';
 
 interface MediaCardProps {
     formatType: string;
     formatValue: FormatMedia;
     errors: AssetMediaFormErros;
     formats: AssetMediaFormValues['formats'];
-    urlAssetFile: string;
-    definition: AssetMediaFormValues['definition'];
     handleUploadFile: ({ formatUpload, file }: { formatUpload: string; file: File }) => Promise<void>;
     setFieldValue: (
         field: string,
@@ -42,7 +42,6 @@ export default function MediaCard({
     formatType,
     formats,
     formatValue,
-    definition,
     setFieldValue,
     handleUploadFile,
 }: MediaCardProps) {
@@ -54,13 +53,10 @@ export default function MediaCard({
 
     const { language } = useI18n();
 
-    const mediaConfig =
-        mediaConfigs[definition as keyof typeof mediaConfigs]?.[
-            formatType as keyof (typeof mediaConfigs)['landscape']
-        ] || {};
-
     const upload = useSelector((state) => state.asset.requestAssetUpload);
     const fileStatus = formatValue.transactionId ? upload[formatValue.transactionId] : undefined;
+
+    const mediaConfig = mediaConfigs[formatType as keyof typeof mediaConfigs] || {};
 
     const texts = {
         video: language['studio.consignArtwork.assetMedia.video'],
@@ -70,28 +66,41 @@ export default function MediaCard({
         uploadButton: language['studio.consignArtwork.assetMedia.upload.button'],
     } as { [key: string]: string };
 
-    const originalMediaInfo = handleGetFileType(formats.original.file!);
-    const isVideo = originalMediaInfo.mediaType === 'video' && formatType !== 'print';
-
     const onDrop = useCallback(
         async (acceptedFiles: File[]) => {
-            const imgWidthAndHeight = await handleGetFileWidthAndHeight(acceptedFiles[0]);
-
-            if (
-                isVideo ||
-                (imgWidthAndHeight.width === mediaConfig.width && imgWidthAndHeight.height === mediaConfig.height)
-            ) {
-                handleUploadFile({ formatUpload: formatType, file: acceptedFiles[0] });
-                setFieldValue(`formats.${formatType}`, { file: acceptedFiles[0] });
-            } else {
+            const file = acceptedFiles[0];
+            if (mediaConfig.type === 'Image') {
                 setMediaCrop(acceptedFiles[0]);
                 setShowCrop(true);
+            } else {
+                handleUploadFile({ formatUpload: formatType, file });
+                setFieldValue(`formats.${formatType}.file`, file);
             }
         },
         [setFieldValue]
     );
 
-    const { getRootProps, getInputProps } = useDropzone({ onDrop });
+    const handleGetAccept = () => {
+        let accept = {};
+        if (mediaConfig.type === 'Image') {
+            accept = {
+                'image/jpeg': [],
+                'image/png': [],
+                'image/gif': [],
+            };
+        } else if (mediaConfig.type === 'Video') {
+            accept = {
+                'video/mp4': [],
+                'video/webm': [],
+            };
+        }
+        return accept;
+    };
+
+    const { getRootProps, getInputProps } = useDropzone({
+        onDrop,
+        accept: handleGetAccept(),
+    });
 
     const urlAssetFile = useMemo(() => {
         return formatValue.file && typeof formatValue.file !== 'string'
@@ -100,17 +109,7 @@ export default function MediaCard({
     }, [formatValue.file]);
 
     const handleDeleteFile = () => {
-        const newValue = { file: undefined, customFile: undefined };
-        if (formatType === 'original') {
-            setFieldValue('formats.original', newValue);
-            setFieldValue('formats.display', newValue);
-            setFieldValue('formats.exhibition', newValue);
-            setFieldValue('formats.preview', newValue);
-            setFieldValue('formats.print', newValue);
-            setFieldValue('definition', '');
-        } else {
-            setFieldValue(`formats.${formatType}`, newValue);
-        }
+        setFieldValue(`formats.${formatType}`, { file: undefined, customFile: undefined });
     };
 
     const handleChangeCrop = (fileChange: File) => {
@@ -128,14 +127,14 @@ export default function MediaCard({
     };
 
     useEffect(() => {
-        if (formatType === 'original') {
+        if (formatValue.file) {
             (async () => {
                 const imgWidthAndHeight = await handleGetFileWidthAndHeight(formatValue.file!);
                 setMediaWidth(imgWidthAndHeight.width);
                 setMediaHeight(imgWidthAndHeight.height);
             })();
         }
-    }, []);
+    }, [formatValue.file]);
 
     return (
         <Box marginLeft={1} width={150}>
@@ -161,9 +160,7 @@ export default function MediaCard({
                     )}
 
                     <Typography marginLeft={1} color="grey" variant="h6" fontWeight="normal">
-                        {(language['studio.consignArtwork.assetMedia.formats'] as TranslateFunction)({
-                            format: formatType,
-                        })}
+                        {language[mediaConfig.title] as string}
                     </Typography>
                 </Box>
                 {formatValue.file && (
@@ -202,16 +199,20 @@ export default function MediaCard({
                     height={70}
                 >
                     <Typography fontSize="0.8rem" color="GrayText" textAlign="center">
-                        {isVideo ? originalMediaInfo.contentType : handleGetFileType(formatValue.file).contentType}{' '}
-                        {isVideo ? texts.video : texts.image}
-                        <Typography fontSize="0.8rem">
-                            {mediaConfig?.width || mediaWidth} X {mediaConfig?.height || mediaHeight}
-                        </Typography>
-                        <Typography fontSize="0.8rem">
-                            {mediaConfig?.sizeMB
-                                ? `${isVideo ? mediaConfig?.sizeMB.video : mediaConfig?.sizeMB.image} MB ${texts.max}`
-                                : getFileSize(formatValue.file!)}
-                        </Typography>
+                        {mediaConfig.type === 'Zip' ? (
+                            <Typography fontSize="0.8rem">
+                                ZIP 10 MB max (HTML, JS, CSS, JPG, PNG, GIF, SVG only)
+                            </Typography>
+                        ) : (
+                            <>
+                                {handleGetFileType(formatValue.file).contentType}{' '}
+                                {mediaConfig.type === 'Video' ? texts.video : texts.image}
+                                <Typography fontSize="0.8rem">{mediaConfig?.sizeMB} MB</Typography>
+                                <Typography fontSize="0.8rem" color="GrayText">
+                                    {texts.max}
+                                </Typography>
+                            </>
+                        )}
                     </Typography>
                 </Box>
                 <Box width="100%" justifyContent="center" alignItems="center" height={200}>
@@ -224,31 +225,66 @@ export default function MediaCard({
                     </Box>
                     <Box display="flex" justifyContent="center" alignItems="center">
                         {formatValue.file ? (
-                            <Box display="flex" justifyContent="center" alignItems="center" width={120}>
-                                {formatType !== 'print' && originalMediaInfo.mediaType === 'video' ? (
+                            <Box display="flex" justifyContent="center" alignItems="center" marginTop={1} width={120}>
+                                {mediaConfig.type === 'Video' ? (
                                     <video
                                         controls
-                                        width={definition === 'landscape' ? 120 : definition === 'portrait' ? 100 : 50}
-                                        height={
-                                            definition === 'landscape' ? 100 : definition === 'portrait' ? 120 : 100
-                                        }
                                         src={urlAssetFile!}
                                         style={{
                                             objectFit: 'contain',
+                                            maxWidth: 120,
+                                            maxHeight: 100,
                                         }}
                                     />
-                                ) : (
+                                ) : mediaConfig.type === 'Image' ? (
                                     <Img
-                                        width={definition === 'landscape' ? 120 : definition === 'portrait' ? 100 : 50}
-                                        height={
-                                            definition === 'landscape' ? 100 : definition === 'portrait' ? 120 : 100
-                                        }
+                                        width={mediaWidth}
+                                        height={mediaHeight}
                                         src={urlAssetFile!}
                                         alt=""
                                         style={{
                                             objectFit: 'contain',
+                                            maxWidth: 120,
+                                            maxHeight: 100,
                                         }}
                                     />
+                                ) : (
+                                    <Box
+                                        alignItems="center"
+                                        display="flex"
+                                        flexDirection="column"
+                                        justifyContent="center"
+                                    >
+                                        <InsertDriveFileIcon style={{ width: 40, height: 40 }} color="primary" />
+                                        <Box>
+                                            <a
+                                                style={{
+                                                    display: 'flex',
+                                                    color: 'inherit',
+
+                                                    justifyContent: 'center',
+                                                    flexDirection: 'column',
+                                                    width: '100%',
+                                                }}
+                                                href={urlAssetFile!}
+                                                download
+                                            >
+                                                <Typography
+                                                    variant="body2"
+                                                    style={{
+                                                        overflow: 'hidden',
+                                                        textOverflow: 'ellipsis',
+                                                        whiteSpace: 'nowrap',
+                                                    }}
+                                                >
+                                                    {formatValue.name ||
+                                                        (typeof formatValue.file && typeof formatValue.file !== 'string'
+                                                            ? (formatValue.file as File)?.name
+                                                            : '')}
+                                                </Typography>
+                                            </a>
+                                        </Box>
+                                    </Box>
                                 )}
                             </Box>
                         ) : (
@@ -285,23 +321,12 @@ export default function MediaCard({
             </Box>
 
             <Dialog maxWidth="lg" open={showCrop} onClose={handleClose}>
-                <DialogTitle color="GrayText">
-                    {(language['studio.consignArtwork.assetMedia.cropModal.title'] as TranslateFunction)({
-                        width: mediaConfig.width,
-                        height: mediaConfig.height,
-                    })}
-                </DialogTitle>
                 <DialogContent>
                     <Crop file={mediaCrop} mediaConfig={mediaConfig} onChange={handleChangeCrop} />
                 </DialogContent>
             </Dialog>
 
-            <ModalError
-                format={formatType}
-                open={modalErrorOpen}
-                definition={definition}
-                setClose={handleCloseModalError}
-            />
+            <ModalError format={formatType} open={modalErrorOpen} setClose={handleCloseModalError} />
         </Box>
     );
 }

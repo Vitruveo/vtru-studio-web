@@ -92,8 +92,8 @@ const language: Translation = {
             data.definition === 'landscape' ? 'Landscape' : data.definition === 'portrait' ? 'Portrait' : 'Square'
         }`;
     },
-    'studio.consignArtwork.assetMedia.image': 'image',
-    'studio.consignArtwork.assetMedia.video': 'video',
+    'studio.consignArtwork.assetMedia.image': 'Image',
+    'studio.consignArtwork.assetMedia.video': 'Video',
     'studio.consignArtwork.assetMedia.max': 'maximum',
 
     'studio.consignArtwork.assetMedia.mediaRequired': (data: { required: boolean }) =>
@@ -134,6 +134,18 @@ const language: Translation = {
     'studio.consignArtwork.assetMedia.dragAndDrop': 'Drag and drop a single media asset file or click to upload.',
     'studio.consignArtwork.assetMedia.imageTypes': 'Image: JPEG, PNG, GIF, SVG, WEBP',
     'studio.consignArtwork.assetMedia.videoTypes': 'Video: MP4, WEBM',
+
+    /* Auxiliary Media */
+    'studio.consignArtwork.stepName.auxiliaryMedia': 'Auxiliary Media',
+    'studio.consignArtwork.auxiliaryMedia.description':
+        'Upload auxiliary media assets for Behind-the-scenes (BTS) and Augmented Reality (AR).',
+    'studio.consignArtwork.auxiliaryMedia.title': 'Auxiliary Media',
+    'studio.consignArtwork.auxiliaryMedia.subTitle': 'Auxiliary Media Assets',
+    'studio.consignArtwork.auxiliaryMedia.arImage.title': 'AR Image',
+    'studio.consignArtwork.auxiliaryMedia.arVideo.title': 'AR Video',
+    'studio.consignArtwork.auxiliaryMedia.btsImage.title': 'BTS Image',
+    'studio.consignArtwork.auxiliaryMedia.btsVideo.title': 'BTS Video',
+    'studio.consignArtwork.auxiliaryMedia.codeZip.title': 'Code Zip',
 
     /* Asset Metadata */
     'studio.consignArtwork.assetMetadata.title': 'Asset Metadata',

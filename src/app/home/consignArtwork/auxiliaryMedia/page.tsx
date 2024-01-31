@@ -9,15 +9,14 @@ import { Stack } from '@mui/system';
 import { Box, IconButton, Typography } from '@mui/material';
 
 import { useDispatch, useSelector } from '@/store/hooks';
-import { AssetMediaFormValues, FormatMediaSave, FormatsMedia } from './types';
+import { AssetMediaFormValues, FormatMediaSave, FormatsAuxiliayMedia } from './types';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
 import MediaCard from './mediaCard';
-import SelectMedia from './selectMedia';
+
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 
-import { assetMediaThunk, assetStorageThunk, sendRequestUploadThunk } from '@/features/asset/thunks';
-import { getMediaDefinition, getStepStatus } from './helpers';
+import { auxiliaryMediaThunk, assetStorageThunk, sendRequestUploadThunk } from '@/features/asset/thunks';
 import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
 import { TranslateFunction } from '@/i18n/types';
@@ -33,11 +32,10 @@ export default function AssetMedia() {
         nextButton: language['studio.consignArtwork.form.next.button'],
         homeTitle: language['studio.home.title'],
         consignArtworkTitle: language['studio.consignArtwork.title'],
-        assetMediaTitle: language['studio.consignArtwork.assetMedia.title'],
-        assetMediaDescription: language['studio.consignArtwork.assetMedia.description'],
-        assetMediaAmazing: language['studio.consignArtwork.assetMedia.amazing'],
+        assetMediaTitle: language['studio.consignArtwork.auxiliaryMedia.title'],
+        assetMediaSubTitle: language['studio.consignArtwork.auxiliaryMedia.subTitle'],
+        assetMediaDescription: language['studio.consignArtwork.auxiliaryMedia.description'],
         assetMediaConcerned: language['studio.consignArtwork.assetMedia.concerned'],
-        assets: language['studio.consignArtwork.assetMedia.assets'],
     } as { [key: string]: string };
 
     const BCrumb = [
@@ -62,7 +60,7 @@ export default function AssetMedia() {
     const initialValues = useMemo(
         () => ({
             definition: '',
-            formats: asset.formats,
+            formats: asset.mediaAuxiliary.formats,
         }),
         []
     );
@@ -76,18 +74,13 @@ export default function AssetMedia() {
                 dispatch(
                     consignArtworkActionsCreators.changeStatusStep({
                         stepId: 'assetMedia',
-                        status: getStepStatus({
-                            formats:
-                                JSON.stringify(initialValues.formats) === JSON.stringify(values.formats)
-                                    ? asset.formats
-                                    : values.formats,
-                        }),
+                        status: 'completed',
                     })
                 );
                 const deleteFormats = Object.entries(formValues.formats)
                     .filter(([_, value]) => !value.file)
                     .map(([key, _]) => key);
-                if (deleteFormats.length) await dispatch(assetMediaThunk({ deleteFormats }));
+                if (deleteFormats.length) await dispatch(auxiliaryMediaThunk({ deleteFormats }));
                 router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/assetMetadata`);
             }
         },
@@ -135,25 +128,25 @@ export default function AssetMedia() {
         await dispatch(
             consignArtworkActionsCreators.changeStatusStep({
                 stepId: 'assetMedia',
-                status: getStepStatus({
-                    formats: initialValues.formats,
-                }),
+                status: 'completed',
             })
         );
 
         const deleteFormats = Object.entries(values.formats)
-            .filter(([key, value]) => !initialValues.formats[key as keyof FormatsMedia].file)
+            .filter(([key, value]) => !initialValues.formats[key as keyof FormatsAuxiliayMedia].file)
             .map(([key, _]) => key);
 
-        if (deleteFormats.length) await dispatch(assetMediaThunk({ deleteFormats }));
+        if (deleteFormats.length) await dispatch(auxiliaryMediaThunk({ deleteFormats }));
 
         router.push('/home/consignArtwork');
     };
 
-    const checkStepProgress = getStepStatus({ formats: values.formats });
+    const checkStepProgress = 'completed';
 
     useEffect(() => {
-        dispatch(consignArtworkActionsCreators.changeStatusStep({ stepId: 'assetMedia', status: checkStepProgress }));
+        dispatch(
+            consignArtworkActionsCreators.changeStatusStep({ stepId: 'auxiliaryMedia', status: checkStepProgress })
+        );
     }, [checkStepProgress]);
 
     useEffect(() => {
@@ -202,7 +195,7 @@ export default function AssetMedia() {
             );
 
             await dispatch(
-                assetMediaThunk({
+                auxiliaryMediaThunk({
                     ...values,
                     formats: responseUpload.reduce((acc, cur) => ({ ...acc, ...cur }), {} as FormatMediaSave),
                 })
@@ -211,24 +204,6 @@ export default function AssetMedia() {
 
         if (requestUploadReady.length) uploadAsset();
     }, [asset.requestAssetUpload]);
-
-    const file = values?.formats?.original?.file;
-
-    useEffect(() => {
-        if (file && !values?.definition) {
-            (async () => {
-                if (file) {
-                    const definition = await getMediaDefinition({ fileOrUrl: file });
-
-                    setFieldValue('definition', definition);
-                }
-            })();
-        }
-    }, [values.formats?.original?.file]);
-
-    const urlAssetFile: string = useMemo(() => {
-        return file && file instanceof File ? URL.createObjectURL(file) : file ? (file as string) : '';
-    }, [file]);
 
     return (
         <form onSubmit={handleSubmit}>
@@ -248,62 +223,27 @@ export default function AssetMedia() {
                     <Typography marginBottom={2} fontSize="1.1rem" color="grey" fontWeight="500" marginTop={2}>
                         {texts.assetMediaTitle}
                     </Typography>
-                    {urlAssetFile && (
-                        <Box>
-                            {showFormtsInfo && (
-                                <Box padding={2} bgcolor="#FFF2CC" position="relative">
-                                    <IconButton
-                                        size="small"
-                                        style={{ position: 'absolute', top: 1, right: 1 }}
-                                        onClick={() => setShowFormatsInfo(false)}
-                                    >
-                                        <CloseIcon fontSize="small" />
-                                    </IconButton>
-                                    <Typography fontSize="0.9">
-                                        {texts.assetMediaAmazing}
-                                        <Typography fontSize="0.9" marginTop={2}>
-                                            {texts.assetMediaConcerned}
-                                        </Typography>
-                                    </Typography>
+
+                    <Box>
+                        <Typography marginTop={2} color="grey" fontSize="1rem" fontWeight="bold">
+                            {texts.assetMediaSubTitle}
+                        </Typography>
+                        <Box display="flex" flexWrap="wrap">
+                            {Object.entries(values.formats).map(([formatType, value], index) => (
+                                <Box style={{ marginRight: '10px' }} key={index}>
+                                    <MediaCard
+                                        key={index}
+                                        errors={errors}
+                                        formats={values.formats}
+                                        formatType={formatType}
+                                        formatValue={value}
+                                        setFieldValue={setFieldValue}
+                                        handleUploadFile={handleUploadFile}
+                                    />
                                 </Box>
-                            )}
-
-                            <Typography marginTop={2} color="grey" fontSize="1rem" fontWeight="bold">
-                                {(language['studio.consignArtwork.assetMedia.definition'] as TranslateFunction)({
-                                    definition: values.definition,
-                                })}{' '}
-                                {texts.assets}
-                            </Typography>
-                            <Box display="flex" flexWrap="wrap">
-                                {Object.entries(values.formats).map(([formatType, value], index) => (
-                                    <Box style={{ marginRight: '10px' }} key={index}>
-                                        <MediaCard
-                                            key={index}
-                                            errors={errors}
-                                            formats={values.formats}
-                                            formatType={formatType}
-                                            formatValue={value}
-                                            urlAssetFile={urlAssetFile}
-                                            definition={values.definition}
-                                            setFieldValue={setFieldValue}
-                                            handleUploadFile={handleUploadFile}
-                                        />
-                                    </Box>
-                                ))}
-                            </Box>
+                            ))}
                         </Box>
-                    )}
-
-                    {!urlAssetFile && (
-                        <SelectMedia
-                            file={values?.formats?.original?.file}
-                            definition={values.definition}
-                            urlAssetFile={urlAssetFile}
-                            errors={errors}
-                            setFieldValue={setFieldValue}
-                            handleUploadFile={handleUploadFile}
-                        />
-                    )}
+                    </Box>
                 </Stack>
                 <ModalBackConfirm
                     show={showBackModal}

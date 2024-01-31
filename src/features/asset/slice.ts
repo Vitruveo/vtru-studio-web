@@ -5,6 +5,35 @@ import { AssetSliceState } from './types';
 
 const initialState: AssetSliceState = {
     _id: '',
+    mediaAuxiliary: {
+        formats: {
+            arImage: {
+                file: undefined,
+                customFile: undefined,
+                transactionId: undefined,
+            },
+            arVideo: {
+                file: undefined,
+                customFile: undefined,
+                transactionId: undefined,
+            },
+            btsImage: {
+                file: undefined,
+                customFile: undefined,
+                transactionId: undefined,
+            },
+            btsVideo: {
+                file: undefined,
+                customFile: undefined,
+                transactionId: undefined,
+            },
+            codeZip: {
+                file: undefined,
+                customFile: undefined,
+                transactionId: undefined,
+            },
+        },
+    },
     formats: {
         original: {
             file: undefined,
@@ -33,9 +62,6 @@ const initialState: AssetSliceState = {
         },
     },
     assetMetadata: undefined,
-    // creatorMetadata: {
-    //     creatorMetadataDefinitions: [],
-    // },
     licenses: undefined,
     requestAssetUpload: {},
     isOriginal: false,
@@ -56,6 +82,18 @@ export const assetSlice = createSlice({
     name: 'asset',
     initialState,
     reducers: {
+        changeFormatsMediaAuxiliary: (state, action: PayloadAction<Partial<AssetSliceState['mediaAuxiliary']>>) => {
+            return {
+                ...state,
+                mediaAuxiliary: {
+                    ...state.mediaAuxiliary,
+                    formats: {
+                        ...state.mediaAuxiliary.formats,
+                        ...action.payload.formats,
+                    },
+                },
+            };
+        },
         changeFormats: (state, action: PayloadAction<Partial<AssetSliceState['formats']>>) => {
             return {
                 ...state,
@@ -88,6 +126,31 @@ export const assetSlice = createSlice({
                 ),
             };
         },
+        removeFormatsMediaAuxiliary: (state, action: PayloadAction<string[]>) => {
+            return {
+                ...state,
+                mediaAuxiliary: {
+                    formats: Object.entries(state.mediaAuxiliary.formats).reduce(
+                        (acc, [key, value]) => {
+                            if (action.payload.includes(key))
+                                return {
+                                    ...acc,
+                                    [key]: {
+                                        file: undefined,
+                                        customFile: undefined,
+                                        transactionId: undefined,
+                                    },
+                                };
+                            return {
+                                ...acc,
+                                [key]: value,
+                            };
+                        },
+                        {} as AssetSliceState['mediaAuxiliary']['formats']
+                    ),
+                },
+            };
+        },
         change: (state, action: PayloadAction<Partial<AssetSliceState>>) => {
             return {
                 ...state,
@@ -95,7 +158,10 @@ export const assetSlice = createSlice({
             };
         },
         requestAssetUpload: (state, action) => {
-            state.requestAssetUpload[action.payload.transactionId] = action.payload;
+            state.requestAssetUpload[action.payload.transactionId] = {
+                ...state.requestAssetUpload[action.payload.transactionId],
+                ...action.payload,
+            };
         },
         requestAssetUploadUsed: (state, action) => {
             delete state.requestAssetUpload[action.payload.transactionId];

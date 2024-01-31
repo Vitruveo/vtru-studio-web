@@ -1,4 +1,4 @@
-export type StepId = 'termsOfUse' | 'assetMedia' | 'assetMetadata' | 'licenses';
+export type StepId = 'termsOfUse' | 'assetMedia' | 'assetMetadata' | 'licenses' | 'auxiliaryMedia';
 export type StepStatus = 'notStarted' | 'completed' | 'inProgress';
 
 export interface CompletedSteps {

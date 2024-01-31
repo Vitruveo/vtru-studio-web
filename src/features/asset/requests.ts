@@ -10,11 +10,14 @@ import {
     UpdateAssetStepReq,
 } from './types';
 import { apiService } from '@/services/api';
+import { assetActionsCreators } from './slice';
 
-export async function assetStorage({ file, url }: AssetStorageReq): Promise<any> {
-    const res = await fetch(url, {
-        method: 'PUT',
-        body: file,
+export async function assetStorage({ file, url, dispatch, transactionId }: AssetStorageReq): Promise<any> {
+    const res = await axios.put(url, file, {
+        onUploadProgress: function (progressEvent) {
+            const percentCompleted = Math.round((progressEvent.loaded * 100) / (progressEvent?.total || 0));
+            dispatch(assetActionsCreators.requestAssetUpload({ transactionId, uploadProgress: percentCompleted }));
+        },
     });
 
     return res;

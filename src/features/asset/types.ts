@@ -14,14 +14,24 @@ interface Format {
     transactionId?: string;
 }
 
-interface RequestAssetUpload {
+export interface RequestAssetUpload {
     transactionId: string;
     url: string;
     path: string;
     status: string;
+    uploadProgress: number;
 }
 export interface Asset {
     _id: string;
+    mediaAuxiliary: {
+        formats: {
+            arImage: Format;
+            arVideo: Format;
+            btsImage: Format;
+            btsVideo: Format;
+            codeZip: Format;
+        };
+    };
     formats: {
         original: Format;
         display: Format;
@@ -59,8 +69,10 @@ export interface AssetSliceState extends Asset {
 }
 
 export interface AssetStorageReq {
+    transactionId: string;
     url: string;
     file: File;
+    dispatch: any;
 }
 
 export interface UpdateAssetStepReq {}

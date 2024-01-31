@@ -8,12 +8,15 @@ import { TermsOfUseFormValues } from '@/app/home/consignArtwork/termsOfUse/types
 import { consignArtworkActionsCreators } from '../consignArtwork/slice';
 import { ASSET_STORAGE_URL } from '@/constants/asset';
 import { SectionFormatType, SectionsFormData } from '@/app/home/consignArtwork/assetMetadata/page';
+import { FormatsAuxiliayMedia } from '@/app/home/consignArtwork/auxiliaryMedia/types';
 
-export function assetStorageThunk(payload: AssetStorageReq): ReduxThunkAction<Promise<any>> {
+export function assetStorageThunk(payload: Omit<AssetStorageReq, 'dispatch'>): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
         const response = await assetStorage({
             url: payload.url,
             file: payload.file,
+            transactionId: payload.transactionId,
+            dispatch,
         });
 
         return response;
@@ -97,12 +100,80 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
                     dispatch(assetActionsCreators.changeFormats(formatAssetsFormats));
                     dispatch(consignArtworkActionsCreators.changeStatusStep({ stepId: 'assetMedia', status }));
                 }
+
+                if (response.data.mediaAuxiliary?.formats) {
+                    const formatAssetsFormats = Object.entries(
+                        response.data.mediaAuxiliary.formats as unknown as FormatMediaSave
+                    ).reduce((acc, [key, value]) => {
+                        if (value === null) return acc;
+                        return {
+                            ...acc,
+                            [key]: {
+                                name: value.name,
+                                file: `${ASSET_STORAGE_URL}/${value.path}`,
+                                customFile: undefined,
+                                transactionId: undefined,
+                            },
+                        };
+                    }, {} as FormatsAuxiliayMedia);
+
+                    dispatch(assetActionsCreators.changeFormatsMediaAuxiliary({ formats: formatAssetsFormats }));
+                }
+
+                dispatch(
+                    consignArtworkActionsCreators.changeStatusStep({ stepId: 'auxiliaryMedia', status: 'completed' })
+                );
             }
 
             return response;
         } catch (_) {
             // TODO: implement error handling
         }
+    };
+}
+
+export function auxiliaryMediaThunk(payload: {
+    formats?: FormatMediaSave;
+    deleteFormats?: string[];
+}): ReduxThunkAction<Promise<any>> {
+    return async function (dispatch, getState) {
+        const formatsState = getState().asset.mediaAuxiliary.formats;
+
+        const formatsPersist = Object.entries(formatsState)
+            .filter(([key, value]) => value.file)
+            .filter(([key, value]) => !payload.deleteFormats?.includes(key))
+            .reduce((acc, [key, value]) => {
+                return {
+                    ...acc,
+                    [key]: {
+                        path: (value.file as string)?.replace(new RegExp(`${ASSET_STORAGE_URL}/`, 'g'), ''),
+                        name: value.name,
+                    },
+                };
+            }, {});
+
+        await updateAssetStep({
+            mediaAuxiliary: {
+                formats: { ...formatsPersist, ...payload.formats },
+            },
+            stepName: 'auxiliaryMedia',
+        });
+
+        const formatAssetsFormats = Object.entries(payload.formats || {}).reduce((acc, [key, value]) => {
+            return {
+                ...acc,
+                [key]: {
+                    file: `${ASSET_STORAGE_URL}/${value.path}`,
+                    name: value.name,
+                    customFile: undefined,
+                    transactionId: undefined,
+                },
+            };
+        }, {} as FormatsAuxiliayMedia);
+
+        dispatch(assetActionsCreators.changeFormatsMediaAuxiliary({ formats: formatAssetsFormats }));
+        if (payload.deleteFormats?.length)
+            dispatch(assetActionsCreators.removeFormatsMediaAuxiliary(payload.deleteFormats));
     };
 }
 

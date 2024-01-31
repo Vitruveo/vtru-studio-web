@@ -6,6 +6,7 @@ import { Email, User, Wallet } from '../user/types';
 
 export const stepsNames = {
     assetMedia: 'studio.consignArtwork.stepName.assetMedia',
+    auxiliaryMedia: 'studio.consignArtwork.stepName.auxiliaryMedia',
     assetMetadata: 'studio.consignArtwork.stepName.assetMetadata',
     licenses: 'studio.consignArtwork.stepName.licenses',
     termsOfUse: 'studio.consignArtwork.stepName.termsOfUse',
@@ -28,12 +29,19 @@ const initialState: ConsignArtworkSliceState = {
             status: 'notStarted',
             statusName: statusName.notStarted,
         },
+        auxiliaryMedia: {
+            stepId: 'auxiliaryMedia',
+            stepName: stepsNames.auxiliaryMedia,
+            status: 'notStarted',
+            statusName: statusName.notStarted,
+        },
         assetMetadata: {
             stepId: 'assetMetadata',
             stepName: stepsNames.assetMetadata,
             status: 'notStarted',
             statusName: statusName.notStarted,
         },
+
         licenses: {
             stepId: 'licenses',
             stepName: stepsNames.licenses,
