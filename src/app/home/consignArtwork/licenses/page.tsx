@@ -184,7 +184,7 @@ export default function Licenses() {
                 submitText={texts.nextButton}
                 title={texts.consignArtworkTitle}
                 stepStatus={licensesAdded.length > 0 ? 'completed' : 'inProgress'}
-                stepNumber={3}
+                stepNumber={4}
                 backOnclick={handleOpenBackModal}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />

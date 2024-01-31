@@ -197,7 +197,7 @@ export default function AssetMetadata() {
             <PageContainerFooter
                 submitText={texts.nextButton}
                 stepStatus={status}
-                stepNumber={2}
+                stepNumber={3}
                 title={texts.consignArtworkTitle}
                 backOnclick={handleOpenBackModal}
             >

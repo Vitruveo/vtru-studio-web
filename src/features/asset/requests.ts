@@ -1,5 +1,5 @@
 import axios from 'axios';
-import FormDataUpload from 'form-data';
+
 import {
     Asset,
     AssetSendRequestUploadApiRes,
@@ -13,14 +13,38 @@ import { apiService } from '@/services/api';
 import { assetActionsCreators } from './slice';
 
 export async function assetStorage({ file, url, dispatch, transactionId }: AssetStorageReq): Promise<any> {
-    const res = await axios.put(url, file, {
-        onUploadProgress: function (progressEvent) {
-            const percentCompleted = Math.round((progressEvent.loaded * 100) / (progressEvent?.total || 0));
-            dispatch(assetActionsCreators.requestAssetUpload({ transactionId, uploadProgress: percentCompleted }));
-        },
-    });
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
 
-    return res;
+        xhr.open('PUT', url, true);
+
+        xhr.upload.onprogress = function (event) {
+            if (event.lengthComputable) {
+                const percentCompleted = Math.round((event.loaded * 100) / event.total);
+                dispatch(assetActionsCreators.requestAssetUpload({ transactionId, uploadProgress: percentCompleted }));
+            }
+        };
+
+        xhr.onload = function () {
+            if (this.status >= 200 && this.status < 300) {
+                resolve(xhr.response);
+            } else {
+                reject({
+                    status: this.status,
+                    statusText: xhr.statusText,
+                });
+            }
+        };
+
+        xhr.onerror = function () {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText,
+            });
+        };
+
+        xhr.send(file);
+    });
 }
 
 export async function updateAssetStep(data: UpdateAssetStepReq): Promise<UpdateAssetStepApiRes> {

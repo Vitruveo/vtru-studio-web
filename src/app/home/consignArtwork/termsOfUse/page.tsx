@@ -143,7 +143,7 @@ export default function ContractScreen() {
             <PageContainerFooter
                 submitText={texts.nextButton}
                 stepStatus={checkStatus}
-                stepNumber={4}
+                stepNumber={5}
                 title={texts.consignArtworkTitle}
                 backOnclick={handleOpenBackModal}
             >

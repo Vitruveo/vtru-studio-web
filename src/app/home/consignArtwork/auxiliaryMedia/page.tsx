@@ -211,7 +211,7 @@ export default function AssetMedia() {
                 backOnclick={handleOpenBackModal}
                 submitText={texts.nextButton}
                 stepStatus={checkStepProgress}
-                stepNumber={1}
+                stepNumber={2}
                 title={texts.consignArtworkTitle}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
