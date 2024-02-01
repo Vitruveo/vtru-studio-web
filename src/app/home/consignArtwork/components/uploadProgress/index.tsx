@@ -41,6 +41,8 @@ const UploadProgressBar = ({ fileStatus }: UploadProgressBarProps) => {
     return (
         <>
             <ProgressBar
+                transitionDuration="0.5"
+                animateOnRender={false}
                 height="12px"
                 bgColor={theme.palette.primary.main}
                 customLabelStyles={{

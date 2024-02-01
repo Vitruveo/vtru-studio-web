@@ -141,7 +141,7 @@ export default function ContractScreen() {
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
-                maxHeight="80vh"
+                maxHeight="calc(100vh - 168px)"
                 submitText={texts.nextButton}
                 stepStatus={checkStatus}
                 stepNumber={4}
@@ -196,7 +196,7 @@ export default function ContractScreen() {
                     />
                     <Typography>{texts.notMintedOtherBlockchain}</Typography>
                 </Box>
-                <Box textAlign="right" mt={4} mb={2}>
+                <Box textAlign="right" mt={2} mb={2}>
                     <Button
                         variant="contained"
                         color={values.contract ? 'success' : 'primary'}
