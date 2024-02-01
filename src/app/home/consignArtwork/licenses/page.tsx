@@ -184,11 +184,11 @@ export default function Licenses() {
                 submitText={texts.nextButton}
                 title={texts.consignArtworkTitle}
                 stepStatus={licensesAdded.length > 0 ? 'completed' : 'inProgress'}
-                stepNumber={4}
+                stepNumber={3}
                 backOnclick={handleOpenBackModal}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
-                <Typography fontSize="1rem" fontWeight="normal" color="GrayText">
+                <Typography fontSize="1.1rem" fontWeight="normal" color="GrayText">
                     {texts.licensesDescription}
                 </Typography>
                 <Grid mt={1} my={3} alignItems="center" lg={6} xs={12}>
@@ -196,7 +196,7 @@ export default function Licenses() {
                         <Typography
                             marginRight={2}
                             display="flex"
-                            fontSize="1.1rem"
+                            fontSize="1.2rem"
                             color="grey"
                             fontWeight="500"
                             variant="subtitle1"

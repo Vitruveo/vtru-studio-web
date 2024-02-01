@@ -32,13 +32,16 @@ const ConsignArtwork = () => {
     const status = useSelector((state) => state.asset.status);
     const { completedSteps } = useSelector((state) => state.consignArtwork);
 
-    const checkAllCompletedSteps = Object.values(completedSteps).every((v) => v.status === 'completed');
+    const checkAllCompletedSteps = Object.values(completedSteps)
+        .filter((v) => !v.optional)
+        .every((v) => v.status === 'completed');
 
     const texts = {
         homeTitle: language['studio.home.title'],
         stepPublishMessageSuccess: language['studio.consignArtwork.stepPublishMessageSuccess'],
         consignArtworkTitle: language['studio.consignArtwork.title'],
         consignArtworkSubtitle: language['studio.consignArtwork.subtitle'],
+        optional: language['studio.consignArtwork.optional'],
     } as { [key: string]: string };
 
     const BCrumb = [
@@ -92,6 +95,7 @@ const ConsignArtwork = () => {
                                 <Grid item>
                                     <Typography my={2} variant="h6" fontWeight="normal" color="GrayText">
                                         {language[v.stepName] as string}
+                                        {v.optional ? ` (${texts.optional})` : ''}
                                     </Typography>
                                 </Grid>
                                 <Grid display="flex" flexWrap="wrap" width={350} item>

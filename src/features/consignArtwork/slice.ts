@@ -29,12 +29,6 @@ const initialState: ConsignArtworkSliceState = {
             status: 'notStarted',
             statusName: statusName.notStarted,
         },
-        auxiliaryMedia: {
-            stepId: 'auxiliaryMedia',
-            stepName: stepsNames.auxiliaryMedia,
-            status: 'notStarted',
-            statusName: statusName.notStarted,
-        },
         assetMetadata: {
             stepId: 'assetMetadata',
             stepName: stepsNames.assetMetadata,
@@ -53,6 +47,13 @@ const initialState: ConsignArtworkSliceState = {
             stepName: stepsNames.termsOfUse,
             status: 'notStarted',
             statusName: statusName.notStarted,
+        },
+        auxiliaryMedia: {
+            stepId: 'auxiliaryMedia',
+            stepName: stepsNames.auxiliaryMedia,
+            status: 'notStarted',
+            statusName: statusName.notStarted,
+            optional: true,
         },
     },
 };

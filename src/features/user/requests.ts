@@ -27,6 +27,7 @@ import {
     UserOTPConfirmRes,
     VerifyCodeApiRes,
     VerifyCodeReq,
+    RequestDeleteAvatarURLReq,
 } from './types';
 import { Framework } from '../common/types';
 
@@ -98,11 +99,23 @@ export async function changeAvatar(data: ChangeAvatarReq): Promise<ChangeAvatarA
     return res;
 }
 
+export async function deleteAvatar(url: string): Promise<any> {
+    const res = await fetch(url, {
+        method: 'DELETE',
+    });
+    return res;
+}
+
 export async function generalStorage(data: GeneralStorageAvatarReq): Promise<any> {
     const res = await fetch(data.url, {
         method: 'PUT',
         body: data.file,
     });
 
+    return res;
+}
+
+export async function requestDeleteAvatarURL(data: RequestDeleteAvatarURLReq): Promise<any> {
+    const res = await apiService.delete('/creators/request/deleteFile', data);
     return res;
 }

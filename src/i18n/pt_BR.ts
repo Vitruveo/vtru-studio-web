@@ -11,7 +11,6 @@ const language: Translation = {
     /* Home */
     'studio.home.wellcome': 'Bem-vindo a',
     'studio.home.title': 'Início',
-    'studio.home.congrats': 'Parabéns por ser selecionado como Artista Genesis Vitruveo',
     'studio.home.transforming':
         'Vitruveo está transformando a arte Web3, e isso significa um software totalmente novo como esta versão "Alpha" do vtruStudio. Alpha significa que o software não está totalmente pronto e você está nos ajudando a testá-lo para que possa ser melhorado.',
     'studio.home.software': 'O software atualmente tem dois recursos que você pode acessar com os botões abaixo:',
@@ -62,6 +61,7 @@ const language: Translation = {
     'studio.consignArtwork.stepName.assetMetadata': 'Metadados do Ativo',
     'studio.consignArtwork.stepName.licenses': 'Licenças',
     'studio.consignArtwork.stepName.termsOfUse': 'Termos de Uso',
+    'studio.consignArtwork.optional': 'opcional',
 
     'studio.consignArtwork.stepStatus.completed': 'Concluído',
     'studio.consignArtwork.stepStatus.inProgress': 'Em Andamento',
@@ -73,7 +73,7 @@ const language: Translation = {
         `${data.status !== 'notStarted' ? 'Editar' : 'Iniciar'}`,
 
     'studio.consignArtwork.publishButton': (data: { status: string }) =>
-        `${data.status === 'published' ? 'Publicado' : 'Publicar'}`,
+        `${data.status === 'published' ? 'Consignado' : 'Consignar'}`,
 
     /* Asset Media */
     'studio.consignArtwork.assetMedia.title': 'Mídia do Ativo',
@@ -216,7 +216,7 @@ const language: Translation = {
     'studio.consignArtwork.termsOfUse.isOriginal':
         'Eu concordo que o Ativo e os arquivos de Mídia Auxiliar são obras originais e autênticas que foram criadas pelos criadores indicados na submissão de metadados e não foram copiados, roubados ou plagiados de qualquer outra fonte.',
     'studio.consignArtwork.termsOfUse.generatedArtworkAI':
-        'Eu concordo que se qualquer parte do Ativo e dos arquivos de Mídia Auxiliar foram criados usando Inteligência Artificial, eu respondi "Sim" no campo de Metadados para "Obra de Arte Gerada por IA".',
+        'Eu concordo que se qualquer parte do Ativo e dos arquivos de Mídia Auxiliar foram criados usando Inteligência Artificial, eu respondi "Sim" no campo de Metadados para "Geração por IA".',
     'studio.consignArtwork.termsOfUse.notMintedOtherBlockchain':
         'Eu concordo que esta obra não está cunhada em qualquer outra blockchain, oferecida, consignada ou listada para venda em qualquer outra plataforma, e não será cunhada, oferecida, consignada ou listada enquanto a listagem estiver ativa nesta plataforma.',
 

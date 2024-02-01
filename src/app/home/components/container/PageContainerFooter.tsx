@@ -12,6 +12,7 @@ type Props = {
 
 const PageContainerFooter = ({
     title,
+    maxHeight,
     description,
     submitText,
     children,
@@ -23,6 +24,7 @@ const PageContainerFooter = ({
     submitDisabled,
 }: Props) => (
     <FooterForm
+        maxHeight={maxHeight}
         stepStatus={stepStatus}
         stepNumber={stepNumber}
         submitText={submitText}

@@ -13,7 +13,6 @@ const language: Translation = {
     /* Home */
     'studio.home.wellcome': 'Добро пожаловать в',
     'studio.home.title': 'Главная',
-    'studio.home.congrats': 'Поздравляем с выбором в качестве Genesis художника Vitruveo',
     'studio.home.transforming':
         'Vitruveo трансформирует искусство Web3, и это означает совершенно новое программное обеспечение, такое как эта "Alpha" версия vtruStudio. Alpha означает, что программное обеспечение еще не полностью готово, и вы помогаете нам его тестировать, чтобы оно стало лучше.',
     'studio.home.software':
@@ -66,6 +65,7 @@ const language: Translation = {
     'studio.consignArtwork.stepName.assetMetadata': 'Метаданные мадиафайлов',
     'studio.consignArtwork.stepName.licenses': 'Лицензии',
     'studio.consignArtwork.stepName.termsOfUse': 'Условия использования',
+    'studio.consignArtwork.optional': 'необязательный',
 
     'studio.consignArtwork.stepStatus.completed': 'Завершено',
     'studio.consignArtwork.stepStatus.inProgress': 'В процессе',
@@ -77,7 +77,7 @@ const language: Translation = {
         `${data.status !== 'notStarted' ? 'Редактировать' : 'Начать'}`,
 
     'studio.consignArtwork.publishButton': (data: { status: string }) =>
-        `${data.status === 'published' ? 'Опубликовано' : 'Опубликовать'}`,
+        `${data.status === 'published' ? 'Передано' : 'Передать'}`,
 
     /* Asset Media */
     'studio.consignArtwork.assetMedia.title': 'Медиафайлы',
@@ -217,7 +217,7 @@ const language: Translation = {
     'studio.consignArtwork.termsOfUse.isOriginal':
         'Я подтверждаю, что основной и вспомогательные медиафайлы являются оригинальными, подлинными работами, созданными указанными в метаданных создателями, и не скопированы или украдены (не являются плагиатом) из какого-либо другого источника.',
     'studio.consignArtwork.termsOfUse.generatedArtworkAI':
-        'Я подтверждаю, что если какая-либо часть основного и вспомогательных медиафайлов была создана с использованием искусственного интеллекта, я ответил "Да" в поле метаданных "Произведение искусства, созданное AI".',
+        'Я подтверждаю, что если какая-либо часть основного и вспомогательных медиафайлов была создана с использованием искусственного интеллекта, я ответил "Да" в поле метаданных "Генерации ИИ".',
     'studio.consignArtwork.termsOfUse.notMintedOtherBlockchain':
         'Я подтверждаю, что это произведение не чеканилось (mint) на любой другой платформе и/или сети, не предлагается, не подано и не выставляется на продажу на любой другой платформе или сети и не будет отчеканено, предложено, подано или выставлено на продажу, пока листинг активен на этой платформе.',
 

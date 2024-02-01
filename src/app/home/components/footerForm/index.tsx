@@ -24,6 +24,7 @@ export interface FooterFormProps {
 }
 
 export function FooterForm({
+    maxHeight,
     submitText,
     children,
     submitDisabled,
@@ -69,7 +70,9 @@ export function FooterForm({
                 <Container
                     sx={{
                         maxWidth: customizer.isLayout === 'boxed' ? 'lg' : '100%!important',
-                        height: lgUp ? 'calc(100vh - 140px)' : `calc(100vh - ${stepStatus ? '160px' : '140px'})`,
+                        height:
+                            maxHeight ||
+                            (lgUp ? 'calc(100vh - 140px)' : `calc(100vh - ${stepStatus ? '160px' : '140px'})`),
                         overflowY: 'auto',
                         overflowX: 'hidden',
                     }}
@@ -124,7 +127,7 @@ export function FooterForm({
                     display="flex"
                     flexDirection="column"
                     flexGrow={1}
-                    height={70}
+                    height={80}
                     bgcolor={'#EFEFEF'}
                 >
                     {stepNumber ? (
@@ -137,6 +140,7 @@ export function FooterForm({
 
                             <Stack direction="row" alignItems="center" spacing={4} flexDirection="row-reverse">
                                 <Button
+                                    size="large"
                                     disabled={submitDisabled}
                                     type="submit"
                                     style={{ width: 120, marginLeft: '20px' }}
@@ -146,7 +150,11 @@ export function FooterForm({
                                     {submitText || 'Save'}
                                 </Button>
 
-                                <Button onClick={!backPathRouter ? handleBackClick : undefined} variant="text">
+                                <Button
+                                    size="large"
+                                    onClick={!backPathRouter ? handleBackClick : undefined}
+                                    variant="text"
+                                >
                                     <Typography variant="subtitle2" color="GrayText" className="text-hover">
                                         {texts.back}
                                     </Typography>
@@ -162,6 +170,7 @@ export function FooterForm({
                             flexDirection="row-reverse"
                         >
                             <Button
+                                size="large"
                                 disabled={submitDisabled}
                                 type="submit"
                                 style={{ width: 120, marginLeft: '20px' }}

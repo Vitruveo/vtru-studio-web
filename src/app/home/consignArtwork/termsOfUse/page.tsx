@@ -71,7 +71,7 @@ export default function ContractScreen() {
         initialValues,
         onSubmit: async (formValues) => {
             if (JSON.stringify(initialValues) === JSON.stringify(values)) {
-                router.push(`/home/consignArtwork`);
+                router.push(`/home/consignArtwork/auxiliaryMedia`);
             } else {
                 dispatch(
                     contractThunk({
@@ -93,7 +93,7 @@ export default function ContractScreen() {
                                 : checkStatus,
                     })
                 );
-                router.push(`/home/consignArtwork`);
+                router.push(`/home/consignArtwork/auxiliaryMedia`);
             }
         },
     });
@@ -104,7 +104,7 @@ export default function ContractScreen() {
             : 'inProgress';
 
     const handleScroll = useCallback(() => {
-        const tolerance = 1;
+        const tolerance = 2;
         const scrollContainer = scrollContainerRef.current;
 
         if (
@@ -141,66 +141,75 @@ export default function ContractScreen() {
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
+                maxHeight="80vh"
                 submitText={texts.nextButton}
                 stepStatus={checkStatus}
-                stepNumber={5}
+                stepNumber={4}
                 title={texts.consignArtworkTitle}
                 backOnclick={handleOpenBackModal}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
-                <Typography fontSize="1rem" fontWeight="normal" color="GrayText" marginBottom={2}>
+                <Typography fontSize="1.1rem" fontWeight="normal" color="GrayText" marginBottom={2}>
                     {texts.termsOfUseDescription}
                 </Typography>
-                <Box marginBlock={1} alignItems="center" display="flex">
+
+                <Typography marginBottom={2} fontSize="1.2rem" color="grey" fontWeight="500" marginTop={2}>
+                    {texts.termsOfUseTitle}
+                </Typography>
+
+                <Box
+                    mt={4}
+                    marginBottom={3}
+                    ref={scrollContainerRef}
+                    onScroll={handleScroll}
+                    maxHeight={290}
+                    padding={1}
+                    style={{
+                        textAlign: 'justify',
+                        overflowY: 'auto',
+                        border: '1px solid #ccc',
+                    }}
+                >
+                    <Contract />
+                </Box>
+                <Box marginBlock={2} alignItems="flex-start" display="flex">
                     <CustomCheckbox
+                        sx={{ padding: 0, marginRight: 1, marginTop: 0.5 }}
                         checked={values.isOriginal}
                         onChange={(event) => setFieldValue('isOriginal', event.target.checked)}
                     />
-                    <Typography>{texts.isOriginal}</Typography>
+                    <Typography sx={{ padding: 0 }}>{texts.isOriginal}</Typography>
                 </Box>
-                <Box marginBlock={1} alignItems="center" display="flex">
+                <Box marginBlock={2} alignItems="flex-start" display="flex">
                     <CustomCheckbox
+                        sx={{ padding: 0, marginRight: 1, marginTop: 0.5 }}
                         checked={values.generatedArtworkAI}
                         onChange={(event) => setFieldValue('generatedArtworkAI', event.target.checked)}
                     />
                     <Typography>{texts.generatedArtworkAI}</Typography>
                 </Box>
-                <Box marginBlock={1} alignItems="center" display="flex">
+                <Box marginBlock={2} alignItems="flex-start" display="flex">
                     <CustomCheckbox
+                        sx={{ padding: 0, marginRight: 1, marginTop: 0.5 }}
                         checked={values.notMintedOtherBlockchain}
                         onChange={(event) => setFieldValue('notMintedOtherBlockchain', event.target.checked)}
                     />
                     <Typography>{texts.notMintedOtherBlockchain}</Typography>
                 </Box>
-                <Container>
-                    <Box
-                        mt={4}
-                        ref={scrollContainerRef}
-                        onScroll={handleScroll}
-                        maxHeight={300}
-                        padding={1}
-                        style={{
-                            textAlign: 'justify',
-                            overflowY: 'auto',
-                            border: '1px solid #ccc',
-                        }}
+                <Box textAlign="right" mt={4} mb={2}>
+                    <Button
+                        variant="contained"
+                        color={values.contract ? 'success' : 'primary'}
+                        onClick={handleChangeContract}
+                        disabled={!scrolledToBottom && !values.contract}
                     >
-                        <Contract />
-                    </Box>
-                    <Box textAlign="right" mt={4} mb={2}>
-                        <Button
-                            variant="contained"
-                            color={values.contract ? 'success' : 'primary'}
-                            onClick={handleChangeContract}
-                            disabled={!scrolledToBottom && !values.contract}
-                        >
-                            {(language['studio.consignArtwork.termsOfUse.accept.button'] as TranslateFunction)({
-                                contract,
-                                scrolledToBottom,
-                            })}
-                        </Button>
-                    </Box>
-                </Container>
+                        {(language['studio.consignArtwork.termsOfUse.accept.button'] as TranslateFunction)({
+                            contract,
+                            scrolledToBottom,
+                        })}
+                    </Button>
+                </Box>
+
                 <ModalBackConfirm show={showBackModal} handleClose={handleCloseBackModal} yesClick={handleSaveData} />
             </PageContainerFooter>
         </form>

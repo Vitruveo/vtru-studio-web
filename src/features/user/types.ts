@@ -138,6 +138,11 @@ export interface ChangeAvatarReq {
     transactionId?: string;
 }
 
+export interface RequestDeleteAvatarURLReq {
+    path: string;
+    transactionId: string;
+}
+
 export type ChangeAvatarRes = string;
 
 export type UserAddApiRes = APIResponse<UserAddRes>;

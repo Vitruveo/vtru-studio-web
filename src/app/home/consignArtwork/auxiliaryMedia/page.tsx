@@ -29,6 +29,7 @@ export default function AssetMedia() {
     const { language } = useI18n();
 
     const texts = {
+        optional: language['studio.consignArtwork.optional'],
         nextButton: language['studio.consignArtwork.form.next.button'],
         homeTitle: language['studio.home.title'],
         consignArtworkTitle: language['studio.consignArtwork.title'],
@@ -68,8 +69,7 @@ export default function AssetMedia() {
     const { values, errors, setFieldValue, handleSubmit } = useFormik<AssetMediaFormValues>({
         initialValues,
         onSubmit: async (formValues) => {
-            if (JSON.stringify(initialValues) === JSON.stringify(values))
-                router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/assetMetadata`);
+            if (JSON.stringify(initialValues) === JSON.stringify(values)) router.push('/home/consignArtwork');
             else {
                 dispatch(
                     consignArtworkActionsCreators.changeStatusStep({
@@ -81,7 +81,7 @@ export default function AssetMedia() {
                     .filter(([_, value]) => !value.file)
                     .map(([key, _]) => key);
                 if (deleteFormats.length) await dispatch(auxiliaryMediaThunk({ deleteFormats }));
-                router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/assetMetadata`);
+                router.push('/home/consignArtwork');
             }
         },
     });
@@ -141,7 +141,9 @@ export default function AssetMedia() {
         router.push('/home/consignArtwork');
     };
 
-    const checkStepProgress = 'completed';
+    const checkStepProgress = Object.values(asset.mediaAuxiliary.formats).find((v) => v.file)
+        ? 'completed'
+        : 'inProgress';
 
     useEffect(() => {
         dispatch(
@@ -211,21 +213,21 @@ export default function AssetMedia() {
                 backOnclick={handleOpenBackModal}
                 submitText={texts.nextButton}
                 stepStatus={checkStepProgress}
-                stepNumber={2}
+                stepNumber={5}
                 title={texts.consignArtworkTitle}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
 
                 <Stack marginBottom={3} overflow="auto" maxWidth={{ xs: '100%', sm: '100%', md: '100%' }}>
-                    <Typography fontSize="1rem" fontWeight="normal" color="GrayText">
+                    <Typography fontSize="1.1rem" fontWeight="normal" color="GrayText">
                         {texts.assetMediaDescription}
                     </Typography>
-                    <Typography marginBottom={2} fontSize="1.1rem" color="grey" fontWeight="500" marginTop={2}>
+                    <Typography marginBottom={2} fontSize="1.2rem" color="grey" fontWeight="500" marginTop={2}>
                         {texts.assetMediaTitle}
                     </Typography>
 
                     <Box>
-                        <Typography marginTop={2} color="grey" fontSize="1rem" fontWeight="bold">
+                        <Typography marginTop={2} marginBottom={2} color="grey" fontSize="1.1rem" fontWeight="bold">
                             {texts.assetMediaSubTitle}
                         </Typography>
                         <Box display="flex" flexWrap="wrap">

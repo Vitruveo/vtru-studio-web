@@ -7,6 +7,7 @@ export interface CompletedSteps {
         stepName: string;
         status: StepStatus;
         statusName: string;
+        optional?: boolean;
     };
 }
 

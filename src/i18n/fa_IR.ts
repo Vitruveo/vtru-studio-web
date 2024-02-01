@@ -13,7 +13,6 @@ const language: Translation = {
     /* Home */
     'studio.home.wellcome': 'خوش آمدید به',
     'studio.home.title': 'خانه',
-    'studio.home.congrats': 'تبریک می‌گوییم که به عنوان یک هنرمند Genesis Vitruveo انتخاب شده‌اید',
     'studio.home.transforming':
         'ویتروو در حال تحول هنر وب3 است، و این به معنای نرم‌افزارهای کاملاً جدیدی مانند نسخه "آلفا" vtruStudio است. آلفا به معنای آن است که نرم‌افزار به طور کامل آماده نیست و شما به ما کمک می‌کنید تا آن را تست کرده و بهبود بخشیم.',
     'studio.home.software':
@@ -65,6 +64,7 @@ const language: Translation = {
     'studio.consignArtwork.stepName.assetMetadata': 'فهرست دارایی',
     'studio.consignArtwork.stepName.licenses': 'مجوزها',
     'studio.consignArtwork.stepName.termsOfUse': 'شرایط استفاده',
+    'studio.consignArtwork.optional': 'اختیاری',
 
     'studio.consignArtwork.stepStatus.completed': 'تکمیل شده',
     'studio.consignArtwork.stepStatus.inProgress': 'در حال انجام',
@@ -76,7 +76,7 @@ const language: Translation = {
         `${data.status !== 'notStarted' ? 'ویرایش' : 'شروع'}`,
 
     'studio.consignArtwork.publishButton': (data: { status: string }) =>
-        `${data.status === 'published' ? 'منتشر شده' : 'منتشر کنید'}`,
+        `${data.status === 'published' ? 'محول شده' : 'محول کن'}`,
 
     /* Asset Media */
     'studio.consignArtwork.assetMedia.title': 'رسانه دارایی',
@@ -217,7 +217,7 @@ const language: Translation = {
     'studio.consignArtwork.termsOfUse.isOriginal':
         'با اینکه اینجانب تصدیق می‌کنم که فایل‌های رسانه دارایی و رسانه کمکی اثرات اصیل و اصلی هستند و توسط خالقان مشخص شده در ارسال متادیتا ایجاد شده‌اند و از هیچ منبع دیگری کپی، سرقت یا دزدی نشده‌اند.',
     'studio.consignArtwork.termsOfUse.generatedArtworkAI':
-        'با اینکه اینجانب تصدیق می‌کنم که هر قسمت از فایل‌های رسانه دارایی و رسانه کمکی با استفاده از هوش مصنوعی ایجاد شده‌اند، من در فیلد متادیتا برای "آثار هنری تولید شده توسط هوش مصنوعی" به سوال "بله" پاسخ داده‌ام.',
+        'من با این توافق موافقم که در صورتی که هر قسمت از فایل‌های دارایی و رسانه های کمکی با استفاده از هوش مصنوعی ایجاد شده باشد، در فیلد متادیتا برای "تولید هوش مصنوعی" پاسخ "بله" داده‌ام.',
     'studio.consignArtwork.termsOfUse.notMintedOtherBlockchain':
         'با اینکه اینجانب تصدیق می‌کنم که این اثر در هیچ بلاکچین دیگری ساخته نشده، ارائه شده، قرارداد داده شده یا در هیچ پلتفرم دیگری برای فروش قرار داده نشده است و تا زمانی که لیست فعال است در این پلتفرم ساخته یا فروخته نخواهد شد.',
 

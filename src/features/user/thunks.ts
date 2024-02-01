@@ -13,6 +13,8 @@ import {
     verifyCode,
     changeAvatar,
     generalStorage,
+    deleteAvatar,
+    requestDeleteAvatarURL,
 } from './requests';
 import { userActionsCreators } from './slice';
 import {
@@ -181,6 +183,11 @@ export function saveStepWizardThunk(payload: SaveStepWizardReq): ReduxThunkActio
 
 export function changeAvatarThunk(payload: ChangeAvatarReq): ReduxThunkAction<Promise<ChangeAvatarApiRes>> {
     return async function (dispatch, getState) {
+        const avatar = getState().user?.profile?.avatar;
+        if (avatar && (payload.fileId === '' || payload.fileId !== avatar)) {
+            requestDeleteAvatarURL({ path: avatar, transactionId: nanoid() });
+        }
+
         const response = await changeAvatar({
             fileId: payload.fileId,
         });

@@ -1,16 +1,27 @@
-import axios from 'axios';
-
 import {
     Asset,
     AssetSendRequestUploadApiRes,
     AssetSendRequestUploadReq,
     AssetStorageReq,
     GetAssetApiRes,
+    RequestDeleteURLReq,
     UpdateAssetStepApiRes,
     UpdateAssetStepReq,
 } from './types';
 import { apiService } from '@/services/api';
 import { assetActionsCreators } from './slice';
+
+export async function requestDeleteURL(data: RequestDeleteURLReq): Promise<any> {
+    const res = await apiService.delete('/assets/request/deleteFile', data);
+    return res;
+}
+
+export async function deleteAssetStorage(url: string): Promise<any> {
+    const res = await fetch(url, {
+        method: 'DELETE',
+    });
+    return res;
+}
 
 export async function assetStorage({ file, url, dispatch, transactionId }: AssetStorageReq): Promise<any> {
     return new Promise((resolve, reject) => {

@@ -9,4 +9,5 @@ export interface PreSignedURLPayload {
     transactionId: string;
     path: string;
     origin: 'asset' | 'profile';
+    method: 'PUT' | 'DELETE';
 }

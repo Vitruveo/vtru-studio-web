@@ -13,7 +13,6 @@ const language: Translation = {
     /* Home */
     'studio.home.wellcome': 'Wellcome to',
     'studio.home.title': 'Home',
-    'studio.home.congrats': 'Congrats on being selected as a Vitruveo Genesis Artist',
     'studio.home.transforming':
         'Vitruveo is transforming Web3 art, and that means all-new software like this “Alpha” version of vtruStudio. Alpha means the software is not fully ready and you’re helping us test it so it can be improved.',
     'studio.home.software': 'The software currently has two features you can access with the buttons below:',
@@ -58,12 +57,14 @@ const language: Translation = {
     /* Consign Artwork */
     'studio.consignArtwork.form.next.button': 'Next',
     'studio.consignArtwork.title': 'Consign Artwork',
-    'studio.consignArtwork.subtitle': 'Complete all tasks and publish your artwork',
+    'studio.consignArtwork.subtitle': 'Complete all required tasks and publish your artwork',
 
     'studio.consignArtwork.stepName.assetMedia': 'Asset Media',
     'studio.consignArtwork.stepName.assetMetadata': 'Asset Metadata',
     'studio.consignArtwork.stepName.licenses': 'Licenses',
     'studio.consignArtwork.stepName.termsOfUse': 'Terms of Use',
+    'studio.consignArtwork.stepName.auxiliaryMedia': 'Auxiliary Media',
+    'studio.consignArtwork.optional': 'optional',
 
     'studio.consignArtwork.stepStatus.completed': 'Completed',
     'studio.consignArtwork.stepStatus.inProgress': 'In Progress',
@@ -75,7 +76,7 @@ const language: Translation = {
         `${data.status !== 'notStarted' ? 'Edit' : 'Start'}`,
 
     'studio.consignArtwork.publishButton': (data: { status: string }) =>
-        `${data.status === 'published' ? 'Published' : 'Publish'}`,
+        `${data.status === 'published' ? 'Consigned' : 'Consign'}`,
 
     /* Asset Media */
     'studio.consignArtwork.assetMedia.title': 'Asset Media',
@@ -136,7 +137,6 @@ const language: Translation = {
     'studio.consignArtwork.assetMedia.videoTypes': 'Video: MP4, WEBM',
 
     /* Auxiliary Media */
-    'studio.consignArtwork.stepName.auxiliaryMedia': 'Auxiliary Media',
     'studio.consignArtwork.auxiliaryMedia.description':
         'Upload auxiliary media assets for Behind-the-scenes (BTS) and Augmented Reality (AR).',
     'studio.consignArtwork.auxiliaryMedia.title': 'Auxiliary Media',
@@ -220,13 +220,13 @@ const language: Translation = {
 
     /* Terms of Use */
     'studio.consignArtwork.termsOfUse.title': 'Terms of Use',
-    'studio.consignArtwork.termsOfUse.description': 'Complete all tasks and publish your artwork',
+    'studio.consignArtwork.termsOfUse.description': 'Complete all required tasks and publish your artwork',
     'studio.consignArtwork.termsOfUse.accept.button': (data: { contract: boolean; scrolledToBottom: boolean }) =>
         data.contract ? 'Contract accepted' : data.scrolledToBottom ? 'Accept Contract' : 'Scroll to the End',
     'studio.consignArtwork.termsOfUse.isOriginal':
         'I hereby agree that the Asset and Auxiliary Media files are original, authentic works that have been created by the creators indicated in the metadata submission and not copied, stolen, or plagiarized from any other source.',
     'studio.consignArtwork.termsOfUse.generatedArtworkAI':
-        'I hereby agree that if any portion of the Asset and Auxiliary Media files were created using Artificial Intelligence, I have answered "Yes" in the Metadata field for "AI-Generated Artwork."',
+        'I hereby agree that if any portion of the Asset and Auxiliary Media files were created using Artificial Intelligence, I have answered "Yes" in the Metadata field for "AI Generation."',
     'studio.consignArtwork.termsOfUse.notMintedOtherBlockchain':
         'I hereby agree that this work is not minted on any other blockchain, offered, consigned, or listed for sale on any other platform, and will not be minted, offered, consigned, or listed as long as the listing is active on this platform.',
 

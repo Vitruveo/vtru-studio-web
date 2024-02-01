@@ -75,6 +75,11 @@ export interface AssetStorageReq {
     dispatch: any;
 }
 
+export interface RequestDeleteURLReq {
+    path: string;
+    transactionId: string;
+}
+
 export interface UpdateAssetStepReq {}
 
 export type UpdateAssetStepApiRes = APIResponse<string>;

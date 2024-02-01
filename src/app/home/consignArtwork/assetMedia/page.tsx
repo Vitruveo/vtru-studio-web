@@ -71,7 +71,7 @@ export default function AssetMedia() {
         initialValues,
         onSubmit: async (formValues) => {
             if (JSON.stringify(initialValues) === JSON.stringify(values))
-                router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/auxiliaryMedia`);
+                router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/assetMetadata`);
             else {
                 dispatch(
                     consignArtworkActionsCreators.changeStatusStep({
@@ -88,7 +88,7 @@ export default function AssetMedia() {
                     .filter(([_, value]) => !value.file)
                     .map(([key, _]) => key);
                 if (deleteFormats.length) await dispatch(assetMediaThunk({ deleteFormats }));
-                router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/auxiliaryMedia`);
+                router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/assetMetadata`);
             }
         },
     });
@@ -242,10 +242,10 @@ export default function AssetMedia() {
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
 
                 <Stack marginBottom={3} overflow="auto" maxWidth={{ xs: '100%', sm: '100%', md: '100%' }}>
-                    <Typography fontSize="1rem" fontWeight="normal" color="GrayText">
+                    <Typography fontSize="1.1rem" fontWeight="normal" color="GrayText">
                         {texts.assetMediaDescription}
                     </Typography>
-                    <Typography marginBottom={2} fontSize="1.1rem" color="grey" fontWeight="500" marginTop={2}>
+                    <Typography marginBottom={2} fontSize="1.2rem" color="grey" fontWeight="500" marginTop={2}>
                         {texts.assetMediaTitle}
                     </Typography>
                     {urlAssetFile && (

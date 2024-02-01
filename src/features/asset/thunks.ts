@@ -1,5 +1,11 @@
-import { assetStorage, updateAssetStep, getAsset, sendRequestUpload } from './requests';
-import { AssetSendRequestUploadApiRes, AssetSendRequestUploadReq, AssetStatus, AssetStorageReq } from './types';
+import { assetStorage, updateAssetStep, getAsset, sendRequestUpload, requestDeleteURL } from './requests';
+import {
+    AssetSendRequestUploadApiRes,
+    AssetSendRequestUploadReq,
+    AssetStatus,
+    AssetStorageReq,
+    RequestDeleteURLReq,
+} from './types';
 import { ReduxThunkAction } from '@/store';
 import { assetActionsCreators } from './slice';
 import { FormatMediaSave, FormatsMedia } from '@/app/home/consignArtwork/assetMedia/types';
@@ -9,6 +15,14 @@ import { consignArtworkActionsCreators } from '../consignArtwork/slice';
 import { ASSET_STORAGE_URL } from '@/constants/asset';
 import { SectionFormatType, SectionsFormData } from '@/app/home/consignArtwork/assetMetadata/page';
 import { FormatsAuxiliayMedia } from '@/app/home/consignArtwork/auxiliaryMedia/types';
+import { nanoid } from '@reduxjs/toolkit';
+
+export function requestDeleteURLThunk(payload: RequestDeleteURLReq): ReduxThunkAction<Promise<any>> {
+    return async function (dispatch, getState) {
+        const response = await requestDeleteURL(payload);
+        return response;
+    };
+}
 
 export function assetStorageThunk(payload: Omit<AssetStorageReq, 'dispatch'>): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
@@ -118,11 +132,13 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
                     }, {} as FormatsAuxiliayMedia);
 
                     dispatch(assetActionsCreators.changeFormatsMediaAuxiliary({ formats: formatAssetsFormats }));
+                    dispatch(
+                        consignArtworkActionsCreators.changeStatusStep({
+                            stepId: 'auxiliaryMedia',
+                            status: 'completed',
+                        })
+                    );
                 }
-
-                dispatch(
-                    consignArtworkActionsCreators.changeStatusStep({ stepId: 'auxiliaryMedia', status: 'completed' })
-                );
             }
 
             return response;
@@ -138,6 +154,20 @@ export function auxiliaryMediaThunk(payload: {
 }): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
         const formatsState = getState().asset.mediaAuxiliary.formats;
+
+        if (payload.deleteFormats && payload.deleteFormats.length) {
+            await Promise.all(
+                payload.deleteFormats.map(async (key) => {
+                    const format = formatsState[key as keyof typeof formatsState];
+                    if (format.file) {
+                        await requestDeleteURL({
+                            path: (format.file as string).replace(`${ASSET_STORAGE_URL}/`, ''),
+                            transactionId: nanoid(),
+                        });
+                    }
+                })
+            );
+        }
 
         const formatsPersist = Object.entries(formatsState)
             .filter(([key, value]) => value.file)
@@ -183,6 +213,20 @@ export function assetMediaThunk(payload: {
 }): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
         const formatsState = getState().asset.formats;
+
+        if (payload.deleteFormats && payload.deleteFormats.length) {
+            await Promise.all(
+                payload.deleteFormats.map(async (key) => {
+                    const format = formatsState[key as keyof typeof formatsState];
+                    if (format.file) {
+                        await requestDeleteURL({
+                            path: (format.file as string).replace(`${ASSET_STORAGE_URL}/`, ''),
+                            transactionId: nanoid(),
+                        });
+                    }
+                })
+            );
+        }
 
         const formatsPersist = Object.entries(formatsState)
             .filter(([key, value]) => value.file)

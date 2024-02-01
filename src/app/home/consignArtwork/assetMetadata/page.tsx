@@ -197,15 +197,15 @@ export default function AssetMetadata() {
             <PageContainerFooter
                 submitText={texts.nextButton}
                 stepStatus={status}
-                stepNumber={3}
+                stepNumber={2}
                 title={texts.consignArtworkTitle}
                 backOnclick={handleOpenBackModal}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
-                <Typography fontSize="1rem" fontWeight="normal" color="GrayText">
+                <Typography fontSize="1.1rem" fontWeight="normal" color="GrayText">
                     {texts.assetMetadataDescription}
                 </Typography>
-                <Typography marginTop={2} fontSize="1.1rem" color="grey" fontWeight="500">
+                <Typography marginTop={2} fontSize="1.2rem" color="grey" fontWeight="500">
                     {texts.assetMetadataTitle}
                 </Typography>
                 <Box marginBottom={5} maxWidth={500} mt={2} alignItems="center">

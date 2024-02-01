@@ -4,6 +4,8 @@ import webSocketService from '@/services/websocket';
 import { TOKEN_CREATORS } from '@/constants/ws';
 import { assetActionsCreators } from '../asset/slice';
 import { PreSignedURLPayload } from './types';
+import { deleteAssetStorage } from '../asset/requests';
+import { deleteAvatar } from '../user/requests';
 
 export function connectWebSocketThunk(): ReduxThunkAction {
     return async function (dispatch, getState) {
@@ -22,24 +24,30 @@ export function loginWebSocketThunk(): ReduxThunkAction {
         });
 
         webSocketService.on('preSignedURL', (data: PreSignedURLPayload) => {
-            if (data.origin === 'asset')
-                dispatch(
-                    assetActionsCreators.requestAssetUpload({
-                        url: data.preSignedURL,
-                        transactionId: data.transactionId,
-                        path: data.path,
-                        status: 'ready',
-                    })
-                );
-            if (data.origin === 'profile') {
-                dispatch(
-                    userActionsCreators.requestAvatarUpload({
-                        url: data.preSignedURL,
-                        transactionId: data.transactionId,
-                        path: data.path,
-                        status: 'ready',
-                    })
-                );
+            if (data.method === 'PUT') {
+                if (data.origin === 'asset')
+                    dispatch(
+                        assetActionsCreators.requestAssetUpload({
+                            url: data.preSignedURL,
+                            transactionId: data.transactionId,
+                            path: data.path,
+                            status: 'ready',
+                        })
+                    );
+                if (data.origin === 'profile') {
+                    dispatch(
+                        userActionsCreators.requestAvatarUpload({
+                            url: data.preSignedURL,
+                            transactionId: data.transactionId,
+                            path: data.path,
+                            status: 'ready',
+                        })
+                    );
+                }
+            }
+            if (data.method === 'DELETE') {
+                if (data.origin === 'asset') deleteAssetStorage(data.preSignedURL);
+                if (data.origin === 'profile') deleteAvatar(data.preSignedURL);
             }
         });
     };

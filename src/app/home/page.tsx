@@ -24,7 +24,6 @@ export default function Home() {
     const texts = {
         title: language['studio.home.title'],
         welcome: language['studio.home.wellcome'],
-        congrats: language['studio.home.congrats'],
         transform: language['studio.home.transforming'],
         software: language['studio.home.software'],
         consign: language['studio.home.consign'],
@@ -46,11 +45,6 @@ export default function Home() {
                     <Box>
                         <Typography variant="h2" display="inline">
                             {texts.welcome} <VtruTitle vtru="h3" studio="h2" copyRem="3rem" />
-                        </Typography>
-                    </Box>
-                    <Box marginTop={4}>
-                        <Typography variant="h4" color="primary">
-                            {texts.congrats} 🎉
                         </Typography>
                     </Box>
                     <Box marginTop={4}>
