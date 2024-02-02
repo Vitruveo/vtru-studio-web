@@ -15,6 +15,7 @@ export interface Wallet {
 export interface User {
     _id: string;
     name: string;
+    notify: string;
     username: string;
     login: {
         email: string;

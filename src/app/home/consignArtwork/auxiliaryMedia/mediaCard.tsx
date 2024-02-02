@@ -13,8 +13,9 @@ import { useI18n } from '@/app/hooks/useI18n';
 import { TranslateFunction } from '@/i18n/types';
 import { handleGetFileType, handleGetFileWidthAndHeight } from '../assetMedia/helpers';
 import UploadProgressBar from '../components/uploadProgress';
-import { useSelector } from '@/store/hooks';
+import { useDispatch, useSelector } from '@/store/hooks';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
+import { userActionsCreators } from '@/features/user/slice';
 
 interface MediaCardProps {
     formatType: string;
@@ -58,8 +59,11 @@ export default function MediaCard({
     const [mediaHeight, setMediaHeight] = useState(0);
 
     const { language } = useI18n();
+    const dispatch = useDispatch();
 
     const upload = useSelector((state) => state.asset.requestAssetUpload);
+    const notify = useSelector((state) => state.user.notify);
+
     const fileStatus = formatValue.transactionId ? upload[formatValue.transactionId] : undefined;
 
     const mediaConfig = mediaConfigs[formatType as keyof typeof mediaConfigs] || {};
@@ -155,6 +159,18 @@ export default function MediaCard({
             })();
         }
     }, [formatValue.file]);
+
+    useEffect(() => {
+        if (notify === 'deleteAsset') {
+            setFieldValue(`formats.codeZip`, { file: undefined, customFile: undefined });
+            setToastr({
+                message: 'Media deleted due to containing unauthorized content.',
+                open: true,
+                type: 'warning',
+            });
+            dispatch(userActionsCreators.change({ notify: '' }));
+        }
+    }, [notify]);
 
     return (
         <Box marginLeft={1} width={150}>

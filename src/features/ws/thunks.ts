@@ -3,9 +3,10 @@ import { userActionsCreators } from '../user/slice';
 import webSocketService from '@/services/websocket';
 import { TOKEN_CREATORS } from '@/constants/ws';
 import { assetActionsCreators } from '../asset/slice';
-import { PreSignedURLPayload } from './types';
+import { PreSignedURLPayload, NotifyEnvelope } from './types';
 import { deleteAssetStorage } from '../asset/requests';
 import { deleteAvatar } from '../user/requests';
+import { auxiliaryMediaThunk } from '../asset/thunks';
 
 export function connectWebSocketThunk(): ReduxThunkAction {
     return async function (dispatch, getState) {
@@ -48,6 +49,13 @@ export function loginWebSocketThunk(): ReduxThunkAction {
             if (data.method === 'DELETE') {
                 if (data.origin === 'asset') deleteAssetStorage(data.preSignedURL);
                 if (data.origin === 'profile') deleteAvatar(data.preSignedURL);
+            }
+        });
+
+        webSocketService.on('userNotification', (data: NotifyEnvelope) => {
+            if (data?.notification?.messageType === 'deleteAsset') {
+                dispatch(userActionsCreators.change({ notify: 'deleteAsset' }));
+                dispatch(auxiliaryMediaThunk({ deleteFormats: ['codeZip'] }));
             }
         });
     };

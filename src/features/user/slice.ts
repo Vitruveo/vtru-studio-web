@@ -6,6 +6,7 @@ import { UserSliceState } from './types';
 const initialState: UserSliceState = {
     _id: '',
     token: '',
+    notify: '',
     username: '',
     name: '',
     login: {
@@ -47,6 +48,7 @@ export const userSlice = createSlice({
             state.status = `succeeded: ${action.type}`;
             state.login.email = action.payload.email;
         },
+
         otpConfirm: (state, action) => {
             const { token, creator } = action.payload.data;
             state.status = `succeeded: ${action.type}`;

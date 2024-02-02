@@ -11,3 +11,11 @@ export interface PreSignedURLPayload {
     origin: 'asset' | 'profile';
     method: 'PUT' | 'DELETE';
 }
+
+export interface NotifyEnvelope {
+    notification: {
+        creatorId: string;
+        fileName: string;
+        messageType: string;
+    };
+}
