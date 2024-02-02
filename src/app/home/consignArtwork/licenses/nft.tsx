@@ -11,7 +11,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const values = allValues.nft || {};
 
     const handleAdded = (added: boolean) => {
-        if (added == false) setFieldValue('editionOption', '');
+        if (added == false) setFieldValue('nft.editionOption', '');
         setFieldValue('nft.added', added);
     };
 
