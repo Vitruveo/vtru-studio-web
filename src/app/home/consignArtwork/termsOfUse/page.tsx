@@ -203,7 +203,7 @@ export default function ContractScreen() {
                         disabled={!scrolledToBottom && !values.contract}
                     >
                         {(language['studio.consignArtwork.termsOfUse.accept.button'] as TranslateFunction)({
-                            contract,
+                            contract: values.contract,
                             scrolledToBottom,
                         })}
                     </Button>

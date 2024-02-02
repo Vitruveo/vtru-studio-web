@@ -163,6 +163,14 @@ export default function SelectMedia({
                         <Typography sx={{ fontSize: { xs: '1rem', sm: '1rem', md: '1rem' } }} variant="h6">
                             {texts.dragAndDrop}
                         </Typography>
+
+                        <Typography
+                            marginTop={2}
+                            sx={{ fontSize: { xs: '1rem', sm: '1rem', md: '1rem' } }}
+                            variant="h6"
+                        >
+                            Drag and drop a single media asset file or click to upload your original artwork.
+                        </Typography>
                         <Typography
                             sx={{ fontSize: { xs: '1rem', sm: '1rem', md: '1rem' } }}
                             marginTop={2}

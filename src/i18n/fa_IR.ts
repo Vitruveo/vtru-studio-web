@@ -213,7 +213,7 @@ const language: Translation = {
     'studio.consignArtwork.termsOfUse.title': 'شرایط استفاده',
     'studio.consignArtwork.termsOfUse.description': 'تمام وظایف مورد نیاز را انجام دهید و اثر هنری خود را امضاء کنید',
     'studio.consignArtwork.termsOfUse.accept.button': (data: { contract: boolean; scrolledToBottom: boolean }) =>
-        data.contract ? 'قرارداد پذیرفته شده' : data.scrolledToBottom ? 'پذیرفتن قرارداد' : 'به انتها بروید',
+        data.contract ? 'قرارداد' : data.scrolledToBottom ? 'پذیرفتن قرارداد' : 'به انتها بروید',
     'studio.consignArtwork.termsOfUse.isOriginal':
         'با اینکه اینجانب تصدیق می‌کنم که فایل‌های رسانه دارایی و رسانه کمکی اثرات اصیل و اصلی هستند و توسط خالقان مشخص شده در ارسال متادیتا ایجاد شده‌اند و از هیچ منبع دیگری کپی، سرقت یا دزدی نشده‌اند.',
     'studio.consignArtwork.termsOfUse.generatedArtworkAI':

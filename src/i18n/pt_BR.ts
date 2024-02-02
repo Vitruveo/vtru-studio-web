@@ -211,7 +211,7 @@ const language: Translation = {
     'studio.consignArtwork.termsOfUse.title': 'Termos de Uso',
     'studio.consignArtwork.termsOfUse.description': 'Complete todas as tarefas e publique sua obra de arte',
     'studio.consignArtwork.termsOfUse.accept.button': (data: { contract: boolean; scrolledToBottom: boolean }) =>
-        data.contract ? 'Contrato aceito' : data.scrolledToBottom ? 'Aceitar Contrato' : 'Role até o final',
+        data.contract ? 'Aceito' : data.scrolledToBottom ? 'Aceitar Contrato' : 'Role até o final',
     'studio.consignArtwork.termsOfUse.isOriginal':
         'Eu concordo que o Ativo e os arquivos de Mídia Auxiliar são obras originais e autênticas que foram criadas pelos criadores indicados na submissão de metadados e não foram copiados, roubados ou plagiados de qualquer outra fonte.',
     'studio.consignArtwork.termsOfUse.generatedArtworkAI':

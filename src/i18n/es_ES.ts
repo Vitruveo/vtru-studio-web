@@ -215,7 +215,7 @@ const language: Translation = {
     'studio.consignArtwork.termsOfUse.title': 'Términos de Uso',
     'studio.consignArtwork.termsOfUse.description': 'Completa todas las tareas requeridas y consigna tu obra de arte',
     'studio.consignArtwork.termsOfUse.accept.button': (data: { contract: boolean; scrolledToBottom: boolean }) =>
-        data.contract ? 'Contrato aceptado' : data.scrolledToBottom ? 'Aceptar Contrato' : 'Desplázate hasta el final',
+        data.contract ? 'Aceptado' : data.scrolledToBottom ? 'Aceptar Contrato' : 'Desplázate hasta el final',
     'studio.consignArtwork.termsOfUse.isOriginal':
         'Por la presente, confirmo que los archivos del Activo y los Medios Auxiliares son obras originales y auténticas que han sido creadas por los creadores indicados en la presentación de metadatos y no copiadas, robadas o plagiadas de ninguna otra fuente.',
     'studio.consignArtwork.termsOfUse.generatedArtworkAI':

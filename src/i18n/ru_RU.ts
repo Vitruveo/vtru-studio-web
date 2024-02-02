@@ -214,7 +214,7 @@ const language: Translation = {
     'studio.consignArtwork.termsOfUse.description':
         'Выполните все необходимые задачи и передайте свое произведение искусства',
     'studio.consignArtwork.termsOfUse.accept.button': (data: { contract: boolean; scrolledToBottom: boolean }) =>
-        data.contract ? 'Договор принят' : data.scrolledToBottom ? 'Принять договор' : 'Прокрутите до конца',
+        data.contract ? 'принят' : data.scrolledToBottom ? 'Принять договор' : 'Прокрутите до конца',
     'studio.consignArtwork.termsOfUse.isOriginal':
         'Я подтверждаю, что основной и вспомогательные медиафайлы являются оригинальными, подлинными работами, созданными указанными в метаданных создателями, и не скопированы или украдены (не являются плагиатом) из какого-либо другого источника.',
     'studio.consignArtwork.termsOfUse.generatedArtworkAI':

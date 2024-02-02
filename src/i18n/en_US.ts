@@ -222,7 +222,7 @@ const language: Translation = {
     'studio.consignArtwork.termsOfUse.title': 'Terms of Use',
     'studio.consignArtwork.termsOfUse.description': 'Complete all required tasks and consign your artwork',
     'studio.consignArtwork.termsOfUse.accept.button': (data: { contract: boolean; scrolledToBottom: boolean }) =>
-        data.contract ? 'Contract accepted' : data.scrolledToBottom ? 'Accept Contract' : 'Scroll to the End',
+        data.contract ? 'Accepted' : data.scrolledToBottom ? 'Accept Contract' : 'Scroll to the End',
     'studio.consignArtwork.termsOfUse.isOriginal':
         'I hereby agree that the Asset and Auxiliary Media files are original, authentic works that have been created by the creators indicated in the metadata submission and not copied, stolen, or plagiarized from any other source.',
     'studio.consignArtwork.termsOfUse.generatedArtworkAI':
