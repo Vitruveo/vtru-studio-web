@@ -133,7 +133,7 @@ const language: Translation = {
     }) =>
         `— اندازه فایل رسانه برای یک تصویر ${data.definition} (${data.format}) نمی‌تواند از ${data.sizeError} بیشتر باشد`,
 
-    'studio.consignArtwork.assetMedia.dragAndDrop': 'یک فایل رسانه‌ای را بکشید و رها کنید یا برای آپلود کلیک کنید.',
+    'studio.consignArtwork.assetMedia.dragAndDrop': 'بارگذاری اثر هنری اصلی',
     'studio.consignArtwork.assetMedia.imageTypes': 'تصویر: JPEG، PNG، GIF، SVG، WEBP',
     'studio.consignArtwork.assetMedia.videoTypes': 'ویدئو: MP4، WEBM',
 

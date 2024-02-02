@@ -136,8 +136,7 @@ const language: Translation = {
     }) =>
         `— El tamaño del archivo de medios para una imagen ${data.definition} (${data.format}) no puede exceder ${data.sizeError}`,
 
-    'studio.consignArtwork.assetMedia.dragAndDrop':
-        'Arrastra y suelta un solo archivo de medios o haz clic para subir.',
+    'studio.consignArtwork.assetMedia.dragAndDrop': 'CARGA DE OBRA DE ARTE ORIGINAL',
     'studio.consignArtwork.assetMedia.imageTypes': 'Imagen: JPEG, PNG, GIF, SVG, WEBP',
     'studio.consignArtwork.assetMedia.videoTypes': 'Video: MP4, WEBM',
 

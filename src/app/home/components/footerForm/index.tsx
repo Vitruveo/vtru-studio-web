@@ -116,7 +116,6 @@ export function FooterForm({
                             <Typography fontSize="0.9rem" display="inline" fontWeight={600}>
                                 {texts.inProgress}
                             </Typography>{' '}
-                            {texts.notYet}
                         </Typography>
                     </Box>
                 )}

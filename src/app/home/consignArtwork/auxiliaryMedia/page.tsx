@@ -227,10 +227,10 @@ export default function AssetMedia() {
                     </Typography>
 
                     <Box>
-                        <Typography marginTop={3} marginBottom={2} color="grey" fontSize="1.1rem" fontWeight="bold">
+                        {/* <Typography marginTop={3} marginBottom={2} color="grey" fontSize="1.1rem" fontWeight="bold">
                             {texts.assetMediaSubTitle}
-                        </Typography>
-                        <Box display="flex" flexWrap="wrap">
+                        </Typography> */}
+                        <Box marginTop={1} display="flex" flexWrap="wrap">
                             {Object.entries(values.formats).map(([formatType, value], index) => (
                                 <Box style={{ marginRight: '10px' }} key={index}>
                                     <MediaCard

@@ -132,7 +132,7 @@ const language: Translation = {
         sizeError: string;
     }) => `— The media file size for a ${data.definition} Image (${data.format}) cannot exceed ${data.sizeError}`,
 
-    'studio.consignArtwork.assetMedia.dragAndDrop': 'Drag and drop a single media asset file or click to upload.',
+    'studio.consignArtwork.assetMedia.dragAndDrop': 'ORIGINAL ARTWORK UPLOAD',
     'studio.consignArtwork.assetMedia.imageTypes': 'Image: JPEG, PNG, GIF, SVG, WEBP',
     'studio.consignArtwork.assetMedia.videoTypes': 'Video: MP4, WEBM',
 
@@ -239,7 +239,7 @@ const language: Translation = {
     'studio.sidebar.consign': 'Consign Artwork',
 
     /* Footer */
-    'studio.footer.thisStep': 'This step has been',
+    'studio.footer.thisStep': 'This step is in',
     'studio.footer.completed': 'Completed',
     'studio.footer.inProgress': 'In Progress',
     'studio.footer.notYet': 'and is not yet complete',

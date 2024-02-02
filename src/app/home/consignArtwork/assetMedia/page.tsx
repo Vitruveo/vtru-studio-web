@@ -268,13 +268,13 @@ export default function AssetMedia() {
                                 </Box>
                             )}
 
-                            <Typography marginTop={2} color="grey" fontSize="1rem" fontWeight="bold">
+                            {/* <Typography marginTop={2} color="grey" fontSize="1rem" fontWeight="bold">
                                 {(language['studio.consignArtwork.assetMedia.definition'] as TranslateFunction)({
                                     definition: values.definition,
                                 })}{' '}
                                 {texts.assets}
-                            </Typography>
-                            <Box display="flex" flexWrap="wrap">
+                            </Typography> */}
+                            <Box marginTop={1} display="flex" flexWrap="wrap">
                                 {Object.entries(values.formats).map(([formatType, value], index) => (
                                     <Box style={{ marginRight: '10px' }} key={index}>
                                         <MediaCard

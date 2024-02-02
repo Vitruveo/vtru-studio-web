@@ -132,7 +132,7 @@ const language: Translation = {
     }) =>
         `— Размер медиафайла для ${data.definition} изображения (${data.format}) не может превышать ${data.sizeError}`,
 
-    'studio.consignArtwork.assetMedia.dragAndDrop': 'Перетащите один медиафайл или нажмите, чтобы загрузить.',
+    'studio.consignArtwork.assetMedia.dragAndDrop': 'ЗАГРУЗКА ОРИГИНАЛЬНОГО ИЗОБРАЖЕНИЯ',
     'studio.consignArtwork.assetMedia.imageTypes': 'Изображение: JPEG, PNG, GIF, SVG, WEBP',
     'studio.consignArtwork.assetMedia.videoTypes': 'Видео: MP4, WEBM',
 
