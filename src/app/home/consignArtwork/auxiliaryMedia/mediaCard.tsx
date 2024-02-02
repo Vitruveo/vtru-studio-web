@@ -81,13 +81,9 @@ export default function MediaCard({
             });
             if (fileRejections.length > 0) return;
             const file = acceptedFiles[0];
-            if (mediaConfig.type === 'Image') {
-                setMediaCrop(acceptedFiles[0]);
-                setShowCrop(true);
-            } else {
-                handleUploadFile({ formatUpload: formatType, file });
-                setFieldValue(`formats.${formatType}.file`, file);
-            }
+
+            handleUploadFile({ formatUpload: formatType, file });
+            setFieldValue(`formats.${formatType}.file`, file);
         },
         [setFieldValue]
     );
