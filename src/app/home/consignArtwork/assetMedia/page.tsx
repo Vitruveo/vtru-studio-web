@@ -241,12 +241,12 @@ export default function AssetMedia() {
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
 
-                <Stack marginBottom={3} overflow="auto" maxWidth={{ xs: '100%', sm: '100%', md: '100%' }}>
-                    <Typography fontSize="1.1rem" fontWeight="normal" color="GrayText">
-                        {texts.assetMediaDescription}
-                    </Typography>
-                    <Typography marginBottom={2} fontSize="1.2rem" color="grey" fontWeight="500" marginTop={2}>
+                <Stack overflow="auto" maxWidth={{ xs: '100%', sm: '100%', md: '100%' }}>
+                    <Typography marginBottom={2} fontSize="1.2rem" fontWeight="500">
                         {texts.assetMediaTitle}
+                    </Typography>
+                    <Typography marginBottom={2} fontSize="1.1rem" fontWeight="normal" color="GrayText">
+                        {texts.assetMediaDescription}
                     </Typography>
                     {urlAssetFile && (
                         <Box>

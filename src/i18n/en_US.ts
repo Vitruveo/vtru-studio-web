@@ -57,7 +57,7 @@ const language: Translation = {
     /* Consign Artwork */
     'studio.consignArtwork.form.next.button': 'Next',
     'studio.consignArtwork.title': 'Consign Artwork',
-    'studio.consignArtwork.subtitle': 'Complete all required tasks and publish your artwork',
+    'studio.consignArtwork.subtitle': 'Complete all required tasks and consign your artwork',
 
     'studio.consignArtwork.stepName.assetMedia': 'Asset Media',
     'studio.consignArtwork.stepName.assetMetadata': 'Asset Metadata',
@@ -220,7 +220,7 @@ const language: Translation = {
 
     /* Terms of Use */
     'studio.consignArtwork.termsOfUse.title': 'Terms of Use',
-    'studio.consignArtwork.termsOfUse.description': 'Complete all required tasks and publish your artwork',
+    'studio.consignArtwork.termsOfUse.description': 'Complete all required tasks and consign your artwork',
     'studio.consignArtwork.termsOfUse.accept.button': (data: { contract: boolean; scrolledToBottom: boolean }) =>
         data.contract ? 'Contract accepted' : data.scrolledToBottom ? 'Accept Contract' : 'Scroll to the End',
     'studio.consignArtwork.termsOfUse.isOriginal':

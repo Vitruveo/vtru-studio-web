@@ -1,17 +1,18 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { FileRejection, useDropzone } from 'react-dropzone';
 import Img from 'next/image';
 import { IconTrash } from '@tabler/icons-react';
 import { Box, SvgIcon, Typography, IconButton, Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { AssetMediaFormErros, AssetMediaFormValues, FormatMedia } from './types';
 import Crop from '../components/crop';
-import { getFileSize, handleGetFileType, handleGetFileWidthAndHeight, mediaConfigs } from './helpers';
+import { formatFileSize, getFileSize, handleGetFileType, handleGetFileWidthAndHeight, mediaConfigs } from './helpers';
 import ModalError from './modalError';
 import { useI18n } from '@/app/hooks/useI18n';
 import { TranslateFunction } from '@/i18n/types';
 import { useSelector } from '@/store/hooks';
 import UploadProgressBar from '../components/uploadProgress';
+import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 
 interface MediaCardProps {
     formatType: string;
@@ -38,6 +39,13 @@ export interface MediaConfig {
     required: boolean;
 }
 
+interface Dimensions {
+    imageHeight: number;
+    imageWidth: number;
+    configHeight: number;
+    configWidth: number;
+}
+
 export default function MediaCard({
     formatType,
     formats,
@@ -46,6 +54,14 @@ export default function MediaCard({
     setFieldValue,
     handleUploadFile,
 }: MediaCardProps) {
+    const [dimensionError, setDimensionError] = useState<boolean>();
+    const [sizeError, setSizeError] = useState<boolean>();
+
+    const [toastr, setToastr] = useState<CustomizedSnackbarState>({
+        type: 'success',
+        open: false,
+        message: '',
+    });
     const [modalErrorOpen, setModalErrorOpen] = useState(false);
     const [mediaCrop, setMediaCrop] = useState<File | undefined>(undefined);
     const [showCrop, setShowCrop] = useState(false);
@@ -73,9 +89,40 @@ export default function MediaCard({
     const originalMediaInfo = handleGetFileType(formats.original.file!);
     const isVideo = originalMediaInfo.mediaType === 'video' && formatType !== 'print';
 
+    function compareDimensions(dimensions: Dimensions): boolean {
+        const minimumConfigHeight = dimensions.configHeight * 0.8;
+        const minimumConfigWidth = dimensions.configWidth * 0.8;
+
+        if (dimensions.imageHeight < minimumConfigHeight || dimensions.imageWidth < minimumConfigWidth) {
+            return false;
+        }
+
+        return true;
+    }
+
     const onDrop = useCallback(
-        async (acceptedFiles: File[]) => {
+        async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
+            fileRejections.forEach(({ file, errors }) => {
+                if (errors[0].code === 'file-too-large') {
+                    setSizeError(true);
+                    setModalErrorOpen(true);
+                }
+            });
+            if (fileRejections.length > 0) return;
             const imgWidthAndHeight = await handleGetFileWidthAndHeight(acceptedFiles[0]);
+
+            const isValid = compareDimensions({
+                configHeight: mediaConfig.height,
+                configWidth: mediaConfig.width,
+                imageHeight: imgWidthAndHeight.height,
+                imageWidth: imgWidthAndHeight.width,
+            });
+
+            if (!isValid) {
+                setDimensionError(true);
+                setModalErrorOpen(true);
+                return;
+            }
 
             if (
                 isVideo ||
@@ -91,7 +138,35 @@ export default function MediaCard({
         [setFieldValue]
     );
 
-    const { getRootProps, getInputProps } = useDropzone({ onDrop });
+    const handleGetAccept = () => {
+        let accept = {};
+        if (!isVideo) {
+            accept = {
+                'image/jpeg': [],
+                'image/png': [],
+                'image/gif': [],
+                'image/svg+xml': [],
+                'image/webp': [],
+            };
+        } else {
+            accept = {
+                'video/mp4': [],
+                'video/webm': [],
+            };
+        }
+        return accept;
+    };
+
+    function convertMBToBytes(sizeInMB: number): number {
+        return sizeInMB * 1000000;
+    }
+
+    const { getRootProps, getInputProps } = useDropzone({
+        onDrop,
+        accept: handleGetAccept(),
+        maxFiles: 1,
+        maxSize: convertMBToBytes(isVideo ? mediaConfig.sizeMB?.video : mediaConfig.sizeMB?.image),
+    });
 
     const urlAssetFile = useMemo(() => {
         return formatValue.file && typeof formatValue.file !== 'string'
@@ -124,6 +199,8 @@ export default function MediaCard({
     };
 
     const handleCloseModalError = () => {
+        setDimensionError(false);
+        setSizeError(false);
         setModalErrorOpen(false);
     };
 
@@ -183,7 +260,7 @@ export default function MediaCard({
                 flexDirection="column"
                 alignItems="center"
                 marginTop={2}
-                height={230}
+                height={240}
                 border="2px solid"
                 borderRadius={2}
                 borderColor="#D5D5D5"
@@ -209,13 +286,17 @@ export default function MediaCard({
                         </Typography>
                         <Typography fontSize="0.8rem">
                             {mediaConfig?.sizeMB
-                                ? `${isVideo ? mediaConfig?.sizeMB.video : mediaConfig?.sizeMB.image} MB ${texts.max}`
+                                ? `${
+                                      isVideo
+                                          ? formatFileSize(mediaConfig?.sizeMB.video)
+                                          : formatFileSize(mediaConfig?.sizeMB.image)
+                                  } ${texts.max}`
                                 : getFileSize(formatValue.file!)}
                         </Typography>
                     </Typography>
                 </Box>
                 <Box width="100%" justifyContent="center" alignItems="center" height={200}>
-                    <Box padding={1} marginTop={1} height={15}>
+                    <Box paddingInline={1} marginTop={1} height={15}>
                         {fileStatus && fileStatus.status !== 'completed' ? (
                             <UploadProgressBar fileStatus={fileStatus} />
                         ) : (
@@ -298,9 +379,20 @@ export default function MediaCard({
 
             <ModalError
                 format={formatType}
+                isVideo={isVideo}
+                dimensionError={dimensionError}
+                sizeError={sizeError}
+                mediaConfig={mediaConfig}
                 open={modalErrorOpen}
                 definition={definition}
                 setClose={handleCloseModalError}
+            />
+
+            <CustomizedSnackbar
+                type={toastr.type}
+                open={toastr.open}
+                message={toastr.message}
+                setOpentate={setToastr}
             />
         </Box>
     );

@@ -57,7 +57,7 @@ export default function NavItem({ item, level, pathDirect, hideMenu, onClick }: 
         whiteSpace: 'nowrap',
         marginBottom: '2px',
         padding: '8px 10px',
-        marginTop: theme.spacing(3),
+        marginTop: theme.spacing(0.4),
         borderRadius: `${customizer.borderRadius}px`,
         backgroundColor: level > 1 ? 'transparent !important' : 'inherit',
         color:

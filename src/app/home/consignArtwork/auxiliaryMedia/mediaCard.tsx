@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { FileRejection, useDropzone } from 'react-dropzone';
 import Img from 'next/image';
 import { IconTrash } from '@tabler/icons-react';
 import { Box, SvgIcon, Typography, IconButton, Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
@@ -14,6 +14,7 @@ import { TranslateFunction } from '@/i18n/types';
 import { handleGetFileType, handleGetFileWidthAndHeight } from '../assetMedia/helpers';
 import UploadProgressBar from '../components/uploadProgress';
 import { useSelector } from '@/store/hooks';
+import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 
 interface MediaCardProps {
     formatType: string;
@@ -45,6 +46,11 @@ export default function MediaCard({
     setFieldValue,
     handleUploadFile,
 }: MediaCardProps) {
+    const [toastr, setToastr] = useState<CustomizedSnackbarState>({
+        type: 'success',
+        open: false,
+        message: '',
+    });
     const [modalErrorOpen, setModalErrorOpen] = useState(false);
     const [mediaCrop, setMediaCrop] = useState<File | undefined>(undefined);
     const [showCrop, setShowCrop] = useState(false);
@@ -67,7 +73,13 @@ export default function MediaCard({
     } as { [key: string]: string };
 
     const onDrop = useCallback(
-        async (acceptedFiles: File[]) => {
+        async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
+            fileRejections.forEach(({ file, errors }) => {
+                if (errors[0].code === 'file-too-large') {
+                    setToastr({ message: 'File too large', open: true, type: 'error' });
+                }
+            });
+            if (fileRejections.length > 0) return;
             const file = acceptedFiles[0];
             if (mediaConfig.type === 'Image') {
                 setMediaCrop(acceptedFiles[0]);
@@ -87,18 +99,30 @@ export default function MediaCard({
                 'image/jpeg': [],
                 'image/png': [],
                 'image/gif': [],
+                'image/svg+xml': [],
+                'image/webp': [],
             };
         } else if (mediaConfig.type === 'Video') {
             accept = {
                 'video/mp4': [],
                 'video/webm': [],
             };
+        } else if (mediaConfig.type === 'Zip') {
+            accept = {
+                'application/zip': [],
+            };
         }
         return accept;
     };
 
+    function convertMBToBytes(sizeInMB: number): number {
+        return sizeInMB * 1000000;
+    }
+
     const { getRootProps, getInputProps } = useDropzone({
         onDrop,
+        maxFiles: 1,
+        maxSize: convertMBToBytes(mediaConfig.sizeMB),
         accept: handleGetAccept(),
     });
 
@@ -327,6 +351,13 @@ export default function MediaCard({
             </Dialog>
 
             <ModalError format={formatType} open={modalErrorOpen} setClose={handleCloseModalError} />
+
+            <CustomizedSnackbar
+                type={toastr.type}
+                open={toastr.open}
+                message={toastr.message}
+                setOpentate={setToastr}
+            />
         </Box>
     );
 }

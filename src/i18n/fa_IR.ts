@@ -58,7 +58,7 @@ const language: Translation = {
     /* Consign Artwork */
     'studio.consignArtwork.form.next.button': 'بعدی',
     'studio.consignArtwork.title': 'قرارداد آثار هنری',
-    'studio.consignArtwork.subtitle': 'تمام وظایف را کامل کنید و آثار هنری خود را منتشر کنید',
+    'studio.consignArtwork.subtitle': 'تمام وظایف مورد نیاز را انجام دهید و اثر هنری خود را امضاء کنید',
 
     'studio.consignArtwork.stepName.assetMedia': 'رسانه دارایی',
     'studio.consignArtwork.stepName.assetMetadata': 'فهرست دارایی',
@@ -211,7 +211,7 @@ const language: Translation = {
 
     /* Terms of Use */
     'studio.consignArtwork.termsOfUse.title': 'شرایط استفاده',
-    'studio.consignArtwork.termsOfUse.description': 'تمام وظایف را کامل کنید و آثار هنری خود را منتشر کنید',
+    'studio.consignArtwork.termsOfUse.description': 'تمام وظایف مورد نیاز را انجام دهید و اثر هنری خود را امضاء کنید',
     'studio.consignArtwork.termsOfUse.accept.button': (data: { contract: boolean; scrolledToBottom: boolean }) =>
         data.contract ? 'قرارداد پذیرفته شده' : data.scrolledToBottom ? 'پذیرفتن قرارداد' : 'به انتها بروید',
     'studio.consignArtwork.termsOfUse.isOriginal':

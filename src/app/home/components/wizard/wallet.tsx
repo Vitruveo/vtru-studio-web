@@ -89,14 +89,9 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
                 </Box>
 
                 <Box marginTop={1} width="100%" display="flex" alignItems="center">
-                    <CustomTextField
-                        value=""
-                        disabled
-                        size="small"
-                        fullWidth
-                        variant="outlined"
-                        placeholder={texts.walletPlaceholder}
-                    />
+                    <Typography width="100%" color="GrayText">
+                        {texts.walletPlaceholder}
+                    </Typography>
                     <Box marginLeft={1} flexDirection="row" display="flex" justifyContent="flex-end" gap={1}>
                         <Button size="small" style={{ width: 122 }} variant="contained" onClick={handleAddWallet}>
                             {texts.connectButton}

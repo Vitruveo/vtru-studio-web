@@ -2,17 +2,29 @@ import React from 'react';
 import { useI18n } from '@/app/hooks/useI18n';
 import { Dialog, DialogContent, Typography } from '@mui/material';
 import { TranslateFunction } from '@/i18n/types';
+import { formatFileSize, mediaConfigs } from './helpers';
 
 interface ModalErrorProps {
-    dimensionError?: { width: number; height: number };
-    sizeError?: number;
+    isVideo?: boolean;
+    dimensionError?: boolean;
+    sizeError?: boolean;
+    mediaConfig: (typeof mediaConfigs)['landscape']['display'];
     definition: string;
     format: string;
     open: boolean;
     setClose: () => void;
 }
 
-const ModalError = ({ definition, dimensionError, format, sizeError, open, setClose }: ModalErrorProps) => {
+const ModalError = ({
+    isVideo,
+    definition,
+    dimensionError,
+    format,
+    sizeError,
+    mediaConfig,
+    open,
+    setClose,
+}: ModalErrorProps) => {
     const { language } = useI18n();
 
     const texts = {
@@ -24,7 +36,9 @@ const ModalError = ({ definition, dimensionError, format, sizeError, open, setCl
     return (
         <Dialog open={open} onClose={setClose}>
             <DialogContent>
-                <Typography color="red">{texts.modalErrorTitle}</Typography>
+                <Typography color="red" marginBottom={2}>
+                    {texts.modalErrorTitle}
+                </Typography>
                 {dimensionError && (
                     <Typography color="red">
                         <Typography color="red" fontWeight="bold">
@@ -34,7 +48,7 @@ const ModalError = ({ definition, dimensionError, format, sizeError, open, setCl
                             language[
                                 'studio.consignArtwork.assetMedia.modalErrorDimensions.description'
                             ] as TranslateFunction
-                        )({ width: dimensionError.width, height: dimensionError.height, definition, format })}
+                        )({ width: mediaConfig?.width, height: mediaConfig?.height, definition, format })}
                     </Typography>
                 )}
                 {sizeError && (
@@ -43,7 +57,13 @@ const ModalError = ({ definition, dimensionError, format, sizeError, open, setCl
                             {texts.sizeTitle}
                         </Typography>{' '}
                         {(language['studio.consignArtwork.assetMedia.modalErrorSize.description'] as TranslateFunction)(
-                            { sizeError, definition, format }
+                            {
+                                sizeError: isVideo
+                                    ? formatFileSize(mediaConfig?.sizeMB.video)
+                                    : formatFileSize(mediaConfig?.sizeMB.image),
+                                definition,
+                                format,
+                            }
                         )}
                     </Typography>
                 )}

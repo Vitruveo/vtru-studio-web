@@ -60,7 +60,7 @@ const language: Translation = {
     /* Consign Artwork */
     'studio.consignArtwork.form.next.button': 'Siguiente',
     'studio.consignArtwork.title': 'Consignar Obra de Arte',
-    'studio.consignArtwork.subtitle': 'Completa todas las tareas y publica tu obra de arte',
+    'studio.consignArtwork.subtitle': 'Completa todas las tareas requeridas y consigna tu obra de arte',
 
     'studio.consignArtwork.stepName.assetMedia': 'Medios del Activo',
     'studio.consignArtwork.stepName.assetMetadata': 'Metadatos del Activo',
@@ -214,7 +214,7 @@ const language: Translation = {
 
     /* Terms of Use */
     'studio.consignArtwork.termsOfUse.title': 'Términos de Uso',
-    'studio.consignArtwork.termsOfUse.description': 'Completa todas las tareas y publica tu obra de arte',
+    'studio.consignArtwork.termsOfUse.description': 'Completa todas las tareas requeridas y consigna tu obra de arte',
     'studio.consignArtwork.termsOfUse.accept.button': (data: { contract: boolean; scrolledToBottom: boolean }) =>
         data.contract ? 'Contrato aceptado' : data.scrolledToBottom ? 'Aceptar Contrato' : 'Desplázate hasta el final',
     'studio.consignArtwork.termsOfUse.isOriginal':

@@ -73,6 +73,15 @@ export default function SelectMedia({
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
+        accept: {
+            'video/mp4': [],
+            'video/webm': [],
+            'image/jpeg': [],
+            'image/png': [],
+            'image/gif': [],
+            'image/svg+xml': [],
+            'image/webp': [],
+        },
     });
 
     const handleOnLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
@@ -167,12 +176,12 @@ export default function SelectMedia({
                     </Box>
                 )}
             </Box>
-            <ModalError
+            {/* <ModalError
                 format="original"
                 open={modalErrorOpen}
                 definition={definition}
                 setClose={handleCloseModalError}
-            />
+            /> */}
         </Box>
     );
 }

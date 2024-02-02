@@ -59,7 +59,7 @@ const language: Translation = {
     /* Consign Artwork */
     'studio.consignArtwork.form.next.button': 'Далее',
     'studio.consignArtwork.title': 'Подать Работу',
-    'studio.consignArtwork.subtitle': 'Завершите все задачи и опубликуйте своё произведение искусства',
+    'studio.consignArtwork.subtitle': 'Выполните все необходимые задачи и передайте свое произведение искусства',
 
     'studio.consignArtwork.stepName.assetMedia': 'Медиафайлы',
     'studio.consignArtwork.stepName.assetMetadata': 'Метаданные мадиафайлов',
@@ -211,7 +211,8 @@ const language: Translation = {
 
     /* Terms of Use */
     'studio.consignArtwork.termsOfUse.title': 'Условия использования',
-    'studio.consignArtwork.termsOfUse.description': 'Завершите все задачи и опубликуйте свое произведение искусства',
+    'studio.consignArtwork.termsOfUse.description':
+        'Выполните все необходимые задачи и передайте свое произведение искусства',
     'studio.consignArtwork.termsOfUse.accept.button': (data: { contract: boolean; scrolledToBottom: boolean }) =>
         data.contract ? 'Договор принят' : data.scrolledToBottom ? 'Принять договор' : 'Прокрутите до конца',
     'studio.consignArtwork.termsOfUse.isOriginal':

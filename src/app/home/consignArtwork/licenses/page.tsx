@@ -188,33 +188,26 @@ export default function Licenses() {
                 backOnclick={handleOpenBackModal}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
-                <Typography fontSize="1.1rem" fontWeight="normal" color="GrayText">
-                    {texts.licensesDescription}
-                </Typography>
-                <Grid mt={1} my={3} alignItems="center" lg={6} xs={12}>
-                    <Box alignItems="center" gap={2} display="flex">
+                <Box alignItems="center" gap={2} display="flex">
+                    <Typography marginRight={2} fontSize="1.2rem" fontWeight="500">
+                        {texts.licensesTitle}
+                    </Typography>
+                    {Object.entries(allLicenses).map(([key, Component]) => (
                         <Typography
-                            marginRight={2}
-                            display="flex"
-                            fontSize="1.2rem"
-                            color="grey"
-                            fontWeight="500"
-                            variant="subtitle1"
-                            component="label"
+                            onClick={() => setCurrentLicense(key as keyof typeof allLicenses)}
+                            style={{ color: '#007BFF', cursor: 'pointer', textDecoration: 'underline' }}
+                            fontSize="1.1rem"
+                            key={key}
                         >
-                            {texts.licensesTitle}
+                            {key}
                         </Typography>
-                        {Object.entries(allLicenses).map(([key, Component]) => (
-                            <Typography
-                                onClick={() => setCurrentLicense(key as keyof typeof allLicenses)}
-                                style={{ color: '#007BFF', cursor: 'pointer', textDecoration: 'underline' }}
-                                fontSize="1.1rem"
-                                key={key}
-                            >
-                                {key}
-                            </Typography>
-                        ))}
-                    </Box>
+                    ))}
+                </Box>
+
+                <Grid mt={1} my={3} alignItems="center" lg={6} xs={12}>
+                    <Typography fontSize="1.1rem" fontWeight="normal" color="GrayText">
+                        {texts.licensesDescription}
+                    </Typography>
 
                     <License
                         allValues={values}

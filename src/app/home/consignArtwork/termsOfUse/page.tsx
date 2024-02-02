@@ -149,12 +149,11 @@ export default function ContractScreen() {
                 backOnclick={handleOpenBackModal}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
+                <Typography marginBottom={2} fontSize="1.2rem" fontWeight="500">
+                    {texts.termsOfUseTitle}
+                </Typography>
                 <Typography fontSize="1.1rem" fontWeight="normal" color="GrayText" marginBottom={2}>
                     {texts.termsOfUseDescription}
-                </Typography>
-
-                <Typography marginBottom={2} fontSize="1.2rem" color="grey" fontWeight="500" marginTop={2}>
-                    {texts.termsOfUseTitle}
                 </Typography>
 
                 <Box

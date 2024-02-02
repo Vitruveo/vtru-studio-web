@@ -27,7 +27,7 @@ export const mediaConfigs = {
             height: 2000,
             ppi: 72,
             sizeMB: {
-                image: 0.244,
+                image: 0.25,
                 video: 1,
             },
             required: true,
@@ -279,4 +279,14 @@ export function getStepStatus({ formats }: { formats: FormatsMedia }) {
         : Object.values(formats || {}).some((format) => format.file) || formats?.original?.file
           ? 'inProgress'
           : 'notStarted';
+}
+
+export function formatFileSize(fileSizeInMB: number): string {
+    if (fileSizeInMB < 1) {
+        const fileSizeInKB = Math.round(fileSizeInMB * 1000);
+        return `${fileSizeInKB} KB`;
+    } else {
+        const fileSizeInMBInt = Math.round(fileSizeInMB);
+        return `${fileSizeInMBInt} MB`;
+    }
 }

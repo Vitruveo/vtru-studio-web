@@ -202,12 +202,13 @@ export default function AssetMetadata() {
                 backOnclick={handleOpenBackModal}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
+                <Typography marginBottom={2} fontSize="1.2rem" fontWeight="500">
+                    {texts.assetMetadataTitle}
+                </Typography>
                 <Typography fontSize="1.1rem" fontWeight="normal" color="GrayText">
                     {texts.assetMetadataDescription}
                 </Typography>
-                <Typography marginTop={2} fontSize="1.2rem" color="grey" fontWeight="500">
-                    {texts.assetMetadataTitle}
-                </Typography>
+
                 <Box marginBottom={5} maxWidth={500} mt={2} alignItems="center">
                     <Box display="flex" flexDirection="column" gap={3}>
                         {Object.entries(sections).map(([key, value]) => (
