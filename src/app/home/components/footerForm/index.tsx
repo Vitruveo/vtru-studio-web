@@ -72,7 +72,7 @@ export function FooterForm({
                         maxWidth: customizer.isLayout === 'boxed' ? 'lg' : '100%!important',
                         height:
                             maxHeight ||
-                            (lgUp ? 'calc(100vh - 140px)' : `calc(100vh - ${stepStatus ? '160px' : '140px'})`),
+                            (lgUp ? 'calc(100vh - 150px)' : `calc(100vh - ${stepStatus ? '160px' : '140px'})`),
                         overflowY: 'auto',
                         overflowX: 'hidden',
                     }}

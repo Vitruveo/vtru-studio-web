@@ -239,7 +239,7 @@ const language: Translation = {
     'studio.sidebar.consign': 'Consign Artwork',
 
     /* Footer */
-    'studio.footer.thisStep': 'This step is in',
+    'studio.footer.thisStep': 'This step is',
     'studio.footer.completed': 'Completed',
     'studio.footer.inProgress': 'In Progress',
     'studio.footer.notYet': 'and is not yet complete',
