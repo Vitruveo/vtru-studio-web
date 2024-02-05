@@ -15,6 +15,7 @@ import UploadProgressBar from '../components/uploadProgress';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 
 interface MediaCardProps {
+    deleteKeys: string[];
     formatType: string;
     formatValue: FormatMedia;
     errors: AssetMediaFormErros;
@@ -51,6 +52,7 @@ export default function MediaCard({
     formats,
     formatValue,
     definition,
+    deleteKeys,
     setFieldValue,
     handleUploadFile,
 }: MediaCardProps) {
@@ -176,6 +178,7 @@ export default function MediaCard({
 
     const handleDeleteFile = () => {
         const newValue = { file: undefined, customFile: undefined };
+        if (fileStatus?.url) setFieldValue('deleteKeys', [...deleteKeys, fileStatus.url]);
         if (formatType === 'original') {
             setFieldValue('formats.original', newValue);
             setFieldValue('formats.display', newValue);

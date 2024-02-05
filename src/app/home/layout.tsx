@@ -31,6 +31,7 @@ const PageWrapper = styled('div')(() => ({
 
 const PageFooterWrapper = styled('div')(() => ({
     display: 'flex',
+    overflowX: 'hidden',
     flexGrow: 1,
     flexDirection: 'column',
     zIndex: 1,

@@ -75,8 +75,8 @@ export interface AssetStorageReq {
     dispatch: any;
 }
 
-export interface RequestDeleteURLReq {
-    path: string;
+export interface RequestDeleteFilesReq {
+    deleteKeys: string[];
     transactionId: string;
 }
 

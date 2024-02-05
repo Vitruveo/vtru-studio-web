@@ -14,7 +14,7 @@ import {
     changeAvatar,
     generalStorage,
     deleteAvatar,
-    requestDeleteAvatarURL,
+    requestDeleteAvatar,
 } from './requests';
 import { userActionsCreators } from './slice';
 import {
@@ -185,7 +185,7 @@ export function changeAvatarThunk(payload: ChangeAvatarReq): ReduxThunkAction<Pr
     return async function (dispatch, getState) {
         const avatar = getState().user?.profile?.avatar;
         if (avatar && (payload.fileId === '' || payload.fileId !== avatar)) {
-            requestDeleteAvatarURL({ path: avatar, transactionId: nanoid() });
+            requestDeleteAvatar({ deleteKeys: [avatar], transactionId: nanoid() });
         }
 
         const response = await changeAvatar({

@@ -29,6 +29,7 @@ export interface FormatsMedia {
 
 export interface AssetMediaFormValues {
     definition: string;
+    deleteKeys: string[];
     formats: FormatsMedia;
 }
 

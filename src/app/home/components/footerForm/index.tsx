@@ -66,13 +66,15 @@ export function FooterForm({
 
     return (
         <Box position="relative" display="flex" flexDirection="column">
-            <Box marginBottom={5} flexGrow={1}>
+            <Box flexGrow={1}>
                 <Container
                     sx={{
                         maxWidth: customizer.isLayout === 'boxed' ? 'lg' : '100%!important',
                         height:
                             maxHeight ||
-                            (lgUp ? 'calc(100vh - 150px)' : `calc(100vh - ${stepStatus ? '160px' : '140px'})`),
+                            (lgUp
+                                ? `calc(100vh - ${stepNumber ? '170px' : '150px'})`
+                                : `calc(100vh - ${stepStatus ? '160px' : '140px'})`),
                         overflowY: 'auto',
                         overflowX: 'hidden',
                     }}

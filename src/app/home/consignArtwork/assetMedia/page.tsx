@@ -62,6 +62,7 @@ export default function AssetMedia() {
     const initialValues = useMemo(
         () => ({
             definition: '',
+            deleteKeys: [],
             formats: asset.formats,
         }),
         []
@@ -70,7 +71,7 @@ export default function AssetMedia() {
     const { values, errors, setFieldValue, handleSubmit } = useFormik<AssetMediaFormValues>({
         initialValues,
         onSubmit: async (formValues) => {
-            if (JSON.stringify(initialValues) === JSON.stringify(values))
+            if (JSON.stringify(initialValues) === JSON.stringify(values) && !values.deleteKeys.length)
                 router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/assetMetadata`);
             else {
                 dispatch(
@@ -88,6 +89,7 @@ export default function AssetMedia() {
                     .filter(([_, value]) => !value.file)
                     .map(([key, _]) => key);
                 if (deleteFormats.length) await dispatch(assetMediaThunk({ deleteFormats }));
+
                 router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/assetMetadata`);
             }
         },
@@ -241,7 +243,7 @@ export default function AssetMedia() {
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
 
-                <Stack overflow="auto" maxWidth={{ xs: '100%', sm: '100%', md: '100%' }}>
+                <Stack marginBottom={5} overflow="auto" maxWidth={{ xs: '100%', sm: '100%', md: '100%' }}>
                     <Typography marginBottom={2} fontSize="1.2rem" fontWeight="500">
                         {texts.assetMediaTitle}
                     </Typography>
@@ -283,6 +285,7 @@ export default function AssetMedia() {
                                             formats={values.formats}
                                             formatType={formatType}
                                             formatValue={value}
+                                            deleteKeys={values.deleteKeys}
                                             urlAssetFile={urlAssetFile}
                                             definition={values.definition}
                                             setFieldValue={setFieldValue}

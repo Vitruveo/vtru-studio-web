@@ -4,14 +4,14 @@ import {
     AssetSendRequestUploadReq,
     AssetStorageReq,
     GetAssetApiRes,
-    RequestDeleteURLReq,
+    RequestDeleteFilesReq,
     UpdateAssetStepApiRes,
     UpdateAssetStepReq,
 } from './types';
 import { apiService } from '@/services/api';
 import { assetActionsCreators } from './slice';
 
-export async function requestDeleteURL(data: RequestDeleteURLReq): Promise<any> {
+export async function requestDeleteFiles(data: RequestDeleteFilesReq): Promise<any> {
     const res = await apiService.delete('/assets/request/deleteFile', data);
     return res;
 }

@@ -196,7 +196,7 @@ export default function ProfileSettings() {
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter backPathRouter="/home" title={texts.title}>
-                <Box margin="auto 0" display="relative">
+                <Box margin="auto 0" marginBottom={5} display="relative">
                     <Breadcrumb title={texts.title} items={BCrumb} />
 
                     <Box my={3}>

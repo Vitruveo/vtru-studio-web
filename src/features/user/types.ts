@@ -139,8 +139,8 @@ export interface ChangeAvatarReq {
     transactionId?: string;
 }
 
-export interface RequestDeleteAvatarURLReq {
-    path: string;
+export interface RequestDeleteAvatarReq {
+    deleteKeys: string[];
     transactionId: string;
 }
 

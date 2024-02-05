@@ -1,10 +1,10 @@
-import { assetStorage, updateAssetStep, getAsset, sendRequestUpload, requestDeleteURL } from './requests';
+import { assetStorage, updateAssetStep, getAsset, sendRequestUpload, requestDeleteFiles } from './requests';
 import {
     AssetSendRequestUploadApiRes,
     AssetSendRequestUploadReq,
     AssetStatus,
     AssetStorageReq,
-    RequestDeleteURLReq,
+    RequestDeleteFilesReq,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { assetActionsCreators } from './slice';
@@ -17,9 +17,9 @@ import { SectionFormatType, SectionsFormData } from '@/app/home/consignArtwork/a
 import { FormatsAuxiliayMedia } from '@/app/home/consignArtwork/auxiliaryMedia/types';
 import { nanoid } from '@reduxjs/toolkit';
 
-export function requestDeleteURLThunk(payload: RequestDeleteURLReq): ReduxThunkAction<Promise<any>> {
+export function requestDeleteURLThunk(payload: RequestDeleteFilesReq): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
-        const response = await requestDeleteURL(payload);
+        const response = await requestDeleteFiles(payload);
         return response;
     };
 }
@@ -156,17 +156,18 @@ export function auxiliaryMediaThunk(payload: {
         const formatsState = getState().asset.mediaAuxiliary.formats;
 
         if (payload.deleteFormats && payload.deleteFormats.length) {
-            await Promise.all(
-                payload.deleteFormats.map(async (key) => {
-                    const format = formatsState[key as keyof typeof formatsState];
-                    if (format.file) {
-                        await requestDeleteURL({
-                            path: (format.file as string).replace(`${ASSET_STORAGE_URL}/`, ''),
-                            transactionId: nanoid(),
-                        });
-                    }
-                })
-            );
+            const deleteKeys = payload.deleteFormats.reduce((acc, cur) => {
+                const format = formatsState[cur as keyof typeof formatsState];
+                if (format.file) {
+                    return [...acc, (format.file as string).replace(`${ASSET_STORAGE_URL}/`, '')];
+                }
+                return acc;
+            }, [] as string[]);
+
+            await requestDeleteFiles({
+                deleteKeys,
+                transactionId: nanoid(),
+            });
         }
 
         const formatsPersist = Object.entries(formatsState)
@@ -215,17 +216,18 @@ export function assetMediaThunk(payload: {
         const formatsState = getState().asset.formats;
 
         if (payload.deleteFormats && payload.deleteFormats.length) {
-            await Promise.all(
-                payload.deleteFormats.map(async (key) => {
-                    const format = formatsState[key as keyof typeof formatsState];
-                    if (format.file) {
-                        await requestDeleteURL({
-                            path: (format.file as string).replace(`${ASSET_STORAGE_URL}/`, ''),
-                            transactionId: nanoid(),
-                        });
-                    }
-                })
-            );
+            const deleteKeys = payload.deleteFormats.reduce((acc, cur) => {
+                const format = formatsState[cur as keyof typeof formatsState];
+                if (format.file) {
+                    return [...acc, (format.file as string).replace(`${ASSET_STORAGE_URL}/`, '')];
+                }
+                return acc;
+            }, [] as string[]);
+
+            await requestDeleteFiles({
+                deleteKeys,
+                transactionId: nanoid(),
+            });
         }
 
         const formatsPersist = Object.entries(formatsState)

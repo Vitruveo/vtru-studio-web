@@ -30,6 +30,7 @@ export interface FormatsAuxiliayMedia {
 
 export interface AssetMediaFormValues {
     formats: FormatsAuxiliayMedia;
+    deleteKeys: string[];
 }
 
 export type AssetMediaFormErros = FormikErrors<AssetMediaFormValues>;

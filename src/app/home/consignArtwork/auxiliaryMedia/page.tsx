@@ -61,6 +61,7 @@ export default function AssetMedia() {
     const initialValues = useMemo(
         () => ({
             definition: '',
+            deleteKeys: [],
             formats: asset.mediaAuxiliary.formats,
         }),
         []
@@ -69,7 +70,8 @@ export default function AssetMedia() {
     const { values, errors, setFieldValue, handleSubmit } = useFormik<AssetMediaFormValues>({
         initialValues,
         onSubmit: async (formValues) => {
-            if (JSON.stringify(initialValues) === JSON.stringify(values)) router.push('/home/consignArtwork');
+            if (JSON.stringify(initialValues) === JSON.stringify(values) && !values.deleteKeys.length)
+                router.push('/home/consignArtwork');
             else {
                 dispatch(
                     consignArtworkActionsCreators.changeStatusStep({
@@ -236,6 +238,7 @@ export default function AssetMedia() {
                                     <MediaCard
                                         key={index}
                                         errors={errors}
+                                        deleteKeys={values.deleteKeys}
                                         formats={values.formats}
                                         formatType={formatType}
                                         formatValue={value}

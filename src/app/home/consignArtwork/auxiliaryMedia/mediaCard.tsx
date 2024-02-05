@@ -18,6 +18,7 @@ import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr
 import { userActionsCreators } from '@/features/user/slice';
 
 interface MediaCardProps {
+    deleteKeys: string[];
     formatType: string;
     formatValue: FormatMedia;
     errors: AssetMediaFormErros;
@@ -43,6 +44,7 @@ export interface MediaConfig {
 export default function MediaCard({
     formatType,
     formats,
+    deleteKeys,
     formatValue,
     setFieldValue,
     handleUploadFile,
@@ -133,6 +135,7 @@ export default function MediaCard({
     }, [formatValue.file]);
 
     const handleDeleteFile = () => {
+        if (fileStatus?.url) setFieldValue('deleteKeys', [...deleteKeys, fileStatus.url]);
         setFieldValue(`formats.${formatType}`, { file: undefined, customFile: undefined });
     };
 

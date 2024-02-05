@@ -27,7 +27,7 @@ import {
     UserOTPConfirmRes,
     VerifyCodeApiRes,
     VerifyCodeReq,
-    RequestDeleteAvatarURLReq,
+    RequestDeleteAvatarReq,
 } from './types';
 import { Framework } from '../common/types';
 
@@ -115,7 +115,7 @@ export async function generalStorage(data: GeneralStorageAvatarReq): Promise<any
     return res;
 }
 
-export async function requestDeleteAvatarURL(data: RequestDeleteAvatarURLReq): Promise<any> {
+export async function requestDeleteAvatar(data: RequestDeleteAvatarReq): Promise<any> {
     const res = await apiService.delete('/creators/request/deleteFile', data);
     return res;
 }
