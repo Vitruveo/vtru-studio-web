@@ -83,7 +83,7 @@ const ConsignArtwork = () => {
                 })}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
-                <Grid item xs={12} lg={6}>
+                <Grid marginBottom={10} item xs={12} lg={6}>
                     <Box>
                         <Typography variant="h6" fontWeight="normal" color="GrayText">
                             {texts.consignArtworkSubtitle}
