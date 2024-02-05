@@ -17,7 +17,7 @@ import {
     plugin_resize_locale_en_gb,
     PinturaDefaultImageReaderResult,
 } from '@pqina/pintura';
-import { Box } from '@mui/material';
+import { Box, Theme, useMediaQuery } from '@mui/material';
 
 setPlugins(plugin_crop);
 
@@ -48,6 +48,8 @@ interface PinturaProps {
 export function Pintura({ file, initial, px, onChange }: PinturaProps) {
     const editorRef = useRef<PinturaEditor>(null);
 
+    const lgUp = useMediaQuery((th: Theme) => th.breakpoints.up('lg'));
+
     const handleEditorLoad = useCallback((imageState: PinturaDefaultImageReaderResult) => {
         if (!editorRef.current) {
             console.error('Editor not loaded');
@@ -67,7 +69,7 @@ export function Pintura({ file, initial, px, onChange }: PinturaProps) {
     }, []);
 
     return (
-        <Box height={500} width={800} boxShadow={`0 0 10px #763EBD`}>
+        <Box height={lgUp ? 500 : 300} width={lgUp ? 800 : '80vw'} boxShadow={`0 0 10px #763EBD`}>
             <PinturaEditor
                 ref={editorRef}
                 {...editorDefaults}
