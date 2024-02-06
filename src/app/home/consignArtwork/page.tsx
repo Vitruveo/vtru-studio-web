@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { usePathname, useRouter } from 'next/navigation';
 import { Button, Grid, Typography, useTheme } from '@mui/material';
@@ -68,6 +68,12 @@ const ConsignArtwork = () => {
             message: texts.stepPublishMessageSuccess,
         });
     };
+
+    useEffect(() => {
+        if (status === 'published') {
+            router.push('/home/consignArtwork/consignmentStatus');
+        }
+    }, [status]);
 
     const successColor = '#93C47D';
     const warningColor = '#F6B26B';

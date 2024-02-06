@@ -125,10 +125,15 @@ const ConsignArtwork = () => {
         setStatusRadio(e.target.value);
     };
 
+    const handleOpenBackModal = () => {
+        router.push(`/home`);
+    };
+
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
                 submitDisabled={statusRadio === 'Draft'}
+                backOnclick={handleOpenBackModal}
                 stepNumber={6}
                 title={texts.consignArtworkTitle}
                 submitText={texts.viewArtworkButton}
