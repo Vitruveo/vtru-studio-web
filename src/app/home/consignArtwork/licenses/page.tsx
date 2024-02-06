@@ -188,42 +188,44 @@ export default function Licenses() {
                 backOnclick={handleOpenBackModal}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
-                <Box alignItems="center" gap={2} display="flex">
-                    <Typography marginRight={2} fontSize="1.2rem" fontWeight="500">
-                        {texts.licensesTitle}
-                    </Typography>
-                    {Object.entries(allLicenses).map(([key, Component]) => (
-                        <Typography
-                            onClick={() => setCurrentLicense(key as keyof typeof allLicenses)}
-                            style={{ color: '#007BFF', cursor: 'pointer', textDecoration: 'underline' }}
-                            fontSize="1.1rem"
-                            key={key}
-                        >
-                            {key}
+                <Box marginBottom={10}>
+                    <Box alignItems="center" gap={2} display="flex">
+                        <Typography marginRight={1} fontSize="1.2rem" fontWeight="500">
+                            {texts.licensesTitle}
                         </Typography>
-                    ))}
+                        {Object.entries(allLicenses).map(([key, Component]) => (
+                            <Typography
+                                onClick={() => setCurrentLicense(key as keyof typeof allLicenses)}
+                                style={{ color: '#007BFF', cursor: 'pointer', textDecoration: 'underline' }}
+                                fontSize="1.1rem"
+                                key={key}
+                            >
+                                {key}
+                            </Typography>
+                        ))}
+                    </Box>
+
+                    <Grid mt={1} sx={{ overflowX: 'auto' }} my={3} alignItems="center" lg={6} xs={12}>
+                        <Typography fontSize="1.1rem" fontWeight="normal" color="GrayText">
+                            {texts.licensesDescription}
+                        </Typography>
+
+                        <License
+                            allValues={values}
+                            setFieldValue={setFieldValue}
+                            handleChange={handleChange}
+                            handleSubmit={handleSubmit}
+                            setFieldError={setFieldError}
+                        />
+
+                        <CustomizedSnackbar
+                            type={toastr.type}
+                            open={toastr.open}
+                            message={toastr.message}
+                            setOpentate={setToastr}
+                        />
+                    </Grid>
                 </Box>
-
-                <Grid mt={1} my={3} alignItems="center" lg={6} xs={12}>
-                    <Typography fontSize="1.1rem" fontWeight="normal" color="GrayText">
-                        {texts.licensesDescription}
-                    </Typography>
-
-                    <License
-                        allValues={values}
-                        setFieldValue={setFieldValue}
-                        handleChange={handleChange}
-                        handleSubmit={handleSubmit}
-                        setFieldError={setFieldError}
-                    />
-
-                    <CustomizedSnackbar
-                        type={toastr.type}
-                        open={toastr.open}
-                        message={toastr.message}
-                        setOpentate={setToastr}
-                    />
-                </Grid>
                 <ModalBackConfirm show={showBackModal} handleClose={handleCloseBackModal} yesClick={handleSaveData} />
             </PageContainerFooter>
         </form>

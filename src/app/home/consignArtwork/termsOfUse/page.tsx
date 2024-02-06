@@ -3,7 +3,7 @@ import React, { useState, useRef, useCallback, useMemo } from 'react';
 
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from '@/store/hooks';
-import { Box, Container, Typography, Button } from '@mui/material';
+import { Box, Container, Typography, Button, Theme, useMediaQuery } from '@mui/material';
 
 import { TermsOfUseFormValues } from './types';
 
@@ -27,6 +27,7 @@ export default function ContractScreen() {
     const router = useRouter();
     const dispatch = useDispatch();
 
+    const lgUp = useMediaQuery((th: Theme) => th.breakpoints.up('lg'));
     const currentLanguage = useSelector((state) => state.customizer.currentLanguage);
     const { contract, isOriginal, generatedArtworkAI, notMintedOtherBlockchain } = useSelector((state) => state.asset);
 
@@ -141,7 +142,6 @@ export default function ContractScreen() {
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
-                maxHeight="calc(100vh - 168px)"
                 submitText={texts.nextButton}
                 stepStatus={checkStatus}
                 stepNumber={4}
@@ -149,64 +149,66 @@ export default function ContractScreen() {
                 backOnclick={handleOpenBackModal}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
-                <Typography marginBottom={2} fontSize="1.2rem" fontWeight="500">
-                    {texts.termsOfUseTitle}
-                </Typography>
-                <Typography fontSize="1.1rem" fontWeight="normal" color="GrayText" marginBottom={2}>
-                    {texts.termsOfUseDescription}
-                </Typography>
+                <Box marginBottom={lgUp ? 0 : 8}>
+                    <Typography marginBottom={2} fontSize="1.2rem" fontWeight="500">
+                        {texts.termsOfUseTitle}
+                    </Typography>
+                    <Typography fontSize="1.1rem" fontWeight="normal" color="GrayText" marginBottom={2}>
+                        {texts.termsOfUseDescription}
+                    </Typography>
 
-                <Box
-                    mt={4}
-                    marginBottom={3}
-                    ref={scrollContainerRef}
-                    onScroll={handleScroll}
-                    maxHeight={290}
-                    padding={1}
-                    style={{
-                        textAlign: 'justify',
-                        overflowY: 'auto',
-                        border: '1px solid #ccc',
-                    }}
-                >
-                    <Contract />
-                </Box>
-                <Box marginBlock={2} alignItems="flex-start" display="flex">
-                    <CustomCheckbox
-                        sx={{ padding: 0, marginRight: 1, marginTop: 0.5 }}
-                        checked={values.isOriginal}
-                        onChange={(event) => setFieldValue('isOriginal', event.target.checked)}
-                    />
-                    <Typography sx={{ padding: 0 }}>{texts.isOriginal}</Typography>
-                </Box>
-                <Box marginBlock={2} alignItems="flex-start" display="flex">
-                    <CustomCheckbox
-                        sx={{ padding: 0, marginRight: 1, marginTop: 0.5 }}
-                        checked={values.generatedArtworkAI}
-                        onChange={(event) => setFieldValue('generatedArtworkAI', event.target.checked)}
-                    />
-                    <Typography>{texts.generatedArtworkAI}</Typography>
-                </Box>
-                <Box marginBlock={2} alignItems="flex-start" display="flex">
-                    <CustomCheckbox
-                        sx={{ padding: 0, marginRight: 1, marginTop: 0.5 }}
-                        checked={values.notMintedOtherBlockchain}
-                        onChange={(event) => setFieldValue('notMintedOtherBlockchain', event.target.checked)}
-                    />
-                    <Typography>{texts.notMintedOtherBlockchain}</Typography>
-                </Box>
-                <Box textAlign="right" mt={2} mb={2}>
-                    <Button
-                        variant="contained"
-                        color={values.contract ? 'success' : 'primary'}
-                        onClick={handleChangeContract}
-                        disabled={!scrolledToBottom && !values.contract}
+                    <Box
+                        mt={4}
+                        marginBottom={3}
+                        ref={scrollContainerRef}
+                        onScroll={handleScroll}
+                        maxHeight={290}
+                        padding={1}
+                        style={{
+                            textAlign: 'justify',
+                            overflowY: 'auto',
+                            border: '1px solid #ccc',
+                        }}
                     >
-                        {(language['studio.consignArtwork.termsOfUse.accept.button'] as TranslateFunction)({
-                            contract: values.contract,
-                            scrolledToBottom,
-                        })}
-                    </Button>
+                        <Contract />
+                    </Box>
+                    <Box marginBlock={2} alignItems="flex-start" display="flex">
+                        <CustomCheckbox
+                            sx={{ padding: 0, marginRight: 1, marginTop: 0.5 }}
+                            checked={values.isOriginal}
+                            onChange={(event) => setFieldValue('isOriginal', event.target.checked)}
+                        />
+                        <Typography sx={{ padding: 0 }}>{texts.isOriginal}</Typography>
+                    </Box>
+                    <Box marginBlock={2} alignItems="flex-start" display="flex">
+                        <CustomCheckbox
+                            sx={{ padding: 0, marginRight: 1, marginTop: 0.5 }}
+                            checked={values.generatedArtworkAI}
+                            onChange={(event) => setFieldValue('generatedArtworkAI', event.target.checked)}
+                        />
+                        <Typography>{texts.generatedArtworkAI}</Typography>
+                    </Box>
+                    <Box marginBlock={2} alignItems="flex-start" display="flex">
+                        <CustomCheckbox
+                            sx={{ padding: 0, marginRight: 1, marginTop: 0.5 }}
+                            checked={values.notMintedOtherBlockchain}
+                            onChange={(event) => setFieldValue('notMintedOtherBlockchain', event.target.checked)}
+                        />
+                        <Typography>{texts.notMintedOtherBlockchain}</Typography>
+                    </Box>
+                    <Box textAlign="right" mt={2} mb={2}>
+                        <Button
+                            variant="contained"
+                            color={values.contract ? 'success' : 'primary'}
+                            onClick={handleChangeContract}
+                            disabled={!scrolledToBottom && !values.contract}
+                        >
+                            {(language['studio.consignArtwork.termsOfUse.accept.button'] as TranslateFunction)({
+                                contract: values.contract,
+                                scrolledToBottom,
+                            })}
+                        </Button>
+                    </Box>
                 </Box>
 
                 <ModalBackConfirm show={showBackModal} handleClose={handleCloseBackModal} yesClick={handleSaveData} />

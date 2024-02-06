@@ -34,6 +34,7 @@ export function FooterForm({
     backOnclick,
 }: FooterFormProps) {
     const theme = useTheme();
+
     const customizer = useSelector((state) => state.customizer);
     const router = useRouter();
 
