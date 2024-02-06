@@ -93,7 +93,21 @@ const ConsignArtwork = () => {
                         {Object.values(completedSteps).map((v) => (
                             <Grid alignItems="center" justifyContent="space-between" container key={v.stepId}>
                                 <Grid item>
-                                    <Typography my={2} variant="h6" fontWeight="normal" color="GrayText">
+                                    <Typography
+                                        title={`${language[v.stepName] as string} ${
+                                            v.optional ? ` (${texts.optional})` : ''
+                                        } `}
+                                        sx={{
+                                            whiteSpace: 'nowrap',
+                                            textOverflow: 'ellipsis',
+                                            overflow: 'hidden',
+                                            width: 310,
+                                        }}
+                                        my={2}
+                                        variant="h6"
+                                        fontWeight="normal"
+                                        color="GrayText"
+                                    >
                                         {language[v.stepName] as string}
                                         {v.optional ? ` (${texts.optional})` : ''}
                                     </Typography>

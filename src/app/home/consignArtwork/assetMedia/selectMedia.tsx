@@ -36,6 +36,7 @@ export default function SelectMedia({
 
     const texts = {
         dragAndDrop: language['studio.consignArtwork.assetMedia.dragAndDrop'],
+        dragAndDropDescription: language['studio.consignArtwork.assetMedia.dragAndDrop.description'],
         imageTypes: language['studio.consignArtwork.assetMedia.imageTypes'],
         videoTypes: language['studio.consignArtwork.assetMedia.videoTypes'],
     } as { [key: string]: string };
@@ -169,7 +170,7 @@ export default function SelectMedia({
                             sx={{ fontSize: { xs: '1rem', sm: '1rem', md: '1rem' } }}
                             variant="h6"
                         >
-                            Drag and drop a single media asset file or click to upload your original artwork.
+                            {texts.dragAndDropDescription}
                         </Typography>
                         <Typography
                             sx={{ fontSize: { xs: '1rem', sm: '1rem', md: '1rem' } }}

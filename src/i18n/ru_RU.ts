@@ -65,6 +65,7 @@ const language: Translation = {
     'studio.consignArtwork.stepName.assetMetadata': 'Метаданные мадиафайлов',
     'studio.consignArtwork.stepName.licenses': 'Лицензии',
     'studio.consignArtwork.stepName.termsOfUse': 'Условия использования',
+    'studio.consignArtwork.stepName.auxiliaryMedia': 'Вспомогательные Медиа',
     'studio.consignArtwork.optional': 'необязательный',
 
     'studio.consignArtwork.stepStatus.completed': 'Завершено',
@@ -133,6 +134,8 @@ const language: Translation = {
         `— Размер медиафайла для ${data.definition} изображения (${data.format}) не может превышать ${data.sizeError}`,
 
     'studio.consignArtwork.assetMedia.dragAndDrop': 'ЗАГРУЗКА ОРИГИНАЛЬНОГО ИЗОБРАЖЕНИЯ',
+    'studio.consignArtwork.assetMedia.dragAndDrop.description':
+        'Перетащите один файл мультимедиа или нажмите, чтобы загрузить ваш оригинальный художественный файл.',
     'studio.consignArtwork.assetMedia.imageTypes': 'Изображение: JPEG, PNG, GIF, SVG, WEBP',
     'studio.consignArtwork.assetMedia.videoTypes': 'Видео: MP4, WEBM',
 
@@ -287,6 +290,17 @@ const language: Translation = {
         'Я подтверждаю, что если какая-либо часть основного и вспомогательных медиафайлов была создана с использованием искусственного интеллекта, я ответил "Да" в поле метаданных "Генерации ИИ".',
     'studio.consignArtwork.termsOfUse.notMintedOtherBlockchain':
         'Я подтверждаю, что это произведение не чеканилось (mint) на любой другой платформе и/или сети, не предлагается, не подано и не выставляется на продажу на любой другой платформе или сети и не будет отчеканено, предложено, подано или выставлено на продажу, пока листинг активен на этой платформе.',
+
+    /* Auxiliary Media */
+    'studio.consignArtwork.auxiliaryMedia.description':
+        'Загрузите вспомогательные медиа-файлы для съемок за кулисами (BTS) и дополненной реальности (AR).',
+    'studio.consignArtwork.auxiliaryMedia.title': 'Вспомогательные медиа-файлы',
+    'studio.consignArtwork.auxiliaryMedia.subTitle': 'Медиа-ресурсы вспомогательных файлов',
+    'studio.consignArtwork.auxiliaryMedia.arImage.title': 'AR изображение',
+    'studio.consignArtwork.auxiliaryMedia.arVideo.title': 'AR видео',
+    'studio.consignArtwork.auxiliaryMedia.btsImage.title': 'BTS изображение',
+    'studio.consignArtwork.auxiliaryMedia.btsVideo.title': 'BTS видео',
+    'studio.consignArtwork.auxiliaryMedia.codeZip.title': 'ZIP-код',
 
     /* BackModalConfirm */
     'studio.consignArtwork.backModal.title': 'Хотите сохранить информацию?',

@@ -66,6 +66,7 @@ const language: Translation = {
     'studio.consignArtwork.stepName.assetMetadata': 'Metadatos del Activo',
     'studio.consignArtwork.stepName.licenses': 'Licencias',
     'studio.consignArtwork.stepName.termsOfUse': 'Términos de Uso',
+    'studio.consignArtwork.stepName.auxiliaryMedia': 'Medios Auxiliares',
     'studio.consignArtwork.optional': 'opcional',
 
     'studio.consignArtwork.stepStatus.completed': 'Completado',
@@ -137,6 +138,8 @@ const language: Translation = {
         `— El tamaño del archivo de medios para una imagen ${data.definition} (${data.format}) no puede exceder ${data.sizeError}`,
 
     'studio.consignArtwork.assetMedia.dragAndDrop': 'CARGA DE OBRA DE ARTE ORIGINAL',
+    'studio.consignArtwork.assetMedia.dragAndDrop.description':
+        'Arrastra y suelta un único archivo de medio o haz clic para cargar tu obra de arte original.',
     'studio.consignArtwork.assetMedia.imageTypes': 'Imagen: JPEG, PNG, GIF, SVG, WEBP',
     'studio.consignArtwork.assetMedia.videoTypes': 'Video: MP4, WEBM',
 
@@ -287,6 +290,17 @@ const language: Translation = {
         'Por la presente, confirmo que si alguna parte de los archivos del Activo y los Medios Auxiliares fueron creados utilizando Inteligencia Artificial, he respondido "Sí" en el campo de Metadatos para "Generación por IA".',
     'studio.consignArtwork.termsOfUse.notMintedOtherBlockchain':
         'Por la presente, confirmo que esta obra no está acuñada en ninguna otra blockchain, ofrecida, consignada o listada para la venta en ninguna otra plataforma, y no será acuñada, ofrecida, consignada o listada mientras la lista esté activa en esta plataforma.',
+
+    /* Auxiliary Media */
+    'studio.consignArtwork.auxiliaryMedia.description':
+        'Suba activos de medios auxiliares para Detrás de las escenas (BTS) y Realidad Aumentada (AR).',
+    'studio.consignArtwork.auxiliaryMedia.title': 'Medios Auxiliares',
+    'studio.consignArtwork.auxiliaryMedia.subTitle': 'Activos de Medios Auxiliares',
+    'studio.consignArtwork.auxiliaryMedia.arImage.title': 'Imagen AR',
+    'studio.consignArtwork.auxiliaryMedia.arVideo.title': 'Video AR',
+    'studio.consignArtwork.auxiliaryMedia.btsImage.title': 'Imagen BTS',
+    'studio.consignArtwork.auxiliaryMedia.btsVideo.title': 'Video BTS',
+    'studio.consignArtwork.auxiliaryMedia.codeZip.title': 'Código Zip',
 
     /* BackModalConfirm */
     'studio.consignArtwork.backModal.title': '¿Te gustaría guardar la información?',

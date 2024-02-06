@@ -64,6 +64,7 @@ const language: Translation = {
     'studio.consignArtwork.stepName.assetMetadata': 'فهرست دارایی',
     'studio.consignArtwork.stepName.licenses': 'مجوزها',
     'studio.consignArtwork.stepName.termsOfUse': 'شرایط استفاده',
+    'studio.consignArtwork.stepName.auxiliaryMedia': 'رسانه‌های کمکی',
     'studio.consignArtwork.optional': 'اختیاری',
 
     'studio.consignArtwork.stepStatus.completed': 'تکمیل شده',
@@ -134,6 +135,8 @@ const language: Translation = {
         `— اندازه فایل رسانه برای یک تصویر ${data.definition} (${data.format}) نمی‌تواند از ${data.sizeError} بیشتر باشد`,
 
     'studio.consignArtwork.assetMedia.dragAndDrop': 'بارگذاری اثر هنری اصلی',
+    'studio.consignArtwork.assetMedia.dragAndDrop.description':
+        'یک فایل رسانه انفراده را بکشید و رها کنید یا برای بارگذاری هنر اصلی خود کلیک کنید.',
     'studio.consignArtwork.assetMedia.imageTypes': 'تصویر: JPEG، PNG، GIF، SVG، WEBP',
     'studio.consignArtwork.assetMedia.videoTypes': 'ویدئو: MP4، WEBM',
 
@@ -284,6 +287,17 @@ const language: Translation = {
         'من با این توافق موافقم که در صورتی که هر قسمت از فایل‌های دارایی و رسانه های کمکی با استفاده از هوش مصنوعی ایجاد شده باشد، در فیلد متادیتا برای "تولید هوش مصنوعی" پاسخ "بله" داده‌ام.',
     'studio.consignArtwork.termsOfUse.notMintedOtherBlockchain':
         'با اینکه اینجانب تصدیق می‌کنم که این اثر در هیچ بلاکچین دیگری ساخته نشده، ارائه شده، قرارداد داده شده یا در هیچ پلتفرم دیگری برای فروش قرار داده نشده است و تا زمانی که لیست فعال است در این پلتفرم ساخته یا فروخته نخواهد شد.',
+
+    /* Auxiliary Media */
+    'studio.consignArtwork.auxiliaryMedia.description':
+        'رسانه‌های کمکی را برای پشت صحنه (BTS) و واقعیت افزوده (AR) بارگذاری کنید.',
+    'studio.consignArtwork.auxiliaryMedia.title': 'رسانه‌های کمکی',
+    'studio.consignArtwork.auxiliaryMedia.subTitle': 'اجزاي رسانه‌های کمکی',
+    'studio.consignArtwork.auxiliaryMedia.arImage.title': 'تصویر AR',
+    'studio.consignArtwork.auxiliaryMedia.arVideo.title': 'ویدئو AR',
+    'studio.consignArtwork.auxiliaryMedia.btsImage.title': 'تصویر BTS',
+    'studio.consignArtwork.auxiliaryMedia.btsVideo.title': 'ویدئو BTS',
+    'studio.consignArtwork.auxiliaryMedia.codeZip.title': 'کد Zip',
 
     /* BackModalConfirm */
     'studio.consignArtwork.backModal.title': 'آیا می‌خواهید اطلاعات را ذخیره کنید؟',

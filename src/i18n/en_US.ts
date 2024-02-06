@@ -133,19 +133,10 @@ const language: Translation = {
     }) => `— The media file size for a ${data.definition} Image (${data.format}) cannot exceed ${data.sizeError}`,
 
     'studio.consignArtwork.assetMedia.dragAndDrop': 'ORIGINAL ARTWORK UPLOAD',
+    'studio.consignArtwork.assetMedia.dragAndDrop.description':
+        'Drag and drop a single media asset file or click to upload your original artwork.',
     'studio.consignArtwork.assetMedia.imageTypes': 'Image: JPEG, PNG, GIF, SVG, WEBP',
     'studio.consignArtwork.assetMedia.videoTypes': 'Video: MP4, WEBM',
-
-    /* Auxiliary Media */
-    'studio.consignArtwork.auxiliaryMedia.description':
-        'Upload auxiliary media assets for Behind-the-scenes (BTS) and Augmented Reality (AR).',
-    'studio.consignArtwork.auxiliaryMedia.title': 'Auxiliary Media',
-    'studio.consignArtwork.auxiliaryMedia.subTitle': 'Auxiliary Media Assets',
-    'studio.consignArtwork.auxiliaryMedia.arImage.title': 'AR Image',
-    'studio.consignArtwork.auxiliaryMedia.arVideo.title': 'AR Video',
-    'studio.consignArtwork.auxiliaryMedia.btsImage.title': 'BTS Image',
-    'studio.consignArtwork.auxiliaryMedia.btsVideo.title': 'BTS Video',
-    'studio.consignArtwork.auxiliaryMedia.codeZip.title': 'Code Zip',
 
     /* Asset Metadata */
     'studio.consignArtwork.assetMetadata.title': 'Asset Metadata',
@@ -295,6 +286,17 @@ const language: Translation = {
         'I hereby agree that if any portion of the Asset and Auxiliary Media files were created using Artificial Intelligence, I have answered "Yes" in the Metadata field for "AI Generation."',
     'studio.consignArtwork.termsOfUse.notMintedOtherBlockchain':
         'I hereby agree that this work is not minted on any other blockchain, offered, consigned, or listed for sale on any other platform, and will not be minted, offered, consigned, or listed as long as the listing is active on this platform.',
+
+    /* Auxiliary Media */
+    'studio.consignArtwork.auxiliaryMedia.description':
+        'Upload auxiliary media assets for Behind-the-scenes (BTS) and Augmented Reality (AR).',
+    'studio.consignArtwork.auxiliaryMedia.title': 'Auxiliary Media',
+    'studio.consignArtwork.auxiliaryMedia.subTitle': 'Auxiliary Media Assets',
+    'studio.consignArtwork.auxiliaryMedia.arImage.title': 'AR Image',
+    'studio.consignArtwork.auxiliaryMedia.arVideo.title': 'AR Video',
+    'studio.consignArtwork.auxiliaryMedia.btsImage.title': 'BTS Image',
+    'studio.consignArtwork.auxiliaryMedia.btsVideo.title': 'BTS Video',
+    'studio.consignArtwork.auxiliaryMedia.codeZip.title': 'Code Zip',
 
     /* BackModalConfirm */
     'studio.consignArtwork.backModal.title': 'Would you like to save the information?',

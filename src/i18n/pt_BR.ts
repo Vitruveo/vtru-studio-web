@@ -55,19 +55,20 @@ const language: Translation = {
     /* Consign Artwork */
     'studio.consignArtwork.form.next.button': 'Próximo',
     'studio.consignArtwork.title': 'Consignar Obra de Arte',
-    'studio.consignArtwork.subtitle': 'Complete todas as tarefas e publique sua obra de arte',
+    'studio.consignArtwork.subtitle': 'Complete todas as tarefas necessárias e consigne sua obra de arte',
 
     'studio.consignArtwork.stepName.assetMedia': 'Mídia de Ativo',
     'studio.consignArtwork.stepName.assetMetadata': 'Metadados do Ativo',
     'studio.consignArtwork.stepName.licenses': 'Licenças',
     'studio.consignArtwork.stepName.termsOfUse': 'Termos de Uso',
+    'studio.consignArtwork.stepName.auxiliaryMedia': 'Mídia Auxiliar',
     'studio.consignArtwork.optional': 'opcional',
 
     'studio.consignArtwork.stepStatus.completed': 'Concluído',
     'studio.consignArtwork.stepStatus.inProgress': 'Em Andamento',
     'studio.consignArtwork.stepStatus.notStarted': 'Não Iniciado',
     'studio.consignArtwork.stepStatus.error': 'Erro',
-    'studio.consignArtwork.stepPublishMessageSuccess': 'Publicado com sucesso!',
+    'studio.consignArtwork.stepPublishMessageSuccess': 'Consignado com sucesso!',
 
     'studio.consignArtwork.stepButton': (data: { status: string }) =>
         `${data.status !== 'notStarted' ? 'Editar' : 'Iniciar'}`,
@@ -132,6 +133,8 @@ const language: Translation = {
         `— O tamanho do arquivo de mídia para uma Imagem ${data.definition} (${data.format}) não pode exceder ${data.sizeError}`,
 
     'studio.consignArtwork.assetMedia.dragAndDrop': 'ENVIO DE OBRA DE ARTE ORIGINAL',
+    'studio.consignArtwork.assetMedia.dragAndDrop.description':
+        'Arraste e solte um único arquivo de mídia ou clique para fazer upload de sua obra de arte original.',
     'studio.consignArtwork.assetMedia.imageTypes': 'Imagem: JPEG, PNG, GIF, SVG, WEBP',
     'studio.consignArtwork.assetMedia.videoTypes': 'Vídeo: MP4, WEBM',
 
@@ -274,7 +277,7 @@ const language: Translation = {
 
     /* Termos de Uso */
     'studio.consignArtwork.termsOfUse.title': 'Termos de Uso',
-    'studio.consignArtwork.termsOfUse.description': 'Complete todas as tarefas e publique sua obra de arte',
+    'studio.consignArtwork.termsOfUse.description': 'Complete todas as tarefas necessárias e consigne sua obra de arte',
     'studio.consignArtwork.termsOfUse.accept.button': (data: { contract: boolean; scrolledToBottom: boolean }) =>
         data.contract ? 'Aceito' : data.scrolledToBottom ? 'Aceitar Contrato' : 'Role até o final',
     'studio.consignArtwork.termsOfUse.isOriginal':
@@ -283,6 +286,17 @@ const language: Translation = {
         'Eu concordo que se qualquer parte do Ativo e dos arquivos de Mídia Auxiliar foram criados usando Inteligência Artificial, eu respondi "Sim" no campo de Metadados para "Geração por IA".',
     'studio.consignArtwork.termsOfUse.notMintedOtherBlockchain':
         'Eu concordo que esta obra não está cunhada em qualquer outra blockchain, oferecida, consignada ou listada para venda em qualquer outra plataforma, e não será cunhada, oferecida, consignada ou listada enquanto a listagem estiver ativa nesta plataforma.',
+
+    /* Auxiliary Media */
+    'studio.consignArtwork.auxiliaryMedia.description':
+        'Faça upload de ativos de mídia auxiliares para Bastidores (BTS) e Realidade Aumentada (AR).',
+    'studio.consignArtwork.auxiliaryMedia.title': 'Mídia Auxiliar',
+    'studio.consignArtwork.auxiliaryMedia.subTitle': 'Ativos de Mídia Auxiliar',
+    'studio.consignArtwork.auxiliaryMedia.arImage.title': 'Imagem AR',
+    'studio.consignArtwork.auxiliaryMedia.arVideo.title': 'Vídeo AR',
+    'studio.consignArtwork.auxiliaryMedia.btsImage.title': 'Imagem BTS',
+    'studio.consignArtwork.auxiliaryMedia.btsVideo.title': 'Vídeo BTS',
+    'studio.consignArtwork.auxiliaryMedia.codeZip.title': 'Código Zip',
 
     /* BackModalConfirm */
     'studio.consignArtwork.backModal.title': 'Gostaria de salvar as informações?',
