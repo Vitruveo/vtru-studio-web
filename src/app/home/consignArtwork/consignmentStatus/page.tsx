@@ -152,14 +152,14 @@ const ConsignArtwork = () => {
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
                 <Grid marginBottom={10} item xs={12} lg={6}>
-                    <Box marginBottom={3}>
-                        <Typography variant="h6" fontWeight="normal" color="GrayText">
-                            🎉 {texts.description}
-                        </Typography>
-                    </Box>
                     <Typography marginRight={1} fontSize="1.2rem" fontWeight="500">
                         {texts.title}
                     </Typography>
+                    <Box marginTop={2}>
+                        <Typography marginBottom={2} fontSize="1.1rem" fontWeight="normal" color="GrayText">
+                            🎉 {texts.description}
+                        </Typography>
+                    </Box>
                     <Box gap={3} display="flex" p={2} marginTop={1}>
                         <RadioGroup aria-label="options" value={statusRadio} onChange={handleRadioChange}>
                             <Grid alignItems="center" spacing={2} container>

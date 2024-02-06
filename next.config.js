@@ -9,15 +9,15 @@ const nextConfig = {
         ],
     },
     reactStrictMode: false,
-    async redirects() {
-        return [
-            {
-                source: '/',
-                destination: '/login',
-                permanent: true,
-            },
-        ];
-    },
+    // async redirects() {
+    //     return [
+    //         {
+    //             source: '/',
+    //             destination: '/login',
+    //             permanent: true,
+    //         },
+    //     ];
+    // },
     modularizeImports: {
         '@mui/icons-material': {
             transform: '@mui/icons-material/{{member}}',
