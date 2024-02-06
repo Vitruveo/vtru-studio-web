@@ -3,9 +3,21 @@ import { useFormik } from 'formik';
 import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
 import Card from './common/card';
 import { LicenseProps } from './types';
+import { useI18n } from '@/app/hooks/useI18n';
 
 function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const values = allValues.print || {};
+
+    const { language } = useI18n();
+
+    const texts = {
+        license: language['studio.consignArtwork.licenses.license'],
+        printDescription: language['studio.consignArtwork.licenses.print.description'],
+        printEnable: language['studio.consignArtwork.licenses.print.enable'],
+        singlePrintTitle: language['studio.consignArtwork.licenses.print.singlePrint.title'],
+        singlePrintDescription: language['studio.consignArtwork.licenses.print.singlePrint.description'],
+        singlePrintField: language['studio.consignArtwork.licenses.print.singlePrint.field'],
+    } as { [key: string]: string };
 
     const handleAdded = (added: boolean) => {
         setFieldValue('print.added', added);
@@ -24,9 +36,7 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                             component="label"
                             fontSize="1rem"
                         >
-                            This license makes the artwork available to end-users for printing to a single physical item
-                            using Print-on-Demand (POD) technology. The license is freely transferable until the point
-                            of printing, after which it is transferable solely to the owner of the physical item.
+                            {texts.printDescription}
                         </Typography>
                     </Box>
                 ) : (
@@ -39,7 +49,7 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                         alignItems="center"
                         justifyContent="space-between"
                     >
-                        <Typography sx={{ whiteSpace: 'nowrap', marginRight: 3 }}>Unit Price (USD)</Typography>
+                        <Typography sx={{ whiteSpace: 'nowrap', marginRight: 3 }}>{texts.singlePrintField}</Typography>
                         <CustomTextField
                             name="print.unitPrice"
                             type="number"
@@ -60,12 +70,10 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
             </Card>
             <Box marginTop={2} width={300}>
                 <Typography color="gray" fontSize="1.1rem" fontWeight="bold">
-                    {values?.added ? 'Single Print' : 'PRINT-ART-1 License'}
+                    {values?.added ? texts.singlePrintTitle : `PRINT-ART-1 ${texts.license}`}
                 </Typography>
                 <Typography marginTop={2} color="GrayText" fontSize="0.9rem">
-                    {values?.added
-                        ? '“Unit Price” is the price of the artwork in U.S. dollars for a single print.'
-                        : 'Enable this license if you want end-users to use your art for print-on-demand (POD) applications. This license is for individual printing; bulk printing is not permitted.'}
+                    {values?.added ? texts.singlePrintDescription : texts.printEnable}
                 </Typography>
             </Box>
         </Box>

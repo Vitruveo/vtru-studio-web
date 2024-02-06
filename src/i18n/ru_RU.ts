@@ -209,6 +209,72 @@ const language: Translation = {
     'studio.consignArtwork.licenses.field.editionPrice': 'Цена издания',
     'studio.consignArtwork.licenses.field.elasticEditions': 'Эластичные издания',
 
+    'studio.consignArtwork.licenses.license': 'Лицензия',
+
+    'studio.consignArtwork.licenses.nft.description':
+        'Эта лицензия делает произведение доступным для продажи по одной из нескольких моделей ценообразования. При продаже создается и передается покупателю NFT произведения.',
+    'studio.consignArtwork.licenses.nft.enable':
+        'Включите эту лицензию, если хотите, чтобы покупатели стали владельцами цифровой коллекции произведения искусства.',
+
+    'studio.consignArtwork.licenses.nft.selectEdition.title': 'Выберите издание',
+    'studio.consignArtwork.licenses.nft.selectEdition.elasticEditions':
+        'это гибкая модель, предоставляющая покупателю возможность объединять несколько изданий в одно, динамически изменяя размер издания.',
+    'studio.consignArtwork.licenses.nft.selectEdition.singleEdition': 'это фиксированная модель 1/1.',
+    'studio.consignArtwork.licenses.nft.selectEdition.unlimitedEditions':
+        'это плата или бесплатная модель для неограниченных изданий.',
+
+    'studio.consignArtwork.licenses.nft.elasticEditions.title': 'Эластичные издания',
+    'studio.consignArtwork.licenses.nft.elasticEditions.editionPrice.title': 'Цена издания (USD)',
+    'studio.consignArtwork.licenses.nft.elasticEditions.numberOfEditions.title': 'Количество изданий',
+    'studio.consignArtwork.licenses.nft.elasticEditions.totalPrice.title': 'Общая стоимость (USD)',
+    'studio.consignArtwork.licenses.nft.elasticEditions.editionDiscount.title': 'Скидка на издание',
+    'studio.consignArtwork.licenses.nft.elasticEditions.editionPrice':
+        '“Цена издания” - это цена произведения искусства в долларах США.',
+    'studio.consignArtwork.licenses.nft.elasticEditions.numberOfEditions':
+        '“Количество изданий” - это количество изданий произведения, которые могут быть созданы.',
+    'studio.consignArtwork.licenses.nft.elasticEditions.totalPrice':
+        '“Общая стоимость” - это “Цена издания” умноженная на “Количество изданий”.',
+    'studio.consignArtwork.licenses.nft.elasticEditions.editionDiscount':
+        '“Скидка на издание” - это скидка для покупателя при покупке нескольких изданий. Рассчитывается делением 10 на “Количество изданий”. Если включено, скидка применяется к каждому изданию после первого.',
+    'studio.consignArtwork.licenses.nft.singleEdition.title': 'Одиночное издание',
+    'studio.consignArtwork.licenses.nft.singleEdition.editionPrice':
+        '“Цена издания” - это цена произведения искусства в долларах США.',
+    'studio.consignArtwork.licenses.nft.singleEdition.editionPrice.title': 'Цена издания (USD)',
+    'studio.consignArtwork.licenses.nft.unlimitedEditions.title': 'Неограниченные издания',
+    'studio.consignArtwork.licenses.nft.unlimitedEditions.editionPrice':
+        '“Цена издания” - это цена произведения искусства в долларах США.',
+    'studio.consignArtwork.licenses.nft.unlimitedEditions.editionPrice.title': 'Цена издания (USD)',
+
+    'studio.consignArtwork.licenses.stream.description':
+        'Эта лицензия предоставляет произведение для кураторов для включения в плейлисты для потокового воспроизведения искусства на цифровых рамках. Доходы от потокового воспроизведения автоматически рассчитываются на основе использования и согласованных ценовых соглашений.',
+    'studio.consignArtwork.licenses.stream.enable':
+        'Включите эту лицензию, если хотите, чтобы кураторы включали ваше произведение в плейлисты, используемые потребителями и бизнесом для слайд-шоу на цифровых рамках.',
+    'studio.consignArtwork.licenses.stream.enable.description':
+        'Доходы от потокового воспроизведения автоматически рассчитываются на основе использования и согласованных ценовых соглашений.',
+    'studio.consignArtwork.licenses.stream.unlimitedStreaming': 'Неограниченное потоковое воспроизведение',
+    'studio.consignArtwork.licenses.stream.unlimitedStreaming.description':
+        'Произведение может использоваться для потокового воспроизведения в неограниченных сценариях.',
+
+    'studio.consignArtwork.licenses.print.description':
+        'Эта лицензия предоставляет произведение конечным пользователям для печати на один физический объект с использованием технологии печати по требованию (POD). Лицензия свободно передается до момента печати, после чего она передается исключительно владельцу физического объекта.',
+    'studio.consignArtwork.licenses.print.enable':
+        'Включите эту лицензию, если хотите, чтобы конечные пользователи использовали ваше искусство для приложений печати по требованию (POD). Эта лицензия предназначена для индивидуальной печати; массовая печать не разрешена.',
+    'studio.consignArtwork.licenses.print.singlePrint.title': 'Одиночная печать',
+    'studio.consignArtwork.licenses.print.singlePrint.description':
+        '“Цена за единицу” - это цена произведения искусства в долларах США за одну печать.',
+    'studio.consignArtwork.licenses.print.singlePrint.field': 'Цена за единицу (USD)',
+
+    'studio.consignArtwork.licenses.remix.description':
+        'Эта лицензия предоставляет произведение конечным пользователям для использования в приложениях Remix с использованием',
+    'studio.consignArtwork.licenses.remix.description2':
+        'лицензии, которая разрешает использование Remix в некоммерческих целях.',
+    'studio.consignArtwork.licenses.remix.singleRemix.title': 'Одиночный Remix',
+    'studio.consignArtwork.licenses.remix.singleRemix.description':
+        '“Цена за единицу” - это цена произведения искусства в долларах США за один Remix.',
+    'studio.consignArtwork.licenses.remix.singleRemix.field': 'Цена за единицу (USD)',
+    'studio.consignArtwork.licenses.remix.enable':
+        'Включите эту лицензию, если хотите, чтобы конечные пользователи использовали ваше искусство в приложениях Remix. Результат Remix может использоваться только в некоммерческих целях.',
+
     /* Terms of Use */
     'studio.consignArtwork.termsOfUse.title': 'Условия использования',
     'studio.consignArtwork.termsOfUse.description':

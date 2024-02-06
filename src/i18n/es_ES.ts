@@ -210,6 +210,71 @@ const language: Translation = {
     'studio.consignArtwork.licenses.field.maximumEditions': 'Ediciones Máximas',
     'studio.consignArtwork.licenses.field.editionPrice': 'Precio de la Edición',
     'studio.consignArtwork.licenses.field.elasticEditions': 'Ediciones Elásticas',
+    'studio.consignArtwork.licenses.license': 'Licencia',
+
+    'studio.consignArtwork.licenses.nft.description':
+        'Esta licencia hace que la obra de arte esté disponible para la venta bajo uno de varios modelos de precios de edición. Cuando se vende, se acuña un NFT de la obra de arte y se entrega al comprador.',
+    'studio.consignArtwork.licenses.nft.enable':
+        'Habilite esta licencia si desea que los compradores tengan la propiedad de un coleccionable digital de la obra de arte.',
+
+    'studio.consignArtwork.licenses.nft.selectEdition.title': 'Seleccionar Edición',
+    'studio.consignArtwork.licenses.nft.selectEdition.elasticEditions':
+        'es un modelo flexible que le da al comprador la capacidad de combinar varias ediciones en una, cambiando dinámicamente el tamaño de la edición.',
+    'studio.consignArtwork.licenses.nft.selectEdition.singleEdition': 'es un modelo fijo 1/1.',
+    'studio.consignArtwork.licenses.nft.selectEdition.unlimitedEditions':
+        'es un modelo de tarifa o gratuito para ediciones ilimitadas.',
+
+    'studio.consignArtwork.licenses.nft.elasticEditions.title': 'Ediciones Elásticas',
+    'studio.consignArtwork.licenses.nft.elasticEditions.editionPrice.title': 'Precio de la Edición (USD)',
+    'studio.consignArtwork.licenses.nft.elasticEditions.numberOfEditions.title': 'Número de Ediciones',
+    'studio.consignArtwork.licenses.nft.elasticEditions.totalPrice.title': 'Precio Total (USD)',
+    'studio.consignArtwork.licenses.nft.elasticEditions.editionDiscount.title': 'Descuento de Edición',
+    'studio.consignArtwork.licenses.nft.elasticEditions.editionPrice':
+        '“Precio de la Edición” es el precio de la obra de arte en dólares estadounidenses.',
+    'studio.consignArtwork.licenses.nft.elasticEditions.numberOfEditions':
+        '“Número de Ediciones” es la cantidad de ediciones de la obra de arte que se pueden acuñar.',
+    'studio.consignArtwork.licenses.nft.elasticEditions.totalPrice':
+        '“Precio Total” es el “Precio de la Edición” multiplicado por el “Número de Ediciones”.',
+    'studio.consignArtwork.licenses.nft.elasticEditions.editionDiscount':
+        '“Descuento de Edición” es el descuento para el comprador al comprar varias ediciones. Se calcula dividiendo 10 por el “Número de Ediciones”. Si está habilitado, el descuento se aplica para cada edición después de la primera.',
+    'studio.consignArtwork.licenses.nft.singleEdition.title': 'Edición Única',
+    'studio.consignArtwork.licenses.nft.singleEdition.editionPrice':
+        '“Precio de la Edición” es el precio de la obra de arte en dólares estadounidenses.',
+    'studio.consignArtwork.licenses.nft.singleEdition.editionPrice.title': 'Precio de la Edición (USD)',
+    'studio.consignArtwork.licenses.nft.unlimitedEditions.title': 'Ediciones Ilimitadas',
+    'studio.consignArtwork.licenses.nft.unlimitedEditions.editionPrice':
+        '“Precio de la Edición” es el precio de la obra de arte en dólares estadounidenses.',
+    'studio.consignArtwork.licenses.nft.unlimitedEditions.editionPrice.title': 'Precio de la Edición (USD)',
+
+    'studio.consignArtwork.licenses.stream.description':
+        'Esta licencia hace que la obra de arte esté disponible para los curadores para incluirla en listas de reproducción para transmitir arte a marcos digitales. Los ingresos por transmisión se calculan automáticamente en función del uso y los acuerdos de precios negociados.',
+    'studio.consignArtwork.licenses.stream.enable':
+        'Habilite esta licencia si desea que los curadores incluyan su obra de arte en listas de reproducción que utilizan los consumidores y las empresas para presentaciones de diapositivas en marcos digitales.',
+    'studio.consignArtwork.licenses.stream.enable.description':
+        'Los ingresos por transmisión se calculan automáticamente en función del uso y los acuerdos de precios negociados.',
+    'studio.consignArtwork.licenses.stream.unlimitedStreaming': 'Transmisión Ilimitada',
+    'studio.consignArtwork.licenses.stream.unlimitedStreaming.description':
+        'La obra de arte puede ser utilizada para transmisión en escenarios ilimitados.',
+
+    'studio.consignArtwork.licenses.print.description':
+        'Esta licencia hace que la obra de arte esté disponible para los usuarios finales para imprimir en un solo artículo físico utilizando la tecnología de impresión bajo demanda (POD). La licencia es libremente transferible hasta el punto de impresión, después de lo cual es transferible únicamente al propietario del artículo físico.',
+    'studio.consignArtwork.licenses.print.enable':
+        'Habilite esta licencia si desea que los usuarios finales utilicen su arte para aplicaciones de impresión bajo demanda (POD). Esta licencia es para impresión individual; no se permite la impresión en masa.',
+    'studio.consignArtwork.licenses.print.singlePrint.title': 'Impresión Única',
+    'studio.consignArtwork.licenses.print.singlePrint.description':
+        '“Precio Unitario” es el precio de la obra de arte en dólares estadounidenses para una sola impresión.',
+    'studio.consignArtwork.licenses.print.singlePrint.field': 'Precio Unitario (USD)',
+
+    'studio.consignArtwork.licenses.remix.description':
+        'Esta licencia hace que la obra de arte esté disponible para los usuarios finales para su uso en aplicaciones de Remix utilizando la',
+    'studio.consignArtwork.licenses.remix.description2':
+        'licencia que permite el uso de remix para fines no comerciales.',
+    'studio.consignArtwork.licenses.remix.singleRemix.title': 'Remix Único',
+    'studio.consignArtwork.licenses.remix.singleRemix.description':
+        '“Precio Unitario” es el precio de la obra de arte en dólares estadounidenses para un solo remix.',
+    'studio.consignArtwork.licenses.remix.singleRemix.field': 'Precio Unitario (USD)',
+    'studio.consignArtwork.licenses.remix.enable':
+        'Habilite esta licencia si desea que los usuarios finales utilicen su arte en aplicaciones de Remix. El resultado del remix solo puede ser utilizado para fines no comerciales.',
 
     /* Terms of Use */
     'studio.consignArtwork.termsOfUse.title': 'Términos de Uso',

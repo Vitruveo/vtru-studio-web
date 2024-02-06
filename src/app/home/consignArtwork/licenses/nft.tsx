@@ -6,9 +6,38 @@ import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTe
 import CustomCheckbox from '@/app/home/components/forms/theme-elements/CustomCheckbox';
 import Card from './common/card';
 import { LicenseProps } from './types';
+import { useI18n } from '@/app/hooks/useI18n';
 
 function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const values = allValues.nft || {};
+
+    const { language } = useI18n();
+
+    const texts = {
+        license: language['studio.consignArtwork.licenses.license'],
+        nftDescription: language['studio.consignArtwork.licenses.nft.description'],
+        nftEnable: language['studio.consignArtwork.licenses.nft.enable'],
+        elasticEditionsTitle: language['studio.consignArtwork.licenses.nft.elasticEditions.title'],
+        editionPriceTitle: language['studio.consignArtwork.licenses.nft.elasticEditions.editionPrice.title'],
+        numberOfEditionsTitle: language['studio.consignArtwork.licenses.nft.elasticEditions.numberOfEditions.title'],
+        totalPriceTitle: language['studio.consignArtwork.licenses.nft.elasticEditions.totalPrice.title'],
+        editionDiscountTitle: language['studio.consignArtwork.licenses.nft.elasticEditions.editionDiscount.title'],
+        editionPrice: language['studio.consignArtwork.licenses.nft.elasticEditions.editionPrice'],
+        numberOfEditions: language['studio.consignArtwork.licenses.nft.elasticEditions.numberOfEditions'],
+        totalPrice: language['studio.consignArtwork.licenses.nft.elasticEditions.totalPrice'],
+        editionDiscount: language['studio.consignArtwork.licenses.nft.elasticEditions.editionDiscount'],
+        singleEditionTitle: language['studio.consignArtwork.licenses.nft.singleEdition.title'],
+        singleEditionPrice: language['studio.consignArtwork.licenses.nft.singleEdition.editionPrice'],
+        singleEditionPriceTitle: language['studio.consignArtwork.licenses.nft.singleEdition.editionPrice.title'],
+        unlimitedEditionsTitle: language['studio.consignArtwork.licenses.nft.unlimitedEditions.title'],
+        unlimitedEditionsPrice: language['studio.consignArtwork.licenses.nft.unlimitedEditions.editionPrice'],
+        unlimitedEditionsPriceTitle:
+            language['studio.consignArtwork.licenses.nft.unlimitedEditions.editionPrice.title'],
+        selectEditionTitle: language['studio.consignArtwork.licenses.nft.selectEdition.title'],
+        selectEditionElasticEditions: language['studio.consignArtwork.licenses.nft.selectEdition.elasticEditions'],
+        selectEditionSingleEdition: language['studio.consignArtwork.licenses.nft.selectEdition.singleEdition'],
+        selectEditionUnlimitedEditions: language['studio.consignArtwork.licenses.nft.selectEdition.unlimitedEditions'],
+    } as { [key: string]: string };
 
     const handleAdded = (added: boolean) => {
         if (added == false) setFieldValue('nft.editionOption', '');
@@ -28,15 +57,14 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                             component="label"
                             fontSize="1rem"
                         >
-                            This license makes the artwork available for sale under one of several edition pricing
-                            models. When sold, an NFT of the artwork is minted and delivered to the buyer.
+                            {texts.nftDescription}
                         </Typography>
                     </Box>
                 ) : (
                     <Box paddingTop={1} paddingLeft={3} width="100%">
                         <Box alignItems="center" justifyContent="space-between" display="flex" marginBottom={1}>
-                            <Box width={100}>
-                                <Typography>License</Typography>
+                            <Box marginRight={1} width={100}>
+                                <Typography>{texts.license}</Typography>
                             </Box>
                             <Box alignItems="center" justifyContent="space-between" display="flex" width={300}>
                                 <CustomSelect
@@ -79,23 +107,33 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                             value={values.editionOption}
                             onChange={handleChange}
                         >
-                            <FormControlLabel value="elastic" control={<Radio />} label="Elastic Editions" />
+                            <FormControlLabel value="elastic" control={<Radio />} label={texts.elasticEditionsTitle} />
                             {values.editionOption === 'elastic' && (
                                 <Box marginLeft={4}>
                                     <Box display="flex" alignItems="center" justifyContent="space-between">
-                                        <Typography
-                                            fontSize="0.8rem"
-                                            sx={{ whiteSpace: 'nowrap', width: 100, marginRight: 3 }}
-                                        >
-                                            Edition Price (USD)
-                                        </Typography>
+                                        <Box marginRight={1}>
+                                            <Typography
+                                                title={texts.editionPriceTitle}
+                                                whiteSpace="nowrap"
+                                                textOverflow="ellipsis"
+                                                fontSize="0.8rem"
+                                                sx={{
+                                                    whiteSpace: 'nowrap',
+                                                    textOverflow: 'ellipsis',
+                                                    overflow: 'hidden',
+                                                    width: 130,
+                                                }}
+                                            >
+                                                {texts.editionPriceTitle}
+                                            </Typography>
+                                        </Box>
                                         <CustomTextField
                                             name="nft.elastic.editionPrice"
                                             type="number"
                                             InputProps={{
                                                 sx: {
                                                     backgroundColor: '#fff',
-                                                    width: 100,
+                                                    width: 90,
                                                 },
                                             }}
                                             value={values.elastic.editionPrice}
@@ -112,19 +150,27 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                         alignItems="center"
                                         justifyContent="space-between"
                                     >
-                                        <Typography
-                                            fontSize="0.8rem"
-                                            sx={{ whiteSpace: 'nowrap', width: 100, marginRight: 3 }}
-                                        >
-                                            Number of Editions
-                                        </Typography>
+                                        <Box marginRight={1}>
+                                            <Typography
+                                                title={texts.numberOfEditionsTitle}
+                                                fontSize="0.8rem"
+                                                sx={{
+                                                    whiteSpace: 'nowrap',
+                                                    textOverflow: 'ellipsis',
+                                                    overflow: 'hidden',
+                                                    width: 130,
+                                                }}
+                                            >
+                                                {texts.numberOfEditionsTitle}
+                                            </Typography>
+                                        </Box>
                                         <CustomTextField
                                             name="nft.elastic.numberOfEditions"
                                             type="number"
                                             InputProps={{
                                                 sx: {
                                                     backgroundColor: '#fff',
-                                                    width: 100,
+                                                    width: 90,
                                                 },
                                             }}
                                             value={values.elastic.numberOfEditions}
@@ -145,7 +191,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                             fontSize="0.8rem"
                                             sx={{ whiteSpace: 'nowrap', width: 100, marginRight: 3 }}
                                         >
-                                            Total Price (USD)
+                                            {texts.totalPriceTitle}
                                         </Typography>
                                         <Typography
                                             textAlign="right"
@@ -167,7 +213,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                             fontSize="0.8rem"
                                             sx={{ whiteSpace: 'nowrap', width: 100, marginRight: 3 }}
                                         >
-                                            Edition Discount
+                                            {texts.editionDiscountTitle}
                                         </Typography>
 
                                         <Box display="flex" gap={1} alignItems="center" justifyContent="space-between">
@@ -193,22 +239,29 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                     </Box>
                                 </Box>
                             )}
-                            <FormControlLabel value="single" control={<Radio />} label="Single Edition" />
+                            <FormControlLabel value="single" control={<Radio />} label={texts.singleEditionTitle} />
                             {values.editionOption === 'single' && (
                                 <Box marginLeft={4} display="flex" alignItems="center" justifyContent="space-between">
-                                    <Typography
-                                        fontSize="0.8rem"
-                                        sx={{ whiteSpace: 'nowrap', width: 100, marginRight: 3 }}
-                                    >
-                                        Edition Price (USD)
-                                    </Typography>
+                                    <Box marginRight={1}>
+                                        <Typography
+                                            fontSize="0.8rem"
+                                            sx={{
+                                                whiteSpace: 'nowrap',
+                                                textOverflow: 'ellipsis',
+                                                overflow: 'hidden',
+                                                width: 130,
+                                            }}
+                                        >
+                                            {texts.singleEditionPriceTitle}
+                                        </Typography>
+                                    </Box>
                                     <CustomTextField
                                         name="nft.single.editionPrice"
                                         type="number"
                                         InputProps={{
                                             sx: {
                                                 backgroundColor: '#fff',
-                                                width: 100,
+                                                width: 90,
                                             },
                                         }}
                                         value={values.single.editionPrice}
@@ -220,23 +273,35 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                     />
                                 </Box>
                             )}
-                            <FormControlLabel value="unlimited" control={<Radio />} label="Unlimited Editions" />
+                            <FormControlLabel
+                                value="unlimited"
+                                control={<Radio />}
+                                label={texts.unlimitedEditionsTitle}
+                            />
 
                             {values.editionOption === 'unlimited' && (
                                 <Box marginLeft={4} display="flex" alignItems="center" justifyContent="space-between">
-                                    <Typography
-                                        fontSize="0.8rem"
-                                        sx={{ whiteSpace: 'nowrap', width: 100, marginRight: 3 }}
-                                    >
-                                        Edition Price (USD)
-                                    </Typography>
+                                    <Box marginRight={1}>
+                                        <Typography
+                                            title={texts.unlimitedEditionsPriceTitle}
+                                            fontSize="0.8rem"
+                                            sx={{
+                                                whiteSpace: 'nowrap',
+                                                textOverflow: 'ellipsis',
+                                                overflow: 'hidden',
+                                                width: 130,
+                                            }}
+                                        >
+                                            {texts.unlimitedEditionsPriceTitle}
+                                        </Typography>
+                                    </Box>
                                     <CustomTextField
                                         name="nft.unlimited.editionPrice"
                                         type="number"
                                         InputProps={{
                                             sx: {
                                                 backgroundColor: '#fff',
-                                                width: 100,
+                                                width: 90,
                                             },
                                         }}
                                         value={values.unlimited.editionPrice}
@@ -255,88 +320,81 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
             <Box marginTop={2} width={300}>
                 <Typography color="gray" fontSize="1.1rem" fontWeight="bold">
                     {values?.editionOption === 'elastic'
-                        ? 'Elastic Editions'
+                        ? texts.elasticEditionsTitle
                         : values?.editionOption === 'single'
-                          ? 'Single Edition'
+                          ? texts.singleEditionTitle
                           : values?.editionOption === 'unlimited'
-                            ? 'Unlimited Editions'
+                            ? texts.unlimitedEditionsTitle
                             : values?.added
-                              ? 'Select Edition'
-                              : 'NFT-ART-1 License'}
+                              ? texts.selectEditionTitle
+                              : `NFT-ART-1 ${texts.license}`}
                 </Typography>
 
                 {values.editionOption === 'elastic' ? (
                     <Box marginTop={2}>
                         <Box>
                             <Typography textAlign="left" display="inline" color="GrayText" fontSize="0.9rem">
-                                “Edition Price” is the price of the artwork in U.S. dollars.
-                            </Typography>
-                            <Typography display="inline" color="GrayText" fontSize="0.9rem">
-                                “Edition Price” is the price of the artwork in U.S. dollars.
+                                {texts.editionPrice}
                             </Typography>
                         </Box>
                         <Box marginTop={2}>
                             <Typography display="inline" color="GrayText" fontSize="0.9rem">
-                                “Number of Editions” is the quantity of editions of the artwork that can be minted.
+                                {texts.numberOfEditions}
                             </Typography>
                         </Box>
                         <Box marginTop={2}>
                             <Typography textAlign="left" display="inline" color="GrayText" fontSize="0.9rem">
-                                “Total Price” is the “Edition Price” multiplied by “Number of Editions.”
+                                {texts.totalPrice}
                             </Typography>
                         </Box>
                         <Box marginTop={2}>
                             <Typography textAlign="left" display="inline" color="GrayText" fontSize="0.9rem">
-                                “Edition Discount” is the discount for the buyer when purchasing multiple editions. It
-                                is calculated by dividing 10 by the “Number of Editions.” If enabled, the discount is
-                                applied for each edition after the first one.
+                                {texts.editionDiscount}
                             </Typography>
                         </Box>
                     </Box>
                 ) : values.editionOption === 'single' ? (
                     <Box marginTop={2}>
                         <Typography textAlign="left" display="inline" color="GrayText" fontSize="0.9rem">
-                            “Edition Price” is the price of the artwork in U.S. dollars.
+                            {texts.singleEditionPrice}
                         </Typography>
                     </Box>
                 ) : values.editionOption === 'unlimited' ? (
                     <Box marginTop={2}>
                         <Typography textAlign="left" display="inline" color="GrayText" fontSize="0.9rem">
-                            “Edition Price” is the price of the artwork in U.S. dollars.
+                            {texts.unlimitedEditionsPrice}
                         </Typography>
                     </Box>
                 ) : values.added ? (
                     <Box marginTop={2}>
                         <Box>
                             <Typography display="inline" fontWeight="bold" color="GrayText" fontSize="0.9rem">
-                                Elastic Editions{' '}
+                                {texts.elasticEditionsTitle}{' '}
                             </Typography>
                             <Typography display="inline" color="GrayText" fontSize="0.9rem">
-                                is a flexible model that gives a buyer the ability to combine multiple editions into
-                                one, dynamically changing the edition size.
+                                {texts.selectEditionElasticEditions}
                             </Typography>
                         </Box>
                         <Box marginTop={2}>
                             <Typography display="inline" fontWeight="bold" color="GrayText" fontSize="0.9rem">
-                                Single Edition{' '}
+                                {texts.singleEditionTitle}{' '}
                             </Typography>
                             <Typography display="inline" color="GrayText" fontSize="0.9rem">
-                                is a fixed 1/1 model.
+                                {texts.selectEditionSingleEdition}
                             </Typography>
                         </Box>
                         <Box marginTop={2}>
                             <Typography display="inline" fontWeight="bold" color="GrayText" fontSize="0.9rem">
-                                Unlimited Editions{' '}
+                                {texts.unlimitedEditionsTitle}{' '}
                             </Typography>
                             <Typography display="inline" color="GrayText" fontSize="0.9rem">
-                                is a fee or free model for unlimited editions.
+                                {texts.selectEditionUnlimitedEditions}
                             </Typography>
                         </Box>
                     </Box>
                 ) : (
                     <Typography marginTop={2} color="GrayText" fontSize="0.9rem">
-                        Enable this license if you want buyers to have ownership of a digital collectible of the
-                        artwork.
+                        {texts.nftEnable}
                     </Typography>
                 )}
             </Box>

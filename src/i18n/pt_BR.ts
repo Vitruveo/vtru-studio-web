@@ -207,6 +207,71 @@ const language: Translation = {
     'studio.consignArtwork.licenses.field.editionPrice': 'Preço da Edição',
     'studio.consignArtwork.licenses.field.elasticEditions': 'Edições Elásticas',
 
+    'studio.consignArtwork.licenses.license': 'Licença',
+
+    'studio.consignArtwork.licenses.nft.description':
+        'Esta licença torna a obra de arte disponível para venda sob um dos vários modelos de precificação de edição. Quando vendido, um NFT da obra de arte é cunhado e entregue ao comprador.',
+    'studio.consignArtwork.licenses.nft.enable':
+        'Ative esta licença se você deseja que os compradores tenham a propriedade de um colecionável digital da obra de arte.',
+
+    'studio.consignArtwork.licenses.nft.selectEdition.title': 'Selecionar Edição',
+    'studio.consignArtwork.licenses.nft.selectEdition.elasticEditions':
+        'é um modelo flexível que dá ao comprador a capacidade de combinar várias edições em uma, alterando dinamicamente o tamanho da edição.',
+    'studio.consignArtwork.licenses.nft.selectEdition.singleEdition': 'é um modelo fixo 1/1.',
+    'studio.consignArtwork.licenses.nft.selectEdition.unlimitedEditions':
+        'é um modelo gratuito ou com taxa para edições ilimitadas.',
+
+    'studio.consignArtwork.licenses.nft.elasticEditions.title': 'Edições Elásticas',
+    'studio.consignArtwork.licenses.nft.elasticEditions.editionPrice.title': 'Preço da Edição (USD)',
+    'studio.consignArtwork.licenses.nft.elasticEditions.numberOfEditions.title': 'Número de Edições',
+    'studio.consignArtwork.licenses.nft.elasticEditions.totalPrice.title': 'Preço Total (USD)',
+    'studio.consignArtwork.licenses.nft.elasticEditions.editionDiscount.title': 'Desconto da Edição',
+    'studio.consignArtwork.licenses.nft.elasticEditions.editionPrice':
+        '“Preço da Edição” é o preço da obra de arte em dólares americanos.',
+    'studio.consignArtwork.licenses.nft.elasticEditions.numberOfEditions':
+        '“Número de Edições” é a quantidade de edições da obra de arte que podem ser cunhadas.',
+    'studio.consignArtwork.licenses.nft.elasticEditions.totalPrice':
+        '“Preço Total” é o “Preço da Edição” multiplicado pelo “Número de Edições.”',
+    'studio.consignArtwork.licenses.nft.elasticEditions.editionDiscount':
+        '“Desconto da Edição” é o desconto para o comprador ao comprar várias edições. É calculado dividindo 10 pelo “Número de Edições.” Se ativado, o desconto é aplicado para cada edição após a primeira.',
+    'studio.consignArtwork.licenses.nft.singleEdition.title': 'Edição Única',
+    'studio.consignArtwork.licenses.nft.singleEdition.editionPrice':
+        '“Preço da Edição” é o preço da obra de arte em dólares americanos.',
+    'studio.consignArtwork.licenses.nft.singleEdition.editionPrice.title': 'Preço da Edição (USD)',
+    'studio.consignArtwork.licenses.nft.unlimitedEditions.title': 'Edições Ilimitadas',
+    'studio.consignArtwork.licenses.nft.unlimitedEditions.editionPrice':
+        '“Preço da Edição” é o preço da obra de arte em dólares americanos.',
+    'studio.consignArtwork.licenses.nft.unlimitedEditions.editionPrice.title': 'Preço da Edição (USD)',
+
+    'studio.consignArtwork.licenses.stream.description':
+        'Esta licença torna a obra de arte disponível para curadores para inclusão em playlists para transmissão de arte para quadros digitais. Os ganhos com a transmissão são calculados automaticamente com base no uso e nos acordos de preço negociados.',
+    'studio.consignArtwork.licenses.stream.enable':
+        'Ative esta licença se você deseja que os curadores incluam sua obra de arte em playlists que são usadas por consumidores e empresas para apresentações de slides em quadros digitais.',
+    'studio.consignArtwork.licenses.stream.enable.description':
+        'Os ganhos com a transmissão são calculados automaticamente com base no uso e nos acordos de preço negociados.',
+    'studio.consignArtwork.licenses.stream.unlimitedStreaming': 'Transmissão Ilimitada',
+    'studio.consignArtwork.licenses.stream.unlimitedStreaming.description':
+        'A obra de arte pode ser usada para transmissão em cenários ilimitados.',
+
+    'studio.consignArtwork.licenses.print.description':
+        'Esta licença torna a obra de arte disponível para os usuários finais para impressão em um único item físico usando a tecnologia Print-on-Demand (POD). A licença é livremente transferível até o ponto de impressão, após o qual é transferível apenas para o proprietário do item físico.',
+    'studio.consignArtwork.licenses.print.enable':
+        'Ative esta licença se você deseja que os usuários finais usem sua arte para aplicações de impressão sob demanda (POD). Esta licença é para impressão individual; a impressão em massa não é permitida.',
+    'studio.consignArtwork.licenses.print.singlePrint.title': 'Impressão Única',
+    'studio.consignArtwork.licenses.print.singlePrint.description':
+        '“Preço Unitário” é o preço da obra de arte em dólares americanos para uma única impressão.',
+    'studio.consignArtwork.licenses.print.singlePrint.field': 'Preço Unitário (USD)',
+
+    'studio.consignArtwork.licenses.remix.description':
+        'Esta licença torna a obra de arte disponível para os usuários finais para uso em aplicações Remix usando a',
+    'studio.consignArtwork.licenses.remix.description2': 'licença que permite o uso de remix para fins não comerciais.',
+    'studio.consignArtwork.licenses.remix.singleRemix.title': 'Remix Único',
+    'studio.consignArtwork.licenses.remix.singleRemix.description':
+        '“Preço Unitário” é o preço da obra de arte em dólares americanos para um único remix.',
+    'studio.consignArtwork.licenses.remix.singleRemix.field': 'Preço Unitário (USD)',
+    'studio.consignArtwork.licenses.remix.enable':
+        'Ative esta licença se você deseja que os usuários finais usem sua arte em aplicações Remix. O output do remix só pode ser usado para fins não comerciais.',
+
     /* Termos de Uso */
     'studio.consignArtwork.termsOfUse.title': 'Termos de Uso',
     'studio.consignArtwork.termsOfUse.description': 'Complete todas as tarefas e publique sua obra de arte',

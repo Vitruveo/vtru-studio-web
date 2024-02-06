@@ -209,6 +209,70 @@ const language: Translation = {
     'studio.consignArtwork.licenses.field.editionPrice': 'قیمت ادیشن',
     'studio.consignArtwork.licenses.field.elasticEditions': 'ادیشن‌های ایلاستیک',
 
+    'studio.consignArtwork.licenses.license': 'مجوز',
+
+    'studio.consignArtwork.licenses.nft.description':
+        'این مجوز اثر هنری را برای فروش زیر یکی از مدل‌های قیمت‌گذاری انتشار می‌دهد. هنگام فروخته شدن، یک NFT از اثر هنری ساخته و به خریدار تحویل داده می‌شود.',
+    'studio.consignArtwork.licenses.nft.enable':
+        'این مجوز را فعال کنید اگر می‌خواهید خریداران مالکیت یک مجموعه دیجیتال از اثر هنری را داشته باشند.',
+
+    'studio.consignArtwork.licenses.nft.selectEdition.title': 'انتخاب نسخه',
+    'studio.consignArtwork.licenses.nft.selectEdition.elasticEditions':
+        'مدل انعطاف‌پذیری است که به خریدار امکان می‌دهد چندین نسخه را به یکدیگر ترکیب کند و اندازه نسخه به صورت پویا تغییر کند.',
+    'studio.consignArtwork.licenses.nft.selectEdition.singleEdition': 'مدل ثابت 1/1 است.',
+    'studio.consignArtwork.licenses.nft.selectEdition.unlimitedEditions':
+        'مدل هزینه‌ای یا رایگان برای نسخه‌های نامحدود است.',
+
+    'studio.consignArtwork.licenses.nft.elasticEditions.title': 'نسخه‌های انعطاف‌پذیر',
+    'studio.consignArtwork.licenses.nft.elasticEditions.editionPrice.title': 'قیمت نسخه (دلار آمریکا)',
+    'studio.consignArtwork.licenses.nft.elasticEditions.numberOfEditions.title': 'تعداد نسخه‌ها',
+    'studio.consignArtwork.licenses.nft.elasticEditions.totalPrice.title': 'قیمت کل (دلار آمریکا)',
+    'studio.consignArtwork.licenses.nft.elasticEditions.editionDiscount.title': 'تخفیف نسخه',
+    'studio.consignArtwork.licenses.nft.elasticEditions.editionPrice': '“قیمت نسخه” قیمت اثر هنری به دلار آمریکا است.',
+    'studio.consignArtwork.licenses.nft.elasticEditions.numberOfEditions':
+        '“تعداد نسخه‌ها” تعداد نسخه‌های اثر هنری است که می‌تواند ساخته شود.',
+    'studio.consignArtwork.licenses.nft.elasticEditions.totalPrice':
+        '“قیمت کل” حاصل ضرب “قیمت نسخه” در “تعداد نسخه‌ها” است.',
+    'studio.consignArtwork.licenses.nft.elasticEditions.editionDiscount':
+        '“تخفیف نسخه” تخفیف برای خریدار هنگام خرید چند نسخه است. این مقدار با تقسیم 10 به “تعداد نسخه‌ها” محاسبه می‌شود. اگر فعال باشد، تخفیف برای هر نسخه پس از نخستین نسخه اعمال می‌شود.',
+    'studio.consignArtwork.licenses.nft.singleEdition.title': 'نسخه تکی',
+    'studio.consignArtwork.licenses.nft.singleEdition.editionPrice': '“قیمت نسخه” قیمت اثر هنری به دلار آمریکا است.',
+    'studio.consignArtwork.licenses.nft.singleEdition.editionPrice.title': 'قیمت نسخه (دلار آمریکا)',
+    'studio.consignArtwork.licenses.nft.unlimitedEditions.title': 'نسخه‌های نامحدود',
+    'studio.consignArtwork.licenses.nft.unlimitedEditions.editionPrice':
+        '“قیمت نسخه” قیمت اثر هنری به دلار آمریکا است.',
+    'studio.consignArtwork.licenses.nft.unlimitedEditions.editionPrice.title': 'قیمت نسخه (دلار آمریکا)',
+
+    'studio.consignArtwork.licenses.stream.description':
+        'این مجوز اثر هنری را برای کارآفرینان برای اضافه کردن به لیست‌های پخش برای استریم هنر به فریم‌های دیجیتال فراهم می‌کند. درآمد از استریم به صورت خودکار بر اساس استفاده و توافق‌نامه‌های قیمت محاسبه می‌شود.',
+    'studio.consignArtwork.licenses.stream.enable':
+        'این مجوز را فعال کنید اگر می‌خواهید کارآفرینان اثر هنری شما را در لیست‌های پخشی که توسط مصرف‌کنندگان و کسب‌وکارها برای اسلایدها در فریم‌های دیجیتال استفاده می‌شود، قرار دهند.',
+    'studio.consignArtwork.licenses.stream.enable.description':
+        'درآمد استریم به صورت خودکار بر اساس استفاده و توافق‌نامه‌های قیمت محاسبه می‌شود.',
+    'studio.consignArtwork.licenses.stream.unlimitedStreaming': 'استریم نامحدود',
+    'studio.consignArtwork.licenses.stream.unlimitedStreaming.description':
+        'این اثر ممکن است برای استریم در سناریوهای نامحدود استفاده شود.',
+
+    'studio.consignArtwork.licenses.print.description':
+        'این مجوز اثر هنری را برای کاربران نهایی برای چاپ روی یک مورد فیزیکی تکی با استفاده از فناوری چاپ درخواستی (POD) فراهم می‌کند. این مجوز تا لحظه چاپ قابل انتقال است، پس از آن فقط به مالک مورد فیزیکی قابل انتقال است.',
+    'studio.consignArtwork.licenses.print.enable':
+        'این مجوز را فعال کنید اگر می‌خواهید کاربران نهایی از آثار هنری شما برای برنامه‌های چاپ درخواستی (POD) استفاده کنند. این مجوز برای چاپ فردی است؛ چاپ انبوه مجاز نیست.',
+    'studio.consignArtwork.licenses.print.singlePrint.title': 'چاپ تکی',
+    'studio.consignArtwork.licenses.print.singlePrint.description':
+        '“قیمت واحد” قیمت اثر هنری به دلار آمریکا برای یک چاپ تکی است.',
+    'studio.consignArtwork.licenses.print.singlePrint.field': 'قیمت واحد (دلار آمریکا)',
+
+    'studio.consignArtwork.licenses.remix.description':
+        'این مجوز اثر هنری را برای کاربران نهایی برای استفاده در برنامه‌های Remix با استفاده از',
+    'studio.consignArtwork.licenses.remix.description2':
+        'مجوزی که استفاده از Remix برای مقاصد غیرتجاری را امکان‌پذیر می‌کند، فراهم می‌کند.',
+    'studio.consignArtwork.licenses.remix.singleRemix.title': 'Remix تکی',
+    'studio.consignArtwork.licenses.remix.singleRemix.description':
+        '“قیمت واحد” قیمت اثر هنری به دلار آمریکا برای یک Remix تکی است.',
+    'studio.consignArtwork.licenses.remix.singleRemix.field': 'قیمت واحد (دلار آمریکا)',
+    'studio.consignArtwork.licenses.remix.enable':
+        'این مجوز را فعال کنید اگر می‌خواهید کاربران نهایی از آثار هنری شما در برنامه‌های Remix استفاده کنند. خروجی Remix فقط برای مقاصد غیرتجاری استفاده می‌شود.',
+
     /* Terms of Use */
     'studio.consignArtwork.termsOfUse.title': 'شرایط استفاده',
     'studio.consignArtwork.termsOfUse.description': 'تمام وظایف مورد نیاز را انجام دهید و اثر هنری خود را امضاء کنید',

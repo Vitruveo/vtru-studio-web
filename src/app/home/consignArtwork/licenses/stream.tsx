@@ -1,11 +1,21 @@
 import { Box, Typography } from '@mui/material';
-import { useFormik } from 'formik';
-import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
 import Card from './common/card';
 import { LicenseProps } from './types';
+import { useI18n } from '@/app/hooks/useI18n';
 
 function Stream({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const values = allValues.stream || {};
+
+    const { language } = useI18n();
+
+    const texts = {
+        license: language['studio.consignArtwork.licenses.license'],
+        streamDescription: language['studio.consignArtwork.licenses.stream.description'],
+        streamEnable: language['studio.consignArtwork.licenses.stream.enable'],
+        streamEnableDescription: language['studio.consignArtwork.licenses.stream.enable.description'],
+        unlimitedStreaming: language['studio.consignArtwork.licenses.stream.unlimitedStreaming'],
+        unlimitedStreamingDescription: language['studio.consignArtwork.licenses.stream.unlimitedStreaming.description'],
+    } as { [key: string]: string };
 
     const handleAdded = (added: boolean) => {
         setFieldValue('stream.added', added);
@@ -23,20 +33,16 @@ function Stream({ allValues, handleChange, setFieldValue }: LicenseProps) {
                         component="label"
                         fontSize="1rem"
                     >
-                        {values?.added
-                            ? 'Stream earnings are automatically calculated based on usage and negotiated price agreements.'
-                            : 'This license makes the artwork available to curators for including in playlists for streaming art to digital frames. Earnings for streaming are automatically calculated based on usage and negotiated price agreements.'}
+                        {values?.added ? texts.streamEnableDescription : texts.streamDescription}
                     </Typography>
                 </Box>
             </Card>
             <Box marginTop={2} width={300}>
                 <Typography color="gray" fontSize="1.1rem" fontWeight="bold">
-                    {values?.added ? 'Unlimited Streaming' : 'STREAM-ART-1 License'}
+                    {values?.added ? texts.unlimitedStreaming : `STREAM-ART-1 ${texts.license}`}
                 </Typography>
                 <Typography marginTop={2} color="GrayText" fontSize="0.9rem">
-                    {values?.added
-                        ? 'The artwork may be used for streaming in unlimited scenarios.'
-                        : 'Enable this license if you want curators to include your artwork in playlists that are used by consumers and businesses for slideshows on digital frames.'}
+                    {values?.added ? texts.unlimitedStreamingDescription : texts.streamEnable}
                 </Typography>
             </Box>
         </Box>

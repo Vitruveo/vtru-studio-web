@@ -1,11 +1,23 @@
 import { Box, Typography } from '@mui/material';
-import { useFormik } from 'formik';
 import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
 import Card from './common/card';
 import { LicenseProps } from './types';
+import { useI18n } from '@/app/hooks/useI18n';
 
 function Remix({ allValues, setFieldValue, handleChange }: LicenseProps) {
     const values = allValues.remix || {};
+
+    const { language } = useI18n();
+
+    const texts = {
+        license: language['studio.consignArtwork.licenses.license'],
+        remixDescription: language['studio.consignArtwork.licenses.remix.description'],
+        remixDescription2: language['studio.consignArtwork.licenses.remix.description2'],
+        singleRemixTitle: language['studio.consignArtwork.licenses.remix.singleRemix.title'],
+        singleRemixDescription: language['studio.consignArtwork.licenses.remix.singleRemix.description'],
+        singleRemixField: language['studio.consignArtwork.licenses.remix.singleRemix.field'],
+        remixEnable: language['studio.consignArtwork.licenses.remix.enable'],
+    } as { [key: string]: string };
 
     const handleAdded = (added: boolean) => {
         setFieldValue('remix.added', added);
@@ -24,8 +36,7 @@ function Remix({ allValues, setFieldValue, handleChange }: LicenseProps) {
                             component="label"
                             fontSize="1rem"
                         >
-                            This license makes the artwork available to end-users for use in Remix applications using
-                            the
+                            {texts.remixDescription}
                             <Typography
                                 color="text.secondary"
                                 display="inline"
@@ -34,7 +45,7 @@ function Remix({ allValues, setFieldValue, handleChange }: LicenseProps) {
                                 {'  '}
                                 CC BY-NC{' '}
                             </Typography>
-                            license which allows remix usage for non-commercial purposes.
+                            {texts.remixDescription2}
                         </Typography>
                     </Box>
                 ) : (
@@ -47,7 +58,7 @@ function Remix({ allValues, setFieldValue, handleChange }: LicenseProps) {
                         alignItems="center"
                         justifyContent="space-between"
                     >
-                        <Typography sx={{ whiteSpace: 'nowrap', marginRight: 3 }}>Unit Price (USD)</Typography>
+                        <Typography sx={{ whiteSpace: 'nowrap', marginRight: 3 }}>{texts.singleRemixField}</Typography>
                         <CustomTextField
                             name="remix.unitPrice"
                             type="number"
@@ -68,12 +79,10 @@ function Remix({ allValues, setFieldValue, handleChange }: LicenseProps) {
             </Card>
             <Box marginTop={2} width={300}>
                 <Typography color="gray" fontSize="1.1rem" fontWeight="bold">
-                    {values?.added ? 'Single Remix' : 'REMIX-ART-1 License'}
+                    {values?.added ? texts.singleRemixTitle : `REMIX-ART-1 ${texts.license}`}
                 </Typography>
                 <Typography marginTop={2} color="GrayText" fontSize="0.9rem">
-                    {values?.added
-                        ? '“Unit Price” is the price of the artwork in U.S. dollars for a single remix.'
-                        : 'Enable this license if you want end-users to use your art in Remix applications. The remix output may only be used for non-commercial purposes.'}
+                    {values?.added ? texts.singleRemixDescription : texts.remixEnable}
                 </Typography>
             </Box>
         </Box>
