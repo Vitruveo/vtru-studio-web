@@ -52,11 +52,9 @@ export function FooterForm({
     } as { [key: string]: string };
 
     const handleBackClick = () => {
-        console.log('backOnclick', backOnclick);
         if (backOnclick) {
             backOnclick();
         } else {
-            console.log('backPathRouter', backPathRouter);
             if (backPathRouter) {
                 router.push(backPathRouter);
             } else {
@@ -147,7 +145,7 @@ export function FooterForm({
                                     size="large"
                                     disabled={submitDisabled}
                                     type="submit"
-                                    style={{ marginLeft: '20px', whiteSpace: 'nowrap' }}
+                                    style={{ marginLeft: '20px', whiteSpace: 'nowrap', minWidth: 120 }}
                                     color="primary"
                                     variant="contained"
                                 >
