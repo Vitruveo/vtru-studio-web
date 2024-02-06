@@ -18,6 +18,8 @@ export default function Home() {
     const { language } = useI18n();
     const dispatch = useDispatch();
 
+    const status = useSelector((state) => state.asset.status);
+
     const isCompletedProfile = useSelector((state) => state.consignArtwork.isCompletedProfile);
     const customizer = useSelector((state) => state.customizer);
 
@@ -29,6 +31,8 @@ export default function Home() {
         consign: language['studio.home.consign'],
         myProfile: language['studio.home.myProfile'],
     } as { [key: string]: string };
+
+    const isPublished = status === 'published';
 
     return (
         <Container
@@ -66,7 +70,16 @@ export default function Home() {
                             </Link>
                         </Grid>
                         <Grid item xs={12} sm={6} md={3.5}>
-                            <Link href={isCompletedProfile ? '/home/consignArtwork' : '/home/myProfile'} passHref>
+                            <Link
+                                href={
+                                    isCompletedProfile
+                                        ? isPublished
+                                            ? '/home/consignArtwork/consignmentStatus'
+                                            : '/home/consignArtwork'
+                                        : '/home/myProfile'
+                                }
+                                passHref
+                            >
                                 <Button
                                     variant="contained"
                                     onClick={() =>

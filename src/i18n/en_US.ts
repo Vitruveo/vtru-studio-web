@@ -298,6 +298,28 @@ const language: Translation = {
     'studio.consignArtwork.auxiliaryMedia.btsVideo.title': 'BTS Video',
     'studio.consignArtwork.auxiliaryMedia.codeZip.title': 'Code Zip',
 
+    /* Consignment Status */
+    'studio.consignArtwork.consignmentStatus.title': 'Consignment Status',
+    'studio.consignArtwork.consignmentStatus.description': 'Nice work! Your artwork is ready for consignment.',
+    'studio.consignArtwork.consignmentStatus.message': 'This feature will be available soon.',
+    'studio.consignArtwork.consignmentStatus.yes': 'Yes',
+    'studio.consignArtwork.consignmentStatus.no': 'No',
+    'studio.consignArtwork.consignmentStatus.edit': 'Edit',
+    'studio.consignArtwork.consignmentStatus.view': 'View',
+    'studio.consignArtwork.consignmentStatus.search': 'Search',
+    'studio.consignArtwork.consignmentStatus.license': 'License',
+
+    'studio.consignArtwork.consignmentStatus.draft.title': 'Draft',
+    'studio.consignArtwork.consignmentStatus.preview.title': 'Preview',
+    'studio.consignArtwork.consignmentStatus.activate.title': 'Activate',
+
+    'studio.consignArtwork.consignmentStatus.activation.title': 'Activation',
+    'studio.consignArtwork.consignmentStatus.activation.description':
+        'Activation consigns your artwork to the blockchain and requires a Creator Credit.',
+    'studio.consignArtwork.consignmentStatus.creatorCreditsRequired': 'Creator Credits Required',
+    'studio.consignArtwork.consignmentStatus.creatorCreditsAvailable': 'Creator Credits Available',
+    'studio.consignArtwork.consignmentStatus.viewArtwork.button': 'View Artwork',
+
     /* BackModalConfirm */
     'studio.consignArtwork.backModal.title': 'Would you like to save the information?',
     'studio.consignArtwork.backModal.confirm.button': 'Save',

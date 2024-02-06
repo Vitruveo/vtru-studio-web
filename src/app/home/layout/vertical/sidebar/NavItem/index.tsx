@@ -50,8 +50,11 @@ export default function NavItem({ item, level, pathDirect, hideMenu, onClick }: 
 
     const { language } = useI18n();
 
+    const status = useSelector((state) => state.asset.status);
     const isCompletedProfile = useSelector((state) => state.consignArtwork.isCompletedProfile);
     const itemIcon = level > 1 ? <Icon stroke={1.5} size="1rem" /> : <Icon stroke={1.5} size="1.3rem" />;
+
+    const isPublished = status === 'published';
 
     const ListItemStyled = styled(ListItemButton)(() => ({
         whiteSpace: 'nowrap',
@@ -90,7 +93,13 @@ export default function NavItem({ item, level, pathDirect, hideMenu, onClick }: 
     return (
         <List component="li" disablePadding key={item?.id && item.title}>
             <Link
-                href={item.href === '/home/consignArtwork' && !isCompletedProfile ? '/home/myProfile' : item.href}
+                href={
+                    item.href === '/home/consignArtwork' && !isCompletedProfile
+                        ? '/home/myProfile'
+                        : isPublished
+                          ? '/home/consignArtwork/consignmentStatus'
+                          : item.href
+                }
                 style={{ textDecoration: 'none' }}
             >
                 <ListItemStyled

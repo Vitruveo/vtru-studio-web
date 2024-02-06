@@ -58,8 +58,10 @@ const ConsignArtwork = () => {
         router.push(`${pathname}/${page}`);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = (event?: React.FormEvent) => {
+        if (event) event.preventDefault();
         dispatch(publishThunk({ status: 'published' }));
+        router.push('/home/consignArtwork/consignmentStatus');
         setToastr({
             type: 'success',
             open: true,

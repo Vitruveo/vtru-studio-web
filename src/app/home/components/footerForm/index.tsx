@@ -52,9 +52,11 @@ export function FooterForm({
     } as { [key: string]: string };
 
     const handleBackClick = () => {
+        console.log('backOnclick', backOnclick);
         if (backOnclick) {
             backOnclick();
         } else {
+            console.log('backPathRouter', backPathRouter);
             if (backPathRouter) {
                 router.push(backPathRouter);
             } else {
@@ -74,7 +76,7 @@ export function FooterForm({
                         height:
                             maxHeight ||
                             (lgUp
-                                ? `calc(100vh - ${stepNumber ? '170px' : '150px'})`
+                                ? `calc(100vh - ${stepStatus ? '170px' : '150px'})`
                                 : `calc(100vh - ${stepStatus ? '160px' : '140px'})`),
                         overflowY: 'auto',
                         overflowX: 'hidden',
@@ -136,7 +138,7 @@ export function FooterForm({
                         <Box marginInline={4} display="flex" alignItems="center" justifyContent="space-between">
                             {stepNumber && (
                                 <Typography flexDirection="row" fontWeight="400" fontSize="1.1rem">
-                                    {texts.step} {stepNumber} {texts.of} 5
+                                    {texts.step} {stepNumber} {texts.of} 6
                                 </Typography>
                             )}
 
@@ -145,7 +147,7 @@ export function FooterForm({
                                     size="large"
                                     disabled={submitDisabled}
                                     type="submit"
-                                    style={{ width: 120, marginLeft: '20px' }}
+                                    style={{ marginLeft: '20px', whiteSpace: 'nowrap' }}
                                     color="primary"
                                     variant="contained"
                                 >

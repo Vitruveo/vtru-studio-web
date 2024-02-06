@@ -135,7 +135,8 @@ export default function ContractScreen() {
         }
     };
 
-    const handleSaveData = async () => {
+    const handleSaveData = async (event?: React.FormEvent) => {
+        if (event) event.preventDefault();
         handleSubmit();
     };
 
@@ -156,7 +157,6 @@ export default function ContractScreen() {
                     <Typography fontSize="1.1rem" fontWeight="normal" color="GrayText" marginBottom={2}>
                         {texts.termsOfUseDescription}
                     </Typography>
-
                     <Box
                         mt={4}
                         marginBottom={3}
