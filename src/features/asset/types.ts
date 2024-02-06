@@ -3,7 +3,7 @@ import { LicensesFormValues } from '@/app/home/consignArtwork/licenses/types';
 import { APIResponse } from '../common/types';
 import { SectionsFormData } from '@/app/home/consignArtwork/assetMetadata/page';
 
-export type AssetStatus = 'draft' | 'published' | 'archived';
+export type AssetStatus = 'draft' | 'published' | 'archived' | 'preview';
 
 export type FileType = File | string;
 

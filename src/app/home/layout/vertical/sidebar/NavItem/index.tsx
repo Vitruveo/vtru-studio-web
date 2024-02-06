@@ -54,7 +54,7 @@ export default function NavItem({ item, level, pathDirect, hideMenu, onClick }: 
     const isCompletedProfile = useSelector((state) => state.consignArtwork.isCompletedProfile);
     const itemIcon = level > 1 ? <Icon stroke={1.5} size="1rem" /> : <Icon stroke={1.5} size="1.3rem" />;
 
-    const isPublished = status === 'published';
+    const isPublished = status === 'preview';
 
     const ListItemStyled = styled(ListItemButton)(() => ({
         whiteSpace: 'nowrap',

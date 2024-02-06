@@ -32,7 +32,7 @@ export default function Home() {
         myProfile: language['studio.home.myProfile'],
     } as { [key: string]: string };
 
-    const isPublished = status === 'published';
+    const isPublished = status === 'preview';
 
     return (
         <Container

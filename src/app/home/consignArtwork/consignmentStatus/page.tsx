@@ -31,7 +31,12 @@ const ConsignArtwork = () => {
         open: false,
         message: '',
     });
-    const [statusRadio, setStatusRadio] = useState('Draft');
+
+    const assetStatus = useSelector((state) => state.asset.status);
+
+    const checkStatus = assetStatus === 'draft' ? 'Draft' : 'Preview';
+
+    const [statusRadio, setStatusRadio] = useState(checkStatus);
 
     const pathname = usePathname();
     const router = useRouter();
@@ -73,22 +78,18 @@ const ConsignArtwork = () => {
             title: texts.homeTitle,
         },
         {
+            to: '/home/consignArtwork',
+            title: texts.consignArtworkTitle,
+        },
+        {
             title: texts.title,
         },
     ];
 
-    const handleChangePage = (page: StepId, stepStatus: StepStatus) => {
-        router.push(`${pathname}/${page}`);
-    };
-
     const handleSubmit = (event?: React.FormEvent) => {
         if (event) event.preventDefault();
-        dispatch(publishThunk({ status: 'published' }));
-        setToastr({
-            type: 'info',
-            open: true,
-            message: texts.message,
-        });
+
+        setToastr({ message: texts.message, open: true, type: 'info' });
     };
 
     const status = [
@@ -123,10 +124,21 @@ const ConsignArtwork = () => {
 
     const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setStatusRadio(e.target.value);
+        if (e.target.value === 'Draft') {
+            dispatch(publishThunk({ status: 'draft' }));
+        }
+        if (e.target.value === 'Preview') {
+            dispatch(publishThunk({ status: 'preview' }));
+        }
     };
 
     const handleOpenBackModal = () => {
-        router.push(`/home`);
+        if (statusRadio === 'Draft') {
+            router.push(`/home/consignArtwork`);
+        }
+        if (statusRadio === 'Preview') {
+            router.push(`/home`);
+        }
     };
 
     return (
@@ -155,7 +167,7 @@ const ConsignArtwork = () => {
                                     <Grid key={i} item width={180}>
                                         {v.type === 'radio' ? (
                                             <Box marginBottom={1} alignItems="center" display="flex">
-                                                <Box>
+                                                <Box marginRight={1}>
                                                     <Radio sx={{ padding: 0 }} value={v.title} size="medium" />
                                                 </Box>
                                                 <Typography style={{ textTransform: 'uppercase' }}>

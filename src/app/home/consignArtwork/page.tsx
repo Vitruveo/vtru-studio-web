@@ -60,20 +60,8 @@ const ConsignArtwork = () => {
 
     const handleSubmit = (event?: React.FormEvent) => {
         if (event) event.preventDefault();
-        dispatch(publishThunk({ status: 'published' }));
         router.push('/home/consignArtwork/consignmentStatus');
-        setToastr({
-            type: 'success',
-            open: true,
-            message: texts.stepPublishMessageSuccess,
-        });
     };
-
-    useEffect(() => {
-        if (status === 'published') {
-            router.push('/home/consignArtwork/consignmentStatus');
-        }
-    }, [status]);
 
     const successColor = '#93C47D';
     const warningColor = '#F6B26B';
@@ -83,7 +71,7 @@ const ConsignArtwork = () => {
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
-                submitDisabled={!checkAllCompletedSteps || status === 'published'}
+                submitDisabled={!checkAllCompletedSteps}
                 backPathRouter="/home"
                 title={texts.consignArtworkTitle}
                 submitText={(language['studio.consignArtwork.publishButton'] as TranslateFunction)({
@@ -140,7 +128,7 @@ const ConsignArtwork = () => {
                                     </Box>
                                     <Box width={100} marginLeft={1}>
                                         <Button
-                                            disabled={status === 'published'}
+                                            disabled={status === 'published' || status === 'preview'}
                                             onClick={() => handleChangePage(v.stepId, v.status)}
                                             size="small"
                                             variant="contained"
