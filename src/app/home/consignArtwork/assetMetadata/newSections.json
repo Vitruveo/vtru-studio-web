@@ -1,7 +1,8 @@
 {
     "context": {
         "formData": {
-            "tags": ["artwork"]
+            "tags": ["artwork"],
+            "moods": []
         },
         "schema": {
             "type": "object",

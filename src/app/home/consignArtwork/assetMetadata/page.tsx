@@ -114,7 +114,6 @@ export default function AssetMetadata() {
                 const ajvValidator = ajv8Validator.rawValidation(value.schema, value.formData);
 
                 if (ajvValidator.errors?.length) {
-                    console.log(ajvValidator.errors);
                     const errorSchema = ajvValidator.errors?.reduce((acc, error) => {
                         let path = error.instancePath.substring(1);
                         if (!path && error.params && 'missingProperty' in error.params) {
