@@ -17,12 +17,12 @@ import { useI18n } from '@/app/hooks/useI18n';
 
 import Section, { SectionOnChangeParams } from './section';
 import { ErrorSchema, RJSFSchema } from '@rjsf/utils';
-import sectionsJSON from './sections.json';
+import sectionsJSON from './newSections.json';
 
 import ajv8Validator from '@rjsf/validator-ajv8';
 import { TranslateFunction } from '@/i18n/types';
 
-export type SectionName = 'section1';
+export type SectionName = 'context' | 'taxonomy' | 'creators' | 'provenance' | 'custom' | 'assets';
 type SectionsJSONType = typeof sectionsJSON;
 type SectionType = SectionsJSONType[keyof SectionsJSONType];
 
@@ -114,6 +114,7 @@ export default function AssetMetadata() {
                 const ajvValidator = ajv8Validator.rawValidation(value.schema, value.formData);
 
                 if (ajvValidator.errors?.length) {
+                    console.log(ajvValidator.errors);
                     const errorSchema = ajvValidator.errors?.reduce((acc, error) => {
                         let path = error.instancePath.substring(1);
                         if (!path && error.params && 'missingProperty' in error.params) {

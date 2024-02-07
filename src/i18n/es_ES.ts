@@ -190,7 +190,7 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.tags.placeholder': 'Agregar etiqueta',
 
     'studio.consignArtwork.assetMetadata.field.errors': (data: { message: string }) =>
-        `${data.message === 'required' ? 'Campo requerido' : ''}`,
+        `${data.message === 'required' || data.message === 'minItems' ? 'Campo requerido' : ''}`,
 
     /* Licenses */
     'studio.consignArtwork.licenses.title': 'Licencias',

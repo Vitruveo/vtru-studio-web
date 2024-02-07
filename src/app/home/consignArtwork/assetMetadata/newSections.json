@@ -1,0 +1,151 @@
+{
+    "context": {
+        "formData": {
+            "tags": ["artwork"]
+        },
+        "schema": {
+            "type": "object",
+            "required": ["title", "description", "tags", "moods"],
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "title": "Title",
+                    "description": "Title of work"
+                },
+                "description": {
+                    "type": "string",
+                    "title": "Description",
+                    "description": "Brief description of work"
+                },
+                "tags": {
+                    "type": "array",
+                    "title": "Tag",
+                    "minItems": 1,
+                    "description": "Tags relevant to the work",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "moods": {
+                    "type": "array",
+                    "title": "Moods",
+                    "minItems": 1,
+                    "description": "Feelings that the work evokes",
+                    "uniqueItems": true,
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "Admiration",
+                            "Absorbing",
+                            "Amusement",
+                            "Adoration",
+                            "Awe",
+                            "Anxiety",
+                            "Boredom",
+                            "Brooding",
+                            "Calmness",
+                            "Chills",
+                            "Chaotic",
+                            "Connectedness",
+                            "Cosmic",
+                            "Confusion",
+                            "Dread",
+                            "Distaste",
+                            "Disgust",
+                            "Dreary",
+                            "Disorienting",
+                            "Dreamy",
+                            "Desire",
+                            "Elegant",
+                            "Humorous",
+                            "Intimate",
+                            "Intricate",
+                            "Love",
+                            "Lively",
+                            "Mystical",
+                            "Mysterious",
+                            "Nostalgia",
+                            "Ornate",
+                            "Psychedelic",
+                            "Serenity",
+                            "Sadness",
+                            "Sensual",
+                            "Spiritual",
+                            "Strange",
+                            "Striking",
+                            "Tragic",
+                            "Tense",
+                            "Vibrant",
+                            "Violent",
+                            "Wonder",
+                            "Whimsical"
+                        ]
+                    }
+                }
+            }
+        },
+        "uiSchema": {
+            "title": {
+                "ui:options": {
+                    "label": false,
+                    "placeholder": ""
+                }
+            },
+            "description": {
+                "ui:options": {
+                    "label": false,
+                    "placeholder": ""
+                }
+            },
+            "tags": {
+                "items": {
+                    "ui:emptyValue": "",
+                    "ui:options": {
+                        "label": false
+                    }
+                },
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "moods": {
+                "ui:widget": "checkboxes",
+                "ui:field": "noTitle",
+                "ui:title": false,
+                "ui:options": {
+                    "label": false
+                },
+                "items": {
+                    "ui:options": {
+                        "label": false
+                    }
+                }
+            }
+        }
+    },
+    "taxonomy": {
+        "formData": {},
+        "schema": {},
+        "uiSchema": {}
+    },
+    "creators": {
+        "formData": {},
+        "schema": {},
+        "uiSchema": {}
+    },
+    "provenance": {
+        "formData": {},
+        "schema": {},
+        "uiSchema": {}
+    },
+    "custom": {
+        "formData": {},
+        "schema": {},
+        "uiSchema": {}
+    },
+    "assets": {
+        "formData": {},
+        "schema": {},
+        "uiSchema": {}
+    }
+}

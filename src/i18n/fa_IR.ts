@@ -188,7 +188,7 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.tags.placeholder': 'برچسب افزودن',
 
     'studio.consignArtwork.assetMetadata.field.errors': (data: { message: string }) =>
-        `${data.message === 'required' ? 'فیلد ضروری است' : ''}`,
+        `${data.message === 'required' || data.message === 'minItems' ? 'فیلد ضروری است' : ''}`,
 
     /* Licenses */
     'studio.consignArtwork.licenses.title': 'لایسنس‌ها',

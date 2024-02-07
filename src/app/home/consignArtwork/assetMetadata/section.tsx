@@ -99,7 +99,7 @@ const Section = ({ sectionName, formData, errors, schema, uiSchema, onChange, up
             >
                 <Box width="100%" display="flex" alignItems="center" justifyContent="space-between">
                     <Typography marginLeft="10px" fontSize="1.2rem" fontWeight="bold">
-                        Section Title
+                        {sectionName.charAt(0).toUpperCase() + sectionName.slice(1).toLowerCase()}
                     </Typography>
                     <Box
                         display="flex"

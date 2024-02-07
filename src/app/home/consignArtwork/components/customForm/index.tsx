@@ -78,6 +78,11 @@ const CustomForm = ({
 
         const { errorSchema: validatedErrorSchema } = $this.validate(formDataToValidate);
 
+        if (!validatedErrorSchema || !Object.values(validatedErrorSchema).length) {
+            updateErrors({});
+            return;
+        }
+
         const newErrorSchema = cloneDeep(stateErrorSchema);
         const newFieldErrorSchema = get(validatedErrorSchema, fieldPath);
 

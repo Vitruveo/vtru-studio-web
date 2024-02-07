@@ -186,7 +186,7 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.tags.placeholder': 'Adicionar tag',
 
     'studio.consignArtwork.assetMetadata.field.errors': (data: { message: string }) =>
-        `${data.message === 'required' ? 'Campo obrigatório' : ''}`,
+        `${data.message === 'required' || data.message === 'minItems' ? 'Campo obrigatório' : ''}`,
 
     /* Licenças */
     'studio.consignArtwork.licenses.title': 'Licenças',
