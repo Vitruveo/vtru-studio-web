@@ -7,7 +7,7 @@ import LetsVitru from '@/app/letsVitruveo/container';
 
 export default function LetsVitruveo() {
     return (
-        <PageContainer title="Lets Vitruveo" description="Lets Vitruveo">
+        <PageContainer title="home" description="Lets Vitruveo">
             <Grid container spacing={0} justifyContent="center" sx={{ height: '100vh' }}>
                 <AuthLogo />
                 <Grid item xs={12} sm={12} lg={5} xl={4} display="flex" justifyContent="center" alignItems="center">
