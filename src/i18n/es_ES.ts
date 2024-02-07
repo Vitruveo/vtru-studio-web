@@ -302,6 +302,29 @@ const language: Translation = {
     'studio.consignArtwork.auxiliaryMedia.btsVideo.title': 'Video BTS',
     'studio.consignArtwork.auxiliaryMedia.codeZip.title': 'Código Zip',
 
+    /* Consignment Status */
+    'studio.consignArtwork.consignmentStatus.title': 'Estado de Consignación',
+    'studio.consignArtwork.consignmentStatus.description':
+        '¡Buen trabajo! Tu obra de arte está lista para la consignación.',
+    'studio.consignArtwork.consignmentStatus.message': 'Esta función estará disponible pronto.',
+    'studio.consignArtwork.consignmentStatus.yes': 'Sí',
+    'studio.consignArtwork.consignmentStatus.no': 'No',
+    'studio.consignArtwork.consignmentStatus.edit': 'Editar',
+    'studio.consignArtwork.consignmentStatus.view': 'Ver',
+    'studio.consignArtwork.consignmentStatus.search': 'Buscar',
+    'studio.consignArtwork.consignmentStatus.license': 'Licencia',
+
+    'studio.consignArtwork.consignmentStatus.draft.title': 'Borrador',
+    'studio.consignArtwork.consignmentStatus.preview.title': 'Vista Previa',
+    'studio.consignArtwork.consignmentStatus.activate.title': 'Activar',
+
+    'studio.consignArtwork.consignmentStatus.activation.title': 'Activación',
+    'studio.consignArtwork.consignmentStatus.activation.description':
+        'La activación consigna tu obra de arte a la cadena de bloques y requiere un Crédito de Creador.',
+    'studio.consignArtwork.consignmentStatus.creatorCreditsRequired': 'Créditos de Creador Requeridos',
+    'studio.consignArtwork.consignmentStatus.creatorCreditsAvailable': 'Créditos de Creador Disponibles',
+    'studio.consignArtwork.consignmentStatus.viewArtwork.button': 'Ver Obra de Arte',
+
     /* BackModalConfirm */
     'studio.consignArtwork.backModal.title': '¿Te gustaría guardar la información?',
     'studio.consignArtwork.backModal.confirm.button': 'Guardar',

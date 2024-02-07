@@ -43,13 +43,13 @@ export function ConsignmentStatusCard({ edit, license, search, view, backgroundC
             >
                 {search && (
                     <Box gap={2} marginTop={1} display="flex">
-                        <CustomCheckbox checked sx={{ padding: 0 }} name="nft.elastic.editionDiscount" disabled />
+                        <CustomCheckbox checked sx={{ padding: 0 }} disabled />
                         <Typography>{texts.search}</Typography>
                     </Box>
                 )}
                 {license && (
                     <Box gap={2} marginTop={1} display="flex">
-                        <CustomCheckbox checked sx={{ padding: 0 }} name="nft.elastic.editionDiscount" disabled />
+                        <CustomCheckbox checked sx={{ padding: 0 }} disabled />
                         <Typography>{texts.license}</Typography>
                     </Box>
                 )}

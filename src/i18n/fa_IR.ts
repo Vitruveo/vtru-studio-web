@@ -299,6 +299,28 @@ const language: Translation = {
     'studio.consignArtwork.auxiliaryMedia.btsVideo.title': 'ویدئو BTS',
     'studio.consignArtwork.auxiliaryMedia.codeZip.title': 'کد Zip',
 
+    /* Consignment Status */
+    'studio.consignArtwork.consignmentStatus.title': 'وضعیت واگذاری',
+    'studio.consignArtwork.consignmentStatus.description': 'کار خوبی انجام داده‌اید! نقاشی شما برای واگذاری آماده است.',
+    'studio.consignArtwork.consignmentStatus.message': 'این ویژگی به زودی در دسترس خواهد بود.',
+    'studio.consignArtwork.consignmentStatus.yes': 'بله',
+    'studio.consignArtwork.consignmentStatus.no': 'خیر',
+    'studio.consignArtwork.consignmentStatus.edit': 'ویرایش',
+    'studio.consignArtwork.consignmentStatus.view': 'نمایش',
+    'studio.consignArtwork.consignmentStatus.search': 'جستجو',
+    'studio.consignArtwork.consignmentStatus.license': 'مجوز',
+
+    'studio.consignArtwork.consignmentStatus.draft.title': 'پیش نویس',
+    'studio.consignArtwork.consignmentStatus.preview.title': 'پیش‌نمایش',
+    'studio.consignArtwork.consignmentStatus.activate.title': 'فعال‌سازی',
+
+    'studio.consignArtwork.consignmentStatus.activation.title': 'فعال‌سازی',
+    'studio.consignArtwork.consignmentStatus.activation.description':
+        'فعال‌سازی نقاشی شما را به زنجیره بلوک واگذار می‌کند و نیاز به اعتبار خالق دارد.',
+    'studio.consignArtwork.consignmentStatus.creatorCreditsRequired': 'اعتبار خالق مورد نیاز',
+    'studio.consignArtwork.consignmentStatus.creatorCreditsAvailable': 'اعتبار خالق موجود',
+    'studio.consignArtwork.consignmentStatus.viewArtwork.button': 'نمایش نقاشی',
+
     /* BackModalConfirm */
     'studio.consignArtwork.backModal.title': 'آیا می‌خواهید اطلاعات را ذخیره کنید؟',
     'studio.consignArtwork.backModal.confirm.button': 'ذخیره',

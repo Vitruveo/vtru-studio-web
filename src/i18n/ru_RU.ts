@@ -302,6 +302,29 @@ const language: Translation = {
     'studio.consignArtwork.auxiliaryMedia.btsVideo.title': 'BTS видео',
     'studio.consignArtwork.auxiliaryMedia.codeZip.title': 'ZIP-код',
 
+    /* Consignment Status */
+    'studio.consignArtwork.consignmentStatus.title': 'Статус передачи',
+    'studio.consignArtwork.consignmentStatus.description':
+        'Отличная работа! Ваша художественная работа готова к передаче.',
+    'studio.consignArtwork.consignmentStatus.message': 'Эта функция будет доступна скоро.',
+    'studio.consignArtwork.consignmentStatus.yes': 'Да',
+    'studio.consignArtwork.consignmentStatus.no': 'Нет',
+    'studio.consignArtwork.consignmentStatus.edit': 'Редактировать',
+    'studio.consignArtwork.consignmentStatus.view': 'Просмотр',
+    'studio.consignArtwork.consignmentStatus.search': 'Поиск',
+    'studio.consignArtwork.consignmentStatus.license': 'Лицензия',
+
+    'studio.consignArtwork.consignmentStatus.draft.title': 'Черновик',
+    'studio.consignArtwork.consignmentStatus.preview.title': 'Предпросмотр',
+    'studio.consignArtwork.consignmentStatus.activate.title': 'Активировать',
+
+    'studio.consignArtwork.consignmentStatus.activation.title': 'Активация',
+    'studio.consignArtwork.consignmentStatus.activation.description':
+        'Активация передает ваше произведение искусства на блокчейн и требует кредита создателя.',
+    'studio.consignArtwork.consignmentStatus.creatorCreditsRequired': 'Требуемые кредиты создателя',
+    'studio.consignArtwork.consignmentStatus.creatorCreditsAvailable': 'Доступные кредиты создателя',
+    'studio.consignArtwork.consignmentStatus.viewArtwork.button': 'Просмотреть произведение искусства',
+
     /* BackModalConfirm */
     'studio.consignArtwork.backModal.title': 'Хотите сохранить информацию?',
     'studio.consignArtwork.backModal.confirm.button': 'Сохранить',
