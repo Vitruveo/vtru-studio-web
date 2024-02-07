@@ -47,7 +47,8 @@ const Section = ({ sectionName, formData, errors, schema, uiSchema, onChange, up
         const checkRequired = Object.entries(formData).filter(([key, v]) => schema?.required?.includes(key));
 
         const allFieldsFilled = checkRequired.some(
-            ([key, v]) => v === null || (typeof v === 'string' && v.trim().length === 0)
+            ([key, v]) =>
+                v === null || (typeof v === 'string' && v.trim().length === 0) || (Array.isArray(v) && !v.length)
         );
 
         if (allFieldsFilled || (schema?.required && checkRequired.length !== schema?.required?.length)) {
