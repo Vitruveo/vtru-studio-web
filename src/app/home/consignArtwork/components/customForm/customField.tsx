@@ -58,17 +58,20 @@ function CustomFieldTemplate({
         );
     }, [blurStatus, help?.props.hasErrors]);
 
+    const checkTag = label.includes('tag-') ? label.split('-') : label;
+    const title = typeof checkTag === 'string' ? checkTag : checkTag[0];
+    const withNumber = typeof checkTag === 'string' ? '' : checkTag[1];
+
     return (
         <Box className={classNames}>
             <Box>
                 <Typography fontSize="0.9rem" fontWeight="bold" className="MuiFormLabel-root MuiInputLabel-root">
-                    {label}
-                    {/* {language[`${langBasePath}.${label}`] as string} */}
+                    {title.length ? `${language[`${langBasePath}.${title}`] as string} ${withNumber}` : ''}
                     {required && '*'}
                 </Typography>
-                {description && (
-                    <Typography color="GrayText" fontSize="0.6rem" className="description">
-                        {description}
+                {description && !withNumber && (
+                    <Typography color="GrayText" fontSize="0.8rem" className="description">
+                        {language[`${langBasePath}.${title}.placeholder`] as string}
                     </Typography>
                 )}
             </Box>

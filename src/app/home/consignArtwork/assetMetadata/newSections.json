@@ -10,17 +10,18 @@
             "properties": {
                 "title": {
                     "type": "string",
-                    "title": "Title",
+                    "title": "title",
                     "description": "Title of work"
                 },
                 "description": {
                     "type": "string",
-                    "title": "Description",
+                    "format": "textarea",
+                    "title": "description",
                     "description": "Brief description of work"
                 },
                 "tags": {
                     "type": "array",
-                    "title": "Tag",
+                    "title": "tag",
                     "minItems": 1,
                     "description": "Tags relevant to the work",
                     "items": {
@@ -29,7 +30,7 @@
                 },
                 "moods": {
                     "type": "array",
-                    "title": "Moods",
+                    "title": "moods",
                     "minItems": 1,
                     "description": "Feelings that the work evokes",
                     "uniqueItems": true,
@@ -93,6 +94,7 @@
                 }
             },
             "description": {
+                "ui:widget": "textarea",
                 "ui:options": {
                     "label": false,
                     "placeholder": ""
