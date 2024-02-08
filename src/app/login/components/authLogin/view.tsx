@@ -9,6 +9,11 @@ import { LoginViewProps } from './types';
 import VtruTitle from '@/app/home/components/vtruTItle';
 
 function LoginView({ values, errors, disabled, handleChange, handleSubmit }: LoginViewProps) {
+    const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        event.target.value = event.target.value.toLowerCase();
+        handleChange(event);
+    };
+
     return (
         <Grid height="70vh" alignContent="center" display="grid" minWidth={{ xl: '400px', lg: '400px', sm: '500px' }}>
             <Typography fontWeight="700" variant="h3" mb={1}>
@@ -25,7 +30,7 @@ function LoginView({ values, errors, disabled, handleChange, handleSubmit }: Log
                                 error={!!errors.email}
                                 value={values.email}
                                 variant="outlined"
-                                onChange={handleChange}
+                                onChange={handleEmailChange}
                                 helperText={errors.email}
                                 fullWidth
                             />

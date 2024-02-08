@@ -112,7 +112,8 @@ const AccountSettings = ({
             }
         };
 
-    const handleChangeEmailInput = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChangeEmailInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        e.target.value = e.target.value.toLowerCase();
         setEmail(e.target.value);
     }, []);
 
@@ -232,6 +233,7 @@ const AccountSettings = ({
 
                     <Box marginTop={1} width="100%" display="flex" alignItems="center">
                         <CustomTextField
+                            type="email"
                             value={email}
                             onChange={handleChangeEmailInput}
                             size="small"
