@@ -168,7 +168,6 @@ export default function MediaCard({
         onDrop,
         accept: handleGetAccept(),
         maxFiles: 1,
-        maxSize: convertMBToBytes(isVideo ? mediaConfig.sizeMB?.video : mediaConfig.sizeMB?.image),
     });
 
     const fileIsLocal = formatValue.file && typeof formatValue.file !== 'string';
@@ -185,7 +184,8 @@ export default function MediaCard({
 
     const handleDeleteFile = () => {
         const newValue = { file: undefined, customFile: undefined };
-        if (fileStatus?.url) setFieldValue('deleteKeys', [...deleteKeys, fileStatus.url]);
+
+        if (fileStatus?.path) setFieldValue('deleteKeys', [...deleteKeys, fileStatus.path]);
         if (formatType === 'original') {
             setFieldValue('formats.original', newValue);
             setFieldValue('formats.display', newValue);
@@ -198,6 +198,14 @@ export default function MediaCard({
     };
 
     const handleChangeCrop = (fileChange: File) => {
+        const maxSize = convertMBToBytes(isVideo ? mediaConfig.sizeMB?.video : mediaConfig.sizeMB?.image);
+        console.log(maxSize, fileChange.size);
+        if (fileChange.size > maxSize) {
+            setModalErrorOpen(true);
+            setSizeError(true);
+            setShowCrop(false);
+            return;
+        }
         setShowCrop(false);
         handleUploadFile({ formatUpload: formatType, file: fileChange });
         setFieldValue(`formats.${formatType}.file`, fileChange);

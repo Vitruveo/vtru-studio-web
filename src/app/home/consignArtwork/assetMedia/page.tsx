@@ -17,11 +17,13 @@ import SelectMedia from './selectMedia';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 
 import { assetMediaThunk, assetStorageThunk, sendRequestUploadThunk } from '@/features/asset/thunks';
-import { getFileSize, getMediaDefinition, getStepStatus } from './helpers';
+import { getMediaDefinition, getStepStatus } from './helpers';
 import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
-import { TranslateFunction } from '@/i18n/types';
+
 import { assetActionsCreators } from '@/features/asset/slice';
+import { requestDeleteFiles } from '@/features/asset/requests';
+import { ASSET_STORAGE_URL } from '@/constants/asset';
 
 export default function AssetMedia() {
     const [showBackModal, setShowBackModal] = useState(false);
@@ -69,7 +71,7 @@ export default function AssetMedia() {
 
     const { values, errors, setFieldValue, handleSubmit } = useFormik<AssetMediaFormValues>({
         initialValues,
-        onSubmit: async (formValues) => {
+        onSubmit: async () => {
             if (JSON.stringify(initialValues) === JSON.stringify(values) && !values.deleteKeys.length)
                 router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/assetMetadata`);
             else {
@@ -84,7 +86,14 @@ export default function AssetMedia() {
                         }),
                     })
                 );
-                const deleteFormats = Object.entries(formValues.formats)
+
+                if (values.deleteKeys.length)
+                    await requestDeleteFiles({
+                        deleteKeys: values.deleteKeys,
+                        transactionId: nanoid(),
+                    });
+
+                const deleteFormats = Object.entries(values.formats)
                     .filter(([_, value]) => !value.file)
                     .map(([key, _]) => key);
                 if (deleteFormats.length) await dispatch(assetMediaThunk({ deleteFormats }));
