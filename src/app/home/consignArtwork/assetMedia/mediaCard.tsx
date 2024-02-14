@@ -199,7 +199,7 @@ export default function MediaCard({
 
     const handleChangeCrop = (fileChange: File) => {
         const maxSize = convertMBToBytes(isVideo ? mediaConfig.sizeMB?.video : mediaConfig.sizeMB?.image);
-        console.log(maxSize, fileChange.size);
+
         if (fileChange.size > maxSize) {
             setModalErrorOpen(true);
             setSizeError(true);

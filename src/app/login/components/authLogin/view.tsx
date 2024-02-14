@@ -1,5 +1,16 @@
 'use client';
-import { Box, Typography, FormGroup, FormControlLabel, Button, Stack, FormControl, Grid } from '@mui/material';
+import {
+    Box,
+    Typography,
+    FormGroup,
+    FormControlLabel,
+    Button,
+    Stack,
+    FormControl,
+    Grid,
+    useMediaQuery,
+    Theme,
+} from '@mui/material';
 
 import CustomCheckbox from '@/app/home/components/forms/theme-elements/CustomCheckbox';
 import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
@@ -7,8 +18,11 @@ import CustomFormLabel from '@/app/home/components/forms/theme-elements/CustomFo
 
 import { LoginViewProps } from './types';
 import VtruTitle from '@/app/home/components/vtruTItle';
+import Image from 'next/image';
 
 function LoginView({ values, errors, disabled, handleChange, handleSubmit }: LoginViewProps) {
+    const lgUp = useMediaQuery((th: Theme) => th.breakpoints.up('lg'));
+
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.target.value = event.target.value.toLowerCase();
         handleChange(event);
@@ -16,9 +30,27 @@ function LoginView({ values, errors, disabled, handleChange, handleSubmit }: Log
 
     return (
         <Grid height="70vh" alignContent="center" display="grid" minWidth={{ xl: '400px', lg: '400px', sm: '500px' }}>
-            <Typography fontWeight="700" variant="h3" mb={1}>
-                Welcome to <VtruTitle vtru="h5" studio="h3" copy="h3" />
-            </Typography>
+            <Box display="flex" alignItems="baseline">
+                <Typography
+                    whiteSpace="nowrap"
+                    alignSelf="center"
+                    fontWeight="700"
+                    fontSize={lgUp ? '1.7rem' : '1.5rem'}
+                >
+                    Welcome to{' '}
+                </Typography>
+                <Image
+                    src={'/images/logos/newFullLogo.png'}
+                    alt="bg"
+                    width={lgUp ? 200 : 160}
+                    height={lgUp ? 30 : 25}
+                    style={{
+                        maxWidth: '300px',
+                        maxHeight: '300px',
+                        alignSelf: 'baseline',
+                    }}
+                />
+            </Box>
             <form onSubmit={handleSubmit}>
                 <Stack>
                     <Box>

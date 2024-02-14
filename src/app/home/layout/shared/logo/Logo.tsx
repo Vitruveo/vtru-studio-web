@@ -31,27 +31,39 @@ const Logo = () => {
                     <Box display="flex" marginTop={2} alignItems="center">
                         <Image
                             style={{ marginRight: '5px' }}
-                            src={'/images/logos/logo-icon-vtru.png'}
+                            src={'/images/logos/newlogo.png'}
                             alt="logo"
-                            height={40}
-                            width={40}
+                            height={35}
+                            width={100}
                             priority
                         />
-
-                        <VtruTitle vtru="h5" studio="h3" copy="h3" copyRem="2.5rem" />
+                        <Image
+                            style={{ marginRight: '5px' }}
+                            src={'/images/logos/newFullLogo.png'}
+                            alt="logo"
+                            height={25}
+                            width={150}
+                            priority
+                        />
                     </Box>
                 ) : (
                     <Box display="flex" marginTop={2} alignItems="center">
                         <Image
                             style={{ marginRight: '5px' }}
-                            src={'/images/logos/logo-icon-vtru.png'}
+                            src={'/images/logos/newlogo.png'}
                             alt="logo"
-                            height={40}
-                            width={40}
+                            height={35}
+                            width={100}
                             priority
                         />
-
-                        <VtruTitle vtru="h5" studio="h3" copy="h3" copyRem="2.5rem" />
+                        <Image
+                            style={{ marginRight: '5px' }}
+                            src={'/images/logos/newFullLogo.png'}
+                            alt="logo"
+                            height={25}
+                            width={150}
+                            priority
+                        />
                     </Box>
                 )}
             </LinkStyled>
@@ -64,27 +76,39 @@ const Logo = () => {
                 <Box display="flex" marginTop={2} alignItems="center">
                     <Image
                         style={{ marginRight: '5px' }}
-                        src={'/images/logos/logo-icon-vtru.png'}
+                        src={'/images/logos/newlogo.png'}
                         alt="logo"
-                        height={40}
-                        width={40}
+                        height={35}
+                        width={100}
                         priority
                     />
-
-                    <VtruTitle vtru="h5" studio="h3" copy="h3" copyRem="2.5rem" />
+                    <Image
+                        style={{ marginRight: '5px' }}
+                        src={'/images/logos/newFullLogo.png'}
+                        alt="logo"
+                        height={25}
+                        width={150}
+                        priority
+                    />
                 </Box>
             ) : (
                 <Box display="flex" marginTop={2} alignItems="center">
                     <Image
                         style={{ marginRight: '5px' }}
-                        src={'/images/logos/logo-icon-vtru.png'}
+                        src={'/images/logos/newlogo.png'}
                         alt="logo"
-                        height={40}
-                        width={40}
+                        height={35}
+                        width={100}
                         priority
                     />
-
-                    <VtruTitle vtru="h5" studio="h3" copy="h3" copyRem="2.5rem" />
+                    <Image
+                        style={{ marginRight: '5px' }}
+                        src={'/images/logos/newFullLogo.png'}
+                        alt="logo"
+                        height={25}
+                        width={150}
+                        priority
+                    />
                 </Box>
             )}
         </LinkStyled>

@@ -39,19 +39,29 @@ export default function AuthLogo() {
                         },
                     }}
                 >
+                    <Box marginBottom={1}>
+                        <Image
+                            src={'/images/logos/newlogo.png'}
+                            alt="bg"
+                            width={60}
+                            height={60}
+                            style={{
+                                width: '100%',
+                                maxWidth: '300px',
+                                maxHeight: '300px',
+                            }}
+                        />
+                    </Box>
                     <Image
-                        src={'/images/logos/logo-icon-vtru.png'}
+                        src={'/images/logos/newFullLogo.png'}
                         alt="bg"
-                        width={60}
-                        height={60}
+                        width={200}
+                        height={30}
                         style={{
-                            maxWidth: '120px',
-                            maxHeight: '120px',
+                            maxWidth: '300px',
+                            maxHeight: '300px',
                         }}
                     />
-                    <Box>
-                        <VtruTitle vtru="h5" studio="h3" copy="h3" />
-                    </Box>
                 </Box>
                 <Box
                     flexDirection="column"
@@ -65,21 +75,31 @@ export default function AuthLogo() {
                         },
                     }}
                 >
-                    <Box>
+                    <Box marginBottom={1}>
                         <Image
-                            src={'/images/logos/logo-icon-vtru.png'}
+                            src={'/images/logos/newlogo.png'}
                             alt="bg"
                             width={500}
                             height={500}
                             style={{
                                 width: '100%',
-                                maxWidth: '140px',
-                                maxHeight: '140px',
+                                maxWidth: '500px',
+                                maxHeight: '100px',
                             }}
                         />
                     </Box>
                     <Box>
-                        <VtruTitle login />
+                        <Image
+                            src={'/images/logos/newFullLogo.png'}
+                            alt="bg"
+                            width={450}
+                            height={80}
+                            style={{
+                                width: '100%',
+                                maxWidth: '500px',
+                                maxHeight: '80px',
+                            }}
+                        />
                     </Box>
                 </Box>
             </Box>

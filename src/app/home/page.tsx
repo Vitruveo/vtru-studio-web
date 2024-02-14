@@ -13,6 +13,7 @@ import VtruTitle from '@/app/home/components/vtruTItle';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { useI18n } from '../hooks/useI18n';
+import Image from 'next/image';
 
 export default function Home() {
     const { language } = useI18n();
@@ -46,10 +47,23 @@ export default function Home() {
                 <Breadcrumb title={texts.title} />
 
                 <Box maxWidth={800} padding={3} mt={3}>
-                    <Box>
-                        <Typography variant="h2" display="inline">
-                            {texts.welcome} <VtruTitle vtru="h3" studio="h2" copyRem="3rem" />
+                    <Box display="flex" flexWrap="wrap" rowGap={1} alignItems="center">
+                        <Typography fontSize="1.7rem" alignSelf="center">
+                            {texts.welcome}
                         </Typography>
+
+                        <Image
+                            src={'/images/logos/newFullLogo.png'}
+                            alt="bg"
+                            width={200}
+                            height={30}
+                            style={{
+                                paddingBlock: 1,
+                                maxWidth: '300px',
+                                maxHeight: '300px',
+                                alignSelf: 'baseline',
+                            }}
+                        />
                     </Box>
                     <Box marginTop={4}>
                         <Typography variant="h4" color="primary">
