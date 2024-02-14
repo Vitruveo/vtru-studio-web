@@ -69,7 +69,7 @@ const ConsignArtwork = () => {
     const grayColor = theme.palette.text.disabled;
 
     useEffect(() => {
-        if (!status.length) dispatch(publishThunk({ status: 'draft' }));
+        if (!status?.length) dispatch(publishThunk({ status: 'draft' }));
     }, [status]);
 
     return (

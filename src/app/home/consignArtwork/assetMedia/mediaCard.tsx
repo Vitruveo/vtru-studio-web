@@ -182,6 +182,8 @@ export default function MediaCard({
             : (formatValue.file as string)?.replace(/\.[^/.]+$/, '_thumb.jpg');
     }, [formatValue.file]) as string;
 
+    console.log({ thumbSRC });
+
     const handleDeleteFile = () => {
         const newValue = { file: undefined, customFile: undefined };
         if (fileStatus?.url) setFieldValue('deleteKeys', [...deleteKeys, fileStatus.url]);
