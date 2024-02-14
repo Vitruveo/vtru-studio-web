@@ -170,11 +170,17 @@ export default function MediaCard({
         maxSize: convertMBToBytes(isVideo ? mediaConfig.sizeMB?.video : mediaConfig.sizeMB?.image),
     });
 
+    const fileIsLocal = formatValue.file && typeof formatValue.file !== 'string';
+
     const urlAssetFile = useMemo(() => {
-        return formatValue.file && typeof formatValue.file !== 'string'
-            ? URL.createObjectURL(formatValue.file)
-            : formatValue.file;
-    }, [formatValue.file]);
+        return fileIsLocal ? URL.createObjectURL(formatValue.file as Blob) : formatValue.file;
+    }, [formatValue.file]) as string;
+
+    const thumbSRC = useMemo(() => {
+        return fileIsLocal
+            ? URL.createObjectURL(formatValue.file as Blob)
+            : (formatValue.file as string)?.replace(/\.[^/.]+$/, '_thumb.jpg');
+    }, [formatValue.file]) as string;
 
     const handleDeleteFile = () => {
         const newValue = { file: undefined, customFile: undefined };
@@ -309,7 +315,7 @@ export default function MediaCard({
                     <Box display="flex" justifyContent="center" alignItems="center">
                         {formatValue.file ? (
                             <Box display="flex" justifyContent="center" alignItems="center" width={120}>
-                                {formatType !== 'print' && originalMediaInfo.mediaType === 'video' ? (
+                                {fileIsLocal && formatType !== 'print' && originalMediaInfo.mediaType === 'video' ? (
                                     <video
                                         controls
                                         width={definition === 'landscape' ? 120 : definition === 'portrait' ? 100 : 50}
@@ -327,7 +333,7 @@ export default function MediaCard({
                                         height={
                                             definition === 'landscape' ? 100 : definition === 'portrait' ? 120 : 100
                                         }
-                                        src={urlAssetFile!}
+                                        src={thumbSRC!}
                                         alt=""
                                         style={{
                                             objectFit: 'contain',

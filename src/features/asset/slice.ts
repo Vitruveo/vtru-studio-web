@@ -74,7 +74,7 @@ const initialState: AssetSliceState = {
         createdBy: null,
         updatedBy: null,
     },
-    status: 'draft',
+    status: '',
     error: '',
 };
 
