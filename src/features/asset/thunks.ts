@@ -101,16 +101,6 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
                         };
                     }, {} as FormatsMedia);
 
-                    if (formatAssetsFormats.original.file && !formatAssetsFormats.original.definition) {
-                        const { definition, width, height } = await getMediaDefinition({
-                            fileOrUrl: formatAssetsFormats.original.file!,
-                        });
-
-                        formatAssetsFormats.original.definition = definition;
-                        formatAssetsFormats.original.width = width;
-                        formatAssetsFormats.original.height = height;
-                    }
-
                     const status =
                         Object.entries(formatAssetsFormats).length < 4
                             ? 'inProgress'
