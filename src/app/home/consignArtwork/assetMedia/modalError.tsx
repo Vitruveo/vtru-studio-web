@@ -9,7 +9,7 @@ interface ModalErrorProps {
     dimensionError?: boolean;
     sizeError?: boolean;
     mediaConfig: (typeof mediaConfigs)['landscape']['display'];
-    definition: string;
+    definition?: string;
     format: string;
     open: boolean;
     setClose: () => void;

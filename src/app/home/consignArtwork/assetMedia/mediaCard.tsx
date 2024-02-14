@@ -4,7 +4,7 @@ import Img from 'next/image';
 import { IconTrash } from '@tabler/icons-react';
 import { Box, SvgIcon, Typography, IconButton, Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { AssetMediaFormErros, AssetMediaFormValues, FormatMedia } from './types';
+import { AssetMediaFormErros, AssetMediaFormValues, Definition, FormatMedia } from './types';
 import Crop from '../components/crop';
 import { formatFileSize, getFileSize, handleGetFileType, handleGetFileWidthAndHeight, mediaConfigs } from './helpers';
 import ModalError from './modalError';
@@ -21,7 +21,7 @@ interface MediaCardProps {
     errors: AssetMediaFormErros;
     formats: AssetMediaFormValues['formats'];
     urlAssetFile: string;
-    definition: AssetMediaFormValues['definition'];
+    definition?: Definition;
     handleUploadFile: ({ formatUpload, file }: { formatUpload: string; file: File }) => Promise<void>;
     setFieldValue: (
         field: string,
@@ -67,8 +67,6 @@ export default function MediaCard({
     const [modalErrorOpen, setModalErrorOpen] = useState(false);
     const [mediaCrop, setMediaCrop] = useState<File | undefined>(undefined);
     const [showCrop, setShowCrop] = useState(false);
-    const [mediaWidth, setMediaWidth] = useState(0);
-    const [mediaHeight, setMediaHeight] = useState(0);
 
     const { language } = useI18n();
 
@@ -76,6 +74,9 @@ export default function MediaCard({
         mediaConfigs[definition as keyof typeof mediaConfigs]?.[
             formatType as keyof (typeof mediaConfigs)['landscape']
         ] || {};
+
+    const mediaWidth = formats.original.width;
+    const mediaHeight = formats.original.height;
 
     const upload = useSelector((state) => state.asset.requestAssetUpload);
     const fileStatus = formatValue.transactionId ? upload[formatValue.transactionId] : undefined;
@@ -193,7 +194,6 @@ export default function MediaCard({
             setFieldValue('formats.exhibition', newValue);
             setFieldValue('formats.preview', newValue);
             setFieldValue('formats.print', newValue);
-            setFieldValue('definition', '');
         } else {
             setFieldValue(`formats.${formatType}`, newValue);
         }
@@ -214,16 +214,6 @@ export default function MediaCard({
         setSizeError(false);
         setModalErrorOpen(false);
     };
-
-    useEffect(() => {
-        if (formatType === 'original') {
-            (async () => {
-                const imgWidthAndHeight = await handleGetFileWidthAndHeight(formatValue.file!);
-                setMediaWidth(imgWidthAndHeight.width);
-                setMediaHeight(imgWidthAndHeight.height);
-            })();
-        }
-    }, []);
 
     return (
         <Box marginLeft={1} width={150}>
@@ -330,7 +320,7 @@ export default function MediaCard({
                                         }}
                                     />
                                 ) : (
-                                    <Img
+                                    <img
                                         width={definition === 'landscape' ? 120 : definition === 'portrait' ? 100 : 50}
                                         height={
                                             definition === 'landscape' ? 100 : definition === 'portrait' ? 120 : 100

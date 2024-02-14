@@ -1,7 +1,7 @@
-import { AssetMetadata } from '@/app/home/consignArtwork/assetMetadata/types';
 import { LicensesFormValues } from '@/app/home/consignArtwork/licenses/types';
 import { APIResponse } from '../common/types';
 import { SectionsFormData } from '@/app/home/consignArtwork/assetMetadata/page';
+import { OriginalFormatMedia } from '@/app/home/consignArtwork/assetMedia/types';
 
 export type AssetStatus = 'draft' | 'published' | 'archived' | 'preview' | '';
 
@@ -33,7 +33,7 @@ export interface Asset {
         };
     };
     formats: {
-        original: Format;
+        original: OriginalFormatMedia;
         display: Format;
         exhibition: Format;
         preview: Format;

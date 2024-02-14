@@ -1,7 +1,11 @@
 import { FormikErrors } from 'formik';
 
+export type Definition = 'square' | 'landscape' | 'portrait';
 export interface FormatMediaSave {
     [key: string]: {
+        width?: number;
+        height?: number;
+        definition?: Definition;
         name: string;
         path: string;
     };
@@ -14,13 +18,20 @@ export interface FormatValue {
 }
 
 export interface FormatMedia {
+    name?: string;
     file?: File | string;
     customFile?: File | string;
     transactionId?: string;
 }
 
+export interface OriginalFormatMedia extends FormatMedia {
+    definition?: Definition;
+    width?: number;
+    height?: number;
+}
+
 export interface FormatsMedia {
-    original: FormatMedia;
+    original: OriginalFormatMedia;
     display: FormatMedia;
     exhibition: FormatMedia;
     preview: FormatMedia;
@@ -28,7 +39,6 @@ export interface FormatsMedia {
 }
 
 export interface AssetMediaFormValues {
-    definition: string;
     deleteKeys: string[];
     formats: FormatsMedia;
 }

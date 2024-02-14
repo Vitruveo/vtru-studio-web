@@ -1,4 +1,4 @@
-import { FormatsMedia } from './types';
+import { Definition, FormatsMedia } from './types';
 
 export const mediaConfigs = {
     landscape: {
@@ -259,16 +259,25 @@ export function calculatePPI(fileOrUrl: File | string): Promise<number | null> {
     });
 }
 
-export async function getMediaDefinition({ fileOrUrl }: { fileOrUrl: File | string }): Promise<string> {
+export async function getMediaDefinition({
+    fileOrUrl,
+}: {
+    fileOrUrl: File | string;
+}): Promise<{ definition: Definition; width: number; height: number }> {
     const imgWidthAndHeight = await handleGetFileWidthAndHeight(fileOrUrl);
+    const defReturn = { width: imgWidthAndHeight.width, height: imgWidthAndHeight.height, definition: 'square' } as {
+        width: number;
+        height: number;
+        definition: Definition;
+    };
 
     if (imgWidthAndHeight.width > imgWidthAndHeight.height) {
-        return 'landscape';
+        defReturn.definition = 'landscape';
     } else if (imgWidthAndHeight.height > imgWidthAndHeight.width) {
-        return 'portrait';
-    } else {
-        return 'square';
+        defReturn.definition = 'portrait';
     }
+
+    return defReturn;
 }
 
 export function getStepStatus({ formats }: { formats: FormatsMedia }) {

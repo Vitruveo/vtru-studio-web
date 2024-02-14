@@ -8,7 +8,7 @@ import {
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { assetActionsCreators } from './slice';
-import { FormatMediaSave, FormatsMedia } from '@/app/home/consignArtwork/assetMedia/types';
+import { FormatMediaSave, FormatsMedia, OriginalFormatMedia } from '@/app/home/consignArtwork/assetMedia/types';
 import { LicensesFormValues } from '@/app/home/consignArtwork/licenses/types';
 import { TermsOfUseFormValues } from '@/app/home/consignArtwork/termsOfUse/types';
 import { consignArtworkActionsCreators } from '../consignArtwork/slice';
@@ -16,6 +16,7 @@ import { ASSET_STORAGE_URL } from '@/constants/asset';
 import { SectionFormatType, SectionsFormData } from '@/app/home/consignArtwork/assetMetadata/page';
 import { FormatsAuxiliayMedia } from '@/app/home/consignArtwork/auxiliaryMedia/types';
 import { nanoid } from '@reduxjs/toolkit';
+import { getMediaDefinition } from '@/app/home/consignArtwork/assetMedia/helpers';
 
 export function requestDeleteURLThunk(payload: RequestDeleteFilesReq): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
@@ -91,6 +92,7 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
                         return {
                             ...acc,
                             [key]: {
+                                ...value,
                                 name: value.name,
                                 file: `${ASSET_STORAGE_URL}/${value.path}`,
                                 customFile: undefined,
@@ -98,6 +100,16 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
                             },
                         };
                     }, {} as FormatsMedia);
+
+                    if (formatAssetsFormats.original.file && !formatAssetsFormats.original.definition) {
+                        const { definition, width, height } = await getMediaDefinition({
+                            fileOrUrl: formatAssetsFormats.original.file!,
+                        });
+
+                        formatAssetsFormats.original.definition = definition;
+                        formatAssetsFormats.original.width = width;
+                        formatAssetsFormats.original.height = height;
+                    }
 
                     const status =
                         Object.entries(formatAssetsFormats).length < 4
@@ -123,6 +135,7 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
                         return {
                             ...acc,
                             [key]: {
+                                ...value,
                                 name: value.name,
                                 file: `${ASSET_STORAGE_URL}/${value.path}`,
                                 customFile: undefined,
@@ -177,6 +190,7 @@ export function auxiliaryMediaThunk(payload: {
                 return {
                     ...acc,
                     [key]: {
+                        ...value,
                         path: (value.file as string)?.replace(new RegExp(`${ASSET_STORAGE_URL}/`, 'g'), ''),
                         name: value.name,
                     },
@@ -194,6 +208,7 @@ export function auxiliaryMediaThunk(payload: {
             return {
                 ...acc,
                 [key]: {
+                    ...value,
                     file: `${ASSET_STORAGE_URL}/${value.path}`,
                     name: value.name,
                     customFile: undefined,
@@ -238,6 +253,7 @@ export function assetMediaThunk(payload: {
                 return {
                     ...acc,
                     [key]: {
+                        ...value,
                         path: (value.file as string)?.replace(new RegExp(`${ASSET_STORAGE_URL}/`, 'g'), ''),
                         name: value.name,
                     },
@@ -253,8 +269,8 @@ export function assetMediaThunk(payload: {
             return {
                 ...acc,
                 [key]: {
+                    ...value,
                     file: `${ASSET_STORAGE_URL}/${value.path}`,
-                    name: value.name,
                     customFile: undefined,
                     transactionId: undefined,
                 },

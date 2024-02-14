@@ -61,7 +61,6 @@ export default function AssetMedia() {
 
     const initialValues = useMemo(
         () => ({
-            definition: '',
             deleteKeys: [],
             formats: asset.formats,
         }),
@@ -194,8 +193,19 @@ export default function AssetMedia() {
                         })
                     );
 
+                    let formatSave = {};
+
+                    if (key === 'original') {
+                        formatSave = {
+                            definition: value.definition,
+                            width: value.width,
+                            height: value.height,
+                        };
+                    }
+
                     return {
                         [key]: {
+                            ...formatSave,
                             path: item.path,
                             name: value.file!.name,
                         },
@@ -217,12 +227,13 @@ export default function AssetMedia() {
     const file = values?.formats?.original?.file;
 
     useEffect(() => {
-        if (file && !values?.definition) {
+        if (file && !values?.formats.original.definition) {
             (async () => {
                 if (file) {
-                    const definition = await getMediaDefinition({ fileOrUrl: file });
-
-                    setFieldValue('definition', definition);
+                    const { definition, width, height } = await getMediaDefinition({ fileOrUrl: file });
+                    setFieldValue('formats.original.width', width);
+                    setFieldValue('formats.original.height', height);
+                    setFieldValue('formats.original.definition', definition);
                 }
             })();
         }
@@ -287,7 +298,7 @@ export default function AssetMedia() {
                                             formatValue={value}
                                             deleteKeys={values.deleteKeys}
                                             urlAssetFile={urlAssetFile}
-                                            definition={values.definition}
+                                            definition={values.formats?.original?.definition}
                                             setFieldValue={setFieldValue}
                                             handleUploadFile={handleUploadFile}
                                         />
@@ -300,7 +311,7 @@ export default function AssetMedia() {
                     {!urlAssetFile && (
                         <SelectMedia
                             file={values?.formats?.original?.file}
-                            definition={values.definition}
+                            definition={values.formats?.original?.definition}
                             urlAssetFile={urlAssetFile}
                             errors={errors}
                             setFieldValue={setFieldValue}
