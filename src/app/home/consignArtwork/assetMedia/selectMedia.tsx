@@ -3,7 +3,7 @@ import Img from 'next/image';
 import { IconTrash } from '@tabler/icons-react';
 import { Box, SvgIcon, Typography, IconButton, Stack } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { AssetMediaFormErros, AssetMediaFormValues } from './types';
+import { AssetMediaFormErros, AssetMediaFormValues, Definition } from './types';
 import { useDropzone } from 'react-dropzone';
 import { handleGetFileWidthAndHeight } from './helpers';
 import ModalError from './modalError';
@@ -13,7 +13,7 @@ interface SelectMediaProps {
     urlAssetFile?: string;
     errors: AssetMediaFormErros;
     file?: File | string;
-    definition: AssetMediaFormValues['definition'];
+    definition?: Definition;
     handleUploadFile: ({ formatUpload, file }: { formatUpload: string; file: File }) => Promise<void>;
     setFieldValue: (
         field: string,
