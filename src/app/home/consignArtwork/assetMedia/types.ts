@@ -3,6 +3,7 @@ import { FormikErrors } from 'formik';
 export type Definition = 'square' | 'landscape' | 'portrait';
 export interface FormatMediaSave {
     [key: string]: {
+        size?: number;
         width?: number;
         height?: number;
         definition?: Definition;
@@ -28,6 +29,7 @@ export interface OriginalFormatMedia extends FormatMedia {
     definition?: Definition;
     width?: number;
     height?: number;
+    size?: number;
 }
 
 export interface FormatsMedia {

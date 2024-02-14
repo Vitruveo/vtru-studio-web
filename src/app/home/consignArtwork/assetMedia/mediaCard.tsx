@@ -4,7 +4,7 @@ import Img from 'next/image';
 import { IconTrash } from '@tabler/icons-react';
 import { Box, SvgIcon, Typography, IconButton, Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { AssetMediaFormErros, AssetMediaFormValues, Definition, FormatMedia } from './types';
+import { AssetMediaFormErros, AssetMediaFormValues, Definition, FormatMedia, OriginalFormatMedia } from './types';
 import Crop from '../components/crop';
 import { formatFileSize, getFileSize, handleGetFileType, handleGetFileWidthAndHeight, mediaConfigs } from './helpers';
 import ModalError from './modalError';
@@ -17,7 +17,7 @@ import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr
 interface MediaCardProps {
     deleteKeys: string[];
     formatType: string;
-    formatValue: FormatMedia;
+    formatValue: FormatMedia | OriginalFormatMedia;
     errors: AssetMediaFormErros;
     formats: AssetMediaFormValues['formats'];
     urlAssetFile: string;
@@ -183,8 +183,6 @@ export default function MediaCard({
             : (formatValue.file as string)?.replace(/\.[^/.]+$/, '_thumb.jpg');
     }, [formatValue.file]) as string;
 
-    console.log({ thumbSRC });
-
     const handleDeleteFile = () => {
         const newValue = { file: undefined, customFile: undefined };
         if (fileStatus?.url) setFieldValue('deleteKeys', [...deleteKeys, fileStatus.url]);
@@ -292,7 +290,7 @@ export default function MediaCard({
                                           ? formatFileSize(mediaConfig?.sizeMB.video)
                                           : formatFileSize(mediaConfig?.sizeMB.image)
                                   } ${texts.max}`
-                                : getFileSize(formatValue.file!)}
+                                : getFileSize((formatValue as OriginalFormatMedia).size)}
                         </Typography>
                     </Typography>
                 </Box>

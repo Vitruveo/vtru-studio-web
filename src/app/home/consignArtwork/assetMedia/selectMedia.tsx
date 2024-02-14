@@ -5,7 +5,7 @@ import { Box, SvgIcon, Typography, IconButton, Stack } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { AssetMediaFormErros, AssetMediaFormValues, Definition } from './types';
 import { useDropzone } from 'react-dropzone';
-import { handleGetFileWidthAndHeight } from './helpers';
+import { getMediaDefinition, handleGetFileWidthAndHeight } from './helpers';
 import ModalError from './modalError';
 import { useI18n } from '@/app/hooks/useI18n';
 
@@ -58,15 +58,12 @@ export default function SelectMedia({
             setFieldValue('definition', '');
         }
 
-        const mediaWidthAndHeight = await handleGetFileWidthAndHeight(acceptedFiles[0]);
+        const { width, height, definition: newDefinition } = await getMediaDefinition({ fileOrUrl: acceptedFiles[0] });
 
-        if (mediaWidthAndHeight.width > mediaWidthAndHeight.height) {
-            setFieldValue('definition', 'landscape');
-        } else if (mediaWidthAndHeight.height > mediaWidthAndHeight.width) {
-            setFieldValue('definition', 'portrait');
-        } else {
-            setFieldValue('definition', 'square');
-        }
+        setFieldValue('formats.original.size', acceptedFiles[0].size);
+        setFieldValue('formats.original.width', width);
+        setFieldValue('formats.original.height', height);
+        setFieldValue('formats.original.definition', newDefinition);
 
         handleUploadFile({ formatUpload: 'original', file: acceptedFiles[0] });
         setFieldValue('formats.original.file', acceptedFiles[0]);

@@ -211,18 +211,13 @@ export function handleGetFileWidthAndHeight(fileOrUrl: File | string): Promise<{
     });
 }
 
-export function getFileSize(fileOrUrl: File | string): string {
-    const isFile = fileOrUrl instanceof File;
-
-    if (isFile) {
-        const bytes = (fileOrUrl as File).size || 0;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-        if (bytes === 0) return '0 Byte';
-        const i = parseInt(String(Math.floor(Math.log(bytes) / Math.log(1024))));
-        return Math.round(bytes / Math.pow(1024, i)) + ' ' + sizes[i];
-    }
-
-    return '';
+export function getFileSize(size?: number): string {
+    if (!size) return '';
+    const bytes = size | 0;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    if (bytes === 0) return '0 Byte';
+    const i = parseInt(String(Math.floor(Math.log(bytes) / Math.log(1024))));
+    return Math.round(bytes / Math.pow(1024, i)) + ' ' + sizes[i];
 }
 
 export function calculatePPI(fileOrUrl: File | string): Promise<number | null> {
