@@ -167,10 +167,11 @@ export function auxiliaryMediaThunk(payload: {
                 return acc;
             }, [] as string[]);
 
-            await requestDeleteFiles({
-                deleteKeys,
-                transactionId: nanoid(),
-            });
+            if (deleteKeys?.length)
+                await requestDeleteFiles({
+                    deleteKeys,
+                    transactionId: nanoid(),
+                });
         }
 
         const formatsPersist = Object.entries(formatsState)
