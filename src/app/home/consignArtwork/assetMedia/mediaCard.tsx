@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
 import { IconTrash } from '@tabler/icons-react';
 import { Box, SvgIcon, Typography, IconButton, Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
@@ -185,9 +185,19 @@ export default function MediaCard({
 
     const handleDeleteFile = () => {
         const newValue = { file: undefined, customFile: undefined };
+        const newDeleteKeys = [...deleteKeys];
 
-        if (fileStatus?.path) setFieldValue('deleteKeys', [...deleteKeys, fileStatus.path]);
+        if (fileStatus?.path) newDeleteKeys.push(fileStatus.path);
+
         if (formatType === 'original') {
+            Object.values(formats).forEach((v) => {
+                const uploadFormat = upload[v.transactionId];
+                if (v.file && uploadFormat) {
+                    newDeleteKeys.push(uploadFormat.path);
+                } else if (v.path) {
+                    newDeleteKeys.push(v.path);
+                }
+            });
             setFieldValue('formats.original', newValue);
             setFieldValue('formats.display', newValue);
             setFieldValue('formats.exhibition', newValue);
@@ -196,6 +206,8 @@ export default function MediaCard({
         } else {
             setFieldValue(`formats.${formatType}`, newValue);
         }
+
+        setFieldValue('deleteKeys', newDeleteKeys);
     };
 
     const handleChangeCrop = (fileChange: File) => {
@@ -225,9 +237,9 @@ export default function MediaCard({
     const handleError = () => {
         setTimeout(() => {
             if (imgRef.current) {
-                imgRef.current.src = `${thumbSRC}?retry=${Date.now()}`;
+                imgRef.current.src = `${urlAssetFile}?retry=${Date.now()}`;
             }
-        }, 3000);
+        }, 1000);
     };
 
     return (

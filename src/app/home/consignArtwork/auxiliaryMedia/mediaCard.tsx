@@ -129,14 +129,20 @@ export default function MediaCard({
         accept: handleGetAccept(),
     });
 
+    const fileIsLocal = formatValue.file && typeof formatValue.file !== 'string';
+
     const urlAssetFile = useMemo(() => {
-        return formatValue.file && typeof formatValue.file !== 'string'
-            ? URL.createObjectURL(formatValue.file)
-            : formatValue.file;
-    }, [formatValue.file]);
+        return fileIsLocal ? URL.createObjectURL(formatValue.file as Blob) : formatValue.file;
+    }, [formatValue.file]) as string;
+
+    const thumbSRC = useMemo(() => {
+        return fileIsLocal
+            ? URL.createObjectURL(formatValue.file as Blob)
+            : (formatValue.file as string)?.replace(/\.[^/.]+$/, '_thumb.jpg');
+    }, [formatValue.file]) as string;
 
     const handleDeleteFile = () => {
-        if (fileStatus?.url) setFieldValue('deleteKeys', [...deleteKeys, fileStatus.url]);
+        setFieldValue('deleteKeys', [...deleteKeys, fileStatus?.path || formatValue.path]);
         setFieldValue(`formats.${formatType}`, { file: undefined, customFile: undefined });
     };
 
@@ -159,7 +165,7 @@ export default function MediaCard({
             if (imgRef.current) {
                 imgRef.current.src = `${urlAssetFile}?retry=${Date.now()}`;
             }
-        }, 3000);
+        }, 1000);
     };
 
     useEffect(() => {
@@ -290,7 +296,7 @@ export default function MediaCard({
                                         onError={handleError}
                                         width={mediaWidth}
                                         height={mediaHeight}
-                                        src={urlAssetFile!}
+                                        src={thumbSRC!}
                                         alt=""
                                         style={{
                                             objectFit: 'contain',

@@ -21,6 +21,7 @@ import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
 import { TranslateFunction } from '@/i18n/types';
 import { assetActionsCreators } from '@/features/asset/slice';
+import { requestDeleteFiles } from '@/features/asset/requests';
 
 export default function AssetMedia() {
     const [showBackModal, setShowBackModal] = useState(false);
@@ -79,6 +80,13 @@ export default function AssetMedia() {
                         status: 'completed',
                     })
                 );
+
+                if (values.deleteKeys.length)
+                    await requestDeleteFiles({
+                        deleteKeys: values.deleteKeys,
+                        transactionId: nanoid(),
+                    });
+
                 const deleteFormats = Object.entries(formValues.formats)
                     .filter(([_, value]) => !value.file)
                     .map(([key, _]) => key);

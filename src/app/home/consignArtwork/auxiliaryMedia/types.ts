@@ -15,6 +15,7 @@ export interface FormatValue {
 
 export interface FormatMedia {
     name?: string;
+    path?: string;
     file?: File | string;
     customFile?: File | string;
     transactionId?: string;
