@@ -227,7 +227,7 @@ export default function MediaCard({
             if (imgRef.current) {
                 imgRef.current.src = `${thumbSRC}?retry=${Date.now()}`;
             }
-        }, 5000);
+        }, 3000);
     };
 
     return (
