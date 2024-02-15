@@ -118,6 +118,7 @@ const Section = ({ sectionName, formData, errors, schema, uiSchema, onChange, up
             <AccordionDetails
                 sx={{
                     padding: '0px 16px 16px',
+                    maxWidth: '320px',
                 }}
             >
                 <CustomForm

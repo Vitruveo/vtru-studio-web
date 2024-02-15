@@ -9,6 +9,7 @@ import { Box, FormControlLabel, TextareaAutosize, ThemeProvider, useTheme } from
 import CustomFieldTemplate from './customField';
 import CustomCheckbox from '@/app/home/components/forms/theme-elements/CustomCheckbox';
 import { useI18n } from '@/app/hooks/useI18n';
+import './inputs.css';
 
 export interface CustomFormProps extends Partial<FormProps<any, RJSFSchema, any>> {
     langBasePath: string;
@@ -97,7 +98,7 @@ const TextareaWidget = (props: WidgetProps) => {
             onFocus={(e) => props.onFocus(props.id, e.target.value)}
             style={{
                 backgroundColor: theme.palette.background.paper,
-                width: '200px',
+                width: '100%',
                 border: `1px solid ${theme.palette.divider}`,
                 borderRadius: theme.shape.borderRadius,
                 padding: theme.spacing(1),
@@ -134,7 +135,14 @@ const CustomForm = ({
                 styleOverrides: {
                     root: {
                         backgroundColor: 'white',
-                        width: '200px',
+                        width: '100%',
+                    },
+                },
+            },
+            MuiTextField: {
+                styleOverrides: {
+                    root: {
+                        width: '100%',
                     },
                 },
             },

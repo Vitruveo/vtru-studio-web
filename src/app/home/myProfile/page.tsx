@@ -62,6 +62,8 @@ export default function ProfileSettings() {
         title: language['studio.myProfile.title'],
         subtitle: language['studio.myProfile.subtitle'],
         home: language['studio.myProfile.home'],
+        emailsTitle: language['studio.myProfile.form.emails.title'],
+        walletsTitle: language['studio.myProfile.form.wallets.title'],
         usernameTitle: language['studio.myProfile.form.username.title'],
         usernamePlaceholder: language['studio.myProfile.form.username.placeholder'],
         saveMessage: language['studio.myProfile.saveMessage'],
@@ -139,11 +141,37 @@ export default function ProfileSettings() {
 
     useEffect(() => {
         if (!isCompletedProfile && goToConsignArtwork) {
+            const fields = {
+                username: {
+                    translation: texts.usernameTitle,
+                    isValid: !!values.username,
+                },
+                emails: {
+                    translation: texts.emailsTitle,
+                    isValid: !!values.emails.length,
+                },
+
+                wallets: {
+                    translation: texts.walletsTitle,
+                    isValid: !!values.wallets.length,
+                },
+            };
+
+            const invalidFields = Object.entries(fields).filter(([key, value]) => !value.isValid);
+
             dispatch(consignArtworkActionsCreators.changeGoToConsignArtwork(false));
             setToastr({
                 open: true,
                 type: 'warning',
-                message: texts.accessConsignMessage,
+                autoClose: false,
+                message: (
+                    <Box>
+                        {`${texts.accessConsignMessage}`}
+                        <Box>
+                            Fill in the fields: {`${invalidFields.map(([key, value]) => value.translation).join(', ')}`}
+                        </Box>
+                    </Box>
+                ),
             });
         }
     }, [isCompletedProfile, goToConsignArtwork]);
@@ -294,6 +322,7 @@ export default function ProfileSettings() {
                     type={toastr.type}
                     open={toastr.open}
                     message={toastr.message}
+                    autoClose={toastr.autoClose}
                     setOpentate={setToastr}
                 />
             </PageContainerFooter>
