@@ -1,6 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
-import Img from 'next/image';
 import { IconTrash } from '@tabler/icons-react';
 import { Box, SvgIcon, Typography, IconButton, Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
@@ -56,6 +56,7 @@ export default function MediaCard({
     setFieldValue,
     handleUploadFile,
 }: MediaCardProps) {
+    const imgRef = React.useRef<HTMLImageElement>(null);
     const [dimensionError, setDimensionError] = useState<boolean>();
     const [sizeError, setSizeError] = useState<boolean>();
 
@@ -221,6 +222,14 @@ export default function MediaCard({
         setModalErrorOpen(false);
     };
 
+    const handleError = () => {
+        setTimeout(() => {
+            if (imgRef.current) {
+                imgRef.current.src = `${thumbSRC}?retry=${Date.now()}`;
+            }
+        }, 5000);
+    };
+
     return (
         <Box marginLeft={1} width={150}>
             <Box marginTop={2} height={20} display="flex" alignItems="center" justifyContent="space-between">
@@ -327,6 +336,8 @@ export default function MediaCard({
                                     />
                                 ) : (
                                     <img
+                                        ref={imgRef}
+                                        onError={handleError}
                                         width={definition === 'landscape' ? 120 : definition === 'portrait' ? 100 : 50}
                                         height={
                                             definition === 'landscape' ? 100 : definition === 'portrait' ? 120 : 100

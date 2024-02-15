@@ -1,6 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
-import Img from 'next/image';
 import { IconTrash } from '@tabler/icons-react';
 import { Box, SvgIcon, Typography, IconButton, Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
@@ -49,6 +49,7 @@ export default function MediaCard({
     setFieldValue,
     handleUploadFile,
 }: MediaCardProps) {
+    const imgRef = React.useRef<HTMLImageElement>(null);
     const [toastr, setToastr] = useState<CustomizedSnackbarState>({
         type: 'success',
         open: false,
@@ -151,6 +152,14 @@ export default function MediaCard({
 
     const handleCloseModalError = () => {
         setModalErrorOpen(false);
+    };
+
+    const handleError = () => {
+        setTimeout(() => {
+            if (imgRef.current) {
+                imgRef.current.src = `${urlAssetFile}?retry=${Date.now()}`;
+            }
+        }, 5000);
     };
 
     useEffect(() => {
@@ -276,7 +285,9 @@ export default function MediaCard({
                                         }}
                                     />
                                 ) : mediaConfig.type === 'Image' ? (
-                                    <Img
+                                    <img
+                                        ref={imgRef}
+                                        onError={handleError}
                                         width={mediaWidth}
                                         height={mediaHeight}
                                         src={urlAssetFile!}
