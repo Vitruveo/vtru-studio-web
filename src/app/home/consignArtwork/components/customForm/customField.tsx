@@ -75,9 +75,19 @@ function CustomFieldTemplate({
                     </Typography>
                 )}
             </Box>
-            <Box display="flex" alignItems="center">
+            <Box position="relative" display="flex" alignItems="center">
                 {children}
-                {isCompleted ? <CheckCircle style={{ color: '#93C47D', marginLeft: '10px', marginInline: 1 }} /> : null}
+                {isCompleted ? (
+                    <CheckCircle
+                        style={{
+                            color: '#93C47D',
+                            marginLeft: '10px',
+                            marginInline: 1,
+                            position: 'absolute',
+                            right: -30,
+                        }}
+                    />
+                ) : null}
             </Box>
             <RedTypography>{errorsC}</RedTypography>
             <RedTypography>{help}</RedTypography>
