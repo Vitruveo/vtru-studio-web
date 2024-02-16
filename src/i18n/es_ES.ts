@@ -41,7 +41,7 @@ const language: Translation = {
     'studio.myProfile.form.profile.title': 'Cambia tu foto de perfil desde aquí',
     'studio.myProfile.form.profile.reset.button': 'Restablecer',
     'studio.myProfile.form.profile.upload.button': 'Subir',
-    'studio.myProfile.form.profile.description': 'Se permite JPG, GIF o PNG. Tamaño máximo de 800K',
+    'studio.myProfile.form.profile.description': 'Se permite JPG, GIF o PNG. Tamaño máximo de 800KB',
     'studio.myProfile.form.emails.title': 'Correos Electrónicos',
     'studio.myProfile.form.emailsExists.error': 'El correo electrónico ya existe',
     'studio.myProfile.form.addEmails.placeholder': 'Introduce una nueva dirección de correo electrónico',

@@ -94,7 +94,7 @@ export default function ContractScreen() {
                                 : checkStatus,
                     })
                 );
-                router.push(`/home/consignArtwork/auxiliaryMedia`);
+                router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/auxiliaryMedia`);
             }
         },
     });

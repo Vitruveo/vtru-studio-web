@@ -132,6 +132,15 @@ export default function MediaCard({
                 isVideo ||
                 (imgWidthAndHeight.width === mediaConfig.width && imgWidthAndHeight.height === mediaConfig.height)
             ) {
+                const maxSize = convertMBToBytes(isVideo ? mediaConfig.sizeMB?.video : mediaConfig.sizeMB?.image);
+
+                if (acceptedFiles[0].size > maxSize) {
+                    setModalErrorOpen(true);
+                    setSizeError(true);
+                    setShowCrop(false);
+                    return;
+                }
+
                 handleUploadFile({ formatUpload: formatType, file: acceptedFiles[0] });
                 setFieldValue(`formats.${formatType}`, { file: acceptedFiles[0] });
             } else {

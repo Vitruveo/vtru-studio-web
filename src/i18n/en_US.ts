@@ -39,7 +39,7 @@ const language: Translation = {
     'studio.myProfile.form.profile.title': 'Change your profile picture from here',
     'studio.myProfile.form.profile.reset.button': 'Reset',
     'studio.myProfile.form.profile.upload.button': 'Upload',
-    'studio.myProfile.form.profile.description': 'Allowed JPG, GIF or PNG. Max size of 800K',
+    'studio.myProfile.form.profile.description': 'Allowed JPG, GIF or PNG. Max size of 800KB',
     'studio.myProfile.form.emails.title': 'Emails',
     'studio.myProfile.form.emailsExists.error': 'Email already exists',
     'studio.myProfile.form.addEmails.placeholder': 'Enter new email address',

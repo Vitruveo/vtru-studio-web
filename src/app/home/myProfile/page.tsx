@@ -184,8 +184,21 @@ export default function ProfileSettings() {
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (resetAvatar) setResetAvatar(false);
+
         const file = event.target.files?.[0];
-        setChangeAvatarFile(file);
+
+        if (file) {
+            const fileSize = file.size / 1024;
+            if (fileSize > 800) {
+                setToastr({
+                    open: true,
+                    type: 'warning',
+                    message: 'File size is too big',
+                });
+            } else {
+                setChangeAvatarFile(file);
+            }
+        }
     };
 
     const handleOnClickReset = () => {
