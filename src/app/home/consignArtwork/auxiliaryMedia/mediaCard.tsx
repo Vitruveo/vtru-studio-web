@@ -66,15 +66,16 @@ export default function MediaCard({
 
     const upload = useSelector((state) => state.asset.requestAssetUpload);
     const notify = useSelector((state) => state.user.notify);
+    const fileIsLocal = formatValue.file && typeof formatValue.file !== 'string';
 
     const fileStatus = formatValue.transactionId ? upload[formatValue.transactionId] : undefined;
+    const uploadSuccess = fileStatus ? fileStatus?.uploadProgress === 100 : formatValue.file && !fileIsLocal;
 
     const mediaConfig = mediaConfigs[formatType as keyof typeof mediaConfigs] || {};
 
     const texts = {
         video: language['studio.consignArtwork.assetMedia.video'],
         image: language['studio.consignArtwork.assetMedia.image'],
-        max: language['studio.consignArtwork.assetMedia.max'],
         mediaIs: language['studio.consignArtwork.assetMedia.mediaIs'],
         uploadButton: language['studio.consignArtwork.assetMedia.upload.button'],
     } as { [key: string]: string };
@@ -128,8 +129,6 @@ export default function MediaCard({
         maxSize: convertMBToBytes(mediaConfig.sizeMB),
         accept: handleGetAccept(),
     });
-
-    const fileIsLocal = formatValue.file && typeof formatValue.file !== 'string';
 
     const urlAssetFile = useMemo(() => {
         return fileIsLocal ? URL.createObjectURL(formatValue.file as Blob) : formatValue.file;
@@ -194,24 +193,18 @@ export default function MediaCard({
         <Box marginLeft={1} width={150}>
             <Box marginTop={2} height={20} display="flex" alignItems="center" justifyContent="space-between">
                 <Box display="flex" alignItems="center">
-                    {formatValue.file ? (
-                        <SvgIcon style={{ width: 20 }}>
-                            <rect width="24" height="24" rx="4" fill="#4CAF50" />
-                            <CheckCircleOutlineIcon
-                                fontSize="small"
-                                style={{
-                                    color: '#FFFFFF',
-                                    position: 'absolute',
-                                    top: '50%',
-                                    left: '50%',
-                                }}
-                            />
-                        </SvgIcon>
-                    ) : (
-                        <Typography variant="h3" style={{ color: 'red' }}>
-                            ?
-                        </Typography>
-                    )}
+                    <SvgIcon style={{ width: 20 }}>
+                        <rect width="24" height="24" rx="4" fill={uploadSuccess ? '#4CAF50' : '#D3D3D3'} />
+                        <CheckCircleOutlineIcon
+                            fontSize="small"
+                            style={{
+                                color: '#FFFFFF',
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                            }}
+                        />
+                    </SvgIcon>
 
                     <Typography marginLeft={1} color="grey" variant="h6" fontWeight="normal">
                         {language[mediaConfig.title] as string}
@@ -263,7 +256,7 @@ export default function MediaCard({
                                 {mediaConfig.type === 'Video' ? texts.video : texts.image}
                                 <Typography fontSize="0.8rem">{mediaConfig?.sizeMB} MB</Typography>
                                 <Typography fontSize="0.8rem" color="GrayText">
-                                    {texts.max}
+                                    {(language['studio.consignArtwork.assetMedia.max'] as TranslateFunction)({})}
                                 </Typography>
                             </>
                         )}

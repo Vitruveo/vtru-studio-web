@@ -44,7 +44,7 @@ const language: Translation = {
     'studio.myProfile.form.profile.description': 'Разрешенные форматы: JPG, GIF или PNG. Максимальный размер 800Кб',
     'studio.myProfile.form.emails.title': 'Электронная почта',
     'studio.myProfile.form.emailsExists.error': 'Электронная почта уже существует',
-    'studio.myProfile.form.addEmails.placeholder': 'Введите новый адрес электронной почты',
+    'studio.myProfile.form.addEmails.placeholder': 'Введите дополнительный адрес электронной почты',
     'studio.myProfile.form.code.placeholder': 'введите код...',
     'studio.myProfile.form.verify.button': 'Подтвердить',
     'studio.myProfile.form.delete.button': 'Удалить',
@@ -53,6 +53,7 @@ const language: Translation = {
     'studio.myProfile.verificationCodeSentMessageError': 'Ошибка отправки кода подтверждения на электронную почту',
     'studio.myProfile.emailVerificationMessageSuccess': 'Электронная почта подтверждена',
     'studio.myProfile.emailVerificationMessageError': 'Неверный код подтверждения',
+    'studio.myProfile.form.wallet.placeholderAdded': 'Подключить дополнительный кошелек',
     'studio.myProfile.form.wallet.placeholder': 'Подключить новый кошелек',
     'studio.myProfile.form.connect.button': 'Подключить',
 
@@ -83,10 +84,15 @@ const language: Translation = {
     /* Asset Media */
     'studio.consignArtwork.assetMedia.title': 'Медиафайлы',
     'studio.consignArtwork.assetMedia.description': 'Загрузите Ваше произведение искусства.',
+    'studio.consignArtwork.assetMedia.differentUses': 'ЗАГРУЗИТЬ/СОЗДАТЬ ВАРИАНТЫ ДЛЯ РАЗЛИЧНЫХ ИСПОЛЬЗОВАНИЙ',
     'studio.consignArtwork.assetMedia.amazing':
-        'Выглядит потрясающе! Чтобы ваше произведение искусства выглядело отлично на разных устройствах, нам нужно еще три медиафайла. Не волнуйтесь, мы поможем вам обрезать ваш оригинальный медиафайл.',
-    'studio.consignArtwork.assetMedia.concerned':
-        'Если вы беспокоитесь о потере качества, не используйте функцию обрезки и загрузите медиа напрямую в требуемом размере.',
+        'Выглядит потрясающе! Для того чтобы ваше произведение искусства выглядело отлично на разных устройствах, нам нужно еще несколько вариаций.',
+    'studio.consignArtwork.assetMedia.haveCreated':
+        'Если вы создали свои собственные файлы для нижеперечисленных вариаций, просто загрузите каждый из них здесь.',
+    'studio.consignArtwork.assetMedia.haveNotCreated':
+        'Если вы не создали свои собственные файлы, не волнуйтесь, просто загрузите ваш оригинальный файл снова для каждой необходимой вариации, и мы поможем вам обрезать ваш файл прямо здесь.',
+    'studio.consignArtwork.assetMedia.previewHelp':
+        'Файл предварительного просмотра будет пяти секундным клипом вашего произведения искусства. Вы можете загрузить тот, который создали сами, или просто загрузить свой оригинальный файл, и мы поможем вам создать этот клип здесь.',
     'studio.consignArtwork.assetMedia.upload.button': 'Загрузить',
     'studio.consignArtwork.assetMedia.assets': 'Медиафайлы',
 
@@ -95,7 +101,8 @@ const language: Translation = {
     },
     'studio.consignArtwork.assetMedia.image': 'изображение',
     'studio.consignArtwork.assetMedia.video': 'видео',
-    'studio.consignArtwork.assetMedia.max': 'максимум',
+    'studio.consignArtwork.assetMedia.max': (data: { seconds: number }) =>
+        `${data.seconds ? `макс / ${data.seconds} сек.` : 'максимально'}`,
 
     'studio.consignArtwork.assetMedia.mediaRequired': (data: { required: boolean }) =>
         `${data.required ? 'Требуется' : 'Необязательно'}`,
@@ -135,7 +142,7 @@ const language: Translation = {
 
     'studio.consignArtwork.assetMedia.dragAndDrop': 'ЗАГРУЗКА ОРИГИНАЛЬНОГО ИЗОБРАЖЕНИЯ',
     'studio.consignArtwork.assetMedia.dragAndDrop.description':
-        'Перетащите один файл мультимедиа или нажмите, чтобы загрузить ваш оригинальный художественный файл.',
+        'Чтобы загрузить свою оригинальную художественную работу, перетащите свой файл сюда или нажмите, чтобы выбрать файл с вашего компьютера.',
     'studio.consignArtwork.assetMedia.imageTypes': 'Изображение: JPEG, PNG, GIF, SVG, WEBP',
     'studio.consignArtwork.assetMedia.videoTypes': 'Видео: MP4, WEBM',
 
@@ -208,7 +215,7 @@ const language: Translation = {
     /* Licenses */
     'studio.consignArtwork.licenses.title': 'Лицензии',
     'studio.consignArtwork.licenses.description':
-        'Выберите одну или несколько лицензий для этого произведения искусства',
+        'В настоящее время Vitruveo предлагает четыре способа лицензирования/продажи вашего произведения искусства. Здесь вы можете выбрать любой из этих вариантов лицензирования:',
     'studio.consignArtwork.licenses.oneLicense.error': 'Пожалуйста, добавьте хотя бы одну лицензию',
     'studio.consignArtwork.licenses.fillFields.error': 'Заполните поля правильно.',
     'studio.consignArtwork.licenses.alreadyAdded': 'Лицензия уже добавлена',

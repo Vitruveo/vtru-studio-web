@@ -40,7 +40,7 @@ const language: Translation = {
     'studio.myProfile.form.profile.description': 'Permitido JPG, GIF ou PNG. Tamanho máximo de 800KB',
     'studio.myProfile.form.emails.title': 'Emails',
     'studio.myProfile.form.emailsExists.error': 'Email já existe',
-    'studio.myProfile.form.addEmails.placeholder': 'Digite novo endereço de email',
+    'studio.myProfile.form.addEmails.placeholder': 'Digite um endereço de e-mail adicional',
     'studio.myProfile.form.code.placeholder': 'digite um código...',
     'studio.myProfile.form.verify.button': 'Verificar',
     'studio.myProfile.form.delete.button': 'Excluir',
@@ -49,6 +49,7 @@ const language: Translation = {
     'studio.myProfile.verificationCodeSentMessageError': 'erro ao enviar código de verificação para o email',
     'studio.myProfile.emailVerificationMessageSuccess': 'email verificado',
     'studio.myProfile.emailVerificationMessageError': 'erro ao verificar o código',
+    'studio.myProfile.form.wallet.placeholderAdded': 'Conectar carteira adicional',
     'studio.myProfile.form.wallet.placeholder': 'Conectar nova carteira',
     'studio.myProfile.form.connect.button': 'Conectar',
 
@@ -80,10 +81,15 @@ const language: Translation = {
     'studio.consignArtwork.assetMedia.title': 'Mídia do Ativo',
     'studio.consignArtwork.assetMedia.description':
         'Faça upload dos arquivos de mídia para a obra de arte sendo consignada.',
+    'studio.consignArtwork.assetMedia.differentUses': 'FAZER UPLOAD/CRIAR VARIAÇÕES PARA USOS DIFERENTES',
     'studio.consignArtwork.assetMedia.amazing':
-        'Parece incrível! Para que sua obra de arte fique ótima em diferentes dispositivos, precisamos de mais três arquivos de mídia. Não se preocupe, nós vamos ajudá-lo a cortar seu arquivo de mídia original.',
-    'studio.consignArtwork.assetMedia.concerned':
-        'Se você está preocupado com a perda de qualidade, não use o recurso de corte e faça o upload da mídia diretamente no tamanho necessário.',
+        'Ficou incrível! Para que sua obra de arte pareça ótima em diferentes dispositivos, precisamos de algumas variações adicionais.',
+    'studio.consignArtwork.assetMedia.haveCreated':
+        'Se você criou seus próprios arquivos para as variações abaixo, basta fazer o upload de cada um aqui.',
+    'studio.consignArtwork.assetMedia.haveNotCreated':
+        'Se você não criou seus próprios arquivos, não se preocupe, faça o upload do seu arquivo original novamente para cada variação necessária e nós ajudaremos a recortar seu arquivo aqui mesmo.',
+    'studio.consignArtwork.assetMedia.previewHelp':
+        'O arquivo de visualização será um clipe de cinco segundos da sua obra de arte. Você pode fazer upload de um que tenha criado você mesmo ou simplesmente fazer upload do seu arquivo original, e nós ajudaremos a criar esse clipe aqui.',
     'studio.consignArtwork.assetMedia.upload.button': 'Upload',
     'studio.consignArtwork.assetMedia.assets': 'Arquivos de Mídia',
 
@@ -93,7 +99,8 @@ const language: Translation = {
         }`;
     },
     'studio.consignArtwork.assetMedia.image': 'imagem',
-    'studio.consignArtwork.assetMedia.max': 'máximo',
+    'studio.consignArtwork.assetMedia.max': (data: { seconds: number }) =>
+        `${data.seconds ? `máx / ${data.seconds} segundos` : 'máx.'}`,
 
     'studio.consignArtwork.assetMedia.mediaRequired': (data: { required: boolean }) =>
         `${data.required ? 'Obrigatório' : 'Opcional'}`,
@@ -134,7 +141,7 @@ const language: Translation = {
 
     'studio.consignArtwork.assetMedia.dragAndDrop': 'ENVIO DE OBRA DE ARTE ORIGINAL',
     'studio.consignArtwork.assetMedia.dragAndDrop.description':
-        'Arraste e solte um único arquivo de mídia ou clique para fazer upload de sua obra de arte original.',
+        'Para enviar sua obra de arte original, arraste e solte seu arquivo aqui ou clique para selecionar o arquivo em seu computador.',
     'studio.consignArtwork.assetMedia.imageTypes': 'Imagem: JPEG, PNG, GIF, SVG, WEBP',
     'studio.consignArtwork.assetMedia.videoTypes': 'Vídeo: MP4, WEBM',
 
@@ -206,7 +213,8 @@ const language: Translation = {
 
     /* Licenças */
     'studio.consignArtwork.licenses.title': 'Licenças',
-    'studio.consignArtwork.licenses.description': 'Selecione uma ou mais licenças para esta obra de arte',
+    'studio.consignArtwork.licenses.description':
+        'Atualmente, a Vitruveo oferece quatro formas de licenciar/vender sua obra de arte. Aqui você pode escolher qualquer uma dessas opções de licenciamento:',
     'studio.consignArtwork.licenses.oneLicense.error': 'Por favor, adicione pelo menos uma licença',
     'studio.consignArtwork.licenses.fillFields.error': 'Preencha os campos corretamente.',
     'studio.consignArtwork.licenses.alreadyAdded': 'Licença já adicionada',

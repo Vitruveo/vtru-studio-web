@@ -43,7 +43,7 @@ const language: Translation = {
     'studio.myProfile.form.profile.description': 'فقط JPG، GIF یا PNG مجاز است. حداکثر اندازه 800 کیلوبایت',
     'studio.myProfile.form.emails.title': 'ایمیل‌ها',
     'studio.myProfile.form.emailsExists.error': 'ایمیل از قبل وجود دارد',
-    'studio.myProfile.form.addEmails.placeholder': 'آدرس ایمیل جدید را وارد کنید',
+    'studio.myProfile.form.addEmails.placeholder': 'آدرس ایمیل اضافی را وارد کنید',
     'studio.myProfile.form.code.placeholder': 'کد را وارد کنید...',
     'studio.myProfile.form.verify.button': 'تایید',
     'studio.myProfile.form.delete.button': 'حذف',
@@ -53,6 +53,7 @@ const language: Translation = {
     'studio.myProfile.emailVerificationMessageSuccess': 'ایمیل تایید شد',
     'studio.myProfile.emailVerificationMessageError': 'خطا در تایید کد',
     'studio.myProfile.form.wallet.placeholder': 'اتصال کیف پول جدید',
+    'studio.myProfile.form.wallet.placeholderAdded': 'اتصال کیف پول اضافی',
     'studio.myProfile.form.connect.button': 'اتصال',
 
     /* Consign Artwork */
@@ -83,10 +84,15 @@ const language: Translation = {
     'studio.consignArtwork.assetMedia.title': 'رسانه دارایی',
     'studio.consignArtwork.assetMedia.description':
         'رسانه‌های دارایی را برای آثار هنری که در قرارداد گرفته شده‌اند، آپلود کنید.',
+    'studio.consignArtwork.assetMedia.differentUses': 'آپلود/ایجاد تغییرات برای استفاده‌های مختلف',
     'studio.consignArtwork.assetMedia.amazing':
-        'شگفت‌انگیز است! برای اینکه آثار هنری شما بر روی دستگاه‌های مختلف زیبا نمایش داده شود، به سه فایل رسانه‌ای دیگر نیاز داریم. نگران نباشید، ما به شما در برش فایل اصلی رسانه کمک خواهیم کرد.',
-    'studio.consignArtwork.assetMedia.concerned':
-        'اگر نگران از دست دادن کیفیت هستید، از ویژگی برش استفاده نکنید و رسانه را مستقیماً با اندازه مورد نیاز آپلود کنید.',
+        'شگفت‌انگیز به نظر می‌آید! برای اینکه هنر شما بر روی دستگاه‌های مختلف زیبا به نظر بیاید، نیاز به چند نسخه دیگر داریم.',
+    'studio.consignArtwork.assetMedia.haveCreated':
+        'اگر فایل‌های خود را برای تغییرات زیر ایجاد کرده‌اید، به راحتی هرکدام را در اینجا بارگذاری کنید.',
+    'studio.consignArtwork.assetMedia.haveNotCreated':
+        'اگر فایل‌های خود را ایجاد نکرده‌اید، نگران نباشید، فقط فایل اصلی خود را برای هر تغییر مورد نیاز دوباره بارگذاری کنید و ما به شما کمک خواهیم کرد تا فایل خود را در همینجا کراپ کنید.',
+    'studio.consignArtwork.assetMedia.previewHelp':
+        'پرونده پیش‌نمایش یک کلیپ پنج ثانیه‌ای از هنر شما خواهد بود. می‌توانید یکی را که خودتان ایجاد کرده‌اید بارگذاری کنید یا فقط پرونده اصلی خود را بارگذاری کنید و ما به شما کمک خواهیم کرد تا این کلیپ را ایجاد کنید.',
     'studio.consignArtwork.assetMedia.upload.button': 'آپلود',
     'studio.consignArtwork.assetMedia.assets': 'رسانه‌های دارایی',
 
@@ -95,7 +101,8 @@ const language: Translation = {
     },
     'studio.consignArtwork.assetMedia.image': 'تصویر',
     'studio.consignArtwork.assetMedia.video': 'ویدیو',
-    'studio.consignArtwork.assetMedia.max': 'حداکثر',
+    'studio.consignArtwork.assetMedia.max': (data: { seconds: number }) =>
+        `${data.seconds ? `حداکثر / ${data.seconds} ثانیه` : 'حداکثر'}`,
 
     'studio.consignArtwork.assetMedia.mediaRequired': (data: { required: boolean }) =>
         `${data.required ? 'الزامی' : 'اختیاری'}`,
@@ -136,7 +143,7 @@ const language: Translation = {
 
     'studio.consignArtwork.assetMedia.dragAndDrop': 'بارگذاری اثر هنری اصلی',
     'studio.consignArtwork.assetMedia.dragAndDrop.description':
-        'یک فایل رسانه انفراده را بکشید و رها کنید یا برای بارگذاری هنر اصلی خود کلیک کنید.',
+        'برای بارگذاری هنر اصلی خود، پرونده خود را اینجا بکشید و رها کنید یا برای انتخاب پرونده از رایانه خود کلیک کنید.',
     'studio.consignArtwork.assetMedia.imageTypes': 'تصویر: JPEG، PNG، GIF، SVG، WEBP',
     'studio.consignArtwork.assetMedia.videoTypes': 'ویدئو: MP4، WEBM',
 
@@ -208,7 +215,8 @@ const language: Translation = {
 
     /* Licenses */
     'studio.consignArtwork.licenses.title': 'لایسنس‌ها',
-    'studio.consignArtwork.licenses.description': 'یک یا چند مجوز برای این اثر هنری انتخاب کنید',
+    'studio.consignArtwork.licenses.description':
+        'در حال حاضر، ویتروو چهار راه برای اخذ مجوز/فروش اثر هنری شما ارائه می‌دهد. در اینجا می‌توانید هر یک از گزینه‌های این مجوزها را انتخاب کنید:',
     'studio.consignArtwork.licenses.oneLicense.error': 'لطفاً حداقل یک لایسنس اضافه کنید',
     'studio.consignArtwork.licenses.fillFields.error': 'فیلدها را به درستی پر کنید.',
     'studio.consignArtwork.licenses.alreadyAdded': 'لایسنس از قبل اضافه شده است',

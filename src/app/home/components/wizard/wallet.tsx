@@ -21,6 +21,7 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
     const texts = {
         deleteButton: language['studio.myProfile.form.delete.button'],
         walletPlaceholder: language['studio.myProfile.form.wallet.placeholder'],
+        walletPlaceholderAdded: language['studio.myProfile.form.wallet.placeholderAdded'],
         connectButton: language['studio.myProfile.form.connect.button'],
     } as { [key: string]: string };
 
@@ -90,7 +91,7 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
 
                 <Box marginTop={1} width="100%" display="flex" alignItems="center">
                     <Typography width="100%" color="GrayText">
-                        {texts.walletPlaceholder}
+                        {values.wallets?.length ? texts.walletPlaceholderAdded : texts.walletPlaceholder}
                     </Typography>
                     <Box marginLeft={1} flexDirection="row" display="flex" justifyContent="flex-end" gap={1}>
                         <Button size="small" style={{ width: 122 }} variant="contained" onClick={handleAddWallet}>

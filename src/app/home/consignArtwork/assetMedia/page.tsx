@@ -17,7 +17,7 @@ import SelectMedia from './selectMedia';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 
 import { assetMediaThunk, assetStorageThunk, sendRequestUploadThunk } from '@/features/asset/thunks';
-import { getMediaDefinition, getStepStatus } from './helpers';
+import { getMediaDefinition, getStepStatus, handleGetFileType } from './helpers';
 import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
 
@@ -37,7 +37,11 @@ export default function AssetMedia() {
         consignArtworkTitle: language['studio.consignArtwork.title'],
         assetMediaTitle: language['studio.consignArtwork.assetMedia.title'],
         assetMediaDescription: language['studio.consignArtwork.assetMedia.description'],
+        differentUses: language['studio.consignArtwork.assetMedia.differentUses'],
         assetMediaAmazing: language['studio.consignArtwork.assetMedia.amazing'],
+        haveCreated: language['studio.consignArtwork.assetMedia.haveCreated'],
+        haveNotCreated: language['studio.consignArtwork.assetMedia.haveNotCreated'],
+        previewHelp: language['studio.consignArtwork.assetMedia.previewHelp'],
         assetMediaConcerned: language['studio.consignArtwork.assetMedia.concerned'],
         assets: language['studio.consignArtwork.assetMedia.assets'],
     } as { [key: string]: string };
@@ -102,6 +106,8 @@ export default function AssetMedia() {
             }
         },
     });
+
+    const originalFileType = handleGetFileType(values.formats?.original?.file);
 
     const handleUploadFile = async ({ formatUpload, file }: { formatUpload: string; file: File }) => {
         const transactionId = nanoid();
@@ -285,10 +291,21 @@ export default function AssetMedia() {
                                         <CloseIcon fontSize="small" />
                                     </IconButton>
                                     <Typography fontSize="0.9">
-                                        {texts.assetMediaAmazing}
-                                        <Typography fontSize="0.9" marginTop={2}>
-                                            {texts.assetMediaConcerned}
+                                        {texts.differentUses}
+                                        <Typography fontSize="0.9" marginTop={1}>
+                                            {texts.assetMediaAmazing}
                                         </Typography>
+                                        <Typography fontSize="0.9" marginTop={1}>
+                                            {texts.haveCreated}
+                                        </Typography>
+                                        <Typography fontSize="0.9" marginTop={1}>
+                                            {texts.haveNotCreated}
+                                        </Typography>
+                                        {originalFileType.mediaType === 'video' && (
+                                            <Typography fontSize="0.9" marginTop={1}>
+                                                {texts.previewHelp}
+                                            </Typography>
+                                        )}
                                     </Typography>
                                 </Box>
                             )}

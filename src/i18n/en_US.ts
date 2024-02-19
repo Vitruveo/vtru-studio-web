@@ -42,7 +42,7 @@ const language: Translation = {
     'studio.myProfile.form.profile.description': 'Allowed JPG, GIF or PNG. Max size of 800KB',
     'studio.myProfile.form.emails.title': 'Emails',
     'studio.myProfile.form.emailsExists.error': 'Email already exists',
-    'studio.myProfile.form.addEmails.placeholder': 'Enter new email address',
+    'studio.myProfile.form.addEmails.placeholder': 'Enter additional email address',
     'studio.myProfile.form.code.placeholder': 'type a code...',
     'studio.myProfile.form.verify.button': 'Verify',
     'studio.myProfile.form.delete.button': 'Delete',
@@ -51,6 +51,7 @@ const language: Translation = {
     'studio.myProfile.verificationCodeSentMessageError': 'error sending verification code to email',
     'studio.myProfile.emailVerificationMessageSuccess': 'email verified',
     'studio.myProfile.emailVerificationMessageError': 'error verifying code',
+    'studio.myProfile.form.wallet.placeholderAdded': 'Connect additional wallet',
     'studio.myProfile.form.wallet.placeholder': 'Connect new wallet',
     'studio.myProfile.form.connect.button': 'Connect',
 
@@ -81,13 +82,17 @@ const language: Translation = {
     /* Asset Media */
     'studio.consignArtwork.assetMedia.title': 'Asset Media',
     'studio.consignArtwork.assetMedia.description': 'Upload media assets for the artwork being consigned.',
+    'studio.consignArtwork.assetMedia.differentUses': 'UPLOAD/CREATE VARIATIONS FOR DIFFERENT USES',
     'studio.consignArtwork.assetMedia.amazing':
-        'Looks amazing! For your artwork to look great on different devices, we need three more media files. Don’t worry, we’ll help you crop your original media file.',
-    'studio.consignArtwork.assetMedia.concerned':
-        'If you’re concerned about loss of quality, don’t use the crop feature and upload media directly in the required size.',
+        'Looks amazing! For your artwork to look great on different devices, we need a few more variations.',
+    'studio.consignArtwork.assetMedia.haveCreated':
+        'If you have created your own files for the variations below, simply upload each one here.',
+    'studio.consignArtwork.assetMedia.haveNotCreated':
+        'If you have not created your own files don’t worry, just upload your original file again for each required variation and we’ll help you crop your file right here.',
+    'studio.consignArtwork.assetMedia.previewHelp':
+        'Preview file will be a five second clip of your artwork. You can upload one you’ve created yourself or just upload your original file and we’ll help you create that clip here.',
     'studio.consignArtwork.assetMedia.upload.button': 'Upload',
     'studio.consignArtwork.assetMedia.assets': 'Media Assets',
-
     'studio.consignArtwork.assetMedia.definition': (data: { definition: 'landscape' | 'square' | 'portrait' }) => {
         return `${
             data.definition === 'landscape' ? 'Landscape' : data.definition === 'portrait' ? 'Portrait' : 'Square'
@@ -95,7 +100,8 @@ const language: Translation = {
     },
     'studio.consignArtwork.assetMedia.image': 'Image',
     'studio.consignArtwork.assetMedia.video': 'Video',
-    'studio.consignArtwork.assetMedia.max': 'maximum',
+    'studio.consignArtwork.assetMedia.max': (data: { seconds: number }) =>
+        `${data.seconds ? `max / ${data.seconds} seconds` : 'maximum'}`,
 
     'studio.consignArtwork.assetMedia.mediaRequired': (data: { required: boolean }) =>
         `${data.required ? 'Required' : 'Optional'}`,
@@ -134,7 +140,7 @@ const language: Translation = {
 
     'studio.consignArtwork.assetMedia.dragAndDrop': 'ORIGINAL ARTWORK UPLOAD',
     'studio.consignArtwork.assetMedia.dragAndDrop.description':
-        'Drag and drop a single media asset file or click to upload your original artwork.',
+        'To upload your original artwork, drag and drop your file here or click to select your file from your computer.',
     'studio.consignArtwork.assetMedia.imageTypes': 'Image: JPEG, PNG, GIF, SVG, WEBP',
     'studio.consignArtwork.assetMedia.videoTypes': 'Video: MP4, WEBM',
 
@@ -249,7 +255,8 @@ const language: Translation = {
     /* Licenses */
 
     'studio.consignArtwork.licenses.title': 'Licenses',
-    'studio.consignArtwork.licenses.description': 'Select one or more licenses for this artwork',
+    'studio.consignArtwork.licenses.description':
+        'Currently, Vitruveo offers four ways for your artwork to be licensed/sold. Here you can choose any of these licensing options:',
     'studio.consignArtwork.licenses.oneLicense.error': 'Please add at least one license',
     'studio.consignArtwork.licenses.fillFields.error': 'Fill in the fields correctly.',
     'studio.consignArtwork.licenses.alreadyAdded': 'License already added',
