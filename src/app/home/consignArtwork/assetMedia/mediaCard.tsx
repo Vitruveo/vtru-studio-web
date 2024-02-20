@@ -2,11 +2,29 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
 import { IconTrash } from '@tabler/icons-react';
-import { Box, SvgIcon, Typography, IconButton, Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
+import {
+    Box,
+    SvgIcon,
+    Typography,
+    IconButton,
+    Button,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    CircularProgress,
+} from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { AssetMediaFormErros, AssetMediaFormValues, Definition, FormatMedia, OriginalFormatMedia } from './types';
 import Crop from '../components/crop';
-import { formatFileSize, getFileSize, handleGetFileType, handleGetFileWidthAndHeight, mediaConfigs } from './helpers';
+import VideoPreview from './videoPreview';
+import {
+    formatFileSize,
+    getFileSize,
+    getVideoDuration,
+    handleGetFileType,
+    handleGetFileWidthAndHeight,
+    mediaConfigs,
+} from './helpers';
 import ModalError from './modalError';
 import { useI18n } from '@/app/hooks/useI18n';
 import { TranslateFunction } from '@/i18n/types';
@@ -26,10 +44,12 @@ interface MediaCardProps {
         formatUpload,
         file,
         maxSize,
+        startTime,
     }: {
         formatUpload: string;
         file: File;
-        maxSize: string;
+        maxSize?: string;
+        startTime?: string;
     }) => Promise<void>;
     setFieldValue: (
         field: string,
@@ -64,7 +84,15 @@ export default function MediaCard({
     setFieldValue,
     handleUploadFile,
 }: MediaCardProps) {
+    const fileIsLocal = formatValue.file && typeof formatValue.file !== 'string';
+
+    const urlAssetFile = useMemo(() => {
+        return fileIsLocal ? URL.createObjectURL(formatValue.file as Blob) : formatValue.file;
+    }, [formatValue.file]) as string;
+
     const imgRef = React.useRef<HTMLImageElement>(null);
+    const [imgIsload, setImgIsload] = useState(true);
+    const [currentSrcType, setCurrentSrcType] = useState<string>(urlAssetFile);
     const [dimensionError, setDimensionError] = useState<boolean>();
     const [sizeError, setSizeError] = useState<boolean>();
 
@@ -76,6 +104,7 @@ export default function MediaCard({
     const [modalErrorOpen, setModalErrorOpen] = useState(false);
     const [mediaCrop, setMediaCrop] = useState<File | undefined>(undefined);
     const [showCrop, setShowCrop] = useState(false);
+    const [showVideoPreview, setShowVideoPreview] = useState(false);
 
     const { language } = useI18n();
 
@@ -84,12 +113,17 @@ export default function MediaCard({
             formatType as keyof (typeof mediaConfigs)['landscape']
         ] || {};
 
-    const fileIsLocal = formatValue.file && typeof formatValue.file !== 'string';
-
     const mediaWidth = formats.original.width;
     const mediaHeight = formats.original.height;
 
     const upload = useSelector((state) => state.asset.requestAssetUpload);
+
+    const thumbSRC = useMemo(() => {
+        return fileIsLocal
+            ? URL.createObjectURL(formatValue.file as Blob)
+            : (formatValue.file as string)?.replace(/\.[^/.]+$/, '_thumb.jpg');
+    }, [formatValue.file]) as string;
+
     const fileStatus = formatValue.transactionId ? upload[formatValue.transactionId] : undefined;
     const uploadSuccess = fileStatus ? fileStatus?.uploadProgress === 100 : formatValue.file && !fileIsLocal;
 
@@ -125,17 +159,26 @@ export default function MediaCard({
             if (fileRejections.length > 0) return;
             const imgWidthAndHeight = await handleGetFileWidthAndHeight(acceptedFiles[0]);
 
-            const isValid = compareDimensions({
-                configHeight: mediaConfig.height,
-                configWidth: mediaConfig.width,
-                imageHeight: imgWidthAndHeight.height,
-                imageWidth: imgWidthAndHeight.width,
-            });
+            // const isValid = compareDimensions({
+            //     configHeight: mediaConfig.height,
+            //     configWidth: mediaConfig.width,
+            //     imageHeight: imgWidthAndHeight.height,
+            //     imageWidth: imgWidthAndHeight.width,
+            // });
 
-            if (!isValid) {
-                setDimensionError(true);
-                setModalErrorOpen(true);
-                return;
+            // if (!isValid) {
+            //     setDimensionError(true);
+            //     setModalErrorOpen(true);
+            //     return;
+            // }
+
+            if (isVideo) {
+                const videoDuration = await getVideoDuration(acceptedFiles[0]);
+                if (formatType === 'preview' && videoDuration > 5) {
+                    setMediaCrop(acceptedFiles[0]);
+                    setShowVideoPreview(true);
+                    return;
+                }
             }
 
             if (
@@ -183,16 +226,6 @@ export default function MediaCard({
         maxFiles: 1,
     });
 
-    const urlAssetFile = useMemo(() => {
-        return fileIsLocal ? URL.createObjectURL(formatValue.file as Blob) : formatValue.file;
-    }, [formatValue.file]) as string;
-
-    const thumbSRC = useMemo(() => {
-        return fileIsLocal
-            ? URL.createObjectURL(formatValue.file as Blob)
-            : (formatValue.file as string)?.replace(/\.[^/.]+$/, '_thumb.jpg');
-    }, [formatValue.file]) as string;
-
     const handleDeleteFile = () => {
         const newValue = { file: undefined, customFile: undefined };
         const newDeleteKeys = [...deleteKeys];
@@ -228,8 +261,22 @@ export default function MediaCard({
         setShowCrop(false);
     };
 
+    const handleChangeVideoPreview = (fileChange: File, startTime: number) => {
+        const checkSize = isVideo ? mediaConfig.sizeMB?.video : mediaConfig.sizeMB?.image;
+
+        handleUploadFile({
+            formatUpload: formatType,
+            file: fileChange,
+            startTime: startTime.toString(),
+            maxSize: checkSize.toString(),
+        });
+        setFieldValue(`formats.${formatType}.file`, fileChange);
+        setShowVideoPreview(false);
+    };
+
     const handleClose = () => {
         setShowCrop(false);
+        setShowVideoPreview(false);
     };
 
     const handleCloseModalError = () => {
@@ -239,11 +286,17 @@ export default function MediaCard({
     };
 
     const handleError = () => {
+        setImgIsload(true);
         setTimeout(() => {
             if (imgRef.current) {
-                imgRef.current.src = `${urlAssetFile}?retry=${Date.now()}`;
+                imgRef.current.src = `${currentSrcType}?retry=${Date.now()}`;
+                setCurrentSrcType(currentSrcType === urlAssetFile ? thumbSRC : urlAssetFile);
             }
         }, 1000);
+    };
+
+    const handleLoad = () => {
+        setImgIsload(false);
     };
 
     return (
@@ -347,19 +400,35 @@ export default function MediaCard({
                                         }}
                                     />
                                 ) : (
-                                    <img
-                                        ref={imgRef}
-                                        onError={handleError}
-                                        width={definition === 'landscape' ? 120 : definition === 'portrait' ? 100 : 50}
-                                        height={
-                                            definition === 'landscape' ? 100 : definition === 'portrait' ? 120 : 100
-                                        }
-                                        src={thumbSRC!}
-                                        alt=""
-                                        style={{
-                                            objectFit: 'contain',
-                                        }}
-                                    />
+                                    <Box>
+                                        <Box
+                                            display={imgIsload ? 'flex' : 'none'}
+                                            justifyContent="center"
+                                            height={100}
+                                            alignItems="center"
+                                            textAlign="center"
+                                        >
+                                            <CircularProgress color="primary" />
+                                        </Box>
+                                        <img
+                                            ref={imgRef}
+                                            onLoad={handleLoad}
+                                            onError={handleError}
+                                            width={
+                                                definition === 'landscape' ? 120 : definition === 'portrait' ? 100 : 50
+                                            }
+                                            height={
+                                                definition === 'landscape' ? 100 : definition === 'portrait' ? 120 : 100
+                                            }
+                                            src={thumbSRC!}
+                                            alt=""
+                                            style={{
+                                                objectFit: 'contain',
+                                                opacity: imgIsload ? 0 : 1,
+                                                display: imgIsload ? 'none' : '',
+                                            }}
+                                        />
+                                    </Box>
                                 )}
                             </Box>
                         ) : (
@@ -404,6 +473,18 @@ export default function MediaCard({
                 </DialogTitle>
                 <DialogContent>
                     <Crop file={mediaCrop} mediaConfig={mediaConfig} onChange={handleChangeCrop} />
+                </DialogContent>
+            </Dialog>
+
+            <Dialog maxWidth="lg" open={showVideoPreview} onClose={handleClose}>
+                <DialogTitle color="GrayText">
+                    {(language['studio.consignArtwork.assetMedia.cropModal.title'] as TranslateFunction)({
+                        width: mediaConfig.width,
+                        height: mediaConfig.height,
+                    })}
+                </DialogTitle>
+                <DialogContent>
+                    <VideoPreview file={mediaCrop} mediaConfig={mediaConfig} onChange={handleChangeVideoPreview} />
                 </DialogContent>
             </Dialog>
 

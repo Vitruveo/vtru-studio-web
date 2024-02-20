@@ -63,7 +63,7 @@ export interface AssetSendRequestUploadReq {
     originalName: string;
     transactionId: string;
     metadata: {
-        [key: string]: string;
+        [key: string]: string | undefined;
     };
 }
 

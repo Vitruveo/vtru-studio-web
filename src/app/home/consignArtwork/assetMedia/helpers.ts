@@ -129,6 +129,24 @@ export const mediaConfigs = {
     },
 };
 
+export function getVideoDuration(file: File): Promise<number> {
+    return new Promise((resolve, reject) => {
+        const video = document.createElement('video');
+        video.preload = 'metadata';
+
+        video.onloadedmetadata = function () {
+            window.URL.revokeObjectURL(video.src);
+            resolve(video.duration);
+        };
+
+        video.onerror = function () {
+            reject('Failed to load video');
+        };
+
+        video.src = URL.createObjectURL(file);
+    });
+}
+
 export function handleGetFileType(fileOrUrl?: File | string): { contentType: string; mediaType: string } {
     const fileTypes = {
         jpg: { contentType: 'JPEG', mediaType: 'image' },
