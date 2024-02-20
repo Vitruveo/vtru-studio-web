@@ -96,7 +96,15 @@ export default function AssetMedia() {
         },
     });
 
-    const handleUploadFile = async ({ formatUpload, file }: { formatUpload: string; file: File }) => {
+    const handleUploadFile = async ({
+        formatUpload,
+        file,
+        maxSize,
+    }: {
+        formatUpload: string;
+        file: File;
+        maxSize: string;
+    }) => {
         const transactionId = nanoid();
 
         await dispatch(
@@ -110,6 +118,10 @@ export default function AssetMedia() {
         dispatch(
             sendRequestUploadThunk({
                 mimetype: file!.type,
+                metadata: {
+                    formatUpload,
+                    maxSize,
+                },
                 originalName: file!.name,
                 transactionId,
             })

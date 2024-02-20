@@ -23,7 +23,7 @@ interface MediaCardProps {
     formatValue: FormatMedia;
     errors: AssetMediaFormErros;
     formats: AssetMediaFormValues['formats'];
-    handleUploadFile: ({ formatUpload, file }: { formatUpload: string; file: File }) => Promise<void>;
+    handleUploadFile: ({ formatUpload, file }: { formatUpload: string; file: File; maxSize: string }) => Promise<void>;
     setFieldValue: (
         field: string,
         value: any,
@@ -82,15 +82,9 @@ export default function MediaCard({
 
     const onDrop = useCallback(
         async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
-            fileRejections.forEach(({ file, errors }) => {
-                if (errors[0].code === 'file-too-large') {
-                    setToastr({ message: 'File too large', open: true, type: 'error' });
-                }
-            });
-            if (fileRejections.length > 0) return;
             const file = acceptedFiles[0];
 
-            handleUploadFile({ formatUpload: formatType, file });
+            handleUploadFile({ formatUpload: formatType, file, maxSize: mediaConfig?.sizeMB.toString() });
             setFieldValue(`formats.${formatType}.file`, file);
         },
         [setFieldValue]
@@ -126,7 +120,6 @@ export default function MediaCard({
     const { getRootProps, getInputProps } = useDropzone({
         onDrop,
         maxFiles: 1,
-        maxSize: convertMBToBytes(mediaConfig.sizeMB),
         accept: handleGetAccept(),
     });
 
@@ -147,7 +140,7 @@ export default function MediaCard({
 
     const handleChangeCrop = (fileChange: File) => {
         setShowCrop(false);
-        handleUploadFile({ formatUpload: formatType, file: fileChange });
+        handleUploadFile({ formatUpload: formatType, file: fileChange, maxSize: mediaConfig?.sizeMB.toString() });
         setFieldValue(`formats.${formatType}.file`, fileChange);
     };
 
