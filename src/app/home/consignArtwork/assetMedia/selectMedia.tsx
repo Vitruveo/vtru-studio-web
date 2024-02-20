@@ -14,7 +14,7 @@ interface SelectMediaProps {
     errors: AssetMediaFormErros;
     file?: File | string;
     definition?: Definition;
-    handleUploadFile: ({ formatUpload, file }: { formatUpload: string; file: File }) => Promise<void>;
+    handleUploadFile: ({ formatUpload, file }: { formatUpload: string; file: File; maxSize: string }) => Promise<void>;
     setFieldValue: (
         field: string,
         value: any,
@@ -65,7 +65,7 @@ export default function SelectMedia({
         setFieldValue('formats.original.height', height);
         setFieldValue('formats.original.definition', newDefinition);
 
-        handleUploadFile({ formatUpload: 'original', file: acceptedFiles[0] });
+        handleUploadFile({ formatUpload: 'original', file: acceptedFiles[0], maxSize: '500' });
         setFieldValue('formats.original.file', acceptedFiles[0]);
     };
 

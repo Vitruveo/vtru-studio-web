@@ -319,6 +319,7 @@ export function sendRequestUploadThunk(
             mimetype: payload.mimetype,
             originalName: payload.originalName,
             transactionId: payload.transactionId,
+            metadata: payload.metadata,
         });
 
         return response;

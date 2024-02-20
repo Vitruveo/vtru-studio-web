@@ -62,6 +62,9 @@ export interface AssetSendRequestUploadReq {
     mimetype: string;
     originalName: string;
     transactionId: string;
+    metadata: {
+        [key: string]: string;
+    };
 }
 
 export interface AssetSliceState extends Asset {

@@ -22,7 +22,15 @@ interface MediaCardProps {
     formats: AssetMediaFormValues['formats'];
     urlAssetFile: string;
     definition?: Definition;
-    handleUploadFile: ({ formatUpload, file }: { formatUpload: string; file: File }) => Promise<void>;
+    handleUploadFile: ({
+        formatUpload,
+        file,
+        maxSize,
+    }: {
+        formatUpload: string;
+        file: File;
+        maxSize: string;
+    }) => Promise<void>;
     setFieldValue: (
         field: string,
         value: any,
@@ -134,16 +142,9 @@ export default function MediaCard({
                 isVideo ||
                 (imgWidthAndHeight.width === mediaConfig.width && imgWidthAndHeight.height === mediaConfig.height)
             ) {
-                const maxSize = convertMBToBytes(isVideo ? mediaConfig.sizeMB?.video : mediaConfig.sizeMB?.image);
+                const checkSize = isVideo ? mediaConfig.sizeMB?.video : mediaConfig.sizeMB?.image;
 
-                if (acceptedFiles[0].size > maxSize) {
-                    setModalErrorOpen(true);
-                    setSizeError(true);
-                    setShowCrop(false);
-                    return;
-                }
-
-                handleUploadFile({ formatUpload: formatType, file: acceptedFiles[0] });
+                handleUploadFile({ formatUpload: formatType, file: acceptedFiles[0], maxSize: checkSize.toString() });
                 setFieldValue(`formats.${formatType}`, { file: acceptedFiles[0] });
             } else {
                 setMediaCrop(acceptedFiles[0]);
@@ -220,17 +221,11 @@ export default function MediaCard({
     };
 
     const handleChangeCrop = (fileChange: File) => {
-        const maxSize = convertMBToBytes(isVideo ? mediaConfig.sizeMB?.video : mediaConfig.sizeMB?.image);
+        const checkSize = isVideo ? mediaConfig.sizeMB?.video : mediaConfig.sizeMB?.image;
 
-        if (fileChange.size > maxSize) {
-            setModalErrorOpen(true);
-            setSizeError(true);
-            setShowCrop(false);
-            return;
-        }
-        setShowCrop(false);
-        handleUploadFile({ formatUpload: formatType, file: fileChange });
+        handleUploadFile({ formatUpload: formatType, file: fileChange, maxSize: checkSize.toString() });
         setFieldValue(`formats.${formatType}.file`, fileChange);
+        setShowCrop(false);
     };
 
     const handleClose = () => {
