@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
 import { IconTrash } from '@tabler/icons-react';
 import {
@@ -31,6 +31,7 @@ import { TranslateFunction } from '@/i18n/types';
 import { useSelector } from '@/store/hooks';
 import UploadProgressBar from '../components/uploadProgress';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
+import { ASSET_STORAGE_URL } from '@/constants/asset';
 
 interface MediaCardProps {
     deleteKeys: string[];
@@ -91,7 +92,9 @@ export default function MediaCard({
     }, [formatValue.file]) as string;
 
     const imgRef = React.useRef<HTMLImageElement>(null);
-    const [imgIsload, setImgIsload] = useState(true);
+    const videoRef = React.useRef<HTMLVideoElement>(null);
+
+    const [fileIsload, setFileIsload] = useState(true);
     const [currentSrcType, setCurrentSrcType] = useState<string>(urlAssetFile);
     const [dimensionError, setDimensionError] = useState<boolean>();
     const [sizeError, setSizeError] = useState<boolean>();
@@ -117,11 +120,13 @@ export default function MediaCard({
     const mediaHeight = formats.original.height;
 
     const upload = useSelector((state) => state.asset.requestAssetUpload);
+    const originalMediaInfo = handleGetFileType(formats.original.file!);
+    const isVideo = originalMediaInfo.mediaType === 'video' && formatType !== 'print';
 
     const thumbSRC = useMemo(() => {
         return fileIsLocal
             ? URL.createObjectURL(formatValue.file as Blob)
-            : (formatValue.file as string)?.replace(/\.[^/.]+$/, '_thumb.jpg');
+            : (formatValue.file as string)?.replace(/\.[^/.]+$/, `_thumb.${isVideo ? 'mp4' : 'jpg'}`);
     }, [formatValue.file]) as string;
 
     const fileStatus = formatValue.transactionId ? upload[formatValue.transactionId] : undefined;
@@ -133,9 +138,6 @@ export default function MediaCard({
         mediaIs: language['studio.consignArtwork.assetMedia.mediaIs'],
         uploadButton: language['studio.consignArtwork.assetMedia.upload.button'],
     } as { [key: string]: string };
-
-    const originalMediaInfo = handleGetFileType(formats.original.file!);
-    const isVideo = originalMediaInfo.mediaType === 'video' && formatType !== 'print';
 
     function compareDimensions(dimensions: Dimensions): boolean {
         const minimumConfigHeight = dimensions.configHeight * 0.8;
@@ -272,6 +274,7 @@ export default function MediaCard({
         });
         setFieldValue(`formats.${formatType}.file`, fileChange);
         setShowVideoPreview(false);
+        setFileIsload(true);
     };
 
     const handleClose = () => {
@@ -286,7 +289,7 @@ export default function MediaCard({
     };
 
     const handleError = () => {
-        setImgIsload(true);
+        setFileIsload(true);
         setTimeout(() => {
             if (imgRef.current) {
                 imgRef.current.src = `${currentSrcType}?retry=${Date.now()}`;
@@ -295,9 +298,41 @@ export default function MediaCard({
         }, 1000);
     };
 
-    const handleLoad = () => {
-        setImgIsload(false);
+    const handleVideoError = () => {
+        setFileIsload(true);
+        setTimeout(() => {
+            if (videoRef.current) {
+                videoRef.current.src = `${currentSrcType}?retry=${Date.now()}`;
+                setCurrentSrcType(currentSrcType === urlAssetFile ? thumbSRC : urlAssetFile);
+            }
+        }, 1000);
     };
+
+    const handleLoad = () => {
+        setFileIsload(false);
+    };
+
+    useEffect(() => {
+        if (uploadSuccess && fileStatus && formatType === 'preview' && isVideo) {
+            const intervalId = setInterval(() => {
+                const checkPreviewURL = `${ASSET_STORAGE_URL}/${fileStatus?.path.replace(
+                    /\.[^/.]+$/,
+                    '_thumb.mp4'
+                )}?retry=${Date.now()}`;
+                fetch(checkPreviewURL, { method: 'GET' }).then((response) => {
+                    if (response.ok) {
+                        if (videoRef.current) {
+                            setFileIsload(false);
+                            videoRef.current.src = checkPreviewURL;
+                            clearInterval(intervalId);
+                        }
+                    }
+                });
+            }, 1000);
+
+            return () => clearInterval(intervalId);
+        }
+    }, [uploadSuccess]);
 
     return (
         <Box marginLeft={1} width={160}>
@@ -387,48 +422,53 @@ export default function MediaCard({
                     <Box display="flex" justifyContent="center" alignItems="center">
                         {formatValue.file ? (
                             <Box display="flex" justifyContent="center" alignItems="center" width={120}>
-                                {fileIsLocal && formatType !== 'print' && originalMediaInfo.mediaType === 'video' ? (
+                                <Box
+                                    display={
+                                        (fileIsload && !isVideo) ||
+                                        (fileIsload && isVideo && formatType === 'preview' && fileStatus)
+                                            ? 'flex'
+                                            : 'none'
+                                    }
+                                    justifyContent="center"
+                                    height={100}
+                                    alignItems="center"
+                                    textAlign="center"
+                                >
+                                    <CircularProgress color="primary" />
+                                </Box>
+                                {formatType !== 'print' && originalMediaInfo.mediaType === 'video' ? (
                                     <video
+                                        ref={videoRef}
+                                        onError={handleVideoError}
                                         controls
                                         width={definition === 'landscape' ? 120 : definition === 'portrait' ? 100 : 50}
                                         height={
                                             definition === 'landscape' ? 100 : definition === 'portrait' ? 120 : 100
                                         }
-                                        src={urlAssetFile!}
+                                        src={thumbSRC!}
                                         style={{
                                             objectFit: 'contain',
+
+                                            display: fileIsload && fileStatus && formatType === 'preview' ? 'none' : '',
                                         }}
                                     />
                                 ) : (
-                                    <Box>
-                                        <Box
-                                            display={imgIsload ? 'flex' : 'none'}
-                                            justifyContent="center"
-                                            height={100}
-                                            alignItems="center"
-                                            textAlign="center"
-                                        >
-                                            <CircularProgress color="primary" />
-                                        </Box>
-                                        <img
-                                            ref={imgRef}
-                                            onLoad={handleLoad}
-                                            onError={handleError}
-                                            width={
-                                                definition === 'landscape' ? 120 : definition === 'portrait' ? 100 : 50
-                                            }
-                                            height={
-                                                definition === 'landscape' ? 100 : definition === 'portrait' ? 120 : 100
-                                            }
-                                            src={thumbSRC!}
-                                            alt=""
-                                            style={{
-                                                objectFit: 'contain',
-                                                opacity: imgIsload ? 0 : 1,
-                                                display: imgIsload ? 'none' : '',
-                                            }}
-                                        />
-                                    </Box>
+                                    <img
+                                        ref={imgRef}
+                                        onLoad={handleLoad}
+                                        onError={handleError}
+                                        width={definition === 'landscape' ? 120 : definition === 'portrait' ? 100 : 50}
+                                        height={
+                                            definition === 'landscape' ? 100 : definition === 'portrait' ? 120 : 100
+                                        }
+                                        src={thumbSRC!}
+                                        alt=""
+                                        style={{
+                                            objectFit: 'contain',
+                                            opacity: fileIsload ? 0 : 1,
+                                            display: fileIsload ? 'none' : '',
+                                        }}
+                                    />
                                 )}
                             </Box>
                         ) : (
@@ -477,12 +517,7 @@ export default function MediaCard({
             </Dialog>
 
             <Dialog maxWidth="lg" open={showVideoPreview} onClose={handleClose}>
-                <DialogTitle color="GrayText">
-                    {(language['studio.consignArtwork.assetMedia.cropModal.title'] as TranslateFunction)({
-                        width: mediaConfig.width,
-                        height: mediaConfig.height,
-                    })}
-                </DialogTitle>
+                <DialogTitle color="GrayText">Select a starting point for creating the preview</DialogTitle>
                 <DialogContent>
                     <VideoPreview file={mediaCrop} mediaConfig={mediaConfig} onChange={handleChangeVideoPreview} />
                 </DialogContent>

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useMemo } from 'react';
 import ReactPlayer from 'react-player';
-import { Button, Grid, Slider, Typography } from '@mui/material';
+import { Box, Button } from '@mui/material';
 
 interface VideoFrameSelectorProps {
     mediaConfig: {
@@ -43,7 +43,7 @@ const VideoFrameSelector = ({ mediaConfig, onChange, file }: VideoFrameSelectorP
     };
 
     return (
-        <div>
+        <Box display="flex" justifyContent="right" alignItems="flex-end" flexDirection="column">
             <ReactPlayer
                 ref={playerRef}
                 url={url}
@@ -53,10 +53,12 @@ const VideoFrameSelector = ({ mediaConfig, onChange, file }: VideoFrameSelectorP
                 onPause={handlePause}
                 onDuration={handleDuration}
             />
-            <Button onClick={changePosition} size="small" variant="contained">
-                save starting point
-            </Button>
-        </div>
+            <Box marginTop={2}>
+                <Button onClick={changePosition} size="small" variant="contained">
+                    create preview
+                </Button>
+            </Box>
+        </Box>
     );
 };
 
