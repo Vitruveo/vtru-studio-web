@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import Scrollbar from '@/app/home/components/custom-scroll/Scrollbar';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -7,9 +8,11 @@ import Logo from '../../shared/logo/Logo';
 import SidebarItems from './SidebarItems';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { hoverSidebar, toggleMobileSidebar } from '@/features/customizer/slice';
-// import { AppState } from '@/store';
+
+const sidebarBackgroundImages = ['side1.jpg', 'side2.jpg', 'side3.jpg'];
 
 const Sidebar = () => {
+    const [backgroundImage, setBackgroundImage] = useState(sidebarBackgroundImages[0]);
     const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
 
     const dispatch = useDispatch();
@@ -29,6 +32,20 @@ const Sidebar = () => {
     const onHoverLeave = () => {
         dispatch(hoverSidebar(false));
     };
+
+    useEffect(() => {
+        const backgroundInterval = setInterval(() => {
+            const index = sidebarBackgroundImages.indexOf(backgroundImage);
+
+            const targetIndex = index === sidebarBackgroundImages.length - 1 ? 0 : index + 1;
+
+            setBackgroundImage(sidebarBackgroundImages[targetIndex]);
+        }, 10000);
+
+        return () => {
+            clearInterval(backgroundInterval);
+        };
+    }, [backgroundImage]);
 
     if (lgUp) {
         return (
@@ -75,7 +92,15 @@ const Sidebar = () => {
                         <Box px={3}>
                             <Logo />
                         </Box>
-                        <Scrollbar sx={{ height: 'calc(100% - 190px)' }}>
+                        <Scrollbar
+                            sx={{
+                                height: 'calc(100% - 70px)',
+                                backgroundPosition: 'center 60px',
+                                backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(/images/backgrounds/sidebar/${backgroundImage})`,
+                                backgroundRepeat: 'no-repeat',
+                                backgroundSize: 'cover',
+                            }}
+                        >
                             {/* ------------------------------------------- */}
                             {/* Sidebar Items */}
                             {/* ------------------------------------------- */}
@@ -96,7 +121,11 @@ const Sidebar = () => {
             PaperProps={{
                 sx: {
                     width: customizer.SidebarWidth,
-
+                    height: 'calc(100%)',
+                    backgroundPosition: 'center 130px',
+                    backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(/images/backgrounds/sidebar/${backgroundImage})`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: 'cover',
                     // backgroundColor:
                     //   customizer.activeMode === 'dark'
                     //     ? customizer.darkBackground900
