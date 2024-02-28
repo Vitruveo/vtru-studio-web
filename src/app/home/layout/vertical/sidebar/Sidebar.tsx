@@ -96,7 +96,7 @@ const Sidebar = () => {
                             sx={{
                                 height: 'calc(100% - 70px)',
                                 backgroundPosition: 'center 60px',
-                                backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(/images/backgrounds/sidebar/${backgroundImage})`,
+                                backgroundImage: `linear-gradient(to top, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)), url(/images/backgrounds/sidebar/${backgroundImage})`,
                                 backgroundRepeat: 'no-repeat',
                                 backgroundSize: 'cover',
                             }}
