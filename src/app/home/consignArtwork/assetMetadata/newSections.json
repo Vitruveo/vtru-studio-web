@@ -11,7 +11,7 @@
                 "title": {
                     "type": "string",
                     "title": "title",
-                    "description": "Title of work"
+                    "description": "THE Title of work"
                 },
                 "description": {
                     "type": "string",
