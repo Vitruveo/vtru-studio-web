@@ -13,7 +13,7 @@ export type SectionOnChangeParams = { data: IChangeEvent<any, RJSFSchema, any>; 
 
 interface SectionProps extends Omit<CustomFormProps, 'updateErrors' | 'onChange' | 'langBasePath'> {
     sectionName: SectionName;
-    updateErrors: (params: { errors: ErrorSchema<any>; sectionName: SectionName }) => void;
+    updateErrors: any;
     onChange: (params: SectionOnChangeParams) => void;
 }
 

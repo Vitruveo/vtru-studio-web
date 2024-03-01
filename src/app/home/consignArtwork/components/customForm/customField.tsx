@@ -56,11 +56,11 @@ function CustomFieldTemplate({
             typeof formData === 'string' &&
             formData.length
         );
-    }, [blurStatus, help?.props.hasErrors]); 
+    }, [blurStatus, help?.props.hasErrors]);
 
     const checkMulti = label.includes('-') ? `${label.split('-')[0]}.item` : label;
     const withNumber = label.includes('-') ? label.split('-')[1] : '';
-    let formattedLabel = String(language[`${langBasePath}.${checkMulti}`]);
+    const formattedLabel = String(language[`${langBasePath}.${checkMulti}`]);
 
     return (
         <Box className={classNames}>

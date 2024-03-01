@@ -132,7 +132,7 @@ export default function AssetMetadata() {
                         return acc;
                     }, {});
 
-                    handleUpdateErrors({ errors: errorSchema as ErrorSchema<any>, sectionName: key as SectionName });
+                    handleUpdateErrors({ errors: errorSchema as ErrorSchema<any>, sectionName: key as any });
                     return;
                 }
                 isValid.push(true);
@@ -165,7 +165,10 @@ export default function AssetMetadata() {
     const handleOnChange = ({ data, sectionName }: SectionOnChangeParams) => {
         setSections((prevSections) => ({
             ...prevSections,
-            [sectionName]: { ...prevSections[sectionName], formData: data.formData },
+            [sectionName as keyof typeof prevSections]: {
+                ...prevSections[sectionName as keyof typeof prevSections],
+                formData: data.formData,
+            },
         }));
     };
 
