@@ -9,7 +9,7 @@ import SidebarItems from './SidebarItems';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { hoverSidebar, toggleMobileSidebar } from '@/features/customizer/slice';
 
-const sidebarBackgroundImages = ['side1.jpg', 'side2.jpg', 'side3.jpg'];
+const sidebarBackgroundImages = ['side1.jpg', 'side2.jpg', 'side3.jpg', 'side4.jpg'];
 
 const Sidebar = () => {
     const [backgroundImage, setBackgroundImage] = useState(sidebarBackgroundImages[0]);
