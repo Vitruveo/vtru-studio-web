@@ -56,22 +56,22 @@ function CustomFieldTemplate({
             typeof formData === 'string' &&
             formData.length
         );
-    }, [blurStatus, help?.props.hasErrors]);
+    }, [blurStatus, help?.props.hasErrors]); 
 
-    const checkTag = label.includes('tag-') ? label.split('-') : label;
-    const title = typeof checkTag === 'string' ? checkTag : checkTag[0];
-    const withNumber = typeof checkTag === 'string' ? '' : checkTag[1];
+    const checkMulti = label.includes('-') ? `${label.split('-')[0]}.item` : label;
+    const withNumber = label.includes('-') ? label.split('-')[1] : '';
+    let formattedLabel = String(language[`${langBasePath}.${checkMulti}`]);
 
     return (
         <Box className={classNames}>
             <Box>
                 <Typography fontSize="0.9rem" fontWeight="bold" className="MuiFormLabel-root MuiInputLabel-root">
-                    {title.length ? `${language[`${langBasePath}.${title}`] as string} ${withNumber}` : ''}
+                    {`${formattedLabel} ${withNumber}`}
                     {required && '*'}
                 </Typography>
                 {description && !withNumber && (
                     <Typography color="GrayText" fontSize="0.8rem" className="description">
-                        {language[`${langBasePath}.${title}.placeholder`] as string}
+                        {language[`${langBasePath}.${label}.description`] as string}
                     </Typography>
                 )}
             </Box>

@@ -8,6 +8,7 @@ import { RJSFSchema, ErrorSchema, FieldTemplateProps, WidgetProps } from '@rjsf/
 import { Box, FormControlLabel, TextareaAutosize, ThemeProvider, useTheme } from '@mui/material';
 import CustomFieldTemplate from './customField';
 import CustomCheckbox from '@/app/home/components/forms/theme-elements/CustomCheckbox';
+import CustomRadio from '@/app/home/components/forms/theme-elements/CustomRadio';
 import { useI18n } from '@/app/hooks/useI18n';
 import './inputs.css';
 
@@ -70,7 +71,51 @@ const MyCustomCheckboxWidget = (props: MyCustomCheckboxWidgetProps) => {
                                 onChange={handleChange(option.value)}
                             />
                         }
-                        label={`${language[`${langBasePath}.${name}.option.${option.label.toLowerCase()}`] as string}`}
+                        label={`${language[`${langBasePath}.${name}.enum.${option.value.toLowerCase()}`] as string}`}
+                    />
+                </Box>
+            ))}
+        </div>
+    );
+};
+
+interface MyCustomRadioWidgetProps extends WidgetProps {
+    langBasePath: string;
+}
+
+const MyCustomRadioWidget = (props: MyCustomRadioWidgetProps) => {
+    const { id, options, value, langBasePath, name, blurHandler, onChange } = props;
+
+    const { language } = useI18n();
+
+    const handleChange = (item: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+        onChange(item);
+    };
+
+    const handleFocus = (e: React.FocusEvent<HTMLButtonElement>) => {
+        props.onFocus(props.id, e.target.value);
+    };
+
+    const handleBlur = (e: React.FocusEvent<HTMLButtonElement, Element>) => {
+        props.onBlur(props.id, e.target.value);
+    };
+
+    return (
+        <div id={id}>
+            {(options.enumOptions || []).map((option, i) => (
+                <Box key={i}>
+                    <FormControlLabel
+                        control={
+                            <CustomRadio
+                                onBlur={handleBlur}
+                                onFocus={handleFocus}
+                                color="primary"
+                                value={option.value}
+                                checked={value == option.value}
+                                onChange={handleChange(option.value)}
+                            />
+                        }
+                        label={`${language[`${langBasePath}.${name}.enum.${option.value.toLowerCase()}`] as string}`}
                     />
                 </Box>
             ))}
@@ -130,7 +175,6 @@ const CustomForm = ({
         ...theme,
         components: {
             ...theme.components,
-
             MuiInputBase: {
                 styleOverrides: {
                     root: {
@@ -146,12 +190,26 @@ const CustomForm = ({
                     },
                 },
             },
+            MuiPaper: {
+                styleOverrides: {
+                    root: {
+                        width: '100%',
+                    },
+                },
+            },
+            MuiMenu: {
+                styleOverrides: {
+                    paper: {
+                        maxWidth: '500px',
+                    },
+                },
+            },
             MuiFormControl: {
                 ...theme.components?.MuiFormControl,
                 defaultProps: {
                     ...theme.components?.MuiFormControl?.defaultProps,
                     size: 'small',
-                },
+                }         
             },
             MuiFormHelperText: {
                 styleOverrides: {
@@ -165,7 +223,7 @@ const CustomForm = ({
 
     const blurHandler = useCallback(
         (...args: any) => {
-            setFieldHasFocus(false);
+            setFieldHasFocus(false); 
             setFormIschanged(false);
 
             if (!formIschanged) return;
@@ -177,8 +235,8 @@ const CustomForm = ({
 
             const { errorSchema: stateErrorSchema } = $this.state;
 
-            const fieldValue = get(formData, fieldPath);
-
+            const fieldValue = get(formData, fieldPath); 
+    
             const formDataToValidate = fieldValue === '' ? omit(formData, fieldPath) : formData;
 
             const { errorSchema: validatedErrorSchema } = $this.validate(formDataToValidate);
@@ -218,6 +276,7 @@ const CustomForm = ({
         () => ({
             TextareaWidget: TextareaWidget,
             checkboxes: (props: WidgetProps) => <MyCustomCheckboxWidget {...props} langBasePath={langBasePath} />,
+            radios: (props: WidgetProps) => <MyCustomRadioWidget {...props} langBasePath={langBasePath} />,
         }),
         []
     );

@@ -80,7 +80,7 @@ const Section = ({ sectionName, formData, errors, schema, uiSchema, onChange, up
     }, [errors]);
 
     return (
-        <Accordion style={{ background: '#EFEFEF' }} expanded={expanded} onChange={handleChange}>
+        <Accordion style={{ background: '#fafafa' }} expanded={expanded} onChange={handleChange}>
             <AccordionSummary
                 sx={{
                     height: '50px',
@@ -118,7 +118,7 @@ const Section = ({ sectionName, formData, errors, schema, uiSchema, onChange, up
             <AccordionDetails
                 sx={{
                     padding: '0px 16px 16px',
-                    maxWidth: '320px',
+                    maxWidth: '90%',
                 }}
             >
                 <CustomForm

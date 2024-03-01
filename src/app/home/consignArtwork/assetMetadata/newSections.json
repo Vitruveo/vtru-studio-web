@@ -1,106 +1,727 @@
 {
     "context": {
         "formData": {
-            "tags": ["artwork"],
-            "moods": []
+            "title": "",
+            "description": "",
+            "culture": "",
+            "mood": [],
+            "copyright": "",
+            "colors": [
+                "#000000"
+            ],
+            "orientation": ""
         },
         "schema": {
             "type": "object",
-            "required": ["title", "description", "tags", "moods"],
+            "required": [
+                "title",
+                "description",
+                "culture",
+                "mood",
+                "copyright",
+                "colors",
+                "orientation"
+            ],
             "properties": {
                 "title": {
-                    "type": "string",
-                    "title": "title",
-                    "description": "THE Title of work"
+                    "type": "string"
                 },
                 "description": {
                     "type": "string",
-                    "format": "textarea",
-                    "title": "description",
-                    "description": "Brief description of work"
+                    "format": "textarea"
                 },
-                "tags": {
-                    "type": "array",
-                    "title": "tag",
-                    "minItems": 1,
-                    "description": "Tags relevant to the work",
-                    "items": {
-                        "type": "string"
-                    }
+                "culture": {
+                    "type": "string",
+                    "enum": [
+                        "african",
+                        "centralasian",
+                        "eastasian",
+                        "islamic",
+                        "latinamerican",
+                        "nativeamerican",
+                        "oceanic",
+                        "southasian",
+                        "southeastasian",
+                        "western"
+                    ]
                 },
-                "moods": {
+                "mood": {
                     "type": "array",
-                    "title": "moods",
                     "minItems": 1,
-                    "description": "Feelings that the work evokes",
                     "uniqueItems": true,
                     "items": {
                         "type": "string",
                         "enum": [
-                            "Admiration",
-                            "Absorbing",
-                            "Amusement",
-                            "Adoration",
-                            "Awe",
-                            "Anxiety",
-                            "Boredom",
-                            "Brooding",
-                            "Calmness",
-                            "Chills",
-                            "Chaotic",
-                            "Connectedness",
-                            "Cosmic",
-                            "Confusion",
-                            "Dread",
-                            "Distaste",
-                            "Disgust",
-                            "Dreary",
-                            "Disorienting",
-                            "Dreamy",
-                            "Desire",
-                            "Elegant",
-                            "Humorous",
-                            "Intimate",
-                            "Intricate",
-                            "Love",
-                            "Lively",
-                            "Mystical",
-                            "Mysterious",
-                            "Nostalgia",
-                            "Ornate",
-                            "Psychedelic",
-                            "Serenity",
-                            "Sadness",
-                            "Sensual",
-                            "Spiritual",
-                            "Strange",
-                            "Striking",
-                            "Tragic",
-                            "Tense",
-                            "Vibrant",
-                            "Violent",
-                            "Wonder",
-                            "Whimsical"
+                            "admiration",
+                            "absorbing",
+                            "amusement",
+                            "adoration",
+                            "awe",
+                            "anxiety",
+                            "boredom",
+                            "brooding",
+                            "calmness",
+                            "chills",
+                            "chaotic",
+                            "connectedness",
+                            "cosmic",
+                            "confusion",
+                            "dread",
+                            "distaste",
+                            "disgust",
+                            "dreary",
+                            "disorienting",
+                            "dreamy",
+                            "desire",
+                            "elegant",
+                            "humorous",
+                            "intimate",
+                            "intricate",
+                            "love",
+                            "lively",
+                            "mystical",
+                            "mysterious",
+                            "nostalgia",
+                            "ornate",
+                            "psychedelic",
+                            "serenity",
+                            "sadness",
+                            "sensual",
+                            "spiritual",
+                            "strange",
+                            "striking",
+                            "tragic",
+                            "tense",
+                            "vibrant",
+                            "violent",
+                            "wonder",
+                            "whimsical"
                         ]
                     }
+                },
+                "colors": {
+                    "type": "array",
+                    "item": "color",
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "copyright": {
+                    "type": "string"
+                },
+                "orientation": {
+                    "type": "string",
+                    "enum": [
+                        "horizontal",
+                        "vertical",
+                        "square"
+                    ]
                 }
             }
         },
         "uiSchema": {
             "title": {
-                "classNames": "my-custom-class",
                 "ui:options": {
                     "label": false,
                     "placeholder": ""
                 }
             },
             "description": {
-                "classNames": "my-custom-class",
                 "ui:widget": "textarea",
                 "ui:options": {
                     "label": false,
                     "placeholder": ""
                 }
+            },
+            "culture": {
+                "ui:widget": "radios",
+                "classNames": "display-fixed make-scrollable"
+            },
+            "mood": {
+                "ui:widget": "checkboxes",
+                "classNames": "display-fixed make-scrollable"
+            },
+            "colors": {
+                "items": {
+                    "ui:widget": "color",
+                    "ui:options": {
+                        "label": false
+                    }
+                },
+                "ui:options": {
+                    "label": false
+                }
+            },
+            "copyright": {
+                "ui:options": {
+                    "label": false,
+                    "placeholder": ""
+                }
+            },
+            "orientation": {
+                "ui:widget": "radios",
+                "classNames": "display-fixed"
+            }
+        }
+    },
+    "taxonomy": {
+        "formData": {
+            "category": "",
+            "tags": [
+                "artwork"
+            ],
+            "collections": [],
+            "medium": [],
+            "style": [],
+            "subject": [],
+            "genre": "",
+            "material": [],
+            "aiGeneration": "",
+            "arEnabled": "",
+            "nudity": "",
+            "department": "",
+            "orientation": "",
+            "classification": ""
+        },
+        "schema": {
+            "type": "object",
+            "required": [
+                "category",
+                "tags",
+                "aiGeneration",
+                "nudity",
+                "collections",
+                "medium",
+                "style",
+                "subject",
+                "material",
+                "orientation",
+                "classification"
+            ],
+            "properties": {
+                "category": {
+                    "type": "string",
+                    "enum": [
+                        "digitalart",
+                        "physicalart",
+                        "digitalphysicalart"
+                    ]
+                },
+                "tags": {
+                    "type": "array",
+                    "item": "tag",
+                    "minItems": 1,
+                    "maxItems": 10,
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "collections": {
+                    "type": "array",
+                    "item": "tag",
+                    "minItems": 1,
+                    "maxItems": 10,
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "aigeneration": {
+                    "type": "string",
+                    "enum": [
+                        "full",
+                        "partial",
+                        "none"
+                    ]
+                },
+                "nudity": {
+                    "type": "string",
+                    "enum": [
+                        "yes",
+                        "no"
+                    ]
+                },
+                "medium": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "sculpting",
+                            "acrylic",
+                            "airbrush",
+                            "algorithmic",
+                            "aquatint",
+                            "ai",
+                            "bw",
+                            "ballpoint",
+                            "bronze",
+                            "color",
+                            "charcoal",
+                            "chalk",
+                            "conte",
+                            "clay",
+                            "crayon",
+                            "ctype",
+                            "ceramic",
+                            "digital",
+                            "decoupage",
+                            "dye",
+                            "drypoint",
+                            "enamel",
+                            "environmental",
+                            "encaustic",
+                            "etching",
+                            "engraving",
+                            "fabric",
+                            "found",
+                            "fiber",
+                            "fractal",
+                            "fullspectrum",
+                            "fiberglass",
+                            "gesso",
+                            "graphite",
+                            "gouache",
+                            "giclee",
+                            "glass",
+                            "gelatin",
+                            "granite",
+                            "household",
+                            "ink",
+                            "interactive",
+                            "kinetic",
+                            "lithograph",
+                            "linocuts",
+                            "latex",
+                            "lights",
+                            "led",
+                            "leather",
+                            "lenticular",
+                            "marker",
+                            "manipulated",
+                            "monotype",
+                            "metal",
+                            "marble",
+                            "mosaic",
+                            "mezzotint",
+                            "neon",
+                            "oil",
+                            "paper",
+                            "paint",
+                            "pencil",
+                            "pastel",
+                            "photo",
+                            "plaster",
+                            "plastic",
+                            "photogram",
+                            "papermache",
+                            "platinum",
+                            "polaroid",
+                            "precious",
+                            "penink",
+                            "pottery",
+                            "pinhole",
+                            "resin",
+                            "rubber",
+                            "robotics",
+                            "spraypaint",
+                            "stencil",
+                            "screenprinting",
+                            "stone",
+                            "silverpoint",
+                            "steel",
+                            "sound",
+                            "tempera",
+                            "textile",
+                            "taxidermy",
+                            "timber",
+                            "vector",
+                            "watercolor",
+                            "wood",
+                            "wax",
+                            "woodcut"
+                        ]
+                    }
+                },
+                "style": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "abstract",
+                            "abstractexpressionism",
+                            "artdeco",
+                            "conceptual",
+                            "cubism",
+                            "dada",
+                            "documentary",
+                            "expressionism",
+                            "figurative",
+                            "fineart",
+                            "folk",
+                            "illustration",
+                            "impressionism",
+                            "minimalism",
+                            "modern",
+                            "photorealism",
+                            "popart",
+                            "portraiture",
+                            "realism",
+                            "streetart",
+                            "surrealism"
+                        ]
+                    }
+                },
+                "subject": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "abstract",
+                            "aerial",
+                            "aeroplane",
+                            "animal",
+                            "architecture",
+                            "automobile",
+                            "beach",
+                            "bicycle",
+                            "bike",
+                            "bird",
+                            "boat",
+                            "body",
+                            "botanic",
+                            "business",
+                            "calligraphy",
+                            "car",
+                            "cartoon",
+                            "cats",
+                            "celebrity",
+                            "children",
+                            "cinema",
+                            "cities",
+                            "classicalmythology",
+                            "comics",
+                            "cows",
+                            "cuisine",
+                            "culture",
+                            "dogs",
+                            "education",
+                            "erotic",
+                            "family",
+                            "fantasy",
+                            "fashion",
+                            "fish",
+                            "floral",
+                            "food",
+                            "fooddrink",
+                            "garden",
+                            "geometric",
+                            "graffiti",
+                            "healthbeauty",
+                            "home",
+                            "horse",
+                            "humor",
+                            "interiors",
+                            "kids",
+                            "kitchen",
+                            "landscape",
+                            "language",
+                            "light",
+                            "love",
+                            "men",
+                            "mortality",
+                            "motor",
+                            "motorbike",
+                            "motorcycle",
+                            "music",
+                            "nature",
+                            "nude",
+                            "outerspace",
+                            "patterns",
+                            "people",
+                            "performingarts",
+                            "places",
+                            "political",
+                            "politics",
+                            "popculturecelebrity",
+                            "popularculture",
+                            "portrait",
+                            "religion",
+                            "religious",
+                            "rurallife",
+                            "sailboat",
+                            "science",
+                            "sciencetechnology",
+                            "seascape",
+                            "seasons",
+                            "ship",
+                            "sport",
+                            "sports",
+                            "stilllife",
+                            "technology",
+                            "time",
+                            "train",
+                            "travel",
+                            "tree",
+                            "typography",
+                            "wall",
+                            "water",
+                            "women",
+                            "worldculture"
+                        ]
+                    }
+                },
+                "material": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "acrylic",
+                            "albumensilver",
+                            "aluminium",
+                            "appropriation",
+                            "aquatint",
+                            "assemblage",
+                            "augmentedreality",
+                            "basalt",
+                            "bas-relief",
+                            "binder",
+                            "blockchain",
+                            "board",
+                            "brass",
+                            "bronze",
+                            "brush",
+                            "burlap",
+                            "cable",
+                            "cameo",
+                            "canvas",
+                            "carbonfiber",
+                            "card",
+                            "cardboard",
+                            "casein",
+                            "cement",
+                            "ceramics",
+                            "chalk",
+                            "charcoal",
+                            "chisel",
+                            "clay",
+                            "cliché-verre",
+                            "cloth",
+                            "coal",
+                            "collage",
+                            "collotype",
+                            "colorvarnish",
+                            "coloredmarkers",
+                            "coloredpencils",
+                            "concrete",
+                            "copper",
+                            "cotton",
+                            "crayon",
+                            "digital",
+                            "drawing",
+                            "drypoint",
+                            "dust",
+                            "elephantdung",
+                            "embroidery",
+                            "emulsion",
+                            "enamel",
+                            "encaustic",
+                            "engraving",
+                            "etching",
+                            "fabric",
+                            "fabricstraps",
+                            "fat",
+                            "feather",
+                            "felt",
+                            "felt-tippen",
+                            "fiberboard",
+                            "fiberglass",
+                            "flashlight",
+                            "fluorescentpaint",
+                            "fresco",
+                            "frottage",
+                            "gelatinsilverprint",
+                            "gesso",
+                            "gilt",
+                            "glass",
+                            "glitter",
+                            "gloss",
+                            "gold",
+                            "goldleaf",
+                            "gouache",
+                            "graffiti",
+                            "granite",
+                            "graphite",
+                            "graphitepencil",
+                            "grattage",
+                            "greenstone",
+                            "grisaille",
+                            "gumarabic",
+                            "hematite",
+                            "hemp",
+                            "hologram",
+                            "horns",
+                            "indianink",
+                            "ink",
+                            "intaglio",
+                            "iron",
+                            "ironplate",
+                            "ivory",
+                            "japanesepaper",
+                            "jute",
+                            "lacquer",
+                            "laidpaper",
+                            "latex",
+                            "lavis",
+                            "leadpoint",
+                            "leather",
+                            "lemon",
+                            "lightbox",
+                            "lightbulb",
+                            "limestone",
+                            "linen",
+                            "linocut",
+                            "linocutb&w",
+                            "linocutcolor",
+                            "linoleum",
+                            "lithography",
+                            "magna",
+                            "magnets",
+                            "mahoganypanel",
+                            "majolica",
+                            "mappins",
+                            "marble",
+                            "maskingtape",
+                            "masonite",
+                            "metal",
+                            "metalpoint",
+                            "mezzotint",
+                            "mixedmedia",
+                            "mixedtechnique",
+                            "mosaic",
+                            "mosaïque",
+                            "mural",
+                            "music",
+                            "musicpaper",
+                            "nails",
+                            "oak",
+                            "objettrouve",
+                            "obsidian",
+                            "oil",
+                            "oilcloth",
+                            "onyx",
+                            "paint",
+                            "paintedmetal",
+                            "panel",
+                            "paper",
+                            "papier-pelle",
+                            "papyrus",
+                            "parchment",
+                            "pastel",
+                            "pebbles",
+                            "pen",
+                            "pencil",
+                            "pergament",
+                            "photogram",
+                            "photographicpaper",
+                            "photography",
+                            "photogravure",
+                            "photomontage",
+                            "photomosaic",
+                            "piano",
+                            "pigment",
+                            "plaster",
+                            "plastic",
+                            "plates",
+                            "plexiglas",
+                            "plugsocket",
+                            "plywood",
+                            "polyester",
+                            "polymer",
+                            "polymerpaint",
+                            "polystyrene",
+                            "poplar",
+                            "porcelain",
+                            "postcard",
+                            "print",
+                            "printedbrochure",
+                            "pyroxylin",
+                            "ready-made",
+                            "recorderwithcassette",
+                            "resin",
+                            "rubber",
+                            "sand",
+                            "sandstone",
+                            "sanguine",
+                            "satin",
+                            "scrapings",
+                            "screenprint",
+                            "sepia",
+                            "shell",
+                            "silk",
+                            "silkscreen",
+                            "silver",
+                            "silverpoint",
+                            "sound",
+                            "sponge",
+                            "spraypaint",
+                            "stainedglass",
+                            "steel",
+                            "stencil",
+                            "stone",
+                            "string",
+                            "stucco",
+                            "stump",
+                            "tapestry",
+                            "tar",
+                            "tempera",
+                            "terracotta",
+                            "textile",
+                            "tin",
+                            "travertine",
+                            "turquoise",
+                            "tusche",
+                            "twine",
+                            "varnish",
+                            "vellum",
+                            "video",
+                            "vinyl",
+                            "vitrage",
+                            "wall",
+                            "wallpaper",
+                            "wash",
+                            "watercolor",
+                            "wax",
+                            "waxpastel",
+                            "white",
+                            "whitewash",
+                            "wine",
+                            "wire",
+                            "wood",
+                            "woodengraving",
+                            "woodblockprint",
+                            "woodcut",
+                            "woodenchair",
+                            "woodensled",
+                            "wool",
+                            "zinc"                            
+                        ]
+                    }
+                }
+            }
+        },
+        "uiSchema": {
+            "category": {
+                "ui:widget": "radios",
+                "classNames": "display-fixed"
             },
             "tags": {
                 "items": {
@@ -113,42 +734,44 @@
                     "label": false
                 }
             },
-            "moods": {
-                "ui:widget": "checkboxes",
-                "ui:field": "noTitle",
-                "ui:title": false,
-                "ui:options": {
-                    "label": false
-                },
+            "collections": {
                 "items": {
+                    "ui:emptyValue": "",
                     "ui:options": {
                         "label": false
                     }
+                },
+                "ui:options": {
+                    "label": false
                 }
+            },
+            "aigeneration": {
+                "ui:widget": "radios",
+                "classNames": "display-fixed"
+            },
+            "nudity": {
+                "ui:widget": "radios",
+                "classNames": "display-fixed"
+            },
+            "medium": {
+                "ui:widget": "checkboxes",
+                "classNames": "display-fixed make-scrollable"
+            },
+            "style": {
+                "ui:widget": "checkboxes",
+                "classNames": "display-fixed make-scrollable"
+            },
+            "subject": {
+                "ui:widget": "checkboxes",
+                "classNames": "display-fixed make-scrollable"
+            },
+            "material": {
+                "ui:widget": "checkboxes",
+                "classNames": "display-fixed make-scrollable"
             }
         }
     },
-    "taxonomy": {
-        "formData": {},
-        "schema": {},
-        "uiSchema": {}
-    },
     "creators": {
-        "formData": {},
-        "schema": {},
-        "uiSchema": {}
-    },
-    "provenance": {
-        "formData": {},
-        "schema": {},
-        "uiSchema": {}
-    },
-    "custom": {
-        "formData": {},
-        "schema": {},
-        "uiSchema": {}
-    },
-    "assets": {
         "formData": {},
         "schema": {},
         "uiSchema": {}
