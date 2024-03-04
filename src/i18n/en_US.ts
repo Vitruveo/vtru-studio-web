@@ -378,7 +378,7 @@ const language: Translation = {
 
 
     'studio.consignArtwork.assetMetadata.field.subject': 'Subject',
-    'studio.consignArtwork.assetMetadata.field.subject.description': 'Subjects used in this work',
+    'studio.consignArtwork.assetMetadata.field.subject.description': 'Keywords identifying the subjects used in this work',
 
     'studio.consignArtwork.assetMetadata.field.subject.enum.abstract': "Abstract",
     'studio.consignArtwork.assetMetadata.field.subject.enum.aerial': "Aerial",
@@ -719,6 +719,27 @@ const language: Translation = {
 
     'studio.consignArtwork.assetMetadata.field.nudity.enum.yes': "This work contains nudity",
     'studio.consignArtwork.assetMetadata.field.nudity.enum.no': "This work does not contain nudity",
+
+    'studio.consignArtwork.assetMetadata.field.name': 'Creator Name',
+    'studio.consignArtwork.assetMetadata.field.name.description': 'Creator name or pseudonym',
+
+    'studio.consignArtwork.assetMetadata.field.role': 'Creator Role',
+    'studio.consignArtwork.assetMetadata.field.role.description': 'Creator role for this work or general title',
+
+    'studio.consignArtwork.assetMetadata.field.bio': 'Creator Bio',
+    'studio.consignArtwork.assetMetadata.field.bio.description': 'Creator bio (short, 3-4 sentences)',
+
+    'studio.consignArtwork.assetMetadata.field.profileUrl': 'Creator Profile Link',
+    'studio.consignArtwork.assetMetadata.field.profileUrl.description': 'Creator profile link',
+
+    'studio.consignArtwork.assetMetadata.field.nationality': 'Nationality',
+    'studio.consignArtwork.assetMetadata.field.nationality.description': 'Creator nationality or origin country',
+
+    'studio.consignArtwork.assetMetadata.field.residence': 'Residence',
+    'studio.consignArtwork.assetMetadata.field.residence.description': 'Creator residence country',
+
+    'studio.consignArtwork.assetMetadata.field.ethnicity': 'Ethnicity',
+    'studio.consignArtwork.assetMetadata.field.ethnicity.description': 'Creator ethnicity',
 
     // 'studio.consignArtwork.assetMetadata.field.date': 'Date',
 

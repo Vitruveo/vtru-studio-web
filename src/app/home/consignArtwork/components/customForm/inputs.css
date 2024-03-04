@@ -13,7 +13,18 @@
     overflow-y: scroll;
 }
 
-.form-group > div:nth-child(2) {
+.form-group > div.:nth-child(2) {
     margin-top: 10px;
 }
 
+.MuiBox-root > .form-group > div.MuiBox-root:nth-child(1) {
+    display: none;
+}
+
+.MuiAccordionDetails-root > form > .form-group > div.MuiBox-root:nth-child(1) {
+    display: none;
+}
+
+.MuiGrid-root > .MuiBox-root > .MuiPaper-root > .MuiBox-root {
+    padding-right: 50px; 
+}
