@@ -209,7 +209,7 @@ const CustomForm = ({
                 defaultProps: {
                     ...theme.components?.MuiFormControl?.defaultProps,
                     size: 'small',
-                }         
+                },
             },
             MuiFormHelperText: {
                 styleOverrides: {
@@ -223,7 +223,7 @@ const CustomForm = ({
 
     const blurHandler = useCallback(
         (...args: any) => {
-            setFieldHasFocus(false); 
+            setFieldHasFocus(false);
             setFormIschanged(false);
 
             if (!formIschanged) return;
@@ -235,11 +235,13 @@ const CustomForm = ({
 
             const { errorSchema: stateErrorSchema } = $this.state;
 
-            const fieldValue = get(formData, fieldPath); 
-    
+            const fieldValue = get(formData, fieldPath);
+
             const formDataToValidate = fieldValue === '' ? omit(formData, fieldPath) : formData;
 
             const { errorSchema: validatedErrorSchema } = $this.validate(formDataToValidate);
+
+            console.log(validatedErrorSchema);
 
             if (!validatedErrorSchema || !Object.values(validatedErrorSchema).length) {
                 updateErrors({});

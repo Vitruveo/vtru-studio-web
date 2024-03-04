@@ -29,34 +29,64 @@ const Section = ({ sectionName, formData, errors, schema, uiSchema, onChange, up
         setExpanded((prevExpanded) => !prevExpanded);
     };
 
-    const handleChangeStatus = (params: { errors?: ErrorSchema }) => {
-        if (params?.errors && Object.values(params?.errors).length) {
-            setStatus('error');
-            return;
-        }
-
-        const checkStarted = Object.values(formData).every(
+    const handleValidateSection = (formDat: any, fieldsRequired: string[]) => {
+        const checkStarted = Object.values(formDat).every(
             (v) => v === null || (typeof v === 'string' && v.trim().length === 0)
         );
 
         if (checkStarted) {
-            setStatus('notStarted');
-            return;
+            return 'notStarted';
         }
 
-        const checkRequired = Object.entries(formData).filter(([key, v]) => schema?.required?.includes(key));
+        const checkRequired = Object.entries(formDat).filter(([key, v]) => fieldsRequired?.includes(key));
 
         const allFieldsFilled = checkRequired.some(
             ([key, v]) =>
                 v === null || (typeof v === 'string' && v.trim().length === 0) || (Array.isArray(v) && !v.length)
         );
 
-        if (allFieldsFilled || (schema?.required && checkRequired.length !== schema?.required?.length)) {
-            setStatus('inProgress');
+        if (allFieldsFilled || (fieldsRequired && checkRequired.length !== fieldsRequired?.length)) {
+            return 'inProgress';
+        }
+
+        return 'completed';
+    };
+
+    const handleChangeStatus = (params: { errors?: ErrorSchema }) => {
+        if (params?.errors && Object.values(params?.errors).length) {
+            setStatus('error');
             return;
         }
 
-        setStatus('completed');
+        if (Array.isArray(formData)) {
+            const allStatus: string[] = [];
+
+            formData.forEach((v: any) => {
+                allStatus.push(handleValidateSection(v, (schema?.items as { required: string[] })?.required));
+            });
+
+            if (allStatus.includes('error')) {
+                setStatus('error');
+                return;
+            }
+
+            if (allStatus.includes('inProgress')) {
+                setStatus('inProgress');
+                return;
+            }
+
+            if (allStatus.includes('notStarted')) {
+                setStatus('notStarted');
+                return;
+            }
+
+            setStatus('completed');
+
+            return;
+        }
+
+        const validStatus = handleValidateSection(formData, schema?.required as string[]);
+        setStatus(validStatus);
     };
 
     const handleUpdateErrors = (newErrors: ErrorSchema) => {
