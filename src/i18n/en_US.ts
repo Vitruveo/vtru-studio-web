@@ -708,11 +708,11 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.material.enum.wool': 'Wool',
     'studio.consignArtwork.assetMetadata.field.material.enum.zinc': 'Zinc',
 
-    'studio.consignArtwork.assetMetadata.field.aigeneration': 'AI Generation',
-    'studio.consignArtwork.assetMetadata.field.aigeneration.description': 'Is any part of this work AI generated?',
-    'studio.consignArtwork.assetMetadata.field.aigeneration.enum.full': "Fully AI generated",
-    'studio.consignArtwork.assetMetadata.field.aigeneration.enum.partial': "Partially AI generated",
-    'studio.consignArtwork.assetMetadata.field.aigeneration.enum.none': "No AI used",
+    'studio.consignArtwork.assetMetadata.field.aiGeneration': 'AI Generation',
+    'studio.consignArtwork.assetMetadata.field.aiGeneration.description': 'Is any part of this work AI generated?',
+    'studio.consignArtwork.assetMetadata.field.aiGeneration.enum.full': "Fully AI generated",
+    'studio.consignArtwork.assetMetadata.field.aiGeneration.enum.partial': "Partially AI generated",
+    'studio.consignArtwork.assetMetadata.field.aiGeneration.enum.none': "No AI used",
 
     'studio.consignArtwork.assetMetadata.field.nudity': 'Nudity',
     'studio.consignArtwork.assetMetadata.field.nudity.description': 'Does this work contain any nudity?',
@@ -740,6 +740,9 @@ const language: Translation = {
 
     'studio.consignArtwork.assetMetadata.field.ethnicity': 'Ethnicity',
     'studio.consignArtwork.assetMetadata.field.ethnicity.description': 'Creator ethnicity',
+
+    'studio.consignArtwork.assetMetadata.field.gender': 'Gender',
+    'studio.consignArtwork.assetMetadata.field.gender.description': 'Creator gender',
 
     // 'studio.consignArtwork.assetMetadata.field.date': 'Date',
 

@@ -226,7 +226,7 @@
                         "type": "string"
                     }
                 },
-                "aigeneration": {
+                "aiGeneration": {
                     "type": "string",
                     "enum": [
                         "full",
@@ -652,7 +652,7 @@
                     "label": false
                 }
             },
-            "aigeneration": {
+            "aiGeneration": {
                 "ui:widget": "radios",
                 "classNames": "display-fixed"
             },
@@ -708,9 +708,7 @@
                     "name",
                     "role",
                     "bio",
-                    "profileUrl",
-                    "nationality",
-                    "residence"
+                    "profileUrl"
                 ],    
                 "properties": {
                     "name": {
