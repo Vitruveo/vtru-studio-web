@@ -12,6 +12,8 @@ interface CustomFieldTemplateProps extends FieldTemplateProps {
     langBasePath: string;
 }
 
+const filteredCheck = ['root_colors', 'root_tags', 'root_subject', 'root_collections'];
+
 function CustomFieldTemplate({
     id,
     classNames,
@@ -50,10 +52,10 @@ function CustomFieldTemplate({
         Date.now();
 
         return (
-            !id.includes('root_tags') &&
+            !filteredCheck.includes(id) &&
             !help?.props.hasErrors &&
             id !== 'root' &&
-            typeof formData === 'string' &&
+            (typeof formData === 'string' || Array.isArray(formData)) &&
             formData.length
         );
     }, [blurStatus, help?.props.hasErrors]);

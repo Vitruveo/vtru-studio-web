@@ -210,11 +210,11 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.mood.enum.whimsical': 'Whimsical',
 
     'studio.consignArtwork.assetMetadata.field.copyright': 'Copyright',
-    'studio.consignArtwork.assetMetadata.field.copyright.description': 'Copyright text',
+    'studio.consignArtwork.assetMetadata.field.copyright.description': 'Copyright text. (Example: Copyright (c) 2024 Joe Artist)',
 
     'studio.consignArtwork.assetMetadata.field.colors': 'Colors',
     'studio.consignArtwork.assetMetadata.field.colors.item': 'Color',
-    'studio.consignArtwork.assetMetadata.field.colors.description': 'Main color palette (min/max three colors)',
+    'studio.consignArtwork.assetMetadata.field.colors.description': 'Main color palette (up to three colors)',
 
     'studio.consignArtwork.assetMetadata.field.orientation': 'Orientation',
     'studio.consignArtwork.assetMetadata.field.orientation.description': 'Orientation of this work',
@@ -237,11 +237,11 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.culture.enum.western': 'Western',
 
     'studio.consignArtwork.assetMetadata.field.category': 'Category',
-    'studio.consignArtwork.assetMetadata.field.category.description': 'Category of this work',
+    'studio.consignArtwork.assetMetadata.field.category.description': 'Origin of the work',
 
     'studio.consignArtwork.assetMetadata.field.category.enum.digitalart': 'Digital Art',
     'studio.consignArtwork.assetMetadata.field.category.enum.physicalart': 'Physical Art',
-    'studio.consignArtwork.assetMetadata.field.category.enum.digitalphysicalart': 'Digital and Physical Art',
+    'studio.consignArtwork.assetMetadata.field.category.enum.digitalphysicalart': 'Physical+Digital Hybrid Art',
 
     'studio.consignArtwork.assetMetadata.field.tags': 'Tags',
     'studio.consignArtwork.assetMetadata.field.tags.item': 'Tag',
@@ -250,7 +250,7 @@ const language: Translation = {
 
     'studio.consignArtwork.assetMetadata.field.collections': 'Collections',
     'studio.consignArtwork.assetMetadata.field.collections.item': 'Collection',
-    'studio.consignArtwork.assetMetadata.field.collections.description': 'Collections for organizing this work',
+    'studio.consignArtwork.assetMetadata.field.collections.description': 'Collections for organizing this work (at least one required)',
 
     'studio.consignArtwork.assetMetadata.field.medium': 'Medium',
     'studio.consignArtwork.assetMetadata.field.medium.description': 'Mediums used for this work',

@@ -5,7 +5,7 @@
         },
         "schema": {
             "type": "object",
-            "required": ["title", "description", "culture", "mood", "copyright", "colors", "orientation"],
+            "required": ["title", "description", "culture", "mood", "colors", "orientation"],
             "properties": {
                 "title": {
                     "type": "string"
@@ -86,7 +86,7 @@
                 "colors": {
                     "type": "array",
                     "item": "color",
-                    "minItems": 3,
+                    "minItems": 1,
                     "maxItems": 3,
                     "items": {
                         "type": "string"
@@ -148,11 +148,12 @@
     },
     "taxonomy": {
         "formData": {
+            "subject": [""],
             "tags": ["artwork"]
         },
         "schema": {
             "type": "object",
-            "required": ["category", "tags", "aiGeneration", "nudity", "collections", "medium", "style", "material"],
+            "required": ["category", "aiGeneration", "nudity", "collections", "medium", "style", "material"],
             "properties": {
                 "category": {
                     "type": "string",
@@ -169,7 +170,7 @@
                 },
                 "collections": {
                     "type": "array",
-                    "item": "tag",
+                    "item": "collection",
                     "minItems": 1,
                     "maxItems": 10,
                     "items": {
@@ -631,7 +632,7 @@
     "creators": {
         "formData": [
             {
-                "name": "Me"
+                "name": "Your name"
             }
         ],
         "schema": {

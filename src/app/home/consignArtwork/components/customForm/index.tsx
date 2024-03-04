@@ -241,8 +241,6 @@ const CustomForm = ({
 
             const { errorSchema: validatedErrorSchema } = $this.validate(formDataToValidate);
 
-            console.log(validatedErrorSchema);
-
             if (!validatedErrorSchema || !Object.values(validatedErrorSchema).length) {
                 updateErrors({});
                 return;
