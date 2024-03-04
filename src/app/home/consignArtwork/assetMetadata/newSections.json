@@ -18,7 +18,6 @@
                 "description",
                 "culture",
                 "mood",
-                "copyright",
                 "colors",
                 "orientation"
             ],
@@ -102,7 +101,7 @@
                 "colors": {
                     "type": "array",
                     "item": "color",
-                    "minItems": 3,
+                    "minItems": 1,
                     "maxItems": 3,
                     "items": {
                         "type": "string"
@@ -189,7 +188,6 @@
             "type": "object",
             "required": [
                 "category",
-                "tags",
                 "aiGeneration",
                 "nudity",
                 "collections",
@@ -219,7 +217,7 @@
                 },
                 "collections": {
                     "type": "array",
-                    "item": "tag",
+                    "item": "collection",
                     "minItems": 1,
                     "maxItems": 10,
                     "items": {
@@ -688,7 +686,7 @@
     "creators": {
         "formData": [
             {            
-                "name": "Me",
+                "name": "Your name",
                 "role": "",
                 "bio": "",
                 "birthDate": "",
