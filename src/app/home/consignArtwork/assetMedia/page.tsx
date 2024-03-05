@@ -113,12 +113,14 @@ export default function AssetMedia() {
         formatUpload,
         file,
         maxSize,
-        startTime,
+        rangeTimeStart,
+        rangeTimeEnd,
     }: {
         formatUpload: string;
         file: File;
         maxSize?: string;
-        startTime?: string;
+        rangeTimeStart?: string;
+        rangeTimeEnd?: string;
     }) => {
         const transactionId = nanoid();
 
@@ -136,7 +138,8 @@ export default function AssetMedia() {
                 metadata: {
                     formatUpload,
                     maxSize,
-                    startTime,
+                    rangeTimeStart,
+                    rangeTimeEnd,
                 },
                 originalName: file!.name,
                 transactionId,

@@ -1,26 +1,35 @@
 import React, { useState, useRef, useMemo } from 'react';
 import ReactPlayer from 'react-player';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Slider } from '@mui/material';
 
+export interface RangeTime {
+    start: number;
+    end: number;
+}
 interface VideoFrameSelectorProps {
     mediaConfig: {
         width: number;
         height: number;
     };
-    onChange: (file: File, position: number) => void;
+    onChange: (file: File, position: RangeTime) => void;
     file?: File;
 }
 
 const VideoFrameSelector = ({ mediaConfig, onChange, file }: VideoFrameSelectorProps) => {
+    const [range, setRange] = useState([0, 5]);
     const playerRef = useRef<ReactPlayer | null>(null);
     const [duration, setDuration] = useState<number>(0);
     const [played, setPlayed] = useState<number>(0);
 
     const url = useMemo(() => URL.createObjectURL(file as Blob), [file]);
 
-    const handleProgress = (state: { played: number }) => {
-        const position = state.played * duration;
-        setPlayed(position);
+    const handleProgress = ({ playedSeconds }: { playedSeconds: number }) => {
+        if (playedSeconds > range[1]) {
+            if (playerRef.current) {
+                playerRef.current.seekTo(range[0]);
+            }
+        }
+        setPlayed(playedSeconds);
     };
 
     const handleSeek = (newPosition: number) => {
@@ -39,7 +48,14 @@ const VideoFrameSelector = ({ mediaConfig, onChange, file }: VideoFrameSelectorP
     };
 
     const changePosition = () => {
-        onChange(file!, played);
+        onChange(file!, { start: range[0], end: range[1] });
+    };
+
+    const handleRangeChange = (event: Event, newValue: number | number[]) => {
+        setRange(newValue as number[]);
+        if (playerRef.current) {
+            playerRef.current.seekTo((newValue as number[])[0]);
+        }
     };
 
     return (
@@ -47,11 +63,18 @@ const VideoFrameSelector = ({ mediaConfig, onChange, file }: VideoFrameSelectorP
             <ReactPlayer
                 ref={playerRef}
                 url={url}
-                controls
+                playing
                 onProgress={handleProgress}
                 onSeek={handleSeek}
                 onPause={handlePause}
                 onDuration={handleDuration}
+            />
+            <Slider
+                value={range}
+                max={duration}
+                onChange={handleRangeChange}
+                valueLabelDisplay="auto"
+                aria-labelledby="range-slider"
             />
             <Box marginTop={2}>
                 <Button onClick={changePosition} size="small" variant="contained">

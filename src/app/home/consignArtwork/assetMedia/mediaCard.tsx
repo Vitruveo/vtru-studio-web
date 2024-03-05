@@ -16,7 +16,7 @@ import {
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { AssetMediaFormErros, AssetMediaFormValues, Definition, FormatMedia, OriginalFormatMedia } from './types';
 import Crop from '../components/crop';
-import VideoPreview from './videoPreview';
+import VideoPreview, { RangeTime } from './videoPreview';
 import {
     formatFileSize,
     getFileSize,
@@ -45,12 +45,14 @@ interface MediaCardProps {
         formatUpload,
         file,
         maxSize,
-        startTime,
+        rangeTimeStart,
+        rangeTimeEnd,
     }: {
         formatUpload: string;
         file: File;
         maxSize?: string;
-        startTime?: string;
+        rangeTimeStart?: string;
+        rangeTimeEnd?: string;
     }) => Promise<void>;
     setFieldValue: (
         field: string,
@@ -152,13 +154,13 @@ export default function MediaCard({
 
     const onDrop = useCallback(
         async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
-            fileRejections.forEach(({ file, errors }) => {
-                if (errors[0].code === 'file-too-large') {
-                    setSizeError(true);
-                    setModalErrorOpen(true);
-                }
-            });
-            if (fileRejections.length > 0) return;
+            // fileRejections.forEach(({ file, errors }) => {
+            //     if (errors[0].code === 'file-too-large') {
+            //         setSizeError(true);
+            //         setModalErrorOpen(true);
+            //     }
+            // });
+            // if (fileRejections.length > 0) return;
             const imgWidthAndHeight = await handleGetFileWidthAndHeight(acceptedFiles[0]);
 
             // const isValid = compareDimensions({
@@ -263,13 +265,14 @@ export default function MediaCard({
         setShowCrop(false);
     };
 
-    const handleChangeVideoPreview = (fileChange: File, startTime: number) => {
+    const handleChangeVideoPreview = (fileChange: File, rangeTime: RangeTime) => {
         const checkSize = isVideo ? mediaConfig.sizeMB?.video : mediaConfig.sizeMB?.image;
 
         handleUploadFile({
             formatUpload: formatType,
             file: fileChange,
-            startTime: startTime.toString(),
+            rangeTimeStart: rangeTime.start.toString(),
+            rangeTimeEnd: rangeTime.end.toString(),
             maxSize: checkSize.toString(),
         });
         setFieldValue(`formats.${formatType}.file`, fileChange);
@@ -405,7 +408,7 @@ export default function MediaCard({
                                           ? formatFileSize(mediaConfig?.sizeMB.video)
                                           : formatFileSize(mediaConfig?.sizeMB.image)
                                   } ${(language['studio.consignArtwork.assetMedia.max'] as TranslateFunction)({
-                                      seconds: isVideo && formatType === 'preview' ? 5 : 0,
+                                      seconds: isVideo && formatType === 'preview' ? 0 : 0,
                                   })}`
                                 : getFileSize((formatValue as OriginalFormatMedia).size)}
                         </Typography>
