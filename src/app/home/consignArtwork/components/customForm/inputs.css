@@ -28,3 +28,8 @@
 .MuiGrid-root > .MuiBox-root > .MuiPaper-root > .MuiBox-root {
     padding-right: 50px; 
 }
+
+/* Fixes exhibitions and awards fields */
+.MuiBox-root > h5, .MuiBox-root > hr {
+    display: none;
+}
