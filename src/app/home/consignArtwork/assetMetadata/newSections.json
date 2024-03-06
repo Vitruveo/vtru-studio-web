@@ -3052,8 +3052,7 @@
                     "items": {
                         "type": "object",
                         "required": [
-                            "exhibitionName",
-                            "exhibitionUrl"
+                            "exhibitionName"
                         ],
                         "properties": {
                             "exhibitionName": {
