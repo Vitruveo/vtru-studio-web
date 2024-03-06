@@ -545,7 +545,6 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.style': 'Style',
     'studio.consignArtwork.assetMetadata.field.style.description': 'Styles used in this work',
 
-
     'studio.consignArtwork.assetMetadata.field.style.enum.abstract': 'Abstract',
     'studio.consignArtwork.assetMetadata.field.style.enum.abstractexpressionism': 'Abstract Expressionism',
     'studio.consignArtwork.assetMetadata.field.style.enum.artdeco': 'Art Deco',
@@ -673,6 +672,13 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.aiGeneration.enum.partial': "Partially AI generated",
     'studio.consignArtwork.assetMetadata.field.aiGeneration.enum.none': "No AI used",
 
+
+    'studio.consignArtwork.assetMetadata.field.arenabled': 'Augmented Reality enabled',
+    'studio.consignArtwork.assetMetadata.field.arenabled.description': 'Is Augmented Reality enabled for this work?',
+
+    'studio.consignArtwork.assetMetadata.field.arenabled.enum.yes': "This work is AR enabled",
+    'studio.consignArtwork.assetMetadata.field.arenabled.enum.no': "This work is not AR enabled",
+
     'studio.consignArtwork.assetMetadata.field.nudity': 'Nudity',
     'studio.consignArtwork.assetMetadata.field.nudity.description': 'Does this work contain any nudity?',
 
@@ -703,47 +709,36 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.gender': 'Gender',
     'studio.consignArtwork.assetMetadata.field.gender.description': 'Creator gender',
 
-    // 'studio.consignArtwork.assetMetadata.field.date': 'Date',
 
-    // 'studio.consignArtwork.assetMetadata.field.artistName': 'Artist Name',
-    // 'studio.consignArtwork.assetMetadata.field.place': 'Place',
+    'studio.consignArtwork.assetMetadata.field.country': 'Country',
+    'studio.consignArtwork.assetMetadata.field.country.description': 'Country of provenance for this work',
 
-    // 'studio.consignArtwork.assetMetadata.field.objectType': 'Object Type',
-    // 'studio.consignArtwork.assetMetadata.field.objectType.video': 'Video',
-    // 'studio.consignArtwork.assetMetadata.field.objectType.2D': '2D',
-    // 'studio.consignArtwork.assetMetadata.field.objectType.3D': '3D',
-    // 'studio.consignArtwork.assetMetadata.field.objectType.phygital': 'Phygital',
-    // 'studio.consignArtwork.assetMetadata.field.objectType.other': 'Other',
+    'studio.consignArtwork.assetMetadata.field.plusCode': 'PlusCode',
+    'studio.consignArtwork.assetMetadata.field.plusCode.description': 'For example, Copenhagen, Denmark would be PlusCode "MHJQ+4V" You can lookup PlusCode values here: https://plus.codes/map',
 
-    // 'studio.consignArtwork.assetMetadata.field.category': 'Category',
-    // 'studio.consignArtwork.assetMetadata.field.category.photography': 'Photography',
-    // 'studio.consignArtwork.assetMetadata.field.category.painting': 'Painting',
-    // 'studio.consignArtwork.assetMetadata.field.category.3D': '3D',
-    // 'studio.consignArtwork.assetMetadata.field.category.video': 'Video',
-    // 'studio.consignArtwork.assetMetadata.field.category.mixedMedia': 'Mixed Media',
-    // 'studio.consignArtwork.assetMetadata.field.category.illustration': 'Illustration',
-    // 'studio.consignArtwork.assetMetadata.field.category.collage': 'Collage',
-    // 'studio.consignArtwork.assetMetadata.field.category.ai': 'AI',
-    // 'studio.consignArtwork.assetMetadata.field.category.other': 'Other',
+    'studio.consignArtwork.assetMetadata.field.blockchain': 'Blockchain',
+    'studio.consignArtwork.assetMetadata.field.blockchain.description': 'Blockchain',
 
-    // 'studio.consignArtwork.assetMetadata.field.medium': 'Medium',
-    // 'studio.consignArtwork.assetMetadata.field.medium.oil': 'Oil',
-    // 'studio.consignArtwork.assetMetadata.field.medium.watercolour': 'Watercolour',
-    // 'studio.consignArtwork.assetMetadata.field.medium.acrylic': 'Acrylic',
-    // 'studio.consignArtwork.assetMetadata.field.medium.ink': 'Ink',
-    // 'studio.consignArtwork.assetMetadata.field.medium.illustration': 'Illustration',
-    // 'studio.consignArtwork.assetMetadata.field.medium.collage': 'Collage',
-    // 'studio.consignArtwork.assetMetadata.field.medium.AI': 'AI',
-    // 'studio.consignArtwork.assetMetadata.field.medium.mixedMedia': 'Mixed media',
-    // 'studio.consignArtwork.assetMetadata.field.medium.film': 'Film',
-    // 'studio.consignArtwork.assetMetadata.field.medium.photography': 'Photography',
-    // 'studio.consignArtwork.assetMetadata.field.medium.analogPhotography': 'Analog photography',
-    // 'studio.consignArtwork.assetMetadata.field.medium.digitalPhotography': 'Digital photography',
-    // 'studio.consignArtwork.assetMetadata.field.medium.compositePhotography': 'Composite Photography',
-    // 'studio.consignArtwork.assetMetadata.field.medium.other': 'Other',
-    // 'studio.consignArtwork.assetMetadata.field.tags': 'Tags',
-    // 'studio.consignArtwork.assetMetadata.field.tags.button': 'Add',
-    // 'studio.consignArtwork.assetMetadata.field.tags.placeholder': 'Add tag',
+    'studio.consignArtwork.assetMetadata.field.exhibitions': 'Exhibitions',
+    'studio.consignArtwork.assetMetadata.field.exhibitions.item': 'Exhibit',
+    'studio.consignArtwork.assetMetadata.field.exhibitions.description': 'Exhibitions where this work was shown',
+
+    'studio.consignArtwork.assetMetadata.field.exhibitionName': 'Exhibition Name',
+    'studio.consignArtwork.assetMetadata.field.exhibitionName.description': 'Name of the exhibition',
+
+    'studio.consignArtwork.assetMetadata.field.exhibitionUrl': 'Exhibition URL',
+    'studio.consignArtwork.assetMetadata.field.exhibitionUrl.description': 'Link to exhibition information',
+
+
+    'studio.consignArtwork.assetMetadata.field.awards': 'Awards',
+    'studio.consignArtwork.assetMetadata.field.awards.item': 'Award',
+    'studio.consignArtwork.assetMetadata.field.awards.description': 'Awards this work has won',
+
+    'studio.consignArtwork.assetMetadata.field.awardName': 'Award Name',
+    'studio.consignArtwork.assetMetadata.field.awardName.description': 'Name of the award',
+
+    'studio.consignArtwork.assetMetadata.field.awardUrl': 'Award URL',
+    'studio.consignArtwork.assetMetadata.field.awardUrl.description': 'Link to award information',
 
     'studio.consignArtwork.assetMetadata.field.errors': (data: { message: string }) =>
         `${data.message === 'required' || data.message === 'minItems' ? 'Field required' : ''}`,
