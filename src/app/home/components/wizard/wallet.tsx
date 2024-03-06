@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useAccount, useDisconnect } from 'wagmi';
+import { useAccount, useDisconnect, useNetwork } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 import Box from '@mui/material/Box';
@@ -12,6 +12,7 @@ import { useI18n } from '@/app/hooks/useI18n';
 const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
     const [connectWallet, setConnectWallet] = useState(false);
 
+    const { chain } = useNetwork();
     const { openConnectModal } = useConnectModal();
     const { isConnected, address } = useAccount();
     const { disconnectAsync } = useDisconnect();

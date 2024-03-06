@@ -342,7 +342,7 @@ export default function MediaCard({
             <Box marginTop={2} height={20} display="flex" alignItems="center" justifyContent="space-between">
                 <Box display="flex" alignItems="center">
                     <SvgIcon style={{ width: 20 }}>
-                        <rect width="24" height="24" rx="4" fill={uploadSuccess ? '#4CAF50' : '#D3D3D3'} />
+                        <circle cx="12" cy="12" r="12" fill={uploadSuccess ? '#4CAF50' : '#D3D3D3'} />
                         <CheckCircleOutlineIcon
                             fontSize="small"
                             style={{
@@ -350,6 +350,7 @@ export default function MediaCard({
                                 position: 'absolute',
                                 top: '50%',
                                 left: '50%',
+                                transform: 'translate(-50%, -50%)',
                             }}
                         />
                     </SvgIcon>
@@ -408,7 +409,7 @@ export default function MediaCard({
                                           ? formatFileSize(mediaConfig?.sizeMB.video)
                                           : formatFileSize(mediaConfig?.sizeMB.image)
                                   } ${(language['studio.consignArtwork.assetMedia.max'] as TranslateFunction)({
-                                      seconds: isVideo && formatType === 'preview' ? 0 : 0,
+                                      seconds: isVideo && formatType === 'preview' ? 5 : 0,
                                   })}`
                                 : getFileSize((formatValue as OriginalFormatMedia).size)}
                         </Typography>

@@ -52,9 +52,38 @@ const VideoFrameSelector = ({ mediaConfig, onChange, file }: VideoFrameSelectorP
     };
 
     const handleRangeChange = (event: Event, newValue: number | number[]) => {
-        setRange(newValue as number[]);
-        if (playerRef.current) {
-            playerRef.current.seekTo((newValue as number[])[0]);
+        if (Array.isArray(newValue)) {
+            const [start, end] = newValue;
+            const rangeLength = end - start;
+
+            if (rangeLength <= 5) {
+                setRange(newValue);
+                if (playerRef.current) {
+                    playerRef.current.seekTo(start);
+                }
+            } else {
+                // If the new range is more than 5 seconds, adjust it to keep the length at 5 seconds
+                const adjustedRange = range[1] < end ? [end - 5, end] : [start, start + 5];
+                setRange(adjustedRange);
+                if (playerRef.current) {
+                    playerRef.current.seekTo(adjustedRange[0]);
+                }
+            }
+        }
+    };
+
+    const handleClick = (event: React.MouseEvent) => {
+        const rect = (event.target as Element).getBoundingClientRect();
+        const x = event.clientX - rect.left; // x position within the element.
+        const width = rect.width;
+        const clickPosition = (x / width) * duration; // calculate click position in your data
+
+        if (clickPosition < range[0] || clickPosition > range[1]) {
+            const newStart = clickPosition < duration - 5 ? clickPosition : duration - 5;
+            setRange([newStart, newStart + 5]);
+            if (playerRef.current) {
+                playerRef.current.seekTo(newStart);
+            }
         }
     };
 
@@ -63,6 +92,7 @@ const VideoFrameSelector = ({ mediaConfig, onChange, file }: VideoFrameSelectorP
             <ReactPlayer
                 ref={playerRef}
                 url={url}
+                muted
                 playing
                 onProgress={handleProgress}
                 onSeek={handleSeek}
@@ -72,9 +102,15 @@ const VideoFrameSelector = ({ mediaConfig, onChange, file }: VideoFrameSelectorP
             <Slider
                 value={range}
                 max={duration}
+                sx={{
+                    '& .MuiSlider-thumb': {
+                        height: 13,
+                        width: 13,
+                    },
+                }}
                 onChange={handleRangeChange}
                 valueLabelDisplay="auto"
-                aria-labelledby="range-slider"
+                aria-labelledby="start-slider"
             />
             <Box marginTop={2}>
                 <Button onClick={changePosition} size="small" variant="contained">

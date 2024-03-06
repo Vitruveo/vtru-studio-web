@@ -37,7 +37,53 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
         selectEditionElasticEditions: language['studio.consignArtwork.licenses.nft.selectEdition.elasticEditions'],
         selectEditionSingleEdition: language['studio.consignArtwork.licenses.nft.selectEdition.singleEdition'],
         selectEditionUnlimitedEditions: language['studio.consignArtwork.licenses.nft.selectEdition.unlimitedEditions'],
+        licenseCCBY: language['studio.consignArtwork.licenses.nft.ccby'],
+        licenseCCBYSA: language['studio.consignArtwork.licenses.nft.ccbysa'],
+        licenseCCBYNC: language['studio.consignArtwork.licenses.nft.ccbync'],
+        licenseCCBYNCSA: language['studio.consignArtwork.licenses.nft.ccbyncsa'],
+        licenseCCBYND: language['studio.consignArtwork.licenses.nft.ccbynd'],
+        licenseCCBYNCND: language['studio.consignArtwork.licenses.nft.ccbyncnd'],
+        licenseCC0: language['studio.consignArtwork.licenses.nft.cc0'],
     } as { [key: string]: string };
+
+    const aboutLicenses = 'https://creativecommons.org/share-your-work/cclicenses/';
+
+    const licenses = [
+        {
+            license: 'CC BY',
+            about: texts.licenseCCBY,
+        },
+        {
+            license: 'CC BY-SA',
+            about: texts.licenseCCBYSA,
+        },
+        {
+            license: 'CC BY-NC',
+            about: texts.licenseCCBYNC,
+        },
+        {
+            license: 'CC BY-NC-SA',
+            about: texts.licenseCCBYNCSA,
+        },
+        {
+            license: 'CC BY-ND',
+            about: texts.licenseCCBYND,
+        },
+        {
+            license: 'CC BY-NC-ND',
+            about: texts.licenseCCBYNCND,
+        },
+        {
+            license: 'CC0',
+            about: texts.licenseCC0,
+        },
+        {
+            license: 'Vitruveo',
+            about: '',
+        },
+    ];
+
+    const currentLicense = licenses.find((item) => item.license === values.license);
 
     const handleAdded = (added: boolean) => {
         if (added == false) setFieldValue('nft.editionOption', '');
@@ -81,22 +127,17 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                     fullWidth
                                     variant="outlined"
                                 >
-                                    {[
-                                        'CC BY',
-                                        'CC BY-SA',
-                                        'CC BY-NC',
-                                        'CC BY-NC-SA',
-                                        'CC BY-ND',
-                                        'CC BY-NC-ND',
-                                        'CC0',
-                                        'Vitruveo',
-                                    ]?.map((option) => (
-                                        <MenuItem key={option} value={option}>
-                                            {option}
+                                    {licenses?.map((option) => (
+                                        <MenuItem key={option.license} value={option.license}>
+                                            {option.license}
                                         </MenuItem>
                                     ))}
                                 </CustomSelect>
-                                <IconButton sx={{ padding: 0, marginLeft: 1 }}>
+                                <IconButton
+                                    title={aboutLicenses}
+                                    sx={{ padding: 0, marginLeft: 1 }}
+                                    onClick={() => window.open(aboutLicenses, '_blank')}
+                                >
                                     <InfoIcon color="primary" />
                                 </IconButton>
                             </Box>
@@ -389,6 +430,14 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                             </Typography>
                             <Typography display="inline" color="GrayText" fontSize="0.9rem">
                                 {texts.selectEditionUnlimitedEditions}
+                            </Typography>
+                        </Box>
+                        <Box marginTop={2}>
+                            <Typography display="inline" fontWeight="bold" color="GrayText" fontSize="0.9rem">
+                                {currentLicense?.license}{' '}
+                            </Typography>
+                            <Typography display="inline" color="GrayText" fontSize="0.9rem">
+                                {currentLicense?.about}
                             </Typography>
                         </Box>
                     </Box>
