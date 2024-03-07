@@ -156,8 +156,8 @@ export default function AssetMetadata() {
             }
         }
 
-        // if (!isValid.length || !isValid.includes(false))
-        //     router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/licenses`);
+        if (!isValid.length || !isValid.includes(false))
+            router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/licenses`);
 
         setShowBackModal(false);
     };
