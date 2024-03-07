@@ -672,12 +672,11 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.aiGeneration.enum.partial': 'Partially AI generated',
     'studio.consignArtwork.assetMetadata.field.aiGeneration.enum.none': 'No AI used',
 
-
     'studio.consignArtwork.assetMetadata.field.arenabled': 'Augmented Reality enabled',
     'studio.consignArtwork.assetMetadata.field.arenabled.description': 'Is Augmented Reality enabled for this work?',
 
-    'studio.consignArtwork.assetMetadata.field.arenabled.enum.yes': "This work is AR enabled",
-    'studio.consignArtwork.assetMetadata.field.arenabled.enum.no': "This work is not AR enabled",
+    'studio.consignArtwork.assetMetadata.field.arenabled.enum.yes': 'This work is AR enabled',
+    'studio.consignArtwork.assetMetadata.field.arenabled.enum.no': 'This work is not AR enabled',
 
     'studio.consignArtwork.assetMetadata.field.nudity': 'Nudity',
     'studio.consignArtwork.assetMetadata.field.nudity.description': 'Does this work contain any nudity?',
@@ -688,8 +687,8 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.name': 'Creator Name',
     'studio.consignArtwork.assetMetadata.field.name.description': 'Creator name or pseudonym',
 
-    'studio.consignArtwork.assetMetadata.field.role': 'Creator Role',
-    'studio.consignArtwork.assetMetadata.field.role.description': 'Creator role for this work or general title',
+    'studio.consignArtwork.assetMetadata.field.roles': 'Creator Roles',
+    'studio.consignArtwork.assetMetadata.field.roles.description': 'Creator roles for this work or general title',
 
     'studio.consignArtwork.assetMetadata.field.bio': 'Creator Bio',
     'studio.consignArtwork.assetMetadata.field.bio.description': 'Creator bio (short, 3-4 sentences)',
@@ -709,12 +708,12 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.gender': 'Gender',
     'studio.consignArtwork.assetMetadata.field.gender.description': 'Creator gender',
 
-
     'studio.consignArtwork.assetMetadata.field.country': 'Country',
     'studio.consignArtwork.assetMetadata.field.country.description': 'Country of provenance for this work',
 
     'studio.consignArtwork.assetMetadata.field.plusCode': 'PlusCode',
-    'studio.consignArtwork.assetMetadata.field.plusCode.description': 'For example, Copenhagen, Denmark would be PlusCode "MHJQ+4V" You can lookup PlusCode values here: https://plus.codes/map',
+    'studio.consignArtwork.assetMetadata.field.plusCode.description':
+        'For example, Copenhagen, Denmark would be PlusCode "MHJQ+4V" You can lookup PlusCode values here: https://plus.codes/map',
 
     'studio.consignArtwork.assetMetadata.field.blockchain': 'Blockchain',
     'studio.consignArtwork.assetMetadata.field.blockchain.description': 'Blockchain',
@@ -728,7 +727,6 @@ const language: Translation = {
 
     'studio.consignArtwork.assetMetadata.field.exhibitionUrl': 'Exhibition URL',
     'studio.consignArtwork.assetMetadata.field.exhibitionUrl.description': 'Link to exhibition information',
-
 
     'studio.consignArtwork.assetMetadata.field.awards': 'Awards',
     'studio.consignArtwork.assetMetadata.field.awards.item': 'Award',
