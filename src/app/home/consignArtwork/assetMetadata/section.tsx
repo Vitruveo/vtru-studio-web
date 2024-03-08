@@ -29,6 +29,8 @@ const Section = ({ sectionName, formData, errors, schema, uiSchema, onChange, up
         setExpanded((prevExpanded) => !prevExpanded);
     };
 
+    const newFormData = formData;
+
     const handleValidateSection = (formDat: any, fieldsRequired: string[]) => {
         const checkStarted = Object.values(formDat).every(
             (v) => v === null || (typeof v === 'string' && v.trim().length === 0)
@@ -58,10 +60,10 @@ const Section = ({ sectionName, formData, errors, schema, uiSchema, onChange, up
             return;
         }
 
-        if (Array.isArray(formData)) {
+        if (Array.isArray(newFormData)) {
             const allStatus: string[] = [];
 
-            formData.forEach((v: any) => {
+            newFormData.forEach((v: any) => {
                 allStatus.push(handleValidateSection(v, (schema?.items as { required: string[] })?.required));
             });
 
@@ -85,7 +87,7 @@ const Section = ({ sectionName, formData, errors, schema, uiSchema, onChange, up
             return;
         }
 
-        const validStatus = handleValidateSection(formData, schema?.required as string[]);
+        const validStatus = handleValidateSection(newFormData, schema?.required as string[]);
         setStatus(validStatus);
     };
 
@@ -154,7 +156,7 @@ const Section = ({ sectionName, formData, errors, schema, uiSchema, onChange, up
                 <CustomForm
                     langBasePath="studio.consignArtwork.assetMetadata.field"
                     uiSchema={uiSchema}
-                    formData={formData}
+                    formData={newFormData}
                     onChange={handleChangeForm}
                     schema={schema}
                     errors={errors}

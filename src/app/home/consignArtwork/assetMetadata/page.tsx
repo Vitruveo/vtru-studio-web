@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import Typography from '@mui/material/Typography';
@@ -32,6 +32,32 @@ export type SectionFormatType = {
     [key in keyof SectionsJSONType]: Omit<SectionType, 'schema'> & { schema: RJSFSchema; errors: ErrorSchema<any> };
 };
 
+const removeEmptyProperties = (obj: Record<string, any> | any[] | null): Record<string, any> | any[] | null => {
+    if (obj === null) {
+        return null;
+    }
+
+    if (Array.isArray(obj)) {
+        return obj.map((item) => (typeof item === 'object' ? removeEmptyProperties(item) : item));
+    } else {
+        const newObj = Object.entries(obj).reduce(
+            (acc, [key, value]) => {
+                if (value !== null && value !== undefined && value.length !== 0) {
+                    if (typeof value === 'object') {
+                        acc[key] = removeEmptyProperties(value);
+                    } else {
+                        acc[key] = value;
+                    }
+                }
+                return acc;
+            },
+            {} as Record<string, any>
+        );
+
+        return newObj;
+    }
+};
+
 export default function AssetMetadata() {
     const { assetMetadata } = useSelector((state) => state.asset);
 
@@ -40,10 +66,11 @@ export default function AssetMetadata() {
             ...acc,
             [key as keyof typeof sectionsJSON]: {
                 ...value,
-                formData:
+                formData: removeEmptyProperties(
                     assetMetadata && assetMetadata[key as keyof typeof sectionsJSON]
                         ? assetMetadata[key as keyof typeof sectionsJSON].formData
-                        : value.formData,
+                        : value.formData
+                ),
                 errors: {},
             },
         }),
@@ -104,63 +131,70 @@ export default function AssetMetadata() {
         setSections((prevSections) => ({ ...prevSections, [sectionName]: { ...prevSections[sectionName], errors } }));
     };
 
-    const handleSaveData = async (event?: React.FormEvent) => {
+    const handleSaveData = async (event?: React.FormEvent, skip?: boolean) => {
         if (event) event.preventDefault();
 
         const isValid: boolean[] = [];
 
-        if (JSON.stringify(sectionsFormat) !== JSON.stringify(sections)) {
-            Object.entries(sections).forEach(([key, value]) => {
-                const ajvValidator = ajv8Validator.rawValidation(value.schema, value.formData);
+        Object.entries(sections).forEach(([key, value]) => {
+            const ajvValidator = ajv8Validator.rawValidation(value.schema, value.formData);
 
-                if (ajvValidator.errors?.length) {
-                    const errorSchema = ajvValidator.errors?.reduce((acc, error) => {
-                        let path = error.instancePath.substring(1);
-                        if (!path && error.params && 'missingProperty' in error.params) {
-                            path = error.params.missingProperty;
-                        }
+            if (ajvValidator.errors?.length) {
+                const errorSchema = ajvValidator.errors?.reduce((acc, error) => {
+                    let path = error.instancePath.substring(1);
+                    if (!path && error.params && 'missingProperty' in error.params) {
+                        path = error.params.missingProperty;
+                    }
 
-                        const message = (
-                            language[`studio.consignArtwork.assetMetadata.field.errors`] as TranslateFunction
-                        )({ message: error.keyword });
+                    const message = (language[`studio.consignArtwork.assetMetadata.field.errors`] as TranslateFunction)(
+                        { message: error.keyword }
+                    );
 
-                        if (message) {
-                            isValid.push(false);
-                            return { ...acc, [path]: { __errors: [message] } };
-                        }
+                    if (message) {
+                        isValid.push(false);
+                        return { ...acc, [path]: { __errors: [message] } };
+                    }
 
-                        return acc;
-                    }, {});
+                    return acc;
+                }, {});
 
-                    handleUpdateErrors({ errors: errorSchema as ErrorSchema<any>, sectionName: key as any });
-                    return;
-                }
-                isValid.push(true);
-            });
-
-            if (!isValid.length || !isValid.includes(false)) {
-                dispatch(
-                    assetMetadataThunk(
-                        Object.entries(sections).reduce(
-                            (acc, [key, v]) => ({ ...acc, [key]: { formData: v.formData } }),
-                            {} as SectionsFormData
-                        )
-                    )
-                );
-                dispatch(
-                    consignArtworkActionsCreators.changeStatusStep({
-                        stepId: 'assetMetadata',
-                        status: 'completed',
-                    })
-                );
+                handleUpdateErrors({ errors: errorSchema as ErrorSchema<any>, sectionName: key as any });
+                return;
             }
-        }
+            isValid.push(true);
+        });
 
-        if (!isValid.length || !isValid.includes(false))
-            router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/licenses`);
+        if (skip) return;
+
+        const isCompleted = !isValid.length || !isValid.includes(false);
+
+        dispatch(
+            assetMetadataThunk(
+                Object.entries(sections).reduce(
+                    (acc, [key, v]) => ({
+                        isCompleted: isCompleted,
+                        ...acc,
+                        [key]: { formData: v.formData },
+                    }),
+                    {} as SectionsFormData
+                )
+            )
+        );
+        dispatch(
+            consignArtworkActionsCreators.changeStatusStep({
+                stepId: 'assetMetadata',
+                status: isCompleted ? 'completed' : 'inProgress',
+            })
+        );
+
+        router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/licenses`);
 
         setShowBackModal(false);
     };
+
+    useEffect(() => {
+        if (assetMetadata) handleSaveData(undefined, true);
+    }, []);
 
     const handleOnChange = ({ data, sectionName }: SectionOnChangeParams) => {
         setSections((prevSections) => ({

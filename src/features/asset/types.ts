@@ -43,7 +43,9 @@ export interface Asset {
     generatedArtworkAI: boolean;
     notMintedOtherBlockchain: boolean;
     contract: boolean;
-    assetMetadata?: SectionsFormData;
+    assetMetadata?: {
+        isCompleted?: boolean;
+    } & SectionsFormData;
     requestAssetUpload: { [key: string]: RequestAssetUpload };
     // creatorMetadata: {
     //     creatorMetadataDefinitions: MetadataDefinitionTypes[];

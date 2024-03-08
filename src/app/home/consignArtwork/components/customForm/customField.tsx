@@ -27,6 +27,7 @@ function CustomFieldTemplate({
     children,
     ...res
 }: CustomFieldTemplateProps) {
+    const [elementIgnoreBlur, setElementIgnoreBlur] = useState(false);
     const [blurStatus, setBlurStatus] = useState(false);
 
     const { language } = useI18n();
@@ -36,6 +37,11 @@ function CustomFieldTemplate({
         const blurOff = () => setBlurStatus(false);
 
         const element = document.getElementById(id);
+
+        if (element && element.tagName === 'DIV') {
+            setElementIgnoreBlur(true);
+        }
+
         if (element) {
             element.addEventListener('focus', blurOff);
             element.addEventListener('blur', blurOn);
@@ -79,7 +85,7 @@ function CustomFieldTemplate({
             </Box>
             <Box position="relative" display="flex" alignItems="center">
                 {children}
-                {isCompleted ? (
+                {(elementIgnoreBlur && !help?.props.hasErrors && formData?.length) || isCompleted ? (
                     <CheckCircle
                         style={{
                             color: '#93C47D',

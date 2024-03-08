@@ -45,7 +45,10 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
             if (response.data) {
                 if (response.data.assetMetadata && Object.values(response.data.assetMetadata)?.length) {
                     dispatch(
-                        consignArtworkActionsCreators.changeStatusStep({ stepId: 'assetMetadata', status: 'completed' })
+                        consignArtworkActionsCreators.changeStatusStep({
+                            stepId: 'assetMetadata',
+                            status: response.data.assetMetadata.isCompleted ? 'completed' : 'inProgress',
+                        })
                     );
                 }
 
