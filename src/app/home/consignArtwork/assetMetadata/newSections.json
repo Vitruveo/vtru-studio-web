@@ -131,7 +131,8 @@
                     }
                 },
                 "ui:options": {
-                    "label": false
+                    "label": false,
+                    "orderable": false
                 }
             },
             "copyright": {
@@ -541,7 +542,8 @@
                     }
                 },
                 "ui:options": {
-                    "label": false
+                    "label": false,
+                    "orderable": false
                 }
             },
             "collections": {
@@ -552,7 +554,8 @@
                     }
                 },
                 "ui:options": {
-                    "label": false
+                    "label": false,
+                    "orderable": false
                 }
             },
             "aiGeneration": {
@@ -587,7 +590,8 @@
                     }
                 },
                 "ui:options": {
-                    "label": false
+                    "label": false,
+                    "orderable": false
                 }
             }
         }
@@ -2418,7 +2422,11 @@
             }
         },
         "uiSchema": {
+            "ui:options": {
+                "orderable": false
+            },
             "items": {
+                "classNames": "my-array-item",
                 "name": {
                     "ui:options": {
                         "label": false,
@@ -2427,13 +2435,15 @@
                 },
                 "roles": {
                     "items": {
+                        "classNames": "my-array-item",
                         "ui:emptyValue": "",
                         "ui:options": {
                             "label": false
                         }
                     },
                     "ui:options": {
-                        "label": false
+                        "label": false,
+                        "orderable": false
                     }
                 },
                 "bio": {
@@ -3062,6 +3072,9 @@
                 }
             },
             "exhibitions": {
+                "ui:options": {
+                    "orderable": false
+                },
                 "items": {
                     "exhibitionName": {
                         "ui:options": {
@@ -3091,6 +3104,10 @@
                             "placeholder": ""
                         }
                     }
+                },
+                "ui:options": {
+                    "label": false,
+                    "orderable": false
                 }
             }
         }

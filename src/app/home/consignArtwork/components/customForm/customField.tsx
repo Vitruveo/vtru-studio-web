@@ -12,7 +12,7 @@ interface CustomFieldTemplateProps extends FieldTemplateProps {
     langBasePath: string;
 }
 
-const filteredCheck = ['root_colors', 'root_tags', 'root_subject', 'root_collections'];
+const filteredCheck = ['root_colors', 'root_tags', 'root_subject', 'root_collections', 'root_roles'];
 
 function CustomFieldTemplate({
     id,

@@ -246,7 +246,7 @@ export default function AssetMetadata() {
                     {texts.assetMetadataDescription}
                 </Typography>
 
-                <Box marginBottom={10} maxWidth={500} mt={2} alignItems="center">
+                <Box marginBottom={10} maxWidth={550} mt={2} alignItems="center">
                     <Box display="flex" flexDirection="column" gap={3}>
                         {Object.entries(sections).map(([key, value]) => (
                             <Box key={key}>
