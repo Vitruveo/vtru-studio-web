@@ -1,4 +1,14 @@
-import { Box, FormControlLabel, IconButton, MenuItem, Radio, RadioGroup, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import {
+    Box,
+    FormControlLabel,
+    IconButton,
+    MenuItem,
+    Radio,
+    RadioGroup,
+    SelectChangeEvent,
+    Typography,
+} from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import { useFormik } from 'formik';
 import CustomSelect from '@/app/home/components/forms/theme-elements/CustomSelect';
@@ -9,6 +19,7 @@ import { LicenseProps } from './types';
 import { useI18n } from '@/app/hooks/useI18n';
 
 function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
+    const [currentDescription, setCurrentDescription] = useState('');
     const values = allValues.nft || {};
 
     const { language } = useI18n();
@@ -46,36 +57,41 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
         licenseCC0: language['studio.consignArtwork.licenses.nft.cc0'],
     } as { [key: string]: string };
 
-    const aboutLicenses = 'https://creativecommons.org/share-your-work/cclicenses/';
-
     const licenses = [
         {
             license: 'CC BY',
             about: texts.licenseCCBY,
+            infoLink: 'https://creativecommons.org/licenses/by/4.0/',
         },
         {
             license: 'CC BY-SA',
             about: texts.licenseCCBYSA,
+            infoLink: 'https://creativecommons.org/licenses/by-sa/4.0/',
         },
         {
             license: 'CC BY-NC',
             about: texts.licenseCCBYNC,
+            infoLink: 'https://creativecommons.org/licenses/by-nc/4.0/',
         },
         {
             license: 'CC BY-NC-SA',
             about: texts.licenseCCBYNCSA,
+            infoLink: 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
         },
         {
             license: 'CC BY-ND',
             about: texts.licenseCCBYND,
+            infoLink: 'https://creativecommons.org/licenses/by-nd/4.0/',
         },
         {
             license: 'CC BY-NC-ND',
             about: texts.licenseCCBYNCND,
+            infoLink: 'https://creativecommons.org/licenses/by-nc-nd/4.0/',
         },
         {
             license: 'CC0',
             about: texts.licenseCC0,
+            infoLink: 'https://creativecommons.org/publicdomain/zero/1.0/',
         },
         {
             license: 'Vitruveo',
@@ -84,10 +100,29 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
     ];
 
     const currentLicense = licenses.find((item) => item.license === values.license);
+    const aboutLicenses = currentLicense?.infoLink || 'https://creativecommons.org/licenses/by/4.0/';
+
+    const editionTitles = {
+        elastic: texts.elasticEditionsTitle,
+        single: texts.singleEditionTitle,
+        unlimited: texts.unlimitedEditionsTitle,
+    };
+
+    const currentDescriptionTitle =
+        values?.editionOption && currentDescription === 'nft.editionOption'
+            ? editionTitles[values.editionOption as keyof typeof editionTitles]
+            : values?.added
+              ? texts.selectEditionTitle
+              : `NFT-ART-1 ${texts.license}`;
 
     const handleAdded = (added: boolean) => {
         if (added == false) setFieldValue('nft.editionOption', '');
         setFieldValue('nft.added', added);
+    };
+
+    const handleCustomChange = (field: string, value: string) => {
+        setCurrentDescription(field);
+        setFieldValue(field, value);
     };
 
     return (
@@ -108,45 +143,11 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                     </Box>
                 ) : (
                     <Box paddingTop={1} paddingLeft={3} width="100%">
-                        <Box alignItems="center" justifyContent="space-between" display="flex" marginBottom={1}>
-                            <Box marginRight={1} width={100}>
-                                <Typography>{texts.license}</Typography>
-                            </Box>
-                            <Box alignItems="center" justifyContent="space-between" display="flex" width={300}>
-                                <CustomSelect
-                                    sx={{ backgroundColor: '#fff' }}
-                                    InputProps={{
-                                        sx: {
-                                            backgroundColor: '#fff',
-                                        },
-                                    }}
-                                    name="nft.license"
-                                    value={values.license}
-                                    onChange={handleChange}
-                                    size="small"
-                                    fullWidth
-                                    variant="outlined"
-                                >
-                                    {licenses?.map((option) => (
-                                        <MenuItem key={option.license} value={option.license}>
-                                            {option.license}
-                                        </MenuItem>
-                                    ))}
-                                </CustomSelect>
-                                <IconButton
-                                    title={aboutLicenses}
-                                    sx={{ padding: 0, marginLeft: 1 }}
-                                    onClick={() => window.open(aboutLicenses, '_blank')}
-                                >
-                                    <InfoIcon color="primary" />
-                                </IconButton>
-                            </Box>
-                        </Box>
                         <RadioGroup
                             aria-label="options"
                             name="nft.editionOption"
                             value={values.editionOption}
-                            onChange={handleChange}
+                            onChange={(v) => handleCustomChange('nft.editionOption', v.target.value)}
                         >
                             <FormControlLabel value="elastic" control={<Radio />} label={texts.elasticEditionsTitle} />
                             {values.editionOption === 'elastic' && (
@@ -355,57 +356,87 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                 </Box>
                             )}
                         </RadioGroup>
+                        <Box alignItems="center" justifyContent="space-between" display="flex" marginTop={1}>
+                            <Box marginRight={1} width={100}>
+                                <Typography>{texts.license}</Typography>
+                            </Box>
+                            <Box alignItems="center" justifyContent="space-between" display="flex" width={300}>
+                                <CustomSelect
+                                    sx={{ backgroundColor: '#fff' }}
+                                    InputProps={{
+                                        sx: {
+                                            backgroundColor: '#fff',
+                                        },
+                                    }}
+                                    name="nft.license"
+                                    value={values.license}
+                                    onChange={(v: SelectChangeEvent<string>) =>
+                                        handleCustomChange('nft.license', v.target.value)
+                                    }
+                                    size="small"
+                                    fullWidth
+                                    variant="outlined"
+                                >
+                                    {licenses?.map((option) => (
+                                        <MenuItem key={option.license} value={option.license}>
+                                            {option.license}
+                                        </MenuItem>
+                                    ))}
+                                </CustomSelect>
+                                <IconButton
+                                    title={aboutLicenses}
+                                    sx={{ padding: 0, marginLeft: 1 }}
+                                    onClick={() => window.open(aboutLicenses, '_blank')}
+                                >
+                                    <InfoIcon color="primary" />
+                                </IconButton>
+                            </Box>
+                        </Box>
                     </Box>
                 )}
             </Card>
             <Box marginTop={2} width={300}>
                 <Typography color="gray" fontSize="1.1rem" fontWeight="bold">
-                    {values?.editionOption === 'elastic'
-                        ? texts.elasticEditionsTitle
-                        : values?.editionOption === 'single'
-                          ? texts.singleEditionTitle
-                          : values?.editionOption === 'unlimited'
-                            ? texts.unlimitedEditionsTitle
-                            : values?.added
-                              ? texts.selectEditionTitle
-                              : `NFT-ART-1 ${texts.license}`}
+                    {currentDescriptionTitle}
                 </Typography>
 
-                {values.editionOption === 'elastic' ? (
-                    <Box marginTop={2}>
-                        <Box>
-                            <Typography textAlign="left" display="inline" color="GrayText" fontSize="0.9rem">
-                                {texts.editionPrice}
-                            </Typography>
-                        </Box>
+                {currentDescription === 'nft.editionOption' ? (
+                    values.editionOption === 'elastic' ? (
                         <Box marginTop={2}>
-                            <Typography display="inline" color="GrayText" fontSize="0.9rem">
-                                {texts.numberOfEditions}
-                            </Typography>
+                            <Box>
+                                <Typography textAlign="left" display="inline" color="GrayText" fontSize="0.9rem">
+                                    {texts.editionPrice}
+                                </Typography>
+                            </Box>
+                            <Box marginTop={2}>
+                                <Typography display="inline" color="GrayText" fontSize="0.9rem">
+                                    {texts.numberOfEditions}
+                                </Typography>
+                            </Box>
+                            <Box marginTop={2}>
+                                <Typography textAlign="left" display="inline" color="GrayText" fontSize="0.9rem">
+                                    {texts.totalPrice}
+                                </Typography>
+                            </Box>
+                            <Box marginTop={2}>
+                                <Typography textAlign="left" display="inline" color="GrayText" fontSize="0.9rem">
+                                    {texts.editionDiscount}
+                                </Typography>
+                            </Box>
                         </Box>
+                    ) : values.editionOption === 'single' ? (
                         <Box marginTop={2}>
                             <Typography textAlign="left" display="inline" color="GrayText" fontSize="0.9rem">
-                                {texts.totalPrice}
+                                {texts.singleEditionPrice}
                             </Typography>
                         </Box>
+                    ) : (
                         <Box marginTop={2}>
                             <Typography textAlign="left" display="inline" color="GrayText" fontSize="0.9rem">
-                                {texts.editionDiscount}
+                                {texts.unlimitedEditionsPrice}
                             </Typography>
                         </Box>
-                    </Box>
-                ) : values.editionOption === 'single' ? (
-                    <Box marginTop={2}>
-                        <Typography textAlign="left" display="inline" color="GrayText" fontSize="0.9rem">
-                            {texts.singleEditionPrice}
-                        </Typography>
-                    </Box>
-                ) : values.editionOption === 'unlimited' ? (
-                    <Box marginTop={2}>
-                        <Typography textAlign="left" display="inline" color="GrayText" fontSize="0.9rem">
-                            {texts.unlimitedEditionsPrice}
-                        </Typography>
-                    </Box>
+                    )
                 ) : values.added ? (
                     <Box marginTop={2}>
                         <Box>
