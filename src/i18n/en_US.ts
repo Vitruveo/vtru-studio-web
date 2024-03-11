@@ -52,6 +52,7 @@ const language: Translation = {
     'studio.myProfile.emailVerificationMessageSuccess': 'email verified',
     'studio.myProfile.emailVerificationMessageError': 'error verifying code',
     'studio.myProfile.form.wallet.placeholderAdded': 'Connect additional wallet',
+    'studio.myProfile.form.wallet.connected': 'Wallet already connected',
     'studio.myProfile.form.wallet.placeholder': 'Connect new wallet',
     'studio.myProfile.form.connect.button': 'Connect',
 

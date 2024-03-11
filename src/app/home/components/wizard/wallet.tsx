@@ -8,8 +8,15 @@ import { Button, Divider, Typography } from '@mui/material';
 import { AccountSettingsProps } from '../../myProfile/types';
 import CustomTextField from '../forms/theme-elements/CustomTextField';
 import { useI18n } from '@/app/hooks/useI18n';
+import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 
 const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
+    const [toastr, setToastr] = useState<CustomizedSnackbarState>({
+        type: 'success',
+        open: false,
+        message: '',
+    });
+
     const [connectWallet, setConnectWallet] = useState(false);
 
     const { chain } = useNetwork();
@@ -23,6 +30,7 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
         deleteButton: language['studio.myProfile.form.delete.button'],
         walletPlaceholder: language['studio.myProfile.form.wallet.placeholder'],
         walletPlaceholderAdded: language['studio.myProfile.form.wallet.placeholderAdded'],
+        walletConnected: language['studio.myProfile.form.wallet.connected'],
         connectButton: language['studio.myProfile.form.connect.button'],
     } as { [key: string]: string };
 
@@ -38,6 +46,10 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
         );
     };
 
+    const handleFormatWallet = (addressF: string) => {
+        return `${addressF.substring(0, 6)}...${addressF.substring(addressF.length - 4)}`;
+    };
+
     useEffect(() => {
         if (openConnectModal && connectWallet) {
             openConnectModal();
@@ -51,6 +63,16 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
     useEffect(() => {
         if (address && !values.wallets.some((item) => item.address === address)) {
             setFieldValue('wallets', [{ address }, ...values.wallets]);
+        } else if (address) {
+            setToastr({
+                type: 'warning',
+                open: true,
+                message: (
+                    <div>
+                        {texts.walletConnected}:<Typography>{handleFormatWallet(address)}</Typography>
+                    </div>
+                ),
+            });
         }
     }, [address]);
 
@@ -68,11 +90,7 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
                             key={index}
                         >
                             <Box display="flex" alignItems="center" justifyContent="space-between" gap={1}>
-                                <Typography color="GrayText">
-                                    {`${item.address.substring(0, 6)}...${item.address.substring(
-                                        item.address.length - 4
-                                    )}`}
-                                </Typography>
+                                <Typography color="GrayText">{handleFormatWallet(item.address)}</Typography>
                                 {values.wallets.length > 1 && (
                                     <Button
                                         variant="outlined"
@@ -102,6 +120,12 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
                 </Box>
 
                 <Typography color="error">{errors?.wallets as string}</Typography>
+                <CustomizedSnackbar
+                    type={toastr.type}
+                    open={toastr.open}
+                    message={toastr.message}
+                    setOpentate={setToastr}
+                />
             </Box>
         </>
     );
