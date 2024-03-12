@@ -57,6 +57,23 @@ export function loginWebSocketThunk(): ReduxThunkAction {
                 dispatch(userActionsCreators.change({ notify: 'deleteAsset' }));
                 dispatch(auxiliaryMediaThunk({ deleteFormats: ['codeZip'] }));
             }
+            if (data?.notification?.messageType === 'updateAsset') {
+                const asset = getState().asset;
+                const findFormat = Object.entries(asset.formats).find(
+                    ([key, value]) => value.path === data.notification.fileName
+                );
+                if (findFormat) {
+                    dispatch(
+                        assetActionsCreators.changeFormats({
+                            [findFormat[0]]: {
+                                ...findFormat[1],
+                                load: false,
+                                size: data.notification.size,
+                            },
+                        })
+                    );
+                }
+            }
         });
     };
 }

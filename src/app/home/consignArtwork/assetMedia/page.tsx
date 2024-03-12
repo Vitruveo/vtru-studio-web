@@ -110,12 +110,16 @@ export default function AssetMedia() {
     const originalFileType = handleGetFileType(values.formats?.original?.file);
 
     const handleUploadFile = async ({
+        width,
+        height,
         formatUpload,
         file,
         maxSize,
         rangeTimeStart,
         rangeTimeEnd,
     }: {
+        width?: number;
+        height?: number;
         formatUpload: string;
         file: File;
         maxSize?: string;
@@ -136,6 +140,8 @@ export default function AssetMedia() {
             sendRequestUploadThunk({
                 mimetype: file!.type,
                 metadata: {
+                    width: width?.toString(),
+                    height: height?.toString(),
                     formatUpload,
                     maxSize,
                     rangeTimeStart,
@@ -252,6 +258,7 @@ export default function AssetMedia() {
                     assetMediaThunk({
                         ...values,
                         formats: responseUpload.reduce((acc, cur) => ({ ...acc, ...cur }), {} as FormatMediaSave),
+                        load: true,
                     })
                 );
             };
@@ -274,6 +281,17 @@ export default function AssetMedia() {
             }
         }
     }, [values.formats?.original?.file]);
+
+    useEffect(() => {
+        const updateValues = Object.entries(asset.formats).reduce(
+            (acc, [key, cur]) => ({
+                ...acc,
+                [key]: { ...values.formats[key as keyof FormatsMedia], load: cur.load, size: cur.size },
+            }),
+            {}
+        );
+        setFieldValue('formats', updateValues);
+    }, [asset.formats]);
 
     const urlAssetFile: string = useMemo(() => {
         return file && file instanceof File ? URL.createObjectURL(file) : file ? (file as string) : '';

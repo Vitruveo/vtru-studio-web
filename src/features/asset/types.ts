@@ -8,6 +8,9 @@ export type AssetStatus = 'draft' | 'published' | 'archived' | 'preview' | '';
 export type FileType = File | string;
 
 interface Format {
+    size?: number;
+    load?: boolean;
+    path?: string;
     file?: FileType;
     name?: string;
     customFile?: FileType;

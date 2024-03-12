@@ -14,7 +14,16 @@ interface SelectMediaProps {
     errors: AssetMediaFormErros;
     file?: File | string;
     definition?: Definition;
-    handleUploadFile: ({ formatUpload, file }: { formatUpload: string; file: File; maxSize: string }) => Promise<void>;
+    handleUploadFile: ({
+        formatUpload,
+        file,
+    }: {
+        width?: number;
+        height?: number;
+        formatUpload: string;
+        file: File;
+        maxSize: string;
+    }) => Promise<void>;
     setFieldValue: (
         field: string,
         value: any,

@@ -204,6 +204,7 @@ export function auxiliaryMediaThunk(payload: {
 export function assetMediaThunk(payload: {
     formats?: FormatMediaSave;
     deleteFormats?: string[];
+    load?: boolean;
 }): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
         const formatsState = getState().asset.formats;
@@ -232,6 +233,7 @@ export function assetMediaThunk(payload: {
                 ...acc,
                 [key]: {
                     ...value,
+                    load: payload.load,
                     file: `${ASSET_STORAGE_URL}/${value.path}`,
                     customFile: undefined,
                     transactionId: undefined,

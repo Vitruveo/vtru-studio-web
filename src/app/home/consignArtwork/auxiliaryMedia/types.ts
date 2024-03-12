@@ -14,6 +14,7 @@ export interface FormatValue {
 }
 
 export interface FormatMedia {
+    load?: boolean;
     name?: string;
     path?: string;
     file?: File | string;
