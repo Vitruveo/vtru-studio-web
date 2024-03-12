@@ -165,27 +165,27 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.moods': 'Настроения',
     'studio.consignArtwork.assetMetadata.field.moods.placeholder': 'Чувства, вызываемые произведением',
     'studio.consignArtwork.assetMetadata.field.moods.option.admiration': 'Восхищение',
-    'studio.consignArtwork.assetMetadata.field.moods.option.absorbing': 'Поглощающий',
-    'studio.consignArtwork.assetMetadata.field.moods.option.amusement': 'Забава',
+    'studio.consignArtwork.assetMetadata.field.moods.option.absorbing': 'Поглащение',
+    'studio.consignArtwork.assetMetadata.field.moods.option.amusement': 'Веселье',
     'studio.consignArtwork.assetMetadata.field.moods.option.adoration': 'Почтение',
     'studio.consignArtwork.assetMetadata.field.moods.option.awe': 'Страх',
     'studio.consignArtwork.assetMetadata.field.moods.option.anxiety': 'Тревога',
     'studio.consignArtwork.assetMetadata.field.moods.option.boredom': 'Скука',
-    'studio.consignArtwork.assetMetadata.field.moods.option.brooding': 'Замедленный',
+    'studio.consignArtwork.assetMetadata.field.moods.option.brooding': 'Задумчивость',
     'studio.consignArtwork.assetMetadata.field.moods.option.calmness': 'Спокойствие',
     'studio.consignArtwork.assetMetadata.field.moods.option.chills': 'Мурашки',
-    'studio.consignArtwork.assetMetadata.field.moods.option.chaotic': 'Хаотичный',
+    'studio.consignArtwork.assetMetadata.field.moods.option.chaotic': 'Хаотичность',
     'studio.consignArtwork.assetMetadata.field.moods.option.connectedness': 'Связь',
-    'studio.consignArtwork.assetMetadata.field.moods.option.cosmic': 'Космический',
-    'studio.consignArtwork.assetMetadata.field.moods.option.confusion': 'Путаница',
+    'studio.consignArtwork.assetMetadata.field.moods.option.cosmic': 'Космичность',
+    'studio.consignArtwork.assetMetadata.field.moods.option.confusion': 'Замешательство',
     'studio.consignArtwork.assetMetadata.field.moods.option.dread': 'Страх',
-    'studio.consignArtwork.assetMetadata.field.moods.option.distaste': 'Отвращение',
+    'studio.consignArtwork.assetMetadata.field.moods.option.distaste': 'Неприязнь',
     'studio.consignArtwork.assetMetadata.field.moods.option.disgust': 'Отвращение',
-    'studio.consignArtwork.assetMetadata.field.moods.option.dreary': 'Мрачный',
-    'studio.consignArtwork.assetMetadata.field.moods.option.disorienting': 'Дезориентирующий',
-    'studio.consignArtwork.assetMetadata.field.moods.option.dreamy': 'Мечтательный',
+    'studio.consignArtwork.assetMetadata.field.moods.option.dreary': 'Мрачность',
+    'studio.consignArtwork.assetMetadata.field.moods.option.disorienting': 'Дезориентация',
+    'studio.consignArtwork.assetMetadata.field.moods.option.dreamy': 'Мечтательность',
     'studio.consignArtwork.assetMetadata.field.moods.option.desire': 'Желание',
-    'studio.consignArtwork.assetMetadata.field.moods.option.elegant': 'Элегантный',
+    'studio.consignArtwork.assetMetadata.field.moods.option.elegant': 'Изысканность',
     'studio.consignArtwork.assetMetadata.field.moods.option.humorous': 'Юмористический',
     'studio.consignArtwork.assetMetadata.field.moods.option.intimate': 'Интимный',
     'studio.consignArtwork.assetMetadata.field.moods.option.intricate': 'Сложный',
@@ -198,16 +198,16 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.moods.option.psychedelic': 'Психоделический',
     'studio.consignArtwork.assetMetadata.field.moods.option.serenity': 'Смирение',
     'studio.consignArtwork.assetMetadata.field.moods.option.sadness': 'Печаль',
-    'studio.consignArtwork.assetMetadata.field.moods.option.sensual': 'Сенсуальный',
-    'studio.consignArtwork.assetMetadata.field.moods.option.spiritual': 'Духовный',
+    'studio.consignArtwork.assetMetadata.field.moods.option.sensual': 'Нежность',
+    'studio.consignArtwork.assetMetadata.field.moods.option.spiritual': 'Духовность',
     'studio.consignArtwork.assetMetadata.field.moods.option.strange': 'Странный',
     'studio.consignArtwork.assetMetadata.field.moods.option.striking': 'Заметный',
     'studio.consignArtwork.assetMetadata.field.moods.option.tragic': 'Трагический',
     'studio.consignArtwork.assetMetadata.field.moods.option.tense': 'Напряженный',
     'studio.consignArtwork.assetMetadata.field.moods.option.vibrant': 'Яркий',
     'studio.consignArtwork.assetMetadata.field.moods.option.violent': 'Жестокий',
-    'studio.consignArtwork.assetMetadata.field.moods.option.wonder': 'Чудо',
-    'studio.consignArtwork.assetMetadata.field.moods.option.whimsical': 'Капризный',
+    'studio.consignArtwork.assetMetadata.field.moods.option.wonder': 'Изумительный',
+    'studio.consignArtwork.assetMetadata.field.moods.option.whimsical': 'Причудливый',
 
     'studio.consignArtwork.assetMetadata.field.errors': (data: { message: string }) =>
         `${data.message === 'required' || data.message === 'minItems' ? 'поле обязательно для заполнения' : ''}`,
@@ -215,7 +215,7 @@ const language: Translation = {
     /* Licenses */
     'studio.consignArtwork.licenses.title': 'Лицензии',
     'studio.consignArtwork.licenses.description':
-        'В настоящее время Vitruveo предлагает четыре способа лицензирования/продажи вашего произведения искусства. Здесь вы можете выбрать любой из этих вариантов лицензирования:',
+        'В настоящее время Vitruveo предлагает четыре способа лицензирования/продажи вашего произведения искусства. Здесь вы можете выбрать любой из вариантов лицензирования:',
     'studio.consignArtwork.licenses.oneLicense.error': 'Пожалуйста, добавьте хотя бы одну лицензию',
     'studio.consignArtwork.licenses.fillFields.error': 'Заполните поля правильно.',
     'studio.consignArtwork.licenses.alreadyAdded': 'Лицензия уже добавлена',
@@ -238,16 +238,16 @@ const language: Translation = {
     'studio.consignArtwork.licenses.license': 'Лицензия',
 
     'studio.consignArtwork.licenses.nft.description':
-        'Эта лицензия делает произведение доступным для продажи по одной из нескольких моделей ценообразования. При продаже создается и передается покупателю NFT произведения.',
+        'Эта лицензия обеспечивает возможность продажи произведения искусства по одной из нескольких моделей ценообразования. При продаже происходит чеканка (mint) работы в виде NFT и передача NFT покупателю.',
     'studio.consignArtwork.licenses.nft.enable':
-        'Включите эту лицензию, если хотите, чтобы покупатели стали владельцами цифровой коллекции произведения искусства.',
+        'Включите эту лицензию, если хотите, чтобы покупатели получили право владения цифровой коллекционной копией произведения искусства.',
 
     'studio.consignArtwork.licenses.nft.selectEdition.title': 'Выберите издание',
     'studio.consignArtwork.licenses.nft.selectEdition.elasticEditions':
-        'это гибкая модель, предоставляющая покупателю возможность объединять несколько изданий в одно, динамически изменяя размер издания.',
+        'это гибкая модель, предоставляющая покупателю возможность объединять несколько копий издания в одну, динамически изменяя размер издания.',
     'studio.consignArtwork.licenses.nft.selectEdition.singleEdition': 'это фиксированная модель 1/1.',
     'studio.consignArtwork.licenses.nft.selectEdition.unlimitedEditions':
-        'это плата или бесплатная модель для неограниченных изданий.',
+        'модель для неограниченных изданий: за символическую плату или бесплатно',
 
     'studio.consignArtwork.licenses.nft.elasticEditions.title': 'Эластичные издания',
     'studio.consignArtwork.licenses.nft.elasticEditions.editionPrice.title': 'Цена издания (USD)',
@@ -255,13 +255,13 @@ const language: Translation = {
     'studio.consignArtwork.licenses.nft.elasticEditions.totalPrice.title': 'Общая стоимость (USD)',
     'studio.consignArtwork.licenses.nft.elasticEditions.editionDiscount.title': 'Скидка на издание',
     'studio.consignArtwork.licenses.nft.elasticEditions.editionPrice':
-        '“Цена издания” - это цена произведения искусства в долларах США.',
+        '“Цена издания” - это цена одной копии произведения искусства в долларах США.',
     'studio.consignArtwork.licenses.nft.elasticEditions.numberOfEditions':
-        '“Количество изданий” - это количество изданий произведения, которые могут быть созданы.',
+        '“Количество изданий” - это количество копий произведения, которые могут быть созданы.',
     'studio.consignArtwork.licenses.nft.elasticEditions.totalPrice':
         '“Общая стоимость” - это “Цена издания” умноженная на “Количество изданий”.',
     'studio.consignArtwork.licenses.nft.elasticEditions.editionDiscount':
-        '“Скидка на издание” - это скидка для покупателя при покупке нескольких изданий. Рассчитывается делением 10 на “Количество изданий”. Если включено, скидка применяется к каждому изданию после первого.',
+        '“Скидка на издание” - это скидка для покупателя при покупке нескольких копий издания. Рассчитывается делением 10% на “Количество изданий”. Если включено, скидка применяется к каждой копии издания после первой.',
     'studio.consignArtwork.licenses.nft.singleEdition.title': 'Одиночное издание',
     'studio.consignArtwork.licenses.nft.singleEdition.editionPrice':
         '“Цена издания” - это цена произведения искусства в долларах США.',
@@ -272,17 +272,17 @@ const language: Translation = {
     'studio.consignArtwork.licenses.nft.unlimitedEditions.editionPrice.title': 'Цена издания (USD)',
 
     'studio.consignArtwork.licenses.stream.description':
-        'Эта лицензия предоставляет произведение для кураторов для включения в плейлисты для потокового воспроизведения искусства на цифровых рамках. Доходы от потокового воспроизведения автоматически рассчитываются на основе использования и согласованных ценовых соглашений.',
+        'Эта лицензия позволяет кураторам включать произведение искусства в плейлисты для потокового воспроизведения работ на дисплеях. Доходы от потокового воспроизведения автоматически рассчитываются на основе количества показов и стоимости показа.',
     'studio.consignArtwork.licenses.stream.enable':
-        'Включите эту лицензию, если хотите, чтобы кураторы включали ваше произведение в плейлисты, используемые потребителями и бизнесом для слайд-шоу на цифровых рамках.',
+        'Включите эту лицензию, если хотите, чтобы кураторы включали ваше произведение в плейлисты, используемые обычными пользователями и бизнесами для слайд-шоу на цифровых дисплеях.',
     'studio.consignArtwork.licenses.stream.enable.description':
-        'Доходы от потокового воспроизведения автоматически рассчитываются на основе использования и согласованных ценовых соглашений.',
+        'Доходы от потокового воспроизведения автоматически рассчитываются на основе количества показов и стоимости показа.',
     'studio.consignArtwork.licenses.stream.unlimitedStreaming': 'Неограниченное потоковое воспроизведение',
     'studio.consignArtwork.licenses.stream.unlimitedStreaming.description':
         'Произведение может использоваться для потокового воспроизведения в неограниченных сценариях.',
 
     'studio.consignArtwork.licenses.print.description':
-        'Эта лицензия предоставляет произведение конечным пользователям для печати на один физический объект с использованием технологии печати по требованию (POD). Лицензия свободно передается до момента печати, после чего она передается исключительно владельцу физического объекта.',
+        'Эта лицензия предоставляет произведение конечным пользователям для печати на один физический объект с использованием технологии печати по требованию (POD). Лицензия свободно передается до момента первой печати, после чего она передается исключительно владельцу физического объекта.',
     'studio.consignArtwork.licenses.print.enable':
         'Включите эту лицензию, если хотите, чтобы конечные пользователи использовали ваше искусство для приложений печати по требованию (POD). Эта лицензия предназначена для индивидуальной печати; массовая печать не разрешена.',
     'studio.consignArtwork.licenses.print.singlePrint.title': 'Одиночная печать',
@@ -291,15 +291,15 @@ const language: Translation = {
     'studio.consignArtwork.licenses.print.singlePrint.field': 'Цена за единицу (USD)',
 
     'studio.consignArtwork.licenses.remix.description':
-        'Эта лицензия предоставляет произведение конечным пользователям для использования в приложениях Remix с использованием',
+        'Эта лицензия позволяет конечным пользователям использовать работу в приложениях создания ремиксов с использованием',
     'studio.consignArtwork.licenses.remix.description2':
-        'лицензии, которая разрешает использование Remix в некоммерческих целях.',
-    'studio.consignArtwork.licenses.remix.singleRemix.title': 'Одиночный Remix',
+        'лицензии, которая разрешает использование ремиксов в некоммерческих целях.',
+    'studio.consignArtwork.licenses.remix.singleRemix.title': 'Одиночный ремикс',
     'studio.consignArtwork.licenses.remix.singleRemix.description':
-        '“Цена за единицу” - это цена произведения искусства в долларах США за один Remix.',
+        '“Цена за единицу” - это цена произведения искусства в долларах США за один ремикс.',
     'studio.consignArtwork.licenses.remix.singleRemix.field': 'Цена за единицу (USD)',
     'studio.consignArtwork.licenses.remix.enable':
-        'Включите эту лицензию, если хотите, чтобы конечные пользователи использовали ваше искусство в приложениях Remix. Результат Remix может использоваться только в некоммерческих целях.',
+        'Включите эту лицензию, если хотите, чтобы конечные пользователи использовали ваше искусство в приложениях создания ремиксов. Результат ремикса может использоваться только в некоммерческих целях.',
 
     /* Terms of Use */
     'studio.consignArtwork.termsOfUse.title': 'Условия использования',
@@ -316,7 +316,7 @@ const language: Translation = {
 
     /* Auxiliary Media */
     'studio.consignArtwork.auxiliaryMedia.description':
-        'Загрузите вспомогательные медиа-файлы для съемок за кулисами (BTS) и дополненной реальности (AR).',
+        'Загрузите вспомогательные медиа-файлы: съёмки за сценой (BTS) и файлы дополненной реальности (AR).',
     'studio.consignArtwork.auxiliaryMedia.title': 'Вспомогательные медиа-файлы',
     'studio.consignArtwork.auxiliaryMedia.subTitle': 'Медиа-ресурсы вспомогательных файлов',
     'studio.consignArtwork.auxiliaryMedia.arImage.title': 'AR изображение',
@@ -326,9 +326,9 @@ const language: Translation = {
     'studio.consignArtwork.auxiliaryMedia.codeZip.title': 'ZIP-код',
 
     /* Consignment Status */
-    'studio.consignArtwork.consignmentStatus.title': 'Статус передачи',
+    'studio.consignArtwork.consignmentStatus.title': 'Статус подачи',
     'studio.consignArtwork.consignmentStatus.description':
-        'Отличная работа! Ваша художественная работа готова к передаче.',
+        'Отличная работа! Ваша художественное произведение готово к подаче.',
     'studio.consignArtwork.consignmentStatus.message': 'Эта функция будет доступна скоро.',
     'studio.consignArtwork.consignmentStatus.yes': 'Да',
     'studio.consignArtwork.consignmentStatus.no': 'Нет',
@@ -343,9 +343,9 @@ const language: Translation = {
 
     'studio.consignArtwork.consignmentStatus.activation.title': 'Активация',
     'studio.consignArtwork.consignmentStatus.activation.description':
-        'Активация передает ваше произведение искусства на блокчейн и требует кредита создателя.',
-    'studio.consignArtwork.consignmentStatus.creatorCreditsRequired': 'Требуемые кредиты создателя',
-    'studio.consignArtwork.consignmentStatus.creatorCreditsAvailable': 'Доступные кредиты создателя',
+        'Активация передает ваше произведение искусства на блокчейн и требует кредитов художника.',
+    'studio.consignArtwork.consignmentStatus.creatorCreditsRequired': 'Кредитов Художника необходимо',
+    'studio.consignArtwork.consignmentStatus.creatorCreditsAvailable': 'Кредитов Художник доступно',
     'studio.consignArtwork.consignmentStatus.viewArtwork.button': 'Просмотреть произведение искусства',
 
     /* BackModalConfirm */
