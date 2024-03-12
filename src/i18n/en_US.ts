@@ -59,7 +59,9 @@ const language: Translation = {
     /* Consign Artwork */
     'studio.consignArtwork.form.next.button': 'Next',
     'studio.consignArtwork.title': 'Consign Artwork',
-    'studio.consignArtwork.subtitle': 'Complete all required tasks and consign your artwork',
+    'studio.consignArtwork.subtitle':
+        'Complete all required tasks and consign your artwork. For more information visit the',
+    'studio.consignArtwork.subtitle.link': 'Dreamer website.',
 
     'studio.consignArtwork.stepName.assetMedia': 'Asset Media',
     'studio.consignArtwork.stepName.assetMetadata': 'Asset Metadata',

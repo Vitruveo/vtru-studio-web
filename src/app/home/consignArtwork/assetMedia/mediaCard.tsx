@@ -332,10 +332,6 @@ export default function MediaCard({
     };
 
     useEffect(() => {
-        console.log(formatValue);
-    }, [formatValue]);
-
-    useEffect(() => {
         if (uploadSuccess && fileStatus && formatType === 'preview' && isVideo) {
             const intervalId = setInterval(() => {
                 const checkPreviewURL = `${ASSET_STORAGE_URL}/${fileStatus?.path}?retry=${Date.now()}`;

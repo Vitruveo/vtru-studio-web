@@ -41,6 +41,7 @@ const ConsignArtwork = () => {
         stepPublishMessageSuccess: language['studio.consignArtwork.stepPublishMessageSuccess'],
         consignArtworkTitle: language['studio.consignArtwork.title'],
         consignArtworkSubtitle: language['studio.consignArtwork.subtitle'],
+        consignArtworkSubtitleLink: language['studio.consignArtwork.subtitle.link'],
         optional: language['studio.consignArtwork.optional'],
     } as { [key: string]: string };
 
@@ -86,7 +87,14 @@ const ConsignArtwork = () => {
                 <Grid marginBottom={10} item xs={12} lg={6}>
                     <Box>
                         <Typography variant="h6" fontWeight="normal" color="GrayText">
-                            {texts.consignArtworkSubtitle}
+                            {texts.consignArtworkSubtitle}{' '}
+                            <Typography
+                                display="inline"
+                                style={{ color: '#007BFF', cursor: 'pointer', textDecoration: 'underline' }}
+                                onClick={() => window.open('https://dreamer.vitruveo.xyz/', '_blank')}
+                            >
+                                {texts.consignArtworkSubtitleLink}
+                            </Typography>
                         </Typography>
                     </Box>
                     <Box maxWidth={700} p={2}>
