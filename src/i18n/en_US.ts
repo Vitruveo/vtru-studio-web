@@ -11,7 +11,7 @@ const language: Translation = {
     'studio.languages.russianRU': 'Russian (ru-RU)',
 
     /* Home */
-    'studio.home.wellcome': 'Wellcome to',
+    'studio.home.wellcome': 'Welcome to',
     'studio.home.title': 'Home',
     'studio.home.transforming':
         'Vitruveo is transforming Web3 art, and that means all-new software like this “Alpha” version of vtruStudio. Alpha means the software is not fully ready and you’re helping us test it so it can be improved.',
@@ -161,7 +161,7 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.title': 'Title',
     'studio.consignArtwork.assetMetadata.field.title.description': 'Title of work',
 
-    'studio.consignArtwork.assetMetadata.field.description': 'Description',
+    'studio.consignArtwork.assetMetadata.field.description': 'Label',
     'studio.consignArtwork.assetMetadata.field.description.description': 'Brief description of work',
 
     'studio.consignArtwork.assetMetadata.field.mood': 'Mood',
