@@ -274,7 +274,8 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                                     fontSize="0.8rem"
                                                     sx={{ whiteSpace: 'nowrap', width: 50 }}
                                                 >
-                                                    {(values.elastic.numberOfEditions / 10).toFixed(2) + '%'}
+                                                    {Math.min(values.elastic.numberOfEditions / 10, 10).toFixed(2) +
+                                                        '%'}
                                                 </Typography>
                                             </Box>
                                         </Box>

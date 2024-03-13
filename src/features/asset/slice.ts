@@ -6,6 +6,7 @@ import { AssetSliceState } from './types';
 const initialState: AssetSliceState = {
     _id: '',
     mediaAuxiliary: {
+        description: '',
         formats: {
             arImage: {
                 file: undefined,
@@ -87,6 +88,7 @@ export const assetSlice = createSlice({
                 ...state,
                 mediaAuxiliary: {
                     ...state.mediaAuxiliary,
+                    description: action.payload.description || '',
                     formats: {
                         ...state.mediaAuxiliary.formats,
                         ...action.payload.formats,
@@ -130,6 +132,7 @@ export const assetSlice = createSlice({
             return {
                 ...state,
                 mediaAuxiliary: {
+                    ...state.mediaAuxiliary,
                     formats: Object.entries(state.mediaAuxiliary.formats).reduce(
                         (acc, [key, value]) => {
                             if (action.payload.includes(key))

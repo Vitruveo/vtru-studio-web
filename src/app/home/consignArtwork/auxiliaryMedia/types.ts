@@ -31,6 +31,7 @@ export interface FormatsAuxiliayMedia {
 }
 
 export interface AssetMediaFormValues {
+    description: string;
     formats: FormatsAuxiliayMedia;
     deleteKeys: string[];
 }

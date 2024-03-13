@@ -27,6 +27,7 @@ export interface RequestAssetUpload {
 export interface Asset {
     _id: string;
     mediaAuxiliary: {
+        description: string;
         formats: {
             arImage: Format;
             arVideo: Format;
