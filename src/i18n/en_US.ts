@@ -162,7 +162,8 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.title.description': 'Title of work',
 
     'studio.consignArtwork.assetMetadata.field.description': 'Label',
-    'studio.consignArtwork.assetMetadata.field.description.description': 'Brief description of work',
+    'studio.consignArtwork.assetMetadata.field.description.description':
+        'Brief description of work. Longer description available in Auxiliary Media.',
 
     'studio.consignArtwork.assetMetadata.field.mood': 'Mood',
     'studio.consignArtwork.assetMetadata.field.mood.description': 'Feelings that the work evokes',
