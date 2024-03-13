@@ -10,21 +10,15 @@ interface AssetMediaPreviewProps {
 const AssetMediaPreview = (props: AssetMediaPreviewProps) => {
     const { formats } = useSelector((state) => state.asset);
 
-    const selectOriginalAsset = Object.entries(formats).find(([key]) => key === 'original');
+    const selectOriginalAsset = Object.entries(formats).find(([key]) => key === 'preview');
 
     if (!selectOriginalAsset || (selectOriginalAsset && !selectOriginalAsset[1].file)) return <></>;
 
-    const thumbSRC = (selectOriginalAsset[1].file as string)?.replace(/\.[^/.]+$/, `_thumb.jpg`);
-
-    const definition = 'portrait';
+    const thumbSRC = (selectOriginalAsset[1].file as string)?.replace(/\.[^/.]+$/, `.jpeg`);
 
     return (
         <div>
-            <img
-                src={thumbSRC}
-                width={definition === 'landscape' ? 500 : definition === 'portrait' ? 300 : 50}
-                height={definition === 'landscape' ? 300 : definition === 'portrait' ? 500 : 100}
-            />
+            <img src={thumbSRC} width={600} height={600} />
         </div>
     );
 };
