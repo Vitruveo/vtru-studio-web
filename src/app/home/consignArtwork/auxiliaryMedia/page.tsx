@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import CloseIcon from '@mui/icons-material/Close';
 import { Stack } from '@mui/system';
-import { Box, IconButton, Typography } from '@mui/material';
+import { Box, IconButton, Typography, useTheme } from '@mui/material';
 
 import { useDispatch, useSelector } from '@/store/hooks';
 import { AssetMediaFormValues, FormatMediaSave, FormatsAuxiliayMedia } from './types';
@@ -58,6 +58,7 @@ export default function AssetMedia() {
     const asset = useSelector((state) => state.asset);
 
     const router = useRouter();
+    const theme = useTheme();
     const dispatch = useDispatch();
 
     const initialValues = useMemo(
@@ -273,17 +274,31 @@ export default function AssetMedia() {
                                 </Box>
                             ))}
                         </Box>
-                        <Box marginTop={1}>
+                        <Box marginTop={2}>
                             <Box>
                                 <Typography mb={2} variant="subtitle1" fontWeight={600} component="label">
                                     Description
                                 </Typography>
                             </Box>
+                            <Box>
+                                <Typography color="GrayText" mb={2} variant="subtitle1" component="label">
+                                    Longer Description of Work
+                                </Typography>
+                            </Box>
                             <CustomTextareaAutosize
+                                style={{
+                                    width: '98.7%',
+                                    height: 130,
+                                    backgroundColor: theme.palette.background.paper,
+                                    border: `1px solid ${theme.palette.divider}`,
+                                    borderRadius: theme.shape.borderRadius,
+                                    padding: theme.spacing(1),
+                                    fontSize: theme.typography.fontSize,
+                                    fontFamily: theme.typography.fontFamily,
+                                }}
                                 value={values.description}
                                 name="description"
                                 onChange={handleChange}
-                                style={{ width: '100%', height: 150 }}
                             />
                         </Box>
                     </Box>
