@@ -93,10 +93,10 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
             about: texts.licenseCC0,
             infoLink: 'https://creativecommons.org/publicdomain/zero/1.0/',
         },
-        {
-            license: 'Vitruveo',
-            about: '',
-        },
+        // {
+        //     license: 'Vitruveo',
+        //     about: '',
+        // },
     ];
 
     const currentLicense = licenses.find((item) => item.license === values.license);
