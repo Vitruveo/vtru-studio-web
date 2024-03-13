@@ -100,7 +100,8 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
     ];
 
     const currentLicense = licenses.find((item) => item.license === values.license);
-    const aboutLicenses = currentLicense?.infoLink || 'https://creativecommons.org/licenses/by/4.0/';
+    console.log(currentLicense);
+    const aboutLicenses = currentLicense?.infoLink || 'https://creativecommons.org/share-your-work/cclicenses/';
 
     const editionTitles = {
         elastic: texts.elasticEditionsTitle,
