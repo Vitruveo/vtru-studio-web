@@ -133,8 +133,6 @@ export default function MediaCard({
             : (formatValue.file as string)?.replace(/\.[^/.]+$/, `_thumb.${isVideo ? 'mp4' : 'jpg'}`);
     }, [formatValue.file]) as string;
 
-    console.log(thumbSRC);
-
     const fileStatus = formatValue.transactionId ? upload[formatValue.transactionId] : undefined;
     const uploadSuccess = fileStatus ? fileStatus?.uploadProgress === 100 : formatValue.file && !fileIsLocal;
 
