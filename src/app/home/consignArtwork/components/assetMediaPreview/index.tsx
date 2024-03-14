@@ -60,14 +60,14 @@ const AssetMediaPreview = (props: AssetMediaPreviewProps) => {
     const height = lgUp || mdUp || smUp ? 480 : 320;
 
     return (
-        <Box>
+        <Box style={{ opacity: fileIsload ? 0 : 1, display: fileIsload ? 'none' : '' }}>
             <Box>
                 <Typography marginBottom={2} fontSize="1.2rem" fontWeight="500">
                     Asset Preview
                 </Typography>
             </Box>
             <BlankCard>
-                <CardContent style={{ opacity: fileIsload ? 0 : 1, display: fileIsload ? 'none' : '' }}>
+                <CardContent>
                     {isVideo ? (
                         <video
                             ref={videoRef}
