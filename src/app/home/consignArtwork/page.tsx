@@ -43,6 +43,7 @@ const ConsignArtwork = () => {
         consignArtworkSubtitle: language['studio.consignArtwork.subtitle'],
         consignArtworkSubtitleLink: language['studio.consignArtwork.subtitle.link'],
         optional: language['studio.consignArtwork.optional'],
+        moreInformation: language['studio.consignArtwork.subtitle.moreInformation'],
     } as { [key: string]: string };
 
     const BCrumb = [
@@ -85,17 +86,26 @@ const ConsignArtwork = () => {
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
 
-                <Grid display="flex" flexWrap="wrap" flex={1} marginBottom={10} item xs={12} lg={6}>
-                    <Box marginBottom={2}>
+                <Grid display="flex" flexWrap="wrap" marginBottom={10} item xs={12} lg={6}>
+                    <Box flex={1} marginBottom={2}>
                         <Box>
                             <Typography variant="h6" fontWeight="normal" color="GrayText">
-                                {texts.consignArtworkSubtitle}{' '}
-                                <Typography
-                                    display="inline"
-                                    style={{ color: '#007BFF', cursor: 'pointer', textDecoration: 'underline' }}
-                                    onClick={() => window.open('https://dreamer.vitruveo.xyz/', '_blank')}
-                                >
-                                    {texts.consignArtworkSubtitleLink}
+                                {texts.consignArtworkSubtitle}
+                                <Typography variant="h6" fontWeight="normal" color="GrayText">
+                                    {texts.moreInformation}{' '}
+                                    <Typography
+                                        variant="h6"
+                                        display="inline"
+                                        style={{
+                                            fontWeight: 400,
+                                            color: '#007BFF',
+                                            cursor: 'pointer',
+                                            textDecoration: 'underline',
+                                        }}
+                                        onClick={() => window.open('https://dreamer.vitruveo.xyz/', '_blank')}
+                                    >
+                                        {texts.consignArtworkSubtitleLink}
+                                    </Typography>
                                 </Typography>
                             </Typography>
                         </Box>
@@ -158,7 +168,7 @@ const ConsignArtwork = () => {
                             ))}
                         </Box>
                     </Box>
-                    <Box display="flex" justifyContent="center" flex={1}>
+                    <Box flex={1} display="flex" justifyContent="center">
                         <AssetMediaPreview />
                     </Box>
                 </Grid>

@@ -243,8 +243,8 @@ export default function AssetMetadata() {
                 backOnclick={handleOpenBackModal}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
-                <Box alignItems="flex-start" height="auto" display="flex" flexWrap="wrap" flex={1}>
-                    <Box>
+                <Box alignItems="flex-start" height="auto" display="flex" flexWrap="wrap">
+                    <Box flex={1}>
                         <Typography marginBottom={2} fontSize="1.2rem" fontWeight="500">
                             {texts.assetMetadataTitle}
                         </Typography>
