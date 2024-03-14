@@ -12,7 +12,7 @@ const language: Translation = {
     'studio.home.wellcome': 'Bem-vindo a',
     'studio.home.title': 'Início',
     'studio.home.transforming':
-        'Vitruveo está transformando a arte Web3, e isso significa um software totalmente novo como esta versão "Alpha" do vtruStudio. Alpha significa que o software não está totalmente pronto e você está nos ajudando a testá-lo para que possa ser melhorado.',
+        'Vitruveo está transformando a arte Web3, e isso significa um software totalmente novo como esta versão "Demo" do vtruStudio. Demo significa que o software não está totalmente pronto e você está nos ajudando a testá-lo para que possa ser melhorado.',
     'studio.home.software': 'O software atualmente tem dois recursos que você pode acessar com os botões abaixo:',
     'studio.home.consign': 'Consignar Obra de Arte',
     'studio.home.myProfile': 'Meu Perfil',
