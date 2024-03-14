@@ -84,8 +84,9 @@ const ConsignArtwork = () => {
                 })}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
-                <Box display="flex" flexWrap="wrap">
-                    <Grid flex={1} marginBottom={10} item xs={12} lg={6}>
+
+                <Grid display="flex" flexWrap="wrap" flex={1} marginBottom={10} item xs={12} lg={6}>
+                    <Box marginBottom={2}>
                         <Box>
                             <Typography variant="h6" fontWeight="normal" color="GrayText">
                                 {texts.consignArtworkSubtitle}{' '}
@@ -156,17 +157,17 @@ const ConsignArtwork = () => {
                                 </Grid>
                             ))}
                         </Box>
-                        <CustomizedSnackbar
-                            type={toastr.type}
-                            open={toastr.open}
-                            message={toastr.message}
-                            setOpentate={setToastr}
-                        />
-                    </Grid>
-                    <Box display="flex" justifyContent="center" flex={1}>
-                        <AssetMediaPreview width={500} height={500} />
                     </Box>
-                </Box>
+                    <Box display="flex" justifyContent="center" flex={1}>
+                        <AssetMediaPreview />
+                    </Box>
+                </Grid>
+                <CustomizedSnackbar
+                    type={toastr.type}
+                    open={toastr.open}
+                    message={toastr.message}
+                    setOpentate={setToastr}
+                />
             </PageContainerFooter>
         </form>
     );
