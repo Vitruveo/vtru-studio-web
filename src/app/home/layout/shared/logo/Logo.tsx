@@ -29,34 +29,11 @@ const Logo = () => {
             <LinkStyled style={{ textDecoration: 'none' }} href="/home">
                 {customizer.activeMode === 'dark' ? (
                     <Box display="flex" marginTop={2} alignItems="center">
-                        <Image
-                            style={{ marginRight: '5px' }}
-                            src={'/images/logos/newlogo.png'}
-                            alt="logo"
-                            height={35}
-                            width={100}
-                            priority
-                        />
-                        <Image
-                            style={{ marginRight: '5px' }}
-                            src={'/images/logos/newFullLogo.png'}
-                            alt="logo"
-                            height={25}
-                            width={150}
-                            priority
-                        />
+                        <Image src={'/images/logos/studiologo.png'} alt="logo" height={25} width={150} priority />
                     </Box>
                 ) : (
-                    <Box display="flex" marginTop={2} alignItems="center">
-                        <Image
-                            style={{ marginRight: '3px' }}
-                            src={'/images/logos/newlogo.png'}
-                            alt="logo"
-                            height={35}
-                            width={35}
-                            priority
-                        />
-                        <Image src={'/images/logos/newFullLogo.png'} alt="logo" height={25} width={154} priority />
+                    <Box display="flex" marginTop={1} alignItems="center">
+                        <Image src={'/images/logos/studiologo.png'} alt="logo" height={55} width={155} priority />
                     </Box>
                 )}
             </LinkStyled>

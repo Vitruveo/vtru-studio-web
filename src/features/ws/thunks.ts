@@ -65,7 +65,6 @@ export function loginWebSocketThunk(): ReduxThunkAction {
                 );
 
                 if (findFormat) {
-                    console.log(data.notification);
                     const newFilenameProps = data.notification?.newFilename
                         ? {
                               path: data.notification.newFilename,
