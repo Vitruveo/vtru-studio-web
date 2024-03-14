@@ -17,6 +17,7 @@ export interface NotifyEnvelope {
         size: number;
         creatorId: string;
         fileName: string;
+        newFilename: string;
         messageType: string;
     };
 }
