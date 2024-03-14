@@ -23,7 +23,7 @@ const AssetMediaPreview = (props: AssetMediaPreviewProps) => {
 
     const thumbSRC = urlAssetFile?.replace(/\.[^/.]+$/, `_thumb.${isVideo ? 'mp4' : 'jpg'}`);
 
-    const [currentSrcType, setCurrentSrcType] = useState(thumbSRC);
+    const [currentSrcType, setCurrentSrcType] = useState(urlAssetFile);
     const imgRef = useRef<HTMLImageElement>(null);
     const videoRef = React.useRef<HTMLVideoElement>(null);
 
