@@ -2,6 +2,9 @@ import { useSelector } from '@/store/hooks';
 import React, { useEffect, useState, useRef } from 'react';
 import { getMediaDefinition, handleGetFileType } from '../../assetMedia/helpers';
 import { Theme, useMediaQuery } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import CardContent from '@mui/material/CardContent';
+import BlankCard from '@/app/home/components/shared/BlankCard';
 
 interface AssetMediaPreviewProps {
     width?: number;
@@ -52,31 +55,36 @@ const AssetMediaPreview = (props: AssetMediaPreviewProps) => {
         setFileIsload(false);
     };
 
-    const width = lgUp || mdUp || smUp ? 500 : 340;
-    const height = lgUp || mdUp || smUp ? 500 : 340;
+    const width = lgUp || mdUp || smUp ? 480 : 320;
+    const height = lgUp || mdUp || smUp ? 480 : 320;
 
     return (
-        <div>
-            {isVideo ? (
-                <video ref={videoRef} onError={handleVideoError} width={width} height={height} autoPlay muted loop>
-                    <source src={currentSrcType} />
-                </video>
-            ) : (
-                <img
-                    ref={imgRef}
-                    style={{
-                        objectFit: 'contain',
-                        opacity: fileIsload ? 0 : 1,
-                        display: fileIsload ? 'none' : '',
-                    }}
-                    onLoad={handleLoad}
-                    onError={handleError}
-                    src={currentSrcType}
-                    width={width}
-                    height={height}
-                />
-            )}
-        </div>
+        <BlankCard>
+            <CardContent>
+                <Typography marginBottom={2} fontSize="1.2rem" fontWeight="500">
+                    Asset preview
+                </Typography>
+                {isVideo ? (
+                    <video ref={videoRef} onError={handleVideoError} width={width} height={height} autoPlay muted loop>
+                        <source src={currentSrcType} />
+                    </video>
+                ) : (
+                    <img
+                        ref={imgRef}
+                        style={{
+                            objectFit: 'contain',
+                            opacity: fileIsload ? 0 : 1,
+                            display: fileIsload ? 'none' : '',
+                        }}
+                        onLoad={handleLoad}
+                        onError={handleError}
+                        src={currentSrcType}
+                        width={width}
+                        height={height}
+                    />
+                )}
+            </CardContent>
+        </BlankCard>
     );
 };
 

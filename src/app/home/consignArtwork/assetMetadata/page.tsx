@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 import Typography from '@mui/material/Typography';
@@ -231,6 +231,7 @@ export default function AssetMetadata() {
     // }, [assetMetadata?.assetMetadataDefinitions.length]);
 
     const xL = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'));
+    const containerRef = useRef(null);
 
     return (
         <form onSubmit={handleSaveData}>
@@ -242,7 +243,7 @@ export default function AssetMetadata() {
                 backOnclick={handleOpenBackModal}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
-                <Box display="flex" flexWrap="wrap" flex={1}>
+                <Box alignItems="flex-start" height="auto" display="flex" flexWrap="wrap" flex={1}>
                     <Box>
                         <Typography marginBottom={2} fontSize="1.2rem" fontWeight="500">
                             {texts.assetMetadataTitle}
@@ -276,7 +277,7 @@ export default function AssetMetadata() {
                         </Box>
                     </Box>
                     {xL && (
-                        <Box display="flex" justifyContent="center" flex={1}>
+                        <Box flex={1} position="sticky" top={0} display="flex" justifyContent="center">
                             <AssetMediaPreview />
                         </Box>
                     )}
