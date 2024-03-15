@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 import Typography from '@mui/material/Typography';
-import { Box } from '@mui/material';
+import { Box, Theme, useMediaQuery } from '@mui/material';
 
 import { useDispatch, useSelector } from '@/store/hooks';
 
@@ -21,6 +21,7 @@ import sectionsJSON from './newSections.json';
 
 import ajv8Validator from '@rjsf/validator-ajv8';
 import { TranslateFunction } from '@/i18n/types';
+import AssetMediaPreview from '../components/assetMediaPreview';
 
 export type SectionName = 'context' | 'taxonomy' | 'creators' | 'provenance' | 'custom' | 'assets';
 type SectionsJSONType = typeof sectionsJSON;
@@ -229,6 +230,8 @@ export default function AssetMetadata() {
     //     })();
     // }, [assetMetadata?.assetMetadataDefinitions.length]);
 
+    const xL = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'));
+
     return (
         <form onSubmit={handleSaveData}>
             <PageContainerFooter
@@ -239,30 +242,52 @@ export default function AssetMetadata() {
                 backOnclick={handleOpenBackModal}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
-                <Typography marginBottom={2} fontSize="1.2rem" fontWeight="500">
-                    {texts.assetMetadataTitle}
-                </Typography>
-                <Typography fontSize="1.1rem" fontWeight="normal" color="GrayText">
-                    {texts.assetMetadataDescription}
-                </Typography>
+                <Box alignItems="flex-start" height="auto" display="flex" flexWrap="wrap">
+                    <Box width={680}>
+                        <Typography marginBottom={2} fontSize="1.2rem" fontWeight="500">
+                            {texts.assetMetadataTitle}
+                        </Typography>
+                        <Typography fontSize="1.1rem" fontWeight="normal" color="GrayText">
+                            {texts.assetMetadataDescription}
+                        </Typography>
 
-                <Box marginBottom={10} maxWidth={550} mt={2} alignItems="center">
-                    <Box display="flex" flexDirection="column" gap={3}>
-                        {Object.entries(sections).map(([key, value]) => (
-                            <Box key={key}>
-                                <Section
-                                    sectionName={key as SectionName}
-                                    formData={value.formData}
-                                    errors={value.errors}
-                                    schema={value.schema}
-                                    uiSchema={value.uiSchema}
-                                    onChange={handleOnChange}
-                                    updateErrors={handleUpdateErrors}
-                                />
+                        {!xL && (
+                            <Box display="flex" maxWidth={550} marginTop={2} marginBottom={2} flex={1}>
+                                <AssetMediaPreview maxWidth={550} />
                             </Box>
-                        ))}
+                        )}
+
+                        <Box marginBottom={10} maxWidth={550} mt={2} alignItems="center">
+                            <Box display="flex" flexDirection="column" gap={3}>
+                                {Object.entries(sections).map(([key, value]) => (
+                                    <Box key={key}>
+                                        <Section
+                                            sectionName={key as SectionName}
+                                            formData={value.formData}
+                                            errors={value.errors}
+                                            schema={value.schema}
+                                            uiSchema={value.uiSchema}
+                                            onChange={handleOnChange}
+                                            updateErrors={handleUpdateErrors}
+                                        />
+                                    </Box>
+                                ))}
+                            </Box>
+                        </Box>
                     </Box>
+                    {xL && (
+                        <Box
+                            flex={1}
+                            position="sticky"
+                            top={0}
+                            display="flex"
+                            justifyContent={!xL ? 'flex-start' : 'center'}
+                        >
+                            <AssetMediaPreview />
+                        </Box>
+                    )}
                 </Box>
+
                 <ModalBackConfirm show={showBackModal} handleClose={handleCloseBackModal} yesClick={handleSaveData} />
             </PageContainerFooter>
         </form>

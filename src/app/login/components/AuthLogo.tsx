@@ -39,24 +39,11 @@ export default function AuthLogo() {
                         },
                     }}
                 >
-                    <Box marginBottom={1}>
-                        <Image
-                            src={'/images/logos/newlogo.png'}
-                            alt="bg"
-                            width={60}
-                            height={60}
-                            style={{
-                                width: '100%',
-                                maxWidth: '300px',
-                                maxHeight: '300px',
-                            }}
-                        />
-                    </Box>
                     <Image
-                        src={'/images/logos/newFullLogo.png'}
+                        src={'/images/logos/studiologo.png'}
                         alt="bg"
                         width={200}
-                        height={30}
+                        height={70}
                         style={{
                             maxWidth: '300px',
                             maxHeight: '300px',
@@ -75,29 +62,16 @@ export default function AuthLogo() {
                         },
                     }}
                 >
-                    <Box marginBottom={1}>
+                    <Box>
                         <Image
-                            src={'/images/logos/newlogo.png'}
+                            src={'/images/logos/studiologo.png'}
                             alt="bg"
-                            width={500}
+                            width={700}
                             height={500}
                             style={{
                                 width: '100%',
-                                maxWidth: '500px',
+                                maxWidth: '700px',
                                 maxHeight: '100px',
-                            }}
-                        />
-                    </Box>
-                    <Box>
-                        <Image
-                            src={'/images/logos/newFullLogo.png'}
-                            alt="bg"
-                            width={450}
-                            height={80}
-                            style={{
-                                width: '100%',
-                                maxWidth: '500px',
-                                maxHeight: '80px',
                             }}
                         />
                     </Box>

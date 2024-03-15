@@ -40,11 +40,12 @@ function LoginView({ values, errors, disabled, handleChange, handleSubmit }: Log
                     Welcome to{' '}
                 </Typography>
                 <Image
-                    src={'/images/logos/newFullLogo.png'}
+                    src={'/images/logos/studiologo.png'}
                     alt="bg"
-                    width={lgUp ? 200 : 160}
-                    height={lgUp ? 30 : 25}
+                    width={lgUp ? 150 : 130}
+                    height={lgUp ? 60 : 50}
                     style={{
+                        marginLeft: '10px',
                         maxWidth: '300px',
                         maxHeight: '300px',
                         alignSelf: 'baseline',

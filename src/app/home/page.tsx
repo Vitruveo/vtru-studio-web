@@ -48,15 +48,15 @@ export default function Home() {
 
                 <Box maxWidth={800} padding={3} mt={3}>
                     <Box display="flex" flexWrap="wrap" rowGap={1} alignItems="center">
-                        <Typography fontSize="1.7rem" alignSelf="center">
+                        <Typography marginRight={1} fontSize="1.7rem" alignSelf="center">
                             {texts.welcome}
                         </Typography>
 
                         <Image
-                            src={'/images/logos/newFullLogo.png'}
+                            src={'/images/logos/studiologo.png'}
                             alt="bg"
-                            width={200}
-                            height={30}
+                            width={140}
+                            height={50}
                             style={{
                                 paddingBlock: 1,
                                 maxWidth: '300px',

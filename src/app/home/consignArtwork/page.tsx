@@ -2,10 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { usePathname, useRouter } from 'next/navigation';
-import { Button, Grid, Typography, useTheme } from '@mui/material';
+import { Button, Grid, Theme, Typography, useMediaQuery, useTheme } from '@mui/material';
 
 import Box from '@mui/material/Box';
-
+import AssetMediaPreview from '@/app/home/consignArtwork/components/assetMediaPreview';
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 import PageContainerFooter from '../components/container/PageContainerFooter';
 import { StepId, StepStatus } from '@/features/consignArtwork/types';
@@ -29,7 +29,7 @@ const ConsignArtwork = () => {
     const theme = useTheme();
     const dispatch = useDispatch();
 
-    const status = useSelector((state) => state.asset.status);
+    const { status } = useSelector((state) => state.asset);
     const { completedSteps } = useSelector((state) => state.consignArtwork);
 
     const checkAllCompletedSteps = Object.values(completedSteps)
@@ -43,6 +43,7 @@ const ConsignArtwork = () => {
         consignArtworkSubtitle: language['studio.consignArtwork.subtitle'],
         consignArtworkSubtitleLink: language['studio.consignArtwork.subtitle.link'],
         optional: language['studio.consignArtwork.optional'],
+        moreInformation: language['studio.consignArtwork.subtitle.moreInformation'],
     } as { [key: string]: string };
 
     const BCrumb = [
@@ -68,6 +69,9 @@ const ConsignArtwork = () => {
     const warningColor = '#F6B26B';
 
     const grayColor = theme.palette.text.disabled;
+    const xL = useMediaQuery((them: Theme) => them.breakpoints.up('xl'));
+    const smUp = useMediaQuery((them: Theme) => them.breakpoints.up('sm'));
+    const xs = useMediaQuery((them: Theme) => them.breakpoints.up('xs'));
 
     useEffect(() => {
         if (!status?.length) dispatch(publishThunk({ status: 'draft' }));
@@ -84,84 +88,106 @@ const ConsignArtwork = () => {
                 })}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
-                <Grid marginBottom={10} item xs={12} lg={6}>
-                    <Box>
-                        <Typography variant="h6" fontWeight="normal" color="GrayText">
-                            {texts.consignArtworkSubtitle}{' '}
-                            <Typography
-                                display="inline"
-                                style={{ color: '#007BFF', cursor: 'pointer', textDecoration: 'underline' }}
-                                onClick={() => window.open('https://dreamer.vitruveo.xyz/', '_blank')}
-                            >
-                                {texts.consignArtworkSubtitleLink}
-                            </Typography>
-                        </Typography>
-                    </Box>
-                    <Box maxWidth={700} p={2}>
-                        {Object.values(completedSteps).map((v) => (
-                            <Grid alignItems="center" justifyContent="space-between" container key={v.stepId}>
-                                <Grid item>
+
+                <Grid display="flex" flexWrap="wrap" marginBottom={6} item xs={12} lg={6}>
+                    <Box marginBottom={2}>
+                        <Box>
+                            <Typography variant="h6" fontWeight="normal" color="GrayText">
+                                {texts.consignArtworkSubtitle}
+                                <Typography variant="h6" fontWeight="normal" color="GrayText">
+                                    {texts.moreInformation}{' '}
                                     <Typography
-                                        title={`${language[v.stepName] as string} ${
-                                            v.optional ? ` (${texts.optional})` : ''
-                                        } `}
-                                        sx={{
-                                            whiteSpace: 'nowrap',
-                                            textOverflow: 'ellipsis',
-                                            overflow: 'hidden',
-                                            width: 310,
-                                        }}
-                                        my={2}
                                         variant="h6"
-                                        fontWeight="normal"
-                                        color="GrayText"
+                                        display="inline"
+                                        style={{
+                                            fontWeight: 400,
+                                            color: '#007BFF',
+                                            cursor: 'pointer',
+                                            textDecoration: 'underline',
+                                        }}
+                                        onClick={() => window.open('https://dreamer.vitruveo.xyz/', '_blank')}
                                     >
-                                        {language[v.stepName] as string}
-                                        {v.optional ? ` (${texts.optional})` : ''}
+                                        {texts.consignArtworkSubtitleLink}
                                     </Typography>
-                                </Grid>
-                                <Grid display="flex" flexWrap="wrap" width={350} item>
-                                    <Box width={110} display="flex" alignItems="center">
-                                        <Box
-                                            display="flex"
-                                            alignItems="center"
-                                            justifyContent="center"
-                                            height="100%"
-                                            width="100%"
-                                            color="white"
-                                            bgcolor={
-                                                (v.status === 'completed' && successColor) ||
-                                                (v.status === 'notStarted' && grayColor) ||
-                                                warningColor
-                                            }
+                                </Typography>
+                            </Typography>
+                        </Box>
+                        <Box maxWidth={700} p={2}>
+                            {Object.values(completedSteps).map((v) => (
+                                <Grid
+                                    sx={{ alignItems: 'center!important' }}
+                                    container
+                                    display="flex"
+                                    alignItems="center"
+                                    justifyContent="space-between"
+                                    key={v.stepId}
+                                >
+                                    <Grid item>
+                                        <Typography
+                                            title={`${language[v.stepName] as string} ${
+                                                v.optional ? ` (${texts.optional})` : ''
+                                            } `}
+                                            sx={{
+                                                whiteSpace: 'nowrap',
+                                                textOverflow: 'ellipsis',
+                                                overflow: 'hidden',
+                                                width: xL || smUp || xs ? 300 : 130,
+                                            }}
+                                            my={2}
+                                            variant="h6"
+                                            fontWeight="normal"
+                                            color="GrayText"
                                         >
-                                            {language[v.statusName] as string}
+                                            {language[v.stepName] as string}
+                                            {v.optional ? ` (${texts.optional})` : ''}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid display="flex" flexWrap="wrap" width={350} item>
+                                        <Box width={110} display="flex" alignItems="center">
+                                            <Box
+                                                display="flex"
+                                                alignItems="center"
+                                                justifyContent="center"
+                                                height="100%"
+                                                width="100%"
+                                                color="white"
+                                                bgcolor={
+                                                    (v.status === 'completed' && successColor) ||
+                                                    (v.status === 'notStarted' && grayColor) ||
+                                                    warningColor
+                                                }
+                                            >
+                                                {language[v.statusName] as string}
+                                            </Box>
                                         </Box>
-                                    </Box>
-                                    <Box width={100} marginLeft={1}>
-                                        <Button
-                                            disabled={status === 'published' || status === 'preview'}
-                                            onClick={() => handleChangePage(v.stepId, v.status)}
-                                            size="small"
-                                            variant="contained"
-                                            fullWidth
-                                        >
-                                            {(language['studio.consignArtwork.stepButton'] as TranslateFunction)({
-                                                status: v.status,
-                                            })}
-                                        </Button>
-                                    </Box>
+                                        <Box width={100} marginLeft={1}>
+                                            <Button
+                                                disabled={status === 'published' || status === 'preview'}
+                                                onClick={() => handleChangePage(v.stepId, v.status)}
+                                                size="small"
+                                                variant="contained"
+                                                fullWidth
+                                            >
+                                                {(language['studio.consignArtwork.stepButton'] as TranslateFunction)({
+                                                    status: v.status,
+                                                })}
+                                            </Button>
+                                        </Box>
+                                    </Grid>
                                 </Grid>
-                            </Grid>
-                        ))}
+                            ))}
+                        </Box>
                     </Box>
-                    <CustomizedSnackbar
-                        type={toastr.type}
-                        open={toastr.open}
-                        message={toastr.message}
-                        setOpentate={setToastr}
-                    />
+                    <Box flex={1} display="flex" justifyContent={!xL ? 'flex-start' : 'center'}>
+                        <AssetMediaPreview />
+                    </Box>
                 </Grid>
+                <CustomizedSnackbar
+                    type={toastr.type}
+                    open={toastr.open}
+                    message={toastr.message}
+                    setOpentate={setToastr}
+                />
             </PageContainerFooter>
         </form>
     );
