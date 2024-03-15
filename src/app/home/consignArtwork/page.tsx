@@ -114,7 +114,14 @@ const ConsignArtwork = () => {
                         </Box>
                         <Box maxWidth={700} p={2}>
                             {Object.values(completedSteps).map((v) => (
-                                <Grid alignItems="center" justifyContent="space-between" container key={v.stepId}>
+                                <Grid
+                                    sx={{ alignItems: 'center!important' }}
+                                    container
+                                    display="flex"
+                                    alignItems="center"
+                                    justifyContent="space-between"
+                                    key={v.stepId}
+                                >
                                     <Grid item>
                                         <Typography
                                             title={`${language[v.stepName] as string} ${
