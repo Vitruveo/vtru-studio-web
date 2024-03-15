@@ -475,6 +475,7 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.medium.enum.porcelain': 'Porcelain',
     'studio.consignArtwork.assetMetadata.field.medium.enum.postcard': 'Postcard',
     'studio.consignArtwork.assetMetadata.field.medium.enum.pottery': 'Pottery',
+    'studio.consignArtwork.assetMetadata.field.medium.enum.poetry': 'Poetry',
     'studio.consignArtwork.assetMetadata.field.medium.enum.precious': 'Precious Materials',
     'studio.consignArtwork.assetMetadata.field.medium.enum.print': 'Print',
     'studio.consignArtwork.assetMetadata.field.medium.enum.printedbrochure': 'Printedbrochure',
