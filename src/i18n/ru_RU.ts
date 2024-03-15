@@ -345,7 +345,7 @@ const language: Translation = {
     'studio.consignArtwork.consignmentStatus.activation.description':
         'Активация передает ваше произведение искусства на блокчейн и требует кредитов художника.',
     'studio.consignArtwork.consignmentStatus.creatorCreditsRequired': 'Кредитов Художника необходимо',
-    'studio.consignArtwork.consignmentStatus.creatorCreditsAvailable': 'Кредитов Художникf доступно',
+    'studio.consignArtwork.consignmentStatus.creatorCreditsAvailable': 'Кредитов Художника доступно',
     'studio.consignArtwork.consignmentStatus.viewArtwork.button': 'Просмотреть произведение искусства',
 
     /* BackModalConfirm */
