@@ -894,6 +894,8 @@ const language: Translation = {
     'studio.consignArtwork.consignmentStatus.creatorCreditsRequired': 'Creator Credits Required',
     'studio.consignArtwork.consignmentStatus.creatorCreditsAvailable': 'Creator Credits Available',
     'studio.consignArtwork.consignmentStatus.viewArtwork.button': 'View Artwork',
+    'studio.consignArtwork.consignmentStatus.warning':
+        'Creator Credits will be airdropped to all artists soon! We will notify you again when we are ready for this final step.',
 
     /* BackModalConfirm */
     'studio.consignArtwork.backModal.title': 'Would you like to save the information?',
