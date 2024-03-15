@@ -345,7 +345,7 @@ const language: Translation = {
     'studio.consignArtwork.consignmentStatus.activation.description':
         'Активация передает ваше произведение искусства на блокчейн и требует кредитов художника.',
     'studio.consignArtwork.consignmentStatus.creatorCreditsRequired': 'Кредитов Художника необходимо',
-    'studio.consignArtwork.consignmentStatus.creatorCreditsAvailable': 'Кредитов Художник доступно',
+    'studio.consignArtwork.consignmentStatus.creatorCreditsAvailable': 'Кредитов Художникf доступно',
     'studio.consignArtwork.consignmentStatus.viewArtwork.button': 'Просмотреть произведение искусства',
 
     /* BackModalConfirm */
@@ -357,7 +357,7 @@ const language: Translation = {
     'studio.sidebar.consign': 'Подать Работу',
 
     /* Footer */
-    'studio.footer.thisStep': 'Этот шаг был',
+    'studio.footer.thisStep': 'Текущий шаг',
     'studio.footer.completed': 'Завершено',
     'studio.footer.inProgress': 'В процессе',
     'studio.footer.notYet': 'и еще не завершено',
