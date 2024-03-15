@@ -24,6 +24,8 @@ const Logo = () => {
         color: theme.palette.text.primary,
     }));
 
+    const checkSidebar = customizer.isCollapse && !customizer.isSidebarHover;
+
     if (customizer.activeDir === 'ltr') {
         return (
             <LinkStyled style={{ textDecoration: 'none' }} href="/home">
@@ -33,7 +35,17 @@ const Logo = () => {
                     </Box>
                 ) : (
                     <Box display="flex" marginTop={1} alignItems="center">
-                        <Image src={'/images/logos/studiologo.png'} alt="logo" height={55} width={155} priority />
+                        <Image
+                            src={
+                                customizer.isCollapse && !customizer.isSidebarHover
+                                    ? '/images/logos/studioshortlogo.png'
+                                    : '/images/logos/studiologo.png'
+                            }
+                            alt="logo"
+                            height={checkSidebar ? 40 : 55}
+                            width={checkSidebar ? 100 : 155}
+                            priority
+                        />
                     </Box>
                 )}
             </LinkStyled>
