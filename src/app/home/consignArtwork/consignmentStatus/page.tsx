@@ -24,8 +24,10 @@ import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr
 import { useI18n } from '@/app/hooks/useI18n';
 import { TranslateFunction } from '@/i18n/types';
 import { ConsignmentStatusCard } from './card';
+import WarningCard from '../components/warningCard';
 
 const ConsignArtwork = () => {
+    const [showInfo, setShowInfo] = useState(true);
     const [toastr, setToastr] = useState<CustomizedSnackbarState>({
         type: 'success',
         open: false,
@@ -70,6 +72,7 @@ const ConsignArtwork = () => {
         creatorCreditsRequired: language['studio.consignArtwork.consignmentStatus.creatorCreditsRequired'],
         creatorCreditsAvailable: language['studio.consignArtwork.consignmentStatus.creatorCreditsAvailable'],
         viewArtworkButton: language['studio.consignArtwork.consignmentStatus.viewArtwork.button'],
+        warning: language['studio.consignArtwork.consignmentStatus.warning'],
     } as { [key: string]: string };
 
     const BCrumb = [
@@ -152,7 +155,7 @@ const ConsignArtwork = () => {
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
                 <Grid marginBottom={10} item xs={12} lg={6}>
-                    <Typography marginRight={1} fontSize="1.2rem" fontWeight="500">
+                    <Typography marginBottom={2} marginRight={1} fontSize="1.2rem" fontWeight="500">
                         {texts.title}
                     </Typography>
                     <Box marginTop={2}>
@@ -160,6 +163,11 @@ const ConsignArtwork = () => {
                             🎉 {texts.description}
                         </Typography>
                     </Box>
+                    {showInfo && (
+                        <WarningCard setShowInfo={setShowInfo}>
+                            <Typography fontSize="0.9">{texts.warning}</Typography>
+                        </WarningCard>
+                    )}
                     <Box gap={3} display="flex" p={2} marginTop={1}>
                         <RadioGroup aria-label="options" value={statusRadio} onChange={handleRadioChange}>
                             <Grid alignItems="center" spacing={2} container>
