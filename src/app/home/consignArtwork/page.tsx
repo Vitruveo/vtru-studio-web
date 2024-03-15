@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { usePathname, useRouter } from 'next/navigation';
-import { Button, Grid, Typography, useTheme } from '@mui/material';
+import { Button, Grid, Theme, Typography, useMediaQuery, useTheme } from '@mui/material';
 
 import Box from '@mui/material/Box';
 import AssetMediaPreview from '@/app/home/consignArtwork/components/assetMediaPreview';
@@ -69,6 +69,9 @@ const ConsignArtwork = () => {
     const warningColor = '#F6B26B';
 
     const grayColor = theme.palette.text.disabled;
+    const xL = useMediaQuery((them: Theme) => them.breakpoints.up('xl'));
+    const smUp = useMediaQuery((them: Theme) => them.breakpoints.up('sm'));
+    const xs = useMediaQuery((them: Theme) => them.breakpoints.up('xs'));
 
     useEffect(() => {
         if (!status?.length) dispatch(publishThunk({ status: 'draft' }));
@@ -86,8 +89,8 @@ const ConsignArtwork = () => {
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
 
-                <Grid display="flex" flexWrap="wrap" marginBottom={10} item xs={12} lg={6}>
-                    <Box flex={1} marginBottom={2}>
+                <Grid display="flex" flexWrap="wrap" marginBottom={6} item xs={12} lg={6}>
+                    <Box marginBottom={2}>
                         <Box>
                             <Typography variant="h6" fontWeight="normal" color="GrayText">
                                 {texts.consignArtworkSubtitle}
@@ -121,7 +124,7 @@ const ConsignArtwork = () => {
                                                 whiteSpace: 'nowrap',
                                                 textOverflow: 'ellipsis',
                                                 overflow: 'hidden',
-                                                width: 310,
+                                                width: xL || smUp || xs ? 300 : 130,
                                             }}
                                             my={2}
                                             variant="h6"
@@ -168,7 +171,7 @@ const ConsignArtwork = () => {
                             ))}
                         </Box>
                     </Box>
-                    <Box flex={1} display="flex" justifyContent="center">
+                    <Box flex={1} display="flex" justifyContent={!xL ? 'flex-start' : 'center'}>
                         <AssetMediaPreview />
                     </Box>
                 </Grid>

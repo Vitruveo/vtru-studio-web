@@ -231,7 +231,6 @@ export default function AssetMetadata() {
     // }, [assetMetadata?.assetMetadataDefinitions.length]);
 
     const xL = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'));
-    const containerRef = useRef(null);
 
     return (
         <form onSubmit={handleSaveData}>
@@ -244,7 +243,7 @@ export default function AssetMetadata() {
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
                 <Box alignItems="flex-start" height="auto" display="flex" flexWrap="wrap">
-                    <Box flex={1}>
+                    <Box width={680}>
                         <Typography marginBottom={2} fontSize="1.2rem" fontWeight="500">
                             {texts.assetMetadataTitle}
                         </Typography>
@@ -253,8 +252,8 @@ export default function AssetMetadata() {
                         </Typography>
 
                         {!xL && (
-                            <Box marginTop={2} marginBottom={2} flex={1}>
-                                <AssetMediaPreview />
+                            <Box display="flex" maxWidth={550} marginTop={2} marginBottom={2} flex={1}>
+                                <AssetMediaPreview maxWidth={550} />
                             </Box>
                         )}
 
@@ -277,7 +276,13 @@ export default function AssetMetadata() {
                         </Box>
                     </Box>
                     {xL && (
-                        <Box flex={1} position="sticky" top={0} display="flex" justifyContent="center">
+                        <Box
+                            flex={1}
+                            position="sticky"
+                            top={0}
+                            display="flex"
+                            justifyContent={!xL ? 'flex-start' : 'center'}
+                        >
                             <AssetMediaPreview />
                         </Box>
                     )}

@@ -10,6 +10,7 @@ import BlankCard from '@/app/home/components/shared/BlankCard';
 interface AssetMediaPreviewProps {
     width?: number;
     height?: number;
+    maxWidth?: number;
 }
 
 const AssetMediaPreview = (props: AssetMediaPreviewProps) => {
@@ -56,18 +57,25 @@ const AssetMediaPreview = (props: AssetMediaPreviewProps) => {
         setFileIsload(false);
     };
 
-    const width = lgUp || mdUp || smUp ? 480 : 320;
-    const height = lgUp || mdUp || smUp ? 480 : 320;
+    const width = lgUp || mdUp || smUp ? 500 : 320;
+    const height = lgUp || mdUp || smUp ? 500 : 320;
 
     return (
-        <Box style={{ opacity: fileIsload ? 0 : 1, display: fileIsload ? 'none' : '' }}>
+        <Box
+            maxWidth={props.maxWidth}
+            width={props.maxWidth && '100%'}
+            style={{ opacity: fileIsload ? 0 : 1, display: fileIsload ? 'none' : '' }}
+        >
             <Box>
                 <Typography marginBottom={2} fontSize="1.2rem" fontWeight="500">
                     Asset Preview
                 </Typography>
             </Box>
-            <BlankCard>
-                <CardContent>
+            <BlankCard sx={{ width: '100%' }}>
+                <CardContent
+                    sx={{ width: '100%' }}
+                    style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                >
                     {isVideo ? (
                         <video
                             ref={videoRef}
