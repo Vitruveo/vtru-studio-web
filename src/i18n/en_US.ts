@@ -11,10 +11,10 @@ const language: Translation = {
     'studio.languages.russianRU': 'Russian (ru-RU)',
 
     /* Home */
-    'studio.home.wellcome': 'Wellcome to',
+    'studio.home.wellcome': 'Welcome to',
     'studio.home.title': 'Home',
     'studio.home.transforming':
-        'Vitruveo is transforming Web3 art, and that means all-new software like this “Alpha” version of vtruStudio. Alpha means the software is not fully ready and you’re helping us test it so it can be improved.',
+        'Vitruveo is transforming Web3 art, and that means all-new software like this “Beta” version of vtruStudio. Beta means the software is not fully ready and you’re helping us test it so it can be improved.',
     'studio.home.software': 'The software currently has two features you can access with the buttons below:',
     'studio.home.consign': 'Consign Artwork',
     'studio.home.myProfile': 'My Profile',
@@ -59,7 +59,9 @@ const language: Translation = {
     /* Consign Artwork */
     'studio.consignArtwork.form.next.button': 'Next',
     'studio.consignArtwork.title': 'Consign Artwork',
-    'studio.consignArtwork.subtitle': 'Complete all required tasks and consign your artwork',
+    'studio.consignArtwork.subtitle': 'Complete all required tasks and consign your artwork.',
+    'studio.consignArtwork.subtitle.moreInformation': 'For more information visit the',
+    'studio.consignArtwork.subtitle.link': 'Dreamer website.',
 
     'studio.consignArtwork.stepName.assetMedia': 'Asset Media',
     'studio.consignArtwork.stepName.assetMetadata': 'Asset Metadata',
@@ -159,8 +161,9 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.title': 'Title',
     'studio.consignArtwork.assetMetadata.field.title.description': 'Title of work',
 
-    'studio.consignArtwork.assetMetadata.field.description': 'Description',
-    'studio.consignArtwork.assetMetadata.field.description.description': 'Brief description of work',
+    'studio.consignArtwork.assetMetadata.field.description': 'Label',
+    'studio.consignArtwork.assetMetadata.field.description.description':
+        'Brief description of work. Longer description available in Auxiliary Media.',
 
     'studio.consignArtwork.assetMetadata.field.mood': 'Mood',
     'studio.consignArtwork.assetMetadata.field.mood.description': 'Feelings that the work evokes',
@@ -472,6 +475,7 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.medium.enum.porcelain': 'Porcelain',
     'studio.consignArtwork.assetMetadata.field.medium.enum.postcard': 'Postcard',
     'studio.consignArtwork.assetMetadata.field.medium.enum.pottery': 'Pottery',
+    'studio.consignArtwork.assetMetadata.field.medium.enum.poetry': 'Poetry',
     'studio.consignArtwork.assetMetadata.field.medium.enum.precious': 'Precious Materials',
     'studio.consignArtwork.assetMetadata.field.medium.enum.print': 'Print',
     'studio.consignArtwork.assetMetadata.field.medium.enum.printedbrochure': 'Printedbrochure',
@@ -890,6 +894,8 @@ const language: Translation = {
     'studio.consignArtwork.consignmentStatus.creatorCreditsRequired': 'Creator Credits Required',
     'studio.consignArtwork.consignmentStatus.creatorCreditsAvailable': 'Creator Credits Available',
     'studio.consignArtwork.consignmentStatus.viewArtwork.button': 'View Artwork',
+    'studio.consignArtwork.consignmentStatus.warning':
+        'Creator Credits will be airdropped to all artists soon! We will notify you again when we are ready for this final step.',
 
     /* BackModalConfirm */
     'studio.consignArtwork.backModal.title': 'Would you like to save the information?',

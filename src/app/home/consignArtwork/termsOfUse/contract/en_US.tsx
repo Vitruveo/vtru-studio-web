@@ -21,8 +21,8 @@ export default function Contract() {
                 bind the entity to these Terms, and (b) you agree to the terms of this Agreement on the entity’s behalf.
             </p>
             <p style={{ textAlign: 'justify' }}>
-                Vitrveo is not a wallet provider, exchange, broker, dealer, financial institution, payments processor,
-                money services business, or creditor. Vitruvro provides a Web3 protocol that allows creators to upload
+                Vitruveo is not a wallet provider, exchange, broker, dealer, financial institution, payments processor,
+                money services business, or creditor. Vitruveo provides a Web3 protocol that allows creators to upload
                 assets and licenses their work for fair compensation according to terms that they control. We do not
                 have custody or control over the assets.&nbsp; To use our Service, you must use a third-party wallet
                 which allows you to engage in transactions on our protocol.
@@ -98,7 +98,7 @@ export default function Contract() {
             </p>
             <p style={{ marginLeft: 48, textAlign: 'justify' }}>
                 7.1 The Company will promptly take down works on its platform in response to intellectual property
-                infringement claims, in accordance wth the Takedown Procedure outlined below.&nbsp;
+                infringement claims, in accordance with the Takedown Procedure outlined below.&nbsp;
             </p>
             <p style={{ marginLeft: 48, textAlign: 'justify' }}>
                 If you believe that your content has been copied in a manner that constitutes copyright or trademark

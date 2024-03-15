@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import CloseIcon from '@mui/icons-material/Close';
 import { Stack } from '@mui/system';
-import { Box, IconButton, Typography } from '@mui/material';
+import { Box, IconButton, Typography, useTheme } from '@mui/material';
 
 import { useDispatch, useSelector } from '@/store/hooks';
 import { AssetMediaFormValues, FormatMediaSave, FormatsAuxiliayMedia } from './types';
@@ -22,6 +22,7 @@ import { useI18n } from '@/app/hooks/useI18n';
 import { TranslateFunction } from '@/i18n/types';
 import { assetActionsCreators } from '@/features/asset/slice';
 import { requestDeleteFiles } from '@/features/asset/requests';
+import { CustomTextareaAutosize } from '../../components/forms/theme-elements/CustomTextarea';
 
 export default function AssetMedia() {
     const [showBackModal, setShowBackModal] = useState(false);
@@ -57,10 +58,12 @@ export default function AssetMedia() {
     const asset = useSelector((state) => state.asset);
 
     const router = useRouter();
+    const theme = useTheme();
     const dispatch = useDispatch();
 
     const initialValues = useMemo(
         () => ({
+            description: asset.mediaAuxiliary.description || '',
             definition: '',
             deleteKeys: [],
             formats: asset.mediaAuxiliary.formats,
@@ -68,18 +71,19 @@ export default function AssetMedia() {
         []
     );
 
-    const { values, errors, setFieldValue, handleSubmit } = useFormik<AssetMediaFormValues>({
+    const { values, errors, setFieldValue, handleChange, handleSubmit } = useFormik<AssetMediaFormValues>({
         initialValues,
         onSubmit: async (formValues) => {
             if (JSON.stringify(initialValues) === JSON.stringify(values) && !values.deleteKeys.length)
                 router.push('/home/consignArtwork');
             else {
-                dispatch(
-                    consignArtworkActionsCreators.changeStatusStep({
-                        stepId: 'assetMedia',
-                        status: 'completed',
-                    })
-                );
+                if (Object.values(values.formats).find((v) => v.file) || values.description?.length)
+                    dispatch(
+                        consignArtworkActionsCreators.changeStatusStep({
+                            stepId: 'auxiliaryMedia',
+                            status: 'completed',
+                        })
+                    );
 
                 if (values.deleteKeys.length)
                     await requestDeleteFiles({
@@ -90,7 +94,8 @@ export default function AssetMedia() {
                 const deleteFormats = Object.entries(formValues.formats)
                     .filter(([_, value]) => !value.file)
                     .map(([key, _]) => key);
-                if (deleteFormats.length) await dispatch(auxiliaryMediaThunk({ deleteFormats }));
+
+                await dispatch(auxiliaryMediaThunk({ deleteFormats, description: formValues.description }));
                 router.push('/home/consignArtwork');
             }
         },
@@ -135,7 +140,10 @@ export default function AssetMedia() {
     };
 
     const handleOpenBackModal = () => {
-        if (JSON.stringify(initialValues.formats) === JSON.stringify(values.formats)) {
+        if (
+            JSON.stringify(initialValues.formats) === JSON.stringify(values.formats) &&
+            values.description === initialValues.description
+        ) {
             router.push(`/home/consignArtwork`);
         } else {
             setShowBackModal(true);
@@ -163,9 +171,10 @@ export default function AssetMedia() {
         router.push('/home/consignArtwork');
     };
 
-    const checkStepProgress = Object.values(asset.mediaAuxiliary.formats).find((v) => v.file)
-        ? 'completed'
-        : 'inProgress';
+    const checkStepProgress =
+        Object.values(asset.mediaAuxiliary.formats).find((v) => v.file) || values.description?.length
+            ? 'completed'
+            : 'inProgress';
 
     useEffect(() => {
         dispatch(
@@ -240,7 +249,7 @@ export default function AssetMedia() {
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
 
-                <Stack marginBottom={10} maxWidth={{ xs: '100%', sm: '100%', md: '100%' }}>
+                <Stack marginBottom={10} maxWidth={{ xs: '100%', sm: '100%', md: '100%' }} alignItems="flex-start">
                     <Typography marginBottom={2} fontSize="1.2rem" fontWeight="500">
                         {texts.assetMediaTitle}
                     </Typography>
@@ -249,9 +258,6 @@ export default function AssetMedia() {
                     </Typography>
 
                     <Box>
-                        {/* <Typography marginTop={3} marginBottom={2} color="grey" fontSize="1.1rem" fontWeight="bold">
-                            {texts.assetMediaSubTitle}
-                        </Typography> */}
                         <Box marginTop={1} display="flex" flexWrap="wrap">
                             {Object.entries(values.formats).map(([formatType, value], index) => (
                                 <Box style={{ marginRight: '10px' }} key={index}>
@@ -268,8 +274,36 @@ export default function AssetMedia() {
                                 </Box>
                             ))}
                         </Box>
+                        <Box marginTop={2}>
+                            <Box>
+                                <Typography mb={2} variant="subtitle1" fontWeight={600} component="label">
+                                    Description
+                                </Typography>
+                            </Box>
+                            <Box>
+                                <Typography color="GrayText" mb={2} variant="subtitle1" component="label">
+                                    Longer Description of Work
+                                </Typography>
+                            </Box>
+                            <CustomTextareaAutosize
+                                style={{
+                                    width: '98.7%',
+                                    height: 130,
+                                    backgroundColor: theme.palette.background.paper,
+                                    border: `1px solid ${theme.palette.divider}`,
+                                    borderRadius: theme.shape.borderRadius,
+                                    padding: theme.spacing(1),
+                                    fontSize: theme.typography.fontSize,
+                                    fontFamily: theme.typography.fontFamily,
+                                }}
+                                value={values.description}
+                                name="description"
+                                onChange={handleChange}
+                            />
+                        </Box>
                     </Box>
                 </Stack>
+
                 <ModalBackConfirm
                     show={showBackModal}
                     handleClose={handleCloseBackModal}

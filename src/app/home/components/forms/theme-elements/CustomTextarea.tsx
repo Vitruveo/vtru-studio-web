@@ -1,7 +1,7 @@
 import { TextareaAutosize, TextareaAutosizeProps } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-export const CustomTextareaAutosize = styled(TextareaAutosize)(({ theme }) => ({
+export const CustomTextareaAutosize = styled(TextareaAutosize)<TextareaAutosizeProps>(({ theme }) => ({
     '& .MuiOutlinedInput-input::-webkit-input-placeholder': {
         color: theme.palette.text.secondary,
         opacity: '0.8',

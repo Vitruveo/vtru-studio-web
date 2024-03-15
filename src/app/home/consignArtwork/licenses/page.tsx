@@ -29,6 +29,7 @@ import Nft from './nft';
 import Print from './print';
 import Stream from './stream';
 import Remix from './remix';
+import WarningCard from '../components/warningCard';
 
 type YupErrors = {
     [key: string]: string;
@@ -46,6 +47,7 @@ const allLicenses = {
 };
 
 export default function Licenses() {
+    const [showInfo, setShowInfo] = useState(true);
     const [currentLicense, setCurrentLicense] = useState<keyof typeof allLicenses>('NFT');
     const [showBackModal, setShowBackModal] = useState(false);
     const [toastr, setToastr] = useState<CustomizedSnackbarState>({
@@ -194,6 +196,7 @@ export default function Licenses() {
                 backOnclick={handleOpenBackModal}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
+
                 <Box marginBottom={10}>
                     <Box
                         paddingBottom={1}
@@ -208,6 +211,7 @@ export default function Licenses() {
                         <Typography marginRight={1} fontSize="1.2rem" fontWeight="500">
                             {texts.licensesTitle}
                         </Typography>
+
                         {Object.entries(allLicenses).map(([key, Component]) => (
                             <a key={key} href={`#${key}`} onClick={(e) => handleScrollToElement(e, key)}>
                                 <Typography
@@ -225,6 +229,17 @@ export default function Licenses() {
                         <Typography fontSize="1.1rem" fontWeight="normal" color="GrayText">
                             {texts.licensesDescription}
                         </Typography>
+                        <Box marginTop={2}>
+                            {showInfo && (
+                                <WarningCard setShowInfo={setShowInfo}>
+                                    <Typography fontSize="0.9">
+                                        Genesis artworks have been guaranteed an NFT sale for $150. Please select the
+                                        NFT-ART-1 license, Single Edition and enter $150. You can select additional
+                                        licenses as well.
+                                    </Typography>
+                                </WarningCard>
+                            )}
+                        </Box>
 
                         {Object.values(allLicenses).map((License, i) => (
                             <Box key={i} id={Object.keys(allLicenses)[i]}>

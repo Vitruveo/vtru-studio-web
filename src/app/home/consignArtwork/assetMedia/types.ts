@@ -19,7 +19,9 @@ export interface FormatValue {
 }
 
 export interface FormatMedia {
+    size?: number;
     name?: string;
+    load?: boolean;
     file?: File | string;
     customFile?: File | string;
     transactionId?: string;
@@ -27,6 +29,8 @@ export interface FormatMedia {
 
 export interface OriginalFormatMedia extends FormatMedia {
     definition?: Definition;
+    load?: boolean;
+    path?: string;
     width?: number;
     height?: number;
     size?: number;

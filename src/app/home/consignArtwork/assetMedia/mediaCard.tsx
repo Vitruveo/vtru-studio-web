@@ -48,6 +48,8 @@ interface MediaCardProps {
         rangeTimeStart,
         rangeTimeEnd,
     }: {
+        width: number;
+        height: number;
         formatUpload: string;
         file: File;
         maxSize?: string;
@@ -191,7 +193,13 @@ export default function MediaCard({
             ) {
                 const checkSize = isVideo ? mediaConfig.sizeMB?.video : mediaConfig.sizeMB?.image;
 
-                handleUploadFile({ formatUpload: formatType, file: acceptedFiles[0], maxSize: checkSize.toString() });
+                handleUploadFile({
+                    width: mediaConfig.width,
+                    height: mediaConfig.height,
+                    formatUpload: formatType,
+                    file: acceptedFiles[0],
+                    maxSize: checkSize.toString(),
+                });
                 setFieldValue(`formats.${formatType}`, { file: acceptedFiles[0] });
             } else {
                 setMediaCrop(acceptedFiles[0]);
@@ -260,7 +268,13 @@ export default function MediaCard({
     const handleChangeCrop = (fileChange: File) => {
         const checkSize = isVideo ? mediaConfig.sizeMB?.video : mediaConfig.sizeMB?.image;
 
-        handleUploadFile({ formatUpload: formatType, file: fileChange, maxSize: checkSize.toString() });
+        handleUploadFile({
+            width: mediaConfig.width,
+            height: mediaConfig.height,
+            formatUpload: formatType,
+            file: fileChange,
+            maxSize: checkSize.toString(),
+        });
         setFieldValue(`formats.${formatType}.file`, fileChange);
         setShowCrop(false);
     };
@@ -269,6 +283,8 @@ export default function MediaCard({
         const checkSize = isVideo ? mediaConfig.sizeMB?.video : mediaConfig.sizeMB?.image;
 
         handleUploadFile({
+            width: mediaConfig.width,
+            height: mediaConfig.height,
             formatUpload: formatType,
             file: fileChange,
             rangeTimeStart: rangeTime.start.toString(),
@@ -318,10 +334,7 @@ export default function MediaCard({
     useEffect(() => {
         if (uploadSuccess && fileStatus && formatType === 'preview' && isVideo) {
             const intervalId = setInterval(() => {
-                const checkPreviewURL = `${ASSET_STORAGE_URL}/${fileStatus?.path.replace(
-                    /\.[^/.]+$/,
-                    '_thumb.mp4'
-                )}?retry=${Date.now()}`;
+                const checkPreviewURL = `${ASSET_STORAGE_URL}/${fileStatus?.path}?retry=${Date.now()}`;
                 fetch(checkPreviewURL, { method: 'GET' }).then((response) => {
                     if (response.ok) {
                         if (videoRef.current) {
@@ -403,7 +416,7 @@ export default function MediaCard({
                             {mediaConfig?.width || mediaWidth} X {mediaConfig?.height || mediaHeight}
                         </Typography>
                         <Typography fontSize="0.8rem">
-                            {mediaConfig?.sizeMB
+                            {!thumbSRC || (mediaConfig?.sizeMB && !formatValue.size)
                                 ? `${
                                       isVideo
                                           ? formatFileSize(mediaConfig?.sizeMB.video)
@@ -411,7 +424,7 @@ export default function MediaCard({
                                   } ${(language['studio.consignArtwork.assetMedia.max'] as TranslateFunction)({
                                       seconds: isVideo && formatType === 'preview' ? 5 : 0,
                                   })}`
-                                : getFileSize((formatValue as OriginalFormatMedia).size)}
+                                : getFileSize(formatValue.size)}
                         </Typography>
                     </Typography>
                 </Box>
@@ -428,6 +441,7 @@ export default function MediaCard({
                             <Box display="flex" justifyContent="center" alignItems="center" width={120}>
                                 <Box
                                     display={
+                                        formatValue.load ||
                                         (fileIsload && !isVideo) ||
                                         (fileIsload && isVideo && formatType === 'preview' && fileStatus)
                                             ? 'flex'
@@ -452,8 +466,11 @@ export default function MediaCard({
                                         src={thumbSRC!}
                                         style={{
                                             objectFit: 'contain',
-
-                                            display: fileIsload && fileStatus && formatType === 'preview' ? 'none' : '',
+                                            display:
+                                                formatValue.load ||
+                                                (fileIsload && fileStatus && formatType === 'preview')
+                                                    ? 'none'
+                                                    : '',
                                         }}
                                     />
                                 ) : (
@@ -469,8 +486,8 @@ export default function MediaCard({
                                         alt=""
                                         style={{
                                             objectFit: 'contain',
-                                            opacity: fileIsload ? 0 : 1,
-                                            display: fileIsload ? 'none' : '',
+                                            opacity: formatValue.load || fileIsload ? 0 : 1,
+                                            display: formatValue.load || fileIsload ? 'none' : '',
                                         }}
                                     />
                                 )}

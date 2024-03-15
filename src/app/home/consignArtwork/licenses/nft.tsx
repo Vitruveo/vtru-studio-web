@@ -93,14 +93,15 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
             about: texts.licenseCC0,
             infoLink: 'https://creativecommons.org/publicdomain/zero/1.0/',
         },
-        {
-            license: 'Vitruveo',
-            about: '',
-        },
+        // {
+        //     license: 'Vitruveo',
+        //     about: '',
+        // },
     ];
 
     const currentLicense = licenses.find((item) => item.license === values.license);
-    const aboutLicenses = currentLicense?.infoLink || 'https://creativecommons.org/licenses/by/4.0/';
+
+    const aboutLicenses = currentLicense?.infoLink || 'https://creativecommons.org/share-your-work/cclicenses/';
 
     const editionTitles = {
         elastic: texts.elasticEditionsTitle,
@@ -274,7 +275,8 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                                     fontSize="0.8rem"
                                                     sx={{ whiteSpace: 'nowrap', width: 50 }}
                                                 >
-                                                    {(values.elastic.numberOfEditions / 10).toFixed(2) + '%'}
+                                                    {Math.min(values.elastic.numberOfEditions / 10, 10).toFixed(2) +
+                                                        '%'}
                                                 </Typography>
                                             </Box>
                                         </Box>

@@ -14,8 +14,10 @@ export interface PreSignedURLPayload {
 
 export interface NotifyEnvelope {
     notification: {
+        size: number;
         creatorId: string;
         fileName: string;
+        newFilename: string;
         messageType: string;
     };
 }

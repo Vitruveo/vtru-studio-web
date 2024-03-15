@@ -14,6 +14,7 @@ export interface FormatValue {
 }
 
 export interface FormatMedia {
+    load?: boolean;
     name?: string;
     path?: string;
     file?: File | string;
@@ -30,6 +31,7 @@ export interface FormatsAuxiliayMedia {
 }
 
 export interface AssetMediaFormValues {
+    description: string;
     formats: FormatsAuxiliayMedia;
     deleteKeys: string[];
 }

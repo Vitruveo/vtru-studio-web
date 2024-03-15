@@ -24,39 +24,28 @@ const Logo = () => {
         color: theme.palette.text.primary,
     }));
 
+    const checkSidebar = customizer.isCollapse && !customizer.isSidebarHover;
+
     if (customizer.activeDir === 'ltr') {
         return (
             <LinkStyled style={{ textDecoration: 'none' }} href="/home">
                 {customizer.activeMode === 'dark' ? (
                     <Box display="flex" marginTop={2} alignItems="center">
-                        <Image
-                            style={{ marginRight: '5px' }}
-                            src={'/images/logos/newlogo.png'}
-                            alt="logo"
-                            height={35}
-                            width={100}
-                            priority
-                        />
-                        <Image
-                            style={{ marginRight: '5px' }}
-                            src={'/images/logos/newFullLogo.png'}
-                            alt="logo"
-                            height={25}
-                            width={150}
-                            priority
-                        />
+                        <Image src={'/images/logos/studiologo.png'} alt="logo" height={25} width={150} priority />
                     </Box>
                 ) : (
-                    <Box display="flex" marginTop={2} alignItems="center">
+                    <Box display="flex" marginTop={1} alignItems="center">
                         <Image
-                            style={{ marginRight: '3px' }}
-                            src={'/images/logos/newlogo.png'}
+                            src={
+                                customizer.isCollapse && !customizer.isSidebarHover
+                                    ? '/images/logos/studioshortlogo.png'
+                                    : '/images/logos/studiologo.png'
+                            }
                             alt="logo"
-                            height={35}
-                            width={35}
+                            height={checkSidebar ? 40 : 55}
+                            width={checkSidebar ? 100 : 155}
                             priority
                         />
-                        <Image src={'/images/logos/newFullLogo.png'} alt="logo" height={25} width={154} priority />
                     </Box>
                 )}
             </LinkStyled>

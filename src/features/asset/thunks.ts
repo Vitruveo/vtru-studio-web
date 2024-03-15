@@ -120,7 +120,10 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
                     dispatch(consignArtworkActionsCreators.changeStatusStep({ stepId: 'assetMedia', status }));
                 }
 
-                if (response.data.mediaAuxiliary?.formats) {
+                if (
+                    Object.values(response.data.mediaAuxiliary.formats || {}).find((v) => v) ||
+                    response.data.mediaAuxiliary?.description?.length
+                ) {
                     const formatAssetsFormats = Object.entries(
                         response.data.mediaAuxiliary.formats as unknown as FormatMediaSave
                     ).reduce((acc, [key, value]) => {
@@ -137,7 +140,13 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
                         };
                     }, {} as FormatsAuxiliayMedia);
 
-                    dispatch(assetActionsCreators.changeFormatsMediaAuxiliary({ formats: formatAssetsFormats }));
+                    dispatch(
+                        assetActionsCreators.changeFormatsMediaAuxiliary({
+                            description: response.data.mediaAuxiliary?.description,
+                            formats: formatAssetsFormats,
+                        })
+                    );
+
                     dispatch(
                         consignArtworkActionsCreators.changeStatusStep({
                             stepId: 'auxiliaryMedia',
@@ -156,6 +165,7 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
 
 export function auxiliaryMediaThunk(payload: {
     formats?: FormatMediaSave;
+    description?: string;
     deleteFormats?: string[];
 }): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
@@ -177,6 +187,7 @@ export function auxiliaryMediaThunk(payload: {
 
         await updateAssetStep({
             mediaAuxiliary: {
+                description: payload.description,
                 formats: { ...formatsPersist, ...payload.formats },
             },
             stepName: 'auxiliaryMedia',
@@ -195,7 +206,12 @@ export function auxiliaryMediaThunk(payload: {
             };
         }, {} as FormatsAuxiliayMedia);
 
-        dispatch(assetActionsCreators.changeFormatsMediaAuxiliary({ formats: formatAssetsFormats }));
+        dispatch(
+            assetActionsCreators.changeFormatsMediaAuxiliary({
+                formats: formatAssetsFormats,
+                description: payload.description,
+            })
+        );
         if (payload.deleteFormats?.length)
             dispatch(assetActionsCreators.removeFormatsMediaAuxiliary(payload.deleteFormats));
     };
@@ -204,6 +220,7 @@ export function auxiliaryMediaThunk(payload: {
 export function assetMediaThunk(payload: {
     formats?: FormatMediaSave;
     deleteFormats?: string[];
+    load?: boolean;
 }): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
         const formatsState = getState().asset.formats;
@@ -232,6 +249,7 @@ export function assetMediaThunk(payload: {
                 ...acc,
                 [key]: {
                     ...value,
+                    load: payload.load,
                     file: `${ASSET_STORAGE_URL}/${value.path}`,
                     customFile: undefined,
                     transactionId: undefined,

@@ -10,10 +10,6 @@
         0 2px 2px -2px rgba(0, 0, 0, 0.25);
 }
 
-.my-array-item {
-    margin-bottom: 10px;
-}
-
 .make-scrollable div:nth-child(2) > div {
     height: 200px;
     overflow-y: scroll;
@@ -21,6 +17,10 @@
 
 .form-group > div.:nth-child(2) {
     margin-top: 10px;
+}
+
+.MuiBox-root > .MuiGrid-container {
+    align-items: flex-start;
 }
 
 .MuiBox-root > .form-group > div.MuiBox-root:nth-child(1) {

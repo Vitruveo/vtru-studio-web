@@ -7,6 +7,7 @@ import { PreSignedURLPayload, NotifyEnvelope } from './types';
 import { deleteAssetStorage } from '../asset/requests';
 import { deleteAvatar } from '../user/requests';
 import { auxiliaryMediaThunk } from '../asset/thunks';
+import { ASSET_STORAGE_URL } from '@/constants/asset';
 
 export function connectWebSocketThunk(): ReduxThunkAction {
     return async function (dispatch, getState) {
@@ -56,6 +57,31 @@ export function loginWebSocketThunk(): ReduxThunkAction {
             if (data?.notification?.messageType === 'deleteAsset') {
                 dispatch(userActionsCreators.change({ notify: 'deleteAsset' }));
                 dispatch(auxiliaryMediaThunk({ deleteFormats: ['codeZip'] }));
+            }
+            if (data?.notification?.messageType === 'updateAsset') {
+                const asset = getState().asset;
+                const findFormat = Object.entries(asset.formats).find(
+                    ([key, value]) => value.path === data.notification.fileName
+                );
+
+                if (findFormat) {
+                    const newFilenameProps = data.notification?.newFilename
+                        ? {
+                              path: data.notification.newFilename,
+                              file: `${ASSET_STORAGE_URL}/${data.notification.newFilename}`,
+                          }
+                        : {};
+                    dispatch(
+                        assetActionsCreators.changeFormats({
+                            [findFormat[0]]: {
+                                ...findFormat[1],
+                                load: false,
+                                ...newFilenameProps,
+                                size: data.notification.size,
+                            },
+                        })
+                    );
+                }
             }
         });
     };
