@@ -895,7 +895,7 @@ const language: Translation = {
     'studio.consignArtwork.consignmentStatus.creatorCreditsAvailable': 'Creator Credits Available',
     'studio.consignArtwork.consignmentStatus.viewArtwork.button': 'View Artwork',
     'studio.consignArtwork.consignmentStatus.warning':
-        'I have just sent the email to all artists and I realize they are all going to ask about the credits. We need to add a warning to that page until we send the credits and are ready for consign!',
+        'Creator Credits will be airdropped to all artists soon! We will notify you again when we are ready for this final step.',
 
     /* BackModalConfirm */
     'studio.consignArtwork.backModal.title': 'Would you like to save the information?',
