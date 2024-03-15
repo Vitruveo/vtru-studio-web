@@ -14,7 +14,7 @@ const language: Translation = {
     'studio.home.wellcome': 'Welcome to',
     'studio.home.title': 'Home',
     'studio.home.transforming':
-        'Vitruveo is transforming Web3 art, and that means all-new software like this “Demo” version of vtruStudio. Demo means the software is not fully ready and you’re helping us test it so it can be improved.',
+        'Vitruveo is transforming Web3 art, and that means all-new software like this “Beta” version of vtruStudio. Beta means the software is not fully ready and you’re helping us test it so it can be improved.',
     'studio.home.software': 'The software currently has two features you can access with the buttons below:',
     'studio.home.consign': 'Consign Artwork',
     'studio.home.myProfile': 'My Profile',
