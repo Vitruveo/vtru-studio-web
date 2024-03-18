@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import Typography from '@mui/material/Typography';
@@ -115,6 +115,11 @@ export default function AssetMetadata() {
     };
 
     const handleOpenBackModal = () => {
+        Object.values(sectionsFormat).forEach((v, i) => {
+            if (JSON.stringify(v.formData) !== JSON.stringify(Object.values(sections)[i].formData)) {
+                console.log('v.formData', v.formData, Object.values(sections)[i].formData);
+            }
+        });
         if (JSON.stringify(sectionsFormat) === JSON.stringify(sections)) {
             router.push(`/home/consignArtwork`);
         } else {

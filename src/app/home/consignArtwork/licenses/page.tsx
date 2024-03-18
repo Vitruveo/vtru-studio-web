@@ -74,6 +74,7 @@ export default function Licenses() {
         alreadyAdded: language['studio.consignArtwork.licenses.alreadyAdded'],
         deleteButton: language['studio.consignArtwork.licenses.delete.button'],
         addButton: language['studio.consignArtwork.licenses.add.button'],
+        warning: language['studio.consignArtwork.licenses.warning'],
     } as { [key: string]: string };
 
     const BCrumb = [
@@ -232,11 +233,7 @@ export default function Licenses() {
                         <Box marginTop={2}>
                             {showInfo && (
                                 <WarningCard setShowInfo={setShowInfo}>
-                                    <Typography fontSize="0.9">
-                                        Genesis artworks have been guaranteed an NFT sale for $150. Please select the
-                                        NFT-ART-1 license, Single Edition and enter $150. You can select additional
-                                        licenses as well.
-                                    </Typography>
+                                    <Typography fontSize="0.9">{texts.warning}</Typography>
                                 </WarningCard>
                             )}
                         </Box>

@@ -59,6 +59,7 @@ const language: Translation = {
     /* Consign Artwork */
     'studio.consignArtwork.form.next.button': 'بعدی',
     'studio.consignArtwork.title': 'قرارداد آثار هنری',
+    'studio.consignArtwork.subtitle.moreInformation': 'برای اطلاعات بیشتر به سایت',
     'studio.consignArtwork.subtitle': 'تمام وظایف مورد نیاز را انجام دهید و اثر هنری خود را امضاء کنید',
 
     'studio.consignArtwork.stepName.assetMedia': 'رسانه دارایی',
@@ -222,6 +223,8 @@ const language: Translation = {
     'studio.consignArtwork.licenses.alreadyAdded': 'لایسنس از قبل اضافه شده است',
     'studio.consignArtwork.licenses.delete.button': 'حذف',
     'studio.consignArtwork.licenses.add.button': 'اضافه',
+    'studio.consignArtwork.licenses.warning':
+        'آثار تولید اولیه به فروش ام‌اف‌تی به ارزش 150 دلار تضمین شده‌اند. لطفاً لایسنس NFT-ART-1 را انتخاب کنید، ادیشن تکی را انتخاب کرده و مبلغ 150 دلار را وارد کنید. همچنین می‌توانید لایسنس‌های اضافی را نیز انتخاب کنید.',
 
     'studio.consignArtwork.licenses.field.checkBoolean': (data: { checkBoolean: unknown }) =>
         `${data.checkBoolean === true ? 'بله' : data.checkBoolean === false ? 'خیر' : data.checkBoolean}`,
@@ -322,6 +325,8 @@ const language: Translation = {
     'studio.consignArtwork.auxiliaryMedia.btsImage.title': 'تصویر BTS',
     'studio.consignArtwork.auxiliaryMedia.btsVideo.title': 'ویدئو BTS',
     'studio.consignArtwork.auxiliaryMedia.codeZip.title': 'کد Zip',
+    'studio.consignArtwork.auxiliaryMedia.field.description': 'توضیحات',
+    'studio.consignArtwork.auxiliaryMedia.field.description.placeholder': 'توضیحات بلند درباره کار',
 
     /* Consignment Status */
     'studio.consignArtwork.consignmentStatus.title': 'وضعیت واگذاری',
@@ -344,6 +349,8 @@ const language: Translation = {
     'studio.consignArtwork.consignmentStatus.creatorCreditsRequired': 'اعتبار خالق مورد نیاز',
     'studio.consignArtwork.consignmentStatus.creatorCreditsAvailable': 'اعتبار خالق موجود',
     'studio.consignArtwork.consignmentStatus.viewArtwork.button': 'نمایش نقاشی',
+    'studio.consignArtwork.consignmentStatus.warning':
+        'اعتبارات خالق به زودی به تمام هنرمندان توزیع خواهد شد! ما شما را دوباره اطلاع خواهیم داد زمانی که برای این مرحله نهایی آماده باشیم.',
 
     /* BackModalConfirm */
     'studio.consignArtwork.backModal.title': 'آیا می‌خواهید اطلاعات را ذخیره کنید؟',

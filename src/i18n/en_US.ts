@@ -756,6 +756,8 @@ const language: Translation = {
     'studio.consignArtwork.licenses.alreadyAdded': 'License already added',
     'studio.consignArtwork.licenses.delete.button': 'Delete',
     'studio.consignArtwork.licenses.add.button': 'Add',
+    'studio.consignArtwork.licenses.warning':
+        'Genesis artworks have been guaranteed an NFT sale for $150. Please select the NFT-ART-1 license, Single Edition and enter $150. You can select additional licenses as well.',
 
     'studio.consignArtwork.licenses.field.checkBoolean': (data: { checkBoolean: unknown }) =>
         `${data.checkBoolean === true ? 'yes' : data.checkBoolean === false ? 'no' : data.checkBoolean}`,
@@ -872,6 +874,8 @@ const language: Translation = {
     'studio.consignArtwork.auxiliaryMedia.btsImage.title': 'BTS Image',
     'studio.consignArtwork.auxiliaryMedia.btsVideo.title': 'BTS Video',
     'studio.consignArtwork.auxiliaryMedia.codeZip.title': 'Code Zip',
+    'studio.consignArtwork.auxiliaryMedia.field.description': 'Description',
+    'studio.consignArtwork.auxiliaryMedia.field.description.placeholder': 'Longer Description of Work',
 
     /* Consignment Status */
     'studio.consignArtwork.consignmentStatus.title': 'Consignment Status',

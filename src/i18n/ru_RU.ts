@@ -60,6 +60,7 @@ const language: Translation = {
     /* Consign Artwork */
     'studio.consignArtwork.form.next.button': 'Далее',
     'studio.consignArtwork.title': 'Подать Работу',
+    'studio.consignArtwork.subtitle.moreInformation': 'Для получения дополнительной информации посетите',
     'studio.consignArtwork.subtitle': 'Выполните все необходимые задачи и передайте свое произведение искусства',
 
     'studio.consignArtwork.stepName.assetMedia': 'Медиафайлы',
@@ -221,6 +222,8 @@ const language: Translation = {
     'studio.consignArtwork.licenses.alreadyAdded': 'Лицензия уже добавлена',
     'studio.consignArtwork.licenses.delete.button': 'Удалить',
     'studio.consignArtwork.licenses.add.button': 'Добавить',
+    'studio.consignArtwork.licenses.warning':
+        'Произведения Genesis были гарантированы на продажу NFT за $150. Пожалуйста, выберите лицензию NFT-ART-1, Одну единицу и введите $150. Вы также можете выбрать дополнительные лицензии.',
 
     'studio.consignArtwork.licenses.field.checkBoolean': (data: { checkBoolean: unknown }) =>
         `${data.checkBoolean === true ? 'да' : data.checkBoolean === false ? 'нет' : data.checkBoolean}`,
@@ -324,6 +327,8 @@ const language: Translation = {
     'studio.consignArtwork.auxiliaryMedia.btsImage.title': 'BTS изображение',
     'studio.consignArtwork.auxiliaryMedia.btsVideo.title': 'BTS видео',
     'studio.consignArtwork.auxiliaryMedia.codeZip.title': 'ZIP-код',
+    'studio.consignArtwork.auxiliaryMedia.field.description': 'Описание',
+    'studio.consignArtwork.auxiliaryMedia.field.description.placeholder': 'Более подробное описание работы',
 
     /* Consignment Status */
     'studio.consignArtwork.consignmentStatus.title': 'Статус передачи',
@@ -347,6 +352,8 @@ const language: Translation = {
     'studio.consignArtwork.consignmentStatus.creatorCreditsRequired': 'Требуемые кредиты создателя',
     'studio.consignArtwork.consignmentStatus.creatorCreditsAvailable': 'Доступные кредиты создателя',
     'studio.consignArtwork.consignmentStatus.viewArtwork.button': 'Просмотреть произведение искусства',
+    'studio.consignArtwork.consignmentStatus.warning':
+        'Кредиты создателя будут скоро распределены всем художникам! Мы уведомим вас снова, когда будем готовы к этому последнему шагу.',
 
     /* BackModalConfirm */
     'studio.consignArtwork.backModal.title': 'Хотите сохранить информацию?',

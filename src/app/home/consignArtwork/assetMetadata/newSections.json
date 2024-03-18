@@ -2493,6 +2493,8 @@
     },
     "provenance": {
         "formData": {
+            "awards": [],
+            "exhibitions": [],
             "blockchain": "Vitruveo"
         },
         "schema": {

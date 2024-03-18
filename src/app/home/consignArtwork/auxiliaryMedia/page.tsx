@@ -39,6 +39,8 @@ export default function AssetMedia() {
         assetMediaSubTitle: language['studio.consignArtwork.auxiliaryMedia.subTitle'],
         assetMediaDescription: language['studio.consignArtwork.auxiliaryMedia.description'],
         assetMediaConcerned: language['studio.consignArtwork.assetMedia.concerned'],
+        description: language['studio.consignArtwork.auxiliaryMedia.field.description'],
+        descriptionPlaceholder: language['studio.consignArtwork.auxiliaryMedia.field.description.placeholder'],
     } as { [key: string]: string };
 
     const BCrumb = [
@@ -277,12 +279,12 @@ export default function AssetMedia() {
                         <Box marginTop={2}>
                             <Box>
                                 <Typography mb={2} variant="subtitle1" fontWeight={600} component="label">
-                                    Description
+                                    {texts.description}
                                 </Typography>
                             </Box>
                             <Box>
                                 <Typography color="GrayText" mb={2} variant="subtitle1" component="label">
-                                    Longer Description of Work
+                                    {texts.descriptionPlaceholder}
                                 </Typography>
                             </Box>
                             <CustomTextareaAutosize
