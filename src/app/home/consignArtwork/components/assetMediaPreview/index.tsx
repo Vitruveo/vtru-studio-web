@@ -1,11 +1,12 @@
 import { useSelector } from '@/store/hooks';
-import React, { useEffect, useState, useRef } from 'react';
-import { getMediaDefinition, handleGetFileType } from '../../assetMedia/helpers';
+import React, { useState, useRef } from 'react';
+import { handleGetFileType } from '../../assetMedia/helpers';
 import { Theme, useMediaQuery } from '@mui/material';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
 import BlankCard from '@/app/home/components/shared/BlankCard';
+import { useI18n } from '@/app/hooks/useI18n';
 
 interface AssetMediaPreviewProps {
     width?: number;
@@ -27,6 +28,12 @@ const AssetMediaPreview = (props: AssetMediaPreviewProps) => {
     const isVideo = handleGetFileType(selectPreviewAsset?.[1].file).mediaType === 'video';
 
     const thumbSRC = urlAssetFile?.replace(/\.[^/.]+$/, `_thumb.${isVideo ? 'mp4' : 'jpg'}`);
+
+    const { language } = useI18n();
+
+    const texts = {
+        preview: language['studio.consignArtwork.assetPreview'],
+    } as { [key: string]: string };
 
     const [currentSrcType, setCurrentSrcType] = useState(urlAssetFile);
     const imgRef = useRef<HTMLImageElement>(null);
@@ -68,7 +75,7 @@ const AssetMediaPreview = (props: AssetMediaPreviewProps) => {
         >
             <Box>
                 <Typography marginBottom={2} fontSize="1.2rem" fontWeight="500">
-                    Asset Preview
+                    {texts.preview}
                 </Typography>
             </Box>
             <BlankCard sx={{ width: '100%' }}>

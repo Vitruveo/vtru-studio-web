@@ -12,12 +12,26 @@ import { TranslateFunction } from '@/i18n/types';
 export type SectionOnChangeParams = { data: IChangeEvent<any, RJSFSchema, any>; sectionName: SectionName };
 
 interface SectionProps extends Omit<CustomFormProps, 'updateErrors' | 'onChange' | 'langBasePath'> {
+    setSectionsStatus: React.Dispatch<
+        React.SetStateAction<{
+            [key: string]: string;
+        }>
+    >;
     sectionName: SectionName;
     updateErrors: any;
     onChange: (params: SectionOnChangeParams) => void;
 }
 
-const Section = ({ sectionName, formData, errors, schema, uiSchema, onChange, updateErrors }: SectionProps) => {
+const Section = ({
+    sectionName,
+    formData,
+    errors,
+    schema,
+    uiSchema,
+    onChange,
+    setSectionsStatus,
+    updateErrors,
+}: SectionProps) => {
     const [status, setStatus] = useState<keyof typeof statusName>('notStarted');
 
     const [expanded, setExpanded] = useState<boolean>(false);
@@ -54,9 +68,19 @@ const Section = ({ sectionName, formData, errors, schema, uiSchema, onChange, up
         return 'completed';
     };
 
+    const handleUpdateStatus = (newStatus: keyof typeof statusName) => {
+        setStatus(newStatus);
+        setSectionsStatus((prev) => {
+            return {
+                ...prev,
+                [sectionName]: newStatus,
+            };
+        });
+    };
+
     const handleChangeStatus = (params: { errors?: ErrorSchema }) => {
         if (params?.errors && Object.values(params?.errors).length) {
-            setStatus('error');
+            handleUpdateStatus('error');
             return;
         }
 
@@ -68,27 +92,27 @@ const Section = ({ sectionName, formData, errors, schema, uiSchema, onChange, up
             });
 
             if (allStatus.includes('error')) {
-                setStatus('error');
+                handleUpdateStatus('error');
                 return;
             }
 
             if (allStatus.includes('inProgress')) {
-                setStatus('inProgress');
+                handleUpdateStatus('inProgress');
                 return;
             }
 
             if (allStatus.includes('notStarted')) {
-                setStatus('notStarted');
+                handleUpdateStatus('notStarted');
                 return;
             }
 
-            setStatus('completed');
+            handleUpdateStatus('completed');
 
             return;
         }
 
         const validStatus = handleValidateSection(newFormData, schema?.required as string[]);
-        setStatus(validStatus);
+        handleUpdateStatus(validStatus);
     };
 
     const handleUpdateErrors = (newErrors: ErrorSchema) => {

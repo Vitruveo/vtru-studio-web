@@ -58,6 +58,7 @@ const language: Translation = {
     'studio.consignArtwork.title': 'Consignar Obra de Arte',
     'studio.consignArtwork.subtitle.moreInformation': 'Para mais informações, visite o',
     'studio.consignArtwork.subtitle': 'Complete todas as tarefas necessárias e consigne sua obra de arte',
+    'studio.consignArtwork.assetPreview': 'Prévia do Ativo',
 
     'studio.consignArtwork.stepName.assetMedia': 'Mídia de Ativo',
     'studio.consignArtwork.stepName.assetMetadata': 'Metadados do Ativo',
@@ -612,6 +613,21 @@ const language: Translation = {
     'studio.consignArtwork.licenses.field.elasticEditions': 'Edições Elásticas',
 
     'studio.consignArtwork.licenses.license': 'Licença',
+
+    'studio.consignArtwork.licenses.nft.ccby':
+        'Esta licença permite que os reutilizadores distribuam, remisturem, adaptem e construam sobre o material em qualquer meio ou formato, desde que seja atribuída a autoria ao criador. A licença permite o uso comercial.',
+    'studio.consignArtwork.licenses.nft.ccbysa':
+        'Esta licença permite que os reutilizadores distribuam, remisturem, adaptem e construam sobre o material em qualquer meio ou formato, desde que seja atribuída a autoria ao criador. A licença permite o uso comercial. Se você remixar, adaptar ou construir sobre o material, você deve licenciar o material modificado sob termos idênticos.',
+    'studio.consignArtwork.licenses.nft.ccbync':
+        'Esta licença permite que os reutilizadores distribuam, remisturem, adaptem e construam sobre o material em qualquer meio ou formato apenas para fins não comerciais, e apenas desde que seja atribuída a autoria ao criador.',
+    'studio.consignArtwork.licenses.nft.ccbyncsa':
+        'Esta licença permite que os reutilizadores distribuam, remisturem, adaptem e construam sobre o material em qualquer meio ou formato apenas para fins não comerciais, e apenas desde que seja atribuída a autoria ao criador. Se você remixar, adaptar ou construir sobre o material, você deve licenciar o material modificado sob termos idênticos.',
+    'studio.consignArtwork.licenses.nft.ccbynd':
+        'Esta licença permite que os reutilizadores copiem e distribuam o material em qualquer meio ou formato apenas na forma não adaptada, e apenas desde que seja atribuída a autoria ao criador.',
+    'studio.consignArtwork.licenses.nft.ccbyncnd':
+        'Esta licença permite que os reutilizadores copiem e distribuam o material em qualquer meio ou formato apenas na forma não adaptada, apenas para fins não comerciais, e apenas desde que seja atribuída a autoria ao criador.',
+    'studio.consignArtwork.licenses.nft.cc0':
+        'CC0 (também conhecida como CC Zero) é uma ferramenta de dedicação pública, que permite aos criadores renunciarem aos seus direitos autorais e colocarem suas obras no domínio público mundial. CC0 permite que os reutilizadores distribuam, remisturem, adaptem e construam sobre o material em qualquer meio ou formato, sem condições.',
 
     'studio.consignArtwork.licenses.nft.description':
         'Esta licença torna a obra de arte disponível para venda sob um dos vários modelos de precificação de edição. Quando vendido, um NFT da obra de arte é cunhado e entregue ao comprador.',

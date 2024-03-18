@@ -60,6 +60,7 @@ const removeEmptyProperties = (obj: Record<string, any> | any[] | null): Record<
 };
 
 export default function AssetMetadata() {
+    const [sectionsStatus, setSectionsStatus] = useState<{ [key: string]: string }>({});
     const { assetMetadata } = useSelector((state) => state.asset);
 
     const sectionsFormat = Object.entries(sectionsJSON).reduce(
@@ -115,11 +116,11 @@ export default function AssetMetadata() {
     };
 
     const handleOpenBackModal = () => {
-        Object.values(sectionsFormat).forEach((v, i) => {
-            if (JSON.stringify(v.formData) !== JSON.stringify(Object.values(sections)[i].formData)) {
-                console.log('v.formData', v.formData, Object.values(sections)[i].formData);
-            }
-        });
+        // Object.values(sectionsFormat).forEach((v, i) => {
+        //     if (JSON.stringify(v.formData) !== JSON.stringify(Object.values(sections)[i].formData)) {
+        //         console.log('v.formData', v.formData, Object.values(sections)[i].formData);
+        //     }
+        // });
         if (JSON.stringify(sectionsFormat) === JSON.stringify(sections)) {
             router.push(`/home/consignArtwork`);
         } else {
@@ -135,6 +136,16 @@ export default function AssetMetadata() {
         sectionName: keyof typeof sections;
     }) => {
         setSections((prevSections) => ({ ...prevSections, [sectionName]: { ...prevSections[sectionName], errors } }));
+    };
+
+    const handleUpdateStatus = () => {
+        const isCompleted = Object.values(sectionsStatus).every((v) => v === 'completed');
+        dispatch(
+            consignArtworkActionsCreators.changeStatusStep({
+                stepId: 'assetMetadata',
+                status: isCompleted ? 'completed' : 'inProgress',
+            })
+        );
     };
 
     const handleSaveData = async (event?: React.FormEvent, skip?: boolean) => {
@@ -186,12 +197,7 @@ export default function AssetMetadata() {
                 )
             )
         );
-        dispatch(
-            consignArtworkActionsCreators.changeStatusStep({
-                stepId: 'assetMetadata',
-                status: isCompleted ? 'completed' : 'inProgress',
-            })
-        );
+        handleUpdateStatus();
 
         router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/licenses`);
 
@@ -202,6 +208,10 @@ export default function AssetMetadata() {
         if (assetMetadata) handleSaveData(undefined, true);
     }, []);
 
+    useEffect(() => {
+        handleUpdateStatus();
+    }, [sectionsStatus]);
+
     const handleOnChange = ({ data, sectionName }: SectionOnChangeParams) => {
         setSections((prevSections) => ({
             ...prevSections,
@@ -211,29 +221,6 @@ export default function AssetMetadata() {
             },
         }));
     };
-
-    // useEffect(() => {
-    //     (async () => {
-    //         if (assetMetadata?.assetMetadataDefinitions.length) {
-    //             const isValid = await validateForm();
-    //             if (isValid && Object.values(isValid).length === 0)
-    //                 dispatch(
-    //                     consignArtworkActionsCreators.changeStatusStep({
-    //                         stepId: 'assetMetadata',
-    //                         status: 'completed',
-    //                     })
-    //                 );
-    //             else {
-    //                 dispatch(
-    //                     consignArtworkActionsCreators.changeStatusStep({
-    //                         stepId: 'assetMetadata',
-    //                         status: 'inProgress',
-    //                     })
-    //                 );
-    //             }
-    //         }
-    //     })();
-    // }, [assetMetadata?.assetMetadataDefinitions.length]);
 
     const xL = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'));
 
@@ -267,6 +254,7 @@ export default function AssetMetadata() {
                                 {Object.entries(sections).map(([key, value]) => (
                                     <Box key={key}>
                                         <Section
+                                            setSectionsStatus={setSectionsStatus}
                                             sectionName={key as SectionName}
                                             formData={value.formData}
                                             errors={value.errors}
