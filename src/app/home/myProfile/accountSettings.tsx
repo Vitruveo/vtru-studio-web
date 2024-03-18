@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { ValidationError } from 'yup';
 
 import Box from '@mui/material/Box';
@@ -20,7 +19,7 @@ import { AxiosError } from 'axios';
 import { CreatorEmailExistApiRes } from '@/features/user/types';
 
 import CustomTextField, { CustomTextFieldYellow } from '../components/forms/theme-elements/CustomTextField';
-import Wallet from '../components/wizard/wallet';
+import Wallet from './wallet';
 import { useI18n } from '@/app/hooks/useI18n';
 
 const AccountSettings = ({

@@ -8,7 +8,6 @@ import { Direction, Shadows, ThemeProvider, createTheme } from '@mui/material/st
 import { TypographyOptions } from '@mui/material/styles/createTypography';
 import { Inter } from 'next/font/google';
 import 'toastr/build/toastr.min.css';
-import 'react-image-crop/dist/ReactCrop.css';
 import Providers from '@/store/Provider';
 
 const inter = Inter({ subsets: ['latin'] });

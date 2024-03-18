@@ -4,9 +4,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { nanoid } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
-import CloseIcon from '@mui/icons-material/Close';
 import { Stack } from '@mui/system';
-import { Box, IconButton, Typography, useTheme } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 
 import { useDispatch, useSelector } from '@/store/hooks';
 import { AssetMediaFormValues, FormatMediaSave, FormatsAuxiliayMedia } from './types';
@@ -19,14 +18,12 @@ import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { auxiliaryMediaThunk, assetStorageThunk, sendRequestUploadThunk } from '@/features/asset/thunks';
 import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
-import { TranslateFunction } from '@/i18n/types';
 import { assetActionsCreators } from '@/features/asset/slice';
 import { requestDeleteFiles } from '@/features/asset/requests';
 import { CustomTextareaAutosize } from '../../components/forms/theme-elements/CustomTextarea';
 
 export default function AssetMedia() {
     const [showBackModal, setShowBackModal] = useState(false);
-    const [showFormtsInfo, setShowFormatsInfo] = useState(true);
 
     const { language } = useI18n();
 

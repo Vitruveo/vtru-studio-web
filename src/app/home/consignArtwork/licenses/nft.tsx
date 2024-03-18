@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
     Box,
     FormControlLabel,
@@ -10,7 +10,6 @@ import {
     Typography,
 } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
-import { useFormik } from 'formik';
 import CustomSelect from '@/app/home/components/forms/theme-elements/CustomSelect';
 import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
 import CustomCheckbox from '@/app/home/components/forms/theme-elements/CustomCheckbox';

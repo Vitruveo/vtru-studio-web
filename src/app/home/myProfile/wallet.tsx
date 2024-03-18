@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useAccount, useDisconnect, useNetwork } from 'wagmi';
+import { useAccount, useDisconnect } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 import Box from '@mui/material/Box';
 import { Button, Divider, Typography } from '@mui/material';
 
-import { AccountSettingsProps } from '../../myProfile/types';
-import CustomTextField from '../forms/theme-elements/CustomTextField';
 import { useI18n } from '@/app/hooks/useI18n';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
+import { AccountSettingsProps } from './types';
 
 const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
     const [toastr, setToastr] = useState<CustomizedSnackbarState>({
@@ -19,7 +18,6 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
 
     const [connectWallet, setConnectWallet] = useState(false);
 
-    const { chain } = useNetwork();
     const { openConnectModal } = useConnectModal();
     const { isConnected, address } = useAccount();
     const { disconnectAsync } = useDisconnect();

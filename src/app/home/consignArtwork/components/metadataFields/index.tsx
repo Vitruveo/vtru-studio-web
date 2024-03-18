@@ -10,7 +10,6 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Auto, MetadataDefinitionTypes, MetadataFieldsProps, Option } from './types';
 import CustomSelect from '@/app/home/components/forms/theme-elements/CustomSelect';
 import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
-import { CustomTextareaAutosize } from '@/app/home/components/forms/theme-elements/CustomTextarea';
 import { useI18n } from '@/app/hooks/useI18n';
 import { TranslateFunction } from '@/i18n/types';
 

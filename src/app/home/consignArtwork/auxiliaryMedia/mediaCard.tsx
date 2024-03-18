@@ -2,7 +2,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
 import { IconTrash } from '@tabler/icons-react';
-import { Box, SvgIcon, Typography, IconButton, Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
+import { Box, SvgIcon, Typography, IconButton, Button, Dialog, DialogContent } from '@mui/material';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { AssetMediaFormErros, AssetMediaFormValues, FormatMedia } from './types';

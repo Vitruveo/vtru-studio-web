@@ -1,6 +1,6 @@
 'use client';
 import Img from 'next/image';
-import { Box, Typography, Button, Stack, Grid } from '@mui/material';
+import { Box, Typography, Button, Grid } from '@mui/material';
 import Link from 'next/link';
 
 function LetsView() {

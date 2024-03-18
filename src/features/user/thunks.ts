@@ -1,5 +1,5 @@
 import { nanoid } from '@reduxjs/toolkit';
-import { StepsFormValues } from '@/app/home/components/wizard/types';
+import { StepsFormValues } from '@/app/home/consignArtwork/types';
 import {
     userLoginReq,
     userAddReq,
@@ -13,7 +13,6 @@ import {
     verifyCode,
     changeAvatar,
     generalStorage,
-    deleteAvatar,
     requestDeleteAvatar,
 } from './requests';
 import { userActionsCreators } from './slice';

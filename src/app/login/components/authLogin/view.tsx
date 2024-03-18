@@ -17,7 +17,6 @@ import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTe
 import CustomFormLabel from '@/app/home/components/forms/theme-elements/CustomFormLabel';
 
 import { LoginViewProps } from './types';
-import VtruTitle from '@/app/home/components/vtruTItle';
 import Image from 'next/image';
 
 function LoginView({ values, errors, disabled, handleChange, handleSubmit }: LoginViewProps) {

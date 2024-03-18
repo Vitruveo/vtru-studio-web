@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTheme } from '@mui/material';
-import ProgressBar, { ProgressBarProps } from '@ramonak/react-progress-bar';
+import ProgressBar from '@ramonak/react-progress-bar';
 import { RequestAssetUpload } from '@/features/asset/types';
 import { assetActionsCreators } from '@/features/asset/slice';
 import { useDispatch } from '@/store/hooks';

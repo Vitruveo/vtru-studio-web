@@ -3,7 +3,7 @@ import React, { useState, useRef, useCallback, useMemo } from 'react';
 
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from '@/store/hooks';
-import { Box, Container, Typography, Button, Theme, useMediaQuery } from '@mui/material';
+import { Box, Typography, Button, Theme, useMediaQuery } from '@mui/material';
 
 import { TermsOfUseFormValues } from './types';
 

@@ -1,28 +1,23 @@
 'use client';
-
 import React, { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { Box, Button, MenuItem, Theme, useMediaQuery } from '@mui/material';
+import { Box } from '@mui/material';
 
 import { useDispatch, useSelector } from '@/store/hooks';
-import CustomSelect from '@/app/home/components/forms/theme-elements/CustomSelect';
+
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { licenseThunk } from '@/features/asset/thunks';
 import { useI18n } from '@/app/hooks/useI18n';
-import { TranslateFunction } from '@/i18n/types';
 
 import { LicensesFormValues } from './types';
-import MetadataFields from '../components/metadataFields';
-import { licenseMetadataDefinitionsSchemaValidation } from './formschema';
+
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
-import { licenses } from '../mock';
 import { ModalBackConfirm } from '../modalBackConfirm';
 
 import Nft from './nft';
@@ -30,14 +25,6 @@ import Print from './print';
 import Stream from './stream';
 import Remix from './remix';
 import WarningCard from '../components/warningCard';
-
-type YupErrors = {
-    [key: string]: string;
-};
-
-type Result = {
-    [key: string]: any;
-};
 
 const allLicenses = {
     NFT: Nft,
@@ -59,7 +46,6 @@ export default function Licenses() {
     const { language } = useI18n();
     const router = useRouter();
     const dispatch = useDispatch();
-    const lgUp = useMediaQuery((th: Theme) => th.breakpoints.up('lg'));
 
     const { licenses: licensesState } = useSelector((state) => state.asset);
 

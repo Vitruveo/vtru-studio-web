@@ -1,5 +1,4 @@
 import { Box, Typography } from '@mui/material';
-import { useFormik } from 'formik';
 import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
 import Card from './common/card';
 import { LicenseProps } from './types';

@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import Img from 'next/image';
 import { IconTrash } from '@tabler/icons-react';
-import { Box, SvgIcon, Typography, IconButton, Stack } from '@mui/material';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { AssetMediaFormErros, AssetMediaFormValues, Definition } from './types';
+import { Box, Typography, IconButton, Stack } from '@mui/material';
+
+import { AssetMediaFormErros, Definition } from './types';
 import { useDropzone } from 'react-dropzone';
-import { getMediaDefinition, handleGetFileWidthAndHeight } from './helpers';
-import ModalError from './modalError';
+import { getMediaDefinition } from './helpers';
 import { useI18n } from '@/app/hooks/useI18n';
 
 interface SelectMediaProps {

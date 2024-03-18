@@ -2,7 +2,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ChangeStatusPayload, ConsignArtworkSliceState } from './types';
-import { Email, User, Wallet } from '../user/types';
+import { Email, Wallet } from '../user/types';
 
 export const stepsNames = {
     assetMedia: 'studio.consignArtwork.stepName.assetMedia',

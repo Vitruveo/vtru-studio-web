@@ -9,7 +9,6 @@ import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 import PageContainer from '@/app/home/components/container/PageContainer';
 
 import { Button, Container } from '@mui/material';
-import VtruTitle from '@/app/home/components/vtruTItle';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { useI18n } from '../hooks/useI18n';

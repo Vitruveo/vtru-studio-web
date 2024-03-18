@@ -4,8 +4,6 @@ import PageContainer from '@/app/home/components/container/PageContainer';
 
 import AuthLogo from '@/app/login/components/AuthLogo';
 import AuthLogin from '@/app/login/components/authLogin/container';
-import { useEffect } from 'react';
-import Image from 'next/image';
 
 export default function Login() {
     return (

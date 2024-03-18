@@ -1,4 +1,4 @@
-import { StepsFormValues } from '@/app/home/components/wizard/types';
+import { StepsFormValues } from '@/app/home/consignArtwork/types';
 import { APIResponse, Framework } from '../common/types';
 import { AccountSettingsFormValues } from '@/app/home/myProfile/types';
 

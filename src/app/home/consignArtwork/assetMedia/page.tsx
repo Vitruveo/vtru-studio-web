@@ -23,7 +23,6 @@ import { useI18n } from '@/app/hooks/useI18n';
 
 import { assetActionsCreators } from '@/features/asset/slice';
 import { requestDeleteFiles } from '@/features/asset/requests';
-import { ASSET_STORAGE_URL } from '@/constants/asset';
 
 export default function AssetMedia() {
     const [showBackModal, setShowBackModal] = useState(false);

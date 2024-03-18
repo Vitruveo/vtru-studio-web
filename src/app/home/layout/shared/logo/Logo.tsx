@@ -36,14 +36,19 @@ const Logo = () => {
                 ) : (
                     <Box display="flex" marginTop={1} alignItems="center">
                         <Image
-                            src={
-                                customizer.isCollapse && !customizer.isSidebarHover
-                                    ? '/images/logos/studioshortlogo.png'
-                                    : '/images/logos/studiologo.png'
-                            }
+                            style={{ display: checkSidebar ? 'none' : '' }}
+                            src={'/images/logos/studiologo.png'}
                             alt="logo"
-                            height={checkSidebar ? 40 : 55}
-                            width={checkSidebar ? 100 : 155}
+                            height={55}
+                            width={155}
+                            priority
+                        />
+                        <Image
+                            style={{ display: checkSidebar ? '' : 'none' }}
+                            src={'/images/logos/studioshortlogo.png'}
+                            alt="logo"
+                            height={40}
+                            width={100}
                             priority
                         />
                     </Box>

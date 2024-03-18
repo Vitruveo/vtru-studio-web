@@ -1,7 +1,6 @@
 import React from 'react';
 import { useI18n } from '@/app/hooks/useI18n';
 import { Dialog, DialogContent, Typography } from '@mui/material';
-import { TranslateFunction } from '@/i18n/types';
 
 interface ModalErrorProps {
     dimensionError?: { width: number; height: number };

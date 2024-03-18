@@ -8,15 +8,13 @@ import {
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { assetActionsCreators } from './slice';
-import { FormatMediaSave, FormatsMedia, OriginalFormatMedia } from '@/app/home/consignArtwork/assetMedia/types';
+import { FormatMediaSave, FormatsMedia } from '@/app/home/consignArtwork/assetMedia/types';
 import { LicensesFormValues } from '@/app/home/consignArtwork/licenses/types';
 import { TermsOfUseFormValues } from '@/app/home/consignArtwork/termsOfUse/types';
 import { consignArtworkActionsCreators } from '../consignArtwork/slice';
 import { ASSET_STORAGE_URL } from '@/constants/asset';
-import { SectionFormatType, SectionsFormData } from '@/app/home/consignArtwork/assetMetadata/page';
+import { SectionsFormData } from '@/app/home/consignArtwork/assetMetadata/page';
 import { FormatsAuxiliayMedia } from '@/app/home/consignArtwork/auxiliaryMedia/types';
-import { nanoid } from '@reduxjs/toolkit';
-import { getMediaDefinition } from '@/app/home/consignArtwork/assetMedia/helpers';
 
 export function requestDeleteURLThunk(payload: RequestDeleteFilesReq): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {

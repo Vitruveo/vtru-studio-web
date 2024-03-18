@@ -2,7 +2,6 @@
 import React from 'react';
 import Image from 'next/image';
 import { Grid, Box } from '@mui/material';
-import VtruTitle from '@/app/home/components/vtruTItle';
 
 export default function AuthLogo() {
     return (

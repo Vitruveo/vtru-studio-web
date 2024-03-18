@@ -2,8 +2,8 @@ import React, { Fragment, useRef, useCallback, useState, useEffect, CSSPropertie
 
 import { get, omit, cloneDeep, set, unset } from 'lodash';
 import validator from '@rjsf/validator-ajv8';
-import Form, { FormProps, withTheme } from '@rjsf/core';
-import FormMUI, { Theme as MuiTheme } from '@rjsf/mui';
+import Form, { FormProps } from '@rjsf/core';
+import FormMUI from '@rjsf/mui';
 
 import { RJSFSchema, ErrorSchema, FieldTemplateProps, WidgetProps } from '@rjsf/utils';
 import { Box, FormControlLabel, TextareaAutosize, ThemeProvider, useTheme } from '@mui/material';

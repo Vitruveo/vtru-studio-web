@@ -1,5 +1,3 @@
-import axios from 'axios';
-import FormData from 'form-data';
 import { apiService } from '@/services/api';
 import {
     AddCreatorEmailApiRes,

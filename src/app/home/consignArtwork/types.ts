@@ -1,6 +1,5 @@
 import { FormikErrors } from 'formik';
 import { FormikDefaultProps } from '@/app/common/types';
-import { Area } from 'react-easy-crop';
 
 export interface MetadataDefinitionTypes {
     domain?: string;
