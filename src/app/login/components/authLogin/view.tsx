@@ -41,6 +41,7 @@ function LoginView({ values, errors, disabled, handleChange, handleSubmit }: Log
                 <Image
                     src={'/images/logos/studiologo.png'}
                     alt="bg"
+                    priority
                     width={lgUp ? 150 : 130}
                     height={lgUp ? 60 : 50}
                     style={{

@@ -53,6 +53,7 @@ export default function Home() {
 
                         <Image
                             src={'/images/logos/studiologo.png'}
+                            priority
                             alt="bg"
                             width={140}
                             height={50}
