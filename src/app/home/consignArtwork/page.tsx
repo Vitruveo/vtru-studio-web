@@ -62,7 +62,7 @@ const ConsignArtwork = () => {
 
     const handleSubmit = (event?: React.FormEvent) => {
         if (event) event.preventDefault();
-        router.push('/home/consignArtwork/consignmentStatus');
+        router.push(`${pathname}/consignmentStatus`);
     };
 
     const successColor = '#93C47D';
@@ -74,6 +74,8 @@ const ConsignArtwork = () => {
     const xs = useMediaQuery((them: Theme) => them.breakpoints.up('xs'));
 
     useEffect(() => {
+        if (checkAllCompletedSteps) router.prefetch(`${pathname}/consignmentStatus`);
+
         Object.values(completedSteps).forEach((step) => {
             router.prefetch(`${pathname}/${step.stepId}`);
         });
