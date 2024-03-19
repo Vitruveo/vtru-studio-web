@@ -869,6 +869,8 @@ const language: Translation = {
 
     /* Sidebar */
     'studio.sidebar.consign': 'Consignar Obra de Arte',
+    'studio.sidebar.artistGuide': 'Guía del Artista',
+    'studio.sidebar.community': 'Comunidad',
 
     /* Footer */
     'studio.footer.thisStep': 'Este paso ha sido',

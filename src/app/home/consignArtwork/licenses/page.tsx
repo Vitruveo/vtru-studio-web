@@ -47,7 +47,13 @@ export default function Licenses() {
     const router = useRouter();
     const dispatch = useDispatch();
 
-    const { licenses: licensesState } = useSelector((state) => state.asset);
+    const { licenses: licensesState, formats } = useSelector((state) => state.asset);
+    const selectPreviewAsset = Object.entries(formats).find(([key]) => key === 'print');
+    const printExists = selectPreviewAsset && selectPreviewAsset[1].file;
+
+    const allLicensesFiltered: Partial<Record<keyof typeof allLicenses, typeof Remix>> = printExists
+        ? allLicenses
+        : Object.fromEntries(Object.entries(allLicenses).filter(([key]) => key !== 'Print'));
 
     const texts = {
         nextButton: language['studio.consignArtwork.form.next.button'],
@@ -84,8 +90,8 @@ export default function Licenses() {
                 : {
                       nft: {
                           version: '1',
-                          added: false,
-                          license: '',
+                          added: true,
+                          license: 'CC BY-NC-ND',
                           elastic: {
                               editionPrice: 0,
                               numberOfEditions: 0,
@@ -93,17 +99,17 @@ export default function Licenses() {
                               editionDiscount: false,
                           },
                           single: {
-                              editionPrice: 0,
+                              editionPrice: 150,
                           },
                           unlimited: {
                               editionPrice: 0,
                           },
 
-                          editionOption: '',
+                          editionOption: 'single',
                       },
                       stream: {
                           version: '1',
-                          added: false,
+                          added: true,
                       },
                       print: {
                           version: '1',
@@ -199,10 +205,10 @@ export default function Licenses() {
                             {texts.licensesTitle}
                         </Typography>
 
-                        {Object.entries(allLicenses).map(([key, Component]) => (
+                        {Object.entries(allLicensesFiltered).map(([key, Component]) => (
                             <a key={key} href={`#${key}`} onClick={(e) => handleScrollToElement(e, key)}>
                                 <Typography
-                                    onClick={() => setCurrentLicense(key as keyof typeof allLicenses)}
+                                    onClick={() => setCurrentLicense(key as keyof typeof allLicensesFiltered)}
                                     style={{ color: '#007BFF', cursor: 'pointer', textDecoration: 'underline' }}
                                     fontSize="1.1rem"
                                 >
@@ -224,8 +230,8 @@ export default function Licenses() {
                             )}
                         </Box>
 
-                        {Object.values(allLicenses).map((License, i) => (
-                            <Box key={i} id={Object.keys(allLicenses)[i]}>
+                        {Object.values(allLicensesFiltered).map((License, i) => (
+                            <Box key={i} id={Object.keys(allLicensesFiltered)[i]}>
                                 <License
                                     allValues={values}
                                     setFieldValue={setFieldValue}

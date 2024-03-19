@@ -18,7 +18,7 @@ import { LicenseProps } from './types';
 import { useI18n } from '@/app/hooks/useI18n';
 
 function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
-    const [currentDescription, setCurrentDescription] = useState('');
+    const [currentDescription, setCurrentDescription] = useState('nft.editionOption');
     const values = allValues.nft || {};
 
     const { language } = useI18n();
@@ -121,13 +121,14 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
     };
 
     const handleCustomChange = (field: string, value: string) => {
+        if (field === 'nft.editionOption') return;
         setCurrentDescription(field);
         setFieldValue(field, value);
     };
 
     return (
         <Box width={700} display="flex" justifyContent="space-between" marginTop={2}>
-            <Card title="NFT-ART-1" added={values?.added} setAdded={handleAdded} width={320} height={400}>
+            <Card disabled title="NFT-ART-1" added={values?.added} setAdded={handleAdded} width={320} height={400}>
                 {!values?.added ? (
                     <Box paddingLeft={7} paddingTop={3} paddingRight={3}>
                         <Typography
@@ -149,7 +150,11 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                             value={values.editionOption}
                             onChange={(v) => handleCustomChange('nft.editionOption', v.target.value)}
                         >
-                            <FormControlLabel value="elastic" control={<Radio />} label={texts.elasticEditionsTitle} />
+                            <FormControlLabel
+                                value="elastic"
+                                control={<Radio disabled />}
+                                label={texts.elasticEditionsTitle}
+                            />
                             {values.editionOption === 'elastic' && (
                                 <Box marginLeft={4}>
                                     <Box display="flex" alignItems="center" justifyContent="space-between">
@@ -299,6 +304,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                         </Typography>
                                     </Box>
                                     <CustomTextField
+                                        disabled
                                         name="nft.single.editionPrice"
                                         type="number"
                                         InputProps={{
@@ -318,7 +324,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                             )}
                             <FormControlLabel
                                 value="unlimited"
-                                control={<Radio />}
+                                control={<Radio disabled />}
                                 label={texts.unlimitedEditionsTitle}
                             />
 
@@ -363,6 +369,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                             </Box>
                             <Box alignItems="center" justifyContent="space-between" display="flex" width={300}>
                                 <CustomSelect
+                                    disabled
                                     sx={{ backgroundColor: '#fff' }}
                                     InputProps={{
                                         sx: {

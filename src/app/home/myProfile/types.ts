@@ -14,7 +14,9 @@ export interface EmailFormValues {
 export interface AccountSettingsFormValues {
     username: string;
     emails: EmailFormValues[];
+    emailDefault: string;
     wallets: Wallet[];
+    walletDefault: string;
 }
 
 type AccountSettingsFormErros = FormikErrors<AccountSettingsFormValues>;

@@ -913,6 +913,8 @@ const language: Translation = {
 
     /* Sidebar */
     'studio.sidebar.consign': 'Подать Работу',
+    'studio.sidebar.artistGuide': 'Руководство художника',
+    'studio.sidebar.community': 'Сообщество',
 
     /* Footer */
     'studio.footer.thisStep': 'Текущий шаг',

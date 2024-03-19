@@ -154,6 +154,8 @@ export function creatorAccountThunk(payload: StepsFormValues | AccountSettingsFo
             data: {
                 name: user.name,
                 profile: user.profile,
+                emailDefault: payload.emailDefault,
+                walletDefault: payload.walletDefault,
                 username: payload.username,
                 emails: payload.emails as any,
                 wallets: payload.wallets,
@@ -163,6 +165,8 @@ export function creatorAccountThunk(payload: StepsFormValues | AccountSettingsFo
 
         dispatch(
             userActionsCreators.change({
+                emailDefault: payload.emailDefault,
+                walletDefault: payload.walletDefault,
                 username: payload.username,
                 wallets: payload.wallets,
                 emails: payload.emails,

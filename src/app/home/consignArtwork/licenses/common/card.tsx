@@ -4,12 +4,14 @@ import { Box, BoxProps, Typography } from '@mui/material';
 interface CardProps extends BoxProps {
     title: string;
     added: boolean;
+    disabled?: boolean;
     setAdded: (added: boolean) => void;
     children?: React.ReactNode;
 }
 
-function Card({ children, title, added, setAdded, ...res }: CardProps) {
+function Card({ children, title, added, disabled, setAdded, ...res }: CardProps) {
     const handleCheckOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (disabled) return;
         setAdded(!added);
     };
 

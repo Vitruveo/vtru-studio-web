@@ -1,5 +1,5 @@
 import { uniqueId } from 'lodash';
-import { IconPhotoUp } from '@tabler/icons-react';
+import { IconPhotoUp, IconBook, IconBrandWechat } from '@tabler/icons-react';
 
 interface MenuitemsType {
     [x: string]: any;
@@ -28,6 +28,20 @@ const Menuitems: MenuitemsType[] = [
         title: 'studio.sidebar.consign',
         icon: IconPhotoUp,
         href: '/home/consignArtwork',
+    },
+    {
+        id: uniqueId(),
+        title: 'studio.sidebar.artistGuide',
+        icon: IconBook,
+        external: true,
+        href: '//dreamer.vitruveo.xyz/',
+    },
+    {
+        id: uniqueId(),
+        title: 'studio.sidebar.community',
+        icon: IconBrandWechat,
+        external: true,
+        href: '//dreamverse.vitruveo.xyz/',
     },
 
     // {

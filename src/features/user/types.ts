@@ -20,6 +20,8 @@ export interface User {
     login: {
         email: string;
     };
+    walletDefault: string;
+    emailDefault: string;
     wallets: Wallet[];
     emails: Email[];
     profile: {
@@ -101,6 +103,8 @@ export interface SaveStepWizardReq {
 export interface CreatorSchemaType {
     name: string;
     username?: string | undefined;
+    emailDefault: string;
+    walletDefault: string;
     login: {
         loginHistory: Array<{
             ip: string;

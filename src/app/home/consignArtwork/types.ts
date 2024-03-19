@@ -67,6 +67,8 @@ export interface Formats {
 export interface StepsFormValues {
     username: string;
     profile?: File;
+    emailDefault: string;
+    walletDefault: string;
     emails: EmailFormValues[];
     wallets: Wallet[];
     asset: {

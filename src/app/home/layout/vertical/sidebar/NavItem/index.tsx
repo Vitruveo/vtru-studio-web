@@ -93,6 +93,7 @@ export default function NavItem({ item, level, pathDirect, hideMenu, onClick }: 
     return (
         <List component="li" disablePadding key={item?.id && item.title}>
             <Link
+                {...listItemProps}
                 href={
                     item.href === '/home/consignArtwork' && !isCompletedProfile
                         ? '/home/myProfile'
@@ -103,7 +104,6 @@ export default function NavItem({ item, level, pathDirect, hideMenu, onClick }: 
                 style={{ textDecoration: 'none' }}
             >
                 <ListItemStyled
-                    // {...listItemProps}
                     disabled={item?.disabled}
                     selected={pathDirect === item?.href}
                     onClick={

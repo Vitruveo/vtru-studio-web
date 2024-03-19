@@ -1,8 +1,18 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ValidationError } from 'yup';
 
-import Box from '@mui/material/Box';
-import { Button, Divider, Stack, Typography } from '@mui/material';
+import {
+    Button,
+    Divider,
+    Stack,
+    Typography,
+    Box,
+    RadioGroup,
+    FormControlLabel,
+    Radio,
+    useMediaQuery,
+    Theme,
+} from '@mui/material';
 
 import { WalletProvider } from '@/app/home/components/apps/wallet';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
@@ -154,84 +164,115 @@ const AccountSettings = ({
         [setFieldValue, values.emails]
     );
 
+    const handleEmailDefaultChange = (val: string) => {
+        setFieldValue('emailDefault', val);
+    };
+
+    const xl = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'));
+    const checkDefaultEmail =
+        !values.emailDefault || !values.emailDefault.length ? values.emails[0]?.email : values.emailDefault;
+
     return (
         <Stack sx={{ width: '100%' }}>
             <Box display="flex" flexDirection="column" gap={1}>
-                <Box maxWidth={450} display="flex" flexDirection="column" my={2}>
-                    <Typography mb={2} variant="subtitle1" fontWeight={600} component="label">
-                        {texts.emailsTitle}
-                    </Typography>
-
-                    {values.emails.slice().map((item, index) => (
-                        <Box
-                            key={item.email}
-                            flexWrap="wrap"
-                            display="flex"
-                            alignItems={'center'}
-                            justifyContent="space-between"
-                            mb={2}
-                            gap={1}
-                        >
-                            <Box display="flex" alignItems="center" width="100%">
-                                <Box width="100%">
-                                    <Typography
-                                        color="GrayText"
-                                        title={item.email}
-                                        style={{
-                                            maxWidth: '70%',
-                                            minWidth: '200px',
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis',
-                                        }}
-                                    >
-                                        {item.email}
-                                    </Typography>
-                                </Box>
-
-                                <Box>
-                                    {(values.emails.filter((v) => v.checkedAt).length !== 1 || !item.checkedAt) && (
-                                        <Button
-                                            variant="outlined"
-                                            color="error"
-                                            size="small"
-                                            style={{ width: '122px', marginLeft: '10px' }}
-                                            onClick={() => handleDeleteEmail(item.email)}
-                                        >
-                                            {texts.deleteButton}
-                                        </Button>
-                                    )}
-                                </Box>
-                            </Box>
-                            {!item.checkedAt && (
-                                <Box marginTop={1} width="100%" display="flex" alignItems="center">
-                                    <CustomTextFieldYellow
-                                        // style={{ marginLeft: '20px' }}
-                                        fullWidth
-                                        onChange={handleVerifyCode(item.email)}
-                                        size="small"
-                                        id="verificationCode"
-                                        variant="outlined"
-                                        placeholder={texts.codePlaceholder}
-                                    />
-                                    <Box>
-                                        <Button
-                                            color="warning"
-                                            style={{ width: '122px', marginLeft: '10px' }}
-                                            size="small"
-                                            variant="contained"
-                                            onClick={() => handleSendCodeEmail(item.email)}
-                                        >
-                                            Send new code
-                                        </Button>
+                <Box maxWidth={!xl ? 300 : 490} display="flex" flexDirection="column" my={2}>
+                    <Box mb={2}>
+                        <Typography mb={2} variant="subtitle1" fontWeight={600} component="label">
+                            {texts.emailsTitle}
+                        </Typography>
+                    </Box>
+                    <RadioGroup
+                        defaultValue={checkDefaultEmail}
+                        aria-label="options"
+                        name="emailDefault"
+                        onChange={(v) => handleEmailDefaultChange(v.target.value)}
+                    >
+                        {values.emails.slice().map((item, index) => (
+                            <Box
+                                key={item.email}
+                                flexWrap="wrap"
+                                display="flex"
+                                alignItems={'center'}
+                                justifyContent="space-between"
+                                mb={2}
+                                gap={1}
+                            >
+                                <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
+                                    <Box display="flex">
+                                        <Box width={30}>
+                                            {item.checkedAt && <Radio sx={{ padding: 0 }} value={item.email} />}
+                                        </Box>
+                                        <Box minWidth={150} display="flex" flexWrap="wrap" maxWidth={330} width="100%">
+                                            <Typography
+                                                color="GrayText"
+                                                title={item.email}
+                                                style={{
+                                                    maxWidth: '98%',
+                                                    overflow: 'hidden',
+                                                    textOverflow: 'ellipsis',
+                                                }}
+                                            >
+                                                {`${item.email}`}
+                                            </Typography>
+                                            <Typography marginLeft={0.2} color="black">
+                                                {`${checkDefaultEmail === item.email ? ' (default)' : ''}`}
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                    <Box height={30}>
+                                        {((checkDefaultEmail !== item.email &&
+                                            values.emails.filter((v) => v.checkedAt).length !== 1) ||
+                                            !item.checkedAt) && (
+                                            <Button
+                                                variant="outlined"
+                                                color="error"
+                                                size="small"
+                                                style={{ width: '122px', marginLeft: '5px' }}
+                                                onClick={() => handleDeleteEmail(item.email)}
+                                            >
+                                                {texts.deleteButton}
+                                            </Button>
+                                        )}
                                     </Box>
                                 </Box>
-                            )}
-                            <Divider style={{ width: '100%' }} />
-                        </Box>
-                    ))}
+                                {!item.checkedAt && (
+                                    <Box
+                                        marginTop={1}
+                                        width="100%"
+                                        display="flex"
+                                        justifyContent="space-between"
+                                        alignItems="center"
+                                    >
+                                        <CustomTextFieldYellow
+                                            style={{ maxWidth: 330, marginLeft: 30, marginRight: 5 }}
+                                            fullWidth
+                                            onChange={handleVerifyCode(item.email)}
+                                            size="small"
+                                            id="verificationCode"
+                                            variant="outlined"
+                                            placeholder={texts.codePlaceholder}
+                                        />
+                                        <Box>
+                                            <Button
+                                                color="warning"
+                                                style={{ width: '122px' }}
+                                                size="small"
+                                                variant="contained"
+                                                onClick={() => handleSendCodeEmail(item.email)}
+                                            >
+                                                Send new code
+                                            </Button>
+                                        </Box>
+                                    </Box>
+                                )}
+                                <Divider style={{ width: '100%' }} />
+                            </Box>
+                        ))}
+                    </RadioGroup>
 
-                    <Box marginTop={1} width="100%" display="flex" alignItems="center">
+                    <Box marginTop={1} width="100%" display="flex" justifyContent="space-between" alignItems="center">
                         <CustomTextField
+                            style={{ maxWidth: 360 }}
                             type="email"
                             value={email}
                             onChange={handleChangeEmailInput}
@@ -252,7 +293,7 @@ const AccountSettings = ({
                         />
                         <Box>
                             <Button
-                                style={{ marginLeft: '10px', width: '122px' }}
+                                style={{ marginLeft: 5, width: '122px' }}
                                 size="small"
                                 variant="contained"
                                 onClick={handleAddEmail}

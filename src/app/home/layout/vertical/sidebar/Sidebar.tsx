@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import Scrollbar from '@/app/home/components/custom-scroll/Scrollbar';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
+import { Box, Drawer, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import Logo from '../../shared/logo/Logo';
 import SidebarItems from './SidebarItems';
 import { useDispatch, useSelector } from '@/store/hooks';
@@ -49,7 +47,7 @@ const Sidebar = () => {
             const targetIndex = index === sidebarBackgroundImages.length - 1 ? 0 : index + 1;
 
             setBackgroundImage(sidebarBackgroundImages[targetIndex]);
-        }, 10000);
+        }, 60000);
 
         return () => {
             clearInterval(backgroundInterval);

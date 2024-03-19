@@ -2,23 +2,13 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
-
-import Avatar from '@mui/material/Avatar';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import CardContent from '@mui/material/CardContent';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-
-// components
+import { Avatar, Box, Button, CardContent, Grid, Typography } from '@mui/material';
 import { useDispatch, useSelector } from '@/store/hooks';
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
-import PageContainer from '../components/container/PageContainer';
 import BlankCard from '../components/shared/BlankCard';
 import AccountSettings from './accountSettings';
 
 import { Stack } from '@mui/system';
-import { FooterForm } from '../components/footerForm';
 import {
     changeAvatarThunk,
     generalStorageAvatarThunk,
@@ -45,8 +35,8 @@ export default function ProfileSettings() {
         message: '',
     });
 
-    const { username, emails, wallets, requestAvatarUpload } = useSelector(
-        userSelector(['username', 'emails', 'wallets', 'requestAvatarUpload'])
+    const { username, emailDefault, walletDefault, emails, wallets, requestAvatarUpload } = useSelector(
+        userSelector(['username', 'emailDefault', 'walletDefault', 'emails', 'wallets', 'requestAvatarUpload'])
     );
 
     const { avatarSrc } = useAvatar();
@@ -88,6 +78,8 @@ export default function ProfileSettings() {
     const { handleSubmit, handleChange, setFieldValue, setFieldError, setErrors, values, errors } =
         useFormik<AccountSettingsFormValues>({
             initialValues: {
+                emailDefault: !emailDefault || !emailDefault.length ? emails[0]?.email : emailDefault,
+                walletDefault: !walletDefault || !walletDefault.length ? wallets[0]?.address : walletDefault,
                 username,
                 emails,
                 wallets,

@@ -3,7 +3,7 @@ import { useAccount, useDisconnect } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 import Box from '@mui/material/Box';
-import { Button, Divider, Typography } from '@mui/material';
+import { Button, Divider, Radio, RadioGroup, Typography } from '@mui/material';
 
 import { useI18n } from '@/app/hooks/useI18n';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
@@ -48,6 +48,10 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
         return `${addressF.substring(0, 6)}...${addressF.substring(addressF.length - 4)}`;
     };
 
+    const handleWalletDefaultChange = (val: string) => {
+        setFieldValue('walletDefault', val);
+    };
+
     useEffect(() => {
         if (openConnectModal && connectWallet) {
             openConnectModal();
@@ -74,36 +78,59 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
         }
     }, [address]);
 
+    const checkDefaultWallet =
+        !values.walletDefault || !values.walletDefault.length ? values.wallets[0].address : values.walletDefault;
+
     return (
         <>
-            <Box maxWidth={450} display="flex" flexDirection="column">
+            <Box maxWidth={490} display="flex" flexDirection="column">
                 <Box gap={2}>
-                    {values.wallets.map((item, index) => (
-                        <Box
-                            display="flex"
-                            flexDirection="column"
-                            justifyContent="space-between"
-                            mb={2}
-                            gap={1}
-                            key={index}
-                        >
-                            <Box display="flex" alignItems="center" justifyContent="space-between" gap={1}>
-                                <Typography color="GrayText">{handleFormatWallet(item.address)}</Typography>
-                                {values.wallets.length > 1 && (
-                                    <Button
-                                        variant="outlined"
-                                        color="error"
-                                        size="small"
-                                        style={{ width: 122 }}
-                                        onClick={() => handleDeleteWallet(index)}
-                                    >
-                                        {texts.deleteButton}
-                                    </Button>
-                                )}
+                    <RadioGroup
+                        defaultValue={checkDefaultWallet}
+                        aria-label="options"
+                        name="walletDefault"
+                        onChange={(v) => handleWalletDefaultChange(v.target.value)}
+                    >
+                        {values.wallets.map((item, index) => (
+                            <Box
+                                display="flex"
+                                flexDirection="column"
+                                justifyContent="space-between"
+                                mb={2}
+                                gap={1}
+                                key={index}
+                            >
+                                <Box display="flex" alignItems="center" justifyContent="space-between" gap={1}>
+                                    <Box display="flex">
+                                        <Box width={30}>
+                                            <Radio sx={{ padding: 0 }} value={item.address} />
+                                        </Box>
+                                        <Typography color="GrayText">
+                                            {handleFormatWallet(item.address)}
+                                            <Typography color="black" display="inline">
+                                                {' '}
+                                                {`${checkDefaultWallet === item.address ? '(default)' : ''}`}
+                                            </Typography>
+                                        </Typography>
+                                    </Box>
+                                    <Box height={30}>
+                                        {checkDefaultWallet !== item.address && values.wallets.length > 1 && (
+                                            <Button
+                                                variant="outlined"
+                                                color="error"
+                                                size="small"
+                                                style={{ width: 122 }}
+                                                onClick={() => handleDeleteWallet(index)}
+                                            >
+                                                {texts.deleteButton}
+                                            </Button>
+                                        )}
+                                    </Box>
+                                </Box>
+                                <Divider style={{ width: '100%' }} />
                             </Box>
-                            <Divider style={{ width: '100%' }} />
-                        </Box>
-                    ))}
+                        ))}
+                    </RadioGroup>
                 </Box>
 
                 <Box marginTop={1} width="100%" display="flex" alignItems="center">

@@ -908,6 +908,8 @@ const language: Translation = {
 
     /* Sidebar */
     'studio.sidebar.consign': 'قرارداد آثار هنری',
+    'studio.sidebar.artistGuide': 'راهنمای هنرمند',
+    'studio.sidebar.community': 'جامعه',
 
     /* Footer */
     'studio.footer.thisStep': 'این مرحله انجام شده است',

@@ -6,6 +6,8 @@ import { UserSliceState } from './types';
 const initialState: UserSliceState = {
     _id: '',
     token: '',
+    emailDefault: '',
+    walletDefault: '',
     notify: '',
     username: '',
     name: '',
@@ -58,6 +60,8 @@ export const userSlice = createSlice({
             state.username = creator.username;
             state.wallets = creator.wallets;
             state.profile = creator.profile;
+            state.emailDefault = creator.emailDefault;
+            state.walletDefault = creator.walletDefault;
             state.framework = creator.framework;
         },
         change: (state, action: PayloadAction<Partial<UserSliceState>>) => {

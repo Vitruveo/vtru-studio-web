@@ -748,6 +748,8 @@ const language: Translation = {
 
     /* Sidebar */
     'studio.sidebar.consign': 'Consignar Obra de Arte',
+    'studio.sidebar.artistGuide': 'Guia do Artista',
+    'studio.sidebar.community': 'Comunidade',
 
     /* Footer */
     'studio.footer.thisStep': 'Esta etapa está',
