@@ -159,15 +159,12 @@ export default function Licenses() {
 
     const handleSaveData = async (event?: React.FormEvent) => {
         if (event) event.preventDefault();
-        if (JSON.stringify(initialValues) === JSON.stringify(values)) {
-            router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/termsOfUse`);
+
+        const validate = await validateForm();
+        if (validate && Object.values(validate).length === 0) {
+            handleSubmit();
         } else {
-            const validate = await validateForm();
-            if (validate && Object.values(validate).length === 0) {
-                handleSubmit();
-            } else {
-                setShowBackModal(false);
-            }
+            setShowBackModal(false);
         }
     };
 
