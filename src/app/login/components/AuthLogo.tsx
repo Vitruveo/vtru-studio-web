@@ -41,6 +41,7 @@ export default function AuthLogo() {
                     <Image
                         src={'/images/logos/studiologo.png'}
                         alt="bg"
+                        priority
                         width={200}
                         height={70}
                         style={{
@@ -64,6 +65,7 @@ export default function AuthLogo() {
                     <Box>
                         <Image
                             src={'/images/logos/studiologo.png'}
+                            priority
                             alt="bg"
                             width={270}
                             height={200}
