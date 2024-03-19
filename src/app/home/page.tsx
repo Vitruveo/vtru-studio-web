@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { useI18n } from '../hooks/useI18n';
 import Image from 'next/image';
+import { useEffect } from 'react';
 
 export default function Home() {
     const { language } = useI18n();

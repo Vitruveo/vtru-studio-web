@@ -74,6 +74,9 @@ const ConsignArtwork = () => {
     const xs = useMediaQuery((them: Theme) => them.breakpoints.up('xs'));
 
     useEffect(() => {
+        Object.values(completedSteps).forEach((step) => {
+            router.prefetch(`${pathname}/${step.stepId}`);
+        });
         if (!status?.length) dispatch(publishThunk({ status: 'draft' }));
     }, [status]);
 

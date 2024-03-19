@@ -699,8 +699,8 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.bio': 'Creator Bio',
     'studio.consignArtwork.assetMetadata.field.bio.description': 'Creator bio (short, 3-4 sentences)',
 
-    'studio.consignArtwork.assetMetadata.field.profileUrl': 'Creator Profile Link',
-    'studio.consignArtwork.assetMetadata.field.profileUrl.description': 'Creator profile link',
+    'studio.consignArtwork.assetMetadata.field.profileUrl': 'Creator Website Link',
+    'studio.consignArtwork.assetMetadata.field.profileUrl.description': 'Creator website link',
 
     'studio.consignArtwork.assetMetadata.field.nationality': 'Nationality',
     'studio.consignArtwork.assetMetadata.field.nationality.description': 'Creator nationality or origin country',

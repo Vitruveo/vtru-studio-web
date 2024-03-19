@@ -700,8 +700,8 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.bio': 'Информация об Авторе',
     'studio.consignArtwork.assetMetadata.field.bio.description': 'Информация об Авторе (коротко, 3-4 предложения)',
 
-    'studio.consignArtwork.assetMetadata.field.profileUrl': 'Ссылка на профиль Автора',
-    'studio.consignArtwork.assetMetadata.field.profileUrl.description': 'Ссылка на профиль Автора',
+    'studio.consignArtwork.assetMetadata.field.profileUrl': 'Ссылка на веб-сайт создателя',
+    'studio.consignArtwork.assetMetadata.field.profileUrl.description': 'Ссылка на веб-сайт создателя',
 
     'studio.consignArtwork.assetMetadata.field.nationality': 'Национальность',
     'studio.consignArtwork.assetMetadata.field.nationality.description':

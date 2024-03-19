@@ -699,8 +699,8 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.bio': 'زندگینامه خالق',
     'studio.consignArtwork.assetMetadata.field.bio.description': 'زندگینامه خالق (کوتاه، ۳-۴ جمله)',
 
-    'studio.consignArtwork.assetMetadata.field.profileUrl': 'لینک پروفایل خالق',
-    'studio.consignArtwork.assetMetadata.field.profileUrl.description': 'لینک پروفایل خالق',
+    'studio.consignArtwork.assetMetadata.field.profileUrl': 'لینک وب‌سایت خالق',
+    'studio.consignArtwork.assetMetadata.field.profileUrl.description': 'لینک وب‌سایت خالق',
 
     'studio.consignArtwork.assetMetadata.field.nationality': 'ملیت',
     'studio.consignArtwork.assetMetadata.field.nationality.description': 'ملیت یا کشور مبدا خالق',
