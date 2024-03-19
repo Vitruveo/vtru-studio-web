@@ -65,7 +65,7 @@ export default function AuthLogo() {
                         <Image
                             src={'/images/logos/studiologo.png'}
                             alt="bg"
-                            width={300}
+                            width={270}
                             height={200}
                             style={{
                                 maxWidth: '700px',
