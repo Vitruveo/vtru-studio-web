@@ -24,7 +24,6 @@ import Nft from './nft';
 import Print from './print';
 import Stream from './stream';
 import Remix from './remix';
-import WarningCard from '../components/warningCard';
 
 const allLicenses = {
     NFT: Nft,
@@ -219,13 +218,6 @@ export default function Licenses() {
                         <Typography fontSize="1.1rem" fontWeight="normal" color="GrayText">
                             {texts.licensesDescription}
                         </Typography>
-                        <Box marginTop={2}>
-                            {showInfo && (
-                                <WarningCard setShowInfo={setShowInfo}>
-                                    <Typography fontSize="0.9">{texts.warning}</Typography>
-                                </WarningCard>
-                            )}
-                        </Box>
 
                         {Object.values(allLicensesFiltered).map((License, i) => (
                             <Box key={i} id={Object.keys(allLicensesFiltered)[i]}>
