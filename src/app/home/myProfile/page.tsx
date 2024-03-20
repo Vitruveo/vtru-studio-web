@@ -81,7 +81,7 @@ export default function ProfileSettings() {
                 emailDefault: !emailDefault || !emailDefault.length ? emails[0]?.email : emailDefault,
                 walletDefault: !walletDefault || !walletDefault.length ? wallets[0]?.address : walletDefault,
                 username,
-                emails,
+                emails: emails.filter((email) => email.checkedAt),
                 wallets,
             },
             // validationSchema: stepsSchemaValidation,

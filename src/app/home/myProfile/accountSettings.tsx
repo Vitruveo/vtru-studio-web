@@ -30,6 +30,7 @@ import { CreatorEmailExistApiRes } from '@/features/user/types';
 
 import CustomTextField, { CustomTextFieldYellow } from '../components/forms/theme-elements/CustomTextField';
 import Wallet from './wallet';
+import AddEmails from './addEmails';
 import { useI18n } from '@/app/hooks/useI18n';
 
 const AccountSettings = ({
@@ -175,7 +176,7 @@ const AccountSettings = ({
     return (
         <Stack sx={{ width: '100%' }}>
             <Box display="flex" flexDirection="column" gap={1}>
-                <Box maxWidth={!xl ? 300 : 490} display="flex" flexDirection="column" my={2}>
+                {/* <Box maxWidth={!xl ? 300 : 490} display="flex" flexDirection="column" my={2}>
                     <Box mb={2}>
                         <Typography mb={2} variant="subtitle1" fontWeight={600} component="label">
                             {texts.emailsTitle}
@@ -302,13 +303,11 @@ const AccountSettings = ({
                             </Button>
                         </Box>
                     </Box>
-                </Box>
+                </Box> */}
 
-                <Box my={1} display="flex" flexDirection="column">
-                    <Typography mb={2} variant="subtitle1" fontWeight={600} component="label">
-                        {texts.walletsTitle}
-                    </Typography>
+                <AddEmails emails={values.emails} emailDefault={values.emailDefault} setFieldValue={setFieldValue} />
 
+                <Box display="flex" flexDirection="column">
                     <WalletProvider>
                         <Wallet
                             values={values}
