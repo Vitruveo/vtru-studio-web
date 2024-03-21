@@ -33,7 +33,7 @@ const ConsignArtwork = () => {
     const { completedSteps } = useSelector((state) => state.consignArtwork);
 
     const checkAllCompletedSteps = Object.values(completedSteps)
-        .filter((v) => !v.optional)
+        .filter((v) => !v.optional && v.stepId !== 'reviewAndConsign')
         .every((v) => v.status === 'completed');
 
     const texts = {
@@ -62,7 +62,10 @@ const ConsignArtwork = () => {
 
     const handleSubmit = (event?: React.FormEvent) => {
         if (event) event.preventDefault();
-        router.push(`${pathname}/consignmentStatus`);
+        if (status === 'draft' || status === 'preview') router.push(`${pathname}/reviewAndConsign`);
+        else {
+            router.push(`${pathname}/consignmentStatus`);
+        }
     };
 
     const successColor = '#93C47D';
@@ -74,7 +77,10 @@ const ConsignArtwork = () => {
     const xs = useMediaQuery((them: Theme) => them.breakpoints.up('xs'));
 
     useEffect(() => {
-        if (checkAllCompletedSteps) router.prefetch(`${pathname}/consignmentStatus`);
+        if (checkAllCompletedSteps) {
+            router.prefetch(`${pathname}/consignmentStatus`);
+            router.prefetch(`${pathname}/reviewAndConsign`);
+        }
 
         Object.values(completedSteps).forEach((step) => {
             router.prefetch(`${pathname}/${step.stepId}`);
@@ -167,7 +173,12 @@ const ConsignArtwork = () => {
                                         </Box>
                                         <Box width={100} marginLeft={1}>
                                             <Button
-                                                disabled={status === 'published' || status === 'preview'}
+                                                style={{ opacity: v.stepId === 'reviewAndConsign' ? 0 : 1 }}
+                                                disabled={
+                                                    v.stepId === 'reviewAndConsign' ||
+                                                    status === 'published' ||
+                                                    status === 'preview'
+                                                }
                                                 onClick={() => handleChangePage(v.stepId, v.status)}
                                                 size="small"
                                                 variant="contained"

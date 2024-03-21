@@ -1,4 +1,4 @@
-export type StepId = 'termsOfUse' | 'assetMedia' | 'assetMetadata' | 'licenses' | 'auxiliaryMedia';
+export type StepId = 'termsOfUse' | 'assetMedia' | 'assetMetadata' | 'licenses' | 'auxiliaryMedia' | 'reviewAndConsign';
 export type StepStatus = 'notStarted' | 'completed' | 'inProgress';
 
 export interface CompletedSteps {
@@ -15,6 +15,11 @@ export interface ConsignArtworkSliceState {
     isCompletedProfile: boolean;
     goToConsignArtwork: boolean;
     completedSteps: CompletedSteps;
+    previewAndConsign: {
+        creatorCredits?: number;
+        creatorWallet?: string;
+        creatorContract?: string;
+    };
 }
 
 export interface ChangeStatusPayload {

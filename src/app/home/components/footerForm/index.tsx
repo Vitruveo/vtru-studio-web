@@ -175,7 +175,7 @@ export function FooterForm({
                                 size="large"
                                 disabled={submitDisabled}
                                 type="submit"
-                                style={{ width: 120, marginLeft: '20px' }}
+                                style={{ minWidth: 120, marginLeft: '20px' }}
                                 color="primary"
                                 variant="contained"
                             >

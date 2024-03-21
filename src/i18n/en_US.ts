@@ -69,6 +69,7 @@ const language: Translation = {
     'studio.consignArtwork.stepName.licenses': 'Licenses',
     'studio.consignArtwork.stepName.termsOfUse': 'Terms of Use',
     'studio.consignArtwork.stepName.auxiliaryMedia': 'Auxiliary Media',
+    'studio.consignArtwork.stepName.reviewAndConsign': 'Review And Consign',
     'studio.consignArtwork.optional': 'optional',
 
     'studio.consignArtwork.stepStatus.completed': 'Completed',
@@ -81,7 +82,7 @@ const language: Translation = {
         `${data.status !== 'notStarted' ? 'Edit' : 'Start'}`,
 
     'studio.consignArtwork.publishButton': (data: { status: string }) =>
-        `${data.status === 'published' ? 'Consigned' : 'Consign'}`,
+        `${data.status === 'published' ? 'Review and Update' : 'Review and Consign'}`,
 
     /* Asset Media */
     'studio.consignArtwork.assetMedia.title': 'Asset Media',

@@ -10,6 +10,7 @@ export const stepsNames = {
     assetMetadata: 'studio.consignArtwork.stepName.assetMetadata',
     licenses: 'studio.consignArtwork.stepName.licenses',
     termsOfUse: 'studio.consignArtwork.stepName.termsOfUse',
+    reviewAndConsign: 'studio.consignArtwork.stepName.reviewAndConsign',
 };
 
 export const statusName = {
@@ -55,7 +56,14 @@ const initialState: ConsignArtworkSliceState = {
             statusName: statusName.notStarted,
             optional: true,
         },
+        reviewAndConsign: {
+            stepId: 'reviewAndConsign',
+            stepName: stepsNames.reviewAndConsign,
+            status: 'notStarted',
+            statusName: statusName.notStarted,
+        },
     },
+    previewAndConsign: {},
 };
 
 export const consignArtworkSlice = createSlice({
@@ -71,6 +79,9 @@ export const consignArtworkSlice = createSlice({
         },
         changeGoToConsignArtwork: (state, action: PayloadAction<boolean>) => {
             state.goToConsignArtwork = action.payload;
+        },
+        changePreviewAndConsign: (state, action: PayloadAction<ConsignArtworkSliceState['previewAndConsign']>) => {
+            state.previewAndConsign = { ...state.previewAndConsign, ...action.payload };
         },
         changeStatusStep: (state, action: PayloadAction<ChangeStatusPayload>) => {
             const { stepId, status } = action.payload;
