@@ -1,5 +1,5 @@
 'use client';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import { Avatar, Box, Button, CardContent, Grid, Typography } from '@mui/material';
@@ -75,15 +75,20 @@ export default function ProfileSettings() {
         },
     ];
 
+    const initialValues = useMemo(
+        () => ({
+            emailDefault: !emailDefault || !emailDefault.length ? emails[0]?.email : emailDefault,
+            walletDefault: !walletDefault || !walletDefault.length ? wallets[0]?.address || '' : walletDefault,
+            username,
+            emails: emails.filter((email) => email.checkedAt),
+            wallets,
+        }),
+        []
+    );
+
     const { handleSubmit, handleChange, setFieldValue, setFieldError, setErrors, values, errors } =
         useFormik<AccountSettingsFormValues>({
-            initialValues: {
-                emailDefault: !emailDefault || !emailDefault.length ? emails[0]?.email : emailDefault,
-                walletDefault: !walletDefault || !walletDefault.length ? wallets[0]?.address : walletDefault,
-                username,
-                emails: emails.filter((email) => email.checkedAt),
-                wallets,
-            },
+            initialValues,
             // validationSchema: stepsSchemaValidation,
             onSubmit: async (formValues) => {
                 if (!formValues.username || formValues.username?.length === 0)
