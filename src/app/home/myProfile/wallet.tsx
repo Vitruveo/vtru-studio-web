@@ -83,7 +83,7 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
     const xl = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'));
 
     const checkDefaultWallet =
-        !values.walletDefault || !values.walletDefault.length ? values.wallets[0].address : values.walletDefault;
+        !values.walletDefault || !values.walletDefault.length ? values.wallets[0]?.address : values.walletDefault;
 
     return (
         <>
