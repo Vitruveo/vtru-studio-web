@@ -49,6 +49,7 @@ const ConsignArtwork = () => {
         consignArtworkSubtitleLink: language['studio.consignArtwork.subtitle.link'],
         optional: language['studio.consignArtwork.optional'],
         moreInformation: language['studio.consignArtwork.subtitle.moreInformation'],
+        reviewAndConsign: language['studio.consignArtwork.stepName.reviewAndConsign'],
     } as { [key: string]: string };
 
     const BCrumb = [
@@ -57,7 +58,11 @@ const ConsignArtwork = () => {
             title: texts.homeTitle,
         },
         {
-            title: 'Review And Consign',
+            to: '/home/consignArtwork',
+            title: texts.consignArtworkTitle,
+        },
+        {
+            title: texts.reviewAndConsign,
         },
     ];
 
