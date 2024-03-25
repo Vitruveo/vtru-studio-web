@@ -70,6 +70,7 @@ const language: Translation = {
     'studio.consignArtwork.stepName.licenses': 'Licencias',
     'studio.consignArtwork.stepName.termsOfUse': 'Términos de Uso',
     'studio.consignArtwork.stepName.auxiliaryMedia': 'Medios Auxiliares',
+    'studio.consignArtwork.stepName.reviewAndConsign': 'Revisar y Consignar',
     'studio.consignArtwork.optional': 'opcional',
 
     'studio.consignArtwork.stepStatus.completed': 'Completado',
