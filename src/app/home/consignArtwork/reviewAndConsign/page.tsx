@@ -120,6 +120,7 @@ const ConsignArtwork = () => {
                 backPathRouter="/home/consignArtwork"
                 title={texts.consignArtworkTitle}
                 submitText="Consign"
+                stepNumber={6}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
 
