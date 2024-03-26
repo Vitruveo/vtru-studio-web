@@ -68,6 +68,7 @@ const language: Translation = {
     'studio.consignArtwork.stepName.licenses': 'مجوزها',
     'studio.consignArtwork.stepName.termsOfUse': 'شرایط استفاده',
     'studio.consignArtwork.stepName.auxiliaryMedia': 'رسانه‌های کمکی',
+    'studio.consignArtwork.stepName.reviewAndConsign': 'بررسی و ارسال',
     'studio.consignArtwork.optional': 'اختیاری',
 
     'studio.consignArtwork.stepStatus.completed': 'تکمیل شده',

@@ -65,6 +65,7 @@ const language: Translation = {
     'studio.consignArtwork.stepName.licenses': 'Licenças',
     'studio.consignArtwork.stepName.termsOfUse': 'Termos de Uso',
     'studio.consignArtwork.stepName.auxiliaryMedia': 'Mídia Auxiliar',
+    'studio.consignArtwork.stepName.reviewAndConsign': 'Revisar e Consignar',
     'studio.consignArtwork.optional': 'opcional',
 
     'studio.consignArtwork.stepStatus.completed': 'Concluído',
