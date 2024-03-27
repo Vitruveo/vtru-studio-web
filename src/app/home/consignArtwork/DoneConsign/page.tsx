@@ -7,6 +7,7 @@ import { RotateAnimation } from '@/animations/RotateAnimation';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 import Breadcrumb, { BreadCrumbItem } from '../../layout/shared/breadcrumb/Breadcrumb';
 import { useRouter } from 'next/navigation';
+import { confetti } from '@tsparticles/confetti';
 
 interface ConsignStep {
     title: string;
@@ -48,7 +49,15 @@ export default function DoneConsign() {
     const router = useRouter();
 
     const asyncAction = async () => {
-        await new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 5000)));
+        await new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 500)));
+    };
+
+    const showConfetti = () => {
+        confetti({
+            particleCount: 500,
+            spread: 250,
+            origin: { x: 0.5, y: 0.5 },
+        });
     };
 
     const [steps, setSteps] = useState<ConsignStep[]>([
@@ -70,7 +79,7 @@ export default function DoneConsign() {
         },
         {
             title: 'Your artwork is ready! View',
-            action: asyncAction,
+            action: async () => asyncAction().then(() => showConfetti()),
         },
     ]);
 
@@ -120,7 +129,10 @@ export default function DoneConsign() {
 
                 <Stack component="ul" spacing={1}>
                     {steps.map((step, index) => (
-                        <li key={index} style={{ display: 'flex', gap: '8px', fontSize: 16 }}>
+                        <li
+                            key={index}
+                            style={{ display: 'grid', gridTemplateColumns: '16px 1fr', gap: '12px', fontSize: 16 }}
+                        >
                             <RotateAnimation isDisabled={step.status != 'pending'}>
                                 {getListIcon(step.status)}
                             </RotateAnimation>
