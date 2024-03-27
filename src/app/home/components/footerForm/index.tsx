@@ -21,6 +21,7 @@ export interface FooterFormProps {
     stepNumber?: number;
     backOnclick?: () => void;
     saveOnClick?: () => void;
+    secondaryText?: string;
 }
 
 export function FooterForm({
@@ -32,6 +33,7 @@ export function FooterForm({
     stepStatus,
     stepNumber,
     backOnclick,
+    secondaryText
 }: FooterFormProps) {
     const theme = useTheme();
 
@@ -184,7 +186,7 @@ export function FooterForm({
 
                             <Link href={backPathRouter || '/home'} className="hover-text-primary">
                                 <Typography variant="subtitle2" color="GrayText" className="text-hover">
-                                    {texts.back}
+                                    {secondaryText || texts.back}
                                 </Typography>
                             </Link>
                         </Stack>
