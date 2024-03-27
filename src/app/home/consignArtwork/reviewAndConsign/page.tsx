@@ -12,6 +12,8 @@ import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr
 import { useI18n } from '@/app/hooks/useI18n';
 
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
+import { useSyncProviders } from '@/services/metamask/useSyncProviders';
+import { connectMetaMaskAccount } from '@/services/metamask/helpers';
 
 interface ConsignStepsProps {
     [key: string]: {
@@ -41,6 +43,8 @@ const ConsignArtwork = () => {
     const { status } = useSelector((state) => state.asset);
     const { previewAndConsign } = useSelector((state) => state.consignArtwork);
 
+    const providers = useSyncProviders();
+
     const texts = {
         homeTitle: language['studio.home.title'],
         stepPublishMessageSuccess: language['studio.consignArtwork.stepPublishMessageSuccess'],
@@ -68,22 +72,59 @@ const ConsignArtwork = () => {
 
     const grayColor = theme.palette.text.disabled;
 
+    const handleMetaMaskConnection = async (provider: EIP6963ProviderDetail) => {
+        const isAccountConnected = !!previewAndConsign.creatorWallet;
+
+        if (isAccountConnected) {
+            disconnect();
+        } else {
+            await connect();
+        }
+
+        function disconnect() {
+            dispatch(
+                consignArtworkActionsCreators.changePreviewAndConsign({
+                    creatorWallet: '',
+                })
+            );
+        }
+
+        async function connect() {
+            const account = await connectMetaMaskAccount(provider);
+
+            if (account) {
+                dispatch(
+                    consignArtworkActionsCreators.changePreviewAndConsign({
+                        creatorWallet: account,
+                    })
+                );
+                setToastr({
+                    type: 'success',
+                    open: true,
+                    message: 'Wallet connected',
+                });
+            } else {
+                setToastr({
+                    type: 'error',
+                    open: true,
+                    message: 'Error connecting wallet',
+                });
+            }
+        }
+    };
+
     const consignSteps: ConsignStepsProps = {
         artworkListing: {
             title: 'Artwork Listing',
             actionTitle: 'Preview',
-            actionFunc: () => {},
+            actionFunc: () => {}, //TODO: OPEN NEW WINDOW
         },
         creatorWallet: {
             title: 'Creator Wallet',
             actionTitle: previewAndConsign.creatorWallet ? 'Disconnect' : 'Connect',
             value: previewAndConsign.creatorWallet,
-            actionFunc: () => {
-                dispatch(
-                    consignArtworkActionsCreators.changePreviewAndConsign({
-                        creatorWallet: previewAndConsign.creatorWallet ? '' : '0xA3FD…FEDS',
-                    })
-                );
+            actionFunc: async () => {
+                await handleMetaMaskConnection(providers[0]); //TODO: CHOOSE PROVIDERS
             },
         },
         creatorCredits: {
@@ -155,26 +196,19 @@ const ConsignArtwork = () => {
                                         {v.title}
                                     </Typography>
                                 </Box>
-                                <Box flex={2} display="flex">
+                                <Box flex={2} display="flex" alignItems="stretch">
                                     <Box
-                                        style={{
-                                            opacity: !v.value && !v.status ? 0 : 1,
-                                        }}
-                                        width={110}
                                         display="flex"
                                         alignItems="center"
+                                        justifyContent="center"
+                                        overflow="hidden"
+                                        textOverflow="ellipsis"
+                                        whiteSpace="nowrap"
+                                        width={120}
+                                        color={v.status && !v.value ? 'white' : 'inherit'}
+                                        bgcolor={(v?.status && !v.value && grayColor) || '#EFEFEF'}
                                     >
-                                        <Box
-                                            display="flex"
-                                            alignItems="center"
-                                            justifyContent="center"
-                                            height="100%"
-                                            width="100%"
-                                            color={v.status && !v.value ? 'white' : 'inherit'}
-                                            bgcolor={(v?.status && !v.value && grayColor) || '#EFEFEF'}
-                                        >
-                                            {v.value || v.status}
-                                        </Box>
+                                        {v.value || v.status}
                                     </Box>
                                     <Box width={100} marginLeft={1}>
                                         <Button
