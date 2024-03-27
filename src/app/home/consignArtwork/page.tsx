@@ -13,6 +13,7 @@ import { publishThunk } from '@/features/asset/thunks';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 import { useI18n } from '@/app/hooks/useI18n';
 import { TranslateFunction } from '@/i18n/types';
+import { CompletedConsignPage } from '@/app/home/consignArtwork/components/completedConsignPage/CompletedConsignPage';
 
 const ConsignArtwork = () => {
     const [toastr, setToastr] = useState<CustomizedSnackbarState>({
@@ -30,6 +31,7 @@ const ConsignArtwork = () => {
     const dispatch = useDispatch();
 
     const { status } = useSelector((state) => state.asset);
+    const { previewAndConsign } = useSelector((state) => state.consignArtwork);
     const { completedSteps } = useSelector((state) => state.consignArtwork);
 
     const checkAllCompletedSteps = Object.values(completedSteps)
@@ -87,6 +89,12 @@ const ConsignArtwork = () => {
         });
         if (!status?.length) dispatch(publishThunk({ status: 'draft' }));
     }, [status]);
+
+    const isConsignCompleted = Object.values(previewAndConsign).every((v) => v.checked == true);
+
+    if (isConsignCompleted) {
+        return <CompletedConsignPage />;
+    }
 
     return (
         <form onSubmit={handleSubmit}>
