@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
-import { useAccount, useDisconnect } from 'wagmi';
+import { useAccount, useContractRead, useDisconnect } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { usePathname, useRouter } from 'next/navigation';
 import { Button, Typography, useTheme } from '@mui/material';
@@ -155,7 +155,7 @@ const ConsignArtwork = () => {
             actionTitle: previewAndConsign.creatorCredits?.value ? 'Requested' : 'Request',
             value: previewAndConsign.creatorCredits?.value?.toString(),
             loading: previewAndConsign.creatorCredits?.loading,
-            disabled: previewAndConsign.creatorCredits?.value === 1,
+            disabled: !previewAndConsign.creatorWallet?.value || previewAndConsign.creatorCredits?.value === 1,
             actionFunc: async () => {
                 dispatch(
                     consignArtworkActionsCreators.changePreviewAndConsign({
@@ -182,6 +182,7 @@ const ConsignArtwork = () => {
             status: 'Not Created',
             actionTitle: previewAndConsign.creatorContract?.value ? 'View' : 'Start',
             value: previewAndConsign.creatorContract?.value,
+            disabled: !previewAndConsign.creatorWallet?.value,
             loading: previewAndConsign.creatorContract?.loading,
             actionFunc: async () => {
                 dispatch(
