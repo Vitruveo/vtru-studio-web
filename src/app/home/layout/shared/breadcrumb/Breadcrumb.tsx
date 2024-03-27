@@ -6,9 +6,14 @@ import breadcrumbImg from 'public/images/breadcrumb/brand-asset-banner.png';
 import { IconCircle } from '@tabler/icons-react';
 import Image from 'next/image';
 
+export interface BreadCrumbItem {
+    title: string;
+    to?: string;
+}
+
 interface BreadCrumbType {
     subtitle?: string;
-    items?: any[];
+    items?: BreadCrumbItem[];
     title: string;
     children?: JSX.Element;
 }
