@@ -1,9 +1,10 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
+import { useAccount, useDisconnect } from 'wagmi';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { usePathname, useRouter } from 'next/navigation';
 import { Button, Typography, useTheme } from '@mui/material';
-
 import Box from '@mui/material/Box';
 
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
@@ -12,6 +13,7 @@ import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr
 import { useI18n } from '@/app/hooks/useI18n';
 
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
+import { WalletProvider } from '../../components/apps/wallet';
 
 interface ConsignStepsProps {
     [key: string]: {
@@ -19,6 +21,8 @@ interface ConsignStepsProps {
         status?: string;
         actionTitle: string;
         value?: string | number;
+        loading?: boolean;
+        disabled?: boolean;
         actionFunc: () => void;
     };
 }
@@ -30,6 +34,12 @@ const ConsignArtwork = () => {
         message: '',
     });
 
+    const [connectWallet, setConnectWallet] = useState(false);
+
+    const { openConnectModal } = useConnectModal();
+    const { isConnected, address } = useAccount();
+    const { disconnectAsync } = useDisconnect();
+
     const pathname = usePathname();
     const router = useRouter();
 
@@ -40,6 +50,34 @@ const ConsignArtwork = () => {
 
     const { status } = useSelector((state) => state.asset);
     const { previewAndConsign } = useSelector((state) => state.consignArtwork);
+
+    useEffect(() => {
+        if (openConnectModal && connectWallet) {
+            openConnectModal();
+            setConnectWallet(false);
+        }
+        return () => {
+            disconnectAsync();
+        };
+    }, [connectWallet, openConnectModal]);
+
+    useEffect(() => {
+        if (isConnected && address) {
+            dispatch(
+                consignArtworkActionsCreators.changePreviewAndConsign({
+                    creatorWallet: {
+                        checked: true,
+                        value: address,
+                    },
+                })
+            );
+        }
+    }, [isConnected, address]);
+
+    const handleAddWallet = async () => {
+        if (isConnected) await disconnectAsync();
+        setConnectWallet(true);
+    };
 
     const texts = {
         homeTitle: language['studio.home.title'],
@@ -68,7 +106,7 @@ const ConsignArtwork = () => {
 
     const handleSubmit = (event?: React.FormEvent) => {
         if (event) event.preventDefault();
-        router.push(`${pathname}/consignmentStatus`);
+        router.push(`/home/consignArtwork/DoneConsign`);
     };
 
     const grayColor = theme.palette.text.disabled;
@@ -77,28 +115,64 @@ const ConsignArtwork = () => {
         artworkListing: {
             title: 'Artwork Listing',
             actionTitle: 'Preview',
-            actionFunc: () => {},
-        },
-        creatorWallet: {
-            title: 'Creator Wallet',
-            actionTitle: previewAndConsign.creatorWallet ? 'Disconnect' : 'Connect',
-            value: previewAndConsign.creatorWallet,
             actionFunc: () => {
+                window.open('https://www.google.com', '_blank');
                 dispatch(
                     consignArtworkActionsCreators.changePreviewAndConsign({
-                        creatorWallet: previewAndConsign.creatorWallet ? '' : '0xA3FD…FEDS',
+                        artworkListing: {
+                            checked: true,
+                        },
                     })
                 );
             },
         },
+        creatorWallet: {
+            title: 'Creator Wallet',
+            actionTitle: previewAndConsign.creatorWallet?.value ? 'Disconnect' : 'Connect',
+            value:
+                previewAndConsign.creatorWallet?.value &&
+                previewAndConsign.creatorWallet?.value.slice(0, 6) +
+                    '...' +
+                    previewAndConsign.creatorWallet?.value.slice(-4),
+            actionFunc: () => {
+                if (previewAndConsign.creatorWallet?.value) {
+                    dispatch(
+                        consignArtworkActionsCreators.changePreviewAndConsign({
+                            creatorWallet: {
+                                value: '',
+                                checked: false,
+                            },
+                        })
+                    );
+                    disconnectAsync();
+                    return;
+                }
+                handleAddWallet();
+            },
+        },
         creatorCredits: {
             title: 'Creator Credits',
-            actionTitle: 'Request',
-            value: previewAndConsign.creatorCredits,
-            actionFunc: () => {
+            actionTitle: previewAndConsign.creatorCredits?.value ? 'Requested' : 'Request',
+            value: previewAndConsign.creatorCredits?.value?.toString(),
+            loading: previewAndConsign.creatorCredits?.loading,
+            disabled: previewAndConsign.creatorCredits?.value === 1,
+            actionFunc: async () => {
                 dispatch(
                     consignArtworkActionsCreators.changePreviewAndConsign({
-                        creatorCredits: 1,
+                        creatorCredits: {
+                            checked: false,
+                            loading: true,
+                        },
+                    })
+                );
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+                dispatch(
+                    consignArtworkActionsCreators.changePreviewAndConsign({
+                        creatorCredits: {
+                            checked: true,
+                            value: 1,
+                            loading: false,
+                        },
                     })
                 );
             },
@@ -106,12 +180,27 @@ const ConsignArtwork = () => {
         creatorContract: {
             title: 'Creator Contract',
             status: 'Not Created',
-            actionTitle: previewAndConsign.creatorContract ? 'View' : 'Start',
-            value: previewAndConsign.creatorContract,
-            actionFunc: () => {
+            actionTitle: previewAndConsign.creatorContract?.value ? 'View' : 'Start',
+            value: previewAndConsign.creatorContract?.value,
+            loading: previewAndConsign.creatorContract?.loading,
+            actionFunc: async () => {
                 dispatch(
                     consignArtworkActionsCreators.changePreviewAndConsign({
-                        creatorContract: '0xED34…0012',
+                        creatorContract: {
+                            checked: false,
+                            loading: true,
+                        },
+                    })
+                );
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+                window.open('https://explorer.vitruveo.xyz/', '_blank');
+                dispatch(
+                    consignArtworkActionsCreators.changePreviewAndConsign({
+                        creatorContract: {
+                            checked: true,
+                            value: '0x1234567890',
+                            loading: false,
+                        },
                     })
                 );
             },
@@ -121,11 +210,11 @@ const ConsignArtwork = () => {
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
-                submitDisabled={true}
-                backPathRouter="/home/consignArtwork"
-                title={texts.consignArtworkTitle}
                 submitText="Consign"
+                title={texts.consignArtworkTitle}
                 stepNumber={6}
+                backOnclick={() => router.push(`/home/consignArtwork`)}
+                submitDisabled={Object.values(previewAndConsign).some((v) => !v.checked)}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
 
@@ -183,13 +272,30 @@ const ConsignArtwork = () => {
                                     </Box>
                                     <Box width={100} marginLeft={1}>
                                         <Button
-                                            disabled={status === 'published' || status === 'preview'}
+                                            disabled={
+                                                v?.disabled ||
+                                                v?.loading ||
+                                                status === 'published' ||
+                                                status === 'preview'
+                                            }
                                             onClick={v.actionFunc}
                                             size="small"
                                             variant="contained"
                                             fullWidth
                                         >
-                                            {v.actionTitle}
+                                            {v.loading ? (
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                    }}
+                                                >
+                                                    Loading...
+                                                </Box>
+                                            ) : (
+                                                v.actionTitle
+                                            )}
                                         </Button>
                                     </Box>
                                 </Box>
@@ -209,4 +315,12 @@ const ConsignArtwork = () => {
     );
 };
 
-export default ConsignArtwork;
+const ConsignArtworkHOC = () => {
+    return (
+        <WalletProvider>
+            <ConsignArtwork />
+        </WalletProvider>
+    );
+};
+
+export default ConsignArtworkHOC;

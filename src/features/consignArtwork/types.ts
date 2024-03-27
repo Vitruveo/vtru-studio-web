@@ -16,9 +16,23 @@ export interface ConsignArtworkSliceState {
     goToConsignArtwork: boolean;
     completedSteps: CompletedSteps;
     previewAndConsign: {
-        creatorCredits?: number;
-        creatorWallet?: string;
-        creatorContract?: string;
+        artworkListing?: {
+            checked: boolean;
+        };
+        creatorCredits?: {
+            checked: boolean;
+            value?: number;
+            loading?: boolean;
+        };
+        creatorWallet?: {
+            checked: boolean;
+            value: string | `0x${string}`;
+        };
+        creatorContract?: {
+            checked: boolean;
+            value?: string;
+            loading?: boolean;
+        };
     };
 }
 

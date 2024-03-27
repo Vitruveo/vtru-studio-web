@@ -63,7 +63,25 @@ const initialState: ConsignArtworkSliceState = {
             statusName: statusName.notStarted,
         },
     },
-    previewAndConsign: {},
+    previewAndConsign: {
+        creatorCredits: {
+            checked: false,
+            value: 0,
+            loading: false,
+        },
+        creatorWallet: {
+            checked: false,
+            value: '',
+        },
+        creatorContract: {
+            checked: false,
+            value: '',
+            loading: false,
+        },
+        artworkListing: {
+            checked: false,
+        },
+    },
 };
 
 export const consignArtworkSlice = createSlice({
