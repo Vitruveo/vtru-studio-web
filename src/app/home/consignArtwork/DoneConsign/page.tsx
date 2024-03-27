@@ -44,11 +44,11 @@ const BCrumb: BreadCrumbItem[] = [
 ];
 
 export default function DoneConsign() {
-    const customizer = useSelector((state) => state.customizer);
+    const customizer = useSelector((state: any) => state.customizer); // TODO: ADICIONAR TIPAGEM CORRETA
     const router = useRouter();
 
     const asyncAction = async () => {
-        await new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 10000)));
+        await new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 5000)));
     };
 
     const [steps, setSteps] = useState<ConsignStep[]>([
@@ -103,25 +103,32 @@ export default function DoneConsign() {
 
     const isDisabled = steps[steps.length - 1].status != 'done';
 
-    return (
-        <PageContainerFooter
-            submitText="Done"
-            title={'Consign Artwork'}
-            submitDisabled={isDisabled}
-            backOnclick={() => router.push(`/home/consignArtwork`)}
-        >
-            <Breadcrumb title={'Consign Artwork'} items={BCrumb} />
+    const handleSubmit = (event: React.FormEvent) => {
+        event.preventDefault();
+        router.push('/home/consignArtwork');
+    };
 
-            <Stack component="ul" spacing={1}>
-                {steps.map((step, index) => (
-                    <li key={index} style={{ display: 'flex', gap: '8px', fontSize: 16 }}>
-                        <RotateAnimation isDisabled={step.status != 'pending'}>
-                            {getListIcon(step.status)}
-                        </RotateAnimation>
-                        <Typography fontSize={16}>{step.title}</Typography>
-                    </li>
-                ))}
-            </Stack>
-        </PageContainerFooter>
+    return (
+        <form onSubmit={handleSubmit}>
+            <PageContainerFooter
+                submitText="Done"
+                title={'Consign Artwork'}
+                submitDisabled={isDisabled}
+                backOnclick={() => router.push(`/home/consignArtwork`)}
+            >
+                <Breadcrumb title={'Consign Artwork'} items={BCrumb} />
+
+                <Stack component="ul" spacing={1}>
+                    {steps.map((step, index) => (
+                        <li key={index} style={{ display: 'flex', gap: '8px', fontSize: 16 }}>
+                            <RotateAnimation isDisabled={step.status != 'pending'}>
+                                {getListIcon(step.status)}
+                            </RotateAnimation>
+                            <Typography fontSize={16}>{step.title}</Typography>
+                        </li>
+                    ))}
+                </Stack>
+            </PageContainerFooter>
+        </form>
     );
 }
