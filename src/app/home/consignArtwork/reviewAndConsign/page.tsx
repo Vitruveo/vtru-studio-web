@@ -152,6 +152,7 @@ const ConsignArtwork = () => {
                     '...' +
                     previewAndConsign.creatorWallet?.value.slice(-4),
             actionFunc: () => {},
+            disabled: true,
         },
         creatorCredits: {
             title: 'Creator Credits',
@@ -222,7 +223,10 @@ const ConsignArtwork = () => {
                 title={texts.consignArtworkTitle}
                 stepNumber={6}
                 backOnclick={() => router.push(`/home/consignArtwork`)}
-                submitDisabled={!previewAndConsign.artworkListing?.checked /* Object.values(previewAndConsign).some((v) => !v.checked) */}
+                submitDisabled={
+                    !previewAndConsign.artworkListing
+                        ?.checked /* Object.values(previewAndConsign).some((v) => !v.checked) */
+                }
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
 
@@ -278,39 +282,39 @@ const ConsignArtwork = () => {
                                             {v.value || v.status}
                                         </Box>
                                     </Box>
-                                    <Box width={100} marginLeft={1}>
-                                        <Button
-                                            disabled={
-                                                v?.disabled ||
-                                                v?.loading ||
-                                                status === 'published' ||
-                                                status === 'preview'
-                                            }
-                                            onClick={v.actionFunc}
-                                            size="small"
-                                            variant="contained"
-                                            fullWidth
-                                        >
-                                            {v.loading ? (
-                                                <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                    }}
-                                                >
-                                                    Loading...
-                                                </Box>
-                                            ) : (
-                                                v.actionTitle
-                                            )}
-                                        </Button>
-                                        <Box position="relative" display="inline-block" bgcolor="red">
-                                            {v.title === 'Creator Wallet' && (
-                                                <Typography position="absolute" left="8px" top="-16px">
-                                                    Developing...
-                                                </Typography>
-                                            )}
+                                    <Box width={120} marginLeft={1}>
+                                        <Box width={100}>
+                                            <Button
+                                                disabled={
+                                                    v?.disabled ||
+                                                    v?.loading ||
+                                                    status === 'published' ||
+                                                    status === 'preview'
+                                                }
+                                                onClick={v.actionFunc}
+                                                size="small"
+                                                variant="contained"
+                                                fullWidth
+                                            >
+                                                {v.loading ? (
+                                                    <Box
+                                                        sx={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                        }}
+                                                    >
+                                                        Loading...
+                                                    </Box>
+                                                ) : (
+                                                    v.actionTitle
+                                                )}
+                                            </Button>
+                                        </Box>
+                                        <Box position="relative" left="110px">
+                                            <Typography position="absolute" top="-26px">
+                                                Coming soon
+                                            </Typography>
                                         </Box>
                                     </Box>
                                 </Box>
