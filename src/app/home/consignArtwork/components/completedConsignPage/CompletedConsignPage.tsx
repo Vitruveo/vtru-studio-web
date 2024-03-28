@@ -57,10 +57,6 @@ export const CompletedConsignPage = () => {
         },
     ];
 
-    const onStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        formik.setFieldValue('selectedStatus', event.target.value as ConsignTableStatus);
-    };
-
     return (
         <form onSubmit={formik.handleSubmit}>
             <PageContainerFooter submitText="Update" secondaryText="Edit" submitDisabled={!formik.dirty}>
