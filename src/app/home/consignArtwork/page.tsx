@@ -32,7 +32,7 @@ const ConsignArtwork = () => {
 
     const { status } = useSelector((state) => state.asset);
     const { previewAndConsign } = useSelector((state) => state.consignArtwork);
-    const { completedSteps } = useSelector((state) => state.consignArtwork);
+    const { completedSteps, artworkListing } = useSelector((state) => state.consignArtwork);
 
     const checkAllCompletedSteps = Object.values(completedSteps)
         .filter((v) => !v.optional && v.stepId !== 'reviewAndConsign')
@@ -91,7 +91,7 @@ const ConsignArtwork = () => {
     }, [status]);
 
     // TODO: PUT THIS IN REDUX STORE
-    const isConsignCompleted = previewAndConsign.artworkListing?.checked /*Object.values(previewAndConsign).every((v) => v.checked == true)*/;
+    const isConsignCompleted = previewAndConsign.artworkListing?.checked || !!artworkListing  /*Object.values(previewAndConsign).every((v) => v.checked == true)*/;
 
     if (isConsignCompleted) {
         return <CompletedConsignPage />;

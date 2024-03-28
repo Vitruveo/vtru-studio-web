@@ -1,3 +1,5 @@
+import { AssetConsignArtwork } from '../asset/types';
+
 export type StepId = 'termsOfUse' | 'assetMedia' | 'assetMetadata' | 'licenses' | 'auxiliaryMedia' | 'reviewAndConsign';
 export type StepStatus = 'notStarted' | 'completed' | 'inProgress';
 
@@ -11,7 +13,7 @@ export interface CompletedSteps {
     };
 }
 
-export interface ConsignArtworkSliceState {
+export interface ConsignArtworkSliceState extends AssetConsignArtwork {
     isCompletedProfile: boolean;
     goToConsignArtwork: boolean;
     completedSteps: CompletedSteps;

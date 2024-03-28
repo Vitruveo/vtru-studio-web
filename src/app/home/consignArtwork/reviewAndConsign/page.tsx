@@ -14,6 +14,7 @@ import { useI18n } from '@/app/hooks/useI18n';
 
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { WalletProvider } from '../../components/apps/wallet';
+import { updateAssetStep } from '@/features/asset/requests';
 
 interface ConsignStepsProps {
     [key: string]: {
@@ -88,6 +89,9 @@ const ConsignArtwork = () => {
         optional: language['studio.consignArtwork.optional'],
         moreInformation: language['studio.consignArtwork.subtitle.moreInformation'],
         reviewAndConsign: language['studio.consignArtwork.stepName.reviewAndConsign'],
+        artworkListingTitle: language['studio.consignArtwork.artworkListing'],
+        preview: language['studio.consignArtwork.consignmentStatus.preview.title'],
+        comingSoon: language['studio.consignArtwork.comingSoon'],
     } as { [key: string]: string };
 
     const BCrumb = [
@@ -104,9 +108,28 @@ const ConsignArtwork = () => {
         },
     ];
 
-    const handleSubmit = (event?: React.FormEvent) => {
+    // TODO: VERIFICAR SE A CHAMADA A API ESTÁ SENDO FEITO DA MANEIRA CORRETA
+    const handleSubmit = async (event?: React.FormEvent) => {
         if (event) event.preventDefault();
-        router.push(`/home/consignArtwork/DoneConsign`);
+
+        try {
+            await updateAssetStep({
+                stepName: 'consignArtwork',
+                consignArtwork: {
+                    artworkListing: new Date().toDateString(),
+                    creatorWallet: null,
+                    creatorCredits: null,
+                    creatorContract: null,
+                },
+            });
+            router.push(`/home/consignArtwork/DoneConsign`);
+        } catch (error) {
+            setToastr({
+                type: 'error',
+                open: true,
+                message: 'Error',
+            });
+        }
     };
 
     const grayColor = theme.palette.text.disabled;
@@ -130,8 +153,8 @@ const ConsignArtwork = () => {
 
     const consignSteps: ConsignStepsProps = {
         artworkListing: {
-            title: 'Artwork Listing',
-            actionTitle: 'Preview',
+            title: texts.artworkListingTitle,
+            actionTitle: texts.preview,
             actionFunc: () => {
                 window.open('https://www.google.com', '_blank');
                 dispatch(
@@ -311,11 +334,13 @@ const ConsignArtwork = () => {
                                                 )}
                                             </Button>
                                         </Box>
-                                        <Box position="relative" left="110px">
-                                            <Typography position="absolute" top="-26px">
-                                                Coming soon
-                                            </Typography>
-                                        </Box>
+                                        {v.title != 'Artwork Listing' && (
+                                            <Box position="relative" left="110px">
+                                                <Typography position="absolute" top="-26px">
+                                                    {texts.comingSoon}
+                                                </Typography>
+                                            </Box>
+                                        )}
                                     </Box>
                                 </Box>
                             </Box>

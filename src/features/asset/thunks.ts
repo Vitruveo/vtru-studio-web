@@ -40,7 +40,12 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
         try {
             const response = await getAsset();
+
             if (response.data) {
+                if (response.data.consignArtwork) {
+                    dispatch(consignArtworkActionsCreators.changeConsignArtwork(response.data.consignArtwork));
+                }
+
                 if (response.data.assetMetadata && Object.values(response.data.assetMetadata)?.length) {
                     dispatch(
                         consignArtworkActionsCreators.changeStatusStep({
@@ -151,6 +156,10 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
                             status: 'completed',
                         })
                     );
+
+                    if (response.data.consignArtwork) {
+                        dispatch(consignArtworkActionsCreators.changeConsignArtwork(response.data.consignArtwork));
+                    }
                 }
             }
 

@@ -1,11 +1,14 @@
 import { Box, Button, Grid, Theme, Typography, useMediaQuery, useTheme } from '@mui/material';
-import { useSelector } from '@/store/hooks';
+import { useDispatch, useSelector } from '@/store/hooks';
 import { CompletedConsignTableStatus, ConsignTableStatus } from './CompletedConsignTableStatus';
 import PageContainerFooter from '@/app/home/components/container/PageContainerFooter';
 import Breadcrumb, { BreadCrumbItem } from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 import AssetMediaPreview from '../assetMediaPreview';
 import { useFormik } from 'formik';
 import { useI18n } from '@/app/hooks/useI18n';
+import { updateAssetStep } from '@/features/asset/requests';
+import { getStatus, getTableStatus } from './helpers';
+import { assetActionsCreators } from '@/features/asset/slice';
 
 // TODO: ADICIONAR TRADUÇÃO
 
@@ -17,16 +20,25 @@ export const CompletedConsignPage = () => {
     const { previewAndConsign } = useSelector((state) => state.consignArtwork);
     const xL = useMediaQuery((them: Theme) => them.breakpoints.up('xl'));
     const theme = useTheme();
+    const dispatch = useDispatch();
+    const { status } = useSelector(state => state.asset)
     const { language } = useI18n();
 
     const grayColor = theme.palette.text.disabled;
 
+    // TODO: VERIFICAR SE A CHAMADA A API ESTÁ SENDO FEITO DA MANEIRA CORRETA
     const formik = useFormik<FormType>({
         initialValues: {
-            selectedStatus: 'Active',
+            selectedStatus: getTableStatus(status),
         },
+        enableReinitialize: true,
         onSubmit: async (values) => {
-            alert(values.selectedStatus);
+            try {
+                await updateAssetStep({ stepName: 'publish', status: getStatus(values.selectedStatus) });
+                dispatch(assetActionsCreators.change({ status: getStatus(values.selectedStatus) }))
+            } catch (error) {
+                // TODO: TRATAR ERRO
+            }
         },
     });
 

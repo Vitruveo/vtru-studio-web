@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ChangeStatusPayload, ConsignArtworkSliceState } from './types';
 import { Email, Wallet } from '../user/types';
+import { AssetConsignArtwork, AssetStatus } from '../asset/types';
 
 export const stepsNames = {
     assetMedia: 'studio.consignArtwork.stepName.assetMedia',
@@ -82,6 +83,10 @@ const initialState: ConsignArtworkSliceState = {
             checked: false,
         },
     },
+    artworkListing: '',
+    creatorWallet: '',
+    creatorContract: '',
+    creatorCredits: 0,
 };
 
 export const consignArtworkSlice = createSlice({
@@ -108,6 +113,12 @@ export const consignArtworkSlice = createSlice({
             if (status === 'notStarted') state.completedSteps[stepId].statusName = statusName.notStarted;
             state.completedSteps[stepId].status = status;
         },
+        changeConsignArtwork: (state, action: PayloadAction<AssetConsignArtwork>) => {
+            state.artworkListing = action.payload.artworkListing;
+            state.creatorWallet = action.payload.creatorWallet;
+            state.creatorContract = action.payload.creatorContract;
+            state.creatorCredits = action.payload.creatorCredits;
+        },        
     },
 });
 

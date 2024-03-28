@@ -62,6 +62,14 @@ export interface Asset {
         createdBy: string | null;
         updatedBy: string | null;
     };
+    consignArtwork?: AssetConsignArtwork;
+}
+
+export interface AssetConsignArtwork {
+    artworkListing?: string;
+    creatorWallet?: string;
+    creatorCredits?: number;
+    creatorContract?: string;
 }
 
 export interface AssetSendRequestUploadReq {
