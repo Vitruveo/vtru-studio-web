@@ -66,7 +66,7 @@ const initialState: ConsignArtworkSliceState = {
     previewAndConsign: {
         creatorCredits: {
             checked: false,
-            value: 0,
+            value: undefined,
             loading: false,
         },
         creatorWallet: {

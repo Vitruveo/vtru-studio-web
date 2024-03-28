@@ -21,7 +21,7 @@ export interface ConsignArtworkSliceState {
         };
         creatorCredits?: {
             checked: boolean;
-            value?: number;
+            value?: undefined | number;
             loading?: boolean;
         };
         creatorWallet?: {

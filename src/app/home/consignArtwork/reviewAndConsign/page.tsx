@@ -20,7 +20,7 @@ interface ConsignStepsProps {
         title: string;
         status?: string;
         actionTitle: string;
-        value?: string | number;
+        value?: string | number | undefined;
         loading?: boolean;
         disabled?: boolean;
         actionFunc: () => void;
@@ -153,7 +153,7 @@ const ConsignArtwork = () => {
         creatorCredits: {
             title: 'Creator Credits',
             actionTitle: previewAndConsign.creatorCredits?.value ? 'Requested' : 'Request',
-            value: previewAndConsign.creatorCredits?.value?.toString(),
+            value: previewAndConsign.creatorCredits?.value,
             loading: previewAndConsign.creatorCredits?.loading,
             disabled: !previewAndConsign.creatorWallet?.value || previewAndConsign.creatorCredits?.value === 1,
             actionFunc: async () => {
@@ -185,6 +185,11 @@ const ConsignArtwork = () => {
             disabled: !previewAndConsign.creatorWallet?.value,
             loading: previewAndConsign.creatorContract?.loading,
             actionFunc: async () => {
+                if (previewAndConsign.creatorContract?.value) {
+                    window.open('https://explorer.vitruveo.xyz/', '_blank');
+                    return;
+                }
+
                 dispatch(
                     consignArtworkActionsCreators.changePreviewAndConsign({
                         creatorContract: {
@@ -194,7 +199,6 @@ const ConsignArtwork = () => {
                     })
                 );
                 await new Promise((resolve) => setTimeout(resolve, 2000));
-                window.open('https://explorer.vitruveo.xyz/', '_blank');
                 dispatch(
                     consignArtworkActionsCreators.changePreviewAndConsign({
                         creatorContract: {
