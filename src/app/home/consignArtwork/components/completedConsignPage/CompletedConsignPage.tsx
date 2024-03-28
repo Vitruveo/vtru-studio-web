@@ -34,7 +34,7 @@ export const CompletedConsignPage = () => {
         artworkListingTitle: language['studio.consignArtwork.artworkListing'],
         artworkListingActionTitle: language['studio.consignArtwork.consignmentStatus.preview.title'],
         consignedTitle: language['studio.consignArtwork.artworkConsignedTitle'],
-        consignArtworkTitle: language['studio.consignArtwork.title']
+        consignArtworkTitle: language['studio.consignArtwork.title'],
     } as { [key: string]: string };
 
     const consignSteps = {
@@ -62,7 +62,7 @@ export const CompletedConsignPage = () => {
         },
         {
             title: texts.consignArtworkTitle,
-            to: '/consignArtwork',
+            to: '/home/consignArtwork',
         },
     ];
 
@@ -74,7 +74,7 @@ export const CompletedConsignPage = () => {
                     <Box marginBottom={2}>
                         <Box>
                             <Typography variant="h6" fontWeight="normal" color="GrayText">
-                                { texts.consignedTitle }
+                                {texts.consignedTitle}
                             </Typography>
                         </Box>
                         <Box maxWidth={600} p={2}>
@@ -133,9 +133,9 @@ export const CompletedConsignPage = () => {
                                 />
                             </Box>
                         </Box>
-                        <Box flex={1} display="flex" justifyContent={!xL ? 'flex-start' : 'center'}>
-                            <AssetMediaPreview />
-                        </Box>
+                    </Box>
+                    <Box flex={1} display="flex" justifyContent={!xL ? 'flex-start' : 'center'}>
+                        <AssetMediaPreview />
                     </Box>
                 </Grid>
             </PageContainerFooter>
