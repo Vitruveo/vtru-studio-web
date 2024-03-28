@@ -5,6 +5,7 @@ import PageContainerFooter from '@/app/home/components/container/PageContainerFo
 import Breadcrumb, { BreadCrumbItem } from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 import AssetMediaPreview from '../assetMediaPreview';
 import { useFormik } from 'formik';
+import { useI18n } from '@/app/hooks/useI18n';
 
 // TODO: ADICIONAR TRADUÇÃO
 
@@ -15,8 +16,9 @@ interface FormType {
 export const CompletedConsignPage = () => {
     const { previewAndConsign } = useSelector((state) => state.consignArtwork);
     const xL = useMediaQuery((them: Theme) => them.breakpoints.up('xl'));
-
     const theme = useTheme();
+    const { language } = useI18n();
+
     const grayColor = theme.palette.text.disabled;
 
     const formik = useFormik<FormType>({
@@ -28,10 +30,17 @@ export const CompletedConsignPage = () => {
         },
     });
 
+    const texts = {
+        artworkListingTitle: language['studio.consignArtwork.artworkListing'],
+        artworkListingActionTitle: language['studio.consignArtwork.consignmentStatus.preview.title'],
+        consignedTitle: language['studio.consignArtwork.artworkConsignedTitle'],
+        consignArtworkTitle: language['studio.consignArtwork.title']
+    } as { [key: string]: string };
+
     const consignSteps = {
         artworkListing: {
-            title: 'Artwork Listing',
-            actionTitle: 'Preview',
+            title: texts.artworkListingTitle,
+            actionTitle: texts.artworkListingActionTitle,
             actionFunc: () => {
                 window.open('https://www.google.com', '_blank');
             },
@@ -52,7 +61,7 @@ export const CompletedConsignPage = () => {
             title: 'Home',
         },
         {
-            title: 'Consign Artwork',
+            title: texts.consignArtworkTitle,
             to: '/consignArtwork',
         },
     ];
@@ -65,7 +74,7 @@ export const CompletedConsignPage = () => {
                     <Box marginBottom={2}>
                         <Box>
                             <Typography variant="h6" fontWeight="normal" color="GrayText">
-                                Your artwork is currently consigned.
+                                { texts.consignedTitle }
                             </Typography>
                         </Box>
                         <Box maxWidth={600} p={2}>

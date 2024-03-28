@@ -72,7 +72,8 @@ const language: Translation = {
     'studio.consignArtwork.stepName.auxiliaryMedia': 'Вспомогательные Медиа',
     'studio.consignArtwork.stepName.reviewAndConsign': 'Рассмотрение и отправка',
     'studio.consignArtwork.optional': 'необязательный',
-
+    'studio.consignArtwork.artworkListing': 'список произведений искусства',
+    'studio.consignArtwork.artworkConsignedTitle': 'Ваша работа в настоящее время отправлена.',
     'studio.consignArtwork.stepStatus.completed': 'Завершено',
     'studio.consignArtwork.stepStatus.inProgress': 'В процессе',
     'studio.consignArtwork.stepStatus.notStarted': 'Не начато',

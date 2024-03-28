@@ -67,7 +67,8 @@ const language: Translation = {
     'studio.consignArtwork.stepName.auxiliaryMedia': 'Mídia Auxiliar',
     'studio.consignArtwork.stepName.reviewAndConsign': 'Revisar e Consignar',
     'studio.consignArtwork.optional': 'opcional',
-
+    'studio.consignArtwork.artworkListing': 'Listagem de Obra de Arte',
+    'studio.consignArtwork.artworkConsignedTitle': 'Sua obra de arte está atualmente consignada.',
     'studio.consignArtwork.stepStatus.completed': 'Concluído',
     'studio.consignArtwork.stepStatus.inProgress': 'Em Andamento',
     'studio.consignArtwork.stepStatus.notStarted': 'Não Iniciado',
