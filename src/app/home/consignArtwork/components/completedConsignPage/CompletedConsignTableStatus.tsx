@@ -1,3 +1,4 @@
+import React from 'react';
 import BlankCard from '@/app/home/components/shared/BlankCard';
 import {
     TableContainer,
@@ -13,11 +14,13 @@ import {
 } from '@mui/material';
 
 interface ConsignTableData {
-    status: string;
+    status: ConsignTableStatus;
     view: string;
     license: string;
     search: string;
 }
+
+export type ConsignTableStatus = 'Draft' | 'Preview' | 'Active' | 'Hidden';
 
 const rows: ConsignTableData[] = [
     {
@@ -46,7 +49,12 @@ const rows: ConsignTableData[] = [
     },
 ];
 
-export const CompletedConsignTableStatus = () => {
+interface CompletedConsignTableStatusProps {
+    selectedStatus: ConsignTableStatus;
+    onStatusChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export const CompletedConsignTableStatus = ({ selectedStatus, onStatusChange }: CompletedConsignTableStatusProps) => {
     return (
         <Stack spacing={2}>
             <Typography variant="h6">Consignment Status</Typography>
@@ -74,7 +82,7 @@ export const CompletedConsignTableStatus = () => {
                                 <TableRow key={row.status} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <TableCell scope="row">
                                         <Box display="flex" alignItems="center">
-                                            <Radio />
+                                            <Radio name='selectedStatus' value={row.status} checked={row.status == selectedStatus} onChange={onStatusChange} />
                                             <Typography variant="subtitle1" color="textPrimary" fontWeight={600}>
                                                 {row.status}
                                             </Typography>
