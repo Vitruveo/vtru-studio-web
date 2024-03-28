@@ -49,7 +49,7 @@ export default function DoneConsign() {
     const router = useRouter();
 
     const asyncAction = async () => {
-        await new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 500)));
+        await new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 5000)));
     };
 
     const showConfetti = () => {

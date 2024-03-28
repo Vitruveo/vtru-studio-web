@@ -90,7 +90,8 @@ const ConsignArtwork = () => {
         if (!status?.length) dispatch(publishThunk({ status: 'draft' }));
     }, [status]);
 
-    const isConsignCompleted = Object.values(previewAndConsign).every((v) => v.checked == true);
+    // TODO: PUT THIS IN REDUX STORE
+    const isConsignCompleted = previewAndConsign.artworkListing?.checked /*Object.values(previewAndConsign).every((v) => v.checked == true)*/;
 
     if (isConsignCompleted) {
         return <CompletedConsignPage />;
