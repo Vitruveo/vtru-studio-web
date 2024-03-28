@@ -86,6 +86,8 @@ const language: Translation = {
     'studio.consignArtwork.publishButton': (data: { status: string }) =>
         `${data.status === 'published' ? 'Передано' : 'Передать'}`,
 
+    'studio.consignArtwork.comingSoon': 'Скоро',
+
     /* Asset Media */
     'studio.consignArtwork.assetMedia.title': 'Медиафайлы',
     'studio.consignArtwork.assetMedia.description': 'Загрузите Ваше произведение искусства.',

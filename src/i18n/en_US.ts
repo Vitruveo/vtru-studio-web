@@ -86,6 +86,8 @@ const language: Translation = {
     'studio.consignArtwork.publishButton': (data: { status: string }) =>
         `${data.status === 'published' ? 'Review and Update' : 'Review and Consign'}`,
 
+    'studio.consignArtwork.comingSoon': 'Coming soon',
+
     /* Asset Media */
     'studio.consignArtwork.assetMedia.title': 'Asset Media',
     'studio.consignArtwork.assetMedia.description': 'Upload media assets for the artwork being consigned.',
@@ -895,7 +897,6 @@ const language: Translation = {
     'studio.consignArtwork.consignmentStatus.draft.title': 'Draft',
     'studio.consignArtwork.consignmentStatus.preview.title': 'Preview',
     'studio.consignArtwork.consignmentStatus.activate.title': 'Activate',
-
     'studio.consignArtwork.consignmentStatus.activation.title': 'Activation',
     'studio.consignArtwork.consignmentStatus.activation.description':
         'Activation consigns your artwork to the blockchain and requires a Creator Credit.',

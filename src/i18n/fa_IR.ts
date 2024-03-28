@@ -84,6 +84,8 @@ const language: Translation = {
     'studio.consignArtwork.publishButton': (data: { status: string }) =>
         `${data.status === 'published' ? 'محول شده' : 'محول کن'}`,
 
+    'studio.consignArtwork.comingSoon': 'به زودی',
+
     /* Asset Media */
     'studio.consignArtwork.assetMedia.title': 'رسانه دارایی',
     'studio.consignArtwork.assetMedia.description':

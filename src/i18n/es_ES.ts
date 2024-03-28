@@ -86,6 +86,8 @@ const language: Translation = {
     'studio.consignArtwork.publishButton': (data: { status: string }) =>
         `${data.status === 'published' ? 'Consignado' : 'Consignar'}`,
 
+    'studio.consignArtwork.comingSoon': 'Muy pronto',
+
     /* Asset Media */
     'studio.consignArtwork.assetMedia.title': 'Medios del Activo',
     'studio.consignArtwork.assetMedia.description': 'Sube los medios para la obra de arte que se está consignando.',
