@@ -111,6 +111,23 @@ const ConsignArtwork = () => {
 
     const grayColor = theme.palette.text.disabled;
 
+    // DISABLED FOR NOW
+    const handleWalletConnection = () => {
+        if (previewAndConsign.creatorWallet?.value) {
+            dispatch(
+                consignArtworkActionsCreators.changePreviewAndConsign({
+                    creatorWallet: {
+                        value: '',
+                        checked: false,
+                    },
+                })
+            );
+            disconnectAsync();
+            return;
+        }
+        handleAddWallet();
+    };
+
     const consignSteps: ConsignStepsProps = {
         artworkListing: {
             title: 'Artwork Listing',
@@ -134,28 +151,14 @@ const ConsignArtwork = () => {
                 previewAndConsign.creatorWallet?.value.slice(0, 6) +
                     '...' +
                     previewAndConsign.creatorWallet?.value.slice(-4),
-            actionFunc: () => {
-                if (previewAndConsign.creatorWallet?.value) {
-                    dispatch(
-                        consignArtworkActionsCreators.changePreviewAndConsign({
-                            creatorWallet: {
-                                value: '',
-                                checked: false,
-                            },
-                        })
-                    );
-                    disconnectAsync();
-                    return;
-                }
-                handleAddWallet();
-            },
+            actionFunc: () => {},
         },
         creatorCredits: {
             title: 'Creator Credits',
             actionTitle: previewAndConsign.creatorCredits?.value ? 'Requested' : 'Request',
             value: previewAndConsign.creatorCredits?.value,
             loading: previewAndConsign.creatorCredits?.loading,
-            disabled: !previewAndConsign.creatorWallet?.value || previewAndConsign.creatorCredits?.value === 1,
+            disabled: true /*!previewAndConsign.creatorWallet?.value || previewAndConsign.creatorCredits?.value === 1*/,
             actionFunc: async () => {
                 dispatch(
                     consignArtworkActionsCreators.changePreviewAndConsign({
@@ -182,7 +185,7 @@ const ConsignArtwork = () => {
             status: 'Not Created',
             actionTitle: previewAndConsign.creatorContract?.value ? 'View' : 'Start',
             value: previewAndConsign.creatorContract?.value,
-            disabled: !previewAndConsign.creatorWallet?.value,
+            disabled: true /* !previewAndConsign.creatorWallet?.value */,
             loading: previewAndConsign.creatorContract?.loading,
             actionFunc: async () => {
                 if (previewAndConsign.creatorContract?.value) {
@@ -219,7 +222,7 @@ const ConsignArtwork = () => {
                 title={texts.consignArtworkTitle}
                 stepNumber={6}
                 backOnclick={() => router.push(`/home/consignArtwork`)}
-                submitDisabled={Object.values(previewAndConsign).some((v) => !v.checked)}
+                submitDisabled={!previewAndConsign.artworkListing?.checked /* Object.values(previewAndConsign).some((v) => !v.checked) */}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
 
@@ -302,6 +305,13 @@ const ConsignArtwork = () => {
                                                 v.actionTitle
                                             )}
                                         </Button>
+                                        <Box position="relative" display="inline-block" bgcolor="red">
+                                            {v.title === 'Creator Wallet' && (
+                                                <Typography position="absolute" left="8px" top="-16px">
+                                                    Developing...
+                                                </Typography>
+                                            )}
+                                        </Box>
                                     </Box>
                                 </Box>
                             </Box>
