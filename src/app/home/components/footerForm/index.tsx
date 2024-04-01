@@ -22,6 +22,7 @@ export interface FooterFormProps {
     backOnclick?: () => void;
     saveOnClick?: () => void;
     secondaryText?: string;
+    hasBackButton?: boolean;
 }
 
 export function FooterForm({
@@ -33,7 +34,8 @@ export function FooterForm({
     stepStatus,
     stepNumber,
     backOnclick,
-    secondaryText
+    secondaryText,
+    hasBackButton = true,
 }: FooterFormProps) {
     const theme = useTheme();
 
@@ -153,16 +155,17 @@ export function FooterForm({
                                 >
                                     {submitText || 'Save'}
                                 </Button>
-
-                                <Button
-                                    size="large"
-                                    onClick={!backPathRouter ? handleBackClick : undefined}
-                                    variant="text"
-                                >
-                                    <Typography variant="subtitle2" color="GrayText" className="text-hover">
-                                        {texts.back}
-                                    </Typography>
-                                </Button>
+                                {hasBackButton && (
+                                    <Button
+                                        size="large"
+                                        onClick={!backPathRouter ? handleBackClick : undefined}
+                                        variant="text"
+                                    >
+                                        <Typography variant="subtitle2" color="GrayText" className="text-hover">
+                                            {texts.back}
+                                        </Typography>
+                                    </Button>
+                                )}
                             </Stack>
                         </Box>
                     ) : (
