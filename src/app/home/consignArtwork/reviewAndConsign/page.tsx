@@ -15,6 +15,7 @@ import { useI18n } from '@/app/hooks/useI18n';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { WalletProvider } from '../../components/apps/wallet';
 import { updateAssetStep } from '@/features/asset/requests';
+import { useCookies } from 'react-cookie';
 
 interface ConsignStepsProps {
     [key: string]: {
@@ -34,6 +35,8 @@ const ConsignArtwork = () => {
         open: false,
         message: '',
     });
+
+    const [cookies, setCookie] = useCookies(['token']);
 
     const [connectWallet, setConnectWallet] = useState(false);
 
@@ -111,25 +114,7 @@ const ConsignArtwork = () => {
     // TODO: VERIFICAR SE A CHAMADA A API ESTÁ SENDO FEITO DA MANEIRA CORRETA
     const handleSubmit = async (event?: React.FormEvent) => {
         if (event) event.preventDefault();
-
-        try {
-            await updateAssetStep({
-                stepName: 'consignArtwork',
-                consignArtwork: {
-                    artworkListing: new Date().toDateString(),
-                    creatorWallet: null,
-                    creatorCredits: null,
-                    creatorContract: null,
-                },
-            });
-            router.push(`/home/consignArtwork/DoneConsign`);
-        } catch (error) {
-            setToastr({
-                type: 'error',
-                open: true,
-                message: 'Error',
-            });
-        }
+        router.push(`/home/consignArtwork/DoneConsign`);
     };
 
     const grayColor = theme.palette.text.disabled;
@@ -151,20 +136,23 @@ const ConsignArtwork = () => {
         handleAddWallet();
     };
 
+    const handlePreview = () => {
+        setCookie('token', localStorage.getItem('token'), { path: '/', domain: window.location.hostname });
+        window.open('https://www.google.com', '_blank');
+        dispatch(
+            consignArtworkActionsCreators.changePreviewAndConsign({
+                artworkListing: {
+                    checked: true,
+                },
+            })
+        );
+    };
+
     const consignSteps: ConsignStepsProps = {
         artworkListing: {
             title: texts.artworkListingTitle,
             actionTitle: texts.preview,
-            actionFunc: () => {
-                window.open('https://www.google.com', '_blank');
-                dispatch(
-                    consignArtworkActionsCreators.changePreviewAndConsign({
-                        artworkListing: {
-                            checked: true,
-                        },
-                    })
-                );
-            },
+            actionFunc: handlePreview,
         },
         creatorWallet: {
             title: 'Creator Wallet',

@@ -187,11 +187,13 @@ export function FooterForm({
                                 {submitText || texts.save}
                             </Button>
 
-                            <Link href={backPathRouter || '/home'} className="hover-text-primary">
-                                <Typography variant="subtitle2" color="GrayText" className="text-hover">
-                                    {secondaryText || texts.back}
-                                </Typography>
-                            </Link>
+                            {hasBackButton && (
+                                <Link href={backPathRouter || '/home'} className="hover-text-primary">
+                                    <Typography variant="subtitle2" color="GrayText" className="text-hover">
+                                        {secondaryText || texts.back}
+                                    </Typography>
+                                </Link>
+                            )}
                         </Stack>
                     )}
                 </Box>

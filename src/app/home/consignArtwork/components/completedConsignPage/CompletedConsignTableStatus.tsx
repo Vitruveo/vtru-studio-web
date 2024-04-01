@@ -12,68 +12,91 @@ import {
     Box,
     Stack,
 } from '@mui/material';
+import { useI18n } from '@/app/hooks/useI18n';
+import { ConsignArtworkAssetStatus } from '@/features/consignArtwork/types';
 
 interface ConsignTableData {
-    status: ConsignTableStatus;
+    title: string;
+    status: ConsignArtworkAssetStatus;
     view: string;
     license: string;
     search: string;
 }
 
-export type ConsignTableStatus = 'Draft' | 'Preview' | 'Active' | 'Hidden';
-
-const rows: ConsignTableData[] = [
-    {
-        status: 'Draft',
-        view: 'Me',
-        license: 'No',
-        search: 'No',
-    },
-    {
-        status: 'Preview',
-        view: 'Everyone',
-        license: 'No',
-        search: 'No',
-    },
-    {
-        status: 'Active',
-        view: 'Everyone',
-        license: 'Yes',
-        search: 'Yes',
-    },
-    {
-        status: 'Hidden',
-        view: 'Everyone',
-        license: 'Yes',
-        search: 'No',
-    },
-];
-
 interface CompletedConsignTableStatusProps {
-    selectedStatus: ConsignTableStatus;
+    selectedStatus: ConsignArtworkAssetStatus;
     onStatusChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const CompletedConsignTableStatus = ({ selectedStatus, onStatusChange }: CompletedConsignTableStatusProps) => {
+    const { language } = useI18n();
+
+    const texts = {
+        consignStatus: language['studio.consignArtwork.consignmentStatus.title'],
+        status: 'Status',
+        preview: language['studio.consignArtwork.consignmentStatus.preview.title'],
+        active: language['studio.consignArtwork.consignmentStatus.active.title'],
+        hidden: 'Hidden',
+        view: language['studio.consignArtwork.consignmentStatus.view'],
+        license: language['studio.consignArtwork.consignmentStatus.license'],
+        search: language['studio.consignArtwork.consignmentStatus.search'],
+        yes: language['studio.consignArtwork.consignmentStatus.yes'],
+        no: language['studio.consignArtwork.consignmentStatus.no'],
+        everyone: 'Everyone',
+        me: 'Me',
+        draft: language['studio.consignArtwork.consignmentStatus.draft.title'],
+    } as { [key: string]: string };
+
+    const rows: ConsignTableData[] = [
+        {
+            status: 'draft',
+            title: texts.draft,
+            view: texts.me,
+            license: texts.no,
+            search: texts.no,
+        },
+        {
+            status: 'preview',
+            title: texts.preview,
+            view: texts.everyone,
+            license: texts.no,
+            search: texts.no,
+        },
+        {
+            status: 'active',
+            title: texts.active,
+            view: texts.everyone,
+            license: texts.yes,
+            search: texts.yes,
+        },
+        {
+            status: 'hidden',
+            title: texts.hidden,
+            view: texts.everyone,
+            license: texts.yes,
+            search: texts.no,
+        },
+    ];
+
     return (
         <Stack spacing={2}>
-            <Typography variant="h6">Consignment Status</Typography>
+            <Typography variant="h6">{texts.consignStatus}</Typography>
             <BlankCard>
                 <TableContainer>
                     <Table>
                         <TableHead>
                             <TableRow>
                                 <TableCell>
-                                    <Typography variant="h6">Status</Typography>
+                                    <Typography variant="h6">{texts.status}</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Typography variant="h6">View</Typography>
+                                    <Typography variant="h6">{texts.view}</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Typography variant="h6">License</Typography>
+                                    <Typography variant="h6">{texts.license}</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Typography variant="h6">Search</Typography>
+                                    <Typography variant="h6">{texts.search}</Typography>
                                 </TableCell>
                             </TableRow>
                         </TableHead>
@@ -82,9 +105,14 @@ export const CompletedConsignTableStatus = ({ selectedStatus, onStatusChange }: 
                                 <TableRow key={row.status} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <TableCell scope="row">
                                         <Box display="flex" alignItems="center">
-                                            <Radio name='selectedStatus' value={row.status} checked={row.status == selectedStatus} onChange={onStatusChange} />
+                                            <Radio
+                                                name="selectedStatus"
+                                                value={row.status}
+                                                checked={row.status == selectedStatus}
+                                                onChange={onStatusChange}
+                                            />
                                             <Typography variant="subtitle1" color="textPrimary" fontWeight={600}>
-                                                {row.status}
+                                                {row.title}
                                             </Typography>
                                         </Box>
                                     </TableCell>

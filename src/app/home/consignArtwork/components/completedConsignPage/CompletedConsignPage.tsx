@@ -1,27 +1,26 @@
 import { Box, Button, Grid, Theme, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useDispatch, useSelector } from '@/store/hooks';
-import { CompletedConsignTableStatus, ConsignTableStatus } from './CompletedConsignTableStatus';
+import { CompletedConsignTableStatus } from './CompletedConsignTableStatus';
 import PageContainerFooter from '@/app/home/components/container/PageContainerFooter';
 import Breadcrumb, { BreadCrumbItem } from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 import AssetMediaPreview from '../assetMediaPreview';
 import { useFormik } from 'formik';
 import { useI18n } from '@/app/hooks/useI18n';
 import { updateAssetStep } from '@/features/asset/requests';
-import { getStatus, getTableStatus } from './helpers';
-import { assetActionsCreators } from '@/features/asset/slice';
+import { ConsignArtworkAssetStatus } from '@/features/consignArtwork/types';
+import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 
 // TODO: ADICIONAR TRADUÇÃO
 
 interface FormType {
-    selectedStatus: ConsignTableStatus;
+    selectedStatus: ConsignArtworkAssetStatus;
 }
 
 export const CompletedConsignPage = () => {
-    const { previewAndConsign } = useSelector((state) => state.consignArtwork);
+    const { previewAndConsign, status } = useSelector((state) => state.consignArtwork);
     const xL = useMediaQuery((them: Theme) => them.breakpoints.up('xl'));
     const theme = useTheme();
     const dispatch = useDispatch();
-    const { status } = useSelector(state => state.asset)
     const { language } = useI18n();
 
     const grayColor = theme.palette.text.disabled;
@@ -29,13 +28,20 @@ export const CompletedConsignPage = () => {
     // TODO: VERIFICAR SE A CHAMADA A API ESTÁ SENDO FEITO DA MANEIRA CORRETA
     const formik = useFormik<FormType>({
         initialValues: {
-            selectedStatus: getTableStatus(status),
+            selectedStatus: status,
         },
         enableReinitialize: true,
         onSubmit: async (values) => {
             try {
-                await updateAssetStep({ stepName: 'publish', status: getStatus(values.selectedStatus) });
-                dispatch(assetActionsCreators.change({ status: getStatus(values.selectedStatus) }))
+                await updateAssetStep({
+                    stepName: 'consignArtwork',
+                    consignArtwork: {
+                        status: values.selectedStatus,
+                    },
+                });
+                dispatch(
+                    consignArtworkActionsCreators.changeConsignArtworkAssetStatus({ status: values.selectedStatus })
+                );
             } catch (error) {
                 // TODO: TRATAR ERRO
             }
@@ -47,6 +53,7 @@ export const CompletedConsignPage = () => {
         artworkListingActionTitle: language['studio.consignArtwork.consignmentStatus.preview.title'],
         consignedTitle: language['studio.consignArtwork.artworkConsignedTitle'],
         consignArtworkTitle: language['studio.consignArtwork.title'],
+        view: language['studio.consignArtwork.consignmentStatus.view'],
     } as { [key: string]: string };
 
     const consignSteps = {
@@ -60,7 +67,7 @@ export const CompletedConsignPage = () => {
         },
         creatorContract: {
             title: 'Creator Contract',
-            actionTitle: 'View',
+            actionTitle: texts.view,
             value: previewAndConsign.creatorContract?.value,
             actionFunc: async () => {
                 window.open('https://explorer.vitruveo.xyz/', '_blank');
@@ -81,7 +88,7 @@ export const CompletedConsignPage = () => {
     return (
         <form onSubmit={formik.handleSubmit}>
             <PageContainerFooter submitText="Update" secondaryText="Edit" submitDisabled={!formik.dirty}>
-                <Breadcrumb title="Consign Artwork" items={BCrumb} />
+                <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
                 <Grid display="flex" flexWrap="wrap" marginBottom={6} item xs={12} lg={6}>
                     <Box marginBottom={2}>
                         <Box>

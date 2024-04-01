@@ -1,9 +1,9 @@
 'use client';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { ChangeStatusPayload, ConsignArtworkSliceState } from './types';
+import { ChangeStatusPayload, ConsignArtworkAssetStatus, ConsignArtworkSliceState } from './types';
 import { Email, Wallet } from '../user/types';
-import { AssetConsignArtwork, AssetStatus } from '../asset/types';
+import { AssetConsignArtwork } from '../asset/types';
 
 export const stepsNames = {
     assetMedia: 'studio.consignArtwork.stepName.assetMedia',
@@ -24,6 +24,7 @@ export const statusName = {
 const initialState: ConsignArtworkSliceState = {
     isCompletedProfile: false,
     goToConsignArtwork: false,
+    status: 'draft',
     completedSteps: {
         assetMedia: {
             stepId: 'assetMedia',
@@ -118,7 +119,12 @@ export const consignArtworkSlice = createSlice({
             state.creatorWallet = action.payload.creatorWallet;
             state.creatorContract = action.payload.creatorContract;
             state.creatorCredits = action.payload.creatorCredits;
-        },        
+            state.status = action.payload.status
+        },
+        changeConsignArtworkAssetStatus: (state, action: PayloadAction<{ status: ConsignArtworkAssetStatus }>) => {
+            const { status } = action.payload;
+            state.status = status;
+        }
     },
 });
 

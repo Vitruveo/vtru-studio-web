@@ -8,6 +8,8 @@ import PageContainerFooter from '../../components/container/PageContainerFooter'
 import Breadcrumb, { BreadCrumbItem } from '../../layout/shared/breadcrumb/Breadcrumb';
 import { useRouter } from 'next/navigation';
 import { confetti } from '@tsparticles/confetti';
+import { useDispatch } from '@/store/hooks';
+import { updateAssetStep } from '@/features/asset/requests';
 
 interface ConsignStep {
     title: string;
@@ -112,9 +114,19 @@ export default function DoneConsign() {
 
     const isDisabled = steps[steps.length - 1].status != 'done';
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        router.push('/home/consignArtwork');
+        try {
+            await updateAssetStep({
+                stepName: 'consignArtwork',
+                consignArtwork: {
+                    status: 'active',
+                },
+            });
+            router.push('/home/consignArtwork');
+        } catch (error) {
+            // TODO: TRATAR ERRO
+        }
     };
 
     return (
@@ -123,7 +135,7 @@ export default function DoneConsign() {
                 submitText="Done"
                 title={'Consign Artwork'}
                 submitDisabled={isDisabled}
-                backOnclick={() => router.push(`/home/consignArtwork`)}
+                hasBackButton={false}
             >
                 <Breadcrumb title={'Consign Artwork'} items={BCrumb} />
 
