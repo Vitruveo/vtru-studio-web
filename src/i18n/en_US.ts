@@ -894,6 +894,7 @@ const language: Translation = {
     'studio.consignArtwork.consignmentStatus.search': 'Search',
     'studio.consignArtwork.consignmentStatus.license': 'License',
 
+    'studio.consignArtwork.consignmentStatus.active.title': 'Active',
     'studio.consignArtwork.consignmentStatus.draft.title': 'Draft',
     'studio.consignArtwork.consignmentStatus.preview.title': 'Preview',
     'studio.consignArtwork.consignmentStatus.activate.title': 'Activate',

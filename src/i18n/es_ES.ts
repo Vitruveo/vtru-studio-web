@@ -853,6 +853,7 @@ const language: Translation = {
     'studio.consignArtwork.consignmentStatus.search': 'Buscar',
     'studio.consignArtwork.consignmentStatus.license': 'Licencia',
 
+    'studio.consignArtwork.consignmentStatus.active.title': 'Activo',
     'studio.consignArtwork.consignmentStatus.draft.title': 'Borrador',
     'studio.consignArtwork.consignmentStatus.preview.title': 'Vista Previa',
     'studio.consignArtwork.consignmentStatus.activate.title': 'Activar',

@@ -896,7 +896,7 @@ const language: Translation = {
     'studio.consignArtwork.consignmentStatus.view': 'Просмотр',
     'studio.consignArtwork.consignmentStatus.search': 'Поиск',
     'studio.consignArtwork.consignmentStatus.license': 'Лицензия',
-
+    'studio.consignArtwork.consignmentStatus.active.title': 'Активный',
     'studio.consignArtwork.consignmentStatus.draft.title': 'Черновик',
     'studio.consignArtwork.consignmentStatus.preview.title': 'Предпросмотр',
     'studio.consignArtwork.consignmentStatus.activate.title': 'Активировать',

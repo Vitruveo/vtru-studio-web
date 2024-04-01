@@ -892,6 +892,7 @@ const language: Translation = {
     'studio.consignArtwork.consignmentStatus.search': 'جستجو',
     'studio.consignArtwork.consignmentStatus.license': 'مجوز',
 
+    'studio.consignArtwork.consignmentStatus.active.title': 'فعال',
     'studio.consignArtwork.consignmentStatus.draft.title': 'پیش نویس',
     'studio.consignArtwork.consignmentStatus.preview.title': 'پیش‌نمایش',
     'studio.consignArtwork.consignmentStatus.activate.title': 'فعال‌سازی',
