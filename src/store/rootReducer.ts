@@ -7,6 +7,7 @@ import { userSlice } from '../features/user';
 import { consignArtworkSlice } from '../features/consignArtwork';
 import { customizerSlice } from '../features/customizer';
 import { assetSlice } from '@/features/asset';
+import { toastrSlice } from '@/features/toastr/slice';
 
 interface RootState {
     user: ReturnType<typeof userSlice.reducer>;
@@ -14,6 +15,7 @@ interface RootState {
     customizer: ReturnType<typeof customizerSlice.reducer>;
     websocket: ReturnType<typeof websocketSlice.reducer>;
     asset: ReturnType<typeof assetSlice.reducer>;
+    toastr: ReturnType<typeof toastrSlice.reducer>;
 }
 
 const appReducer = combineReducers<RootState>({
@@ -22,6 +24,7 @@ const appReducer = combineReducers<RootState>({
     customizer: customizerSlice.reducer,
     websocket: websocketSlice.reducer,
     asset: assetSlice.reducer,
+    toastr: toastrSlice.reducer,
 });
 
 export const reducer: Reducer<RootState, AnyAction> = (state: RootState | undefined, action: AnyAction) => {
