@@ -54,6 +54,7 @@ const ConsignArtwork = () => {
 
     const { status } = useSelector((state) => state.asset);
     const { previewAndConsign } = useSelector((state) => state.consignArtwork);
+    const { token } = useSelector((state) => state.user);
 
     useEffect(() => {
         if (openConnectModal && connectWallet) {
@@ -137,7 +138,7 @@ const ConsignArtwork = () => {
     };
 
     const handlePreview = () => {
-        setCookie('token', localStorage.getItem('token'), { path: '/', domain: window.location.hostname });
+        setCookie('token', token, { path: '/', domain: window.location.hostname });
         window.open('https://www.google.com', '_blank');
         dispatch(
             consignArtworkActionsCreators.changePreviewAndConsign({
