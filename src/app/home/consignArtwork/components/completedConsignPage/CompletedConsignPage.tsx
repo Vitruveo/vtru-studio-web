@@ -9,6 +9,7 @@ import { useI18n } from '@/app/hooks/useI18n';
 import { updateAssetStep } from '@/features/asset/requests';
 import { ConsignArtworkAssetStatus } from '@/features/consignArtwork/types';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
+import { useToastr } from '@/app/hooks/useToastr';
 
 // TODO: ADICIONAR TRADUÇÃO
 
@@ -22,6 +23,7 @@ export const CompletedConsignPage = () => {
     const theme = useTheme();
     const dispatch = useDispatch();
     const { language } = useI18n();
+    const toastr = useToastr();
 
     const grayColor = theme.palette.text.disabled;
 
@@ -42,8 +44,15 @@ export const CompletedConsignPage = () => {
                 dispatch(
                     consignArtworkActionsCreators.changeConsignArtworkAssetStatus({ status: values.selectedStatus })
                 );
+                toastr.display({
+                    message: 'Consign artwork status updated',
+                    type: 'success',
+                });
             } catch (error) {
-                // TODO: TRATAR ERRO
+                toastr.display({
+                    message: 'Error updating consign artwork status',
+                    type: 'error',
+                });
             }
         },
     });
