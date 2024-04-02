@@ -11,7 +11,7 @@ export interface CustomizedSnackbarState {
 }
 
 interface CustomizedSnackbarProps extends CustomizedSnackbarState {
-    setOpentate: React.Dispatch<React.SetStateAction<CustomizedSnackbarState>>;
+    setOpentate: (state: CustomizedSnackbarState) => void;
 }
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
