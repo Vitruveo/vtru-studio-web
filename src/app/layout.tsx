@@ -9,11 +9,15 @@ import { TypographyOptions } from '@mui/material/styles/createTypography';
 import { Inter } from 'next/font/google';
 import 'toastr/build/toastr.min.css';
 import Providers from '@/store/Provider';
+import CustomizedSnackbar from './common/toastr';
+import { useToastr } from './hooks/useToastr';
 
 const inter = Inter({ subsets: ['latin'] });
 
 const MyApp = ({ children }: { children: React.ReactNode }) => {
     const theme = configTheme();
+    const toastr = useToastr();
+
     return (
         <>
             <NextAppDirEmotionCacheProvider options={{ key: 'modernize' }}>
@@ -85,6 +89,12 @@ const MyApp = ({ children }: { children: React.ReactNode }) => {
                 >
                     <CssBaseline />
                     {children}
+                    <CustomizedSnackbar
+                        open={toastr.data.open}
+                        type={toastr.data.type}
+                        message={toastr.data.message}
+                        setOpentate={toastr.setState}
+                    />
                 </ThemeProvider>
             </NextAppDirEmotionCacheProvider>
         </>
