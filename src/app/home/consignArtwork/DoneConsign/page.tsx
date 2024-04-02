@@ -8,7 +8,6 @@ import PageContainerFooter from '../../components/container/PageContainerFooter'
 import Breadcrumb, { BreadCrumbItem } from '../../layout/shared/breadcrumb/Breadcrumb';
 import { useRouter } from 'next/navigation';
 import { confetti } from '@tsparticles/confetti';
-import { useDispatch } from '@/store/hooks';
 import { updateAssetStep } from '@/features/asset/requests';
 
 interface ConsignStep {
@@ -46,20 +45,20 @@ const BCrumb: BreadCrumbItem[] = [
     },
 ];
 
+const showConfetti = () => {
+    confetti({
+        particleCount: 500,
+        spread: 250,
+        origin: { x: 0.5, y: 0.5 },
+    });
+};
+
 export default function DoneConsign() {
     const customizer = useSelector((state: any) => state.customizer); // TODO: ADICIONAR TIPAGEM CORRETA
     const router = useRouter();
 
     const asyncAction = async () => {
         await new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 5000)));
-    };
-
-    const showConfetti = () => {
-        confetti({
-            particleCount: 500,
-            spread: 250,
-            origin: { x: 0.5, y: 0.5 },
-        });
     };
 
     const [steps, setSteps] = useState<ConsignStep[]>([
@@ -104,7 +103,7 @@ export default function DoneConsign() {
                     setSteps([...steps]);
                 } catch (error) {
                     step.status = 'error';
-                    alert('An error occurred. Please try again later.');
+                    alert('An error occurred. Please try again later.'); // TODO: ADICIONAR TOAST
                     break;
                 }
             }
