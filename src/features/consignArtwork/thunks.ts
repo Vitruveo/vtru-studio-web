@@ -8,7 +8,7 @@ export function updateStatus(status: ConsignArtworkAssetStatus): ReduxThunkActio
     return async (dispatch, getState) => {
         try {
             await updateAssetStep({
-                stepName: 'consignArtwork',
+                stepName: 'consignArtworkStatus',
                 consignArtwork: {
                     status: status,
                 },
@@ -35,10 +35,9 @@ export function checkPreview(): ReduxThunkAction {
     return async (dispatch, getState) => {
         try {
             await updateAssetStep({
-                stepName: 'consignArtwork',
+                stepName: 'consignArtworkListing',
                 consignArtwork: {
-                    status: getState().consignArtwork.status,
-                    artworkListing: new Date().toISOString(),
+                    listing: new Date().toISOString(),
                 },
             });
             dispatch(
