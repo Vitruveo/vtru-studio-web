@@ -16,6 +16,8 @@ import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { WalletProvider } from '../../components/apps/wallet';
 import { updateAssetStep } from '@/features/asset/requests';
 import { useCookies } from 'react-cookie';
+import { useToastr } from '@/app/hooks/useToastr';
+import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
 
 interface ConsignStepsProps {
     [key: string]: {
@@ -30,11 +32,7 @@ interface ConsignStepsProps {
 }
 
 const ConsignArtwork = () => {
-    const [toastr, setToastr] = useState<CustomizedSnackbarState>({
-        type: 'success',
-        open: false,
-        message: '',
-    });
+    const toastr = useToastr();
 
     const [cookies, setCookie] = useCookies(['token']);
 
@@ -112,7 +110,6 @@ const ConsignArtwork = () => {
         },
     ];
 
-    // TODO: VERIFICAR SE A CHAMADA A API ESTÁ SENDO FEITO DA MANEIRA CORRETA
     const handleSubmit = async (event?: React.FormEvent) => {
         if (event) event.preventDefault();
         router.push(`/home/consignArtwork/DoneConsign`);
@@ -120,7 +117,7 @@ const ConsignArtwork = () => {
 
     const grayColor = theme.palette.text.disabled;
 
-    // DISABLED FOR NOW
+    // TODO: DESABILITADO POR ENQUANTO E USAR THUNK
     const handleWalletConnection = () => {
         if (previewAndConsign.creatorWallet?.value) {
             dispatch(
@@ -140,13 +137,7 @@ const ConsignArtwork = () => {
     const handlePreview = () => {
         setCookie('token', token, { path: '/', domain: window.location.hostname });
         window.open('https://www.google.com', '_blank');
-        dispatch(
-            consignArtworkActionsCreators.changePreviewAndConsign({
-                artworkListing: {
-                    checked: true,
-                },
-            })
-        );
+        dispatch(consignArtworkThunks.checkPreview());
     };
 
     const consignSteps: ConsignStepsProps = {
@@ -336,13 +327,6 @@ const ConsignArtwork = () => {
                         ))}
                     </Box>
                 </Box>
-
-                <CustomizedSnackbar
-                    type={toastr.type}
-                    open={toastr.open}
-                    message={toastr.message}
-                    setOpentate={setToastr}
-                />
             </PageContainerFooter>
         </form>
     );

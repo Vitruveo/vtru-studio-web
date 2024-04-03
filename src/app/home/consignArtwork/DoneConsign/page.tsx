@@ -8,7 +8,9 @@ import PageContainerFooter from '../../components/container/PageContainerFooter'
 import Breadcrumb, { BreadCrumbItem } from '../../layout/shared/breadcrumb/Breadcrumb';
 import { useRouter } from 'next/navigation';
 import { confetti } from '@tsparticles/confetti';
-import { updateAssetStep } from '@/features/asset/requests';
+import { useDispatch } from '@/store/hooks';
+import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
+import { useToastr } from '@/app/hooks/useToastr';
 
 interface ConsignStep {
     title: string;
@@ -56,6 +58,8 @@ const showConfetti = () => {
 export default function DoneConsign() {
     const customizer = useSelector((state: any) => state.customizer); // TODO: ADICIONAR TIPAGEM CORRETA
     const router = useRouter();
+    const dispatch = useDispatch();
+    const toastr = useToastr();
 
     const asyncAction = async () => {
         await new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 5000)));
@@ -103,7 +107,7 @@ export default function DoneConsign() {
                     setSteps([...steps]);
                 } catch (error) {
                     step.status = 'error';
-                    alert('An error occurred. Please try again later.'); // TODO: ADICIONAR TOAST
+                    toastr.display({ message: `Error on step ${stepIndex + 1}`, type: 'error' });
                     break;
                 }
             }
@@ -114,17 +118,12 @@ export default function DoneConsign() {
     const isDisabled = steps[steps.length - 1].status != 'done';
 
     const handleSubmit = async (event: React.FormEvent) => {
-        event.preventDefault();
         try {
-            await updateAssetStep({
-                stepName: 'consignArtwork',
-                consignArtwork: {
-                    status: 'active',
-                },
-            });
+            event.preventDefault();
+            dispatch(consignArtworkThunks.updateStatus('active'));
             router.push('/home/consignArtwork');
         } catch (error) {
-            // TODO: TRATAR ERRO
+            toastr.display({ message: 'Error updating consign artwork status', type: 'error' });
         }
     };
 

@@ -6,10 +6,9 @@ import Breadcrumb, { BreadCrumbItem } from '@/app/home/layout/shared/breadcrumb/
 import AssetMediaPreview from '../assetMediaPreview';
 import { useFormik } from 'formik';
 import { useI18n } from '@/app/hooks/useI18n';
-import { updateAssetStep } from '@/features/asset/requests';
 import { ConsignArtworkAssetStatus } from '@/features/consignArtwork/types';
-import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { useToastr } from '@/app/hooks/useToastr';
+import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
 
 // TODO: ADICIONAR TRADUÇÃO
 
@@ -27,33 +26,13 @@ export const CompletedConsignPage = () => {
 
     const grayColor = theme.palette.text.disabled;
 
-    // TODO: VERIFICAR SE A CHAMADA A API ESTÁ SENDO FEITO DA MANEIRA CORRETA
     const formik = useFormik<FormType>({
         initialValues: {
             selectedStatus: status,
         },
         enableReinitialize: true,
-        onSubmit: async (values) => {
-            try {
-                await updateAssetStep({
-                    stepName: 'consignArtwork',
-                    consignArtwork: {
-                        status: values.selectedStatus,
-                    },
-                });
-                dispatch(
-                    consignArtworkActionsCreators.changeConsignArtworkAssetStatus({ status: values.selectedStatus })
-                );
-                toastr.display({
-                    message: 'Consign artwork status updated',
-                    type: 'success',
-                });
-            } catch (error) {
-                toastr.display({
-                    message: 'Error updating consign artwork status',
-                    type: 'error',
-                });
-            }
+        onSubmit: (values) => {
+            dispatch(consignArtworkThunks.updateStatus(values.selectedStatus));
         },
     });
 
