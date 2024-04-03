@@ -51,7 +51,7 @@ const ConsignArtwork = () => {
     const theme = useTheme();
     const dispatch = useDispatch();
 
-    const { status } = useSelector((state) => state.asset);
+    const { status, _id } = useSelector((state) => state.asset);
     const { previewAndConsign } = useSelector((state) => state.consignArtwork);
     const { token } = useSelector((state) => state.user);
 
@@ -137,7 +137,8 @@ const ConsignArtwork = () => {
 
     const handlePreview = () => {
         setCookie('token', token, { path: '/', domain: window.location.hostname });
-        window.open(CONSIGN_ARTWORK_PREVIEW_URL, '_blank');
+        const URL = `${CONSIGN_ARTWORK_PREVIEW_URL}/preview/${_id}/seoTitle`;
+        window.open(URL, '_blank');
         dispatch(consignArtworkThunks.checkPreview());
     };
 

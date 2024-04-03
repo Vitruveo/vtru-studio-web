@@ -80,6 +80,7 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
 
                 dispatch(
                     assetActionsCreators.change({
+                        _id: response.data._id,
                         assetMetadata: response.data.assetMetadata,
                         licenses: response.data.licenses,
                         isOriginal: response.data.isOriginal,
