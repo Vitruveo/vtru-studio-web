@@ -35,7 +35,7 @@ export const CompletedConsignPage = () => {
             dispatch(consignArtworkThunks.updateStatus(values.selectedStatus));
         },
     });
-
+    
     const texts = {
         artworkListingTitle: language['studio.consignArtwork.artworkListing'],
         artworkListingActionTitle: language['studio.consignArtwork.consignmentStatus.preview.title'],
@@ -43,14 +43,16 @@ export const CompletedConsignPage = () => {
         consignArtworkTitle: language['studio.consignArtwork.title'],
         view: language['studio.consignArtwork.consignmentStatus.view'],
     } as { [key: string]: string };
-
+    
+    const handlePreview = () => {
+        dispatch(consignArtworkThunks.checkPreview())
+    }
+    
     const consignSteps = {
         artworkListing: {
             title: texts.artworkListingTitle,
             actionTitle: texts.artworkListingActionTitle,
-            actionFunc: () => {
-                window.open('https://www.google.com', '_blank');
-            },
+            actionFunc: handlePreview,
             value: undefined,
         },
         creatorContract: {

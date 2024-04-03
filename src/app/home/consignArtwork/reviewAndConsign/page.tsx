@@ -1,7 +1,7 @@
 'use client';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
-import { useAccount, useContractRead, useDisconnect } from 'wagmi';
+import { useAccount, useDisconnect } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { usePathname, useRouter } from 'next/navigation';
 import { Button, Typography, useTheme } from '@mui/material';
@@ -9,16 +9,12 @@ import Box from '@mui/material/Box';
 
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
-import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 import { useI18n } from '@/app/hooks/useI18n';
 
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { WalletProvider } from '../../components/apps/wallet';
-import { updateAssetStep } from '@/features/asset/requests';
-import { useCookies } from 'react-cookie';
 import { useToastr } from '@/app/hooks/useToastr';
 import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
-import { CONSIGN_ARTWORK_PREVIEW_URL } from '@/constants/consign-artwork';
 
 interface ConsignStepsProps {
     [key: string]: {
@@ -34,16 +30,12 @@ interface ConsignStepsProps {
 
 const ConsignArtwork = () => {
     const toastr = useToastr();
-
-    const [cookies, setCookie] = useCookies(['token']);
-
     const [connectWallet, setConnectWallet] = useState(false);
 
     const { openConnectModal } = useConnectModal();
     const { isConnected, address } = useAccount();
     const { disconnectAsync } = useDisconnect();
 
-    const pathname = usePathname();
     const router = useRouter();
 
     const { language } = useI18n();
@@ -51,9 +43,8 @@ const ConsignArtwork = () => {
     const theme = useTheme();
     const dispatch = useDispatch();
 
-    const { status, _id } = useSelector((state) => state.asset);
+    const { status } = useSelector((state) => state.asset);
     const { previewAndConsign } = useSelector((state) => state.consignArtwork);
-    const { token } = useSelector((state) => state.user);
 
     useEffect(() => {
         if (openConnectModal && connectWallet) {
@@ -136,9 +127,6 @@ const ConsignArtwork = () => {
     };
 
     const handlePreview = () => {
-        setCookie('token', token, { path: '/', domain: window.location.hostname });
-        const URL = `${CONSIGN_ARTWORK_PREVIEW_URL}/preview/${_id}/seoTitle`;
-        window.open(URL, '_blank');
         dispatch(consignArtworkThunks.checkPreview());
     };
 

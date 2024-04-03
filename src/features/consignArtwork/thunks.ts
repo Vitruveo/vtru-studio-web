@@ -3,6 +3,8 @@ import { ConsignArtworkAssetStatus } from './types';
 import { updateAssetStep } from '../asset/requests';
 import { consignArtworkActionsCreators } from './slice';
 import { toastrActionsCreators } from '../toastr/slice';
+import { CONSIGN_ARTWORK_PREVIEW_URL } from '@/constants/consign-artwork';
+import cookie from 'cookiejs';
 
 export function updateStatus(status: ConsignArtworkAssetStatus): ReduxThunkAction {
     return async (dispatch, getState) => {
@@ -34,6 +36,9 @@ export function updateStatus(status: ConsignArtworkAssetStatus): ReduxThunkActio
 export function checkPreview(): ReduxThunkAction {
     return async (dispatch, getState) => {
         try {
+            cookie.set('token', getState().user.token, { path: '/', domain: window.location.hostname });
+            const URL = `${CONSIGN_ARTWORK_PREVIEW_URL}/preview/${getState().asset._id}/seoTitle`;
+            window.open(URL, '_blank');
             await updateAssetStep({
                 stepName: 'consignArtworkListing',
                 consignArtwork: {
