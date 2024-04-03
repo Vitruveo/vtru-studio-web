@@ -18,6 +18,7 @@ import { updateAssetStep } from '@/features/asset/requests';
 import { useCookies } from 'react-cookie';
 import { useToastr } from '@/app/hooks/useToastr';
 import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
+import { CONSIGN_ARTWORK_PREVIEW_URL } from '@/constants/consign-artwork';
 
 interface ConsignStepsProps {
     [key: string]: {
@@ -136,7 +137,7 @@ const ConsignArtwork = () => {
 
     const handlePreview = () => {
         setCookie('token', token, { path: '/', domain: window.location.hostname });
-        window.open('https://www.google.com', '_blank');
+        window.open(CONSIGN_ARTWORK_PREVIEW_URL, '_blank');
         dispatch(consignArtworkThunks.checkPreview());
     };
 

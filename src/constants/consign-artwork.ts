@@ -1,0 +1,1 @@
+export const CONSIGN_ARTWORK_PREVIEW_URL = process.env.CONSIGN_ARTWORK_PREVIEW_URL ?? 'http://'
