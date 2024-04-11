@@ -32,6 +32,7 @@ export interface User {
     };
     roles: Array<string>;
     framework: Framework;
+    canConsignArtwork: boolean;
 }
 
 interface RequestAvatarUpload {

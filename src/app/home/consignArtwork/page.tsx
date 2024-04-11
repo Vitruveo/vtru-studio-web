@@ -33,6 +33,7 @@ const ConsignArtwork = () => {
     const { status } = useSelector((state) => state.asset);
     const { previewAndConsign } = useSelector((state) => state.consignArtwork);
     const { completedSteps, artworkListing } = useSelector((state) => state.consignArtwork);
+    const canConsignArtwork = useSelector(state => state.user.canConsignArtwork)
 
     const checkAllCompletedSteps = Object.values(completedSteps)
         .filter((v) => !v.optional && v.stepId !== 'reviewAndConsign')
