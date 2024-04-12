@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useAccount, useDisconnect } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
@@ -36,7 +36,7 @@ const ConsignArtwork = () => {
     const { language } = useI18n();
     const { disconnectAsync } = useDisconnect();
     const { isConnected, address } = useAccount();
-    const { openConnectModal, connectModalOpen } = useConnectModal();
+    const { openConnectModal } = useConnectModal();
 
     const { status } = useSelector((state) => state.asset);
     const { previewAndConsign } = useSelector((state) => state.consignArtwork);
@@ -52,7 +52,7 @@ const ConsignArtwork = () => {
                         consignArtworkActionsCreators.changePreviewAndConsign({
                             creatorWallet: {
                                 checked: true,
-                                value: wallet.address,
+                                value: address,
                             },
                         })
                     );
