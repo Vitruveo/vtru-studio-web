@@ -1,14 +1,5 @@
 import React from 'react';
-import {
-    Stack,
-    Box,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogContentText,
-    DialogActions,
-    Button,
-} from '@mui/material';
+import { Stack, Box, Typography } from '@mui/material';
 import { WalletProvider } from '@/app/home/components/apps/wallet';
 import { AccountSettingsProps, Creator } from './types';
 import Wallet from './wallet';
@@ -29,22 +20,31 @@ const AccountSettings = ({
 }: AccountSettingsProps) => {
     const [open, setOpen] = React.useState(false);
 
-    const onCreatorAdd = () => {
+    const openModal = () => {
         setOpen(true);
     };
 
-    const onClose = () => {
+    const closeModal = () => {
         setOpen(false);
     };
 
-    const formatCreatorsList = (creators: Creator[]) : AccountDataListItemProps[] => {
-        return creators.map((creator) => ({
+    const deleteCreator = (index: number) => {
+        const newCreators = values.creators.filter((_, i) => i !== index);
+        setFieldValue('creators', newCreators);
+    };
+
+    const formatCreatorsList = (creators: Creator[]): AccountDataListItemProps[] => {
+        return creators.map((creator, index) => ({
             label: creator.name,
             value: creator.name,
             isDisabled: false,
-            onDelete: () => console.log('delete'),
-        }))
-    }
+            onDelete: () => deleteCreator(index),
+        }));
+    };
+
+    const onAddCreator = () => {
+        setFieldValue('creators', [...values.creators, values.currentCreator]);
+    };
 
     return (
         <Stack sx={{ width: '100%' }}>
@@ -63,18 +63,25 @@ const AccountSettings = ({
                         />
                     </WalletProvider>
                 </Box>
-                <AccountDataList title="Creators" defaultValue={''} items={formatCreatorsList(values.creators)} onItemSelect={() => {}}>
-                    <div style={{ width: '70%' }} />
-                    <AccountDataListButton variant="contained" onClick={onCreatorAdd}>
+                <AccountDataList
+                    title="Creators"
+                    defaultValue={''}
+                    items={formatCreatorsList(values.creators)}
+                    onItemSelect={() => {}}
+                >
+                    <Typography width="70%" color="GrayText">
+                        Creator information is publicly visible.
+                    </Typography>
+                    <AccountDataListButton variant="contained" onClick={openModal}>
                         Add
                     </AccountDataListButton>
                 </AccountDataList>
                 <AddCreatorModal
                     open={open}
-                    onClose={onClose}
+                    onClose={closeModal}
                     handleChange={handleChange}
                     creatorsLength={values.creators.length}
-                    onAdd={() => console.log(values)}
+                    onAdd={onAddCreator}
                 />
             </Box>
         </Stack>

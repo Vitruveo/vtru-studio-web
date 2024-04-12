@@ -11,10 +11,10 @@ interface AddCreatorModalProps {
 
 export const AddCreatorModal = ({ open, onClose, handleChange, creatorsLength, onAdd }: AddCreatorModalProps) => {
 
-    const handleAdd = () => {
-        onAdd();
-        onClose();
-    }
+    const onAddClick = () => {
+      onAdd();
+      onClose();
+    };
 
     return (
         <Dialog open={open} onClose={onClose}>
@@ -27,7 +27,7 @@ export const AddCreatorModal = ({ open, onClose, handleChange, creatorsLength, o
                     <CustomTextField
                         autoFocus
                         margin="dense"
-                        name={`creators.${creatorsLength}.name`}
+                        name="currentCreator.name"
                         label="Email Address"
                         type="email"
                         fullWidth
@@ -39,7 +39,7 @@ export const AddCreatorModal = ({ open, onClose, handleChange, creatorsLength, o
                 <Button color="error" onClick={onClose}>
                     Cancel
                 </Button>
-                <Button onClick={handleAdd}>Add</Button>
+                <Button onClick={onAddClick}>Add</Button>
             </DialogActions>
         </Dialog>
     );

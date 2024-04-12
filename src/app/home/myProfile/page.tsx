@@ -40,20 +40,26 @@ export default function ProfileSettings() {
         userSelector(['username', 'emailDefault', 'walletDefault', 'emails', 'wallets', 'requestAvatarUpload'])
     );
 
-    const initialValues = useMemo(
-        () => ({
-            emailDefault: !emailDefault || !emailDefault.length ? emails[0]?.email : emailDefault,
-            walletDefault: !walletDefault || !walletDefault.length ? wallets[0]?.address || '' : walletDefault,
-            username,
-            emails: emails.filter((email) => email.checkedAt),
-            wallets,
-            creators: [],
-            
-        }),
-        []
-    );
+    const initialValues = {
+        emailDefault: !emailDefault || !emailDefault.length ? emails[0]?.email : emailDefault,
+        walletDefault: !walletDefault || !walletDefault.length ? wallets[0]?.address || '' : walletDefault,
+        username,
+        emails: emails.filter((email) => email.checkedAt),
+        wallets,
+        creators: [],
+        currentCreator: {
+            bio: '',
+            ethnicity: '',
+            gender: '',
+            name: '',
+            nationality: '',
+            profileUrl: '',
+            residence: '',
+            roles: [],
+        },
+    };
 
-    const { handleSubmit, handleChange, setFieldValue, setFieldError, setErrors, values, errors, } =
+    const { handleSubmit, handleChange, setFieldValue, setFieldError, setErrors, values, errors } =
         useFormik<AccountSettingsFormValues>({
             initialValues,
             // validationSchema: stepsSchemaValidation,
