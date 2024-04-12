@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useAccount, useDisconnect } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Button, Typography, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 
@@ -29,50 +29,45 @@ interface ConsignStepsProps {
 }
 
 const ConsignArtwork = () => {
-    const toastr = useToastr();
-    const [connectWallet, setConnectWallet] = useState(false);
-
-    const { openConnectModal } = useConnectModal();
-    const { isConnected, address } = useAccount();
-    const { disconnectAsync } = useDisconnect();
-
-    const router = useRouter();
-
-    const { language } = useI18n();
-
     const theme = useTheme();
+    const toastr = useToastr();
+    const router = useRouter();
     const dispatch = useDispatch();
+    const { language } = useI18n();
+    const { disconnectAsync } = useDisconnect();
+    const { isConnected, address } = useAccount();
+    const { openConnectModal, connectModalOpen } = useConnectModal();
 
     const { status } = useSelector((state) => state.asset);
     const { previewAndConsign } = useSelector((state) => state.consignArtwork);
+    const wallets = useSelector((state) => state.user.wallets);
 
+    // Handles the wallet address change
     useEffect(() => {
-        if (openConnectModal && connectWallet) {
-            openConnectModal();
-            setConnectWallet(false);
-        }
-        return () => {
-            disconnectAsync();
-        };
-    }, [connectWallet, openConnectModal]);
-
-    useEffect(() => {
+        let hasWallet = false;
         if (isConnected && address) {
-            dispatch(
-                consignArtworkActionsCreators.changePreviewAndConsign({
-                    creatorWallet: {
-                        checked: true,
-                        value: address,
-                    },
-                })
-            );
+            for (const wallet of wallets) {
+                if (wallet.address === address) {
+                    dispatch(
+                        consignArtworkActionsCreators.changePreviewAndConsign({
+                            creatorWallet: {
+                                checked: true,
+                                value: wallet.address,
+                            },
+                        })
+                    );
+                    hasWallet = true;
+                    break;
+                }
+            }
+            if (!hasWallet) {
+                toastr.display({
+                    type: 'error',
+                    message: 'Wallet not found, please add it to your account at your profile.',
+                });
+            }
         }
     }, [isConnected, address]);
-
-    const handleAddWallet = async () => {
-        if (isConnected) await disconnectAsync();
-        setConnectWallet(true);
-    };
 
     const texts = {
         homeTitle: language['studio.home.title'],
@@ -109,21 +104,15 @@ const ConsignArtwork = () => {
 
     const grayColor = theme.palette.text.disabled;
 
-    // TODO: DESABILITADO POR ENQUANTO E USAR THUNK
     const handleWalletConnection = () => {
-        if (previewAndConsign.creatorWallet?.value) {
-            dispatch(
-                consignArtworkActionsCreators.changePreviewAndConsign({
-                    creatorWallet: {
-                        value: '',
-                        checked: false,
-                    },
-                })
-            );
+        if (isConnected || previewAndConsign.creatorWallet?.value) {
             disconnectAsync();
+            dispatch(
+                consignArtworkActionsCreators.changePreviewAndConsign({ creatorWallet: { checked: false, value: '' } })
+            );
             return;
         }
-        handleAddWallet();
+        openConnectModal?.();
     };
 
     const handlePreview = () => {
@@ -144,8 +133,8 @@ const ConsignArtwork = () => {
                 previewAndConsign.creatorWallet?.value.slice(0, 6) +
                     '...' +
                     previewAndConsign.creatorWallet?.value.slice(-4),
-            actionFunc: () => {},
-            disabled: true,
+            actionFunc: handleWalletConnection,
+            disabled: false,
         },
         creatorCredits: {
             title: 'Creator Credits',
@@ -304,7 +293,7 @@ const ConsignArtwork = () => {
                                                 )}
                                             </Button>
                                         </Box>
-                                        {v.title != 'Artwork Listing' && (
+                                        {v.title != 'Artwork Listing' && v.title != 'Creator Wallet' && (
                                             <Box position="relative" left="110px">
                                                 <Typography position="absolute" top="-26px">
                                                     {texts.comingSoon}
