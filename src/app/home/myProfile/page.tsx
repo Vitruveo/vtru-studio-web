@@ -40,6 +40,62 @@ export default function ProfileSettings() {
         userSelector(['username', 'emailDefault', 'walletDefault', 'emails', 'wallets', 'requestAvatarUpload'])
     );
 
+    const initialValues = useMemo(
+        () => ({
+            emailDefault: !emailDefault || !emailDefault.length ? emails[0]?.email : emailDefault,
+            walletDefault: !walletDefault || !walletDefault.length ? wallets[0]?.address || '' : walletDefault,
+            username,
+            emails: emails.filter((email) => email.checkedAt),
+            wallets,
+            creators: [],
+            
+        }),
+        []
+    );
+
+    const { handleSubmit, handleChange, setFieldValue, setFieldError, setErrors, values, errors, } =
+        useFormik<AccountSettingsFormValues>({
+            initialValues,
+            // validationSchema: stepsSchemaValidation,
+            onSubmit: onSubmit,
+        });
+
+    async function onSubmit(formValues: AccountSettingsFormValues) {
+        if (!formValues.username || formValues.username?.length === 0) setUsernameError(texts.usernameRequiredError);
+        else {
+            dispatch(saveStepWizardThunk({ step: 0, values }));
+            dispatch(
+                consignArtworkActionsCreators.checkIsCompletedProfile({
+                    username: values.username,
+                    emails: values.emails,
+                    wallets: values.wallets,
+                })
+            );
+
+            if (resetAvatar) {
+                dispatch(changeAvatarThunk({ fileId: '' }));
+                toast.display({ message: texts.saveMessage, type: 'success' });
+
+                setTimeout(() => {
+                    router.push('/home');
+                }, 500);
+            } else if (changeAvatarFile) {
+                dispatch(
+                    sendRequestUploadThunk({
+                        mimetype: changeAvatarFile!.type,
+                        originalName: changeAvatarFile!.name,
+                    })
+                );
+            } else {
+                toast.display({ message: texts.saveMessage, type: 'success' });
+
+                setTimeout(() => {
+                    router.push('/home');
+                }, 500);
+            }
+        }
+    }
+
     useEffect(() => {
         if (requestAvatarUpload.status === 'ready') {
             dispatch(
@@ -94,18 +150,6 @@ export default function ProfileSettings() {
         }
     }, [isCompletedProfile, goToConsignArtwork]);
 
-    const initialValues = useMemo(
-        () => ({
-            emailDefault: !emailDefault || !emailDefault.length ? emails[0]?.email : emailDefault,
-            walletDefault: !walletDefault || !walletDefault.length ? wallets[0]?.address || '' : walletDefault,
-            username,
-            emails: emails.filter((email) => email.checkedAt),
-            wallets,
-            creators: [],
-        }),
-        []
-    );
-
     const texts = {
         title: language['studio.myProfile.title'],
         subtitle: language['studio.myProfile.subtitle'],
@@ -132,49 +176,6 @@ export default function ProfileSettings() {
             title: texts.title,
         },
     ];
-
-    const { handleSubmit, handleChange, setFieldValue, setFieldError, setErrors, values, errors } =
-        useFormik<AccountSettingsFormValues>({
-            initialValues,
-            // validationSchema: stepsSchemaValidation,
-            onSubmit: onSubmit,
-        });
-
-    async function onSubmit(formValues: AccountSettingsFormValues) {
-        if (!formValues.username || formValues.username?.length === 0) setUsernameError(texts.usernameRequiredError);
-        else {
-            dispatch(saveStepWizardThunk({ step: 0, values }));
-            dispatch(
-                consignArtworkActionsCreators.checkIsCompletedProfile({
-                    username: values.username,
-                    emails: values.emails,
-                    wallets: values.wallets,
-                })
-            );
-
-            if (resetAvatar) {
-                dispatch(changeAvatarThunk({ fileId: '' }));
-                toast.display({ message: texts.saveMessage, type: 'success' });
-
-                setTimeout(() => {
-                    router.push('/home');
-                }, 500);
-            } else if (changeAvatarFile) {
-                dispatch(
-                    sendRequestUploadThunk({
-                        mimetype: changeAvatarFile!.type,
-                        originalName: changeAvatarFile!.name,
-                    })
-                );
-            } else {
-                toast.display({ message: texts.saveMessage, type: 'success' });
-
-                setTimeout(() => {
-                    router.push('/home');
-                }, 500);
-            }
-        }
-    }
 
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (handleChange) handleChange(e);

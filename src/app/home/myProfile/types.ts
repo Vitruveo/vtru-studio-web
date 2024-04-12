@@ -18,6 +18,7 @@ export interface AccountSettingsFormValues {
     wallets: Wallet[];
     walletDefault: string;
     creators: Creator[];
+    currentCreator: Creator;
 }
 
 export interface Creator {
