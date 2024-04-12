@@ -2,7 +2,7 @@ import { AssetConsignArtwork } from '../asset/types';
 
 export type StepId = 'termsOfUse' | 'assetMedia' | 'assetMetadata' | 'licenses' | 'auxiliaryMedia' | 'reviewAndConsign';
 export type StepStatus = 'notStarted' | 'completed' | 'inProgress';
-export type ConsignArtworkAssetStatus = 'draft' | 'preview' | 'active' | 'hidden';
+export type ConsignArtworkAssetStatus = 'draft' | 'preview' | 'active' | 'hidden' | 'locked';
 
 export interface CompletedSteps {
     [key: string]: {

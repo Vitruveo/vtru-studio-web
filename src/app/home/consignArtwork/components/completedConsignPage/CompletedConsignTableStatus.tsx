@@ -70,6 +70,13 @@ export const CompletedConsignTableStatus = ({ selectedStatus, onStatusChange }: 
             search: texts.yes,
         },
         {
+            status: 'locked',
+            title: 'Active (Locked)',
+            view: texts.me,
+            license: texts.no,
+            search: texts.no,
+        },
+        {
             status: 'hidden',
             title: texts.hidden,
             view: texts.everyone,
