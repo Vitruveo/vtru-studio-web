@@ -9,6 +9,7 @@ import { useI18n } from '@/app/hooks/useI18n';
 import { ConsignArtworkAssetStatus } from '@/features/consignArtwork/types';
 import { useToastr } from '@/app/hooks/useToastr';
 import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
+import { ChangeEvent } from 'react';
 
 // TODO: ADICIONAR TRADUÇÃO
 
@@ -35,7 +36,7 @@ export const CompletedConsignPage = () => {
             dispatch(consignArtworkThunks.updateStatus(values.selectedStatus));
         },
     });
-    
+
     const texts = {
         artworkListingTitle: language['studio.consignArtwork.artworkListing'],
         artworkListingActionTitle: language['studio.consignArtwork.consignmentStatus.preview.title'],
@@ -43,11 +44,11 @@ export const CompletedConsignPage = () => {
         consignArtworkTitle: language['studio.consignArtwork.title'],
         view: language['studio.consignArtwork.consignmentStatus.view'],
     } as { [key: string]: string };
-    
+
     const handlePreview = () => {
-        dispatch(consignArtworkThunks.checkPreview())
-    }
-    
+        dispatch(consignArtworkThunks.checkPreview());
+    };
+
     const consignSteps = {
         artworkListing: {
             title: texts.artworkListingTitle,
@@ -74,6 +75,14 @@ export const CompletedConsignPage = () => {
             to: '/home/consignArtwork',
         },
     ];
+
+    const handleStatusChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value as ConsignArtworkAssetStatus;
+        if (value === 'locked') {
+            return;
+        }
+        formik.setFieldValue('selectedStatus', value);
+    };
 
     return (
         <form onSubmit={formik.handleSubmit}>
@@ -138,7 +147,8 @@ export const CompletedConsignPage = () => {
                             <Box mt={4}>
                                 <CompletedConsignTableStatus
                                     selectedStatus={formik.values.selectedStatus}
-                                    onStatusChange={formik.handleChange}
+                                    onStatusChange={handleStatusChange}
+                                    isDisabled={formik.values.selectedStatus == 'locked'}
                                 />
                             </Box>
                         </Box>
