@@ -34,7 +34,12 @@ export default function Home() {
 
     const isPublished = status === 'preview';
 
-    const canConsignArtwork = useSelector((state) => state.user.canConsignArtwork)
+    const canConsignArtwork = useSelector((state) => state.user.canConsignArtwork);
+
+    const onConsignArtworkButtonClick = () => {
+        if (!canConsignArtwork) return;
+        dispatch(consignArtworkActionsCreators.changeGoToConsignArtwork(true));
+    };
 
     return (
         <Container
@@ -99,9 +104,7 @@ export default function Home() {
                                 <Button
                                     disabled={!canConsignArtwork}
                                     variant="contained"
-                                    onClick={() =>
-                                        dispatch(consignArtworkActionsCreators.changeGoToConsignArtwork(true))
-                                    }
+                                    onClick={onConsignArtworkButtonClick}
                                     fullWidth
                                 >
                                     {texts.consign}
