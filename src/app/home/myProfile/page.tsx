@@ -40,14 +40,14 @@ export default function ProfileSettings() {
         userSelector(['username', 'emailDefault', 'walletDefault', 'emails', 'wallets', 'requestAvatarUpload'])
     );
 
-    const initialValues = {
+    const initialValues: AccountSettingsFormValues = {
         emailDefault: !emailDefault || !emailDefault.length ? emails[0]?.email : emailDefault,
         walletDefault: !walletDefault || !walletDefault.length ? wallets[0]?.address || '' : walletDefault,
         username,
         emails: emails.filter((email) => email.checkedAt),
         wallets,
         creators: [],
-        currentCreator: {
+        defaultCreator: {
             bio: '',
             ethnicity: '',
             gender: '',

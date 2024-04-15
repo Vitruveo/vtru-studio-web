@@ -5,7 +5,7 @@ import { AccountSettingsProps, Creator } from './types';
 import Wallet from './wallet';
 import AddEmails from './addEmails';
 import { AccountDataList, AccountDataListButton, AccountDataListItemProps } from './components/account-data-list';
-import { AddCreatorModal } from './components/add-creator-modal';
+import { AddCreatorModal, CreatorForm } from './components/add-creator-modal';
 
 // TODO: ALTERAR OS OUTROS COMPONENTES PARA USAR O COMPONENTE ACCOUNTDATALIST
 
@@ -42,8 +42,8 @@ const AccountSettings = ({
         }));
     };
 
-    const onAddCreator = () => {
-        setFieldValue('creators', [...values.creators, values.currentCreator]);
+    const onAddCreator = (form: CreatorForm) => {
+        setFieldValue('creators', [...values.creators, form])
     };
 
     return (
@@ -79,8 +79,6 @@ const AccountSettings = ({
                 <AddCreatorModal
                     open={open}
                     onClose={closeModal}
-                    handleChange={handleChange}
-                    creatorsLength={values.creators.length}
                     onAdd={onAddCreator}
                 />
             </Box>
