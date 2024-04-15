@@ -44,10 +44,13 @@ export interface CreatorForm extends Creator {
     role: string;
 }
 
-export interface AddCreatorModalProps {
+export interface CreatorModalProps {
     open: boolean;
     onClose: () => void;
     onAdd: (values: CreatorForm) => void;
+    isEditing?: boolean;
+    onEdit?: (values: CreatorForm) => void;
+    initialFormValues?: CreatorForm;
 }
 
 const initialValues: CreatorForm = {
@@ -64,10 +67,11 @@ const initialValues: CreatorForm = {
 
 const data: CreatorJSON = creatorJSON;
 
-export const AddCreatorModal = ({ open, onClose, onAdd }: AddCreatorModalProps) => {
+export const CreatorModal = ({ open, onClose, onAdd, isEditing, onEdit, initialFormValues }: CreatorModalProps) => {
+
     return (
-        <Formik initialValues={initialValues} onSubmit={() => {}} validationSchema={creatorSchema}>
-            {({ values, handleChange, validateForm, errors, resetForm, handleSubmit }) => (
+        <Formik initialValues={initialFormValues ?? initialValues} onSubmit={() => {}} validationSchema={creatorSchema}>
+            {({ values, handleChange, validateForm, errors, resetForm }) => (
                 <Dialog open={open} onClose={onClose}>
                     <DialogTitle>Add New Creator</DialogTitle>
                     <DialogContent>
@@ -224,14 +228,14 @@ export const AddCreatorModal = ({ open, onClose, onAdd }: AddCreatorModalProps) 
                             onClick={() => {
                                 validateForm().then((e) => {
                                     if (Object.keys(e).length === 0) {
-                                        onAdd(values);
+                                        isEditing ? onEdit?.(values) : onAdd(values);
                                         resetForm();
                                         onClose();
                                     }
                                 });
                             }}
                         >
-                            Add
+                            {isEditing ? 'Edit' : 'Add'}
                         </Button>
                     </DialogActions>
                 </Dialog>

@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Stack, Box, Typography } from '@mui/material';
 import { WalletProvider } from '@/app/home/components/apps/wallet';
 import { AccountSettingsProps, Creator } from './types';
 import Wallet from './wallet';
 import AddEmails from './addEmails';
-import { AccountDataList, AccountDataListButton, AccountDataListItemProps } from './components/account-data-list';
-import { AddCreatorModal, CreatorForm } from './components/add-creator-modal';
+import { AccountDataList, AccountDataListButton, AccountDataListItem } from './components/account-data-list';
+import { CreatorModal, CreatorForm } from './components/creator-modal';
 
 // TODO: ALTERAR OS OUTROS COMPONENTES PARA USAR O COMPONENTE ACCOUNTDATALIST
 
@@ -18,7 +18,10 @@ const AccountSettings = ({
     setFieldValue,
     setFieldError,
 }: AccountSettingsProps) => {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
+
+    // FIX: EDIT MODAL NÃO ATUALIZA OS DADOS NA TELA
+    const [editCurrentModalValues, setEditCurrentModalValues] = useState<CreatorForm | undefined>(undefined);
 
     const openModal = () => {
         setOpen(true);
@@ -33,18 +36,15 @@ const AccountSettings = ({
         setFieldValue('creators', newCreators);
     };
 
-    const formatCreatorsList = (creators: Creator[]): AccountDataListItemProps[] => {
-        return creators.map((creator, index) => ({
-            label: creator.name,
-            value: creator.name,
-            isDisabled: false,
-            onDelete: () => deleteCreator(index),
-        }));
+    const onAddCreator = (form: CreatorForm) => {
+        setFieldValue('creators', [...values.creators, form]);
     };
 
-    const onAddCreator = (form: CreatorForm) => {
-        setFieldValue('creators', [...values.creators, form])
-    };
+    useEffect(() => {
+        if (editCurrentModalValues) {
+            openModal()
+        }
+    }, [editCurrentModalValues])
 
     return (
         <Stack sx={{ width: '100%' }}>
@@ -64,22 +64,38 @@ const AccountSettings = ({
                     </WalletProvider>
                 </Box>
                 <AccountDataList
+                    bottom={
+                        <>
+                            <Typography width="70%" color="GrayText">
+                                Creator information is publicly visible.
+                            </Typography>
+                            <AccountDataListButton variant="contained" onClick={openModal}>
+                                Add
+                            </AccountDataListButton>
+                        </>
+                    }
                     title="Creators"
-                    defaultValue={''}
-                    items={formatCreatorsList(values.creators)}
-                    onItemSelect={() => {}}
+                    defaultValue={values.defaultCreator.name}
                 >
-                    <Typography width="70%" color="GrayText">
-                        Creator information is publicly visible.
-                    </Typography>
-                    <AccountDataListButton variant="contained" onClick={openModal}>
-                        Add
-                    </AccountDataListButton>
+                    {values.creators.map((creator, index) => (
+                        <AccountDataListItem
+                            label={creator.name}
+                            key={index}
+                            onTextClick={() => {
+                                setEditCurrentModalValues({ ...creator, role: '' });
+                                openModal();
+                            }}
+                            onRadioClick={() => setFieldValue('defaultCreator', creator)}
+                            checked={values.defaultCreator.name === creator.name}
+                            onDelete={() => deleteCreator(index)}
+                        />
+                    ))}
                 </AccountDataList>
-                <AddCreatorModal
+                <CreatorModal
                     open={open}
                     onClose={closeModal}
                     onAdd={onAddCreator}
+                    initialFormValues={editCurrentModalValues}
                 />
             </Box>
         </Stack>
