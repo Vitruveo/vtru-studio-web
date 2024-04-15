@@ -37,6 +37,7 @@ const initialState: UserSliceState = {
     },
     status: '',
     error: '',
+    canConsignArtwork: false
 };
 
 export const userSlice = createSlice({
@@ -80,6 +81,9 @@ export const userSlice = createSlice({
             state.status = `failed: ${action.type}`;
             state.error = action.payload;
         },
+        setCanConsignArtwork: (state, action: PayloadAction<boolean>) => {
+            state.canConsignArtwork = action.payload;
+        }
     },
 });
 

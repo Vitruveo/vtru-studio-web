@@ -17,6 +17,18 @@ export interface AccountSettingsFormValues {
     emailDefault: string;
     wallets: Wallet[];
     walletDefault: string;
+    creators: Creator[];
+}
+
+export interface Creator {
+    name: string;
+    roles: string[];
+    bio: string;
+    profileUrl: string;
+    nationality: string;
+    residence: string;
+    ethnicity: string;
+    gender: string;
 }
 
 type AccountSettingsFormErros = FormikErrors<AccountSettingsFormValues>;

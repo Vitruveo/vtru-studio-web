@@ -41,7 +41,13 @@ export default function ConfirmContainer() {
                         await dispatch(connectWebSocketThunk());
                         await dispatch(loginWebSocketThunk());
                         setToastr({ open: true, type: 'success', message: 'OTP confirmed!' });
-                        router.push('/home');
+
+                        if (resOTPConfirm.data?.creator.username) {
+                            router.push('/home');
+                        } else {
+                            router.push('/home/myProfile');
+                        }
+
                         return;
                     } else {
                         setFieldValue('disableSubmitButton', false);

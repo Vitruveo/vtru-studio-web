@@ -1,7 +1,7 @@
 'use client';
+import React, { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { styled, useTheme } from '@mui/material/styles';
-import React, { useEffect, useState } from 'react';
 import Header from './layout/vertical/header/Header';
 import Sidebar from './layout/vertical/sidebar/Sidebar';
 import Navigation from './layout/horizontal/navbar/Navigation';
@@ -10,6 +10,10 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { useRouter } from 'next/navigation';
 import webSocketService from '@/services/websocket';
 import { connectWebSocketThunk, loginWebSocketThunk } from '@/features/ws/thunks';
+import { addAllowList, findEmailInAllowList } from '@/features/allowList/requests';
+import { userActionsCreators } from '@/features/user/slice';
+import { useToastr } from '../hooks/useToastr';
+import { AxiosError } from 'axios';
 
 const MainWrapper = styled('div')(() => ({
     display: 'flex',
@@ -45,10 +49,12 @@ const isValidToken = (token: string) => {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-    const dispatch = useDispatch();
+    const toast = useToastr();
     const router = useRouter();
-    const customizer = useSelector((state) => state.customizer);
+    const dispatch = useDispatch();
     const token = useSelector((state) => state.user.token);
+    const customizer = useSelector((state) => state.customizer);
+    const email = useSelector((state) => state.user.login.email);
 
     useEffect(() => {
         if (!isValidToken(token)) {
@@ -59,11 +65,28 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     useEffect(() => {
         if (!webSocketService.socket) {
             (async () => {
-                await dispatch(connectWebSocketThunk());
-                await dispatch(loginWebSocketThunk());
+                dispatch(connectWebSocketThunk());
+                dispatch(loginWebSocketThunk());
             })();
         }
     }, [webSocketService]);
+
+    // NOTE: NOT USING TRY CATCH BECAUSE WE WANT TO DISPLAY THE ERROR MESSAGE ONLY IF THE EMAIL IS NOT IN THE ALLOW LIST
+    useEffect(() => {
+        (async () => {
+            try {
+                await findEmailInAllowList(email);
+                dispatch(userActionsCreators.setCanConsignArtwork(true));
+            } catch (e) {
+                const error = e as AxiosError;
+                if (error.response?.status === 404) {
+                    dispatch(userActionsCreators.setCanConsignArtwork(false));
+                } else {
+                    toast.display({ type: 'error', message: 'Something went wrong! Try again later.' });
+                }
+            }
+        })();
+    }, [email]);
 
     const theme = useTheme();
 
