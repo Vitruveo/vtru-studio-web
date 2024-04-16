@@ -205,10 +205,6 @@ const ConsignArtwork = () => {
                 title={texts.consignArtworkTitle}
                 stepNumber={6}
                 backOnclick={() => router.push(`/home/consignArtwork`)}
-                submitDisabled={
-                    !previewAndConsign.artworkListing
-                        ?.checked /* Object.values(previewAndConsign).some((v) => !v.checked) */
-                }
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
 
