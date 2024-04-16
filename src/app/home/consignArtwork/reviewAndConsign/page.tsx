@@ -125,44 +125,44 @@ const ConsignArtwork = () => {
             actionTitle: texts.preview,
             actionFunc: handlePreview,
         },
-        creatorWallet: {
-            title: 'Creator Wallet',
-            actionTitle: previewAndConsign.creatorWallet?.value ? 'Disconnect' : 'Connect',
-            value:
-                previewAndConsign.creatorWallet?.value &&
-                previewAndConsign.creatorWallet?.value.slice(0, 6) +
-                    '...' +
-                    previewAndConsign.creatorWallet?.value.slice(-4),
-            actionFunc: handleWalletConnection,
-            disabled: false,
-        },
-        creatorCredits: {
-            title: 'Creator Credits',
-            actionTitle: previewAndConsign.creatorCredits?.value ? 'Requested' : 'Request',
-            value: previewAndConsign.creatorCredits?.value,
-            loading: previewAndConsign.creatorCredits?.loading,
-            disabled: true /*!previewAndConsign.creatorWallet?.value || previewAndConsign.creatorCredits?.value === 1*/,
-            actionFunc: async () => {
-                dispatch(
-                    consignArtworkActionsCreators.changePreviewAndConsign({
-                        creatorCredits: {
-                            checked: false,
-                            loading: true,
-                        },
-                    })
-                );
-                await new Promise((resolve) => setTimeout(resolve, 2000));
-                dispatch(
-                    consignArtworkActionsCreators.changePreviewAndConsign({
-                        creatorCredits: {
-                            checked: true,
-                            value: 1,
-                            loading: false,
-                        },
-                    })
-                );
-            },
-        },
+        // creatorWallet: {
+        //     title: 'Creator Wallet',
+        //     actionTitle: previewAndConsign.creatorWallet?.value ? 'Disconnect' : 'Connect',
+        //     value:
+        //         previewAndConsign.creatorWallet?.value &&
+        //         previewAndConsign.creatorWallet?.value.slice(0, 6) +
+        //             '...' +
+        //             previewAndConsign.creatorWallet?.value.slice(-4),
+        //     actionFunc: handleWalletConnection,
+        //     disabled: false,
+        // },
+        // creatorCredits: {
+        //     title: 'Creator Credits',
+        //     actionTitle: previewAndConsign.creatorCredits?.value ? 'Requested' : 'Request',
+        //     value: previewAndConsign.creatorCredits?.value,
+        //     loading: previewAndConsign.creatorCredits?.loading,
+        //     disabled: true /*!previewAndConsign.creatorWallet?.value || previewAndConsign.creatorCredits?.value === 1*/,
+        //     actionFunc: async () => {
+        //         dispatch(
+        //             consignArtworkActionsCreators.changePreviewAndConsign({
+        //                 creatorCredits: {
+        //                     checked: false,
+        //                     loading: true,
+        //                 },
+        //             })
+        //         );
+        //         await new Promise((resolve) => setTimeout(resolve, 2000));
+        //         dispatch(
+        //             consignArtworkActionsCreators.changePreviewAndConsign({
+        //                 creatorCredits: {
+        //                     checked: true,
+        //                     value: 1,
+        //                     loading: false,
+        //                 },
+        //             })
+        //         );
+        //     },
+        // },
         creatorContract: {
             title: 'Creator Contract',
             status: 'Not Created',
