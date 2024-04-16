@@ -11,7 +11,7 @@ export const mediaConfigs = {
     arVideo: {
         title: 'studio.consignArtwork.auxiliaryMedia.arVideo.title',
         description: 'studio.consignArtwork.auxiliaryMedia.arVideo.description',
-        type: 'Video',
+        type: 'Ar Video',
         width: 3840,
         height: 2160,
         sizeMB: 50,
