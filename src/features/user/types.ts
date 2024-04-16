@@ -151,6 +151,23 @@ export interface RequestDeleteAvatarReq {
 
 export type ChangeAvatarRes = string;
 
+export interface ResquestConnectWalletReq {
+    wallet: `0x${string}`;
+}
+
+export interface ResquestConnectWalletRes {
+    nonce: string;
+}
+
+export interface VerifyConnectWalletReq {
+    signature: string;
+    wallet: string;
+}
+
+export interface RequestConnectWalletRes {
+    signature: string;
+}
+
 export type UserAddApiRes = APIResponse<UserAddRes>;
 export type UserLoginApiRes = APIResponse<string>;
 export type UserOTPConfirmApiRes = APIResponse<UserOTPConfirmRes>;
@@ -161,3 +178,5 @@ export type CreatorSendRequestUploadApiRes = APIResponse<string>;
 export type SendEmailCodeApiRes = APIResponse<string>;
 export type VerifyCodeApiRes = APIResponse<User>;
 export type ChangeAvatarApiRes = APIResponse<ChangeAvatarRes>;
+export type RequestConnectWalletApiRes = APIResponse<ResquestConnectWalletRes>;
+export type VerifyConnectWalletApiRes = APIResponse;

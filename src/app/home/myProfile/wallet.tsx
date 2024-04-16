@@ -2,23 +2,25 @@ import React, { useEffect, useState } from 'react';
 import { useAccount, useDisconnect } from 'wagmi';
 import { IconTrash } from '@tabler/icons-react';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import * as wagmiCore from '@wagmi/core';
+import { Button, IconButton, Radio, RadioGroup, Theme, Typography, useMediaQuery, Box } from '@mui/material';
 
-import Box from '@mui/material/Box';
-import { Button, Divider, IconButton, Radio, RadioGroup, Theme, Typography, useMediaQuery } from '@mui/material';
-
-import { useI18n } from '@/app/hooks/useI18n';
-import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 import { AccountSettingsProps } from './types';
-import CustomTextField from '../components/forms/theme-elements/CustomTextField';
+import { useDispatch } from '@/store/hooks';
+import { useI18n } from '@/app/hooks/useI18n';
+import { requestConnectWalletThunk, verifyConnectWalletThunk } from '@/features/user/thunks';
+import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
+import { config } from '@/app/home/components/apps/wallet';
 
 const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
+    const dispatch = useDispatch();
+
+    const [connectWallet, setConnectWallet] = useState(false);
     const [toastr, setToastr] = useState<CustomizedSnackbarState>({
         type: 'success',
         open: false,
         message: '',
     });
-
-    const [connectWallet, setConnectWallet] = useState(false);
 
     const { openConnectModal } = useConnectModal();
     const { isConnected, address } = useAccount();
@@ -34,9 +36,18 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
         connectButton: language['studio.myProfile.form.connect.button'],
     } as { [key: string]: string };
 
+    const handleDisconeectWallet = async () => {
+        try {
+            await wagmiCore.disconnect(config);
+        } catch (error) {
+            console.log('error on disconnect: ', error);
+        }
+    };
+
     const handleAddWallet = async () => {
-        if (isConnected) await disconnectAsync();
+        if (isConnected) handleDisconeectWallet();
         setConnectWallet(true);
+        if (openConnectModal) openConnectModal();
     };
 
     const handleDeleteWallet = async (index: number) => {
@@ -54,31 +65,29 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
         setFieldValue('walletDefault', val);
     };
 
-    useEffect(() => {
-        if (openConnectModal && connectWallet) {
-            openConnectModal();
+    const handleSignWallet = async (data: { address: `0x${string}` }) => {
+        try {
+            const { signature } = await dispatch(requestConnectWalletThunk({ wallet: data.address }));
+            await dispatch(verifyConnectWalletThunk({ signature, wallet: data.address }));
+
+            // set address to wallets
+            setFieldValue('wallets', [{ address }, ...values.wallets]);
+            // to disconnect wallet
+            setConnectWallet(false);
+        } catch (error) {
+            console.error('error on signature: ', error);
+            // to disconnect wallet
             setConnectWallet(false);
         }
-        return () => {
-            disconnectAsync();
-        };
-    }, [connectWallet, openConnectModal]);
+    };
 
     useEffect(() => {
-        if (address && !values.wallets.some((item) => item.address === address)) {
-            setFieldValue('wallets', [{ address }, ...values.wallets]);
-        } else if (address) {
-            setToastr({
-                type: 'warning',
-                open: true,
-                message: (
-                    <div>
-                        {texts.walletConnected}:<Typography>{handleFormatWallet(address)}</Typography>
-                    </div>
-                ),
-            });
-        }
-    }, [address]);
+        if (isConnected && !connectWallet) handleDisconeectWallet();
+    }, [isConnected, connectWallet, disconnectAsync]);
+
+    useEffect(() => {
+        if (address && connectWallet) handleSignWallet({ address });
+    }, [address, connectWallet]);
 
     const xl = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'));
 
