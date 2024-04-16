@@ -251,6 +251,7 @@ export default function ProfileSettings() {
                                                     src={isNewAvatar}
                                                     alt={'user1'}
                                                     sx={{
+                                                        backgroundColor: '#ffffcc',
                                                         width: 120,
                                                         height: 120,
                                                         margin: '0 auto',
