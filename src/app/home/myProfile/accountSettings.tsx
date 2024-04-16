@@ -38,7 +38,7 @@ const AccountSettings = ({
         setFieldValue('creators', newCreators);
     };
 
-    const onAddCreator = (form: CreatorForm) => {
+    const addCreator = (form: CreatorForm) => {
         setFieldValue('creators', [...values.creators, form]);
     };
 
@@ -100,7 +100,7 @@ const AccountSettings = ({
                 <CreatorModal
                     open={open}
                     onClose={closeModal}
-                    onAdd={onAddCreator}
+                    onAdd={addCreator}
                     initialFormValues={editCurrentModalValues}
                     isEditing={isEditing}
                     onEdit={updateCreator}

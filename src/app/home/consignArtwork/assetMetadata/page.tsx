@@ -148,6 +148,7 @@ export default function AssetMetadata() {
         );
     };
 
+    // TODO: SALVAR OS DADOS DO CREATOR NO BANCO
     const handleSaveData = async (event?: React.FormEvent, skip?: boolean) => {
         if (event) event.preventDefault();
 
