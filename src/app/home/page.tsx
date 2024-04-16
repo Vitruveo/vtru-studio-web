@@ -34,7 +34,7 @@ export default function Home() {
 
     const isPublished = status === 'preview';
 
-    const canConsignArtwork = useSelector((state) => state.user.canConsignArtwork)
+    const canConsignArtwork = useSelector((state) => state.user.canConsignArtwork);
 
     return (
         <Container
@@ -88,11 +88,13 @@ export default function Home() {
                         <Grid item xs={12} sm={6} md={3.5}>
                             <Link
                                 href={
-                                    isCompletedProfile
-                                        ? isPublished
-                                            ? '/home/consignArtwork/consignmentStatus'
-                                            : '/home/consignArtwork'
-                                        : '/home/myProfile'
+                                    !canConsignArtwork
+                                        ? '/home'
+                                        : isCompletedProfile
+                                          ? isPublished
+                                              ? '/home/consignArtwork/consignmentStatus'
+                                              : '/home/consignArtwork'
+                                          : '/home/myProfile'
                                 }
                                 passHref
                             >
