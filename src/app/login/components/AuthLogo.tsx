@@ -63,17 +63,7 @@ export default function AuthLogo() {
                     }}
                 >
                     <Box>
-                        <Image
-                            src={'/images/logos/studiologo.png'}
-                            priority
-                            alt="bg"
-                            width={270}
-                            height={200}
-                            style={{
-                                maxWidth: '700px',
-                                maxHeight: '100px',
-                            }}
-                        />
+                        <Image src={'/images/logos/studiologo.png'} priority alt="bg" width={700} height={300} />
                     </Box>
                 </Box>
             </Box>
