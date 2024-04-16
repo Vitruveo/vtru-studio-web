@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Stack, Typography } from '@mui/material';
+import { Grid, Stack, Typography } from '@mui/material';
 import { RotateAnimation } from '@/animations/RotateAnimation';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 import Breadcrumb, { BreadCrumbItem } from '../../layout/shared/breadcrumb/Breadcrumb';
@@ -11,6 +11,7 @@ import { confetti } from '@tsparticles/confetti';
 import { useDispatch } from '@/store/hooks';
 import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
 import { useToastr } from '@/app/hooks/useToastr';
+import AssetMediaPreview from '../components/assetMediaPreview';
 
 interface ConsignStep {
     title: string;
@@ -137,19 +138,31 @@ export default function DoneConsign() {
             >
                 <Breadcrumb title={'Consign Artwork'} items={BCrumb} />
 
-                <Stack component="ul" spacing={1}>
-                    {steps.map((step, index) => (
-                        <li
-                            key={index}
-                            style={{ display: 'grid', gridTemplateColumns: '16px 1fr', gap: '12px', fontSize: 16 }}
-                        >
-                            <RotateAnimation isDisabled={step.status != 'pending'}>
-                                {getListIcon(step.status)}
-                            </RotateAnimation>
-                            <Typography fontSize={16}>{step.title}</Typography>
-                        </li>
-                    ))}
-                </Stack>
+                <Grid container spacing={2}>
+                    <Grid item lg={6}>
+                        <Stack component="ul" spacing={1}>
+                            {steps.map((step, index) => (
+                                <li
+                                    key={index}
+                                    style={{
+                                        display: 'grid',
+                                        gridTemplateColumns: '16px 1fr',
+                                        gap: '12px',
+                                        fontSize: 16,
+                                    }}
+                                >
+                                    <RotateAnimation isDisabled={step.status != 'pending'}>
+                                        {getListIcon(step.status)}
+                                    </RotateAnimation>
+                                    <Typography fontSize={20}>{step.title}</Typography>
+                                </li>
+                            ))}
+                        </Stack>
+                    </Grid>
+                    <Grid item lg={6}>
+                        <AssetMediaPreview />
+                    </Grid>
+                </Grid>
             </PageContainerFooter>
         </form>
     );
