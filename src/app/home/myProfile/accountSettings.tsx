@@ -19,9 +19,9 @@ const AccountSettings = ({
     setFieldError,
 }: AccountSettingsProps) => {
     const [open, setOpen] = useState(false);
-
-    // FIX: EDIT MODAL NÃO ATUALIZA OS DADOS NA TELA
+    const [isEditing, setIsEditing] = useState(false);
     const [editCurrentModalValues, setEditCurrentModalValues] = useState<CreatorForm | undefined>(undefined);
+    const currentCreatorIndex = useRef<number | null>(null);
 
     const openModal = () => {
         setOpen(true);
@@ -29,6 +29,8 @@ const AccountSettings = ({
 
     const closeModal = () => {
         setOpen(false);
+        setIsEditing(false);
+        currentCreatorIndex.current = null;
     };
 
     const deleteCreator = (index: number) => {
@@ -40,11 +42,16 @@ const AccountSettings = ({
         setFieldValue('creators', [...values.creators, form]);
     };
 
-    useEffect(() => {
-        if (editCurrentModalValues) {
-            openModal()
-        }
-    }, [editCurrentModalValues])
+    const updateCreator = (form: CreatorForm) => {
+        setFieldValue(`creators.${currentCreatorIndex.current}`, form);
+    };
+
+    const handleTextClick = (index: number) => {
+        setEditCurrentModalValues({ ...values.creators[index], role: '' });
+        setIsEditing(true);
+        openModal();
+        currentCreatorIndex.current = index;
+    };
 
     return (
         <Stack sx={{ width: '100%' }}>
@@ -82,8 +89,7 @@ const AccountSettings = ({
                             label={creator.name}
                             key={index}
                             onTextClick={() => {
-                                setEditCurrentModalValues({ ...creator, role: '' });
-                                openModal();
+                                handleTextClick(index);
                             }}
                             onRadioClick={() => setFieldValue('defaultCreator', creator)}
                             checked={values.defaultCreator.name === creator.name}
@@ -96,6 +102,8 @@ const AccountSettings = ({
                     onClose={closeModal}
                     onAdd={onAddCreator}
                     initialFormValues={editCurrentModalValues}
+                    isEditing={isEditing}
+                    onEdit={updateCreator}
                 />
             </Box>
         </Stack>
