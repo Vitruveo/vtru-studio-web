@@ -1,11 +1,10 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
-import { useDispatch } from '@/store/hooks';
+import { useDispatch, useSelector } from '@/store/hooks';
 import LoginView from './view';
 import { loginSchemaValidation } from './formSchema';
-import { userActionsCreators } from '@/features/user/slice';
 import { useToastr } from '@/app/hooks/useToastr';
 import { codesVtruApi } from '@/services/codes';
 import { userLoginThunk } from '@/features/user/thunks';
@@ -15,6 +14,12 @@ const LoginContainer = () => {
     const toast = useToastr();
     const router = useRouter();
     const dispatch = useDispatch();
+
+    const isLogged = useSelector((state) => state.user.token !== '');
+
+    if (isLogged) {
+        router.push('/home');
+    }
 
     const { handleSubmit, handleChange, setFieldValue, setFieldError, validateForm, values, errors } = useFormik({
         initialValues: {
@@ -41,10 +46,6 @@ const LoginContainer = () => {
             }
         },
     });
-
-    useEffect(() => {
-        dispatch(userActionsCreators.logout());
-    }, []);
 
     return (
         <>
