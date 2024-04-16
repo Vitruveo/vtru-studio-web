@@ -12,6 +12,11 @@
                 },
                 "description": {
                     "type": "string",
+                    "format": "textarea",
+                    "maxLength": 250
+                },
+                "longDescription": {
+                    "type": "string",
                     "format": "textarea"
                 },
                 "culture": {
@@ -109,6 +114,13 @@
                 }
             },
             "description": {
+                "ui:widget": "textarea",
+                "ui:options": {
+                    "label": false,
+                    "placeholder": ""
+                }
+            },
+            "longDescription": {
                 "ui:widget": "textarea",
                 "ui:options": {
                     "label": false,

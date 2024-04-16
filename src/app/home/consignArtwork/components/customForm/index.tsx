@@ -133,7 +133,6 @@ const TextareaWidget = (props: WidgetProps) => {
 
     return (
         <TextareaAutosize
-            maxLength={500}
             minRows={4}
             color="primary"
             id={props.id}
