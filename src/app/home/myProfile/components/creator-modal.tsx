@@ -70,7 +70,7 @@ const data: CreatorJSON = creatorJSON;
 export const CreatorModal = ({ open, onClose, onAdd, isEditing, onEdit, initialFormValues }: CreatorModalProps) => {
 
     return (
-        <Formik initialValues={initialFormValues ?? initialValues} onSubmit={() => {}} validationSchema={creatorSchema}>
+        <Formik initialValues={initialFormValues ?? initialValues} enableReinitialize onSubmit={() => {}} validationSchema={creatorSchema}>
             {({ values, handleChange, validateForm, errors, resetForm }) => (
                 <Dialog open={open} onClose={onClose}>
                     <DialogTitle>Add New Creator</DialogTitle>
