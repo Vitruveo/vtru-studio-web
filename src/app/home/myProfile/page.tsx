@@ -141,38 +141,42 @@ export default function ProfileSettings() {
         });
 
     async function onSubmit(formValues: AccountSettingsFormValues) {
-        if (!formValues.username || formValues.username?.length === 0) setUsernameError(texts.usernameRequiredError);
-        else {
-            dispatch(saveStepWizardThunk({ step: 0, values }));
+        if (!formValues.username || formValues.username?.length === 0) {
+            setUsernameError(texts.usernameRequiredError);
+            return;
+        }
+
+        if (errors.username || usernameError) return;
+
+        dispatch(saveStepWizardThunk({ step: 0, values }));
+        dispatch(
+            consignArtworkActionsCreators.checkIsCompletedProfile({
+                username: values.username,
+                emails: values.emails,
+                wallets: values.wallets,
+            })
+        );
+
+        if (resetAvatar) {
+            dispatch(changeAvatarThunk({ fileId: '' }));
+            toast.display({ message: texts.saveMessage, type: 'success' });
+
+            setTimeout(() => {
+                router.push('/home');
+            }, 500);
+        } else if (changeAvatarFile) {
             dispatch(
-                consignArtworkActionsCreators.checkIsCompletedProfile({
-                    username: values.username,
-                    emails: values.emails,
-                    wallets: values.wallets,
+                sendRequestUploadThunk({
+                    mimetype: changeAvatarFile!.type,
+                    originalName: changeAvatarFile!.name,
                 })
             );
+        } else {
+            toast.display({ message: texts.saveMessage, type: 'success' });
 
-            if (resetAvatar) {
-                dispatch(changeAvatarThunk({ fileId: '' }));
-                toast.display({ message: texts.saveMessage, type: 'success' });
-
-                setTimeout(() => {
-                    router.push('/home');
-                }, 500);
-            } else if (changeAvatarFile) {
-                dispatch(
-                    sendRequestUploadThunk({
-                        mimetype: changeAvatarFile!.type,
-                        originalName: changeAvatarFile!.name,
-                    })
-                );
-            } else {
-                toast.display({ message: texts.saveMessage, type: 'success' });
-
-                setTimeout(() => {
-                    router.push('/home');
-                }, 500);
-            }
+            setTimeout(() => {
+                router.push('/home');
+            }, 500);
         }
     }
 
