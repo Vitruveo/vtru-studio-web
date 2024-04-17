@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
-import { useAccount, useDisconnect, useAccountEffect } from 'wagmi';
-import { IconTrash } from '@tabler/icons-react';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { IconButton, Radio, RadioGroup, Theme, Typography, useMediaQuery, Box } from '@mui/material';
-import { AccountSettingsProps } from './types';
-import { useDispatch } from '@/store/hooks';
-import { useI18n } from '@/app/hooks/useI18n';
-import { requestConnectWalletThunk, verifyConnectWalletThunk } from '@/features/user/thunks';
-import { useToastr } from '@/app/hooks/useToastr';
-import { AxiosError } from 'axios';
+import { useAccount, useDisconnect, useAccountEffect } from 'wagmi';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { IconTrash } from '@tabler/icons-react';
 import { LoadingButton } from '@mui/lab';
+import { AxiosError } from 'axios';
+import { useI18n } from '@/app/hooks/useI18n';
+import { useToastr } from '@/app/hooks/useToastr';
+import { useDispatch } from '@/store/hooks';
+import { requestConnectWalletThunk, verifyConnectWalletThunk } from '@/features/user/thunks';
+import { AccountSettingsProps } from './types';
 
 const Wallet = ({ values, setFieldValue }: AccountSettingsProps) => {
     const toast = useToastr();
@@ -99,7 +99,6 @@ const Wallet = ({ values, setFieldValue }: AccountSettingsProps) => {
 
     return (
         <>
-            <div>isConnected: {isConnected ? 'sim' : 'não'}</div>
             <Box maxWidth={!xl ? 300 : 400} display="flex" flexDirection="column" my={1}>
                 <Box display="flex" justifyContent="flex-start" mb={2}>
                     <Typography variant="subtitle1" fontWeight={600} style={{ width: '70%' }}>
