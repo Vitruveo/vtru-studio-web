@@ -37,24 +37,11 @@ export function checkPreview(): ReduxThunkAction {
     return async (dispatch, getState) => {
         try {
             const assetId = getState().asset._id;
+            cookie.set('token', getState().user.token, { path: '/', domain: window.location.hostname });
 
             if (assetId) {
-                cookie.set('token', getState().user.token, { path: '/', domain: window.location.hostname });
                 const URL = `${CONSIGN_ARTWORK_PREVIEW_URL}/preview/${assetId}/${Date.now()}`;
                 window.open(URL, '_blank');
-                await updateAssetStep({
-                    stepName: 'consignArtworkListing',
-                    consignArtwork: {
-                        listing: new Date().toISOString(),
-                    },
-                });
-                dispatch(
-                    consignArtworkActionsCreators.changePreviewAndConsign({
-                        artworkListing: {
-                            checked: true,
-                        },
-                    })
-                );
             }
         } catch (error) {
             dispatch(
