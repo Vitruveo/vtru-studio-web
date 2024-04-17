@@ -1,3 +1,4 @@
+import { WALLET_APP_NAME, WALLET_NETWORKS, WALLET_PROJECT_ID } from '@/constants/wallet';
 import { darkTheme, getDefaultConfig, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -5,10 +6,6 @@ import { http } from '@wagmi/core';
 
 import { WagmiProvider } from 'wagmi';
 import { bsc, bscTestnet, goerli, mainnet } from 'wagmi/chains';
-
-const PROJECT_ID = 'e35af8e9cf766036d44374c2bd11ebbe';
-const APP_NAME = 'vitruveo.studio';
-const VITE_PUBLIC_ENV = 'testnet';
 
 const vitruveoMainnet = {
     id: 1490,
@@ -55,12 +52,12 @@ const vitruveoTestnet = {
 };
 
 export const config = getDefaultConfig({
-    appName: APP_NAME,
-    projectId: PROJECT_ID,
-    chains: VITE_PUBLIC_ENV == 'mainnet' ? [mainnet, bsc, vitruveoMainnet] : [bscTestnet, vitruveoTestnet],
+    appName: WALLET_APP_NAME,
+    projectId: WALLET_PROJECT_ID,
+    chains: WALLET_NETWORKS == 'mainnet' ? [mainnet, bsc, vitruveoMainnet] : [bscTestnet, vitruveoTestnet],
     ssr: false,
     transports:
-        VITE_PUBLIC_ENV == 'mainnet'
+        WALLET_NETWORKS == 'mainnet'
             ? { [mainnet.id]: http(), [bsc.id]: http(), [vitruveoMainnet.id]: http() }
             : { [bscTestnet.id]: http(), [vitruveoTestnet.id]: http() },
 });
