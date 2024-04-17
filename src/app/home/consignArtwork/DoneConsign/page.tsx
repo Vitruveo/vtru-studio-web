@@ -97,6 +97,11 @@ export default function DoneConsign() {
 
     useEffect(() => {
         const runSteps = async () => {
+            if (!assetId) {
+                toastr.display({ message: 'Asset not found', type: 'error' });
+                return;
+            }
+
             for await (const step of steps) {
                 const stepIndex = steps.indexOf(step);
                 const isLastStep = stepIndex === steps.length - 1;

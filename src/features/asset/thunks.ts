@@ -268,6 +268,13 @@ export function assetMediaThunk(payload: {
             stepName: 'assetUpload',
         });
 
+        // Check if asset exists
+        const hasAsset = getState().asset._id;
+        if (!hasAsset) {
+            const asset = await getAsset();
+            if (asset.data?._id) dispatch(assetActionsCreators.change({ _id: asset.data._id }));
+        }
+
         const formatAssetsFormats = Object.entries(payload.formats || {}).reduce((acc, [key, value]) => {
             return {
                 ...acc,
