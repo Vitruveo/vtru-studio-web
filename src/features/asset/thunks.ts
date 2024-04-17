@@ -1,10 +1,24 @@
-import { assetStorage, updateAssetStep, getAsset, sendRequestUpload, requestDeleteFiles } from './requests';
+import { fetchEventSource } from '@microsoft/fetch-event-source';
+
+import {
+    assetStorage,
+    updateAssetStep,
+    getAsset,
+    sendRequestUpload,
+    requestDeleteFiles,
+    signingMediaC2PA,
+} from './requests';
 import {
     AssetSendRequestUploadApiRes,
     AssetSendRequestUploadReq,
     AssetStatus,
     AssetStorageReq,
+    CreateContractApiRes,
+    CreateContractByAssetIdReq,
     RequestDeleteFilesReq,
+    SigningMediaC2PAReq,
+    UploadIPFSByAssetIdApiRes,
+    UploadIPFSByAssetIdReq,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { assetActionsCreators } from './slice';
@@ -15,6 +29,8 @@ import { consignArtworkActionsCreators } from '../consignArtwork/slice';
 import { ASSET_STORAGE_URL } from '@/constants/asset';
 import { SectionsFormData } from '@/app/home/consignArtwork/assetMetadata/page';
 import { FormatsAuxiliayMedia } from '@/app/home/consignArtwork/auxiliaryMedia/types';
+import { AxiosResponse } from 'axios';
+import { BASE_URL_API } from '@/constants/api';
 
 export function requestDeleteURLThunk(payload: RequestDeleteFilesReq): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
@@ -352,5 +368,77 @@ export function sendRequestUploadThunk(
         });
 
         return response;
+    };
+}
+
+export function signingMediaC2PAThunk(data: SigningMediaC2PAReq): ReduxThunkAction<Promise<AxiosResponse>> {
+    return async function () {
+        return signingMediaC2PA(data);
+    };
+}
+
+export function uploadIPFSByAssetIdThunk(
+    data: UploadIPFSByAssetIdReq
+): ReduxThunkAction<Promise<UploadIPFSByAssetIdApiRes>> {
+    return async function (dispatch, getState) {
+        const state = getState();
+        const token = state.user.token;
+
+        const ctrl = new AbortController();
+
+        const url = `${BASE_URL_API}/assets/ipfs/${data.id}`;
+        const headers = {
+            Accept: 'text/event-stream',
+            Authorization: `Bearer ${token}`,
+        };
+
+        return new Promise((resolve, reject) => {
+            fetchEventSource(url, {
+                method: 'POST',
+                headers,
+                onmessage(event) {},
+                signal: ctrl.signal,
+                onclose() {
+                    ctrl.abort();
+                    resolve();
+                },
+                onerror() {
+                    ctrl.abort();
+                    reject();
+                },
+            });
+        });
+    };
+}
+
+export function createContractThunk(data: CreateContractByAssetIdReq): ReduxThunkAction<Promise<CreateContractApiRes>> {
+    return async function (dispatch, getState) {
+        const state = getState();
+        const token = state.user.token;
+
+        const ctrl = new AbortController();
+
+        const url = `${BASE_URL_API}/assets/contract/${data.id}`;
+        const headers = {
+            Accept: 'text/event-stream',
+            Authorization: `Bearer ${token}`,
+        };
+
+        return new Promise((resolve, reject) => {
+            fetchEventSource(url, {
+                method: 'POST',
+                headers,
+                onmessage(event) {},
+                signal: ctrl.signal,
+                onclose() {
+                    ctrl.abort();
+                    resolve();
+                },
+                onerror() {
+                    ctrl.abort();
+                    reject();
+                },
+            });
+        });
     };
 }
