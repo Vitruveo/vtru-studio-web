@@ -1,32 +1,47 @@
-import React, { useEffect, useState } from 'react';
-import { useAccount, useDisconnect } from 'wagmi';
+import React, { useEffect } from 'react';
+import { useAccount, useDisconnect, useAccountEffect } from 'wagmi';
 import { IconTrash } from '@tabler/icons-react';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import * as wagmiCore from '@wagmi/core';
-import { Button, IconButton, Radio, RadioGroup, Theme, Typography, useMediaQuery, Box } from '@mui/material';
-
+import { IconButton, Radio, RadioGroup, Theme, Typography, useMediaQuery, Box } from '@mui/material';
 import { AccountSettingsProps } from './types';
 import { useDispatch } from '@/store/hooks';
 import { useI18n } from '@/app/hooks/useI18n';
 import { requestConnectWalletThunk, verifyConnectWalletThunk } from '@/features/user/thunks';
-import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
-import { config } from '@/app/home/components/apps/wallet';
+import { useToastr } from '@/app/hooks/useToastr';
+import { AxiosError } from 'axios';
+import { LoadingButton } from '@mui/lab';
 
-const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
+const Wallet = ({ values, setFieldValue }: AccountSettingsProps) => {
+    const toast = useToastr();
+    const { language } = useI18n();
     const dispatch = useDispatch();
+    const { connectors } = useDisconnect();
+    const { isConnected, address } = useAccount();
+    const { openConnectModal } = useConnectModal();
 
-    const [connectWallet, setConnectWallet] = useState(false);
-    const [toastr, setToastr] = useState<CustomizedSnackbarState>({
-        type: 'success',
-        open: false,
-        message: '',
+    useAccountEffect({
+        async onConnect() {
+            await handleWalletDisconnection();
+        },
     });
 
-    const { openConnectModal } = useConnectModal();
-    const { isConnected, address } = useAccount();
-    const { disconnectAsync } = useDisconnect();
+    useEffect(() => {
+        if (isConnected) {
+            handleWalletDisconnection();
+        }
+    }, []);
 
-    const { language } = useI18n();
+    useEffect(() => {
+        if (address && isConnected) {
+            handleSignWallet({ address });
+        }
+    }, [address, isConnected]);
+
+    const handleWalletDisconnection = async () => {
+        for await (const connector of connectors) {
+            await connector.disconnect();
+        }
+    };
 
     const texts = {
         deleteButton: language['studio.myProfile.form.delete.button'],
@@ -36,18 +51,8 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
         connectButton: language['studio.myProfile.form.connect.button'],
     } as { [key: string]: string };
 
-    const handleDisconeectWallet = async () => {
-        try {
-            await wagmiCore.disconnect(config);
-        } catch (error) {
-            console.log('error on disconnect: ', error);
-        }
-    };
-
-    const handleAddWallet = async () => {
-        if (isConnected) handleDisconeectWallet();
-        setConnectWallet(true);
-        if (openConnectModal) openConnectModal();
+    const onConnectWalletClick = async () => {
+        openConnectModal?.();
     };
 
     const handleDeleteWallet = async (index: number) => {
@@ -70,24 +75,22 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
             const { signature } = await dispatch(requestConnectWalletThunk({ wallet: data.address }));
             await dispatch(verifyConnectWalletThunk({ signature, wallet: data.address }));
 
-            // set address to wallets
-            setFieldValue('wallets', [{ address }, ...values.wallets]);
-            // to disconnect wallet
-            setConnectWallet(false);
+            const walletExists = values.wallets.find((wallet) => wallet.address === data.address);
+
+            if (walletExists) {
+                toast.display({ message: 'Wallet already exists', type: 'error' });
+            } else {
+                setFieldValue('wallets', [{ address }, ...values.wallets]); // set address to wallets
+                toast.display({ message: 'Wallet connected', type: 'success' });
+            }
         } catch (error) {
-            console.error('error on signature: ', error);
-            // to disconnect wallet
-            setConnectWallet(false);
+            if (error instanceof AxiosError) {
+                toast.display({ message: error.response?.data.message, type: 'error' });
+            } else {
+                toast.display({ message: 'Error on connect wallet', type: 'error' });
+            }
         }
     };
-
-    useEffect(() => {
-        if (isConnected && !connectWallet) handleDisconeectWallet();
-    }, [isConnected, connectWallet, disconnectAsync]);
-
-    useEffect(() => {
-        if (address && connectWallet) handleSignWallet({ address });
-    }, [address, connectWallet]);
 
     const xl = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'));
 
@@ -96,6 +99,7 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
 
     return (
         <>
+            <div>isConnected: {isConnected ? 'sim' : 'não'}</div>
             <Box maxWidth={!xl ? 300 : 400} display="flex" flexDirection="column" my={1}>
                 <Box display="flex" justifyContent="flex-start" mb={2}>
                     <Typography variant="subtitle1" fontWeight={600} style={{ width: '70%' }}>
@@ -152,23 +156,19 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
                         {values.wallets?.length ? texts.walletPlaceholderAdded : texts.walletPlaceholder}
                     </Typography>
                     <Box width="30%" display="flex" justifyContent="center">
-                        <Button
+                        <LoadingButton
                             size="small"
                             style={{ width: '85%', marginLeft: '10%' }}
                             variant="contained"
-                            onClick={handleAddWallet}
+                            onClick={onConnectWalletClick}
+                            loading={isConnected}
+                            disabled={isConnected}
                         >
                             {texts.connectButton}
-                        </Button>
+                        </LoadingButton>
                     </Box>
                 </Box>
             </Box>
-            <CustomizedSnackbar
-                type={toastr.type}
-                open={toastr.open}
-                message={toastr.message}
-                setOpentate={setToastr}
-            />
         </>
     );
 };
