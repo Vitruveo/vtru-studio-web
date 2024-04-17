@@ -35,7 +35,7 @@ export const CompletedConsignPage = () => {
             dispatch(consignArtworkThunks.updateStatus(values.selectedStatus));
         },
     });
-    
+
     const texts = {
         artworkListingTitle: language['studio.consignArtwork.artworkListing'],
         artworkListingActionTitle: language['studio.consignArtwork.consignmentStatus.preview.title'],
@@ -43,11 +43,11 @@ export const CompletedConsignPage = () => {
         consignArtworkTitle: language['studio.consignArtwork.title'],
         view: language['studio.consignArtwork.consignmentStatus.view'],
     } as { [key: string]: string };
-    
+
     const handlePreview = () => {
-        dispatch(consignArtworkThunks.checkPreview())
-    }
-    
+        dispatch(consignArtworkThunks.checkPreview());
+    };
+
     const consignSteps = {
         artworkListing: {
             title: texts.artworkListingTitle,
@@ -77,7 +77,7 @@ export const CompletedConsignPage = () => {
 
     return (
         <form onSubmit={formik.handleSubmit}>
-            <PageContainerFooter submitText="Update" secondaryText="Edit" submitDisabled={!formik.dirty}>
+            <PageContainerFooter submitText="Update" secondaryText="Back" submitDisabled={!formik.dirty}>
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
                 <Grid display="flex" flexWrap="wrap" marginBottom={6} item xs={12} lg={6}>
                     <Box marginBottom={2}>
@@ -135,12 +135,12 @@ export const CompletedConsignPage = () => {
                                     </Box>
                                 </Box>
                             ))}
-                            <Box mt={4}>
+                            {/* <Box mt={4}>
                                 <CompletedConsignTableStatus
                                     selectedStatus={formik.values.selectedStatus}
                                     onStatusChange={formik.handleChange}
                                 />
-                            </Box>
+                            </Box> */}
                         </Box>
                     </Box>
                     <Box flex={1} display="flex" justifyContent={!xL ? 'flex-start' : 'center'}>
