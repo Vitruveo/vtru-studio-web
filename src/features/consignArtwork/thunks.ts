@@ -37,7 +37,7 @@ export function checkPreview(): ReduxThunkAction {
     return async (dispatch, getState) => {
         try {
             const assetId = getState().asset._id;
-            const domain = window.location.hostname.replace('studio', 'store');
+            const domain = window.location.hostname.replace('studio.', '');
             cookie.set('token', getState().user.token, { path: '/', domain });
 
             if (assetId) {
