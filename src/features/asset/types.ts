@@ -64,6 +64,14 @@ export interface Asset {
         updatedBy: string | null;
     };
     consignArtwork?: AssetConsignArtwork;
+    contractExplorer?: ContractExplorer;
+}
+export interface ContractExplorer {
+    assetId: number;
+    assetRefId: number;
+    creatorRefId: number;
+    explorer: string;
+    tx: string;
 }
 
 export interface AssetConsignArtwork {

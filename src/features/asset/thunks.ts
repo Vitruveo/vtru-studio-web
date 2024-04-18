@@ -76,6 +76,20 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
                         consignArtworkActionsCreators.changeStatusStep({ stepId: 'licenses', status: 'completed' })
                     );
 
+                if (response.data.contractExplorer) {
+                    dispatch(assetActionsCreators.changeContractExplorer(response.data.contractExplorer));
+                }
+
+                if (response.data.consignArtwork?.status) {
+                    dispatch(
+                        consignArtworkActionsCreators.changePreviewAndConsign({
+                            artworkListing: {
+                                checked: true,
+                            },
+                        })
+                    );
+                }
+
                 dispatch(
                     consignArtworkActionsCreators.changeStatusStep({
                         stepId: 'termsOfUse',
@@ -437,8 +451,13 @@ export function createContractThunk(data: CreateContractByAssetIdReq): ReduxThun
                 headers,
                 onmessage(event) {},
                 signal: ctrl.signal,
-                onclose() {
+                async onclose() {
                     ctrl.abort();
+
+                    const response = await getAsset();
+                    if (response.data?.contractExplorer?.explorer)
+                        dispatch(assetActionsCreators.changeContractExplorer(response.data.contractExplorer));
+
                     resolve();
                 },
                 onerror() {

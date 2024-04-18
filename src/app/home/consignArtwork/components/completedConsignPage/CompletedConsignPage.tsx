@@ -17,12 +17,14 @@ interface FormType {
 }
 
 export const CompletedConsignPage = () => {
-    const { previewAndConsign, status } = useSelector((state) => state.consignArtwork);
-    const xL = useMediaQuery((them: Theme) => them.breakpoints.up('xl'));
-    const theme = useTheme();
     const dispatch = useDispatch();
+    const xL = useMediaQuery((them: Theme) => them.breakpoints.up('xl'));
     const { language } = useI18n();
+    const theme = useTheme();
     const toastr = useToastr();
+
+    const { previewAndConsign, status } = useSelector((state) => state.consignArtwork);
+    const explorerUrl = useSelector((state) => state.asset.contractExplorer?.explorer);
 
     const grayColor = theme.palette.text.disabled;
 
@@ -60,7 +62,11 @@ export const CompletedConsignPage = () => {
             actionTitle: texts.view,
             value: previewAndConsign.creatorContract?.value,
             actionFunc: async () => {
-                window.open('https://explorer.vitruveo.xyz/', '_blank');
+                if (explorerUrl) {
+                    window.open(explorerUrl, '_blank');
+                } else {
+                    toastr.display({ type: 'error', message: 'Explorer URL not found' });
+                }
             },
         },
     };
