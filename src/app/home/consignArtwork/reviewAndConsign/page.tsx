@@ -15,6 +15,7 @@ import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { WalletProvider } from '../../components/apps/wallet';
 import { useToastr } from '@/app/hooks/useToastr';
 import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
+import { updateAssetStep } from '@/features/asset/requests';
 
 interface ConsignStepsProps {
     [key: string]: {
@@ -43,31 +44,31 @@ const ConsignArtwork = () => {
     const wallets = useSelector((state) => state.user.wallets);
 
     // Handles the wallet address change
-    useEffect(() => {
-        let hasWallet = false;
-        if (isConnected && address) {
-            for (const wallet of wallets) {
-                if (wallet.address === address) {
-                    dispatch(
-                        consignArtworkActionsCreators.changePreviewAndConsign({
-                            creatorWallet: {
-                                checked: true,
-                                value: address,
-                            },
-                        })
-                    );
-                    hasWallet = true;
-                    break;
-                }
-            }
-            if (!hasWallet) {
-                toastr.display({
-                    type: 'error',
-                    message: 'Wallet not found, please add it to your account at your profile.',
-                });
-            }
-        }
-    }, [isConnected, address]);
+    // useEffect(() => {
+    //     let hasWallet = false;
+    //     if (isConnected && address) {
+    //         for (const wallet of wallets) {
+    //             if (wallet.address === address) {
+    //                 dispatch(
+    //                     consignArtworkActionsCreators.changePreviewAndConsign({
+    //                         creatorWallet: {
+    //                             checked: true,
+    //                             value: address,
+    //                         },
+    //                     })
+    //                 );
+    //                 hasWallet = true;
+    //                 break;
+    //             }
+    //         }
+    //         if (!hasWallet) {
+    //             toastr.display({
+    //                 type: 'error',
+    //                 message: 'Wallet not found, please add it to your account at your profile.',
+    //             });
+    //         }
+    //     }
+    // }, [isConnected, address]);
 
     const texts = {
         homeTitle: language['studio.home.title'],
@@ -99,6 +100,19 @@ const ConsignArtwork = () => {
 
     const handleSubmit = async (event?: React.FormEvent) => {
         if (event) event.preventDefault();
+        await updateAssetStep({
+            stepName: 'consignArtworkListing',
+            consignArtwork: {
+                listing: new Date().toISOString(),
+            },
+        });
+        dispatch(
+            consignArtworkActionsCreators.changePreviewAndConsign({
+                artworkListing: {
+                    checked: true,
+                },
+            })
+        );
         router.push(`/home/consignArtwork/DoneConsign`);
     };
 

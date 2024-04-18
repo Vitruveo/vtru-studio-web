@@ -9,7 +9,7 @@ import AssetMediaPreview from '@/app/home/consignArtwork/components/assetMediaPr
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 import PageContainerFooter from '../components/container/PageContainerFooter';
 import { StepId, StepStatus } from '@/features/consignArtwork/types';
-import { publishThunk } from '@/features/asset/thunks';
+import { getAssetThunk, publishThunk } from '@/features/asset/thunks';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 import { useI18n } from '@/app/hooks/useI18n';
 import { TranslateFunction } from '@/i18n/types';
@@ -79,6 +79,10 @@ const ConsignArtwork = () => {
     const xs = useMediaQuery((them: Theme) => them.breakpoints.up('xs'));
 
     useEffect(() => {
+        dispatch(getAssetThunk());
+    }, []);
+
+    useEffect(() => {
         if (checkAllCompletedSteps) {
             router.prefetch(`${pathname}/consignmentStatus`);
             router.prefetch(`${pathname}/reviewAndConsign`);
@@ -90,10 +94,7 @@ const ConsignArtwork = () => {
         if (!status?.length) dispatch(publishThunk({ status: 'draft' }));
     }, [status]);
 
-    // TODO: PUT THIS IN REDUX STORE
-    const isConsignCompleted =
-        previewAndConsign.artworkListing?.checked ||
-        !!artworkListing; /*Object.values(previewAndConsign).every((v) => v.checked == true)*/
+    const isConsignCompleted = previewAndConsign.artworkListing?.checked;
 
     if (isConsignCompleted) {
         return <CompletedConsignPage />;
