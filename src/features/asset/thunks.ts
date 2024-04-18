@@ -411,20 +411,26 @@ export function uploadIPFSByAssetIdThunk(
         };
 
         return new Promise((resolve, reject) => {
-            fetchEventSource(url, {
-                method: 'POST',
-                headers,
-                onmessage(event) {},
-                signal: ctrl.signal,
-                onclose() {
-                    ctrl.abort();
-                    resolve();
-                },
-                onerror() {
-                    ctrl.abort();
-                    reject();
-                },
-            });
+            try {
+                fetchEventSource(url, {
+                    method: 'POST',
+                    headers,
+                    signal: ctrl.signal,
+                    onmessage(message) {
+                        if (message.event === 'ipfs_success') {
+                            ctrl.abort();
+                            resolve();
+                        }
+
+                        if (message.event === 'ipfs_error') {
+                            ctrl.abort();
+                            reject();
+                        }
+                    },
+                }).catch(reject);
+            } catch (error) {
+                reject();
+            }
         });
     };
 }
@@ -443,25 +449,28 @@ export function createContractThunk(data: CreateContractByAssetIdReq): ReduxThun
         };
 
         return new Promise((resolve, reject) => {
-            fetchEventSource(url, {
-                method: 'POST',
-                headers,
-                onmessage(event) {},
-                signal: ctrl.signal,
-                async onclose() {
-                    ctrl.abort();
+            try {
+                fetchEventSource(url, {
+                    method: 'POST',
+                    headers,
+                    signal: ctrl.signal,
+                    onmessage(message) {
+                        if (message.event === 'contract_success') {
+                            dispatch(getAssetThunk());
 
-                    const response = await getAsset();
-                    if (response.data?.contractExplorer?.explorer)
-                        dispatch(assetActionsCreators.changeContractExplorer(response.data.contractExplorer));
+                            ctrl.abort();
+                            resolve();
+                        }
 
-                    resolve();
-                },
-                onerror() {
-                    ctrl.abort();
-                    reject();
-                },
-            });
+                        if (message.event === 'contract_error') {
+                            ctrl.abort();
+                            reject();
+                        }
+                    },
+                }).catch(reject);
+            } catch (error) {
+                reject();
+            }
         });
     };
 }
