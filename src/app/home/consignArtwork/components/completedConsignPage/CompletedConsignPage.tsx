@@ -58,7 +58,7 @@ export const CompletedConsignPage = () => {
             value: undefined,
         },
         creatorContract: {
-            title: 'Creator Contract',
+            title: 'Artwork Transaction',
             actionTitle: texts.view,
             value: previewAndConsign.creatorContract?.value,
             actionFunc: async () => {
