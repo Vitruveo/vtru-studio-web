@@ -601,7 +601,7 @@
     "creators": {
         "formData": [
             {
-                "name": "Your name"
+                "name": ""
             }
         ],
         "schema": {
@@ -2432,7 +2432,7 @@
                 "name": {
                     "ui:options": {
                         "label": false,
-                        "placeholder": ""
+                        "placeholder": "e.g John Doe"
                     }
                 },
                 "roles": {
