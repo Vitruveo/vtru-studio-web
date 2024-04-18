@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { usePathname, useRouter } from 'next/navigation';
-import { Button, Grid, Theme, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Button, Grid, Stack, Theme, Typography, useMediaQuery, useTheme } from '@mui/material';
 
 import Box from '@mui/material/Box';
 import AssetMediaPreview from '@/app/home/consignArtwork/components/assetMediaPreview';
@@ -115,27 +115,27 @@ const ConsignArtwork = () => {
                 <Grid container>
                     <Grid item md={12} lg={6}>
                         <Box marginBottom={2}>
-                            <Box>
+                            <Stack gap={1}>
                                 <Typography variant="h6" fontWeight="normal" color="GrayText">
                                     {texts.consignArtworkSubtitle}
-                                    <Typography variant="h6" fontWeight="normal" color="GrayText">
-                                        {texts.moreInformation}{' '}
-                                        <Typography
-                                            variant="h6"
-                                            display="inline"
-                                            style={{
-                                                fontWeight: 400,
-                                                color: '#007BFF',
-                                                cursor: 'pointer',
-                                                textDecoration: 'underline',
-                                            }}
-                                            onClick={() => window.open('https://dreamer.vitruveo.xyz/', '_blank')}
-                                        >
-                                            {texts.consignArtworkSubtitleLink}
-                                        </Typography>
+                                </Typography>
+                                <Typography variant="h6" fontWeight="normal" color="GrayText">
+                                    {texts.moreInformation}{' '}
+                                    <Typography
+                                        variant="h6"
+                                        display="inline"
+                                        style={{
+                                            fontWeight: 400,
+                                            color: '#007BFF',
+                                            cursor: 'pointer',
+                                            textDecoration: 'underline',
+                                        }}
+                                        onClick={() => window.open('https://dreamer.vitruveo.xyz/', '_blank')}
+                                    >
+                                        {texts.consignArtworkSubtitleLink}
                                     </Typography>
                                 </Typography>
-                            </Box>
+                            </Stack>
                             <Box p={2}>
                                 {Object.values(completedSteps).map((v) => (
                                     <Grid
