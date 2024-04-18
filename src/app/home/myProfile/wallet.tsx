@@ -99,7 +99,6 @@ const Wallet = ({ values, setFieldValue }: AccountSettingsProps) => {
 
     return (
         <>
-            <pre>{JSON.stringify({ isConnected, address })}</pre>
             <Box maxWidth={!xl ? 300 : 400} display="flex" flexDirection="column" my={1}>
                 <Box display="flex" justifyContent="flex-start" mb={2}>
                     <Typography variant="subtitle1" fontWeight={600} style={{ width: '70%' }}>
