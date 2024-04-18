@@ -47,6 +47,7 @@ export default function AuthLogo() {
                         style={{
                             maxWidth: '300px',
                             maxHeight: '300px',
+                            objectFit: 'contain',
                         }}
                     />
                 </Box>
@@ -63,7 +64,14 @@ export default function AuthLogo() {
                     }}
                 >
                     <Box>
-                        <Image src={'/images/logos/VTRU_Studio.png'} priority alt="bg" width={700} height={300} />
+                        <Image
+                            src={'/images/logos/VTRU_Studio.png'}
+                            style={{ objectFit: 'contain' }}
+                            priority
+                            alt="bg"
+                            width={700}
+                            height={300}
+                        />
                     </Box>
                 </Box>
             </Box>
