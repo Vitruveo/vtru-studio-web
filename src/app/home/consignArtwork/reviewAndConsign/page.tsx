@@ -163,12 +163,12 @@ const ConsignArtwork = () => {
         //         );
         //     },
         // },
-        creatorContract: {
+        /*creatorContract: {
             title: 'Creator Contract',
             status: 'Not Created',
             actionTitle: previewAndConsign.creatorContract?.value ? 'View' : 'Start',
             value: previewAndConsign.creatorContract?.value,
-            disabled: true /* !previewAndConsign.creatorWallet?.value */,
+            disabled: true, // !previewAndConsign.creatorWallet?.value,
             loading: previewAndConsign.creatorContract?.loading,
             actionFunc: async () => {
                 if (previewAndConsign.creatorContract?.value) {
@@ -195,7 +195,7 @@ const ConsignArtwork = () => {
                     })
                 );
             },
-        },
+        },*/
     };
 
     return (
