@@ -25,6 +25,7 @@ const PageContainerFooter = ({
     submitDisabled,
     secondaryText,
     hasBackButton,
+    hasSubmitButton=true
 }: Props) => (
     <FooterForm
         maxHeight={maxHeight}
@@ -37,6 +38,7 @@ const PageContainerFooter = ({
         saveOnClick={saveOnClick}
         secondaryText={secondaryText}
         hasBackButton={hasBackButton}
+        hasSubmitButton={hasSubmitButton}
     >
         <HelmetProvider>
             <div>
