@@ -83,7 +83,7 @@ export const CompletedConsignPage = () => {
 
     return (
         <form onSubmit={formik.handleSubmit}>
-            <PageContainerFooter submitText="Update" secondaryText="Back" submitDisabled={!formik.dirty}>
+            <PageContainerFooter hasSubmitButton={false} hasBackButton>
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
                 <Grid display="flex" flexWrap="wrap" marginBottom={6} item xs={12} lg={6}>
                     <Box marginBottom={2}>
