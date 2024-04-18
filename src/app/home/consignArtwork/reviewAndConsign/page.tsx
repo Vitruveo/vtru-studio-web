@@ -100,19 +100,7 @@ const ConsignArtwork = () => {
 
     const handleSubmit = async (event?: React.FormEvent) => {
         if (event) event.preventDefault();
-        await updateAssetStep({
-            stepName: 'consignArtworkListing',
-            consignArtwork: {
-                listing: new Date().toISOString(),
-            },
-        });
-        dispatch(
-            consignArtworkActionsCreators.changePreviewAndConsign({
-                artworkListing: {
-                    checked: true,
-                },
-            })
-        );
+
         router.push(`/home/consignArtwork/DoneConsign`);
     };
 
@@ -177,39 +165,39 @@ const ConsignArtwork = () => {
         //         );
         //     },
         // },
-        /*creatorContract: {
-            title: 'Creator Contract',
-            status: 'Not Created',
-            actionTitle: previewAndConsign.creatorContract?.value ? 'View' : 'Start',
-            value: previewAndConsign.creatorContract?.value,
-            disabled: true, // !previewAndConsign.creatorWallet?.value,
-            loading: previewAndConsign.creatorContract?.loading,
-            actionFunc: async () => {
-                if (previewAndConsign.creatorContract?.value) {
-                    window.open('https://explorer.vitruveo.xyz/', '_blank');
-                    return;
-                }
+        // creatorContract: {
+        //     title: 'Creator Contract',
+        //     status: 'Not Created',
+        //     actionTitle: previewAndConsign.creatorContract?.value ? 'View' : 'Start',
+        //     value: previewAndConsign.creatorContract?.value,
+        //     disabled: true /* !previewAndConsign.creatorWallet?.value */,
+        //     loading: previewAndConsign.creatorContract?.loading,
+        //     actionFunc: async () => {
+        //         if (previewAndConsign.creatorContract?.value) {
+        //             window.open('https://explorer.vitruveo.xyz/', '_blank');
+        //             return;
+        //         }
 
-                dispatch(
-                    consignArtworkActionsCreators.changePreviewAndConsign({
-                        creatorContract: {
-                            checked: false,
-                            loading: true,
-                        },
-                    })
-                );
-                await new Promise((resolve) => setTimeout(resolve, 2000));
-                dispatch(
-                    consignArtworkActionsCreators.changePreviewAndConsign({
-                        creatorContract: {
-                            checked: true,
-                            value: '0x1234567890',
-                            loading: false,
-                        },
-                    })
-                );
-            },
-        },*/
+        //         dispatch(
+        //             consignArtworkActionsCreators.changePreviewAndConsign({
+        //                 creatorContract: {
+        //                     checked: false,
+        //                     loading: true,
+        //                 },
+        //             })
+        //         );
+        //         await new Promise((resolve) => setTimeout(resolve, 2000));
+        //         dispatch(
+        //             consignArtworkActionsCreators.changePreviewAndConsign({
+        //                 creatorContract: {
+        //                     checked: true,
+        //                     value: '0x1234567890',
+        //                     loading: false,
+        //                 },
+        //             })
+        //         );
+        //     },
+        // },
     };
 
     return (

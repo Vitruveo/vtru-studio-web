@@ -13,6 +13,8 @@ import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
 import { useToastr } from '@/app/hooks/useToastr';
 import AssetMediaPreview from '../components/assetMediaPreview';
 import { createContractThunk, signingMediaC2PAThunk, uploadIPFSByAssetIdThunk } from '@/features/asset/thunks';
+import { updateAssetStep } from '@/features/asset/requests';
+import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 
 interface ConsignStep {
     title: string;
@@ -128,6 +130,19 @@ export default function DoneConsign() {
         try {
             event.preventDefault();
             dispatch(consignArtworkThunks.updateStatus('active'));
+            await updateAssetStep({
+                stepName: 'consignArtworkListing',
+                consignArtwork: {
+                    listing: new Date().toISOString(),
+                },
+            });
+            dispatch(
+                consignArtworkActionsCreators.changePreviewAndConsign({
+                    artworkListing: {
+                        checked: true,
+                    },
+                })
+            );
             router.push('/home/consignArtwork');
         } catch (error) {
             toastr.display({ message: 'Error updating consign artwork status', type: 'error' });
