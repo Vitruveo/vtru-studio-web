@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import Scrollbar from '@/app/home/components/custom-scroll/Scrollbar';
-import { Box, Drawer, useMediaQuery } from '@mui/material';
+import { Box, Drawer, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Logo from '../../shared/logo/Logo';
 import SidebarItems from './SidebarItems';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { hoverSidebar, toggleMobileSidebar } from '@/features/customizer/slice';
+import pakge from '../../../../../../package.json';
 
 const sidebarBackgroundImages = [
     'side1.jpg',
@@ -98,6 +99,9 @@ const Sidebar = () => {
                         {/* ------------------------------------------- */}
                         <Box px={3}>
                             <Logo />
+                        </Box>
+                        <Box sx={{ textAlign: 'center' }}>
+                            <Typography variant="caption">version {pakge.version}</Typography>
                         </Box>
                         <Scrollbar
                             sx={{

@@ -119,12 +119,12 @@ export const consignArtworkSlice = createSlice({
             state.creatorWallet = action.payload.creatorWallet;
             state.creatorContract = action.payload.creatorContract;
             state.creatorCredits = action.payload.creatorCredits;
-            state.status = action.payload.status
+            state.status = action.payload.status;
         },
         changeConsignArtworkAssetStatus: (state, action: PayloadAction<{ status: ConsignArtworkAssetStatus }>) => {
             const { status } = action.payload;
             state.status = status;
-        }
+        },
     },
 });
 

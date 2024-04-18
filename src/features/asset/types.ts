@@ -64,6 +64,14 @@ export interface Asset {
         updatedBy: string | null;
     };
     consignArtwork?: AssetConsignArtwork;
+    contractExplorer?: ContractExplorer;
+}
+export interface ContractExplorer {
+    assetId: number;
+    assetRefId: number;
+    creatorRefId: number;
+    explorer: string;
+    tx: string;
 }
 
 export interface AssetConsignArtwork {
@@ -71,7 +79,7 @@ export interface AssetConsignArtwork {
     creatorWallet?: string;
     creatorCredits?: number;
     creatorContract?: string;
-    status: ConsignArtworkAssetStatus
+    status: ConsignArtworkAssetStatus;
 }
 
 export interface AssetSendRequestUploadReq {
@@ -101,6 +109,26 @@ export interface RequestDeleteFilesReq {
 
 export interface UpdateAssetStepReq {}
 
+export interface SigningMediaC2PAReq {
+    filename: string;
+    creator: string;
+    token: string;
+}
+
+export interface UploadIPFSByAssetIdReq {
+    id: string;
+}
+
+export interface UploadIPFSByAssetIdRes {
+    [key: string]: string;
+}
+
+export interface CreateContractByAssetIdReq {
+    id: string;
+}
+
 export type UpdateAssetStepApiRes = APIResponse<string>;
+export type UploadIPFSByAssetIdApiRes = void;
+export type CreateContractApiRes = void;
 export type GetAssetApiRes = APIResponse<Asset>;
 export type AssetSendRequestUploadApiRes = APIResponse<string>;

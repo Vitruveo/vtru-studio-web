@@ -15,10 +15,6 @@
                     "format": "textarea",
                     "maxLength": 250
                 },
-                "longDescription": {
-                    "type": "string",
-                    "format": "textarea"
-                },
                 "culture": {
                     "type": "string",
                     "enum": [
@@ -114,13 +110,6 @@
                 }
             },
             "description": {
-                "ui:widget": "textarea",
-                "ui:options": {
-                    "label": false,
-                    "placeholder": ""
-                }
-            },
-            "longDescription": {
                 "ui:widget": "textarea",
                 "ui:options": {
                     "label": false,

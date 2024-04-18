@@ -1,6 +1,6 @@
 {
     "name": "my-app",
-    "version": "0.1.172",
+    "version": "0.1.179",
     "private": true,
     "scripts": {
         "dev": "next dev",
@@ -13,6 +13,7 @@
         "@emotion/cache": "^11.11.0",
         "@emotion/react": "^11.11.1",
         "@emotion/styled": "^11.11.0",
+        "@microsoft/fetch-event-source": "^2.0.1",
         "@mui/icons-material": "^5.14.13",
         "@mui/lab": "^5.0.0-alpha.148",
         "@mui/material": "^5.14.13",
