@@ -5,7 +5,7 @@ import { nanoid } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import { Stack } from '@mui/system';
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Radio, Typography, useTheme } from '@mui/material';
 
 import { useDispatch, useSelector } from '@/store/hooks';
 import { AssetMediaFormValues, FormatMediaSave, FormatsAuxiliayMedia } from './types';
@@ -25,6 +25,8 @@ import { useToastr } from '@/app/hooks/useToastr';
 
 export default function AssetMedia() {
     const [showBackModal, setShowBackModal] = useState(false);
+    // NOTE: ESTADO LOCAL, NO REDUX SÓ É DISPARADO QUANDO O FORMULÁRIO É SUBMETIDO
+    const [isAR, setIsAR] = useState(false);
     const toast = useToastr();
     const { language } = useI18n();
 
@@ -57,6 +59,9 @@ export default function AssetMedia() {
 
     const asset = useSelector((state) => state.asset);
 
+    // TODO: COLOCAR TIPAGEM CORRETA
+    const isAREnabled = useSelector((state: any) => state.asset.assetMetadata?.taxonomy.formData?.arenabled) == 'yes'
+
     const router = useRouter();
     const theme = useTheme();
     const dispatch = useDispatch();
@@ -74,13 +79,12 @@ export default function AssetMedia() {
     const { values, errors, setFieldValue, handleChange, handleSubmit } = useFormik<AssetMediaFormValues>({
         initialValues,
         onSubmit: async (formValues) => {
-
-            const hasArVideo = !!formValues.formats.arVideo.file
+            const hasArVideo = !!formValues.formats.arVideo.file;
 
             if (hasArVideo) {
-                dispatch(assetActionsCreators.setArEnabled(true))
+                dispatch(assetActionsCreators.setArEnabled(true));
             } else {
-                dispatch(assetActionsCreators.setArEnabled(false))
+                dispatch(assetActionsCreators.setArEnabled(false));
             }
 
             if (JSON.stringify(initialValues) === JSON.stringify(values) && !values.deleteKeys.length)
@@ -130,8 +134,12 @@ export default function AssetMedia() {
         );
 
         if (!file) {
-            toast.display({ message: 'File format not supported', type: 'warning' })
-            return
+            toast.display({ message: 'File format not supported', type: 'warning' });
+            return;
+        }
+
+        if (formatUpload === 'arVideo') {
+            setIsAR(true);
         }
 
         dispatch(
@@ -288,6 +296,22 @@ export default function AssetMedia() {
                                 </Box>
                             ))}
                         </Box>
+
+                        <Box display="flex" gap={1} mt={2}>
+                            <Box display="flex" alignItems="center">
+                                <Radio checked={isAREnabled || isAR} disabled />
+                                <Typography color="GrayText" variant="subtitle1" component="label">
+                                    This work is AR enabled
+                                </Typography>
+                            </Box>
+                            <Box display="flex" alignItems="center">
+                                <Radio checked={!isAR && !isAREnabled} disabled />
+                                <Typography color="GrayText" variant="subtitle1" component="label">
+                                    This work is not AR enabled
+                                </Typography>
+                            </Box>
+                        </Box>
+
                         <Box marginTop={2}>
                             <Box>
                                 <Typography mb={2} variant="subtitle1" fontWeight={600} component="label">
