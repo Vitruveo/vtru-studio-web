@@ -21,10 +21,11 @@ import { useI18n } from '@/app/hooks/useI18n';
 import { assetActionsCreators } from '@/features/asset/slice';
 import { requestDeleteFiles } from '@/features/asset/requests';
 import { CustomTextareaAutosize } from '../../components/forms/theme-elements/CustomTextarea';
+import { useToastr } from '@/app/hooks/useToastr';
 
 export default function AssetMedia() {
     const [showBackModal, setShowBackModal] = useState(false);
-
+    const toast = useToastr();
     const { language } = useI18n();
 
     const texts = {
@@ -111,7 +112,7 @@ export default function AssetMedia() {
     }) => {
         const transactionId = nanoid();
 
-        await dispatch(
+        dispatch(
             assetActionsCreators.requestAssetUpload({
                 key: formatUpload,
                 status: 'requested',
@@ -119,9 +120,14 @@ export default function AssetMedia() {
             })
         );
 
+        if (!file) {
+            toast.display({ message: 'File format not supported', type: 'warning' })
+            return
+        }
+
         dispatch(
             sendRequestUploadThunk({
-                mimetype: file!.type,
+                mimetype: file.type,
                 metadata: {
                     formatUpload,
                     maxSize,
