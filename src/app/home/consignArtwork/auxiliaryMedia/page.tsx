@@ -74,6 +74,15 @@ export default function AssetMedia() {
     const { values, errors, setFieldValue, handleChange, handleSubmit } = useFormik<AssetMediaFormValues>({
         initialValues,
         onSubmit: async (formValues) => {
+
+            const hasArVideo = !!formValues.formats.arVideo.file
+
+            if (hasArVideo) {
+                dispatch(assetActionsCreators.setArEnabled(true))
+            } else {
+                dispatch(assetActionsCreators.setArEnabled(false))
+            }
+
             if (JSON.stringify(initialValues) === JSON.stringify(values) && !values.deleteKeys.length)
                 router.push('/home/consignArtwork');
             else {
