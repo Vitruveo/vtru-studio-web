@@ -60,6 +60,17 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
             if (response.data) {
                 if (response.data.consignArtwork) {
                     dispatch(consignArtworkActionsCreators.changeConsignArtwork(response.data.consignArtwork));
+                    dispatch(
+                        consignArtworkActionsCreators.changePreviewAndConsign({
+                            artworkListing: { checked: true },
+                        })
+                    );
+                } else {
+                    dispatch(
+                        consignArtworkActionsCreators.changePreviewAndConsign({
+                            artworkListing: { checked: false },
+                        })
+                    );
                 }
 
                 if (response.data.assetMetadata && Object.values(response.data.assetMetadata)?.length) {
@@ -78,16 +89,6 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
 
                 if (response.data.contractExplorer) {
                     dispatch(assetActionsCreators.changeContractExplorer(response.data.contractExplorer));
-                }
-
-                if (response.data.consignArtwork?.status) {
-                    dispatch(
-                        consignArtworkActionsCreators.changePreviewAndConsign({
-                            artworkListing: {
-                                checked: true,
-                            },
-                        })
-                    );
                 }
 
                 dispatch(
@@ -187,10 +188,6 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
                             status: 'completed',
                         })
                     );
-
-                    if (response.data.consignArtwork) {
-                        dispatch(consignArtworkActionsCreators.changeConsignArtwork(response.data.consignArtwork));
-                    }
                 }
             }
 
