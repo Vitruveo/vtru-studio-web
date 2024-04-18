@@ -163,8 +163,8 @@ const ConsignArtwork = () => {
         //         );
         //     },
         // },
-        creatorContract: {
-            title: 'Artwork Transaction',
+        /*creatorContract: {
+            title: 'Creator Contract',
             status: 'Not Created',
             actionTitle: previewAndConsign.creatorContract?.value ? 'View' : 'Start',
             value: previewAndConsign.creatorContract?.value,
@@ -195,7 +195,7 @@ const ConsignArtwork = () => {
                     })
                 );
             },
-        },
+        },*/
     };
 
     return (
