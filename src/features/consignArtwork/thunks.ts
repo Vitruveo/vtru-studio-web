@@ -37,7 +37,8 @@ export function checkPreview(): ReduxThunkAction {
     return async (dispatch, getState) => {
         try {
             const assetId = getState().asset._id;
-            cookie.set('token', getState().user.token, { path: '/', domain: window.location.hostname });
+            const domain = window.location.hostname.replace('studio', 'store');
+            cookie.set('token', getState().user.token, { path: '/', domain });
 
             if (assetId) {
                 const URL = `${CONSIGN_ARTWORK_PREVIEW_URL}/preview/${assetId}/${Date.now()}`;
