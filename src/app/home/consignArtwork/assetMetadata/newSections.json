@@ -144,7 +144,10 @@
             },
             "orientation": {
                 "ui:widget": "radios",
-                "classNames": "display-fixed"
+                "classNames": "display-fixed",
+                "ui:options": {
+                    "disabled": true
+                }
             }
         }
     },
