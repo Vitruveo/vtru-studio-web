@@ -6,23 +6,19 @@ import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import { Stack } from '@mui/system';
 import { Box, Typography, useTheme } from '@mui/material';
-
 import { useDispatch, useSelector } from '@/store/hooks';
 import { AssetMediaFormValues, FormatMediaSave, FormatsAuxiliayMedia } from './types';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
 import MediaCard from './mediaCard';
-
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
-
 import { auxiliaryMediaThunk, assetStorageThunk, sendRequestUploadThunk } from '@/features/asset/thunks';
 import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
 import { assetActionsCreators } from '@/features/asset/slice';
 import { requestDeleteFiles } from '@/features/asset/requests';
-import { CustomTextareaAutosize } from '../../components/forms/theme-elements/CustomTextarea';
 import { RichEditor } from '../../components/rich-editor/rich-editor';
-import { ContentState, EditorState, convertFromRaw, convertToRaw } from 'draft-js';
+import { createDescriptionInitialState, getDescriptionJSONString, getDescriptionText } from './helpers';
 
 export default function AssetMedia() {
     const [showBackModal, setShowBackModal] = useState(false);
@@ -59,25 +55,19 @@ export default function AssetMedia() {
     const asset = useSelector((state) => state.asset);
 
     const router = useRouter();
-    const theme = useTheme();
     const dispatch = useDispatch();
 
-    const initialValues: AssetMediaFormValues = {
-        description: EditorState.createWithContent(convertFromRaw(JSON.parse(asset.mediaAuxiliary.description))),
-        definition: '',
-        deleteKeys: [],
-        formats: asset.mediaAuxiliary.formats,
-    };
+    const initialValues: AssetMediaFormValues = useMemo(
+        () => ({
+            description: createDescriptionInitialState(asset.mediaAuxiliary.description),
+            definition: '',
+            deleteKeys: [],
+            formats: asset.mediaAuxiliary.formats,
+        }),
+        []
+    );
 
-    const getDescriptionJSONString = (editorState: EditorState) => {
-        return JSON.stringify(convertToRaw(editorState.getCurrentContent()));
-    };
-
-    const getDescriptionText = (editorState: EditorState) => {
-        return editorState.getCurrentContent().getPlainText();
-    };
-
-    const { values, errors, setFieldValue, handleChange, handleSubmit } = useFormik<AssetMediaFormValues>({
+    const { values, errors, setFieldValue, handleSubmit } = useFormik<AssetMediaFormValues>({
         initialValues,
         onSubmit: async (formValues) => {
             if (JSON.stringify(initialValues) === JSON.stringify(values) && !values.deleteKeys.length)
@@ -123,7 +113,7 @@ export default function AssetMedia() {
     }) => {
         const transactionId = nanoid();
 
-        await dispatch(
+        dispatch(
             assetActionsCreators.requestAssetUpload({
                 key: formatUpload,
                 status: 'requested',
@@ -166,7 +156,7 @@ export default function AssetMedia() {
     };
 
     const handleCancelBackModal = async () => {
-        await dispatch(
+        dispatch(
             consignArtworkActionsCreators.changeStatusStep({
                 stepId: 'assetMedia',
                 status: 'completed',
