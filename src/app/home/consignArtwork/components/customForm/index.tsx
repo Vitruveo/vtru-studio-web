@@ -108,6 +108,7 @@ const MyCustomRadioWidget = (props: MyCustomRadioWidgetProps) => {
                     <FormControlLabel
                         control={
                             <CustomRadio
+                                disabled={props.disabled}
                                 onBlur={handleBlur}
                                 onFocus={handleFocus}
                                 color="primary"
