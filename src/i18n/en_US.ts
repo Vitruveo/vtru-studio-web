@@ -250,6 +250,7 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.culture.enum.southasian': 'South Asian',
     'studio.consignArtwork.assetMetadata.field.culture.enum.southeastasian': 'Southeast Asian',
     'studio.consignArtwork.assetMetadata.field.culture.enum.western': 'Western',
+    'studio.consignArtwork.assetMetadata.field.culture.enum.persian': 'Persian',
 
     'studio.consignArtwork.assetMetadata.field.objectType': 'Object Type',
     'studio.consignArtwork.assetMetadata.field.objectType.description': 'Origin of the work',
