@@ -1,3 +1,4 @@
+import { EditorState } from 'draft-js';
 import { FormikErrors } from 'formik';
 
 export interface FormatMediaSave {
@@ -31,9 +32,10 @@ export interface FormatsAuxiliayMedia {
 }
 
 export interface AssetMediaFormValues {
-    description: string;
+    description: EditorState;
     formats: FormatsAuxiliayMedia;
     deleteKeys: string[];
+    definition: string;
 }
 
 export type AssetMediaFormErros = FormikErrors<AssetMediaFormValues>;

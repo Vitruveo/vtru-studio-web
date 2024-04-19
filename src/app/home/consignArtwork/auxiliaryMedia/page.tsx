@@ -21,6 +21,8 @@ import { useI18n } from '@/app/hooks/useI18n';
 import { assetActionsCreators } from '@/features/asset/slice';
 import { requestDeleteFiles } from '@/features/asset/requests';
 import { CustomTextareaAutosize } from '../../components/forms/theme-elements/CustomTextarea';
+import { RichEditor } from '../../components/rich-editor/rich-editor';
+import { ContentState, EditorState, convertFromRaw, convertToRaw } from 'draft-js';
 
 export default function AssetMedia() {
     const [showBackModal, setShowBackModal] = useState(false);
@@ -60,15 +62,20 @@ export default function AssetMedia() {
     const theme = useTheme();
     const dispatch = useDispatch();
 
-    const initialValues = useMemo(
-        () => ({
-            description: asset.mediaAuxiliary.description || '',
-            definition: '',
-            deleteKeys: [],
-            formats: asset.mediaAuxiliary.formats,
-        }),
-        []
-    );
+    const initialValues: AssetMediaFormValues = {
+        description: EditorState.createWithContent(convertFromRaw(JSON.parse(asset.mediaAuxiliary.description))),
+        definition: '',
+        deleteKeys: [],
+        formats: asset.mediaAuxiliary.formats,
+    };
+
+    const getDescriptionJSONString = (editorState: EditorState) => {
+        return JSON.stringify(convertToRaw(editorState.getCurrentContent()));
+    };
+
+    const getDescriptionText = (editorState: EditorState) => {
+        return editorState.getCurrentContent().getPlainText();
+    };
 
     const { values, errors, setFieldValue, handleChange, handleSubmit } = useFormik<AssetMediaFormValues>({
         initialValues,
@@ -76,7 +83,7 @@ export default function AssetMedia() {
             if (JSON.stringify(initialValues) === JSON.stringify(values) && !values.deleteKeys.length)
                 router.push('/home/consignArtwork');
             else {
-                if (Object.values(values.formats).find((v) => v.file) || values.description?.length)
+                if (Object.values(values.formats).find((v) => v.file) || getDescriptionText(values.description).length)
                     dispatch(
                         consignArtworkActionsCreators.changeStatusStep({
                             stepId: 'auxiliaryMedia',
@@ -94,7 +101,12 @@ export default function AssetMedia() {
                     .filter(([_, value]) => !value.file)
                     .map(([key, _]) => key);
 
-                await dispatch(auxiliaryMediaThunk({ deleteFormats, description: formValues.description }));
+                await dispatch(
+                    auxiliaryMediaThunk({
+                        deleteFormats,
+                        description: getDescriptionJSONString(formValues.description),
+                    })
+                );
                 router.push('/home/consignArtwork');
             }
         },
@@ -171,7 +183,7 @@ export default function AssetMedia() {
     };
 
     const checkStepProgress =
-        Object.values(asset.mediaAuxiliary.formats).find((v) => v.file) || values.description?.length
+        Object.values(asset.mediaAuxiliary.formats).find((v) => v.file) || getDescriptionText(values.description).length
             ? 'completed'
             : 'inProgress';
 
@@ -230,6 +242,7 @@ export default function AssetMedia() {
                 auxiliaryMediaThunk({
                     ...values,
                     formats: responseUpload.reduce((acc, cur) => ({ ...acc, ...cur }), {} as FormatMediaSave),
+                    description: getDescriptionJSONString(values.description),
                 })
             );
         };
@@ -284,21 +297,14 @@ export default function AssetMedia() {
                                     {texts.descriptionPlaceholder}
                                 </Typography>
                             </Box>
-                            <CustomTextareaAutosize
-                                style={{
-                                    width: '98.7%',
-                                    height: 130,
-                                    backgroundColor: theme.palette.background.paper,
-                                    border: `1px solid ${theme.palette.divider}`,
-                                    borderRadius: theme.shape.borderRadius,
-                                    padding: theme.spacing(1),
-                                    fontSize: theme.typography.fontSize,
-                                    fontFamily: theme.typography.fontFamily,
-                                }}
-                                value={values.description}
-                                name="description"
-                                onChange={handleChange}
-                            />
+                            <Box mt={1}>
+                                <RichEditor
+                                    editorState={values.description}
+                                    onChange={(state) => {
+                                        setFieldValue('description', state);
+                                    }}
+                                />
+                            </Box>
                         </Box>
                     </Box>
                 </Stack>
