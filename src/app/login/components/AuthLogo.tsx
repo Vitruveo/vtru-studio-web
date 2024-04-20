@@ -39,7 +39,7 @@ export default function AuthLogo() {
                     }}
                 >
                     <Image
-                        src={'/images/logos/studiologo.png'}
+                        src={'/images/logos/VTRU_Studio.png'}
                         alt="bg"
                         priority
                         width={200}
@@ -47,6 +47,7 @@ export default function AuthLogo() {
                         style={{
                             maxWidth: '300px',
                             maxHeight: '300px',
+                            objectFit: 'contain',
                         }}
                     />
                 </Box>
@@ -64,15 +65,12 @@ export default function AuthLogo() {
                 >
                     <Box>
                         <Image
-                            src={'/images/logos/studiologo.png'}
+                            src={'/images/logos/VTRU_Studio.png'}
+                            style={{ objectFit: 'contain' }}
                             priority
                             alt="bg"
-                            width={270}
-                            height={200}
-                            style={{
-                                maxWidth: '700px',
-                                maxHeight: '100px',
-                            }}
+                            width={700}
+                            height={300}
                         />
                     </Box>
                 </Box>

@@ -1,30 +1,47 @@
-import React, { useEffect, useState } from 'react';
-import { useAccount, useDisconnect } from 'wagmi';
-import { IconTrash } from '@tabler/icons-react';
+import React, { useEffect } from 'react';
+import { IconButton, Radio, RadioGroup, Theme, Typography, useMediaQuery, Box } from '@mui/material';
+import { useAccount, useDisconnect, useAccountEffect } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-
-import Box from '@mui/material/Box';
-import { Button, Divider, IconButton, Radio, RadioGroup, Theme, Typography, useMediaQuery } from '@mui/material';
-
+import { IconTrash } from '@tabler/icons-react';
+import { LoadingButton } from '@mui/lab';
+import { AxiosError } from 'axios';
 import { useI18n } from '@/app/hooks/useI18n';
-import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
+import { useToastr } from '@/app/hooks/useToastr';
+import { useDispatch } from '@/store/hooks';
+import { requestConnectWalletThunk, verifyConnectWalletThunk } from '@/features/user/thunks';
 import { AccountSettingsProps } from './types';
-import CustomTextField from '../components/forms/theme-elements/CustomTextField';
 
-const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
-    const [toastr, setToastr] = useState<CustomizedSnackbarState>({
-        type: 'success',
-        open: false,
-        message: '',
+const Wallet = ({ values, setFieldValue }: AccountSettingsProps) => {
+    const toast = useToastr();
+    const { language } = useI18n();
+    const dispatch = useDispatch();
+    const { connectors } = useDisconnect();
+    const { isConnected, address } = useAccount();
+    const { openConnectModal } = useConnectModal();
+
+    useAccountEffect({
+        async onConnect() {
+            await handleWalletDisconnection();
+        },
     });
 
-    const [connectWallet, setConnectWallet] = useState(false);
+    useEffect(() => {
+        if (isConnected) {
+            handleWalletDisconnection();
+        }
+    }, []);
 
-    const { openConnectModal } = useConnectModal();
-    const { isConnected, address } = useAccount();
-    const { disconnectAsync } = useDisconnect();
+    useEffect(() => {
+        if (address && isConnected) {
+            handleSignWallet({ address });
+        }
+    }, [address, isConnected]);
 
-    const { language } = useI18n();
+    const handleWalletDisconnection = async () => {
+        for await (const connector of connectors) {
+            await connector.disconnect();
+        }
+    };
 
     const texts = {
         deleteButton: language['studio.myProfile.form.delete.button'],
@@ -34,9 +51,8 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
         connectButton: language['studio.myProfile.form.connect.button'],
     } as { [key: string]: string };
 
-    const handleAddWallet = async () => {
-        if (isConnected) await disconnectAsync();
-        setConnectWallet(true);
+    const onConnectWalletClick = async () => {
+        openConnectModal?.();
     };
 
     const handleDeleteWallet = async (index: number) => {
@@ -54,31 +70,27 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
         setFieldValue('walletDefault', val);
     };
 
-    useEffect(() => {
-        if (openConnectModal && connectWallet) {
-            openConnectModal();
-            setConnectWallet(false);
-        }
-        return () => {
-            disconnectAsync();
-        };
-    }, [connectWallet, openConnectModal]);
+    const handleSignWallet = async (data: { address: `0x${string}` }) => {
+        try {
+            const { signature } = await dispatch(requestConnectWalletThunk({ wallet: data.address }));
+            await dispatch(verifyConnectWalletThunk({ signature, wallet: data.address }));
 
-    useEffect(() => {
-        if (address && !values.wallets.some((item) => item.address === address)) {
-            setFieldValue('wallets', [{ address }, ...values.wallets]);
-        } else if (address) {
-            setToastr({
-                type: 'warning',
-                open: true,
-                message: (
-                    <div>
-                        {texts.walletConnected}:<Typography>{handleFormatWallet(address)}</Typography>
-                    </div>
-                ),
-            });
+            const walletExists = values.wallets.find((wallet) => wallet.address === data.address);
+
+            if (walletExists) {
+                toast.display({ message: 'Wallet already exists', type: 'error' });
+            } else {
+                setFieldValue('wallets', [{ address }, ...values.wallets]); // set address to wallets
+                toast.display({ message: 'Wallet connected', type: 'success' });
+            }
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                toast.display({ message: error.response?.data.message, type: 'error' });
+            } else {
+                toast.display({ message: 'Error on connect wallet', type: 'error' });
+            }
         }
-    }, [address]);
+    };
 
     const xl = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'));
 
@@ -143,23 +155,19 @@ const Wallet = ({ values, errors, setFieldValue }: AccountSettingsProps) => {
                         {values.wallets?.length ? texts.walletPlaceholderAdded : texts.walletPlaceholder}
                     </Typography>
                     <Box width="30%" display="flex" justifyContent="center">
-                        <Button
+                        <LoadingButton
                             size="small"
                             style={{ width: '85%', marginLeft: '10%' }}
                             variant="contained"
-                            onClick={handleAddWallet}
+                            onClick={onConnectWalletClick}
+                            loading={isConnected}
+                            disabled={isConnected}
                         >
                             {texts.connectButton}
-                        </Button>
+                        </LoadingButton>
                     </Box>
                 </Box>
             </Box>
-            <CustomizedSnackbar
-                type={toastr.type}
-                open={toastr.open}
-                message={toastr.message}
-                setOpentate={setToastr}
-            />
         </>
     );
 };

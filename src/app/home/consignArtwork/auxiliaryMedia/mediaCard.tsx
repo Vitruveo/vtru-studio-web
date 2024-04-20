@@ -92,7 +92,14 @@ export default function MediaCard({
 
     const handleGetAccept = () => {
         let accept = {};
-        if (mediaConfig.type === 'Image') {
+
+        if (mediaConfig.type == 'Ar Video') {
+            accept = {
+                'image/jpeg': [],
+                'image/png': [],
+            };
+        }
+        else if (mediaConfig.type === 'Image') {
             accept = {
                 'image/jpeg': [],
                 'image/png': [],

@@ -2,6 +2,7 @@ import { LicensesFormValues } from '@/app/home/consignArtwork/licenses/types';
 import { APIResponse } from '../common/types';
 import { SectionsFormData } from '@/app/home/consignArtwork/assetMetadata/page';
 import { OriginalFormatMedia } from '@/app/home/consignArtwork/assetMedia/types';
+import { ConsignArtworkAssetStatus } from '../consignArtwork/types';
 
 export type AssetStatus = 'draft' | 'published' | 'archived' | 'preview' | '';
 
@@ -62,6 +63,23 @@ export interface Asset {
         createdBy: string | null;
         updatedBy: string | null;
     };
+    consignArtwork?: AssetConsignArtwork;
+    contractExplorer?: ContractExplorer;
+}
+export interface ContractExplorer {
+    assetId: number;
+    assetRefId: number;
+    creatorRefId: number;
+    explorer: string;
+    tx: string;
+}
+
+export interface AssetConsignArtwork {
+    artworkListing?: string;
+    creatorWallet?: string;
+    creatorCredits?: number;
+    creatorContract?: string;
+    status: ConsignArtworkAssetStatus;
 }
 
 export interface AssetSendRequestUploadReq {
@@ -91,6 +109,26 @@ export interface RequestDeleteFilesReq {
 
 export interface UpdateAssetStepReq {}
 
+export interface SigningMediaC2PAReq {
+    filename: string;
+    creator: string;
+    token: string;
+}
+
+export interface UploadIPFSByAssetIdReq {
+    id: string;
+}
+
+export interface UploadIPFSByAssetIdRes {
+    [key: string]: string;
+}
+
+export interface CreateContractByAssetIdReq {
+    id: string;
+}
+
 export type UpdateAssetStepApiRes = APIResponse<string>;
+export type UploadIPFSByAssetIdApiRes = void;
+export type CreateContractApiRes = void;
 export type GetAssetApiRes = APIResponse<Asset>;
 export type AssetSendRequestUploadApiRes = APIResponse<string>;

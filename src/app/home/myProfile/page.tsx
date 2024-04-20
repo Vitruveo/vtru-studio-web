@@ -17,36 +17,94 @@ import {
 } from '@/features/user/thunks';
 import { userSelector } from '@/features/user';
 import { AccountSettingsFormValues } from './types';
-import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 import CustomTextField from '../components/forms/theme-elements/CustomTextField';
 import { debouncedUsernameValidation } from '../consignArtwork/formschema';
 import PageContainerFooter from '../components/container/PageContainerFooter';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { useI18n } from '@/app/hooks/useI18n';
 import { useAvatar } from './useAvatar';
+import { useToastr } from '@/app/hooks/useToastr';
 
 export default function ProfileSettings() {
+    const toast = useToastr();
+    const router = useRouter();
+    const dispatch = useDispatch();
+    const { language } = useI18n();
+    const { avatarSrc } = useAvatar();
     const [resetAvatar, setResetAvatar] = useState(false);
-    const [changeAvatarFile, setChangeAvatarFile] = useState<File>();
     const [usernameError, setUsernameError] = useState('');
-    const [toastr, setToastr] = useState<CustomizedSnackbarState>({
-        type: 'success',
-        open: false,
-        message: '',
-    });
+    const [changeAvatarFile, setChangeAvatarFile] = useState<File>();
 
+    const { isCompletedProfile, goToConsignArtwork } = useSelector((state) => state.consignArtwork);
     const { username, emailDefault, walletDefault, emails, wallets, requestAvatarUpload } = useSelector(
         userSelector(['username', 'emailDefault', 'walletDefault', 'emails', 'wallets', 'requestAvatarUpload'])
     );
 
-    const { avatarSrc } = useAvatar();
+    useEffect(() => {
+        if (requestAvatarUpload.status === 'ready') {
+            dispatch(
+                generalStorageAvatarThunk({
+                    file: changeAvatarFile!,
+                    path: requestAvatarUpload.path,
+                    url: requestAvatarUpload.url,
+                    transactionId: requestAvatarUpload.transactionId,
+                })
+            );
 
-    const { isCompletedProfile, goToConsignArtwork } = useSelector((state) => state.consignArtwork);
+            toast.display({ message: texts.saveMessage, type: 'success' });
 
-    const dispatch = useDispatch();
-    const router = useRouter();
+            setTimeout(() => {
+                router.push('/home');
+            }, 500);
+        }
+    }, [requestAvatarUpload.status]);
 
-    const { language } = useI18n();
+    useEffect(() => {
+        if (!isCompletedProfile && goToConsignArtwork) {
+            const fields = {
+                username: {
+                    translation: texts.usernameTitle,
+                    isValid: !!values.username,
+                },
+                emails: {
+                    translation: texts.emailsTitle,
+                    isValid: !!values.emails.length,
+                },
+
+                wallets: {
+                    translation: texts.walletsTitle,
+                    isValid: !!values.wallets.length,
+                },
+            };
+
+            const invalidFields = Object.entries(fields).filter(([key, value]) => !value.isValid);
+
+            dispatch(consignArtworkActionsCreators.changeGoToConsignArtwork(false));
+            toast.display({
+                type: 'warning',
+                message: (
+                    <Box>
+                        {`${texts.accessConsignMessage}`}
+                        <Box>
+                            Fill in the fields: {`${invalidFields.map(([key, value]) => value.translation).join(', ')}`}
+                        </Box>
+                    </Box>
+                ),
+            });
+        }
+    }, [isCompletedProfile, goToConsignArtwork]);
+
+    const initialValues = useMemo(
+        () => ({
+            emailDefault: !emailDefault || !emailDefault.length ? emails[0]?.email : emailDefault,
+            walletDefault: !walletDefault || !walletDefault.length ? wallets[0]?.address || '' : walletDefault,
+            username,
+            emails: emails.filter((email) => email.checkedAt),
+            wallets,
+            creators: [],
+        }),
+        []
+    );
 
     const texts = {
         title: language['studio.myProfile.title'],
@@ -90,88 +148,48 @@ export default function ProfileSettings() {
         useFormik<AccountSettingsFormValues>({
             initialValues,
             // validationSchema: stepsSchemaValidation,
-            onSubmit: async (formValues) => {
-                if (!formValues.username || formValues.username?.length === 0)
-                    setUsernameError(texts.usernameRequiredError);
-                else {
-                    await dispatch(saveStepWizardThunk({ step: 0, values }));
-                    dispatch(
-                        consignArtworkActionsCreators.checkIsCompletedProfile({
-                            username: values.username,
-                            emails: values.emails,
-                            wallets: values.wallets,
-                        })
-                    );
-
-                    if (resetAvatar) {
-                        dispatch(changeAvatarThunk({ fileId: '' }));
-                        setToastr({
-                            open: true,
-                            type: 'success',
-                            message: texts.saveMessage,
-                        });
-
-                        setTimeout(() => {
-                            router.push('/home');
-                        }, 500);
-                    } else if (changeAvatarFile) {
-                        dispatch(
-                            sendRequestUploadThunk({
-                                mimetype: changeAvatarFile!.type,
-                                originalName: changeAvatarFile!.name,
-                            })
-                        );
-                    } else {
-                        setToastr({
-                            open: true,
-                            type: 'success',
-                            message: texts.saveMessage,
-                        });
-
-                        setTimeout(() => {
-                            router.push('/home');
-                        }, 500);
-                    }
-                }
-            },
+            onSubmit: onSubmit,
         });
 
-    useEffect(() => {
-        if (!isCompletedProfile && goToConsignArtwork) {
-            const fields = {
-                username: {
-                    translation: texts.usernameTitle,
-                    isValid: !!values.username,
-                },
-                emails: {
-                    translation: texts.emailsTitle,
-                    isValid: !!values.emails.length,
-                },
-
-                wallets: {
-                    translation: texts.walletsTitle,
-                    isValid: !!values.wallets.length,
-                },
-            };
-
-            const invalidFields = Object.entries(fields).filter(([key, value]) => !value.isValid);
-
-            dispatch(consignArtworkActionsCreators.changeGoToConsignArtwork(false));
-            setToastr({
-                open: true,
-                type: 'warning',
-                autoClose: false,
-                message: (
-                    <Box>
-                        {`${texts.accessConsignMessage}`}
-                        <Box>
-                            Fill in the fields: {`${invalidFields.map(([key, value]) => value.translation).join(', ')}`}
-                        </Box>
-                    </Box>
-                ),
-            });
+    async function onSubmit(formValues: AccountSettingsFormValues) {
+        if (!formValues.username || formValues.username?.length === 0) {
+            setUsernameError(texts.usernameRequiredError);
+            return;
         }
-    }, [isCompletedProfile, goToConsignArtwork]);
+
+        if (errors.username || usernameError) return;
+
+        dispatch(saveStepWizardThunk({ step: 0, values }));
+        dispatch(
+            consignArtworkActionsCreators.checkIsCompletedProfile({
+                username: values.username,
+                emails: values.emails,
+                wallets: values.wallets,
+            })
+        );
+
+        if (resetAvatar) {
+            dispatch(changeAvatarThunk({ fileId: '' }));
+            toast.display({ message: texts.saveMessage, type: 'success' });
+
+            setTimeout(() => {
+                router.push('/home');
+            }, 500);
+        } else if (changeAvatarFile) {
+            dispatch(
+                sendRequestUploadThunk({
+                    mimetype: changeAvatarFile!.type,
+                    originalName: changeAvatarFile!.name,
+                })
+            );
+        } else {
+            toast.display({ message: texts.saveMessage, type: 'success' });
+
+            setTimeout(() => {
+                router.push('/home');
+            }, 500);
+        }
+    }
 
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (handleChange) handleChange(e);
@@ -187,11 +205,7 @@ export default function ProfileSettings() {
         if (file) {
             const fileSize = file.size / 1024;
             if (fileSize > 800) {
-                setToastr({
-                    open: true,
-                    type: 'warning',
-                    message: 'File size is too big',
-                });
+                toast.display({ type: 'warning', message: 'File size is too big' });
             } else {
                 setChangeAvatarFile(file);
             }
@@ -201,29 +215,6 @@ export default function ProfileSettings() {
     const handleOnClickReset = () => {
         setResetAvatar(true);
     };
-
-    useEffect(() => {
-        if (requestAvatarUpload.status === 'ready') {
-            dispatch(
-                generalStorageAvatarThunk({
-                    file: changeAvatarFile!,
-                    path: requestAvatarUpload.path,
-                    url: requestAvatarUpload.url,
-                    transactionId: requestAvatarUpload.transactionId,
-                })
-            );
-
-            setToastr({
-                open: true,
-                type: 'success',
-                message: texts.saveMessage,
-            });
-
-            setTimeout(() => {
-                router.push('/home');
-            }, 500);
-        }
-    }, [requestAvatarUpload.status]);
 
     const isNewAvatar = resetAvatar
         ? '/images/profile/profileDefault.png'
@@ -275,6 +266,7 @@ export default function ProfileSettings() {
                                                     src={isNewAvatar}
                                                     alt={'user1'}
                                                     sx={{
+                                                        backgroundColor: '#ffffcc',
                                                         width: 120,
                                                         height: 120,
                                                         margin: '0 auto',
@@ -327,14 +319,6 @@ export default function ProfileSettings() {
                         </Grid>
                     </Grid>
                 </Box>
-
-                <CustomizedSnackbar
-                    type={toastr.type}
-                    open={toastr.open}
-                    message={toastr.message}
-                    autoClose={toastr.autoClose}
-                    setOpentate={setToastr}
-                />
             </PageContainerFooter>
         </form>
     );

@@ -68,8 +68,10 @@ const language: Translation = {
     'studio.consignArtwork.stepName.licenses': 'مجوزها',
     'studio.consignArtwork.stepName.termsOfUse': 'شرایط استفاده',
     'studio.consignArtwork.stepName.auxiliaryMedia': 'رسانه‌های کمکی',
+    'studio.consignArtwork.stepName.reviewAndConsign': 'بررسی و ارسال',
     'studio.consignArtwork.optional': 'اختیاری',
-
+    'studio.consignArtwork.artworkListing': 'فهرست آثار هنری',
+    'studio.consignArtwork.artworkConsignedTitle': 'آثار هنری شما در حال حاضر ارسال شده است.',
     'studio.consignArtwork.stepStatus.completed': 'تکمیل شده',
     'studio.consignArtwork.stepStatus.inProgress': 'در حال انجام',
     'studio.consignArtwork.stepStatus.notStarted': 'شروع نشده',
@@ -81,6 +83,8 @@ const language: Translation = {
 
     'studio.consignArtwork.publishButton': (data: { status: string }) =>
         `${data.status === 'published' ? 'محول شده' : 'محول کن'}`,
+
+    'studio.consignArtwork.comingSoon': 'به زودی',
 
     /* Asset Media */
     'studio.consignArtwork.assetMedia.title': 'رسانه دارایی',
@@ -233,6 +237,7 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.culture.description': 'فرهنگ اصلی برای این اثر',
 
     'studio.consignArtwork.assetMetadata.field.culture.enum.african': 'آفریقایی',
+    'studio.consignArtwork.assetMetadata.field.culture.enum.persian': 'فارسی',
     'studio.consignArtwork.assetMetadata.field.culture.enum.centralasian': 'آسیای مرکزی',
     'studio.consignArtwork.assetMetadata.field.culture.enum.eastasian': 'آسیای شرقی',
     'studio.consignArtwork.assetMetadata.field.culture.enum.islamic': 'اسلامی',
@@ -888,6 +893,7 @@ const language: Translation = {
     'studio.consignArtwork.consignmentStatus.search': 'جستجو',
     'studio.consignArtwork.consignmentStatus.license': 'مجوز',
 
+    'studio.consignArtwork.consignmentStatus.active.title': 'فعال',
     'studio.consignArtwork.consignmentStatus.draft.title': 'پیش نویس',
     'studio.consignArtwork.consignmentStatus.preview.title': 'پیش‌نمایش',
     'studio.consignArtwork.consignmentStatus.activate.title': 'فعال‌سازی',

@@ -21,6 +21,9 @@ export interface FooterFormProps {
     stepNumber?: number;
     backOnclick?: () => void;
     saveOnClick?: () => void;
+    secondaryText?: string;
+    hasBackButton?: boolean;
+    hasSubmitButton?: boolean;
 }
 
 export function FooterForm({
@@ -32,6 +35,9 @@ export function FooterForm({
     stepStatus,
     stepNumber,
     backOnclick,
+    secondaryText,
+    hasBackButton = true,
+    hasSubmitButton,
 }: FooterFormProps) {
     const theme = useTheme();
 
@@ -151,16 +157,17 @@ export function FooterForm({
                                 >
                                     {submitText || 'Save'}
                                 </Button>
-
-                                <Button
-                                    size="large"
-                                    onClick={!backPathRouter ? handleBackClick : undefined}
-                                    variant="text"
-                                >
-                                    <Typography variant="subtitle2" color="GrayText" className="text-hover">
-                                        {texts.back}
-                                    </Typography>
-                                </Button>
+                                {hasBackButton && (
+                                    <Button
+                                        size="large"
+                                        onClick={!backPathRouter ? handleBackClick : undefined}
+                                        variant="text"
+                                    >
+                                        <Typography variant="subtitle2" color="GrayText" className="text-hover">
+                                            {texts.back}
+                                        </Typography>
+                                    </Button>
+                                )}
                             </Stack>
                         </Box>
                     ) : (
@@ -171,22 +178,26 @@ export function FooterForm({
                             spacing={4}
                             flexDirection="row-reverse"
                         >
-                            <Button
-                                size="large"
-                                disabled={submitDisabled}
-                                type="submit"
-                                style={{ width: 120, marginLeft: '20px' }}
-                                color="primary"
-                                variant="contained"
-                            >
-                                {submitText || texts.save}
-                            </Button>
+                            {hasSubmitButton && (
+                                <Button
+                                    size="large"
+                                    disabled={submitDisabled}
+                                    type="submit"
+                                    style={{ minWidth: 120, marginLeft: '20px' }}
+                                    color="primary"
+                                    variant="contained"
+                                >
+                                    {submitText || texts.save}
+                                </Button>
+                            )}
 
-                            <Link href={backPathRouter || '/home'} className="hover-text-primary">
-                                <Typography variant="subtitle2" color="GrayText" className="text-hover">
-                                    {texts.back}
-                                </Typography>
-                            </Link>
+                            {hasBackButton && (
+                                <Link href={backPathRouter || '/home'} className="hover-text-primary">
+                                    <Typography variant="subtitle2" color="GrayText" className="text-hover">
+                                        {secondaryText || texts.back}
+                                    </Typography>
+                                </Link>
+                            )}
                         </Stack>
                     )}
                 </Box>

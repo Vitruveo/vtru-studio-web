@@ -13,7 +13,6 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { useI18n } from '../hooks/useI18n';
 import Image from 'next/image';
-import { useEffect } from 'react';
 
 export default function Home() {
     const { language } = useI18n();
@@ -34,6 +33,8 @@ export default function Home() {
     } as { [key: string]: string };
 
     const isPublished = status === 'preview';
+
+    const canConsignArtwork = useSelector((state) => state.user.canConsignArtwork);
 
     return (
         <Container
@@ -87,15 +88,18 @@ export default function Home() {
                         <Grid item xs={12} sm={6} md={3.5}>
                             <Link
                                 href={
-                                    isCompletedProfile
-                                        ? isPublished
-                                            ? '/home/consignArtwork/consignmentStatus'
-                                            : '/home/consignArtwork'
-                                        : '/home/myProfile'
+                                    !canConsignArtwork
+                                        ? '/home'
+                                        : isCompletedProfile
+                                          ? isPublished
+                                              ? '/home/consignArtwork/consignmentStatus'
+                                              : '/home/consignArtwork'
+                                          : '/home/myProfile'
                                 }
                                 passHref
                             >
                                 <Button
+                                    disabled={!canConsignArtwork}
                                     variant="contained"
                                     onClick={() =>
                                         dispatch(consignArtworkActionsCreators.changeGoToConsignArtwork(true))

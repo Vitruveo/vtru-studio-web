@@ -12,7 +12,8 @@
                 },
                 "description": {
                     "type": "string",
-                    "format": "textarea"
+                    "format": "textarea",
+                    "maxLength": 250
                 },
                 "culture": {
                     "type": "string",
@@ -24,6 +25,7 @@
                         "latinamerican",
                         "nativeamerican",
                         "oceanic",
+                        "persian",
                         "southasian",
                         "southeastasian",
                         "western"
@@ -143,7 +145,10 @@
             },
             "orientation": {
                 "ui:widget": "radios",
-                "classNames": "display-fixed"
+                "classNames": "display-fixed",
+                "ui:options": {
+                    "disabled": true
+                }
             }
         }
     },
@@ -600,7 +605,7 @@
     "creators": {
         "formData": [
             {
-                "name": "Your name"
+                "name": ""
             }
         ],
         "schema": {
@@ -2431,7 +2436,7 @@
                 "name": {
                     "ui:options": {
                         "label": false,
-                        "placeholder": ""
+                        "placeholder": "e.g John Doe"
                     }
                 },
                 "roles": {

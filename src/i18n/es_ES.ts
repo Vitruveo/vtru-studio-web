@@ -70,8 +70,10 @@ const language: Translation = {
     'studio.consignArtwork.stepName.licenses': 'Licencias',
     'studio.consignArtwork.stepName.termsOfUse': 'Términos de Uso',
     'studio.consignArtwork.stepName.auxiliaryMedia': 'Medios Auxiliares',
+    'studio.consignArtwork.stepName.reviewAndConsign': 'Revisar y Consignar',
     'studio.consignArtwork.optional': 'opcional',
-
+    'studio.consignArtwork.artworkListing': 'Listado de Obra de Arte',
+    'studio.consignArtwork.artworkConsignedTitle': 'Su obra de arte está actualmente consignada.',
     'studio.consignArtwork.stepStatus.completed': 'Completado',
     'studio.consignArtwork.stepStatus.inProgress': 'En Progreso',
     'studio.consignArtwork.stepStatus.notStarted': 'No Iniciado',
@@ -83,6 +85,8 @@ const language: Translation = {
 
     'studio.consignArtwork.publishButton': (data: { status: string }) =>
         `${data.status === 'published' ? 'Consignado' : 'Consignar'}`,
+
+    'studio.consignArtwork.comingSoon': 'Muy pronto',
 
     /* Asset Media */
     'studio.consignArtwork.assetMedia.title': 'Medios del Activo',
@@ -226,6 +230,7 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.culture': 'Cultura',
     'studio.consignArtwork.assetMetadata.field.culture.description': 'Cultura principal de esta obra',
     'studio.consignArtwork.assetMetadata.field.culture.enum.african': 'Africana',
+    'studio.consignArtwork.assetMetadata.field.culture.enum.persian': 'Persa',
     'studio.consignArtwork.assetMetadata.field.culture.enum.centralasian': 'Asiática central',
     'studio.consignArtwork.assetMetadata.field.culture.enum.eastasian': 'Asiática oriental',
     'studio.consignArtwork.assetMetadata.field.culture.enum.islamic': 'Islámica',
@@ -849,6 +854,7 @@ const language: Translation = {
     'studio.consignArtwork.consignmentStatus.search': 'Buscar',
     'studio.consignArtwork.consignmentStatus.license': 'Licencia',
 
+    'studio.consignArtwork.consignmentStatus.active.title': 'Activo',
     'studio.consignArtwork.consignmentStatus.draft.title': 'Borrador',
     'studio.consignArtwork.consignmentStatus.preview.title': 'Vista Previa',
     'studio.consignArtwork.consignmentStatus.activate.title': 'Activar',

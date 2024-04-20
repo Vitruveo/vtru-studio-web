@@ -8,6 +8,7 @@ type Props = {
     children: JSX.Element | JSX.Element[];
     title?: string;
     submitText?: string;
+    secondaryText?: string;
 } & FooterFormProps;
 
 const PageContainerFooter = ({
@@ -22,6 +23,9 @@ const PageContainerFooter = ({
     backPathRouter,
     saveOnClick,
     submitDisabled,
+    secondaryText,
+    hasBackButton,
+    hasSubmitButton=true
 }: Props) => (
     <FooterForm
         maxHeight={maxHeight}
@@ -32,6 +36,9 @@ const PageContainerFooter = ({
         submitDisabled={submitDisabled}
         backOnclick={backOnclick}
         saveOnClick={saveOnClick}
+        secondaryText={secondaryText}
+        hasBackButton={hasBackButton}
+        hasSubmitButton={hasSubmitButton}
     >
         <HelmetProvider>
             <div>

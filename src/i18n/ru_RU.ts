@@ -70,8 +70,10 @@ const language: Translation = {
     'studio.consignArtwork.stepName.licenses': 'Лицензии',
     'studio.consignArtwork.stepName.termsOfUse': 'Условия использования',
     'studio.consignArtwork.stepName.auxiliaryMedia': 'Вспомогательные Медиа',
+    'studio.consignArtwork.stepName.reviewAndConsign': 'Рассмотрение и отправка',
     'studio.consignArtwork.optional': 'необязательный',
-
+    'studio.consignArtwork.artworkListing': 'список произведений искусства',
+    'studio.consignArtwork.artworkConsignedTitle': 'Ваша работа в настоящее время отправлена.',
     'studio.consignArtwork.stepStatus.completed': 'Завершено',
     'studio.consignArtwork.stepStatus.inProgress': 'В процессе',
     'studio.consignArtwork.stepStatus.notStarted': 'Не начато',
@@ -83,6 +85,8 @@ const language: Translation = {
 
     'studio.consignArtwork.publishButton': (data: { status: string }) =>
         `${data.status === 'published' ? 'Передано' : 'Передать'}`,
+
+    'studio.consignArtwork.comingSoon': 'Скоро',
 
     /* Asset Media */
     'studio.consignArtwork.assetMedia.title': 'Медиафайлы',
@@ -233,6 +237,7 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.culture.description': 'Основная культура',
 
     'studio.consignArtwork.assetMetadata.field.culture.enum.african': 'Африканская',
+    'studio.consignArtwork.assetMetadata.field.culture.enum.persian': 'Персидская',
     'studio.consignArtwork.assetMetadata.field.culture.enum.centralasian': 'Центральной Азии',
     'studio.consignArtwork.assetMetadata.field.culture.enum.eastasian': 'Восточноазиатская',
     'studio.consignArtwork.assetMetadata.field.culture.enum.islamic': 'Исламская',
@@ -892,7 +897,7 @@ const language: Translation = {
     'studio.consignArtwork.consignmentStatus.view': 'Просмотр',
     'studio.consignArtwork.consignmentStatus.search': 'Поиск',
     'studio.consignArtwork.consignmentStatus.license': 'Лицензия',
-
+    'studio.consignArtwork.consignmentStatus.active.title': 'Активный',
     'studio.consignArtwork.consignmentStatus.draft.title': 'Черновик',
     'studio.consignArtwork.consignmentStatus.preview.title': 'Предпросмотр',
     'studio.consignArtwork.consignmentStatus.activate.title': 'Активировать',

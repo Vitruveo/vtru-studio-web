@@ -42,7 +42,7 @@ const language: Translation = {
     'studio.myProfile.form.profile.description': 'Allowed JPG, GIF or PNG. Max size of 800KB',
     'studio.myProfile.form.emails.title': 'Emails',
     'studio.myProfile.form.emailsExists.error': 'Email already exists',
-    'studio.myProfile.form.addEmails.placeholder': 'Enter additional email address',
+    'studio.myProfile.form.addEmails.placeholder': 'Additional e-mail (optional)',
     'studio.myProfile.form.code.placeholder': 'type a code...',
     'studio.myProfile.form.verify.button': 'Verify',
     'studio.myProfile.form.delete.button': 'Delete',
@@ -51,7 +51,7 @@ const language: Translation = {
     'studio.myProfile.verificationCodeSentMessageError': 'error sending verification code to email',
     'studio.myProfile.emailVerificationMessageSuccess': 'email verified',
     'studio.myProfile.emailVerificationMessageError': 'error verifying code',
-    'studio.myProfile.form.wallet.placeholderAdded': 'Connect additional wallet',
+    'studio.myProfile.form.wallet.placeholderAdded': 'Addicional wallet (optional)',
     'studio.myProfile.form.wallet.connected': 'Wallet already connected',
     'studio.myProfile.form.wallet.placeholder': 'Connect new wallet',
     'studio.myProfile.form.connect.button': 'Connect',
@@ -69,7 +69,10 @@ const language: Translation = {
     'studio.consignArtwork.stepName.licenses': 'Licenses',
     'studio.consignArtwork.stepName.termsOfUse': 'Terms of Use',
     'studio.consignArtwork.stepName.auxiliaryMedia': 'Auxiliary Media',
+    'studio.consignArtwork.stepName.reviewAndConsign': 'Review And Consign',
     'studio.consignArtwork.optional': 'optional',
+    'studio.consignArtwork.artworkListing': 'Artwork Listing',
+    'studio.consignArtwork.artworkConsignedTitle': 'Your artwork is currently consigned.',
 
     'studio.consignArtwork.stepStatus.completed': 'Completed',
     'studio.consignArtwork.stepStatus.inProgress': 'In Progress',
@@ -81,7 +84,9 @@ const language: Translation = {
         `${data.status !== 'notStarted' ? 'Edit' : 'Start'}`,
 
     'studio.consignArtwork.publishButton': (data: { status: string }) =>
-        `${data.status === 'published' ? 'Consigned' : 'Consign'}`,
+        `${data.status === 'published' ? 'Review and Update' : 'Review and Consign'}`,
+
+    'studio.consignArtwork.comingSoon': 'Coming soon',
 
     /* Asset Media */
     'studio.consignArtwork.assetMedia.title': 'Asset Media',
@@ -162,8 +167,12 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.title': 'Title',
     'studio.consignArtwork.assetMetadata.field.title.description': 'Title of work',
 
-    'studio.consignArtwork.assetMetadata.field.description': 'Label',
+    'studio.consignArtwork.assetMetadata.field.description': 'Short description',
     'studio.consignArtwork.assetMetadata.field.description.description':
+        'Brief description of work. Short description available in Auxiliary Media.',
+
+    'studio.consignArtwork.assetMetadata.field.longDescription': 'Long description',
+    'studio.consignArtwork.assetMetadata.field.longDescription.description':
         'Brief description of work. Longer description available in Auxiliary Media.',
 
     'studio.consignArtwork.assetMetadata.field.mood': 'Mood',
@@ -241,6 +250,7 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.culture.enum.southasian': 'South Asian',
     'studio.consignArtwork.assetMetadata.field.culture.enum.southeastasian': 'Southeast Asian',
     'studio.consignArtwork.assetMetadata.field.culture.enum.western': 'Western',
+    'studio.consignArtwork.assetMetadata.field.culture.enum.persian': 'Persian',
 
     'studio.consignArtwork.assetMetadata.field.objectType': 'Object Type',
     'studio.consignArtwork.assetMetadata.field.objectType.description': 'Origin of the work',
@@ -889,10 +899,10 @@ const language: Translation = {
     'studio.consignArtwork.consignmentStatus.search': 'Search',
     'studio.consignArtwork.consignmentStatus.license': 'License',
 
+    'studio.consignArtwork.consignmentStatus.active.title': 'Active',
     'studio.consignArtwork.consignmentStatus.draft.title': 'Draft',
     'studio.consignArtwork.consignmentStatus.preview.title': 'Preview',
     'studio.consignArtwork.consignmentStatus.activate.title': 'Activate',
-
     'studio.consignArtwork.consignmentStatus.activation.title': 'Activation',
     'studio.consignArtwork.consignmentStatus.activation.description':
         'Activation consigns your artwork to the blockchain and requires a Creator Credit.',

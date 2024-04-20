@@ -108,6 +108,7 @@ const MyCustomRadioWidget = (props: MyCustomRadioWidgetProps) => {
                     <FormControlLabel
                         control={
                             <CustomRadio
+                                disabled={props.disabled}
                                 onBlur={handleBlur}
                                 onFocus={handleFocus}
                                 color="primary"
@@ -133,7 +134,6 @@ const TextareaWidget = (props: WidgetProps) => {
 
     return (
         <TextareaAutosize
-            maxLength={500}
             minRows={4}
             color="primary"
             id={props.id}

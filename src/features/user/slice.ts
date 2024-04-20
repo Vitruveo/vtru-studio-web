@@ -37,14 +37,15 @@ const initialState: UserSliceState = {
     },
     status: '',
     error: '',
+    canConsignArtwork: false,
 };
 
 export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        logout: () => {
-            return initialState;
+        logout: (state) => {
+            state = initialState;
         },
         login: (state, action) => {
             state.status = `succeeded: ${action.type}`;
@@ -79,6 +80,9 @@ export const userSlice = createSlice({
         error: (state, action) => {
             state.status = `failed: ${action.type}`;
             state.error = action.payload;
+        },
+        setCanConsignArtwork: (state, action: PayloadAction<boolean>) => {
+            state.canConsignArtwork = action.payload;
         },
     },
 });
