@@ -66,7 +66,7 @@ const removeEmptyProperties = (obj: Record<string, any> | any[] | null): Record<
 export default function AssetMetadata() {
     const [sectionsStatus, setSectionsStatus] = useState<{ [key: string]: string }>({});
     const { assetMetadata } = useSelector((state) => state.asset);
-    const assetPath = useSelector((state) => state.asset.formats.preview.path);
+    const asset = useSelector((state) => state.asset);
     const toast = useToastr();
 
     const sectionsFormat = Object.entries(sectionsJSON).reduce(
@@ -102,11 +102,38 @@ export default function AssetMetadata() {
                 ...prevSections.context,
                 formData: {
                     ...prevSections.context.formData,
-                    colors
+                    colors,
                 },
             },
         }));
-    }
+    };
+
+    const getAssetOrientation = () => {
+        const { width, height } = asset.formats.original;
+
+        if (!width || !height) return;
+
+        if (width > height) {
+            return 'horizontal';
+        } else if (width < height) {
+            return 'vertical';
+        }
+
+        return 'square';
+    };
+
+    const setOrientation = (orientation: 'horizontal' | 'vertical' | 'square') => {
+        setSections((prevSections) => ({
+            ...prevSections,
+            context: {
+                ...prevSections.context,
+                formData: {
+                    ...prevSections.context.formData,
+                    orientation,
+                },
+            },
+        }));
+    };
 
     useEffect(() => {
         const extractAssetColors = async () => {
@@ -115,15 +142,23 @@ export default function AssetMetadata() {
                 const url = '/image.png';
                 const result = await extractColors(url, { distance: 0.1 });
                 const colors = result.map((color) => color.hex).slice(0, 5);
-                
+
                 if (colors.length > 0) {
                     addColors(colors);
                 }
-
             } catch (e) {
                 toast.display({ type: 'error', message: 'Error while extracting colors' });
             }
         };
+
+        const orientation = getAssetOrientation();
+
+        if (orientation) {
+            setOrientation(orientation);
+        } else {
+            toast.display({ type: 'info', message: 'The asset orientation could not be determined.' })
+        }
+
         extractAssetColors();
     }, []);
 

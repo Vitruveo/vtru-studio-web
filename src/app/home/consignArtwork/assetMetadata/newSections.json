@@ -25,6 +25,7 @@
                         "latinamerican",
                         "nativeamerican",
                         "oceanic",
+                        "persian",
                         "southasian",
                         "southeastasian",
                         "western"
@@ -144,7 +145,10 @@
             },
             "orientation": {
                 "ui:widget": "radios",
-                "classNames": "display-fixed"
+                "classNames": "display-fixed",
+                "ui:options": {
+                    "disabled": true
+                }
             }
         }
     },
