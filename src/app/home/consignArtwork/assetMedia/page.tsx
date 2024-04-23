@@ -26,11 +26,24 @@ import { requestDeleteFiles } from '@/features/asset/requests';
 import { useToastr } from '@/app/hooks/useToastr';
 
 export default function AssetMedia() {
-    const toast = useToastr()
+    const toast = useToastr();
+    const asset = useSelector((state) => state.asset);
     const [showBackModal, setShowBackModal] = useState(false);
     const [showFormtsInfo, setShowFormatsInfo] = useState(true);
-    const [isUploading, setIsUploading] = useState(false);
     const { language } = useI18n();
+
+    const router = useRouter();
+    const dispatch = useDispatch();
+
+    const initialValues = useMemo(
+        () => ({
+            deleteKeys: [],
+            formats: asset.formats,
+        }),
+        []
+    );
+
+    const isUploading = asset.requestAssetUpload && Object.values(asset.requestAssetUpload).some((item) => item.status === 'uploading');
 
     const texts = {
         nextButton: language['studio.consignArtwork.form.next.button'],
@@ -60,19 +73,6 @@ export default function AssetMedia() {
             title: texts.assetMediaTitle,
         },
     ];
-
-    const asset = useSelector((state) => state.asset);
-
-    const router = useRouter();
-    const dispatch = useDispatch();
-
-    const initialValues = useMemo(
-        () => ({
-            deleteKeys: [],
-            formats: asset.formats,
-        }),
-        []
-    );
 
     const { values, errors, setFieldValue, handleSubmit } = useFormik<AssetMediaFormValues>({
         initialValues,
@@ -130,7 +130,7 @@ export default function AssetMedia() {
     }) => {
         const transactionId = nanoid();
 
-        await dispatch(
+        dispatch(
             assetActionsCreators.requestAssetUpload({
                 key: formatUpload,
                 status: 'requested',
@@ -163,7 +163,7 @@ export default function AssetMedia() {
 
     const handleOpenBackModal = () => {
         if (isUploading) {
-            toast.display({ type: 'warning', message: 'Please wait until the upload is complete' })
+            toast.display({ type: 'warning', message: 'Please wait until the upload is complete' });
             return;
         }
         if (JSON.stringify(initialValues.formats) === JSON.stringify(values.formats)) {
@@ -178,7 +178,7 @@ export default function AssetMedia() {
     };
 
     const handleCancelBackModal = async () => {
-        await dispatch(
+        dispatch(
             consignArtworkActionsCreators.changeStatusStep({
                 stepId: 'assetMedia',
                 status: getStepStatus({
