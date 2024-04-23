@@ -51,7 +51,7 @@ const language: Translation = {
     'studio.myProfile.verificationCodeSentMessageError': 'error sending verification code to email',
     'studio.myProfile.emailVerificationMessageSuccess': 'email verified',
     'studio.myProfile.emailVerificationMessageError': 'error verifying code',
-    'studio.myProfile.form.wallet.placeholderAdded': 'Addicional wallet (optional)',
+    'studio.myProfile.form.wallet.placeholderAdded': 'Additional wallet (optional)',
     'studio.myProfile.form.wallet.connected': 'Wallet already connected',
     'studio.myProfile.form.wallet.placeholder': 'Connect new wallet',
     'studio.myProfile.form.connect.button': 'Connect',
@@ -250,6 +250,7 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.culture.enum.southasian': 'South Asian',
     'studio.consignArtwork.assetMetadata.field.culture.enum.southeastasian': 'Southeast Asian',
     'studio.consignArtwork.assetMetadata.field.culture.enum.western': 'Western',
+    'studio.consignArtwork.assetMetadata.field.culture.enum.persian': 'Persian',
 
     'studio.consignArtwork.assetMetadata.field.objectType': 'Object Type',
     'studio.consignArtwork.assetMetadata.field.objectType.description': 'Origin of the work',

@@ -21,6 +21,7 @@ export interface FormatMedia {
     file?: File | string;
     customFile?: File | string;
     transactionId?: string;
+    successUpload?: boolean;
 }
 
 export interface FormatsAuxiliayMedia {

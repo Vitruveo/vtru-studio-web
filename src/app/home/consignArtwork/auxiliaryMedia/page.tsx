@@ -193,52 +193,91 @@ export default function AssetMedia() {
         const requestUploadReady = Object.values(requestAssetUploadNotUsed);
 
         const uploadAsset = async () => {
-            const responseUpload = await Promise.all(
-                requestUploadReady.map(async (item) => {
-                    const url = item.url;
-                    dispatch(
-                        assetActionsCreators.requestAssetUpload({
-                            transactionId: item.transactionId,
-                            status: 'uploading',
-                        })
-                    );
+            requestUploadReady.map((item) => {
+                const url = item.url;
+                dispatch(
+                    assetActionsCreators.requestAssetUpload({
+                        transactionId: item.transactionId,
+                        status: 'uploading',
+                    })
+                );
 
-                    const formatByTransaction = Object.entries(values.formats).find(
-                        ([_, format]) => format.transactionId === item.transactionId
-                    );
+                const formatByTransaction = Object.entries(values.formats).find(
+                    ([_, format]) => format.transactionId === item.transactionId
+                );
 
-                    if (!formatByTransaction) return;
+                if (!formatByTransaction) return;
 
-                    const [key, value] = formatByTransaction;
+                const [key, value] = formatByTransaction;
 
-                    await dispatch(
-                        assetStorageThunk({
-                            transactionId: item.transactionId,
-                            file: value.file!,
-                            url,
-                        })
-                    );
+                dispatch(
+                    assetStorageThunk({
+                        transactionId: item.transactionId,
+                        file: value.file!,
+                        url,
+                    })
+                );
+            });
+        };
 
-                    return {
-                        [key]: {
-                            path: item.path,
-                            name: value.file!.name,
-                        },
-                    };
+        if (requestUploadReady.length) uploadAsset();
+    }, [asset.requestAssetUpload]);
+
+    useEffect(() => {
+        const requestAssetUploadComplete = Object.values(asset.requestAssetUpload)?.filter(
+            (item) => item.transactionId && item.url && item.uploadProgress === 100 && item.status === 'completed'
+        );
+
+        if (!requestAssetUploadComplete || !requestAssetUploadComplete?.length) return;
+
+        const requestUploadComplete = Object.values(requestAssetUploadComplete);
+
+        const responseUpload = requestUploadComplete.map((item) => {
+            const formatByTransaction = Object.entries(values.formats).find(
+                ([_, format]) => format.transactionId === item.transactionId
+            );
+
+            if (!formatByTransaction) return;
+
+            const [key, value] = formatByTransaction;
+
+            setFieldValue(`formats.${key}.successUpload`, true);
+
+            dispatch(
+                assetActionsCreators.requestAssetUploadUsed({
+                    transactionId: item.transactionId,
                 })
             );
 
-            await dispatch(
+            let formatSave = {};
+
+            if (key === 'original') {
+                formatSave = {
+                    size: value.file!.size,
+                    definition: value.definition,
+                    width: value.width,
+                    height: value.height,
+                };
+            }
+
+            return {
+                [key]: {
+                    ...formatSave,
+                    path: item.path,
+                    name: value.file!.name,
+                },
+            };
+        });
+
+        if (responseUpload?.length)
+            dispatch(
                 auxiliaryMediaThunk({
                     ...values,
                     formats: responseUpload.reduce((acc, cur) => ({ ...acc, ...cur }), {} as FormatMediaSave),
                     description: getDescriptionJSONString(values.description),
                 })
             );
-        };
-
-        if (requestUploadReady.length) uploadAsset();
-    }, [asset.requestAssetUpload]);
+    }, [asset.requestAssetUpload, values?.formats]);
 
     return (
         <form onSubmit={handleSubmit}>

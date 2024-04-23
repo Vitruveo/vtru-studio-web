@@ -32,8 +32,6 @@ export default function Home() {
         myProfile: language['studio.home.myProfile'],
     } as { [key: string]: string };
 
-    const isPublished = status === 'preview';
-
     const canConsignArtwork = useSelector((state) => state.user.canConsignArtwork);
 
     return (
@@ -91,9 +89,7 @@ export default function Home() {
                                     !canConsignArtwork
                                         ? '/home'
                                         : isCompletedProfile
-                                          ? isPublished
-                                              ? '/home/consignArtwork/consignmentStatus'
-                                              : '/home/consignArtwork'
+                                          ? '/home/consignArtwork'
                                           : '/home/myProfile'
                                 }
                                 passHref

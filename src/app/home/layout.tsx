@@ -73,19 +73,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
     // NOTE: NOT USING TRY CATCH BECAUSE WE WANT TO DISPLAY THE ERROR MESSAGE ONLY IF THE EMAIL IS NOT IN THE ALLOW LIST
     useEffect(() => {
-        (async () => {
-            try {
-                await findEmailInAllowList(email);
-                dispatch(userActionsCreators.setCanConsignArtwork(true));
-            } catch (e) {
-                const error = e as AxiosError;
-                if (error.response?.status === 404) {
-                    dispatch(userActionsCreators.setCanConsignArtwork(false));
-                } else {
-                    toast.display({ type: 'error', message: 'Something went wrong! Try again later.' });
+        if (token && email) {
+            (async () => {
+                try {
+                    await findEmailInAllowList(email);
+                    dispatch(userActionsCreators.setCanConsignArtwork(true));
+                } catch (e) {
+                    const error = e as AxiosError;
+                    if (error.response?.status === 404) {
+                        dispatch(userActionsCreators.setCanConsignArtwork(false));
+                    } else {
+                        toast.display({ type: 'error', message: 'Something went wrong! Try again later.' });
+                    }
                 }
-            }
-        })();
+            })();
+        }
     }, [email]);
 
     const theme = useTheme();
