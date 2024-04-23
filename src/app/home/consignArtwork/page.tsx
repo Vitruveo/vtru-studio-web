@@ -65,10 +65,7 @@ const ConsignArtwork = () => {
 
     const handleSubmit = (event?: React.FormEvent) => {
         if (event) event.preventDefault();
-        if (status === 'draft' || status === 'preview') router.push(`${pathname}/reviewAndConsign`);
-        else {
-            router.push(`${pathname}/consignmentStatus`);
-        }
+        router.push(`${pathname}/reviewAndConsign`);
     };
 
     const successColor = '#93C47D';
@@ -85,7 +82,6 @@ const ConsignArtwork = () => {
 
     useEffect(() => {
         if (checkAllCompletedSteps) {
-            router.prefetch(`${pathname}/consignmentStatus`);
             router.prefetch(`${pathname}/reviewAndConsign`);
         }
 

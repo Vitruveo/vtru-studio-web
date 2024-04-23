@@ -255,9 +255,8 @@ export default function AssetMedia() {
                 if (!formatByTransaction) return;
 
                 dispatch(
-                    assetActionsCreators.requestAssetUpload({
+                    assetActionsCreators.requestAssetUploadUsed({
                         transactionId: item.transactionId,
-                        status: 'saved',
                     })
                 );
 
@@ -283,13 +282,14 @@ export default function AssetMedia() {
                 };
             });
 
-            dispatch(
-                assetMediaThunk({
-                    ...values,
-                    formats: responseUpload.reduce((acc, cur) => ({ ...acc, ...cur }), {} as FormatMediaSave),
-                    load: true,
-                })
-            );
+            if (responseUpload?.length)
+                dispatch(
+                    assetMediaThunk({
+                        ...values,
+                        formats: responseUpload.reduce((acc, cur) => ({ ...acc, ...cur }), {} as FormatMediaSave),
+                        load: true,
+                    })
+                );
         }
     }, [asset.requestAssetUpload, values?.formats]);
 
