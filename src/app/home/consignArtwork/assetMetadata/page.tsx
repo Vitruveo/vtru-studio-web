@@ -24,7 +24,6 @@ import { TranslateFunction } from '@/i18n/types';
 import AssetMediaPreview from '../components/assetMediaPreview';
 
 import { useToastr } from '@/app/hooks/useToastr';
-import { extractAssetColors } from '@/features/asset/requests';
 
 export type SectionName = 'context' | 'taxonomy' | 'creators' | 'provenance' | 'custom' | 'assets';
 type SectionsJSONType = typeof sectionsJSON;
@@ -94,19 +93,6 @@ export default function AssetMetadata() {
 
     const { language } = useI18n();
 
-    const addColors = (colors: string[]) => {
-        setSections((prevSections) => ({
-            ...prevSections,
-            context: {
-                ...prevSections.context,
-                formData: {
-                    ...prevSections.context.formData,
-                    colors,
-                },
-            },
-        }));
-    };
-
     const getAssetOrientation = () => {
         const { width, height } = asset.formats.original;
 
@@ -135,28 +121,6 @@ export default function AssetMetadata() {
     };
 
     useEffect(() => {
-        const getAssetColors = async () => {
-            try {
-                if (!asset.formats.original?.path) return;
-
-                const result = await extractAssetColors(asset.formats.original.path);
-
-                if (!result.data) {
-                    toast.display({ type: 'error', message: 'Error while extracting colors' });
-                    return;
-                }
-
-                const colors = result.data;
-
-                if (colors.length > 0) {
-                    addColors(colors);
-                }
-            } catch (e) {
-                toast.display({ type: 'error', message: 'Error while extracting colors' });
-            }
-        };
-        getAssetColors();
-
         const orientation = getAssetOrientation();
 
         if (orientation) {

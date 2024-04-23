@@ -175,6 +175,12 @@ export const assetSlice = createSlice({
         error: (state, action) => {
             state.error = action.payload;
         },
+        // TODO: CORRIGIR TIPAGEM
+        setMetadataColors: (state: any, action: PayloadAction<string[]>) => {
+            if (state.assetMetadata) {
+                state.assetMetadata.context.formData.colors = action.payload;
+            }
+        },
     },
 });
 

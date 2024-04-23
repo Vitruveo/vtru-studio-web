@@ -16,7 +16,12 @@ import MediaCard from './mediaCard';
 import SelectMedia from './selectMedia';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 
-import { assetMediaThunk, assetStorageThunk, sendRequestUploadThunk } from '@/features/asset/thunks';
+import {
+    assetMediaThunk,
+    assetStorageThunk,
+    extractAssetColorsThunk,
+    sendRequestUploadThunk,
+} from '@/features/asset/thunks';
 import { getMediaDefinition, getStepStatus, handleGetFileType } from './helpers';
 import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
@@ -26,7 +31,7 @@ import { requestDeleteFiles } from '@/features/asset/requests';
 import { useToastr } from '@/app/hooks/useToastr';
 
 export default function AssetMedia() {
-    const toast = useToastr()
+    const toast = useToastr();
     const [showBackModal, setShowBackModal] = useState(false);
     const [showFormtsInfo, setShowFormatsInfo] = useState(true);
     const [isUploading, setIsUploading] = useState(false);
@@ -130,7 +135,7 @@ export default function AssetMedia() {
     }) => {
         const transactionId = nanoid();
 
-        await dispatch(
+        dispatch(
             assetActionsCreators.requestAssetUpload({
                 key: formatUpload,
                 status: 'requested',
@@ -163,7 +168,7 @@ export default function AssetMedia() {
 
     const handleOpenBackModal = () => {
         if (isUploading) {
-            toast.display({ type: 'warning', message: 'Please wait until the upload is complete' })
+            toast.display({ type: 'warning', message: 'Please wait until the upload is complete' });
             return;
         }
         if (JSON.stringify(initialValues.formats) === JSON.stringify(values.formats)) {
@@ -178,7 +183,7 @@ export default function AssetMedia() {
     };
 
     const handleCancelBackModal = async () => {
-        await dispatch(
+        dispatch(
             consignArtworkActionsCreators.changeStatusStep({
                 stepId: 'assetMedia',
                 status: getStepStatus({
@@ -201,6 +206,14 @@ export default function AssetMedia() {
     useEffect(() => {
         dispatch(consignArtworkActionsCreators.changeStatusStep({ stepId: 'assetMedia', status: checkStepProgress }));
     }, [checkStepProgress]);
+
+    // Extrai as cores da imagem original e seta elas no formulário de metadados.
+    useEffect(() => {
+        const { path } = asset.formats.original;
+        if (path) {
+            dispatch(extractAssetColorsThunk({ path }));
+        }
+    }, [asset.formats.original.path]);
 
     useEffect(() => {
         if (values.formats?.original?.definition) {

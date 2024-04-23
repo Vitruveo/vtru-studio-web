@@ -7,6 +7,7 @@ import {
     sendRequestUpload,
     requestDeleteFiles,
     signingMediaC2PA,
+    extractAssetColors,
 } from './requests';
 import {
     AssetSendRequestUploadApiRes,
@@ -31,6 +32,7 @@ import { SectionsFormData } from '@/app/home/consignArtwork/assetMetadata/page';
 import { FormatsAuxiliayMedia } from '@/app/home/consignArtwork/auxiliaryMedia/types';
 import { AxiosResponse } from 'axios';
 import { BASE_URL_API } from '@/constants/api';
+import { toastrActionsCreators } from '../toastr/slice';
 
 export function requestDeleteURLThunk(payload: RequestDeleteFilesReq): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
@@ -511,5 +513,17 @@ export function createContractThunk(data: CreateContractByAssetIdReq): ReduxThun
                 reject();
             }
         });
+    };
+}
+
+export function extractAssetColorsThunk({ path }: { path: string }): ReduxThunkAction<Promise<any>> {
+    return async function (dispatch, getState) {
+        try {
+            const { data: colors } = await extractAssetColors(path);
+            if (!colors) return;
+            dispatch(assetActionsCreators.setMetadataColors(colors));
+        } catch {
+            dispatch(toastrActionsCreators.displayToastr({ type: 'error', message: 'Error extracting colors' }));
+        }
     };
 }
