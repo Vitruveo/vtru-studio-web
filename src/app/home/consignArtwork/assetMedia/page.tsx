@@ -23,11 +23,13 @@ import { useI18n } from '@/app/hooks/useI18n';
 
 import { assetActionsCreators } from '@/features/asset/slice';
 import { requestDeleteFiles } from '@/features/asset/requests';
+import { useToastr } from '@/app/hooks/useToastr';
 
 export default function AssetMedia() {
+    const toast = useToastr()
     const [showBackModal, setShowBackModal] = useState(false);
     const [showFormtsInfo, setShowFormatsInfo] = useState(true);
-
+    const [isUploading, setIsUploading] = useState(false);
     const { language } = useI18n();
 
     const texts = {
@@ -160,6 +162,10 @@ export default function AssetMedia() {
     };
 
     const handleOpenBackModal = () => {
+        if (isUploading) {
+            toast.display({ type: 'warning', message: 'Please wait until the upload is complete' })
+            return;
+        }
         if (JSON.stringify(initialValues.formats) === JSON.stringify(values.formats)) {
             router.push(`/home/consignArtwork`);
         } else {
@@ -329,6 +335,7 @@ export default function AssetMedia() {
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
+                submitDisabled={isUploading}
                 backOnclick={handleOpenBackModal}
                 submitText={texts.nextButton}
                 stepStatus={checkStepProgress}

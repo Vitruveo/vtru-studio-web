@@ -1,3 +1,5 @@
+import { EditorState, convertFromRaw, convertToRaw } from "draft-js";
+
 export const mediaConfigs = {
     arImage: {
         title: 'studio.consignArtwork.auxiliaryMedia.arImage.title',
@@ -44,4 +46,21 @@ export const mediaConfigs = {
         sizeMB: 10,
         required: false,
     },
+};
+
+
+export const createDescriptionInitialState = (description: string) => {
+    try {
+        return EditorState.createWithContent(convertFromRaw(JSON.parse(description)));
+    } catch (error) {
+        return EditorState.createEmpty();
+    }
+}
+
+export const getDescriptionJSONString = (editorState: EditorState) => {
+    return JSON.stringify(convertToRaw(editorState.getCurrentContent()));
+};
+
+export const getDescriptionText = (editorState: EditorState) => {
+    return editorState.getCurrentContent().getPlainText();
 };
