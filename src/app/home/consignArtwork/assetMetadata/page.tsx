@@ -23,9 +23,8 @@ import ajv8Validator from '@rjsf/validator-ajv8';
 import { TranslateFunction } from '@/i18n/types';
 import AssetMediaPreview from '../components/assetMediaPreview';
 
-import { extractColors } from 'extract-colors';
 import { useToastr } from '@/app/hooks/useToastr';
-import { ASSET_STORAGE_URL } from '@/constants/asset';
+import { extractAssetColors } from '@/features/asset/requests';
 
 export type SectionName = 'context' | 'taxonomy' | 'creators' | 'provenance' | 'custom' | 'assets';
 type SectionsJSONType = typeof sectionsJSON;
@@ -136,12 +135,18 @@ export default function AssetMetadata() {
     };
 
     useEffect(() => {
-        const extractAssetColors = async () => {
+        const getAssetColors = async () => {
             try {
-                // const url = `${ASSET_STORAGE_URL}/${assetPath}`; // TODO: USAR UMA IMAGEM DO S3, ATUALMENTE USANDO IMAGEM ESTÁTICA
-                const url = '/image.png';
-                const result = await extractColors(url, { distance: 0.1 });
-                const colors = result.map((color) => color.hex).slice(0, 5);
+                if (!asset.formats.original?.path) return;
+
+                const result = await extractAssetColors(asset.formats.original.path);
+
+                if (!result.data) {
+                    toast.display({ type: 'error', message: 'Error while extracting colors' });
+                    return;
+                }
+
+                const colors = result.data;
 
                 if (colors.length > 0) {
                     addColors(colors);
@@ -150,16 +155,15 @@ export default function AssetMetadata() {
                 toast.display({ type: 'error', message: 'Error while extracting colors' });
             }
         };
+        getAssetColors();
 
         const orientation = getAssetOrientation();
 
         if (orientation) {
             setOrientation(orientation);
         } else {
-            toast.display({ type: 'info', message: 'The asset orientation could not be determined.' })
+            toast.display({ type: 'info', message: 'The asset orientation could not be determined.' });
         }
-
-        extractAssetColors();
     }, []);
 
     const texts = {

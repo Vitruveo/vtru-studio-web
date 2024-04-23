@@ -85,3 +85,10 @@ export async function signingMediaC2PA(data: SigningMediaC2PAReq): Promise<Axios
         filename: data.filename,
     });
 }
+
+export async function extractAssetColors(path: string) {
+    const res = await apiService.post<string[]>('/assets/colors', {
+        path,
+    });
+    return res;
+}

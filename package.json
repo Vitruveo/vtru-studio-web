@@ -1,6 +1,6 @@
 {
     "name": "my-app",
-    "version": "0.1.197",
+    "version": "0.1.198",
     "private": true,
     "scripts": {
         "dev": "next dev",
@@ -40,7 +40,6 @@
         "date-fns": "^2.30.0",
         "draft-js": "^0.11.7",
         "emoji-picker-react": "^4.5.2",
-        "extract-colors": "^4.0.2",
         "formik": "^2.4.5",
         "framer-motion": "^10.16.4",
         "i18next": "^23.5.1",
