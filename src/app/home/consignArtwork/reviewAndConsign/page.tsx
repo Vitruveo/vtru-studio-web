@@ -265,12 +265,7 @@ const ConsignArtwork = () => {
                                     <Box width={120} marginLeft={1}>
                                         <Box width={100}>
                                             <Button
-                                                disabled={
-                                                    v?.disabled ||
-                                                    v?.loading ||
-                                                    status === 'published' ||
-                                                    status === 'preview'
-                                                }
+                                                disabled={v?.disabled || v?.loading}
                                                 onClick={v.actionFunc}
                                                 size="small"
                                                 variant="contained"

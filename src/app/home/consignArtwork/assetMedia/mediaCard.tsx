@@ -430,7 +430,7 @@ export default function MediaCard({
                 </Box>
                 <Box width="100%" justifyContent="center" alignItems="center" height={200}>
                     <Box paddingInline={1} marginTop={1} height={15}>
-                        {fileStatus && fileStatus.status !== 'completed' ? (
+                        {fileStatus && fileStatus.status !== 'completed' && fileStatus.status !== 'saved' ? (
                             <UploadProgressBar fileStatus={fileStatus} />
                         ) : (
                             <></>

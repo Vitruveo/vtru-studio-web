@@ -98,7 +98,7 @@ export default function NavItem({ item, level, pathDirect, hideMenu, onClick }: 
                     item.href === '/home/consignArtwork' && !isCompletedProfile
                         ? '/home/myProfile'
                         : isPublished
-                          ? '/home/consignArtwork/consignmentStatus'
+                          ? '/home/consignArtwork'
                           : item.href
                 }
                 style={{ textDecoration: 'none' }}
