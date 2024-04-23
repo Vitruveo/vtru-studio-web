@@ -259,6 +259,34 @@ export function assetMediaThunk(payload: {
 }): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
         const formatsState = getState().asset.formats;
+        const assetMetadata = getState().asset.assetMetadata as SectionsFormData;
+
+        if (payload.formats && payload.formats.original && assetMetadata) {
+            const { width, height } = payload.formats.original;
+
+            let orientation = 'square';
+
+            if (width && height) {
+                if (width > height) {
+                    orientation = 'horizontal';
+                } else if (width < height) {
+                    orientation = 'vertical';
+                }
+            }
+
+            dispatch(
+                assetMetadataThunk({
+                    ...assetMetadata,
+                    context: {
+                        ...assetMetadata?.context,
+                        formData: {
+                            ...assetMetadata?.context?.formData,
+                            orientation,
+                        },
+                    },
+                })
+            );
+        }
 
         const formatsPersist = Object.entries(formatsState)
             .filter(([key, value]) => value.file)
@@ -304,9 +332,18 @@ export function assetMediaThunk(payload: {
     };
 }
 
-export function assetMetadataThunk(payload: SectionsFormData): ReduxThunkAction<Promise<any>> {
+export function assetMetadataThunk(
+    payload: SectionsFormData & {
+        isCompleted?: boolean;
+        context: {
+            formData: {
+                orientation?: string;
+            };
+        };
+    }
+): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
-        const response = await updateAssetStep({
+        await updateAssetStep({
             assetMetadata: {
                 ...payload,
             },
@@ -315,7 +352,9 @@ export function assetMetadataThunk(payload: SectionsFormData): ReduxThunkAction<
 
         dispatch(
             assetActionsCreators.change({
-                assetMetadata: payload,
+                assetMetadata: {
+                    ...payload,
+                },
             })
         );
     };
