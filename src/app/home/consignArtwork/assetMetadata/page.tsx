@@ -156,7 +156,7 @@ export default function AssetMetadata() {
         if (orientation) {
             setOrientation(orientation);
         } else {
-            toast.display({ type: 'info', message: 'The asset orientation could not be determined.' })
+            toast.display({ type: 'info', message: 'The asset orientation could not be determined.' });
         }
 
         extractAssetColors();

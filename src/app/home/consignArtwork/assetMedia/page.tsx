@@ -99,6 +99,7 @@ export default function AssetMedia() {
                 const deleteFormats = Object.entries(values.formats)
                     .filter(([_, value]) => !value.file)
                     .map(([key, _]) => key);
+
                 if (deleteFormats.length) await dispatch(assetMediaThunk({ deleteFormats }));
 
                 router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/assetMetadata`);
