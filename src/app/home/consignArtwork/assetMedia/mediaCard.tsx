@@ -138,8 +138,6 @@ export default function MediaCard({
         ? fileStatus?.uploadProgress === 100
         : formatValue.successUpload || (formatValue.file && !fileIsLocal);
 
-    console.log(uploadSuccess);
-
     const texts = {
         video: language['studio.consignArtwork.assetMedia.video'],
         image: language['studio.consignArtwork.assetMedia.image'],
