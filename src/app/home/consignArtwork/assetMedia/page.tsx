@@ -254,13 +254,15 @@ export default function AssetMedia() {
 
                 if (!formatByTransaction) return;
 
+                const [key, value] = formatByTransaction;
+
+                setFieldValue(`formats.${key}.successUpload`, true);
+
                 dispatch(
                     assetActionsCreators.requestAssetUploadUsed({
                         transactionId: item.transactionId,
                     })
                 );
-
-                const [key, value] = formatByTransaction;
 
                 let formatSave = {};
 

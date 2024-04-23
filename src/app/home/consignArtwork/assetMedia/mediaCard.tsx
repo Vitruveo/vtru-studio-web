@@ -134,7 +134,11 @@ export default function MediaCard({
     }, [formatValue.file]) as string;
 
     const fileStatus = formatValue.transactionId ? upload[formatValue.transactionId] : undefined;
-    const uploadSuccess = fileStatus ? fileStatus?.uploadProgress === 100 : formatValue.file && !fileIsLocal;
+    const uploadSuccess = fileStatus
+        ? fileStatus?.uploadProgress === 100
+        : formatValue.successUpload || (formatValue.file && !fileIsLocal);
+
+    console.log(uploadSuccess);
 
     const texts = {
         video: language['studio.consignArtwork.assetMedia.video'],

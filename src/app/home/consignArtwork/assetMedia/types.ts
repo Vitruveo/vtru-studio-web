@@ -25,6 +25,7 @@ export interface FormatMedia {
     file?: File | string;
     customFile?: File | string;
     transactionId?: string;
+    successUpload?: boolean;
 }
 
 export interface OriginalFormatMedia extends FormatMedia {
@@ -34,6 +35,7 @@ export interface OriginalFormatMedia extends FormatMedia {
     width?: number;
     height?: number;
     size?: number;
+    successUpload?: boolean;
 }
 
 export interface FormatsMedia {
