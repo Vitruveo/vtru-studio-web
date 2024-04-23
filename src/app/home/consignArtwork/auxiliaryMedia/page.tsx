@@ -6,21 +6,19 @@ import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import { Stack } from '@mui/system';
 import { Box, Typography, useTheme } from '@mui/material';
-
 import { useDispatch, useSelector } from '@/store/hooks';
 import { AssetMediaFormValues, FormatMediaSave, FormatsAuxiliayMedia } from './types';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
 import MediaCard from './mediaCard';
-
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
-
 import { auxiliaryMediaThunk, assetStorageThunk, sendRequestUploadThunk } from '@/features/asset/thunks';
 import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
 import { assetActionsCreators } from '@/features/asset/slice';
 import { requestDeleteFiles } from '@/features/asset/requests';
-import { CustomTextareaAutosize } from '../../components/forms/theme-elements/CustomTextarea';
+import { RichEditor } from '../../components/rich-editor/rich-editor';
+import { createDescriptionInitialState, getDescriptionJSONString, getDescriptionText } from './helpers';
 
 export default function AssetMedia() {
     const [showBackModal, setShowBackModal] = useState(false);
@@ -57,12 +55,11 @@ export default function AssetMedia() {
     const asset = useSelector((state) => state.asset);
 
     const router = useRouter();
-    const theme = useTheme();
     const dispatch = useDispatch();
 
-    const initialValues = useMemo(
+    const initialValues: AssetMediaFormValues = useMemo(
         () => ({
-            description: asset.mediaAuxiliary.description || '',
+            description: createDescriptionInitialState(asset.mediaAuxiliary.description),
             definition: '',
             deleteKeys: [],
             formats: asset.mediaAuxiliary.formats,
@@ -70,13 +67,13 @@ export default function AssetMedia() {
         []
     );
 
-    const { values, errors, setFieldValue, handleChange, handleSubmit } = useFormik<AssetMediaFormValues>({
+    const { values, errors, setFieldValue, handleSubmit } = useFormik<AssetMediaFormValues>({
         initialValues,
         onSubmit: async (formValues) => {
             if (JSON.stringify(initialValues) === JSON.stringify(values) && !values.deleteKeys.length)
                 router.push('/home/consignArtwork');
             else {
-                if (Object.values(values.formats).find((v) => v.file) || values.description?.length)
+                if (Object.values(values.formats).find((v) => v.file) || getDescriptionText(values.description).length)
                     dispatch(
                         consignArtworkActionsCreators.changeStatusStep({
                             stepId: 'auxiliaryMedia',
@@ -94,7 +91,12 @@ export default function AssetMedia() {
                     .filter(([_, value]) => !value.file)
                     .map(([key, _]) => key);
 
-                await dispatch(auxiliaryMediaThunk({ deleteFormats, description: formValues.description }));
+                await dispatch(
+                    auxiliaryMediaThunk({
+                        deleteFormats,
+                        description: getDescriptionJSONString(formValues.description),
+                    })
+                );
                 router.push('/home/consignArtwork');
             }
         },
@@ -111,7 +113,7 @@ export default function AssetMedia() {
     }) => {
         const transactionId = nanoid();
 
-        await dispatch(
+        dispatch(
             assetActionsCreators.requestAssetUpload({
                 key: formatUpload,
                 status: 'requested',
@@ -154,7 +156,7 @@ export default function AssetMedia() {
     };
 
     const handleCancelBackModal = async () => {
-        await dispatch(
+        dispatch(
             consignArtworkActionsCreators.changeStatusStep({
                 stepId: 'assetMedia',
                 status: 'completed',
@@ -171,7 +173,7 @@ export default function AssetMedia() {
     };
 
     const checkStepProgress =
-        Object.values(asset.mediaAuxiliary.formats).find((v) => v.file) || values.description?.length
+        Object.values(asset.mediaAuxiliary.formats).find((v) => v.file) || getDescriptionText(values.description).length
             ? 'completed'
             : 'inProgress';
 
@@ -272,6 +274,7 @@ export default function AssetMedia() {
                 auxiliaryMediaThunk({
                     ...values,
                     formats: responseUpload.reduce((acc, cur) => ({ ...acc, ...cur }), {} as FormatMediaSave),
+                    description: getDescriptionJSONString(values.description),
                 })
             );
     }, [asset.requestAssetUpload, values?.formats]);
@@ -323,21 +326,14 @@ export default function AssetMedia() {
                                     {texts.descriptionPlaceholder}
                                 </Typography>
                             </Box>
-                            <CustomTextareaAutosize
-                                style={{
-                                    width: '98.7%',
-                                    height: 130,
-                                    backgroundColor: theme.palette.background.paper,
-                                    border: `1px solid ${theme.palette.divider}`,
-                                    borderRadius: theme.shape.borderRadius,
-                                    padding: theme.spacing(1),
-                                    fontSize: theme.typography.fontSize,
-                                    fontFamily: theme.typography.fontFamily,
-                                }}
-                                value={values.description}
-                                name="description"
-                                onChange={handleChange}
-                            />
+                            <Box mt={1}>
+                                <RichEditor
+                                    editorState={values.description}
+                                    onChange={(state) => {
+                                        setFieldValue('description', state);
+                                    }}
+                                />
+                            </Box>
                         </Box>
                     </Box>
                 </Stack>
