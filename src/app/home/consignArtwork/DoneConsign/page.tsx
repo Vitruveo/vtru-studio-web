@@ -72,6 +72,7 @@ export default function DoneConsign() {
     const asyncAction = async () => {
         await new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 5000)));
     };
+    const [retry, setRetry] = useState(false);
 
     const [steps, setSteps] = useState<ConsignStep[]>([
         {
@@ -97,38 +98,59 @@ export default function DoneConsign() {
         setSteps([...steps]);
     };
 
+    const runSteps = async () => {
+        setRetry(false);
+
+        if (!assetId) {
+            toastr.display({ message: 'Asset not found', type: 'error' });
+            return;
+        }
+
+        for await (const step of steps) {
+            const stepIndex = steps.indexOf(step);
+            const isLastStep = stepIndex === steps.length - 1;
+
+            changeStepStatus(stepIndex, 'pending');
+
+            try {
+                await step.action();
+                isLastStep ? changeStepStatus(stepIndex, 'done') : changeStepStatus(stepIndex, 'completed');
+                setSteps([...steps]);
+            } catch (error) {
+                step.status = 'error';
+                toastr.display({ message: `Error on step ${stepIndex + 1}`, type: 'error' });
+                break;
+            }
+        }
+    };
+
     useEffect(() => {
-        const runSteps = async () => {
-            if (!assetId) {
-                toastr.display({ message: 'Asset not found', type: 'error' });
-                return;
-            }
-
-            for await (const step of steps) {
-                const stepIndex = steps.indexOf(step);
-                const isLastStep = stepIndex === steps.length - 1;
-
-                changeStepStatus(stepIndex, 'pending');
-
-                try {
-                    await step.action();
-                    isLastStep ? changeStepStatus(stepIndex, 'done') : changeStepStatus(stepIndex, 'completed');
-                    setSteps([...steps]);
-                } catch (error) {
-                    step.status = 'error';
-                    toastr.display({ message: `Error on step ${stepIndex + 1}`, type: 'error' });
-                    break;
-                }
-            }
-        };
         runSteps();
     }, []);
 
+    useEffect(() => {
+        if (retry) runSteps();
+    }, [retry]);
+
     const isDisabled = steps[steps.length - 1].status != 'done';
+
+    const hasError = steps.some((step) => step.status === 'error');
 
     const handleSubmit = async (event: React.FormEvent) => {
         try {
             event.preventDefault();
+
+            if (hasError) {
+                setSteps((prevState) =>
+                    prevState.map((step) => {
+                        delete step.status;
+                        return step;
+                    })
+                );
+                setRetry(true);
+                return;
+            }
+
             dispatch(consignArtworkThunks.updateStatus('active'));
             await updateAssetStep({
                 stepName: 'consignArtworkListing',
@@ -152,9 +174,9 @@ export default function DoneConsign() {
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
-                submitText="Done"
+                submitText={hasError ? 'Retry' : 'Done'}
                 title={'Consign Artwork'}
-                submitDisabled={isDisabled}
+                submitDisabled={hasError ? false : isDisabled}
                 hasBackButton={false}
             >
                 <Breadcrumb title={'Consign Artwork'} items={BCrumb} />

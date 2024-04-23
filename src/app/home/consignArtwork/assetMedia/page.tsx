@@ -212,65 +212,92 @@ export default function AssetMedia() {
             const requestUploadReady = Object.values(requestAssetUploadNotUsed);
 
             const uploadAsset = async () => {
-                setIsUploading(true);
-                const responseUpload = await Promise.all(
-                    requestUploadReady.map(async (item) => {
-                        const url = item.url;
-                        dispatch(
-                            assetActionsCreators.requestAssetUpload({
-                                transactionId: item.transactionId,
-                                status: 'uploading',
-                            })
-                        );
+                requestUploadReady.map((item) => {
+                    const url = item.url;
+                    dispatch(
+                        assetActionsCreators.requestAssetUpload({
+                            transactionId: item.transactionId,
+                            status: 'uploading',
+                        })
+                    );
 
-                        const formatByTransaction = Object.entries(values.formats).find(
-                            ([_, format]) => format.transactionId === item.transactionId
-                        );
+                    const formatByTransaction = Object.entries(values.formats).find(
+                        ([_, format]) => format.transactionId === item.transactionId
+                    );
 
-                        if (!formatByTransaction) return;
+                    if (!formatByTransaction) return;
 
-                        const [key, value] = formatByTransaction;
+                    const [key, value] = formatByTransaction;
 
-                        await dispatch(
-                            assetStorageThunk({
-                                transactionId: item.transactionId,
-                                file: value.file!,
-                                url,
-                            })
-                        );
+                    dispatch(
+                        assetStorageThunk({
+                            transactionId: item.transactionId,
+                            file: value.file!,
+                            url,
+                        })
+                    );
+                });
+            };
 
-                        let formatSave = {};
+            if (requestUploadReady.length) uploadAsset();
+        }
+    }, [asset.requestAssetUpload, values?.formats]);
 
-                        if (key === 'original') {
-                            formatSave = {
-                                size: value.file!.size,
-                                definition: value.definition,
-                                width: value.width,
-                                height: value.height,
-                            };
-                        }
+    useEffect(() => {
+        if (values.formats?.original?.definition) {
+            const requestAssetUploadComplete = Object.values(asset.requestAssetUpload)?.filter(
+                (item) => item.transactionId && item.url && item.uploadProgress === 100 && item.status === 'completed'
+            );
 
-                        return {
-                            [key]: {
-                                ...formatSave,
-                                path: item.path,
-                                name: value.file!.name,
-                            },
-                        };
+            if (!requestAssetUploadComplete || !requestAssetUploadComplete?.length) return;
+
+            const requestUploadComplete = Object.values(requestAssetUploadComplete);
+
+            const responseUpload = requestUploadComplete.map((item) => {
+                const formatByTransaction = Object.entries(values.formats).find(
+                    ([_, format]) => format.transactionId === item.transactionId
+                );
+
+                if (!formatByTransaction) return;
+
+                const [key, value] = formatByTransaction;
+
+                setFieldValue(`formats.${key}.successUpload`, true);
+
+                dispatch(
+                    assetActionsCreators.requestAssetUploadUsed({
+                        transactionId: item.transactionId,
                     })
                 );
 
-                await dispatch(
+                let formatSave = {};
+
+                if (key === 'original') {
+                    formatSave = {
+                        size: value.file!.size,
+                        definition: value.definition,
+                        width: value.width,
+                        height: value.height,
+                    };
+                }
+
+                return {
+                    [key]: {
+                        ...formatSave,
+                        path: item.path,
+                        name: value.file!.name,
+                    },
+                };
+            });
+
+            if (responseUpload?.length)
+                dispatch(
                     assetMediaThunk({
                         ...values,
                         formats: responseUpload.reduce((acc, cur) => ({ ...acc, ...cur }), {} as FormatMediaSave),
                         load: true,
                     })
                 );
-                setIsUploading(false)
-            };
-
-            if (requestUploadReady.length) uploadAsset();
         }
     }, [asset.requestAssetUpload, values?.formats]);
 
