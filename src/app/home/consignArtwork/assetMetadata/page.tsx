@@ -23,7 +23,6 @@ import ajv8Validator from '@rjsf/validator-ajv8';
 import { TranslateFunction } from '@/i18n/types';
 import AssetMediaPreview from '../components/assetMediaPreview';
 
-import { extractColors } from 'extract-colors';
 import { useToastr } from '@/app/hooks/useToastr';
 import { ASSET_STORAGE_URL } from '@/constants/asset';
 
@@ -109,16 +108,10 @@ export default function AssetMetadata() {
     };
 
     const getAssetOrientation = () => {
-        const { width, height } = asset.formats.original;
+        const { definition } = asset.formats.original;
 
-        if (!width || !height) return;
-
-        if (width > height) {
-            return 'horizontal';
-        } else if (width < height) {
-            return 'vertical';
-        }
-
+        if (definition === 'landscape') return 'horizontal';
+        if (definition === 'portrait') return 'vertical';
         return 'square';
     };
 
@@ -136,21 +129,6 @@ export default function AssetMetadata() {
     };
 
     useEffect(() => {
-        const extractAssetColors = async () => {
-            try {
-                // const url = `${ASSET_STORAGE_URL}/${assetPath}`; // TODO: USAR UMA IMAGEM DO S3, ATUALMENTE USANDO IMAGEM ESTÁTICA
-                const url = '/image.png';
-                const result = await extractColors(url, { distance: 0.1 });
-                const colors = result.map((color) => color.hex).slice(0, 5);
-
-                if (colors.length > 0) {
-                    addColors(colors);
-                }
-            } catch (e) {
-                toast.display({ type: 'error', message: 'Error while extracting colors' });
-            }
-        };
-
         const orientation = getAssetOrientation();
 
         if (orientation) {
@@ -158,8 +136,6 @@ export default function AssetMetadata() {
         } else {
             toast.display({ type: 'info', message: 'The asset orientation could not be determined.' });
         }
-
-        extractAssetColors();
     }, []);
 
     const texts = {
