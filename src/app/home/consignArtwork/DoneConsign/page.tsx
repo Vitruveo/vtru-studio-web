@@ -86,19 +86,19 @@ export default function DoneConsign() {
     const [steps, setSteps] = useState<ConsignStep[]>([
         {
             id: 'c2pa',
-            status: asset.c2pa?.finishedAt ? 'done' : undefined,
+            status: asset.c2pa?.finishedAt ? 'completed' : undefined,
             title: 'Signing media files using C2PA standard',
             action: () => dispatch(signingMediaC2PAThunk({ filename, token, creator: username })),
         },
         {
             id: 'ipfs',
-            status: asset.ipfs?.finishedAt ? 'done' : undefined,
+            status: asset.ipfs?.finishedAt ? 'completed' : undefined,
             title: 'Uploading media files to IPFS decentralized storage',
             action: () => dispatch(uploadIPFSByAssetIdThunk({ id: assetId })),
         },
         {
             id: 'contractExplorer',
-            status: asset.contractExplorer?.finishedAt ? 'done' : undefined,
+            status: asset.contractExplorer?.finishedAt ? 'completed' : undefined,
             title: 'Consigning artwork to Vitruveo blockchain',
             action: () => dispatch(createContractThunk({ id: assetId })),
         },
@@ -106,7 +106,7 @@ export default function DoneConsign() {
             title: 'Your artwork is ready!',
             status:
                 asset.c2pa?.finishedAt && asset.ipfs?.finishedAt && asset.contractExplorer?.finishedAt
-                    ? 'completed'
+                    ? 'done'
                     : undefined,
             action: async () => asyncAction().then(() => showConfetti()),
         },
@@ -125,10 +125,10 @@ export default function DoneConsign() {
             return;
         }
 
-        if (steps.filter((v) => v.id).every((step) => step.status === 'done')) return;
+        if (steps.filter((v) => v.id).every((step) => step.status === 'completed')) return;
 
         for await (const step of steps) {
-            if (step.status === 'done') continue;
+            if (step.status === 'completed') continue;
             const stepIndex = steps.indexOf(step);
             const isLastStep = stepIndex === steps.length - 1;
 
