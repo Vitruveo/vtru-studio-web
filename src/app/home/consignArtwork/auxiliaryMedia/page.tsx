@@ -5,23 +5,21 @@ import { nanoid } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import { Stack } from '@mui/system';
-import { Box, Radio, Typography, useTheme } from '@mui/material';
-
+import { Box, Radio, Typography } from '@mui/material';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { AssetMediaFormValues, FormatMediaSave, FormatsAuxiliayMedia } from './types';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
 import MediaCard from './mediaCard';
-
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
-
 import { auxiliaryMediaThunk, assetStorageThunk, sendRequestUploadThunk } from '@/features/asset/thunks';
 import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
 import { assetActionsCreators } from '@/features/asset/slice';
 import { requestDeleteFiles } from '@/features/asset/requests';
-import { CustomTextareaAutosize } from '../../components/forms/theme-elements/CustomTextarea';
 import { useToastr } from '@/app/hooks/useToastr';
+import { RichEditor } from '../../components/rich-editor/rich-editor';
+import { createDescriptionInitialState, getDescriptionJSONString, getDescriptionText } from './helpers';
 
 export default function AssetMedia() {
     const [showBackModal, setShowBackModal] = useState(false);
@@ -63,12 +61,11 @@ export default function AssetMedia() {
     const isAREnabled = useSelector((state: any) => state.asset.assetMetadata?.taxonomy.formData?.arenabled) == 'yes'
 
     const router = useRouter();
-    const theme = useTheme();
     const dispatch = useDispatch();
 
-    const initialValues = useMemo(
+    const initialValues: AssetMediaFormValues = useMemo(
         () => ({
-            description: asset.mediaAuxiliary.description || '',
+            description: createDescriptionInitialState(asset.mediaAuxiliary.description),
             definition: '',
             deleteKeys: [],
             formats: asset.mediaAuxiliary.formats,
@@ -76,7 +73,7 @@ export default function AssetMedia() {
         []
     );
 
-    const { values, errors, setFieldValue, handleChange, handleSubmit } = useFormik<AssetMediaFormValues>({
+    const { values, errors, setFieldValue, handleSubmit } = useFormik<AssetMediaFormValues>({
         initialValues,
         onSubmit: async (formValues) => {
             const hasArVideo = !!formValues.formats.arVideo.file;
@@ -90,7 +87,7 @@ export default function AssetMedia() {
             if (JSON.stringify(initialValues) === JSON.stringify(values) && !values.deleteKeys.length)
                 router.push('/home/consignArtwork');
             else {
-                if (Object.values(values.formats).find((v) => v.file) || values.description?.length)
+                if (Object.values(values.formats).find((v) => v.file) || getDescriptionText(values.description).length)
                     dispatch(
                         consignArtworkActionsCreators.changeStatusStep({
                             stepId: 'auxiliaryMedia',
@@ -108,7 +105,12 @@ export default function AssetMedia() {
                     .filter(([_, value]) => !value.file)
                     .map(([key, _]) => key);
 
-                await dispatch(auxiliaryMediaThunk({ deleteFormats, description: formValues.description }));
+                await dispatch(
+                    auxiliaryMediaThunk({
+                        deleteFormats,
+                        description: getDescriptionJSONString(formValues.description),
+                    })
+                );
                 router.push('/home/consignArtwork');
             }
         },
@@ -177,7 +179,7 @@ export default function AssetMedia() {
     };
 
     const handleCancelBackModal = async () => {
-        await dispatch(
+        dispatch(
             consignArtworkActionsCreators.changeStatusStep({
                 stepId: 'assetMedia',
                 status: 'completed',
@@ -194,7 +196,7 @@ export default function AssetMedia() {
     };
 
     const checkStepProgress =
-        Object.values(asset.mediaAuxiliary.formats).find((v) => v.file) || values.description?.length
+        Object.values(asset.mediaAuxiliary.formats).find((v) => v.file) || getDescriptionText(values.description).length
             ? 'completed'
             : 'inProgress';
 
@@ -214,51 +216,91 @@ export default function AssetMedia() {
         const requestUploadReady = Object.values(requestAssetUploadNotUsed);
 
         const uploadAsset = async () => {
-            const responseUpload = await Promise.all(
-                requestUploadReady.map(async (item) => {
-                    const url = item.url;
-                    dispatch(
-                        assetActionsCreators.requestAssetUpload({
-                            transactionId: item.transactionId,
-                            status: 'uploading',
-                        })
-                    );
+            requestUploadReady.map((item) => {
+                const url = item.url;
+                dispatch(
+                    assetActionsCreators.requestAssetUpload({
+                        transactionId: item.transactionId,
+                        status: 'uploading',
+                    })
+                );
 
-                    const formatByTransaction = Object.entries(values.formats).find(
-                        ([_, format]) => format.transactionId === item.transactionId
-                    );
+                const formatByTransaction = Object.entries(values.formats).find(
+                    ([_, format]) => format.transactionId === item.transactionId
+                );
 
-                    if (!formatByTransaction) return;
+                if (!formatByTransaction) return;
 
-                    const [key, value] = formatByTransaction;
+                const [key, value] = formatByTransaction;
 
-                    await dispatch(
-                        assetStorageThunk({
-                            transactionId: item.transactionId,
-                            file: value.file!,
-                            url,
-                        })
-                    );
-
-                    return {
-                        [key]: {
-                            path: item.path,
-                            name: value.file!.name,
-                        },
-                    };
-                })
-            );
-
-            await dispatch(
-                auxiliaryMediaThunk({
-                    ...values,
-                    formats: responseUpload.reduce((acc, cur) => ({ ...acc, ...cur }), {} as FormatMediaSave),
-                })
-            );
+                dispatch(
+                    assetStorageThunk({
+                        transactionId: item.transactionId,
+                        file: value.file!,
+                        url,
+                    })
+                );
+            });
         };
 
         if (requestUploadReady.length) uploadAsset();
     }, [asset.requestAssetUpload]);
+
+    useEffect(() => {
+        const requestAssetUploadComplete = Object.values(asset.requestAssetUpload)?.filter(
+            (item) => item.transactionId && item.url && item.uploadProgress === 100 && item.status === 'completed'
+        );
+
+        if (!requestAssetUploadComplete || !requestAssetUploadComplete?.length) return;
+
+        const requestUploadComplete = Object.values(requestAssetUploadComplete);
+
+        const responseUpload = requestUploadComplete.map((item) => {
+            const formatByTransaction = Object.entries(values.formats).find(
+                ([_, format]) => format.transactionId === item.transactionId
+            );
+
+            if (!formatByTransaction) return;
+
+            const [key, value] = formatByTransaction;
+
+            setFieldValue(`formats.${key}.successUpload`, true);
+
+            dispatch(
+                assetActionsCreators.requestAssetUploadUsed({
+                    transactionId: item.transactionId,
+                })
+            );
+
+            let formatSave = {};
+
+            if (key === 'original') {
+                formatSave = {
+                    size: value.file!.size,
+                    definition: value.definition,
+                    width: value.width,
+                    height: value.height,
+                };
+            }
+
+            return {
+                [key]: {
+                    ...formatSave,
+                    path: item.path,
+                    name: value.file!.name,
+                },
+            };
+        });
+
+        if (responseUpload?.length)
+            dispatch(
+                auxiliaryMediaThunk({
+                    ...values,
+                    formats: responseUpload.reduce((acc, cur) => ({ ...acc, ...cur }), {} as FormatMediaSave),
+                    description: getDescriptionJSONString(values.description),
+                })
+            );
+    }, [asset.requestAssetUpload, values?.formats]);
 
     return (
         <form onSubmit={handleSubmit}>
@@ -323,21 +365,14 @@ export default function AssetMedia() {
                                     {texts.descriptionPlaceholder}
                                 </Typography>
                             </Box>
-                            <CustomTextareaAutosize
-                                style={{
-                                    width: '98.7%',
-                                    height: 130,
-                                    backgroundColor: theme.palette.background.paper,
-                                    border: `1px solid ${theme.palette.divider}`,
-                                    borderRadius: theme.shape.borderRadius,
-                                    padding: theme.spacing(1),
-                                    fontSize: theme.typography.fontSize,
-                                    fontFamily: theme.typography.fontFamily,
-                                }}
-                                value={values.description}
-                                name="description"
-                                onChange={handleChange}
-                            />
+                            <Box mt={1}>
+                                <RichEditor
+                                    editorState={values.description}
+                                    onChange={(state) => {
+                                        setFieldValue('description', state);
+                                    }}
+                                />
+                            </Box>
                         </Box>
                     </Box>
                 </Stack>

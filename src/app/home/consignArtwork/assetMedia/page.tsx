@@ -23,12 +23,27 @@ import { useI18n } from '@/app/hooks/useI18n';
 
 import { assetActionsCreators } from '@/features/asset/slice';
 import { requestDeleteFiles } from '@/features/asset/requests';
+import { useToastr } from '@/app/hooks/useToastr';
 
 export default function AssetMedia() {
+    const toast = useToastr();
+    const asset = useSelector((state) => state.asset);
     const [showBackModal, setShowBackModal] = useState(false);
     const [showFormtsInfo, setShowFormatsInfo] = useState(true);
-
     const { language } = useI18n();
+
+    const router = useRouter();
+    const dispatch = useDispatch();
+
+    const initialValues = useMemo(
+        () => ({
+            deleteKeys: [],
+            formats: asset.formats,
+        }),
+        []
+    );
+
+    const isUploading = asset.requestAssetUpload && Object.values(asset.requestAssetUpload).some((item) => item.status === 'uploading');
 
     const texts = {
         nextButton: language['studio.consignArtwork.form.next.button'],
@@ -59,19 +74,6 @@ export default function AssetMedia() {
         },
     ];
 
-    const asset = useSelector((state) => state.asset);
-
-    const router = useRouter();
-    const dispatch = useDispatch();
-
-    const initialValues = useMemo(
-        () => ({
-            deleteKeys: [],
-            formats: asset.formats,
-        }),
-        []
-    );
-
     const { values, errors, setFieldValue, handleSubmit } = useFormik<AssetMediaFormValues>({
         initialValues,
         onSubmit: async () => {
@@ -99,6 +101,7 @@ export default function AssetMedia() {
                 const deleteFormats = Object.entries(values.formats)
                     .filter(([_, value]) => !value.file)
                     .map(([key, _]) => key);
+
                 if (deleteFormats.length) await dispatch(assetMediaThunk({ deleteFormats }));
 
                 router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/assetMetadata`);
@@ -127,7 +130,7 @@ export default function AssetMedia() {
     }) => {
         const transactionId = nanoid();
 
-        await dispatch(
+        dispatch(
             assetActionsCreators.requestAssetUpload({
                 key: formatUpload,
                 status: 'requested',
@@ -159,6 +162,10 @@ export default function AssetMedia() {
     };
 
     const handleOpenBackModal = () => {
+        if (isUploading) {
+            toast.display({ type: 'warning', message: 'Please wait until the upload is complete' });
+            return;
+        }
         if (JSON.stringify(initialValues.formats) === JSON.stringify(values.formats)) {
             router.push(`/home/consignArtwork`);
         } else {
@@ -171,7 +178,7 @@ export default function AssetMedia() {
     };
 
     const handleCancelBackModal = async () => {
-        await dispatch(
+        dispatch(
             consignArtworkActionsCreators.changeStatusStep({
                 stepId: 'assetMedia',
                 status: getStepStatus({
@@ -206,63 +213,92 @@ export default function AssetMedia() {
             const requestUploadReady = Object.values(requestAssetUploadNotUsed);
 
             const uploadAsset = async () => {
-                const responseUpload = await Promise.all(
-                    requestUploadReady.map(async (item) => {
-                        const url = item.url;
-                        dispatch(
-                            assetActionsCreators.requestAssetUpload({
-                                transactionId: item.transactionId,
-                                status: 'uploading',
-                            })
-                        );
+                requestUploadReady.map((item) => {
+                    const url = item.url;
+                    dispatch(
+                        assetActionsCreators.requestAssetUpload({
+                            transactionId: item.transactionId,
+                            status: 'uploading',
+                        })
+                    );
 
-                        const formatByTransaction = Object.entries(values.formats).find(
-                            ([_, format]) => format.transactionId === item.transactionId
-                        );
+                    const formatByTransaction = Object.entries(values.formats).find(
+                        ([_, format]) => format.transactionId === item.transactionId
+                    );
 
-                        if (!formatByTransaction) return;
+                    if (!formatByTransaction) return;
 
-                        const [key, value] = formatByTransaction;
+                    const [key, value] = formatByTransaction;
 
-                        await dispatch(
-                            assetStorageThunk({
-                                transactionId: item.transactionId,
-                                file: value.file!,
-                                url,
-                            })
-                        );
+                    dispatch(
+                        assetStorageThunk({
+                            transactionId: item.transactionId,
+                            file: value.file!,
+                            url,
+                        })
+                    );
+                });
+            };
 
-                        let formatSave = {};
+            if (requestUploadReady.length) uploadAsset();
+        }
+    }, [asset.requestAssetUpload, values?.formats]);
 
-                        if (key === 'original') {
-                            formatSave = {
-                                size: value.file!.size,
-                                definition: value.definition,
-                                width: value.width,
-                                height: value.height,
-                            };
-                        }
+    useEffect(() => {
+        if (values.formats?.original?.definition) {
+            const requestAssetUploadComplete = Object.values(asset.requestAssetUpload)?.filter(
+                (item) => item.transactionId && item.url && item.uploadProgress === 100 && item.status === 'completed'
+            );
 
-                        return {
-                            [key]: {
-                                ...formatSave,
-                                path: item.path,
-                                name: value.file!.name,
-                            },
-                        };
+            if (!requestAssetUploadComplete || !requestAssetUploadComplete?.length) return;
+
+            const requestUploadComplete = Object.values(requestAssetUploadComplete);
+
+            const responseUpload = requestUploadComplete.map((item) => {
+                const formatByTransaction = Object.entries(values.formats).find(
+                    ([_, format]) => format.transactionId === item.transactionId
+                );
+
+                if (!formatByTransaction) return;
+
+                const [key, value] = formatByTransaction;
+
+                setFieldValue(`formats.${key}.successUpload`, true);
+
+                dispatch(
+                    assetActionsCreators.requestAssetUploadUsed({
+                        transactionId: item.transactionId,
                     })
                 );
 
-                await dispatch(
+                let formatSave = {};
+
+                if (key === 'original') {
+                    formatSave = {
+                        size: value.file!.size,
+                        definition: value.definition,
+                        width: value.width,
+                        height: value.height,
+                    };
+                }
+
+                return {
+                    [key]: {
+                        ...formatSave,
+                        path: item.path,
+                        name: value.file!.name,
+                    },
+                };
+            });
+
+            if (responseUpload?.length)
+                dispatch(
                     assetMediaThunk({
                         ...values,
                         formats: responseUpload.reduce((acc, cur) => ({ ...acc, ...cur }), {} as FormatMediaSave),
                         load: true,
                     })
                 );
-            };
-
-            if (requestUploadReady.length) uploadAsset();
         }
     }, [asset.requestAssetUpload, values?.formats]);
 
@@ -299,6 +335,7 @@ export default function AssetMedia() {
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
+                submitDisabled={isUploading}
                 backOnclick={handleOpenBackModal}
                 submitText={texts.nextButton}
                 stepStatus={checkStepProgress}

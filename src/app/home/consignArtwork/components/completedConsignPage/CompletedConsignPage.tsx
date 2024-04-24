@@ -17,12 +17,14 @@ interface FormType {
 }
 
 export const CompletedConsignPage = () => {
-    const { previewAndConsign, status } = useSelector((state) => state.consignArtwork);
-    const xL = useMediaQuery((them: Theme) => them.breakpoints.up('xl'));
-    const theme = useTheme();
     const dispatch = useDispatch();
+    const xL = useMediaQuery((them: Theme) => them.breakpoints.up('xl'));
     const { language } = useI18n();
+    const theme = useTheme();
     const toastr = useToastr();
+
+    const { previewAndConsign, status } = useSelector((state) => state.consignArtwork);
+    const explorerUrl = useSelector((state) => state.asset.contractExplorer?.explorer);
 
     const grayColor = theme.palette.text.disabled;
 
@@ -35,7 +37,7 @@ export const CompletedConsignPage = () => {
             dispatch(consignArtworkThunks.updateStatus(values.selectedStatus));
         },
     });
-    
+
     const texts = {
         artworkListingTitle: language['studio.consignArtwork.artworkListing'],
         artworkListingActionTitle: language['studio.consignArtwork.consignmentStatus.preview.title'],
@@ -43,11 +45,11 @@ export const CompletedConsignPage = () => {
         consignArtworkTitle: language['studio.consignArtwork.title'],
         view: language['studio.consignArtwork.consignmentStatus.view'],
     } as { [key: string]: string };
-    
+
     const handlePreview = () => {
-        dispatch(consignArtworkThunks.checkPreview())
-    }
-    
+        dispatch(consignArtworkThunks.checkPreview());
+    };
+
     const consignSteps = {
         artworkListing: {
             title: texts.artworkListingTitle,
@@ -56,11 +58,15 @@ export const CompletedConsignPage = () => {
             value: undefined,
         },
         creatorContract: {
-            title: 'Creator Contract',
+            title: 'Artwork Transaction',
             actionTitle: texts.view,
             value: previewAndConsign.creatorContract?.value,
             actionFunc: async () => {
-                window.open('https://explorer.vitruveo.xyz/', '_blank');
+                if (explorerUrl) {
+                    window.open(explorerUrl, '_blank');
+                } else {
+                    toastr.display({ type: 'error', message: 'Explorer URL not found' });
+                }
             },
         },
     };
@@ -77,7 +83,7 @@ export const CompletedConsignPage = () => {
 
     return (
         <form onSubmit={formik.handleSubmit}>
-            <PageContainerFooter submitText="Update" secondaryText="Edit" submitDisabled={!formik.dirty}>
+            <PageContainerFooter hasSubmitButton={false} hasBackButton>
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
                 <Grid display="flex" flexWrap="wrap" marginBottom={6} item xs={12} lg={6}>
                     <Box marginBottom={2}>
@@ -135,12 +141,12 @@ export const CompletedConsignPage = () => {
                                     </Box>
                                 </Box>
                             ))}
-                            <Box mt={4}>
+                            {/* <Box mt={4}>
                                 <CompletedConsignTableStatus
                                     selectedStatus={formik.values.selectedStatus}
                                     onStatusChange={formik.handleChange}
                                 />
-                            </Box>
+                            </Box> */}
                         </Box>
                     </Box>
                     <Box flex={1} display="flex" justifyContent={!xL ? 'flex-start' : 'center'}>

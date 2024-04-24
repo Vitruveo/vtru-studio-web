@@ -1,3 +1,4 @@
+import * as wagmiCore from '@wagmi/core';
 import { nanoid } from '@reduxjs/toolkit';
 import { StepsFormValues } from '@/app/home/consignArtwork/types';
 import {
@@ -14,6 +15,8 @@ import {
     changeAvatar,
     generalStorage,
     requestDeleteAvatar,
+    requestConnectWallet,
+    verifyConnectWallet,
 } from './requests';
 import { userActionsCreators } from './slice';
 import {
@@ -39,11 +42,17 @@ import {
     ChangeAvatarReq,
     ChangeAvatarApiRes,
     GeneralStorageAvatarReq,
+    ResquestConnectWalletReq,
+    VerifyConnectWalletReq,
+    RequestConnectWalletApiRes,
+    VerifyConnectWalletApiRes,
+    RequestConnectWalletRes,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { getAssetThunk } from '../asset/thunks';
 import { AccountSettingsFormValues } from '@/app/home/myProfile/types';
 import { consignArtworkActionsCreators } from '../consignArtwork/slice';
+import { config } from '@/app/home/components/apps/wallet';
 
 export function userLoginThunk(payload: UserLoginReq): ReduxThunkAction<Promise<UserLoginApiRes>> {
     return async function (dispatch, getState) {
@@ -223,5 +232,30 @@ export function generalStorageAvatarThunk(payload: GeneralStorageAvatarReq): Red
         await dispatch(changeAvatarThunk({ fileId: payload.path, transactionId: payload.transactionId }));
 
         return res;
+    };
+}
+
+export function requestConnectWalletThunk(
+    payload: ResquestConnectWalletReq
+): ReduxThunkAction<Promise<RequestConnectWalletRes>> {
+    return async function (dispatch, getState) {
+        const response = await requestConnectWallet(payload);
+
+        if (!response.data?.nonce) throw new Error('nonce not found');
+
+        const signature = await wagmiCore.signMessage(config, {
+            account: payload.wallet,
+            message: response.data.nonce,
+        });
+
+        return { signature };
+    };
+}
+
+export function verifyConnectWalletThunk(
+    payload: VerifyConnectWalletReq
+): ReduxThunkAction<Promise<VerifyConnectWalletApiRes>> {
+    return async function (dispatch, getState) {
+        return verifyConnectWallet(payload);
     };
 }

@@ -1,3 +1,4 @@
+import axios, { AxiosResponse } from 'axios';
 import {
     Asset,
     AssetSendRequestUploadApiRes,
@@ -5,11 +6,13 @@ import {
     AssetStorageReq,
     GetAssetApiRes,
     RequestDeleteFilesReq,
+    SigningMediaC2PAReq,
     UpdateAssetStepApiRes,
     UpdateAssetStepReq,
 } from './types';
 import { apiService } from '@/services/api';
 import { assetActionsCreators } from './slice';
+import { ASSET_STORAGE_BUCKET } from '@/constants/asset';
 
 export async function requestDeleteFiles(data: RequestDeleteFilesReq): Promise<any> {
     const res = await apiService.delete('/assets/request/deleteFile', data);
@@ -71,4 +74,14 @@ export async function getAsset(): Promise<GetAssetApiRes> {
 export async function sendRequestUpload(data: AssetSendRequestUploadReq): Promise<AssetSendRequestUploadApiRes> {
     const res = apiService.post<string>('/assets/request/upload', data);
     return res;
+}
+
+export async function signingMediaC2PA(data: SigningMediaC2PAReq): Promise<AxiosResponse> {
+    return axios.post('https://ef2k3d6407.execute-api.us-east-1.amazonaws.com/qa/postprocess', {
+        bucket: ASSET_STORAGE_BUCKET,
+        region: 'us-east-1',
+        token: data.token,
+        creator: data.creator,
+        filename: data.filename,
+    });
 }
