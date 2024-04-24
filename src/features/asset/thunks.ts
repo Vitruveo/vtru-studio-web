@@ -13,6 +13,7 @@ import {
     AssetSendRequestUploadReq,
     AssetStatus,
     AssetStorageReq,
+    ConsignArtworkSteps,
     CreateContractApiRes,
     CreateContractByAssetIdReq,
     RequestDeleteFilesReq,
@@ -25,7 +26,7 @@ import { assetActionsCreators } from './slice';
 import { FormatMediaSave, FormatsMedia } from '@/app/home/consignArtwork/assetMedia/types';
 import { LicensesFormValues } from '@/app/home/consignArtwork/licenses/types';
 import { TermsOfUseFormValues } from '@/app/home/consignArtwork/termsOfUse/types';
-import { consignArtworkActionsCreators } from '../consignArtwork/slice';
+import { consignArtworkActionsCreators, stepsNames } from '../consignArtwork/slice';
 import { ASSET_STORAGE_URL } from '@/constants/asset';
 import { SectionsFormData } from '@/app/home/consignArtwork/assetMetadata/page';
 import { FormatsAuxiliayMedia } from '@/app/home/consignArtwork/auxiliaryMedia/types';
@@ -89,6 +90,14 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
 
                 if (response.data.contractExplorer) {
                     dispatch(assetActionsCreators.changeContractExplorer(response.data.contractExplorer));
+                }
+
+                if (response.data.ipfs) {
+                    dispatch(assetActionsCreators.change({ ipfs: response.data.ipfs }));
+                }
+
+                if (response.data.c2pa) {
+                    dispatch(assetActionsCreators.change({ c2pa: response.data.c2pa }));
                 }
 
                 dispatch(
@@ -511,5 +520,25 @@ export function createContractThunk(data: CreateContractByAssetIdReq): ReduxThun
                 reject();
             }
         });
+    };
+}
+
+export function updateConsignArtworkStepThunk(payload: {
+    stepName: ConsignArtworkSteps;
+}): ReduxThunkAction<Promise<any>> {
+    return async function (dispatch, getState) {
+        let reqBodyStep = { finishedAt: new Date() };
+        const asset = getState().asset;
+
+        if (['c2pa', 'ipfs', 'contractExplorer'].includes(payload.stepName) && asset[payload.stepName]) {
+            reqBodyStep = { ...asset[payload.stepName], ...reqBodyStep };
+        }
+
+        await updateAssetStep({
+            stepName: payload.stepName,
+            ...reqBodyStep,
+        });
+
+        dispatch(assetActionsCreators.change({ [payload.stepName]: reqBodyStep }));
     };
 }

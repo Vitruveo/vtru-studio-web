@@ -12,11 +12,18 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
 import { useToastr } from '@/app/hooks/useToastr';
 import AssetMediaPreview from '../components/assetMediaPreview';
-import { createContractThunk, signingMediaC2PAThunk, uploadIPFSByAssetIdThunk } from '@/features/asset/thunks';
+import {
+    createContractThunk,
+    signingMediaC2PAThunk,
+    updateConsignArtworkStepThunk,
+    uploadIPFSByAssetIdThunk,
+} from '@/features/asset/thunks';
 import { updateAssetStep } from '@/features/asset/requests';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
+import { ConsignArtworkSteps } from '@/features/asset/types';
 
 interface ConsignStep {
+    id?: ConsignArtworkSteps;
     title: string;
     status?: 'completed' | 'pending' | 'done' | 'error';
     action: () => Promise<any>;
@@ -67,7 +74,9 @@ export default function DoneConsign() {
     const token = useSelector((state) => state.user.token);
     const username = useSelector((state) => state.user.username);
     const filename = useSelector((state) => state.asset.formats.original.path) || '';
-    const assetId = useSelector((state) => state.asset._id);
+
+    const asset = useSelector((state) => state.asset);
+    const assetId = asset._id;
 
     const asyncAction = async () => {
         await new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 5000)));
@@ -76,19 +85,29 @@ export default function DoneConsign() {
 
     const [steps, setSteps] = useState<ConsignStep[]>([
         {
+            id: 'c2pa',
+            status: asset.c2pa?.finishedAt ? 'done' : undefined,
             title: 'Signing media files using C2PA standard',
             action: () => dispatch(signingMediaC2PAThunk({ filename, token, creator: username })),
         },
         {
+            id: 'ipfs',
+            status: asset.ipfs?.finishedAt ? 'done' : undefined,
             title: 'Uploading media files to IPFS decentralized storage',
             action: () => dispatch(uploadIPFSByAssetIdThunk({ id: assetId })),
         },
         {
+            id: 'contractExplorer',
+            status: asset.contractExplorer?.finishedAt ? 'done' : undefined,
             title: 'Consigning artwork to Vitruveo blockchain',
             action: () => dispatch(createContractThunk({ id: assetId })),
         },
         {
             title: 'Your artwork is ready!',
+            status:
+                asset.c2pa?.finishedAt && asset.ipfs?.finishedAt && asset.contractExplorer?.finishedAt
+                    ? 'completed'
+                    : undefined,
             action: async () => asyncAction().then(() => showConfetti()),
         },
     ]);
@@ -106,7 +125,10 @@ export default function DoneConsign() {
             return;
         }
 
+        if (steps.filter((v) => v.id).every((step) => step.status === 'done')) return;
+
         for await (const step of steps) {
+            if (step.status === 'done') continue;
             const stepIndex = steps.indexOf(step);
             const isLastStep = stepIndex === steps.length - 1;
 
@@ -115,6 +137,7 @@ export default function DoneConsign() {
             try {
                 await step.action();
                 isLastStep ? changeStepStatus(stepIndex, 'done') : changeStepStatus(stepIndex, 'completed');
+                if (step.id) dispatch(updateConsignArtworkStepThunk({ stepName: step.id }));
                 setSteps([...steps]);
             } catch (error) {
                 step.status = 'error';
