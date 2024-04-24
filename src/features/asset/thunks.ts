@@ -536,7 +536,7 @@ export function updateConsignArtworkStepThunk(payload: {
 
         await updateAssetStep({
             stepName: payload.stepName,
-            ...reqBodyStep,
+            [payload.stepName]: reqBodyStep,
         });
 
         dispatch(assetActionsCreators.change({ [payload.stepName]: reqBodyStep }));
