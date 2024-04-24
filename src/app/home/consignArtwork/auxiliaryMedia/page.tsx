@@ -23,8 +23,6 @@ import { createDescriptionInitialState, getDescriptionJSONString, getDescription
 
 export default function AssetMedia() {
     const [showBackModal, setShowBackModal] = useState(false);
-    // NOTE: ESTADO LOCAL, NO REDUX SÓ É DISPARADO QUANDO O FORMULÁRIO É SUBMETIDO
-    const [isAR, setIsAR] = useState(false);
     const toast = useToastr();
     const { language } = useI18n();
 
@@ -76,14 +74,6 @@ export default function AssetMedia() {
     const { values, errors, setFieldValue, handleSubmit } = useFormik<AssetMediaFormValues>({
         initialValues,
         onSubmit: async (formValues) => {
-            const hasArVideo = !!formValues.formats.arVideo.file;
-
-            if (hasArVideo) {
-                dispatch(assetActionsCreators.setArEnabled(true));
-            } else {
-                dispatch(assetActionsCreators.setArEnabled(false));
-            }
-
             if (JSON.stringify(initialValues) === JSON.stringify(values) && !values.deleteKeys.length)
                 router.push('/home/consignArtwork');
             else {
@@ -116,6 +106,15 @@ export default function AssetMedia() {
         },
     });
 
+    // Altera o estado de AR habilitado ou não automaticamente
+    useEffect(() => {
+        if (values.formats.arVideo.file) {
+            dispatch(assetActionsCreators.setArEnabled(true));
+        } else {
+            dispatch(assetActionsCreators.setArEnabled(false));
+        }
+    }, [values.formats.arVideo.file])
+
     const handleUploadFile = async ({
         formatUpload,
         file,
@@ -138,10 +137,6 @@ export default function AssetMedia() {
         if (!file) {
             toast.display({ message: 'File format not supported', type: 'warning' });
             return;
-        }
-
-        if (formatUpload === 'arVideo') {
-            setIsAR(true);
         }
 
         dispatch(
@@ -341,13 +336,13 @@ export default function AssetMedia() {
 
                         <Box display="flex" gap={1} mt={2}>
                             <Box display="flex" alignItems="center">
-                                <Radio checked={isAREnabled || isAR} disabled />
+                                <Radio checked={isAREnabled} disabled />
                                 <Typography color="GrayText" variant="subtitle1" component="label">
                                     This work is AR enabled
                                 </Typography>
                             </Box>
                             <Box display="flex" alignItems="center">
-                                <Radio checked={!isAR && !isAREnabled} disabled />
+                                <Radio checked={!isAREnabled} disabled />
                                 <Typography color="GrayText" variant="subtitle1" component="label">
                                     This work is not AR enabled
                                 </Typography>
