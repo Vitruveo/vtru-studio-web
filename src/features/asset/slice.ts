@@ -175,6 +175,10 @@ export const assetSlice = createSlice({
         error: (state, action) => {
             state.error = action.payload;
         },
+        // TODO: CORRIGIR TIPAGEM
+        setArEnabled: (state: any, action: PayloadAction<boolean>) => {
+            state.assetMetadata.taxonomy.formData.arenabled = action.payload == true ? 'yes' : 'no';
+        },
     },
 });
 

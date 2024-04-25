@@ -185,10 +185,6 @@
                     "type": "string",
                     "enum": ["full", "partial", "none"]
                 },
-                "arenabled": {
-                    "type": "string",
-                    "enum": ["yes", "no"]
-                },
                 "nudity": {
                     "type": "string",
                     "enum": ["yes", "no"]

@@ -5,7 +5,7 @@ import { nanoid } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import { Stack } from '@mui/system';
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Radio, Typography } from '@mui/material';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { AssetMediaFormValues, FormatMediaSave, FormatsAuxiliayMedia } from './types';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
@@ -17,12 +17,14 @@ import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
 import { assetActionsCreators } from '@/features/asset/slice';
 import { requestDeleteFiles } from '@/features/asset/requests';
+import { CustomTextareaAutosize } from '../../components/forms/theme-elements/CustomTextarea';
+import { useToastr } from '@/app/hooks/useToastr';
 import { RichEditor } from '../../components/rich-editor/rich-editor';
 import { createDescriptionInitialState, getDescriptionJSONString, getDescriptionText } from './helpers';
 
 export default function AssetMedia() {
     const [showBackModal, setShowBackModal] = useState(false);
-
+    const toast = useToastr();
     const { language } = useI18n();
 
     const texts = {
@@ -53,6 +55,9 @@ export default function AssetMedia() {
     ];
 
     const asset = useSelector((state) => state.asset);
+
+    // TODO: COLOCAR TIPAGEM CORRETA
+    const isAREnabled = useSelector((state: any) => state.asset.assetMetadata?.taxonomy.formData?.arenabled) == 'yes'
 
     const router = useRouter();
     const dispatch = useDispatch();
@@ -102,6 +107,15 @@ export default function AssetMedia() {
         },
     });
 
+    // Altera o estado de AR habilitado ou não automaticamente
+    useEffect(() => {
+        if (values.formats.arVideo.file) {
+            dispatch(assetActionsCreators.setArEnabled(true));
+        } else {
+            dispatch(assetActionsCreators.setArEnabled(false));
+        }
+    }, [values.formats.arVideo.file])
+
     const handleUploadFile = async ({
         formatUpload,
         file,
@@ -121,9 +135,14 @@ export default function AssetMedia() {
             })
         );
 
+        if (!file) {
+            toast.display({ message: 'File format not supported', type: 'warning' });
+            return;
+        }
+
         dispatch(
             sendRequestUploadThunk({
-                mimetype: file!.type,
+                mimetype: file.type,
                 metadata: {
                     formatUpload,
                     maxSize,
@@ -315,6 +334,22 @@ export default function AssetMedia() {
                                 </Box>
                             ))}
                         </Box>
+
+                        <Box display="flex" gap={1} mt={2}>
+                            <Box display="flex" alignItems="center">
+                                <Radio checked={isAREnabled} disabled />
+                                <Typography color="GrayText" variant="subtitle1" component="label">
+                                    This work is AR enabled
+                                </Typography>
+                            </Box>
+                            <Box display="flex" alignItems="center">
+                                <Radio checked={!isAREnabled} disabled />
+                                <Typography color="GrayText" variant="subtitle1" component="label">
+                                    This work is not AR enabled
+                                </Typography>
+                            </Box>
+                        </Box>
+
                         <Box marginTop={2}>
                             <Box>
                                 <Typography mb={2} variant="subtitle1" fontWeight={600} component="label">
