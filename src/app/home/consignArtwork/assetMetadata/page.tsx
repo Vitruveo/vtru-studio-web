@@ -94,16 +94,10 @@ export default function AssetMetadata() {
     const { language } = useI18n();
 
     const getAssetOrientation = () => {
-        const { width, height } = asset.formats.original;
+        const { definition } = asset.formats.original;
 
-        if (!width || !height) return;
-
-        if (width > height) {
-            return 'horizontal';
-        } else if (width < height) {
-            return 'vertical';
-        }
-
+        if (definition === 'landscape') return 'horizontal';
+        if (definition === 'portrait') return 'vertical';
         return 'square';
     };
 

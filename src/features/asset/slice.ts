@@ -176,6 +176,10 @@ export const assetSlice = createSlice({
             state.error = action.payload;
         },
         // TODO: CORRIGIR TIPAGEM
+        setArEnabled: (state: any, action: PayloadAction<boolean>) => {
+            state.assetMetadata.taxonomy.formData.arenabled = action.payload == true ? 'yes' : 'no';
+        },
+        // TODO: CORRIGIR TIPAGEM
         setMetadataColors: (state: any, action: PayloadAction<string[]>) => {
             if (state.assetMetadata) {
                 state.assetMetadata.context.formData.colors = action.payload;

@@ -32,10 +32,23 @@ import { useToastr } from '@/app/hooks/useToastr';
 
 export default function AssetMedia() {
     const toast = useToastr();
+    const asset = useSelector((state) => state.asset);
     const [showBackModal, setShowBackModal] = useState(false);
     const [showFormtsInfo, setShowFormatsInfo] = useState(true);
-    const [isUploading, setIsUploading] = useState(false);
     const { language } = useI18n();
+
+    const router = useRouter();
+    const dispatch = useDispatch();
+
+    const initialValues = useMemo(
+        () => ({
+            deleteKeys: [],
+            formats: asset.formats,
+        }),
+        []
+    );
+
+    const isUploading = asset.requestAssetUpload && Object.values(asset.requestAssetUpload).some((item) => item.status === 'uploading');
 
     const texts = {
         nextButton: language['studio.consignArtwork.form.next.button'],
@@ -65,19 +78,6 @@ export default function AssetMedia() {
             title: texts.assetMediaTitle,
         },
     ];
-
-    const asset = useSelector((state) => state.asset);
-
-    const router = useRouter();
-    const dispatch = useDispatch();
-
-    const initialValues = useMemo(
-        () => ({
-            deleteKeys: [],
-            formats: asset.formats,
-        }),
-        []
-    );
 
     const { values, errors, setFieldValue, handleSubmit } = useFormik<AssetMediaFormValues>({
         initialValues,
