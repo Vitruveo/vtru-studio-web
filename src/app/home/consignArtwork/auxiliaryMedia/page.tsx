@@ -5,16 +5,7 @@ import { nanoid } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import { Stack } from '@mui/system';
-<<<<<<< HEAD
-<<<<<<< HEAD
-import { Box, Radio, Typography, useTheme } from '@mui/material';
-
-=======
-import { Box, Typography, useTheme } from '@mui/material';
->>>>>>> main
-=======
 import { Box, Radio, Typography } from '@mui/material';
->>>>>>> 472873e2f006809fccf99abf41f2939d690056b0
 import { useDispatch, useSelector } from '@/store/hooks';
 import { AssetMediaFormValues, FormatMediaSave, FormatsAuxiliayMedia } from './types';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
@@ -26,19 +17,10 @@ import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
 import { assetActionsCreators } from '@/features/asset/slice';
 import { requestDeleteFiles } from '@/features/asset/requests';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import { CustomTextareaAutosize } from '../../components/forms/theme-elements/CustomTextarea';
 import { useToastr } from '@/app/hooks/useToastr';
-=======
 import { RichEditor } from '../../components/rich-editor/rich-editor';
 import { createDescriptionInitialState, getDescriptionJSONString, getDescriptionText } from './helpers';
->>>>>>> main
-=======
-import { useToastr } from '@/app/hooks/useToastr';
-import { RichEditor } from '../../components/rich-editor/rich-editor';
-import { createDescriptionInitialState, getDescriptionJSONString, getDescriptionText } from './helpers';
->>>>>>> 472873e2f006809fccf99abf41f2939d690056b0
 
 export default function AssetMedia() {
     const [showBackModal, setShowBackModal] = useState(false);
