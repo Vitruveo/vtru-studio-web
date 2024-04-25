@@ -184,11 +184,7 @@ const ConsignArtwork = () => {
                                             <Box width={100} marginLeft={1}>
                                                 <Button
                                                     style={{ opacity: v.stepId === 'reviewAndConsign' ? 0 : 1 }}
-                                                    disabled={
-                                                        v.stepId === 'reviewAndConsign' ||
-                                                        status === 'published' ||
-                                                        status === 'preview'
-                                                    }
+                                                    disabled={v.stepId === 'reviewAndConsign'}
                                                     onClick={() => handleChangePage(v.stepId, v.status)}
                                                     size="small"
                                                     variant="contained"

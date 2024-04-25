@@ -13,6 +13,7 @@ import {
     AssetSendRequestUploadReq,
     AssetStatus,
     AssetStorageReq,
+    ConsignArtworkSteps,
     CreateContractApiRes,
     CreateContractByAssetIdReq,
     RequestDeleteFilesReq,
@@ -25,7 +26,7 @@ import { assetActionsCreators } from './slice';
 import { FormatMediaSave, FormatsMedia } from '@/app/home/consignArtwork/assetMedia/types';
 import { LicensesFormValues } from '@/app/home/consignArtwork/licenses/types';
 import { TermsOfUseFormValues } from '@/app/home/consignArtwork/termsOfUse/types';
-import { consignArtworkActionsCreators } from '../consignArtwork/slice';
+import { consignArtworkActionsCreators, stepsNames } from '../consignArtwork/slice';
 import { ASSET_STORAGE_URL } from '@/constants/asset';
 import { SectionsFormData } from '@/app/home/consignArtwork/assetMetadata/page';
 import { FormatsAuxiliayMedia } from '@/app/home/consignArtwork/auxiliaryMedia/types';
@@ -89,6 +90,14 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
 
                 if (response.data.contractExplorer) {
                     dispatch(assetActionsCreators.changeContractExplorer(response.data.contractExplorer));
+                }
+
+                if (response.data.ipfs) {
+                    dispatch(assetActionsCreators.change({ ipfs: response.data.ipfs }));
+                }
+
+                if (response.data.c2pa) {
+                    dispatch(assetActionsCreators.change({ c2pa: response.data.c2pa }));
                 }
 
                 dispatch(
@@ -193,7 +202,7 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
 
             return response;
         } catch (_) {
-            // TODO: implement error handling
+            // TODO: implement error handling.
         }
     };
 }
@@ -259,6 +268,34 @@ export function assetMediaThunk(payload: {
 }): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
         const formatsState = getState().asset.formats;
+        const assetMetadata = getState().asset.assetMetadata as SectionsFormData;
+
+        if (payload.formats && payload.formats.original && assetMetadata) {
+            const { width, height } = payload.formats.original;
+
+            let orientation = 'square';
+
+            if (width && height) {
+                if (width > height) {
+                    orientation = 'horizontal';
+                } else if (width < height) {
+                    orientation = 'vertical';
+                }
+            }
+
+            dispatch(
+                assetMetadataThunk({
+                    ...assetMetadata,
+                    context: {
+                        ...assetMetadata?.context,
+                        formData: {
+                            ...assetMetadata?.context?.formData,
+                            orientation,
+                        },
+                    },
+                })
+            );
+        }
 
         const formatsPersist = Object.entries(formatsState)
             .filter(([key, value]) => value.file)
@@ -304,9 +341,18 @@ export function assetMediaThunk(payload: {
     };
 }
 
-export function assetMetadataThunk(payload: SectionsFormData): ReduxThunkAction<Promise<any>> {
+export function assetMetadataThunk(
+    payload: SectionsFormData & {
+        isCompleted?: boolean;
+        context: {
+            formData: {
+                orientation?: string;
+            };
+        };
+    }
+): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
-        const response = await updateAssetStep({
+        await updateAssetStep({
             assetMetadata: {
                 ...payload,
             },
@@ -315,7 +361,9 @@ export function assetMetadataThunk(payload: SectionsFormData): ReduxThunkAction<
 
         dispatch(
             assetActionsCreators.change({
-                assetMetadata: payload,
+                assetMetadata: {
+                    ...payload,
+                },
             })
         );
     };
@@ -472,5 +520,25 @@ export function createContractThunk(data: CreateContractByAssetIdReq): ReduxThun
                 reject();
             }
         });
+    };
+}
+
+export function updateConsignArtworkStepThunk(payload: {
+    stepName: ConsignArtworkSteps;
+}): ReduxThunkAction<Promise<any>> {
+    return async function (dispatch, getState) {
+        let reqBodyStep = { finishedAt: new Date() };
+        const asset = getState().asset;
+
+        if (['c2pa', 'ipfs', 'contractExplorer'].includes(payload.stepName) && asset[payload.stepName]) {
+            reqBodyStep = { ...asset[payload.stepName], ...reqBodyStep };
+        }
+
+        await updateAssetStep({
+            stepName: payload.stepName,
+            [payload.stepName]: reqBodyStep,
+        });
+
+        dispatch(assetActionsCreators.change({ [payload.stepName]: reqBodyStep }));
     };
 }

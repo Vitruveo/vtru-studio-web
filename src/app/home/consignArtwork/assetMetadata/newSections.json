@@ -5,7 +5,7 @@
         },
         "schema": {
             "type": "object",
-            "required": ["title", "description", "culture", "mood", "colors", "orientation"],
+            "required": ["title", "description", "culture", "mood", "colors"],
             "properties": {
                 "title": {
                     "type": "string"
@@ -96,10 +96,6 @@
                 },
                 "copyright": {
                     "type": "string"
-                },
-                "orientation": {
-                    "type": "string",
-                    "enum": ["horizontal", "vertical", "square"]
                 }
             }
         },
@@ -142,13 +138,6 @@
                     "label": false,
                     "placeholder": ""
                 }
-            },
-            "orientation": {
-                "ui:widget": "radios",
-                "classNames": "display-fixed",
-                "ui:options": {
-                    "disabled": true
-                }
             }
         }
     },
@@ -159,16 +148,7 @@
         },
         "schema": {
             "type": "object",
-            "required": [
-                "objectType",
-                "aiGeneration",
-                "arenabled",
-                "nudity",
-                "category",
-                "collections",
-                "medium",
-                "style"
-            ],
+            "required": ["objectType", "aiGeneration", "nudity", "category", "collections", "medium", "style"],
             "properties": {
                 "objectType": {
                     "type": "string",
@@ -195,10 +175,6 @@
                 "aiGeneration": {
                     "type": "string",
                     "enum": ["full", "partial", "none"]
-                },
-                "arenabled": {
-                    "type": "string",
-                    "enum": ["yes", "no"]
                 },
                 "nudity": {
                     "type": "string",

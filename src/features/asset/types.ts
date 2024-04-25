@@ -25,6 +25,36 @@ export interface RequestAssetUpload {
     status: string;
     uploadProgress: number;
 }
+
+export interface ContractExplorer {
+    finishedAt: Date | null;
+    assetId: number;
+    assetRefId: number;
+    creatorRefId: number;
+    explorer: string;
+    tx: string;
+}
+
+export interface Ipfs {
+    original: string;
+    display: string;
+    exhibition: string;
+    preview: string;
+    print: string;
+    arImage: string;
+    arVideo: string;
+    btsImage: string;
+    btsVideo: string;
+    codeZip: string;
+    finishedAt: Date;
+}
+
+export interface c2pa {
+    finishedAt: Date;
+}
+
+export type ConsignArtworkSteps = 'c2pa' | 'ipfs' | 'contractExplorer';
+
 export interface Asset {
     _id: string;
     mediaAuxiliary: {
@@ -64,14 +94,9 @@ export interface Asset {
         updatedBy: string | null;
     };
     consignArtwork?: AssetConsignArtwork;
+    c2pa?: c2pa;
     contractExplorer?: ContractExplorer;
-}
-export interface ContractExplorer {
-    assetId: number;
-    assetRefId: number;
-    creatorRefId: number;
-    explorer: string;
-    tx: string;
+    ipfs?: Ipfs;
 }
 
 export interface AssetConsignArtwork {

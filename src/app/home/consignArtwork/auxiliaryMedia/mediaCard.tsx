@@ -14,8 +14,8 @@ import { TranslateFunction } from '@/i18n/types';
 import { handleGetFileType, handleGetFileWidthAndHeight } from '../assetMedia/helpers';
 import UploadProgressBar from '../components/uploadProgress';
 import { useDispatch, useSelector } from '@/store/hooks';
-import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 import { userActionsCreators } from '@/features/user/slice';
+import { useToastr } from '@/app/hooks/useToastr';
 
 interface MediaCardProps {
     deleteKeys: string[];
@@ -50,11 +50,7 @@ export default function MediaCard({
     handleUploadFile,
 }: MediaCardProps) {
     const imgRef = React.useRef<HTMLImageElement>(null);
-    const [toastr, setToastr] = useState<CustomizedSnackbarState>({
-        type: 'success',
-        open: false,
-        message: '',
-    });
+    const toast = useToastr();
     const [modalErrorOpen, setModalErrorOpen] = useState(false);
     const [mediaCrop, setMediaCrop] = useState<File | undefined>(undefined);
     const [showCrop, setShowCrop] = useState(false);
@@ -118,6 +114,7 @@ export default function MediaCard({
                 'application/zip': [],
             };
         }
+
         return accept;
     };
 
@@ -181,9 +178,8 @@ export default function MediaCard({
     useEffect(() => {
         if (notify === 'deleteAsset') {
             setFieldValue(`formats.codeZip`, { file: undefined, customFile: undefined });
-            setToastr({
+            toast.display({
                 message: 'Media deleted due to containing unauthorized content.',
-                open: true,
                 type: 'warning',
             });
             dispatch(userActionsCreators.change({ notify: '' }));
@@ -377,13 +373,6 @@ export default function MediaCard({
             </Dialog>
 
             <ModalError format={formatType} open={modalErrorOpen} setClose={handleCloseModalError} />
-
-            <CustomizedSnackbar
-                type={toastr.type}
-                open={toastr.open}
-                message={toastr.message}
-                setOpentate={setToastr}
-            />
         </Box>
     );
 }
