@@ -209,11 +209,11 @@ export default function AssetMedia() {
 
     // Extrai as cores da imagem original e seta elas no formulário de metadados.
     useEffect(() => {
-        const { path } = asset.formats.original;
-        if (path) {
-            dispatch(extractAssetColorsThunk({ path }));
+        const assetId = asset._id;
+        if (assetId) {
+            dispatch(extractAssetColorsThunk({ id: assetId }));
         }
-    }, [asset.formats.original.path]);
+    }, [asset._id]);
 
     useEffect(() => {
         if (values.formats?.original?.definition) {

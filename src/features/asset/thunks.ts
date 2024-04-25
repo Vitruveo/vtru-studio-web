@@ -545,10 +545,10 @@ export function updateConsignArtworkStepThunk(payload: {
     };
 }
 
-export function extractAssetColorsThunk({ path }: { path: string }): ReduxThunkAction<Promise<any>> {
+export function extractAssetColorsThunk({ id }: { id: string }): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
         try {
-            const { data: colors } = await extractAssetColors(path);
+            const { data: colors } = await extractAssetColors(id);
             if (!colors) return;
             dispatch(assetActionsCreators.setMetadataColors(colors));
         } catch {

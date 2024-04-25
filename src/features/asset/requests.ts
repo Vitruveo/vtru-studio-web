@@ -86,9 +86,7 @@ export async function signingMediaC2PA(data: SigningMediaC2PAReq): Promise<Axios
     });
 }
 
-export async function extractAssetColors(path: string) {
-    const res = await apiService.post<string[]>('/assets/colors', {
-        path,
-    });
+export async function extractAssetColors(id: string) {
+    const res = await apiService.get<string[]>(`/assets/${id}/colors`)
     return res;
 }
