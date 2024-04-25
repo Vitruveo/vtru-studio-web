@@ -2,14 +2,14 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { usePathname, useRouter } from 'next/navigation';
-import { Button, Grid, Theme, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Button, Grid, Stack, Theme, Typography, useMediaQuery, useTheme } from '@mui/material';
 
 import Box from '@mui/material/Box';
 import AssetMediaPreview from '@/app/home/consignArtwork/components/assetMediaPreview';
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 import PageContainerFooter from '../components/container/PageContainerFooter';
 import { StepId, StepStatus } from '@/features/consignArtwork/types';
-import { publishThunk } from '@/features/asset/thunks';
+import { getAssetThunk, publishThunk } from '@/features/asset/thunks';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 import { useI18n } from '@/app/hooks/useI18n';
 import { TranslateFunction } from '@/i18n/types';
@@ -32,7 +32,8 @@ const ConsignArtwork = () => {
 
     const { status } = useSelector((state) => state.asset);
     const { previewAndConsign } = useSelector((state) => state.consignArtwork);
-    const { completedSteps, artworkListing } = useSelector((state) => state.consignArtwork);
+    const { completedSteps } = useSelector((state) => state.consignArtwork);
+    const hasContract = useSelector((state) => state.asset?.contractExplorer?.explorer);
 
     const checkAllCompletedSteps = Object.values(completedSteps)
         .filter((v) => !v.optional && v.stepId !== 'reviewAndConsign')
@@ -64,10 +65,7 @@ const ConsignArtwork = () => {
 
     const handleSubmit = (event?: React.FormEvent) => {
         if (event) event.preventDefault();
-        if (status === 'draft' || status === 'preview') router.push(`${pathname}/reviewAndConsign`);
-        else {
-            router.push(`${pathname}/consignmentStatus`);
-        }
+        router.push(`${pathname}/reviewAndConsign`);
     };
 
     const successColor = '#93C47D';
@@ -79,8 +77,11 @@ const ConsignArtwork = () => {
     const xs = useMediaQuery((them: Theme) => them.breakpoints.up('xs'));
 
     useEffect(() => {
+        dispatch(getAssetThunk());
+    }, []);
+
+    useEffect(() => {
         if (checkAllCompletedSteps) {
-            router.prefetch(`${pathname}/consignmentStatus`);
             router.prefetch(`${pathname}/reviewAndConsign`);
         }
 
@@ -90,12 +91,9 @@ const ConsignArtwork = () => {
         if (!status?.length) dispatch(publishThunk({ status: 'draft' }));
     }, [status]);
 
-    // TODO: PUT THIS IN REDUX STORE
-    const isConsignCompleted =
-        previewAndConsign.artworkListing?.checked ||
-        !!artworkListing; /*Object.values(previewAndConsign).every((v) => v.checked == true)*/
+    const isConsignCompleted = previewAndConsign.artworkListing?.checked;
 
-    if (isConsignCompleted) {
+    if (isConsignCompleted && hasContract) {
         return <CompletedConsignPage />;
     }
 
@@ -114,27 +112,27 @@ const ConsignArtwork = () => {
                 <Grid container>
                     <Grid item md={12} lg={6}>
                         <Box marginBottom={2}>
-                            <Box>
+                            <Stack gap={1}>
                                 <Typography variant="h6" fontWeight="normal" color="GrayText">
                                     {texts.consignArtworkSubtitle}
-                                    <Typography variant="h6" fontWeight="normal" color="GrayText">
-                                        {texts.moreInformation}{' '}
-                                        <Typography
-                                            variant="h6"
-                                            display="inline"
-                                            style={{
-                                                fontWeight: 400,
-                                                color: '#007BFF',
-                                                cursor: 'pointer',
-                                                textDecoration: 'underline',
-                                            }}
-                                            onClick={() => window.open('https://dreamer.vitruveo.xyz/', '_blank')}
-                                        >
-                                            {texts.consignArtworkSubtitleLink}
-                                        </Typography>
+                                </Typography>
+                                <Typography variant="h6" fontWeight="normal" color="GrayText">
+                                    {texts.moreInformation}{' '}
+                                    <Typography
+                                        variant="h6"
+                                        display="inline"
+                                        style={{
+                                            fontWeight: 400,
+                                            color: '#007BFF',
+                                            cursor: 'pointer',
+                                            textDecoration: 'underline',
+                                        }}
+                                        onClick={() => window.open('https://dreamer.vitruveo.xyz/', '_blank')}
+                                    >
+                                        {texts.consignArtworkSubtitleLink}
                                     </Typography>
                                 </Typography>
-                            </Box>
+                            </Stack>
                             <Box p={2}>
                                 {Object.values(completedSteps).map((v) => (
                                     <Grid
@@ -186,11 +184,7 @@ const ConsignArtwork = () => {
                                             <Box width={100} marginLeft={1}>
                                                 <Button
                                                     style={{ opacity: v.stepId === 'reviewAndConsign' ? 0 : 1 }}
-                                                    disabled={
-                                                        v.stepId === 'reviewAndConsign' ||
-                                                        status === 'published' ||
-                                                        status === 'preview'
-                                                    }
+                                                    disabled={v.stepId === 'reviewAndConsign'}
                                                     onClick={() => handleChangePage(v.stepId, v.status)}
                                                     size="small"
                                                     variant="contained"

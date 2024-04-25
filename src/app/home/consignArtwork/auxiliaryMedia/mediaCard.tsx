@@ -65,7 +65,9 @@ export default function MediaCard({
     const fileIsLocal = formatValue.file && typeof formatValue.file !== 'string';
 
     const fileStatus = formatValue.transactionId ? upload[formatValue.transactionId] : undefined;
-    const uploadSuccess = fileStatus ? fileStatus?.uploadProgress === 100 : formatValue.file && !fileIsLocal;
+    const uploadSuccess = fileStatus
+        ? fileStatus?.uploadProgress === 100
+        : formatValue.successUpload || (formatValue.file && !fileIsLocal);
 
     const mediaConfig = mediaConfigs[formatType as keyof typeof mediaConfigs] || {};
 

@@ -23,6 +23,9 @@ import ajv8Validator from '@rjsf/validator-ajv8';
 import { TranslateFunction } from '@/i18n/types';
 import AssetMediaPreview from '../components/assetMediaPreview';
 
+import { useToastr } from '@/app/hooks/useToastr';
+import { ASSET_STORAGE_URL } from '@/constants/asset';
+
 export type SectionName = 'context' | 'taxonomy' | 'creators' | 'provenance' | 'custom' | 'assets';
 type SectionsJSONType = typeof sectionsJSON;
 type SectionType = SectionsJSONType[keyof SectionsJSONType];
@@ -62,6 +65,8 @@ const removeEmptyProperties = (obj: Record<string, any> | any[] | null): Record<
 export default function AssetMetadata() {
     const [sectionsStatus, setSectionsStatus] = useState<{ [key: string]: string }>({});
     const { assetMetadata } = useSelector((state) => state.asset);
+    const asset = useSelector((state) => state.asset);
+    const toast = useToastr();
 
     const sectionsFormat = Object.entries(sectionsJSON).reduce(
         (acc, [key, value]) => ({
@@ -88,6 +93,50 @@ export default function AssetMetadata() {
     const dispatch = useDispatch();
 
     const { language } = useI18n();
+
+    const addColors = (colors: string[]) => {
+        setSections((prevSections) => ({
+            ...prevSections,
+            context: {
+                ...prevSections.context,
+                formData: {
+                    ...prevSections.context.formData,
+                    colors,
+                },
+            },
+        }));
+    };
+
+    const getAssetOrientation = () => {
+        const { definition } = asset.formats.original;
+
+        if (definition === 'landscape') return 'horizontal';
+        if (definition === 'portrait') return 'vertical';
+        return 'square';
+    };
+
+    const setOrientation = (orientation: 'horizontal' | 'vertical' | 'square') => {
+        setSections((prevSections) => ({
+            ...prevSections,
+            context: {
+                ...prevSections.context,
+                formData: {
+                    ...prevSections.context.formData,
+                    orientation,
+                },
+            },
+        }));
+    };
+
+    useEffect(() => {
+        const orientation = getAssetOrientation();
+
+        if (orientation) {
+            setOrientation(orientation);
+        } else {
+            toast.display({ type: 'info', message: 'The asset orientation could not be determined.' });
+        }
+    }, []);
 
     const texts = {
         nextButton: language['studio.consignArtwork.form.next.button'],

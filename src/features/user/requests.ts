@@ -26,6 +26,10 @@ import {
     VerifyCodeApiRes,
     VerifyCodeReq,
     RequestDeleteAvatarReq,
+    ResquestConnectWalletReq,
+    VerifyConnectWalletReq,
+    RequestConnectWalletApiRes,
+    VerifyConnectWalletApiRes,
 } from './types';
 import { Framework } from '../common/types';
 
@@ -116,4 +120,12 @@ export async function generalStorage(data: GeneralStorageAvatarReq): Promise<any
 export async function requestDeleteAvatar(data: RequestDeleteAvatarReq): Promise<any> {
     const res = await apiService.delete('/creators/request/deleteFile', data);
     return res;
+}
+
+export async function requestConnectWallet(data: ResquestConnectWalletReq): Promise<RequestConnectWalletApiRes> {
+    return apiService.post('/creators/connect/request', data);
+}
+
+export async function verifyConnectWallet(data: VerifyConnectWalletReq): Promise<VerifyConnectWalletApiRes> {
+    return apiService.post(`/creators/connect/verify`, data);
 }

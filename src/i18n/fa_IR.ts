@@ -237,6 +237,7 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.culture.description': 'فرهنگ اصلی برای این اثر',
 
     'studio.consignArtwork.assetMetadata.field.culture.enum.african': 'آفریقایی',
+    'studio.consignArtwork.assetMetadata.field.culture.enum.persian': 'فارسی',
     'studio.consignArtwork.assetMetadata.field.culture.enum.centralasian': 'آسیای مرکزی',
     'studio.consignArtwork.assetMetadata.field.culture.enum.eastasian': 'آسیای شرقی',
     'studio.consignArtwork.assetMetadata.field.culture.enum.islamic': 'اسلامی',

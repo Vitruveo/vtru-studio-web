@@ -5,7 +5,7 @@
         },
         "schema": {
             "type": "object",
-            "required": ["title", "description", "culture", "mood", "colors", "orientation"],
+            "required": ["title", "description", "culture", "mood", "colors"],
             "properties": {
                 "title": {
                     "type": "string"
@@ -14,10 +14,6 @@
                     "type": "string",
                     "format": "textarea",
                     "maxLength": 250
-                },
-                "longDescription": {
-                    "type": "string",
-                    "format": "textarea"
                 },
                 "culture": {
                     "type": "string",
@@ -29,6 +25,7 @@
                         "latinamerican",
                         "nativeamerican",
                         "oceanic",
+                        "persian",
                         "southasian",
                         "southeastasian",
                         "western"
@@ -99,10 +96,6 @@
                 },
                 "copyright": {
                     "type": "string"
-                },
-                "orientation": {
-                    "type": "string",
-                    "enum": ["horizontal", "vertical", "square"]
                 }
             }
         },
@@ -114,13 +107,6 @@
                 }
             },
             "description": {
-                "ui:widget": "textarea",
-                "ui:options": {
-                    "label": false,
-                    "placeholder": ""
-                }
-            },
-            "longDescription": {
                 "ui:widget": "textarea",
                 "ui:options": {
                     "label": false,
@@ -152,10 +138,6 @@
                     "label": false,
                     "placeholder": ""
                 }
-            },
-            "orientation": {
-                "ui:widget": "radios",
-                "classNames": "display-fixed"
             }
         }
     },
@@ -608,7 +590,7 @@
     "creators": {
         "formData": [
             {
-                "name": "Your name"
+                "name": ""
             }
         ],
         "schema": {
@@ -2439,7 +2421,7 @@
                 "name": {
                     "ui:options": {
                         "label": false,
-                        "placeholder": ""
+                        "placeholder": "e.g John Doe"
                     }
                 },
                 "roles": {

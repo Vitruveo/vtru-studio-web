@@ -1,0 +1,29 @@
+.DraftEditor-root {
+    background: #fff;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    padding: 15px;
+    resize: both;
+    width: '98.7%';
+    height: '130px';
+}
+
+.DraftEditor-editor {
+    border-top: 1px solid #ddd;
+    cursor: text;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+/* CSS DE ALINHHAMENTO DOS TEXTOS */
+.text-align-left div {
+    text-align: left;
+}
+
+.text-align-center div {
+    text-align: center;
+}
+
+.text-align-right div {
+    text-align: right;
+}

@@ -154,6 +154,9 @@ export const assetSlice = createSlice({
                 },
             };
         },
+        changeContractExplorer: (state, action: PayloadAction<AssetSliceState['contractExplorer']>) => {
+            state.contractExplorer = action.payload;
+        },
         change: (state, action: PayloadAction<Partial<AssetSliceState>>) => {
             return {
                 ...state,
