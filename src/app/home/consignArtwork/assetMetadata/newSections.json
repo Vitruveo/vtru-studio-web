@@ -148,16 +148,7 @@
         },
         "schema": {
             "type": "object",
-            "required": [
-                "objectType",
-                "aiGeneration",
-                "arenabled",
-                "nudity",
-                "category",
-                "collections",
-                "medium",
-                "style"
-            ],
+            "required": ["objectType", "aiGeneration", "nudity", "category", "collections", "medium", "style"],
             "properties": {
                 "objectType": {
                     "type": "string",
