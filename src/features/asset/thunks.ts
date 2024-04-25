@@ -202,7 +202,7 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
 
             return response;
         } catch (_) {
-            // TODO: implement error handling
+            // TODO: implement error handling.
         }
     };
 }
