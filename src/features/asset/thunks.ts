@@ -550,13 +550,48 @@ export function updateConsignArtworkStepThunk(payload: {
 }
 
 export function extractAssetColorsThunk({ id }: { id: string }): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch) {
-        try {
-            const { data: colors } = await extractAssetColors(id);
-            if (!colors) return;
-            dispatch(assetActionsCreators.setMetadataColors(colors));
-        } catch {
-            dispatch(toastrActionsCreators.displayToastr({ type: 'error', message: 'Error extracting colors' }));
-        }
+    return async function (dispatch, getState) {
+        const state = getState();
+        const token = state.user.token;
+
+        const ctrl = new AbortController();
+
+        const url = `${BASE_URL_API}/assets/${id}/colors`;
+        const headers = {
+            Accept: 'text/event-stream',
+            Authorization: `Bearer ${token}`,
+        };
+
+        return new Promise((resolve, reject) => {
+            try {
+                fetchEventSource(url, {
+                    method: 'GET',
+                    headers,
+                    signal: ctrl.signal,
+                    onmessage(message) {
+                        try {
+                            if (message.event === 'extract_color_success') {
+                                const parsed = JSON.parse(message.data);
+
+                                dispatch(assetActionsCreators.setMetadataColors(parsed));
+
+                                ctrl.abort();
+                                resolve(parsed);
+                            }
+
+                            if (message.event === 'extract_color_error') {
+                                ctrl.abort();
+                                reject();
+                            }
+                        } catch (error) {
+                            ctrl.abort();
+                            reject();
+                        }
+                    },
+                });
+            } catch (error) {
+                reject();
+            }
+        });
     };
 }
