@@ -72,7 +72,7 @@ export async function getAsset(): Promise<GetAssetApiRes> {
 }
 
 export async function sendRequestUpload(data: AssetSendRequestUploadReq): Promise<AssetSendRequestUploadApiRes> {
-    const res = apiService.post<string>('/assets/request/upload', data);
+    const res = await apiService.post<string>('/assets/request/upload', data);
     return res;
 }
 
@@ -84,4 +84,9 @@ export async function signingMediaC2PA(data: SigningMediaC2PAReq): Promise<Axios
         creator: data.creator,
         filename: data.filename,
     });
+}
+
+export async function extractAssetColors(id: string) {
+    const res = await apiService.get<string[]>(`/assets/${id}/colors`)
+    return res;
 }

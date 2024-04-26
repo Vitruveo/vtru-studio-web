@@ -24,7 +24,6 @@ import { TranslateFunction } from '@/i18n/types';
 import AssetMediaPreview from '../components/assetMediaPreview';
 
 import { useToastr } from '@/app/hooks/useToastr';
-import { ASSET_STORAGE_URL } from '@/constants/asset';
 
 export type SectionName = 'context' | 'taxonomy' | 'creators' | 'provenance' | 'custom' | 'assets';
 type SectionsJSONType = typeof sectionsJSON;
@@ -93,19 +92,6 @@ export default function AssetMetadata() {
     const dispatch = useDispatch();
 
     const { language } = useI18n();
-
-    const addColors = (colors: string[]) => {
-        setSections((prevSections) => ({
-            ...prevSections,
-            context: {
-                ...prevSections.context,
-                formData: {
-                    ...prevSections.context.formData,
-                    colors,
-                },
-            },
-        }));
-    };
 
     const getAssetOrientation = () => {
         const { definition } = asset.formats.original;

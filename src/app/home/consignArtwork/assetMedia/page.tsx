@@ -16,7 +16,11 @@ import MediaCard from './mediaCard';
 import SelectMedia from './selectMedia';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 
-import { assetMediaThunk, assetStorageThunk, sendRequestUploadThunk } from '@/features/asset/thunks';
+import {
+    assetMediaThunk,
+    assetStorageThunk,
+    sendRequestUploadThunk,
+} from '@/features/asset/thunks';
 import { getMediaDefinition, getStepStatus, handleGetFileType } from './helpers';
 import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
