@@ -573,6 +573,7 @@ export function extractAssetColorsThunk({ id }: { id: string }): ReduxThunkActio
                             if (message.event === 'extract_color_success') {
                                 const parsed = JSON.parse(message.data);
 
+                                // Update asset metadata colors
                                 dispatch(assetActionsCreators.setMetadataColors(parsed));
 
                                 ctrl.abort();
