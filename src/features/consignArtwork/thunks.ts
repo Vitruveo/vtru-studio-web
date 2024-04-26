@@ -55,7 +55,29 @@ export function checkPreview(): ReduxThunkAction {
     };
 }
 
+export function preview(): ReduxThunkAction {
+    return async (dispatch, getState) => {
+        try {
+            const assetId = getState().asset._id;
+            const username = getState().user.username;
+
+            if (!username || !assetId) throw new Error('Username or assetId not found');
+
+            const URL = `${CONSIGN_ARTWORK_PREVIEW_URL}/${username}/${assetId}/${Date.now()}`;
+            window.open(URL, '_blank');
+        } catch (error) {
+            dispatch(
+                toastrActionsCreators.displayToastr({
+                    message: 'Error preview',
+                    type: 'error',
+                })
+            );
+        }
+    };
+}
+
 export const consignArtworkThunks = {
     updateStatus,
     checkPreview,
+    preview,
 };
