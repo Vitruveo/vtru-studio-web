@@ -19,7 +19,6 @@ import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import {
     assetMediaThunk,
     assetStorageThunk,
-    extractAssetColorsThunk,
     sendRequestUploadThunk,
 } from '@/features/asset/thunks';
 import { getMediaDefinition, getStepStatus, handleGetFileType } from './helpers';
@@ -206,14 +205,6 @@ export default function AssetMedia() {
     useEffect(() => {
         dispatch(consignArtworkActionsCreators.changeStatusStep({ stepId: 'assetMedia', status: checkStepProgress }));
     }, [checkStepProgress]);
-
-    // Extrai as cores da imagem original e seta elas no formulário de metadados.
-    useEffect(() => {
-        const assetId = asset._id;
-        if (assetId) {
-            dispatch(extractAssetColorsThunk({ id: assetId }));
-        }
-    }, [asset._id]);
 
     useEffect(() => {
         if (values.formats?.original?.definition) {

@@ -50,7 +50,6 @@ export function assetStorageThunk(payload: Omit<AssetStorageReq, 'dispatch'>): R
             transactionId: payload.transactionId,
             dispatch,
         });
-
         return response;
     };
 }
@@ -322,8 +321,13 @@ export function assetMediaThunk(payload: {
         const hasAsset = getState().asset._id;
         if (!hasAsset) {
             const asset = await getAsset();
-            if (asset.data?._id) dispatch(assetActionsCreators.change({ _id: asset.data._id }));
+            if (asset.data?._id) {
+                dispatch(assetActionsCreators.change({ _id: asset.data._id }));
+            }
         }
+
+        // Extract colors from most recent uploaded asset
+        dispatch(extractAssetColorsThunk({ id: getState().asset._id }));
 
         const formatAssetsFormats = Object.entries(payload.formats || {}).reduce((acc, [key, value]) => {
             return {
@@ -546,7 +550,7 @@ export function updateConsignArtworkStepThunk(payload: {
 }
 
 export function extractAssetColorsThunk({ id }: { id: string }): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch, getState) {
+    return async function (dispatch) {
         try {
             const { data: colors } = await extractAssetColors(id);
             if (!colors) return;

@@ -72,7 +72,7 @@ export async function getAsset(): Promise<GetAssetApiRes> {
 }
 
 export async function sendRequestUpload(data: AssetSendRequestUploadReq): Promise<AssetSendRequestUploadApiRes> {
-    const res = apiService.post<string>('/assets/request/upload', data);
+    const res = await apiService.post<string>('/assets/request/upload', data);
     return res;
 }
 
