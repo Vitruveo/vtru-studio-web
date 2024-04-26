@@ -47,7 +47,7 @@ export const CompletedConsignPage = () => {
     } as { [key: string]: string };
 
     const handlePreview = () => {
-        dispatch(consignArtworkThunks.checkPreview());
+        dispatch(consignArtworkThunks.preview());
     };
 
     const consignSteps = {
