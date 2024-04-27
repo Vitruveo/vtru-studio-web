@@ -326,8 +326,10 @@ export function assetMediaThunk(payload: {
             }
         }
 
-        // Extract colors from most recent uploaded asset
-        dispatch(extractAssetColorsThunk({ id: getState().asset._id }));
+        if (payload?.formats?.original) {
+            // Extract colors from most recent uploaded asset
+            dispatch(extractAssetColorsThunk({ id: getState().asset._id }));
+        }
 
         const formatAssetsFormats = Object.entries(payload.formats || {}).reduce((acc, [key, value]) => {
             return {
