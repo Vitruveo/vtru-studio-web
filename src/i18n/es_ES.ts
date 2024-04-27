@@ -28,6 +28,7 @@ const language: Translation = {
     'studio.userAccount.menu.subtitle': 'Configuraciones de Usuario',
 
     /* My Profile */
+    'studio.myProfile.pasteCode': 'Pega el código aquí',
     'studio.myProfile.title': 'Mi Perfil',
     'studio.myProfile.subtitle':
         'Personaliza tu perfil de Vitruveo con múltiples direcciones de correo electrónico y billeteras.',

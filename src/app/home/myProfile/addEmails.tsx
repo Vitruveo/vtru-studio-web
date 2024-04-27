@@ -49,6 +49,7 @@ const AddEmails = ({ emails, emailDefault, setFieldValue }: AddEmailsProps) => {
         verificationCodeError: language['studio.myProfile.verificationCodeSentMessageError'],
         emailVerificationSuccess: language['studio.myProfile.emailVerificationMessageSuccess'],
         emailVerificationError: language['studio.myProfile.emailVerificationMessageError'],
+        pastCode: language['studio.myProfile.pasteCode'],
     } as { [key: string]: string };
 
     const dispatch = useDispatch();
@@ -260,14 +261,7 @@ const AddEmails = ({ emails, emailDefault, setFieldValue }: AddEmailsProps) => {
                         variant="outlined"
                     />
                     <Box width="30%" display="flex" justifyContent="center">
-                        <Button
-                            style={{ width: '85%', marginLeft: '10%' }}
-                            size="small"
-                            variant="contained"
-                            onClick={handleAddEmail}
-                        >
-                            {texts.verifyButton}
-                        </Button>
+                        <Typography>{texts.pastCode}</Typography>
                     </Box>
                 </Box>
             )}

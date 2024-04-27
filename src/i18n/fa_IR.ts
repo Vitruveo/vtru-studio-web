@@ -28,6 +28,7 @@ const language: Translation = {
     'studio.userAccount.menu.subtitle': 'تنظیمات کاربری',
 
     /* My Profile */
+    'studio.myProfile.pasteCode': 'کد را وارد کنید',
     'studio.myProfile.title': 'پروفایل من',
     'studio.myProfile.subtitle': 'پروفایل ویتروو خود را با چندین آدرس ایمیل و کیف پول دلخواه خود سفارشی کنید.',
     'studio.myProfile.home': 'خانه',
