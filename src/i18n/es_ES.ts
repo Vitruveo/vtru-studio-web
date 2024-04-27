@@ -26,6 +26,7 @@ const language: Translation = {
     'studio.userAccount.logout.button': 'Cerrar Sesión',
     'studio.userAccount.menu.title': 'Mi Perfil',
     'studio.userAccount.menu.subtitle': 'Configuraciones de Usuario',
+    'studio.userAccount.usernameNotFound': 'Nombre de usuario no encontrado',
 
     /* My Profile */
     'studio.myProfile.pasteCode': 'Pega el código aquí',

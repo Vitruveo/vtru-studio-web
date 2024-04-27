@@ -29,6 +29,7 @@ const Profile = () => {
         title: language['studio.userAccount.title'],
         creator: language['studio.userAccount.creator'],
         logout: language['studio.userAccount.logout.button'],
+        usernameNotFound: language['studio.userAccount.usernameNotFound'],
     } as { [key: string]: string };
 
     const handleClick2 = (event: any) => {
@@ -94,7 +95,7 @@ const Profile = () => {
                     <Avatar src={avatarSrc} alt={'ProfileImg'} sx={{ width: 95, height: 95 }} />
                     <Box>
                         <Typography variant="subtitle2" color="textPrimary" fontWeight={600}>
-                            {username}
+                            {username || texts.usernameNotFound}
                         </Typography>
                         <Typography variant="subtitle2" color="textSecondary">
                             {texts.creator}

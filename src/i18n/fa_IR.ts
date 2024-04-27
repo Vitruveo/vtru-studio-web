@@ -26,6 +26,7 @@ const language: Translation = {
     'studio.userAccount.logout.button': 'خروج',
     'studio.userAccount.menu.title': 'پروفایل من',
     'studio.userAccount.menu.subtitle': 'تنظیمات کاربری',
+    'studio.userAccount.usernameNotFound': 'نام کاربری یافت نشد',
 
     /* My Profile */
     'studio.myProfile.pasteCode': 'کد را وارد کنید',

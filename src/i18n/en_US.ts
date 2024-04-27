@@ -25,6 +25,7 @@ const language: Translation = {
     'studio.userAccount.logout.button': 'Logout',
     'studio.userAccount.menu.title': 'My Profile',
     'studio.userAccount.menu.subtitle': 'User Settings',
+    'studio.userAccount.usernameNotFound': 'Username not found',
 
     /* My Profile */
     'studio.myProfile.pasteCode': 'Paste code',
