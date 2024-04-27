@@ -192,9 +192,13 @@ export default function ProfileSettings() {
         const file = event.target.files?.[0];
 
         if (file) {
+            if (!file?.type.includes('image')) {
+                toast.display({ type: 'warning', message: 'File is not an image. ' });
+                return;
+            }
             const fileSize = file.size / 1024;
             if (fileSize > 800) {
-                toast.display({ type: 'warning', message: 'File size is too big' });
+                toast.display({ type: 'warning', message: 'File size is too big. Max size 800kb' });
             } else {
                 setChangeAvatarFile(file);
             }
