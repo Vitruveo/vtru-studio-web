@@ -327,6 +327,7 @@ export default function MediaCard({
                                                         overflow: 'hidden',
                                                         textOverflow: 'ellipsis',
                                                         whiteSpace: 'nowrap',
+                                                        width: 140,
                                                     }}
                                                 >
                                                     {formatValue.name ||
