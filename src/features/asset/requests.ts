@@ -15,6 +15,8 @@ import { assetActionsCreators } from './slice';
 import { ASSET_STORAGE_BUCKET } from '@/constants/asset';
 
 export async function requestDeleteFiles(data: RequestDeleteFilesReq): Promise<any> {
+    if (!data.deleteKeys.length) return;
+
     const res = await apiService.delete('/assets/request/deleteFile', data);
     return res;
 }
@@ -87,6 +89,6 @@ export async function signingMediaC2PA(data: SigningMediaC2PAReq): Promise<Axios
 }
 
 export async function extractAssetColors(id: string) {
-    const res = await apiService.get<string[]>(`/assets/${id}/colors`)
+    const res = await apiService.get<string[]>(`/assets/${id}/colors`);
     return res;
 }

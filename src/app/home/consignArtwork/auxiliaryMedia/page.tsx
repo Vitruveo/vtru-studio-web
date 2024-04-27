@@ -57,7 +57,7 @@ export default function AssetMedia() {
     const asset = useSelector((state) => state.asset);
 
     // TODO: COLOCAR TIPAGEM CORRETA
-    const isAREnabled = useSelector((state: any) => state.asset.assetMetadata?.taxonomy.formData?.arenabled) == 'yes'
+    const isAREnabled = useSelector((state: any) => state.asset.assetMetadata?.taxonomy.formData?.arenabled) == 'yes';
 
     const router = useRouter();
     const dispatch = useDispatch();
@@ -88,7 +88,7 @@ export default function AssetMedia() {
 
                 if (values.deleteKeys.length)
                     await requestDeleteFiles({
-                        deleteKeys: values.deleteKeys,
+                        deleteKeys: values.deleteKeys.filter(Boolean),
                         transactionId: nanoid(),
                     });
 
@@ -114,7 +114,7 @@ export default function AssetMedia() {
         } else {
             dispatch(assetActionsCreators.setArEnabled(false));
         }
-    }, [values.formats.arVideo.file])
+    }, [values.formats.arVideo.file]);
 
     const handleUploadFile = async ({
         formatUpload,
@@ -125,6 +125,11 @@ export default function AssetMedia() {
         file: File;
         maxSize: string;
     }) => {
+        if (!file) {
+            toast.display({ message: 'File format not supported', type: 'warning' });
+            return;
+        }
+
         const transactionId = nanoid();
 
         dispatch(
@@ -134,11 +139,6 @@ export default function AssetMedia() {
                 transactionId,
             })
         );
-
-        if (!file) {
-            toast.display({ message: 'File format not supported', type: 'warning' });
-            return;
-        }
 
         dispatch(
             sendRequestUploadThunk({

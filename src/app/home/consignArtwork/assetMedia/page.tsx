@@ -16,11 +16,7 @@ import MediaCard from './mediaCard';
 import SelectMedia from './selectMedia';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 
-import {
-    assetMediaThunk,
-    assetStorageThunk,
-    sendRequestUploadThunk,
-} from '@/features/asset/thunks';
+import { assetMediaThunk, assetStorageThunk, sendRequestUploadThunk } from '@/features/asset/thunks';
 import { getMediaDefinition, getStepStatus, handleGetFileType } from './helpers';
 import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
@@ -47,7 +43,8 @@ export default function AssetMedia() {
         []
     );
 
-    const isUploading = asset.requestAssetUpload && Object.values(asset.requestAssetUpload).some((item) => item.status === 'uploading');
+    const isUploading =
+        asset.requestAssetUpload && Object.values(asset.requestAssetUpload).some((item) => item.status === 'uploading');
 
     const texts = {
         nextButton: language['studio.consignArtwork.form.next.button'],
@@ -98,7 +95,7 @@ export default function AssetMedia() {
 
                 if (values.deleteKeys.length)
                     await requestDeleteFiles({
-                        deleteKeys: values.deleteKeys,
+                        deleteKeys: values.deleteKeys.filter(Boolean),
                         transactionId: nanoid(),
                     });
 
