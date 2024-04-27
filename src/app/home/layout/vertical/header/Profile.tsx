@@ -40,9 +40,9 @@ const Profile = () => {
 
     const handleLogout = () => {
         setTimeout(() => {
-            dispatch(userActionsCreators.logout());
+            router.push('/login');
         }, 1000);
-        router.push('/login');
+        dispatch(userActionsCreators.logout());
     };
 
     const { username } = useSelector(userSelector(['username']));
