@@ -1,4 +1,5 @@
 import * as wagmiCore from '@wagmi/core';
+import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { nanoid } from '@reduxjs/toolkit';
 import { StepsFormValues } from '@/app/home/consignArtwork/types';
 import {
@@ -53,6 +54,7 @@ import { getAssetThunk } from '../asset/thunks';
 import { AccountSettingsFormValues } from '@/app/home/myProfile/types';
 import { consignArtworkActionsCreators } from '../consignArtwork/slice';
 import { config } from '@/app/home/components/apps/wallet';
+import { BASE_URL_API } from '@/constants/api';
 
 export function userLoginThunk(payload: UserLoginReq): ReduxThunkAction<Promise<UserLoginApiRes>> {
     return async function (dispatch, getState) {
@@ -257,5 +259,46 @@ export function verifyConnectWalletThunk(
 ): ReduxThunkAction<Promise<VerifyConnectWalletApiRes>> {
     return async function (dispatch, getState) {
         return verifyConnectWallet(payload);
+    };
+}
+
+export function requestVaultThunk(): ReduxThunkAction<Promise<void>> {
+    return async function (dispatch, getState) {
+        const token = getState().user.token;
+        const ctrl = new AbortController();
+
+        const url = `${BASE_URL_API}/creators/vault`;
+        const headers = {
+            Accept: 'text/event-stream',
+            Authorization: `Bearer ${token}`,
+        };
+
+        return new Promise((resolve, reject) => {
+            try {
+                fetchEventSource(url, {
+                    method: 'POST',
+                    headers,
+                    signal: ctrl.signal,
+                    onmessage(message) {
+                        try {
+                            if (message.event === 'vault_success') {
+                                const parsed = JSON.parse(message.data);
+                                dispatch(userActionsCreators.setVault(parsed));
+                                resolve();
+                            }
+                            if (message.event === 'vault_error') {
+                                ctrl.abort();
+                                reject();
+                            }
+                        } catch (error) {
+                            ctrl.abort();
+                            reject();
+                        }
+                    },
+                });
+            } catch (error) {
+                reject();
+            }
+        });
     };
 }
