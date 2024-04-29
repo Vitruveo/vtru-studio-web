@@ -125,6 +125,12 @@ export const consignArtworkSlice = createSlice({
             const { status } = action.payload;
             state.status = status;
         },
+        addPreviewAndConsignWallet: (state, action: PayloadAction<string>) => {
+            state.previewAndConsign.creatorWallet = { checked: true, value: action.payload };
+        },
+        deletePreviewAndConsignWallet: (state) => {
+            state.previewAndConsign.creatorWallet = { checked: false, value: '' };
+        }
     },
 });
 

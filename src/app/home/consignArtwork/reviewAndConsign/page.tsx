@@ -15,7 +15,6 @@ import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { WalletProvider } from '../../components/apps/wallet';
 import { useToastr } from '@/app/hooks/useToastr';
 import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
-import { updateAssetStep } from '@/features/asset/requests';
 
 interface ConsignStepsProps {
     [key: string]: {
@@ -36,39 +35,11 @@ const ConsignArtwork = () => {
     const dispatch = useDispatch();
     const { language } = useI18n();
     const { disconnectAsync } = useDisconnect();
-    const { isConnected, address } = useAccount();
+    const { isConnected, address, isConnecting } = useAccount();
     const { openConnectModal } = useConnectModal();
-
-    const { status } = useSelector((state) => state.asset);
-    const { previewAndConsign } = useSelector((state) => state.consignArtwork);
-    const wallets = useSelector((state) => state.user.wallets);
-
-    // Handles the wallet address change
-    // useEffect(() => {
-    //     let hasWallet = false;
-    //     if (isConnected && address) {
-    //         for (const wallet of wallets) {
-    //             if (wallet.address === address) {
-    //                 dispatch(
-    //                     consignArtworkActionsCreators.changePreviewAndConsign({
-    //                         creatorWallet: {
-    //                             checked: true,
-    //                             value: address,
-    //                         },
-    //                     })
-    //                 );
-    //                 hasWallet = true;
-    //                 break;
-    //             }
-    //         }
-    //         if (!hasWallet) {
-    //             toastr.display({
-    //                 type: 'error',
-    //                 message: 'Wallet not found, please add it to your account at your profile.',
-    //             });
-    //         }
-    //     }
-    // }, [isConnected, address]);
+    const status = useSelector((state) => state.asset.status);
+    const userWallets = useSelector((state) => state.user.wallets);
+    const previewAndConsign = useSelector((state) => state.consignArtwork.previewAndConsign);
 
     const texts = {
         homeTitle: language['studio.home.title'],
@@ -98,20 +69,40 @@ const ConsignArtwork = () => {
         },
     ];
 
+    /* HANDLE WALLET CONNECTION */
+    useEffect(() => {
+        let hasWallet = false;
+        if (isConnected && address) {
+            for (const wallet of userWallets) {
+                if (wallet.address === address) {
+                    dispatch(consignArtworkActionsCreators.addPreviewAndConsignWallet(wallet.address));
+                    hasWallet = true;
+                    break;
+                }
+            }
+            if (!hasWallet) {
+                toastr.display({
+                    type: 'error',
+                    message: 'Wallet not found, please add it to your account at your profile.',
+                });
+                disconnectWallet();
+            }
+        }
+    }, [isConnected, address]);
+
+    const disconnectWallet = () => {
+        disconnectAsync();
+        dispatch(consignArtworkActionsCreators.deletePreviewAndConsignWallet());
+    };
+
     const handleSubmit = async (event?: React.FormEvent) => {
         if (event) event.preventDefault();
-
         router.push(`/home/consignArtwork/DoneConsign`);
     };
 
-    const grayColor = theme.palette.text.disabled;
-
     const handleWalletConnection = () => {
         if (isConnected || previewAndConsign.creatorWallet?.value) {
-            disconnectAsync();
-            dispatch(
-                consignArtworkActionsCreators.changePreviewAndConsign({ creatorWallet: { checked: false, value: '' } })
-            );
+            disconnectWallet();
             return;
         }
         openConnectModal?.();
@@ -127,17 +118,18 @@ const ConsignArtwork = () => {
             actionTitle: texts.preview,
             actionFunc: handlePreview,
         },
-        // creatorWallet: {
-        //     title: 'Creator Wallet',
-        //     actionTitle: previewAndConsign.creatorWallet?.value ? 'Disconnect' : 'Connect',
-        //     value:
-        //         previewAndConsign.creatorWallet?.value &&
-        //         previewAndConsign.creatorWallet?.value.slice(0, 6) +
-        //             '...' +
-        //             previewAndConsign.creatorWallet?.value.slice(-4),
-        //     actionFunc: handleWalletConnection,
-        //     disabled: false,
-        // },
+        creatorWallet: {
+            title: 'Creator Wallet',
+            actionTitle: previewAndConsign.creatorWallet?.value ? 'Disconnect' : 'Connect',
+            value:
+                previewAndConsign.creatorWallet?.value &&
+                previewAndConsign.creatorWallet?.value.slice(0, 6) +
+                    '...' +
+                    previewAndConsign.creatorWallet?.value.slice(-4),
+            actionFunc: handleWalletConnection,
+            disabled: false,
+            loading: isConnecting,
+        },
         // creatorCredits: {
         //     title: 'Creator Credits',
         //     actionTitle: previewAndConsign.creatorCredits?.value ? 'Requested' : 'Request',
@@ -165,39 +157,39 @@ const ConsignArtwork = () => {
         //         );
         //     },
         // },
-        // creatorContract: {
-        //     title: 'Creator Contract',
-        //     status: 'Not Created',
-        //     actionTitle: previewAndConsign.creatorContract?.value ? 'View' : 'Start',
-        //     value: previewAndConsign.creatorContract?.value,
-        //     disabled: true /* !previewAndConsign.creatorWallet?.value */,
-        //     loading: previewAndConsign.creatorContract?.loading,
-        //     actionFunc: async () => {
-        //         if (previewAndConsign.creatorContract?.value) {
-        //             window.open('https://explorer.vitruveo.xyz/', '_blank');
-        //             return;
-        //         }
+        creatorContract: {
+            title: 'Creator Contract',
+            status: 'Not Created',
+            actionTitle: previewAndConsign.creatorContract?.value ? 'View' : 'Start',
+            value: previewAndConsign.creatorContract?.value,
+            disabled: !previewAndConsign.creatorWallet?.value,
+            loading: previewAndConsign.creatorContract?.loading,
+            actionFunc: async () => {
+                if (previewAndConsign.creatorContract?.value) {
+                    window.open('https://explorer.vitruveo.xyz/tx/transactionId=', '_blank');
+                    return;
+                }
 
-        //         dispatch(
-        //             consignArtworkActionsCreators.changePreviewAndConsign({
-        //                 creatorContract: {
-        //                     checked: false,
-        //                     loading: true,
-        //                 },
-        //             })
-        //         );
-        //         await new Promise((resolve) => setTimeout(resolve, 2000));
-        //         dispatch(
-        //             consignArtworkActionsCreators.changePreviewAndConsign({
-        //                 creatorContract: {
-        //                     checked: true,
-        //                     value: '0x1234567890',
-        //                     loading: false,
-        //                 },
-        //             })
-        //         );
-        //     },
-        // },
+                dispatch(
+                    consignArtworkActionsCreators.changePreviewAndConsign({
+                        creatorContract: {
+                            checked: false,
+                            loading: true,
+                        },
+                    })
+                );
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+                dispatch(
+                    consignArtworkActionsCreators.changePreviewAndConsign({
+                        creatorContract: {
+                            checked: true,
+                            value: '0x1234567890',
+                            loading: false,
+                        },
+                    })
+                );
+            },
+        },
     };
 
     return (
@@ -257,7 +249,9 @@ const ConsignArtwork = () => {
                                             height="100%"
                                             width="100%"
                                             color={v.status && !v.value ? 'white' : 'inherit'}
-                                            bgcolor={(v?.status && !v.value && grayColor) || '#EFEFEF'}
+                                            bgcolor={
+                                                (v?.status && !v.value && theme.palette.text.disabled) || '#EFEFEF'
+                                            }
                                         >
                                             {v.value || v.status}
                                         </Box>
@@ -286,13 +280,13 @@ const ConsignArtwork = () => {
                                                 )}
                                             </Button>
                                         </Box>
-                                        {v.title != 'Artwork Listing' && v.title != 'Creator Wallet' && (
+                                        {/*v.title != 'Artwork Listing' && v.title != 'Creator Wallet' && (
                                             <Box position="relative" left="110px">
                                                 <Typography position="absolute" top="-26px">
                                                     {texts.comingSoon}
                                                 </Typography>
                                             </Box>
-                                        )}
+                                        )*/}
                                     </Box>
                                 </Box>
                             </Box>
