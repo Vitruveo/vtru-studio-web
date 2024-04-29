@@ -33,6 +33,15 @@ export interface User {
     roles: Array<string>;
     framework: Framework;
     canConsignArtwork: boolean;
+    vault: {
+        transactionHash: string | null;
+        createdAt: string | null;
+    };
+}
+
+export interface vaultProps {
+    transactionHash: string;
+    createdAt: string;
 }
 
 interface RequestAvatarUpload {
