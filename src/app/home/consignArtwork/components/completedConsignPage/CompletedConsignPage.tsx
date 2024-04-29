@@ -23,7 +23,8 @@ export const CompletedConsignPage = () => {
     const theme = useTheme();
     const toastr = useToastr();
 
-    const { previewAndConsign, status } = useSelector((state) => state.consignArtwork);
+    const previewAndConsign = useSelector((state) => state.consignArtwork.previewAndConsign);
+    const status = useSelector((state) => state.consignArtwork.status);
     const explorerUrl = useSelector((state) => state.asset.contractExplorer?.explorer);
 
     const grayColor = theme.palette.text.disabled;
@@ -83,7 +84,7 @@ export const CompletedConsignPage = () => {
 
     return (
         <form onSubmit={formik.handleSubmit}>
-            <PageContainerFooter hasSubmitButton={false} hasBackButton>
+            <PageContainerFooter hasBackButton>
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
                 <Grid display="flex" flexWrap="wrap" marginBottom={6} item xs={12} lg={6}>
                     <Box marginBottom={2}>
@@ -141,12 +142,14 @@ export const CompletedConsignPage = () => {
                                     </Box>
                                 </Box>
                             ))}
-                            {/* <Box mt={4}>
-                                <CompletedConsignTableStatus
-                                    selectedStatus={formik.values.selectedStatus}
-                                    onStatusChange={formik.handleChange}
-                                />
-                            </Box> */}
+                            {
+                                <Box mt={4}>
+                                    <CompletedConsignTableStatus
+                                        selectedStatus={formik.values.selectedStatus}
+                                        onStatusChange={formik.handleChange}
+                                    />
+                                </Box>
+                            }
                         </Box>
                     </Box>
                     <Box flex={1} display="flex" justifyContent={!xL ? 'flex-start' : 'center'}>

@@ -15,7 +15,7 @@ import {
 import { useI18n } from '@/app/hooks/useI18n';
 import { ConsignArtworkAssetStatus } from '@/features/consignArtwork/types';
 
-interface ConsignTableData {
+interface ConsignTableItem {
     title: string;
     status: ConsignArtworkAssetStatus;
     view: string;
@@ -47,7 +47,9 @@ export const CompletedConsignTableStatus = ({ selectedStatus, onStatusChange }: 
         draft: language['studio.consignArtwork.consignmentStatus.draft.title'],
     } as { [key: string]: string };
 
-    const rows: ConsignTableData[] = [
+    const isBlocked = selectedStatus == 'blocked';
+
+    const rows: ConsignTableItem[] = [
         {
             status: 'draft',
             title: texts.draft,
@@ -62,20 +64,21 @@ export const CompletedConsignTableStatus = ({ selectedStatus, onStatusChange }: 
             license: texts.no,
             search: texts.no,
         },
-        {
-            status: 'active',
-            title: texts.active,
-            view: texts.everyone,
-            license: texts.yes,
-            search: texts.yes,
-        },
-        {
-            status: 'locked',
-            title: 'Active (Locked)',
-            view: texts.me,
-            license: texts.no,
-            search: texts.no,
-        },
+        isBlocked
+            ? {
+                  status: 'blocked',
+                  title: 'Active (Locked)',
+                  view: texts.me,
+                  license: texts.no,
+                  search: texts.no,
+              }
+            : {
+                  status: 'active',
+                  title: texts.active,
+                  view: texts.everyone,
+                  license: texts.no,
+                  search: texts.yes,
+              },
         {
             status: 'hidden',
             title: texts.hidden,
@@ -113,6 +116,7 @@ export const CompletedConsignTableStatus = ({ selectedStatus, onStatusChange }: 
                                     <TableCell scope="row">
                                         <Box display="flex" alignItems="center">
                                             <Radio
+                                                disabled={isBlocked}
                                                 name="selectedStatus"
                                                 value={row.status}
                                                 checked={row.status == selectedStatus}
