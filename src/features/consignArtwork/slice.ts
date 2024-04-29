@@ -4,6 +4,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ChangeStatusPayload, ConsignArtworkAssetStatus, ConsignArtworkSliceState } from './types';
 import { Email, Wallet } from '../user/types';
 import { AssetConsignArtwork } from '../asset/types';
+import { set } from 'lodash';
 
 export const stepsNames = {
     assetMedia: 'studio.consignArtwork.stepName.assetMedia',
@@ -125,12 +126,20 @@ export const consignArtworkSlice = createSlice({
             const { status } = action.payload;
             state.status = status;
         },
-        addPreviewAndConsignWallet: (state, action: PayloadAction<string>) => {
+        /* Creator Wallet */
+        setPreviewAndConsignWallet: (state, action: PayloadAction<string>) => {
             state.previewAndConsign.creatorWallet = { checked: true, value: action.payload };
         },
         deletePreviewAndConsignWallet: (state) => {
             state.previewAndConsign.creatorWallet = { checked: false, value: '' };
-        }
+        },
+        /* Creator Contract */
+        setPreviewAndConsignContract: (state, action: PayloadAction<string>) => {
+            state.previewAndConsign.creatorContract = { checked: true, value: action.payload, loading: false };
+        },
+        deletePreviewAndConsignContract: (state) => {
+            state.previewAndConsign.creatorContract = { checked: false, value: '', loading: false };
+        },
     },
 });
 
