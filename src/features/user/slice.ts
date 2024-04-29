@@ -41,7 +41,7 @@ const initialState: UserSliceState = {
     vault: {
         transactionHash: null,
         createdAt: null,
-        isLoading: false
+        isLoading: false,
     },
 };
 
@@ -68,6 +68,8 @@ export const userSlice = createSlice({
             state.profile = creator.profile;
             state.emailDefault = creator.emailDefault;
             state.walletDefault = creator.walletDefault;
+            state.vault.transactionHash = creator?.vault?.transactionHash || null;
+            state.vault.createdAt = creator?.vault?.createdAt || null;
             state.framework = creator.framework;
         },
         change: (state, action: PayloadAction<Partial<UserSliceState>>) => {
