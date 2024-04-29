@@ -114,12 +114,12 @@ export default function Licenses() {
                           version: '1',
                           added: false,
 
-                          unitPrice: 0,
+                          unitPrice: 1,
                       },
                       remix: {
                           version: '1',
                           added: false,
-                          unitPrice: 0,
+                          unitPrice: 1,
                       },
                   },
 
