@@ -127,6 +127,39 @@ const ConsignArtwork = () => {
             actionTitle: texts.preview,
             actionFunc: handlePreview,
         },
+        creatorContract: {
+            title: 'Creator Contract',
+            status: 'Not Created',
+            actionTitle: previewAndConsign.creatorContract?.value ? 'View' : 'Start',
+            value: previewAndConsign.creatorContract?.value,
+            disabled: true /* !previewAndConsign.creatorWallet?.value */,
+            loading: previewAndConsign.creatorContract?.loading,
+            actionFunc: async () => {
+                if (previewAndConsign.creatorContract?.value) {
+                    window.open('https://explorer.vitruveo.xyz/', '_blank');
+                    return;
+                }
+
+                dispatch(
+                    consignArtworkActionsCreators.changePreviewAndConsign({
+                        creatorContract: {
+                            checked: false,
+                            loading: true,
+                        },
+                    })
+                );
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+                dispatch(
+                    consignArtworkActionsCreators.changePreviewAndConsign({
+                        creatorContract: {
+                            checked: true,
+                            value: '0x1234567890',
+                            loading: false,
+                        },
+                    })
+                );
+            },
+        },
         // creatorWallet: {
         //     title: 'Creator Wallet',
         //     actionTitle: previewAndConsign.creatorWallet?.value ? 'Disconnect' : 'Connect',
@@ -159,39 +192,6 @@ const ConsignArtwork = () => {
         //                 creatorCredits: {
         //                     checked: true,
         //                     value: 1,
-        //                     loading: false,
-        //                 },
-        //             })
-        //         );
-        //     },
-        // },
-        // creatorContract: {
-        //     title: 'Creator Contract',
-        //     status: 'Not Created',
-        //     actionTitle: previewAndConsign.creatorContract?.value ? 'View' : 'Start',
-        //     value: previewAndConsign.creatorContract?.value,
-        //     disabled: true /* !previewAndConsign.creatorWallet?.value */,
-        //     loading: previewAndConsign.creatorContract?.loading,
-        //     actionFunc: async () => {
-        //         if (previewAndConsign.creatorContract?.value) {
-        //             window.open('https://explorer.vitruveo.xyz/', '_blank');
-        //             return;
-        //         }
-
-        //         dispatch(
-        //             consignArtworkActionsCreators.changePreviewAndConsign({
-        //                 creatorContract: {
-        //                     checked: false,
-        //                     loading: true,
-        //                 },
-        //             })
-        //         );
-        //         await new Promise((resolve) => setTimeout(resolve, 2000));
-        //         dispatch(
-        //             consignArtworkActionsCreators.changePreviewAndConsign({
-        //                 creatorContract: {
-        //                     checked: true,
-        //                     value: '0x1234567890',
         //                     loading: false,
         //                 },
         //             })
@@ -286,7 +286,7 @@ const ConsignArtwork = () => {
                                                 )}
                                             </Button>
                                         </Box>
-                                        {v.title != 'Artwork Listing' && v.title != 'Creator Wallet' && (
+                                        {v.title != 'Artwork Listing' && v.title != 'Creator Contract' && (
                                             <Box position="relative" left="110px">
                                                 <Typography position="absolute" top="-26px">
                                                     {texts.comingSoon}
