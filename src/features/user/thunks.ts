@@ -263,7 +263,9 @@ export function verifyConnectWalletThunk(
 }
 
 export function requestVaultThunk(): ReduxThunkAction<Promise<void>> {
-    return async function (dispatch, getState) {
+    return function (dispatch, getState) {
+        dispatch(userActionsCreators.setVaultLoading(true));
+
         const token = getState().user.token;
         const ctrl = new AbortController();
 
@@ -273,32 +275,33 @@ export function requestVaultThunk(): ReduxThunkAction<Promise<void>> {
             Authorization: `Bearer ${token}`,
         };
 
-        return new Promise((resolve, reject) => {
-            try {
-                fetchEventSource(url, {
-                    method: 'POST',
-                    headers,
-                    signal: ctrl.signal,
-                    onmessage(message) {
+        return new Promise((resolve, reject) =>
+            fetchEventSource(url, {
+                method: 'POST',
+                headers,
+                signal: ctrl.signal,
+                onmessage(message) {
+                    if (message.event === 'vault_success') {
                         try {
-                            if (message.event === 'vault_success') {
-                                const parsed = JSON.parse(message.data);
-                                dispatch(userActionsCreators.setVault(parsed));
-                                resolve();
-                            }
-                            if (message.event === 'vault_error') {
-                                ctrl.abort();
-                                reject();
-                            }
-                        } catch (error) {
+                            const parsed = JSON.parse(message.data);
+                            dispatch(userActionsCreators.setVault(parsed));
+                        } finally {
                             ctrl.abort();
-                            reject();
+                            resolve();
                         }
-                    },
-                });
-            } catch (error) {
-                reject();
-            }
-        });
+                    }
+                    if (message.event === 'vault_error') {
+                        ctrl.abort();
+                        reject();
+                    }
+                },
+            })
+                .finally(() => {
+                    dispatch(userActionsCreators.setVaultLoading(false));
+                })
+                .catch(() => {
+                    reject();
+                })
+        );
     };
 }

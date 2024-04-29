@@ -36,6 +36,7 @@ export interface User {
     vault: {
         transactionHash: string | null;
         createdAt: string | null;
+        isLoading: boolean;
     };
 }
 

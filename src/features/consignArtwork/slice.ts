@@ -133,13 +133,6 @@ export const consignArtworkSlice = createSlice({
         deletePreviewAndConsignWallet: (state) => {
             state.previewAndConsign.creatorWallet = { checked: false, value: '' };
         },
-        /* Creator Contract */
-        setPreviewAndConsignContract: (state, action: PayloadAction<string>) => {
-            state.previewAndConsign.creatorContract = { checked: true, value: action.payload, loading: false };
-        },
-        deletePreviewAndConsignContract: (state) => {
-            state.previewAndConsign.creatorContract = { checked: false, value: '', loading: false };
-        },
     },
 });
 

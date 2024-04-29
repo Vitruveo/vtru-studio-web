@@ -15,6 +15,8 @@ import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { WalletProvider } from '../../components/apps/wallet';
 import { useToastr } from '@/app/hooks/useToastr';
 import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
+import { requestVaultThunk } from '@/features/user/thunks';
+import { WALLET_NETWORKS } from '@/constants/wallet';
 
 interface ConsignStepsProps {
     [key: string]: {
@@ -28,10 +30,13 @@ interface ConsignStepsProps {
     };
 }
 
-const formatAddress = (address?: string) => {
+const formatContent = (address?: string | null) => {
     if (!address) return undefined;
     return address.slice(0, 6) + '...' + address.slice(-4);
 };
+
+const contractURL =
+    WALLET_NETWORKS == 'testnet' ? 'https://test-explorer.vitruveo.xyz/tx/' : 'https://explorer.vitruveo.xyz/tx/';
 
 const ConsignArtwork = () => {
     const theme = useTheme();
@@ -45,6 +50,7 @@ const ConsignArtwork = () => {
     const status = useSelector((state) => state.asset.status);
     const userWallets = useSelector((state) => state.user.wallets);
     const previewAndConsign = useSelector((state) => state.consignArtwork.previewAndConsign);
+    const vault = useSelector((state) => state.user.vault);
 
     const texts = {
         homeTitle: language['studio.home.title'],
@@ -115,12 +121,14 @@ const ConsignArtwork = () => {
     };
 
     const handleCreatorContract = async () => {
-        if (previewAndConsign.creatorContract?.value) {
-            window.open('https://explorer.vitruveo.xyz/tx/transactionId=', '_blank');
+        if (vault?.transactionHash) {
+            window.open(contractURL + vault.transactionHash, '_blank');
             return;
         }
-        dispatch(consignArtworkActionsCreators.setPreviewAndConsignContract('contractId'));
+        dispatch(requestVaultThunk());
     };
+
+    const isCreatorContractDisabled = vault.transactionHash ? false : !previewAndConsign.creatorWallet?.value;
 
     const consignSteps: ConsignStepsProps = {
         artworkListing: {
@@ -131,7 +139,7 @@ const ConsignArtwork = () => {
         creatorWallet: {
             title: 'Creator Wallet',
             actionTitle: previewAndConsign.creatorWallet?.value ? 'Disconnect' : 'Connect',
-            value: formatAddress(previewAndConsign.creatorWallet?.value),
+            value: formatContent(previewAndConsign.creatorWallet?.value),
             actionFunc: handleWalletConnection,
             loading: isConnecting || isDisconnecting,
         },
@@ -165,10 +173,10 @@ const ConsignArtwork = () => {
         creatorContract: {
             title: 'Creator Contract',
             status: 'Not Created',
-            actionTitle: previewAndConsign.creatorContract?.value ? 'View' : 'Start',
-            value: previewAndConsign.creatorContract?.value,
-            disabled: !previewAndConsign.creatorWallet?.value,
-            loading: previewAndConsign.creatorContract?.loading,
+            actionTitle: vault.transactionHash ? 'View' : 'Start',
+            value: formatContent(vault.transactionHash),
+            disabled: isCreatorContractDisabled,
+            loading: vault.isLoading,
             actionFunc: handleCreatorContract,
         },
     };

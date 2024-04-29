@@ -41,6 +41,7 @@ const initialState: UserSliceState = {
     vault: {
         transactionHash: null,
         createdAt: null,
+        isLoading: false
     },
 };
 
@@ -91,6 +92,9 @@ export const userSlice = createSlice({
         setVault: (state, action: PayloadAction<vaultProps>) => {
             state.vault.transactionHash = action.payload.transactionHash;
             state.vault.createdAt = action.payload.createdAt;
+        },
+        setVaultLoading: (state, action: PayloadAction<boolean>) => {
+            state.vault.isLoading = action.payload;
         },
     },
 });
