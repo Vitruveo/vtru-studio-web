@@ -498,7 +498,7 @@ export function createContractThunk(data: CreateContractByAssetIdReq): ReduxThun
 
         const ctrl = new AbortController();
 
-        const url = `${BASE_URL_API}/assets/contract/${data.id}`;
+        const url = `${BASE_URL_API}/assets/consign`;
         const headers = {
             Accept: 'text/event-stream',
             Authorization: `Bearer ${token}`,
@@ -511,14 +511,14 @@ export function createContractThunk(data: CreateContractByAssetIdReq): ReduxThun
                     headers,
                     signal: ctrl.signal,
                     onmessage(message) {
-                        if (message.event === 'contract_success') {
+                        if (message.event === 'consign_success') {
                             dispatch(getAssetThunk());
 
                             ctrl.abort();
                             resolve();
                         }
 
-                        if (message.event === 'contract_error') {
+                        if (message.event === 'consign_error') {
                             ctrl.abort();
                             reject();
                         }

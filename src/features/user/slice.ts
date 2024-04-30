@@ -1,7 +1,7 @@
 'use client';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { UserSliceState } from './types';
+import { UserSliceState, vaultProps } from './types';
 
 const initialState: UserSliceState = {
     _id: '',
@@ -38,6 +38,11 @@ const initialState: UserSliceState = {
     status: '',
     error: '',
     canConsignArtwork: false,
+    vault: {
+        transactionHash: null,
+        createdAt: null,
+        isLoading: false,
+    },
 };
 
 export const userSlice = createSlice({
@@ -63,6 +68,8 @@ export const userSlice = createSlice({
             state.profile = creator.profile;
             state.emailDefault = creator.emailDefault;
             state.walletDefault = creator.walletDefault;
+            state.vault.transactionHash = creator?.vault?.transactionHash || null;
+            state.vault.createdAt = creator?.vault?.createdAt || null;
             state.framework = creator.framework;
         },
         change: (state, action: PayloadAction<Partial<UserSliceState>>) => {
@@ -83,6 +90,13 @@ export const userSlice = createSlice({
         },
         setCanConsignArtwork: (state, action: PayloadAction<boolean>) => {
             state.canConsignArtwork = action.payload;
+        },
+        setVault: (state, action: PayloadAction<vaultProps>) => {
+            state.vault.transactionHash = action.payload.transactionHash;
+            state.vault.createdAt = action.payload.createdAt;
+        },
+        setVaultLoading: (state, action: PayloadAction<boolean>) => {
+            state.vault.isLoading = action.payload;
         },
     },
 });

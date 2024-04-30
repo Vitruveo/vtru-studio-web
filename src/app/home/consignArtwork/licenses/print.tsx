@@ -58,7 +58,7 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                 },
                             }}
                             value={values?.unitPrice}
-                            inputProps={{ maxLength: 185 }}
+                            inputProps={{ maxLength: 185, minLength: 1 }}
                             onChange={handleChange}
                             fullWidth
                             size="small"
