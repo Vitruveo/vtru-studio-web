@@ -9,6 +9,7 @@ import { useI18n } from '@/app/hooks/useI18n';
 import { ConsignArtworkAssetStatus } from '@/features/consignArtwork/types';
 import { useToastr } from '@/app/hooks/useToastr';
 import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
+import { EXPLORER_URL } from '@/constants/explorer';
 
 // TODO: ADICIONAR TRADUÇÃO
 
@@ -25,7 +26,7 @@ export const CompletedConsignPage = () => {
 
     const previewAndConsign = useSelector((state) => state.consignArtwork.previewAndConsign);
     const status = useSelector((state) => state.consignArtwork.status);
-    const explorerUrl = useSelector((state) => state.asset.contractExplorer?.explorer);
+    const transactionHash = useSelector((state) => state.asset.contractExplorer?.tx);
 
     const grayColor = theme.palette.text.disabled;
 
@@ -63,8 +64,8 @@ export const CompletedConsignPage = () => {
             actionTitle: texts.view,
             value: previewAndConsign.creatorContract?.value,
             actionFunc: async () => {
-                if (explorerUrl) {
-                    window.open(explorerUrl, '_blank');
+                if (transactionHash) {
+                    window.open(`${EXPLORER_URL}/tx/${transactionHash}`, '_blank');
                 } else {
                     toastr.display({ type: 'error', message: 'Explorer URL not found' });
                 }
