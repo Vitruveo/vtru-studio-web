@@ -76,7 +76,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         if (token && email) {
             (async () => {
                 try {
-                    await findEmailInAllowList(email);
+                    // await findEmailInAllowList(email); // remove temporary
                     dispatch(userActionsCreators.setCanConsignArtwork(true));
                 } catch (e) {
                     const error = e as AxiosError;
