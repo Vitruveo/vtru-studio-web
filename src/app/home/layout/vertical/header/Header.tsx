@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -13,6 +14,7 @@ import MobileRightSidebar from './MobileRightSidebar';
 import { useDispatch } from 'react-redux';
 import { toggleMobileSidebar, toggleSidebar } from '@/features/customizer/slice';
 import { useSelector } from '@/store/hooks';
+import { GENERAL_STORAGE_URL } from '@/constants/asset';
 
 const Header = () => {
     const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
@@ -53,17 +55,23 @@ const Header = () => {
 
                 <Box flexGrow={1} />
                 <Stack spacing={1} direction="row" alignItems="center">
+                    <IconButton
+                        aria-label="more"
+                        id="long-button"
+                        aria-haspopup="true"
+                        onClick={() => {
+                            window.open(`${GENERAL_STORAGE_URL}/rss.xml`, '_blank');
+                        }}
+                    >
+                        <Image
+                            src="/images/icons/rss.png"
+                            width={30}
+                            height={30}
+                            alt=""
+                            style={{ borderRadius: 30, cursor: 'pointer' }}
+                        />
+                    </IconButton>
                     <Language />
-                    {/* ------------------------------------------- */}
-                    {/* Ecommerce Dropdown */}
-                    {/* ------------------------------------------- */}
-
-                    {/* ------------------------------------------- */}
-                    {/* End Ecommerce Dropdown */}
-
-                    {/* ------------------------------------------- */}
-                    {/* Toggle Right Sidebar for mobile */}
-                    {/* ------------------------------------------- */}
 
                     <Profile />
                 </Stack>
