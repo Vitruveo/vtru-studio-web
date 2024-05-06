@@ -82,51 +82,48 @@ export default function Licenses() {
         },
     ];
 
-    const initialValues = useMemo(
-        () =>
-            licensesState
-                ? licensesState
-                : {
-                      nft: {
-                          version: '1',
-                          added: true,
-                          license: 'CC BY-NC-ND',
-                          elastic: {
-                              editionPrice: 0,
-                              numberOfEditions: 0,
-                              totalPrice: 0,
-                              editionDiscount: false,
-                          },
-                          single: {
-                              editionPrice: 150,
-                          },
-                          unlimited: {
-                              editionPrice: 0,
-                          },
-
-                          editionOption: 'single',
-                      },
-                      stream: {
-                          version: '1',
-                          added: true,
-                      },
-                      print: {
-                          version: '1',
-                          added: false,
-
-                          unitPrice: 1,
-                      },
-                      remix: {
-                          version: '1',
-                          added: false,
-                          unitPrice: 1,
-                      },
+    const initialValues: LicensesFormValues = licensesState
+        ? licensesState
+        : {
+              nft: {
+                  version: '1',
+                  added: true,
+                  license: 'CC BY-NC-ND',
+                  elastic: {
+                      editionPrice: 0,
+                      numberOfEditions: 0,
+                      totalPrice: 0,
+                      editionDiscount: false,
                   },
+                  single: {
+                      editionPrice: 150,
+                  },
+                  unlimited: {
+                      editionPrice: 0,
+                  },
+                  editionOption: 'single',
+                  availableLicenses: 1,
+              },
+              stream: {
+                  version: '1',
+                  added: true,
+                  availableLicenses: 1,
+              },
+              print: {
+                  version: '1',
+                  added: false,
+                  unitPrice: 1,
+                  availableLicenses: 1,
+              },
+              remix: {
+                  version: '1',
+                  added: false,
+                  unitPrice: 1,
+                  availableLicenses: 1,
+              },
+          };
 
-        []
-    );
-
-    const { values, errors, setFieldValue, handleSubmit, setErrors, setFieldError, validateForm, handleChange } =
+    const { values, errors, setFieldValue, handleSubmit, setFieldError, validateForm, handleChange } =
         useFormik<LicensesFormValues>({
             initialValues: initialValues,
             onSubmit: async (formValues) => {
@@ -158,6 +155,20 @@ export default function Licenses() {
 
     const handleSaveData = async (event?: React.FormEvent) => {
         if (event) event.preventDefault();
+
+        if (
+            values.nft.availableLicenses < 1 ||
+            values.stream.availableLicenses < 1 ||
+            values.remix.availableLicenses < 1
+            /*|| values.print.availableLicenses < 1*/
+        ) {
+            setToastr({
+                type: 'error',
+                open: true,
+                message: 'The available field must be greater than 0',
+            });
+            return;
+        }
 
         const validate = await validateForm();
         if (validate && Object.values(validate).length === 0) {

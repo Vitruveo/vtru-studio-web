@@ -19,20 +19,24 @@ export interface LicensesFormValues {
             editionPrice: number;
         };
         editionOption: 'elastic' | 'single' | 'unlimited' | string;
+        availableLicenses: number;
     };
     stream: {
         version: string;
         added: boolean;
+        availableLicenses: number;
     };
     print: {
         version: string;
         added: boolean;
         unitPrice: number;
+        availableLicenses: number;
     };
     remix: {
         version: string;
         added: boolean;
         unitPrice: number;
+        availableLicenses: number;
     };
 }
 

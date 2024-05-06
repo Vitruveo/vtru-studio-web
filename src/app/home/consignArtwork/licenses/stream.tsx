@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material';
 import Card from './common/card';
 import { LicenseProps } from './types';
 import { useI18n } from '@/app/hooks/useI18n';
+import CustomTextField from '../../components/forms/theme-elements/CustomTextField';
 
 function Stream({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const values = allValues.stream || {};
@@ -24,8 +25,9 @@ function Stream({ allValues, handleChange, setFieldValue }: LicenseProps) {
     return (
         <Box width={700} display="flex" justifyContent="space-between" marginTop={2}>
             <Card title="STREAM-ART-1" added={values?.added} setAdded={handleAdded} width={320} height={400}>
-                <Box paddingLeft={7} paddingTop={3} paddingRight={3}>
+                <Box p={1.5} display='flex' flexDirection='column'>
                     <Typography
+                        mb='auto'
                         style={{ wordWrap: 'break-word' }}
                         color="grey"
                         fontWeight="500"
@@ -35,6 +37,25 @@ function Stream({ allValues, handleChange, setFieldValue }: LicenseProps) {
                     >
                         {values?.added ? texts.streamEnableDescription : texts.streamDescription}
                     </Typography>
+                    {values.added && (
+                        <Box display="flex" alignItems="center" mt={3} justifyContent="space-between">
+                            <Typography>Available</Typography>
+                            <CustomTextField
+                                type="number"
+                                InputProps={{
+                                    sx: {
+                                        backgroundColor: '#fff',
+                                        width: 90,
+                                    },
+                                }}
+                                value={values.availableLicenses}
+                                onChange={handleChange}
+                                size="small"
+                                variant="outlined"
+                                name='stream.availableLicenses'
+                            />
+                        </Box>
+                    )}
                 </Box>
             </Card>
             <Box marginTop={2} width={300}>

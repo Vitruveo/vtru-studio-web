@@ -3,6 +3,7 @@ import {
     Box,
     FormControlLabel,
     IconButton,
+    Input,
     MenuItem,
     Radio,
     RadioGroup,
@@ -130,7 +131,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
         <Box width={700} display="flex" justifyContent="space-between" marginTop={2}>
             <Card disabled title="NFT-ART-1" added={values?.added} setAdded={handleAdded} width={320} height={400}>
                 {!values?.added ? (
-                    <Box paddingLeft={7} paddingTop={3} paddingRight={3}>
+                    <Box p={1.5}>
                         <Typography
                             style={{ wordWrap: 'break-word' }}
                             color="grey"
@@ -143,7 +144,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                         </Typography>
                     </Box>
                 ) : (
-                    <Box paddingTop={1} paddingLeft={3} width="100%">
+                    <Box p={1.5} width="100%">
                         <RadioGroup
                             aria-label="options"
                             name="nft.editionOption"
@@ -399,6 +400,23 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                     <InfoIcon color="primary" />
                                 </IconButton>
                             </Box>
+                        </Box>
+                        <Box my={3} display='flex' alignItems='center' justifyContent='space-between'>
+                            <Typography>Available</Typography>
+                            <CustomTextField
+                                name="nft.availableLicenses"
+                                type="number"
+                                InputProps={{
+                                    sx: {
+                                        backgroundColor: '#fff',
+                                        width: 90,
+                                    },
+                                }}
+                                value={values.availableLicenses}
+                                onChange={handleChange}
+                                size="small"
+                                variant="outlined"
+                            />
                         </Box>
                     </Box>
                 )}

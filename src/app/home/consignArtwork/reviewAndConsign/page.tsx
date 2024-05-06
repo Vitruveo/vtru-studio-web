@@ -45,9 +45,8 @@ const ConsignArtwork = () => {
     const dispatch = useDispatch();
     const { language } = useI18n();
     const { disconnectAsync, isPending: isDisconnecting } = useDisconnect();
-    const { isConnected, address, isConnecting, isDisconnected } = useAccount();
+    const { isConnected, address, isConnecting } = useAccount();
     const { openConnectModal } = useConnectModal();
-    const status = useSelector((state) => state.asset.status);
     const userWallets = useSelector((state) => state.user.wallets);
     const previewAndConsign = useSelector((state) => state.consignArtwork.previewAndConsign);
     const vault = useSelector((state) => state.user.vault);
