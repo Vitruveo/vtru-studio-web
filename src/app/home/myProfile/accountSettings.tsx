@@ -4,6 +4,7 @@ import { WalletProvider } from '@/app/home/components/apps/wallet';
 import { AccountSettingsProps } from './types';
 import Wallet from './wallet';
 import AddEmails from './addEmails';
+import Socials from './Socials';
 
 const AccountSettings = ({
     values,
@@ -17,6 +18,7 @@ const AccountSettings = ({
     return (
         <Stack sx={{ width: '100%' }}>
             <Box display="flex" flexDirection="column" gap={1}>
+                <Socials />
                 <AddEmails emails={values.emails} emailDefault={values.emailDefault} setFieldValue={setFieldValue} />
                 <Box display="flex" flexDirection="column">
                     <WalletProvider>

@@ -18,6 +18,10 @@ import {
     requestDeleteAvatar,
     requestConnectWallet,
     verifyConnectWallet,
+    requestSocialX,
+    requestSocialGoogle,
+    requestSocialFacebook,
+    removeSocial,
 } from './requests';
 import { userActionsCreators } from './slice';
 import {
@@ -45,9 +49,9 @@ import {
     GeneralStorageAvatarReq,
     ResquestConnectWalletReq,
     VerifyConnectWalletReq,
-    RequestConnectWalletApiRes,
     VerifyConnectWalletApiRes,
     RequestConnectWalletRes,
+    RemoveSocialReq,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { getAssetThunk } from '../asset/thunks';
@@ -303,5 +307,52 @@ export function requestVaultThunk(): ReduxThunkAction<Promise<void>> {
                     reject();
                 })
         );
+    };
+}
+
+export function requestSocialXThunk(): ReduxThunkAction<Promise<void>> {
+    return function () {
+        return requestSocialX().then((response) => {
+            if (response.data) {
+                window.open(response.data, '_blank');
+            }
+        });
+    };
+}
+
+export function requestSocialGoogleThunk(): ReduxThunkAction<Promise<void>> {
+    return function () {
+        return requestSocialGoogle().then((response) => {
+            if (response.data) {
+                window.open(response.data, '_blank');
+            }
+        });
+    };
+}
+
+export function requestSocialFacebookThunk(): ReduxThunkAction<Promise<void>> {
+    return function () {
+        return requestSocialFacebook().then((response) => {
+            if (response.data) {
+                window.open(response.data, '_blank');
+            }
+        });
+    };
+}
+
+export function removeSocialThunk(data: RemoveSocialReq): ReduxThunkAction<Promise<void>> {
+    return function (dispatch) {
+        return removeSocial(data).then(() => {
+            if (data.social === 'x') {
+                dispatch(userActionsCreators.changeSocialsX({ avatar: '', name: '' }));
+            }
+            if (data.social === 'facebook') {
+                dispatch(userActionsCreators.changeSocialsFacebook({ avatar: '', name: '' }));
+            }
+
+            if (data.social === 'google') {
+                dispatch(userActionsCreators.changeSocialsGoogle({ avatar: '', name: '' }));
+            }
+        });
     };
 }

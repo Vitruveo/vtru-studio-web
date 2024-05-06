@@ -38,6 +38,20 @@ export interface User {
         createdAt: string | null;
         isLoading: boolean;
     };
+    socials: {
+        x: {
+            name: string;
+            avatar: string;
+        };
+        facebook: {
+            name: string;
+            avatar: string;
+        };
+        google: {
+            name: string;
+            avatar: string;
+        };
+    };
 }
 
 export interface vaultProps {
@@ -165,6 +179,10 @@ export interface ResquestConnectWalletReq {
     wallet: `0x${string}`;
 }
 
+export interface RemoveSocialReq {
+    social: string;
+}
+
 export interface ResquestConnectWalletRes {
     nonce: string;
 }
@@ -178,6 +196,10 @@ export interface RequestConnectWalletRes {
     signature: string;
 }
 
+export type RemoveSocialApiRes = APIResponse;
+export type SocialsXApiRes = APIResponse<string>;
+export type SocialsFacebookApiRes = APIResponse<string>;
+export type SocialsGoogleApiRes = APIResponse<string>;
 export type UserAddApiRes = APIResponse<UserAddRes>;
 export type UserLoginApiRes = APIResponse<string>;
 export type UserOTPConfirmApiRes = APIResponse<UserOTPConfirmRes>;

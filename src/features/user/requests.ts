@@ -30,6 +30,11 @@ import {
     VerifyConnectWalletReq,
     RequestConnectWalletApiRes,
     VerifyConnectWalletApiRes,
+    SocialsXApiRes,
+    SocialsGoogleApiRes,
+    SocialsFacebookApiRes,
+    RemoveSocialApiRes,
+    RemoveSocialReq,
 } from './types';
 import { Framework } from '../common/types';
 
@@ -128,4 +133,20 @@ export async function requestConnectWallet(data: ResquestConnectWalletReq): Prom
 
 export async function verifyConnectWallet(data: VerifyConnectWalletReq): Promise<VerifyConnectWalletApiRes> {
     return apiService.post(`/creators/connect/verify`, data);
+}
+
+export function requestSocialX(): Promise<SocialsXApiRes> {
+    return apiService.get('/creators/socials/x/auth');
+}
+
+export function requestSocialGoogle(): Promise<SocialsGoogleApiRes> {
+    return apiService.get('/creators/socials/google/auth');
+}
+
+export function requestSocialFacebook(): Promise<SocialsFacebookApiRes> {
+    return apiService.get('/creators/socials/facebook/auth');
+}
+
+export function removeSocial({ social }: RemoveSocialReq): Promise<RemoveSocialApiRes> {
+    return apiService.delete(`/creators/socials/${social}`);
 }

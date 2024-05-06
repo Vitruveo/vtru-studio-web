@@ -43,6 +43,20 @@ const initialState: UserSliceState = {
         createdAt: null,
         isLoading: false,
     },
+    socials: {
+        x: {
+            name: '',
+            avatar: '',
+        },
+        facebook: {
+            name: '',
+            avatar: '',
+        },
+        google: {
+            name: '',
+            avatar: '',
+        },
+    },
 };
 
 export const userSlice = createSlice({
@@ -71,12 +85,38 @@ export const userSlice = createSlice({
             state.vault.transactionHash = creator?.vault?.transactionHash || null;
             state.vault.createdAt = creator?.vault?.createdAt || null;
             state.framework = creator.framework;
+            state.socials = {
+                x: {
+                    name: creator?.socials?.x?.name ?? '',
+                    avatar: creator?.socials?.x?.avatar ?? '',
+                },
+                facebook: {
+                    name: creator?.socials?.facebook?.name ?? '',
+                    avatar: creator?.socials?.facebook?.avatar ?? '',
+                },
+                google: {
+                    name: creator?.socials?.google?.name ?? '',
+                    avatar: creator?.socials?.google?.avatar ?? '',
+                },
+            };
         },
         change: (state, action: PayloadAction<Partial<UserSliceState>>) => {
             return {
                 ...state,
                 ...action.payload,
             };
+        },
+        changeSocialsX: (state, action: PayloadAction<{ avatar: string; name: string }>) => {
+            state.socials.x.avatar = action.payload.avatar;
+            state.socials.x.name = action.payload.name;
+        },
+        changeSocialsFacebook: (state, action: PayloadAction<{ avatar: string; name: string }>) => {
+            state.socials.facebook.avatar = action.payload.avatar;
+            state.socials.facebook.name = action.payload.name;
+        },
+        changeSocialsGoogle: (state, action: PayloadAction<{ avatar: string; name: string }>) => {
+            state.socials.google.avatar = action.payload.avatar;
+            state.socials.google.name = action.payload.name;
         },
         changeAvatar: (state, action: PayloadAction<{ fileId: string }>) => {
             state.profile.avatar = action.payload.fileId;
