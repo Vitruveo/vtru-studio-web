@@ -3,7 +3,6 @@ import {
     Box,
     FormControlLabel,
     IconButton,
-    Input,
     MenuItem,
     Radio,
     RadioGroup,
@@ -17,6 +16,9 @@ import CustomCheckbox from '@/app/home/components/forms/theme-elements/CustomChe
 import Card from './common/card';
 import { LicenseProps } from './types';
 import { useI18n } from '@/app/hooks/useI18n';
+
+// TODO: AVAILABLE LICENSE SÓ VAI SER USADA QUANDO ELASTIC EDITIONS FOR SELECIONADO
+// NOTE: AVAILABLE LICENSE DESATIVADO POR ENQUANTO
 
 function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const [currentDescription, setCurrentDescription] = useState('nft.editionOption');
@@ -400,23 +402,6 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                     <InfoIcon color="primary" />
                                 </IconButton>
                             </Box>
-                        </Box>
-                        <Box my={3} display='flex' alignItems='center' justifyContent='space-between'>
-                            <Typography>Available</Typography>
-                            <CustomTextField
-                                name="nft.availableLicenses"
-                                type="number"
-                                InputProps={{
-                                    sx: {
-                                        backgroundColor: '#fff',
-                                        width: 90,
-                                    },
-                                }}
-                                value={values.availableLicenses}
-                                onChange={handleChange}
-                                size="small"
-                                variant="outlined"
-                            />
                         </Box>
                     </Box>
                 )}

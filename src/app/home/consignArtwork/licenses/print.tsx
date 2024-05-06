@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
 import Card from './common/card';
 import { LicenseProps } from './types';
@@ -39,30 +39,45 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                         </Typography>
                     </Box>
                 ) : (
-                    <Box
-                        p={1.5}
-                        width="100%"
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="space-between"
-                    >
-                        <Typography sx={{ whiteSpace: 'nowrap', marginRight: 3 }}>{texts.singlePrintField}</Typography>
-                        <CustomTextField
-                            name="print.unitPrice"
-                            type="number"
-                            InputProps={{
-                                sx: {
-                                    backgroundColor: '#fff',
-                                },
-                            }}
-                            value={values?.unitPrice}
-                            inputProps={{ maxLength: 185, minLength: 1 }}
-                            onChange={handleChange}
-                            fullWidth
-                            size="small"
-                            variant="outlined"
-                        />
-                    </Box>
+                    <Stack gap={3} p={1.5}>
+                        <Stack direction='row' justifyContent='space-between' alignItems='center'>
+                            <Typography sx={{ whiteSpace: 'nowrap', marginRight: 3 }}>
+                                {texts.singlePrintField}
+                            </Typography>
+                            <CustomTextField
+                                name="print.unitPrice"
+                                type="number"
+                                InputProps={{
+                                    sx: {
+                                        backgroundColor: '#fff',
+                                        width: 90,
+                                    },
+                                }}
+                                value={values?.unitPrice}
+                                inputProps={{ maxLength: 185, minLength: 1 }}
+                                onChange={handleChange}
+                                size="small"
+                                variant="outlined"
+                            />
+                        </Stack>
+                        <Stack direction='row' justifyContent='space-between' alignItems='center'>
+                            <Typography>Available</Typography>
+                            <CustomTextField
+                                type="number"
+                                InputProps={{
+                                    sx: {
+                                        backgroundColor: '#fff',
+                                        width: 90,
+                                    },
+                                }}
+                                value={values.availableLicenses}
+                                onChange={handleChange}
+                                size="small"
+                                variant="outlined"
+                                name="print.availableLicenses"
+                            />
+                        </Stack>
+                    </Stack>
                 )}
             </Card>
             <Box marginTop={2} width={300}>

@@ -1,29 +1,23 @@
 'use client';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFormik } from 'formik';
-
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/material';
-
 import { useDispatch, useSelector } from '@/store/hooks';
-
-import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { licenseThunk } from '@/features/asset/thunks';
 import { useI18n } from '@/app/hooks/useI18n';
-
 import { LicensesFormValues } from './types';
-
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
 import { ModalBackConfirm } from '../modalBackConfirm';
-
 import Nft from './nft';
 import Print from './print';
 import Stream from './stream';
 import Remix from './remix';
+import { useToastr } from '@/app/hooks/useToastr';
 
 const allLicenses = {
     NFT: Nft,
@@ -33,14 +27,9 @@ const allLicenses = {
 };
 
 export default function Licenses() {
-    const [showInfo, setShowInfo] = useState(true);
     const [currentLicense, setCurrentLicense] = useState<keyof typeof allLicenses>('NFT');
     const [showBackModal, setShowBackModal] = useState(false);
-    const [toastr, setToastr] = useState<CustomizedSnackbarState>({
-        type: 'success',
-        open: false,
-        message: '',
-    });
+    const toast = useToastr();
 
     const { language } = useI18n();
     const router = useRouter();
@@ -94,6 +83,7 @@ export default function Licenses() {
                       numberOfEditions: 0,
                       totalPrice: 0,
                       editionDiscount: false,
+                      availableLicenses: 1,
                   },
                   single: {
                       editionPrice: 150,
@@ -102,12 +92,10 @@ export default function Licenses() {
                       editionPrice: 0,
                   },
                   editionOption: 'single',
-                  availableLicenses: 1,
               },
               stream: {
                   version: '1',
                   added: true,
-                  availableLicenses: 1,
               },
               print: {
                   version: '1',
@@ -123,10 +111,10 @@ export default function Licenses() {
               },
           };
 
-    const { values, errors, setFieldValue, handleSubmit, setFieldError, validateForm, handleChange } =
+    const { values, setFieldValue, handleSubmit, setFieldError, validateForm, handleChange } =
         useFormik<LicensesFormValues>({
             initialValues: initialValues,
-            onSubmit: async (formValues) => {
+            onSubmit: async () => {
                 dispatch(licenseThunk(values));
                 dispatch(
                     consignArtworkActionsCreators.changeStatusStep({
@@ -157,16 +145,11 @@ export default function Licenses() {
         if (event) event.preventDefault();
 
         if (
-            values.nft.availableLicenses < 1 ||
-            values.stream.availableLicenses < 1 ||
-            values.remix.availableLicenses < 1
-            /*|| values.print.availableLicenses < 1*/
+            values.nft.elastic.availableLicenses < 1 ||
+            values.remix.availableLicenses < 1 ||
+            values.print.availableLicenses < 1
         ) {
-            setToastr({
-                type: 'error',
-                open: true,
-                message: 'The available field must be greater than 0',
-            });
+            toast.display({ type: 'error', message: 'The available field must be greater than 0' });
             return;
         }
 
@@ -241,13 +224,6 @@ export default function Licenses() {
                                 />
                             </Box>
                         ))}
-
-                        <CustomizedSnackbar
-                            type={toastr.type}
-                            open={toastr.open}
-                            message={toastr.message}
-                            setOpentate={setToastr}
-                        />
                     </Grid>
                 </Box>
                 <ModalBackConfirm show={showBackModal} handleClose={handleCloseBackModal} yesClick={handleSaveData} />
