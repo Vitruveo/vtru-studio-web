@@ -27,7 +27,7 @@ function Remix({ allValues, setFieldValue, handleChange }: LicenseProps) {
         <Box width={700} display="flex" justifyContent="space-between" marginTop={2}>
             <Card title="REMIX-ART-1" added={values?.added} setAdded={handleAdded} width={320} height={400}>
                 {!values?.added ? (
-                    <Box paddingLeft={7} paddingTop={3} paddingRight={3}>
+                    <Box p={1.5}>
                         <Typography
                             style={{ wordWrap: 'break-word' }}
                             color="grey"
@@ -49,31 +49,44 @@ function Remix({ allValues, setFieldValue, handleChange }: LicenseProps) {
                         </Typography>
                     </Box>
                 ) : (
-                    <Box
-                        paddingTop={2}
-                        paddingLeft={3}
-                        paddingRight={3}
-                        width="100%"
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="space-between"
-                    >
-                        <Typography sx={{ whiteSpace: 'nowrap', marginRight: 3 }}>{texts.singleRemixField}</Typography>
-                        <CustomTextField
-                            name="remix.unitPrice"
-                            type="number"
-                            InputProps={{
-                                sx: {
-                                    backgroundColor: '#fff',
-                                },
-                            }}
-                            value={values?.unitPrice}
-                            inputProps={{ maxLength: 185, minLength: 1 }}
-                            onChange={handleChange}
-                            fullWidth
-                            size="small"
-                            variant="outlined"
-                        />
+                    <Box p={1.5}>
+                        <Box display="flex" alignItems="center" justifyContent="space-between">
+                            <Typography>
+                                {texts.singleRemixField}
+                            </Typography>
+                            <CustomTextField
+                                name="remix.unitPrice"
+                                type="number"
+                                InputProps={{
+                                    sx: {
+                                        backgroundColor: '#fff',
+                                        width: 90,
+                                    },
+                                }}
+                                value={values?.unitPrice}
+                                inputProps={{ maxLength: 185, minLength: 1 }}
+                                onChange={handleChange}
+                                size="small"
+                                variant="outlined"
+                            />
+                        </Box>
+                        <Box display="flex" alignItems="center" mt={3} justifyContent="space-between">
+                            <Typography>Available</Typography>
+                            <CustomTextField
+                                type="number"
+                                InputProps={{
+                                    sx: {
+                                        backgroundColor: '#fff',
+                                        width: 90,
+                                    },
+                                }}
+                                value={values.availableLicenses}
+                                onChange={handleChange}
+                                size="small"
+                                variant="outlined"
+                                name='remix.availableLicenses'
+                            />
+                        </Box>
                     </Box>
                 )}
             </Card>

@@ -11,6 +11,7 @@ export interface LicensesFormValues {
             numberOfEditions: number;
             totalPrice: number;
             editionDiscount: boolean;
+            availableLicenses: number;
         };
         single: {
             editionPrice: number;
@@ -28,11 +29,13 @@ export interface LicensesFormValues {
         version: string;
         added: boolean;
         unitPrice: number;
+        availableLicenses: number;
     };
     remix: {
         version: string;
         added: boolean;
         unitPrice: number;
+        availableLicenses: number;
     };
 }
 
