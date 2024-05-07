@@ -18,7 +18,6 @@ const AccountSettings = ({
     return (
         <Stack sx={{ width: '100%' }}>
             <Box display="flex" flexDirection="column" gap={1}>
-                <Socials />
                 <AddEmails emails={values.emails} emailDefault={values.emailDefault} setFieldValue={setFieldValue} />
                 <Box display="flex" flexDirection="column">
                     <WalletProvider>
@@ -33,6 +32,7 @@ const AccountSettings = ({
                         />
                     </WalletProvider>
                 </Box>
+                <Socials />
             </Box>
         </Stack>
     );

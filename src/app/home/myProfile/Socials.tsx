@@ -1,13 +1,8 @@
-import {
-    removeSocialThunk,
-    requestSocialFacebookThunk,
-    requestSocialGoogleThunk,
-    requestSocialXThunk,
-} from '@/features/user/thunks';
-import { useDispatch, useSelector } from '@/store/hooks';
-import { Avatar, Box, Button, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
-import { IconBrandInstagram, IconBrandYoutube, IconBrandX } from '@tabler/icons-react';
 import { useState } from 'react';
+import { IconBrandX } from '@tabler/icons-react';
+import { removeSocialThunk, requestSocialXThunk } from '@/features/user/thunks';
+import { Avatar, Box, Button, IconButton, Theme, Typography, useMediaQuery } from '@mui/material';
+import { useDispatch, useSelector } from '@/store/hooks';
 
 const sizes = {
     width: '25px',
@@ -18,106 +13,46 @@ const Socials = () => {
     const [show, setShow] = useState(false);
 
     const dispatch = useDispatch();
-    const { x, facebook, google } = useSelector((state) => state.user.socials);
+    const { x } = useSelector((state) => state.user.socials);
+
+    const xl = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'));
 
     return (
-        <Box>
+        <Box maxWidth={!xl ? 300 : 400}>
+            <Typography variant="subtitle1" fontWeight={600} style={{ width: '70%' }}>
+                Socials
+            </Typography>
             <Box display="grid" gridTemplateColumns="50px 50px 50px">
                 <Box>
-                    <IconButton onClick={() => dispatch(requestSocialXThunk())}>
-                        <IconBrandX />
-                    </IconButton>
-                </Box>
-
-                <Box>
-                    {/* <IconButton>
-                        <IconBrandYoutube onClick={() => dispatch(requestSocialGoogleThunk())} />
-                    </IconButton> */}
-                </Box>
-
-                <Box>
-                    {/* <IconButton>
-                        <IconBrandInstagram onClick={() => dispatch(requestSocialFacebookThunk())} />
-                    </IconButton> */}
+                    {!x.avatar && (
+                        <IconButton onClick={() => dispatch(requestSocialXThunk())}>
+                            <IconBrandX />
+                        </IconButton>
+                    )}
                 </Box>
             </Box>
-            <Box display="grid" gridTemplateColumns="50px 50px 50px">
+            <Box>
                 <Box>
                     {x.avatar && (
-                        <IconButton onClick={() => setShow(true)}>
-                            <Avatar sx={sizes} src={x.avatar} />
-                        </IconButton>
-                    )}
-                </Box>
-
-                <Box>
-                    {google.avatar && (
-                        <IconButton onClick={() => setShow(true)}>
-                            <Avatar sx={sizes} src={google.avatar} />
-                        </IconButton>
-                    )}
-                </Box>
-
-                <Box>
-                    {facebook.avatar && (
-                        <IconButton onClick={() => setShow(true)}>
-                            <Avatar sx={sizes} src={facebook.avatar} />
-                        </IconButton>
+                        <Box display="flex" alignItems="center" justifyContent="space-between">
+                            <Box display="flex" alignItems="center" gap={1}>
+                                <IconButton onClick={() => setShow(true)}>
+                                    <Avatar sx={sizes} src={x.avatar} />
+                                </IconButton>
+                                <Typography width="100%">{x.name}</Typography>
+                            </Box>
+                            <Button
+                                variant="contained"
+                                size="small"
+                                sx={{ minWidth: 102 }}
+                                onClick={() => dispatch(removeSocialThunk({ social: 'x' }))}
+                            >
+                                Disconnect
+                            </Button>
+                        </Box>
                     )}
                 </Box>
             </Box>
-
-            <Dialog maxWidth="lg" open={show} onClose={() => setShow(false)}>
-                <DialogTitle color="GrayText" sx={{ textAlign: 'center' }}>
-                    Your accounts
-                </DialogTitle>
-                <DialogContent>
-                    <Box display="flex" flexDirection="column" gap={3} width={300}>
-                        {google.avatar && (
-                            <Box display="flex" justifyContent="space-between" alignItems="center">
-                                <Box display="flex" gap={1} alignItems="center">
-                                    <Avatar sx={sizes} src={google.avatar} />
-                                    <Box>{google.name}</Box>
-                                </Box>
-                                <Button
-                                    sx={{ minWidth: 100 }}
-                                    onClick={() => dispatch(removeSocialThunk({ social: 'google' }))}
-                                >
-                                    Disconnect
-                                </Button>
-                            </Box>
-                        )}
-                        {x.avatar && (
-                            <Box display="flex" justifyContent="space-between" alignItems="center">
-                                <Box display="flex" gap={1} alignItems="center">
-                                    <Avatar sx={sizes} src={x.avatar} />
-                                    <Box>{x.name}</Box>
-                                </Box>
-                                <Button
-                                    sx={{ minWidth: 100 }}
-                                    onClick={() => dispatch(removeSocialThunk({ social: 'x' }))}
-                                >
-                                    Disconnect
-                                </Button>
-                            </Box>
-                        )}
-                        {facebook.avatar && (
-                            <Box display="flex" justifyContent="space-between" alignItems="center">
-                                <Box display="flex" gap={1} alignItems="center">
-                                    <Avatar sx={sizes} src={facebook.avatar} />
-                                    <Box>{facebook.name}</Box>
-                                </Box>
-                                <Button
-                                    sx={{ minWidth: 100 }}
-                                    onClick={() => dispatch(removeSocialThunk({ social: 'facebook' }))}
-                                >
-                                    Disconnect
-                                </Button>
-                            </Box>
-                        )}
-                    </Box>
-                </DialogContent>
-            </Dialog>
         </Box>
     );
 };
