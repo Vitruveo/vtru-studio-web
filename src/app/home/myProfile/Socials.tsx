@@ -24,36 +24,36 @@ const Socials = () => {
         <Box>
             <Box display="grid" gridTemplateColumns="50px 50px 50px">
                 <Box>
-                    <IconButton>
-                        <IconBrandYoutube onClick={() => dispatch(requestSocialGoogleThunk())} />
-                    </IconButton>
-                </Box>
-
-                <Box>
                     <IconButton onClick={() => dispatch(requestSocialXThunk())}>
                         <IconBrandX />
                     </IconButton>
                 </Box>
 
                 <Box>
-                    <IconButton>
+                    {/* <IconButton>
+                        <IconBrandYoutube onClick={() => dispatch(requestSocialGoogleThunk())} />
+                    </IconButton> */}
+                </Box>
+
+                <Box>
+                    {/* <IconButton>
                         <IconBrandInstagram onClick={() => dispatch(requestSocialFacebookThunk())} />
-                    </IconButton>
+                    </IconButton> */}
                 </Box>
             </Box>
             <Box display="grid" gridTemplateColumns="50px 50px 50px">
                 <Box>
-                    {google.avatar && (
+                    {x.avatar && (
                         <IconButton onClick={() => setShow(true)}>
-                            <Avatar sx={sizes} src={google.avatar} />
+                            <Avatar sx={sizes} src={x.avatar} />
                         </IconButton>
                     )}
                 </Box>
 
                 <Box>
-                    {x.avatar && (
+                    {google.avatar && (
                         <IconButton onClick={() => setShow(true)}>
-                            <Avatar sx={sizes} src={x.avatar} />
+                            <Avatar sx={sizes} src={google.avatar} />
                         </IconButton>
                     )}
                 </Box>
