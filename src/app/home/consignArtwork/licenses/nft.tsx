@@ -215,7 +215,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                             </Typography>
                                         </Box>
                                         <CustomTextField
-                                            name="nft.elastic.numberOfEditions"
+                                            name="nft.availableLicenses"
                                             type="number"
                                             InputProps={{
                                                 sx: {
@@ -223,7 +223,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                                     width: 90,
                                                 },
                                             }}
-                                            value={values.elastic.numberOfEditions}
+                                            value={values.availableLicenses}
                                             inputProps={{ maxLength: 185, style: { textAlign: 'right' } }}
                                             onChange={handleChange}
                                             fullWidth
@@ -249,7 +249,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                             fontSize="0.8rem"
                                             sx={{ whiteSpace: 'nowrap', width: 100, marginRight: 3 }}
                                         >
-                                            ${values.elastic.editionPrice * values.elastic.numberOfEditions}
+                                            ${values.elastic.editionPrice * values.availableLicenses}
                                         </Typography>
                                     </Box>
                                     <Box
@@ -282,7 +282,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                                     fontSize="0.8rem"
                                                     sx={{ whiteSpace: 'nowrap', width: 50 }}
                                                 >
-                                                    {Math.min(values.elastic.numberOfEditions / 10, 10).toFixed(2) +
+                                                    {Math.min(values.availableLicenses / 10, 10).toFixed(2) +
                                                         '%'}
                                                 </Typography>
                                             </Box>

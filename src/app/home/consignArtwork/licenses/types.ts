@@ -11,7 +11,6 @@ export interface LicensesFormValues {
             numberOfEditions: number;
             totalPrice: number;
             editionDiscount: boolean;
-            availableLicenses: number;
         };
         single: {
             editionPrice: number;
@@ -20,6 +19,7 @@ export interface LicensesFormValues {
             editionPrice: number;
         };
         editionOption: 'elastic' | 'single' | 'unlimited' | string;
+        availableLicenses: number;
     };
     stream: {
         version: string;

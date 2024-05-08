@@ -83,7 +83,6 @@ export default function Licenses() {
                       numberOfEditions: 0,
                       totalPrice: 0,
                       editionDiscount: false,
-                      availableLicenses: 1,
                   },
                   single: {
                       editionPrice: 150,
@@ -92,6 +91,7 @@ export default function Licenses() {
                       editionPrice: 0,
                   },
                   editionOption: 'single',
+                  availableLicenses: 1,
               },
               stream: {
                   version: '1',
@@ -145,7 +145,7 @@ export default function Licenses() {
         if (event) event.preventDefault();
 
         if (
-            values.nft.elastic.availableLicenses < 1 ||
+            values.nft.availableLicenses < 1 ||
             values.remix.availableLicenses < 1 ||
             values.print.availableLicenses < 1
         ) {
