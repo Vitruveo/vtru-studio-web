@@ -3,7 +3,7 @@ import { userActionsCreators } from '../user/slice';
 import webSocketService from '@/services/websocket';
 import { TOKEN_CREATORS } from '@/constants/ws';
 import { assetActionsCreators } from '../asset/slice';
-import { PreSignedURLPayload, NotifyEnvelope } from './types';
+import { PreSignedURLPayload, NotifyEnvelope, AvatarEnvelop } from './types';
 import { deleteAssetStorage } from '../asset/requests';
 import { deleteAvatar } from '../user/requests';
 import { auxiliaryMediaThunk } from '../asset/thunks';
@@ -50,6 +50,33 @@ export function loginWebSocketThunk(): ReduxThunkAction {
             if (data.method === 'DELETE') {
                 if (data.origin === 'asset') deleteAssetStorage(data.preSignedURL);
                 if (data.origin === 'profile') deleteAvatar(data.preSignedURL);
+            }
+        });
+
+        webSocketService.on('userSocialAvatar', (data: AvatarEnvelop) => {
+            if (data.social.type === 'x') {
+                dispatch(
+                    userActionsCreators.changeSocialsX({
+                        name: data.social.name,
+                        avatar: data.social.avatar,
+                    })
+                );
+            }
+            if (data.social.type === 'facebook') {
+                dispatch(
+                    userActionsCreators.changeSocialsFacebook({
+                        name: data.social.name,
+                        avatar: data.social.avatar,
+                    })
+                );
+            }
+            if (data.social.type === 'google') {
+                dispatch(
+                    userActionsCreators.changeSocialsGoogle({
+                        name: data.social.name,
+                        avatar: data.social.avatar,
+                    })
+                );
             }
         });
 

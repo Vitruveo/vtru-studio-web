@@ -211,10 +211,10 @@ export default function DoneConsign() {
                                 <li
                                     key={index}
                                     style={{
-                                        display: 'grid',
-                                        gridTemplateColumns: '16px 1fr',
+                                        display: 'flex',
                                         gap: '12px',
                                         fontSize: 16,
+                                        alignItems: 'flex-start',
                                     }}
                                 >
                                     <RotateAnimation isDisabled={step.status != 'pending'}>

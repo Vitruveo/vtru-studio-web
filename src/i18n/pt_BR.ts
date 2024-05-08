@@ -23,8 +23,10 @@ const language: Translation = {
     'studio.userAccount.logout.button': 'Sair',
     'studio.userAccount.menu.title': 'Meu Perfil',
     'studio.userAccount.menu.subtitle': 'Configurações do Usuário',
+    'studio.userAccount.usernameNotFound': 'Nome de usuário não encontrado',
 
     /* My Profile */
+    'studio.myProfile.pasteCode': 'Cole o código',
     'studio.myProfile.title': 'Meu Perfil',
     'studio.myProfile.subtitle': 'Personalize seu perfil Vitruveo com vários emails e endereços de carteira.',
     'studio.myProfile.home': 'Início',

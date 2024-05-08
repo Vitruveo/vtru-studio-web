@@ -82,6 +82,12 @@ export default function MediaCard({
         async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
             const file = acceptedFiles[0];
 
+            const fileSize = file.size / 1024;
+            if (fileSize > parseInt(mediaConfig?.sizeMB.toString()) * 1024) {
+                toast.display({ message: 'File size exceeds the limit', type: 'warning' });
+                return;
+            }
+
             handleUploadFile({ formatUpload: formatType, file, maxSize: mediaConfig?.sizeMB.toString() });
             setFieldValue(`formats.${formatType}.file`, file);
         },
@@ -321,6 +327,7 @@ export default function MediaCard({
                                                         overflow: 'hidden',
                                                         textOverflow: 'ellipsis',
                                                         whiteSpace: 'nowrap',
+                                                        width: 140,
                                                     }}
                                                 >
                                                     {formatValue.name ||

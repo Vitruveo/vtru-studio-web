@@ -19,3 +19,11 @@ export interface NotifyEnvelope {
         messageType: string;
     };
 }
+
+export interface AvatarEnvelop {
+    social: {
+        type: 'x' | 'google' | 'facebook';
+        avatar: string;
+        name: string;
+    };
+}

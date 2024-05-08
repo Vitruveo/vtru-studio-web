@@ -43,7 +43,8 @@ export default function AssetMedia() {
         []
     );
 
-    const isUploading = asset.requestAssetUpload && Object.values(asset.requestAssetUpload).some((item) => item.status === 'uploading');
+    const isUploading =
+        asset.requestAssetUpload && Object.values(asset.requestAssetUpload).some((item) => item.status === 'uploading');
 
     const texts = {
         nextButton: language['studio.consignArtwork.form.next.button'],
@@ -94,7 +95,7 @@ export default function AssetMedia() {
 
                 if (values.deleteKeys.length)
                     await requestDeleteFiles({
-                        deleteKeys: values.deleteKeys,
+                        deleteKeys: values.deleteKeys.filter(Boolean),
                         transactionId: nanoid(),
                     });
 

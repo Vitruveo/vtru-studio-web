@@ -119,9 +119,10 @@ const ConsignArtwork = () => {
                                 <Typography variant="h6" fontWeight="normal" color="GrayText">
                                     {texts.moreInformation}{' '}
                                     <Typography
-                                        variant="h6"
+                                        variant="caption"
                                         display="inline"
                                         style={{
+                                            fontSize: 16,
                                             fontWeight: 400,
                                             color: '#007BFF',
                                             cursor: 'pointer',

@@ -21,6 +21,8 @@ const language: Translation = {
     'studio.home.myProfile': 'Мой профиль',
 
     /* User Account */
+    'studio.userAccount.usernameNotFound': 'Имя пользователя не найдено',
+    'studio.myProfile.pasteCode': 'Вставьте код из письма',
     'studio.userAccount.title': 'Учетная запись пользователя',
     'studio.userAccount.creator': 'Создатель',
     'studio.userAccount.logout.button': 'Выйти',

@@ -7,6 +7,7 @@ import {
     sendRequestUpload,
     requestDeleteFiles,
     signingMediaC2PA,
+    extractAssetColors,
 } from './requests';
 import {
     AssetSendRequestUploadApiRes,
@@ -32,6 +33,7 @@ import { SectionsFormData } from '@/app/home/consignArtwork/assetMetadata/page';
 import { FormatsAuxiliayMedia } from '@/app/home/consignArtwork/auxiliaryMedia/types';
 import { AxiosResponse } from 'axios';
 import { BASE_URL_API } from '@/constants/api';
+import { toastrActionsCreators } from '../toastr/slice';
 
 export function requestDeleteURLThunk(payload: RequestDeleteFilesReq): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
@@ -48,7 +50,6 @@ export function assetStorageThunk(payload: Omit<AssetStorageReq, 'dispatch'>): R
             transactionId: payload.transactionId,
             dispatch,
         });
-
         return response;
     };
 }
@@ -320,7 +321,14 @@ export function assetMediaThunk(payload: {
         const hasAsset = getState().asset._id;
         if (!hasAsset) {
             const asset = await getAsset();
-            if (asset.data?._id) dispatch(assetActionsCreators.change({ _id: asset.data._id }));
+            if (asset.data?._id) {
+                dispatch(assetActionsCreators.change({ _id: asset.data._id }));
+            }
+        }
+
+        if (payload?.formats?.original) {
+            // Extract colors from most recent uploaded asset
+            dispatch(extractAssetColorsThunk({ id: getState().asset._id }));
         }
 
         const formatAssetsFormats = Object.entries(payload.formats || {}).reduce((acc, [key, value]) => {
@@ -490,7 +498,7 @@ export function createContractThunk(data: CreateContractByAssetIdReq): ReduxThun
 
         const ctrl = new AbortController();
 
-        const url = `${BASE_URL_API}/assets/contract/${data.id}`;
+        const url = `${BASE_URL_API}/assets/consign`;
         const headers = {
             Accept: 'text/event-stream',
             Authorization: `Bearer ${token}`,
@@ -503,14 +511,14 @@ export function createContractThunk(data: CreateContractByAssetIdReq): ReduxThun
                     headers,
                     signal: ctrl.signal,
                     onmessage(message) {
-                        if (message.event === 'contract_success') {
+                        if (message.event === 'consign_success') {
                             dispatch(getAssetThunk());
 
                             ctrl.abort();
                             resolve();
                         }
 
-                        if (message.event === 'contract_error') {
+                        if (message.event === 'consign_error') {
                             ctrl.abort();
                             reject();
                         }
@@ -540,5 +548,53 @@ export function updateConsignArtworkStepThunk(payload: {
         });
 
         dispatch(assetActionsCreators.change({ [payload.stepName]: reqBodyStep }));
+    };
+}
+
+export function extractAssetColorsThunk({ id }: { id: string }): ReduxThunkAction<Promise<any>> {
+    return async function (dispatch, getState) {
+        const state = getState();
+        const token = state.user.token;
+
+        const ctrl = new AbortController();
+
+        const url = `${BASE_URL_API}/assets/${id}/colors`;
+        const headers = {
+            Accept: 'text/event-stream',
+            Authorization: `Bearer ${token}`,
+        };
+
+        return new Promise((resolve, reject) => {
+            try {
+                fetchEventSource(url, {
+                    method: 'GET',
+                    headers,
+                    signal: ctrl.signal,
+                    onmessage(message) {
+                        try {
+                            if (message.event === 'extract_color_success') {
+                                const parsed = JSON.parse(message.data);
+
+                                // Update asset metadata colors
+                                dispatch(assetActionsCreators.setMetadataColors(parsed));
+
+                                ctrl.abort();
+                                resolve(parsed);
+                            }
+
+                            if (message.event === 'extract_color_error') {
+                                ctrl.abort();
+                                reject();
+                            }
+                        } catch (error) {
+                            ctrl.abort();
+                            reject();
+                        }
+                    },
+                });
+            } catch (error) {
+                reject();
+            }
+        });
     };
 }

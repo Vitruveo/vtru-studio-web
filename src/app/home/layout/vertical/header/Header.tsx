@@ -1,3 +1,4 @@
+import { useDispatch } from 'react-redux';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -6,13 +7,12 @@ import Toolbar from '@mui/material/Toolbar';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { styled } from '@mui/material/styles';
 import { IconMenu2 } from '@tabler/icons-react';
+
+import { useSelector } from '@/store/hooks';
+import { toggleMobileSidebar, toggleSidebar } from '@/features/customizer/slice';
+import { Rss } from './Rss';
 import Profile from './Profile';
 import Language from './Language';
-
-import MobileRightSidebar from './MobileRightSidebar';
-import { useDispatch } from 'react-redux';
-import { toggleMobileSidebar, toggleSidebar } from '@/features/customizer/slice';
-import { useSelector } from '@/store/hooks';
 
 const Header = () => {
     const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
@@ -53,17 +53,8 @@ const Header = () => {
 
                 <Box flexGrow={1} />
                 <Stack spacing={1} direction="row" alignItems="center">
+                    <Rss />
                     <Language />
-                    {/* ------------------------------------------- */}
-                    {/* Ecommerce Dropdown */}
-                    {/* ------------------------------------------- */}
-
-                    {/* ------------------------------------------- */}
-                    {/* End Ecommerce Dropdown */}
-
-                    {/* ------------------------------------------- */}
-                    {/* Toggle Right Sidebar for mobile */}
-                    {/* ------------------------------------------- */}
 
                     <Profile />
                 </Stack>

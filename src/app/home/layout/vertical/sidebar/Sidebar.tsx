@@ -105,7 +105,7 @@ const Sidebar = () => {
                         </Box>
                         <Scrollbar
                             sx={{
-                                height: 'calc(100% - 70px)',
+                                height: 'calc(100% - 92px)',
                                 backgroundPosition: 'center 60px',
                                 backgroundImage: `linear-gradient(to top, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)), url(/images/backgrounds/sidebar/${backgroundImage})`,
                                 backgroundRepeat: 'no-repeat',
