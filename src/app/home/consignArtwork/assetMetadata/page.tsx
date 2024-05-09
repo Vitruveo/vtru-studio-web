@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import Typography from '@mui/material/Typography';
@@ -24,6 +24,7 @@ import { TranslateFunction } from '@/i18n/types';
 import AssetMediaPreview from '../components/assetMediaPreview';
 
 import { useToastr } from '@/app/hooks/useToastr';
+import { assetActionsCreators } from '@/features/asset/slice';
 
 export type SectionName = 'context' | 'taxonomy' | 'creators' | 'provenance' | 'custom' | 'assets';
 type SectionsJSONType = typeof sectionsJSON;
@@ -63,9 +64,11 @@ const removeEmptyProperties = (obj: Record<string, any> | any[] | null): Record<
 
 export default function AssetMetadata() {
     const [sectionsStatus, setSectionsStatus] = useState<{ [key: string]: string }>({});
-    const { assetMetadata } = useSelector((state) => state.asset);
-    const asset = useSelector((state) => state.asset);
     const toast = useToastr();
+    const tempColors = useSelector((state) => state.asset.tempColors);
+
+    const asset = useSelector((state) => state.asset);
+    const { assetMetadata } = asset;
 
     const sectionsFormat = Object.entries(sectionsJSON).reduce(
         (acc, [key, value]) => ({
@@ -87,6 +90,22 @@ export default function AssetMetadata() {
     const [showBackModal, setShowBackModal] = useState(false);
 
     const { status } = useSelector((state) => state.consignArtwork.completedSteps['assetMetadata']);
+
+    // gets the temporary colors and sets it into the form
+    useEffect(() => {
+        if (tempColors.length) {
+            setSections((prevSections) => ({
+                ...prevSections,
+                context: {
+                    ...prevSections.context,
+                    formData: {
+                        ...prevSections.context.formData,
+                        colors: tempColors,
+                    },
+                },
+            }));
+        }
+    }, [tempColors]);
 
     const router = useRouter();
     const dispatch = useDispatch();
@@ -232,6 +251,9 @@ export default function AssetMetadata() {
                 )
             )
         );
+
+        dispatch(assetActionsCreators.setTempColors([]))
+
         handleUpdateStatus();
 
         router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/licenses`);
