@@ -5,6 +5,7 @@ import { AssetSliceState } from './types';
 
 const initialState: AssetSliceState = {
     _id: '',
+    tempColors: [],
     mediaAuxiliary: {
         description: '',
         formats: {
@@ -179,12 +180,9 @@ export const assetSlice = createSlice({
         setArEnabled: (state: any, action: PayloadAction<boolean>) => {
             state.assetMetadata.taxonomy.formData.arenabled = action.payload == true ? 'yes' : 'no';
         },
-        // TODO: CORRIGIR TIPAGEM
-        setMetadataColors: (state: any, action: PayloadAction<string[]>) => {
-            if (state.assetMetadata) {
-                state.assetMetadata.context.formData.colors = action.payload;
-            }
-        },
+        setTempColors: (state, action: PayloadAction<string[]>) => {
+            state.tempColors = action.payload;
+        }
     },
 });
 
