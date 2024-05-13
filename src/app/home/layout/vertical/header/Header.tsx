@@ -53,7 +53,7 @@ const Header = () => {
 
                 <Box flexGrow={1} />
                 <Stack spacing={1} direction="row" alignItems="center">
-                    <Rss />
+                    {/* <Rss /> */}
                     <Language />
 
                     <Profile />
