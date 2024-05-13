@@ -78,9 +78,9 @@ export default function AssetMedia() {
     const { values, errors, setFieldValue, handleSubmit } = useFormik<AssetMediaFormValues>({
         initialValues,
         onSubmit: async () => {
-            if (JSON.stringify(initialValues) === JSON.stringify(values) && !values.deleteKeys.length)
-                router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/assetMetadata`);
-            else {
+            const hasChanges = !(JSON.stringify(initialValues) === JSON.stringify(values) && !values.deleteKeys.length);
+
+            if (hasChanges) {
                 dispatch(
                     consignArtworkActionsCreators.changeStatusStep({
                         stepId: 'assetMedia',
@@ -93,20 +93,19 @@ export default function AssetMedia() {
                     })
                 );
 
-                if (values.deleteKeys.length)
-                    await requestDeleteFiles({
-                        deleteKeys: values.deleteKeys.filter(Boolean),
-                        transactionId: nanoid(),
-                    });
+                await requestDeleteFiles({
+                    deleteKeys: values.deleteKeys.filter(Boolean),
+                    transactionId: nanoid(),
+                });
 
                 const deleteFormats = Object.entries(values.formats)
                     .filter(([_, value]) => !value.file)
                     .map(([key, _]) => key);
 
                 if (deleteFormats.length) await dispatch(assetMediaThunk({ deleteFormats }));
-
-                router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/assetMetadata`);
             }
+
+            router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/assetMetadata`);
         },
     });
 
