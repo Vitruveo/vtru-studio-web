@@ -12,21 +12,16 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
 import { useToastr } from '@/app/hooks/useToastr';
 import AssetMediaPreview from '../components/assetMediaPreview';
-import {
-    createContractThunk,
-    signingMediaC2PAThunk,
-    updateConsignArtworkStepThunk,
-    uploadIPFSByAssetIdThunk,
-} from '@/features/asset/thunks';
+import { consignThunk } from '@/features/asset/thunks';
 import { updateAssetStep } from '@/features/asset/requests';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
+import { assetActionsCreators } from '@/features/asset/slice';
 import { ConsignArtworkSteps } from '@/features/asset/types';
 
 interface ConsignStep {
     id?: ConsignArtworkSteps;
     title: string;
     status?: 'completed' | 'pending' | 'done' | 'error';
-    action: () => Promise<any>;
 }
 
 const getListIcon = (status: ConsignStep['status']) => {
@@ -58,29 +53,15 @@ const BCrumb: BreadCrumbItem[] = [
     },
 ];
 
-const showConfetti = () => {
-    confetti({
-        particleCount: 500,
-        spread: 250,
-        origin: { x: 0.5, y: 0.5 },
-    });
-};
-
 export default function DoneConsign() {
     const router = useRouter();
     const dispatch = useDispatch();
     const toastr = useToastr();
 
-    const token = useSelector((state) => state.user.token);
-    const username = useSelector((state) => state.user.username);
-    const filename = useSelector((state) => state.asset.formats.original.path) || '';
+    const web3 = useSelector((state) => state.asset.web3);
 
     const asset = useSelector((state) => state.asset);
-    const assetId = asset._id;
 
-    const asyncAction = async () => {
-        await new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 5000)));
-    };
     const [retry, setRetry] = useState(false);
 
     const [steps, setSteps] = useState<ConsignStep[]>([
@@ -88,27 +69,16 @@ export default function DoneConsign() {
             id: 'c2pa',
             status: asset.c2pa?.finishedAt ? 'completed' : undefined,
             title: 'Signing media files using C2PA standard',
-            action: () => dispatch(signingMediaC2PAThunk({ filename, token, creator: username })),
         },
         {
             id: 'ipfs',
             status: asset.ipfs?.finishedAt ? 'completed' : undefined,
             title: 'Uploading media files to IPFS decentralized storage',
-            action: () => dispatch(uploadIPFSByAssetIdThunk({ id: assetId })),
         },
         {
-            id: 'contractExplorer',
+            id: 'consign',
             status: asset.contractExplorer?.finishedAt ? 'completed' : undefined,
             title: 'Consigning artwork to Vitruveo blockchain',
-            action: () => dispatch(createContractThunk({ id: assetId })),
-        },
-        {
-            title: 'Your artwork is ready!',
-            status:
-                asset.c2pa?.finishedAt && asset.ipfs?.finishedAt && asset.contractExplorer?.finishedAt
-                    ? 'done'
-                    : undefined,
-            action: async () => asyncAction().then(() => showConfetti()),
         },
     ]);
 
@@ -117,42 +87,54 @@ export default function DoneConsign() {
         setSteps([...steps]);
     };
 
-    const runSteps = async () => {
-        setRetry(false);
-
-        if (!assetId) {
-            toastr.display({ message: 'Asset not found', type: 'error' });
-            return;
-        }
-
-        if (steps.filter((v) => v.id).every((step) => step.status === 'completed')) return;
-
-        for await (const step of steps) {
-            if (step.status === 'completed') continue;
-            const stepIndex = steps.indexOf(step);
-            const isLastStep = stepIndex === steps.length - 1;
-
-            changeStepStatus(stepIndex, 'pending');
-
-            try {
-                await step.action();
-                isLastStep ? changeStepStatus(stepIndex, 'done') : changeStepStatus(stepIndex, 'completed');
-                if (step.id) dispatch(updateConsignArtworkStepThunk({ stepName: step.id }));
-                setSteps([...steps]);
-            } catch (error) {
-                step.status = 'error';
-                toastr.display({ message: `Error on step ${stepIndex + 1}`, type: 'error' });
-                break;
-            }
-        }
-    };
-
     useEffect(() => {
-        runSteps();
+        dispatch(consignThunk());
+        changeStepStatus(0, 'pending');
     }, []);
 
     useEffect(() => {
-        if (retry) runSteps();
+        const hasError = Object.values(web3).some((item) => item.error);
+        if (hasError) {
+            const itemError = Object.entries(web3).find(([_, value]) => value.error);
+            if (itemError) {
+                const index = steps.findIndex((step) => step.id === itemError[0]);
+                if (index !== -1) {
+                    changeStepStatus(index, 'error');
+                }
+            }
+
+            return;
+        }
+
+        if (web3.c2pa.finishedAt) {
+            changeStepStatus(0, 'completed');
+            changeStepStatus(1, 'pending');
+        }
+        if (web3.ipfs.finishedAt) {
+            changeStepStatus(1, 'completed');
+            changeStepStatus(2, 'pending');
+        }
+        if (web3.consign.finishedAt) {
+            changeStepStatus(2, 'completed');
+        }
+
+        if (Object.values(web3).every((item) => item.finishedAt) && steps[steps.length - 1].status !== 'done') {
+            confetti({
+                particleCount: 500,
+                spread: 250,
+                origin: { x: 0.5, y: 0.5 },
+            });
+            changeStepStatus(steps.length - 1, 'done');
+        }
+    }, [web3]);
+
+    useEffect(() => {
+        if (retry) {
+            dispatch(assetActionsCreators.resetConsign());
+            setRetry(false);
+            dispatch(consignThunk());
+            changeStepStatus(0, 'pending');
+        }
     }, [retry]);
 
     const isDisabled = steps[steps.length - 1].status != 'done';

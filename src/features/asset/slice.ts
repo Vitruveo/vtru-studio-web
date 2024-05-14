@@ -76,6 +76,20 @@ const initialState: AssetSliceState = {
         createdBy: null,
         updatedBy: null,
     },
+    web3: {
+        c2pa: {
+            finishedAt: null,
+            error: null,
+        },
+        ipfs: {
+            finishedAt: null,
+            error: null,
+        },
+        consign: {
+            finishedAt: null,
+            error: null,
+        },
+    },
     status: '',
     error: '',
 };
@@ -182,7 +196,32 @@ export const assetSlice = createSlice({
         },
         setTempColors: (state, action: PayloadAction<string[]>) => {
             state.tempColors = action.payload;
-        }
+        },
+        changeWeb3: (
+            state,
+            action: PayloadAction<{
+                type: keyof AssetSliceState['web3'];
+                value: AssetSliceState['web3'][keyof AssetSliceState['web3']];
+            }>
+        ) => {
+            state.web3[action.payload.type] = action.payload.value;
+        },
+        resetConsign: (state) => {
+            state.web3 = {
+                c2pa: {
+                    error: null,
+                    finishedAt: null,
+                },
+                ipfs: {
+                    error: null,
+                    finishedAt: null,
+                },
+                consign: {
+                    error: null,
+                    finishedAt: null,
+                },
+            };
+        },
     },
 });
 
