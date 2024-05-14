@@ -53,7 +53,7 @@ export interface c2pa {
     finishedAt: Date;
 }
 
-export type ConsignArtworkSteps = 'c2pa' | 'ipfs' | 'contractExplorer';
+export type ConsignArtworkSteps = 'c2pa' | 'ipfs' | 'consign';
 
 export interface Asset {
     _id: string;
@@ -117,8 +117,24 @@ export interface AssetSendRequestUploadReq {
     };
 }
 
+export interface Web3 {
+    c2pa: {
+        finishedAt: Date | null;
+        error: string | null;
+    };
+    ipfs: {
+        finishedAt: Date | null;
+        error: string | null;
+    };
+    consign: {
+        finishedAt: Date | null;
+        error: string | null;
+    };
+}
+
 export interface AssetSliceState extends Asset {
     error: string;
+    web3: Web3;
 }
 
 export interface AssetStorageReq {

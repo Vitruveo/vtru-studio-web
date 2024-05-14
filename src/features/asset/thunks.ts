@@ -491,7 +491,7 @@ export function uploadIPFSByAssetIdThunk(
     };
 }
 
-export function createContractThunk(data: CreateContractByAssetIdReq): ReduxThunkAction<Promise<CreateContractApiRes>> {
+export function consignThunk(): ReduxThunkAction<Promise<CreateContractApiRes>> {
     return async function (dispatch, getState) {
         const state = getState();
         const token = state.user.token;
@@ -504,50 +504,71 @@ export function createContractThunk(data: CreateContractByAssetIdReq): ReduxThun
             Authorization: `Bearer ${token}`,
         };
 
-        return new Promise((resolve, reject) => {
-            try {
-                fetchEventSource(url, {
-                    method: 'POST',
-                    headers,
-                    signal: ctrl.signal,
-                    onmessage(message) {
-                        if (message.event === 'consign_success') {
-                            dispatch(getAssetThunk());
+        const dispatchFinished = (type: 'c2pa' | 'ipfs' | 'consign') =>
+            dispatch(
+                assetActionsCreators.changeWeb3({
+                    type,
+                    value: { finishedAt: new Date(), error: null },
+                })
+            );
 
-                            ctrl.abort();
-                            resolve();
-                        }
+        const dispatchError = (message: string | undefined = undefined) => {
+            const web3 = getState().asset.web3;
 
-                        if (message.event === 'consign_error') {
-                            ctrl.abort();
-                            reject();
-                        }
-                    },
-                }).catch(reject);
-            } catch (error) {
-                reject();
+            const item = Object.entries(web3).find(([_, value]) => !value.finishedAt);
+            if (item) {
+                const [key] = item;
+                dispatch(
+                    assetActionsCreators.changeWeb3({
+                        type: key as 'c2pa' | 'ipfs' | 'consign',
+                        value: { finishedAt: null, error: message || 'Connection error' },
+                    })
+                );
             }
-        });
-    };
-}
+        };
 
-export function updateConsignArtworkStepThunk(payload: {
-    stepName: ConsignArtworkSteps;
-}): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch, getState) {
-        let reqBodyStep = { finishedAt: new Date() };
-        const asset = getState().asset;
+        return new Promise((resolve, reject) =>
+            fetchEventSource(url, {
+                method: 'POST',
+                headers,
+                signal: ctrl.signal,
+                onmessage(message) {
+                    if (message.event === 'c2pa_success') {
+                        dispatchFinished('c2pa');
+                    }
+                    if (message.event === 'ipfs_success') {
+                        dispatchFinished('ipfs');
+                    }
 
-        if (['c2pa', 'ipfs', 'contractExplorer'].includes(payload.stepName) && asset[payload.stepName]) {
-            reqBodyStep = { ...asset[payload.stepName], ...reqBodyStep };
-        }
+                    if (message.event === 'consign_success') {
+                        dispatchFinished('consign');
+                        dispatch(getAssetThunk());
 
-        await updateAssetStep({
-            stepName: payload.stepName,
-            [payload.stepName]: reqBodyStep,
-        });
+                        ctrl.abort();
+                        resolve();
+                    }
 
-        dispatch(assetActionsCreators.change({ [payload.stepName]: reqBodyStep }));
+                    if (message.event === 'consign_error') {
+                        dispatchError(message.data);
+
+                        ctrl.abort();
+                        reject();
+                    }
+                },
+                onerror() {
+                    dispatchError();
+
+                    ctrl.abort();
+                    reject();
+                },
+                onclose() {
+                    ctrl.abort();
+                },
+            }).catch(() => {
+                ctrl.abort();
+                reject();
+            })
+        );
     };
 }
 
