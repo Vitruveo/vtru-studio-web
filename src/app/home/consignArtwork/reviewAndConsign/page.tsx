@@ -17,6 +17,7 @@ import { useToastr } from '@/app/hooks/useToastr';
 import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
 import { requestVaultThunk } from '@/features/user/thunks';
 import { WALLET_NETWORKS } from '@/constants/wallet';
+import { validationConsignThunk } from '@/features/asset/thunks';
 
 interface ConsignStepsProps {
     [key: string]: {
@@ -50,6 +51,7 @@ const ConsignArtwork = () => {
     const userWallets = useSelector((state) => state.user.wallets);
     const previewAndConsign = useSelector((state) => state.consignArtwork.previewAndConsign);
     const vault = useSelector((state) => state.user.vault);
+    const validateConsign = useSelector((state) => state.asset.validateConsign);
 
     const texts = {
         homeTitle: language['studio.home.title'],
@@ -101,6 +103,10 @@ const ConsignArtwork = () => {
             }
         })();
     }, [isConnected, address]);
+
+    useEffect(() => {
+        dispatch(validationConsignThunk());
+    }, []);
 
     const disconnectWallet = async () => {
         await disconnectAsync();
@@ -191,6 +197,7 @@ const ConsignArtwork = () => {
                 submitText="Consign"
                 title={texts.consignArtworkTitle}
                 stepNumber={6}
+                submitDisabled={!validateConsign}
                 backOnclick={() => router.push(`/home/consignArtwork`)}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
