@@ -92,3 +92,7 @@ export async function extractAssetColors(id: string) {
     const res = await apiService.get<string[]>(`/assets/${id}/colors`);
     return res;
 }
+
+export async function validationConsign() {
+    return apiService.get('/assets/consign/validation');
+}

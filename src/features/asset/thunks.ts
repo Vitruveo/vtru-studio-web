@@ -1,5 +1,5 @@
 import { fetchEventSource } from '@microsoft/fetch-event-source';
-
+import { AxiosError, AxiosResponse } from 'axios';
 import {
     assetStorage,
     updateAssetStep,
@@ -8,6 +8,7 @@ import {
     requestDeleteFiles,
     signingMediaC2PA,
     extractAssetColors,
+    validationConsign,
 } from './requests';
 import {
     AssetSendRequestUploadApiRes,
@@ -31,7 +32,7 @@ import { consignArtworkActionsCreators, stepsNames } from '../consignArtwork/sli
 import { ASSET_STORAGE_URL } from '@/constants/asset';
 import { SectionsFormData } from '@/app/home/consignArtwork/assetMetadata/page';
 import { FormatsAuxiliayMedia } from '@/app/home/consignArtwork/auxiliaryMedia/types';
-import { AxiosResponse } from 'axios';
+
 import { BASE_URL_API } from '@/constants/api';
 import { toastrActionsCreators } from '../toastr/slice';
 
@@ -596,5 +597,27 @@ export function extractAssetColorsThunk({ id }: { id: string }): ReduxThunkActio
                 reject();
             }
         });
+    };
+}
+
+export function validationConsignThunk(): ReduxThunkAction<Promise<void>> {
+    return function (dispatch) {
+        dispatch(assetActionsCreators.setValidationConsign(false));
+
+        return validationConsign()
+            .then((response) => {
+                if (response.data) {
+                    dispatch(assetActionsCreators.setValidationConsign(true));
+                }
+            })
+            .catch((error) => {
+                dispatch(assetActionsCreators.setValidationConsign(false));
+                dispatch(
+                    toastrActionsCreators.displayToastr({
+                        type: 'error',
+                        message: error instanceof AxiosError ? error.response?.data?.args : 'Unknown error',
+                    })
+                );
+            });
     };
 }

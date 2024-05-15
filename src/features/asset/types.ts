@@ -119,6 +119,7 @@ export interface AssetSendRequestUploadReq {
 
 export interface AssetSliceState extends Asset {
     error: string;
+    validateConsign: boolean;
 }
 
 export interface AssetStorageReq {

@@ -77,6 +77,7 @@ const initialState: AssetSliceState = {
         updatedBy: null,
     },
     status: '',
+    validateConsign: false,
     error: '',
 };
 
@@ -182,7 +183,10 @@ export const assetSlice = createSlice({
         },
         setTempColors: (state, action: PayloadAction<string[]>) => {
             state.tempColors = action.payload;
-        }
+        },
+        setValidationConsign: (state, action: PayloadAction<boolean>) => {
+            state.validateConsign = action.payload;
+        },
     },
 });
 
