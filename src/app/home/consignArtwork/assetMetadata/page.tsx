@@ -100,7 +100,7 @@ export default function AssetMetadata() {
                     ...prevSections.context,
                     formData: {
                         ...prevSections.context.formData,
-                        colors: tempColors,
+                        colors: tempColors as any,
                     },
                 },
             }));
