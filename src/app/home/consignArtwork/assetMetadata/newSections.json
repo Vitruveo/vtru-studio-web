@@ -1,7 +1,7 @@
 {
     "context": {
         "formData": {
-            "colors": ["#000000"]
+            "colors": []
         },
         "schema": {
             "type": "object",
@@ -87,9 +87,8 @@
                 },
                 "colors": {
                     "type": "array",
-                    "item": "color",
                     "minItems": 1,
-                    "maxItems": 3,
+                    "maxItems": 8,
                     "items": {
                         "type": "string"
                     }

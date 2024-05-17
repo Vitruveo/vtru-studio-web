@@ -181,7 +181,7 @@ export const assetSlice = createSlice({
         setArEnabled: (state: any, action: PayloadAction<boolean>) => {
             state.assetMetadata.taxonomy.formData.arenabled = action.payload == true ? 'yes' : 'no';
         },
-        setTempColors: (state, action: PayloadAction<string[]>) => {
+        setTempColors: (state, action: PayloadAction<number[][]>) => {
             state.tempColors = action.payload;
         },
         setValidationConsign: (state, action: PayloadAction<boolean>) => {

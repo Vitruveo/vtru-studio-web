@@ -7,7 +7,6 @@ import {
     sendRequestUpload,
     requestDeleteFiles,
     signingMediaC2PA,
-    extractAssetColors,
     validationConsign,
 } from './requests';
 import {
@@ -574,7 +573,7 @@ export function extractAssetColorsThunk({ id }: { id: string }): ReduxThunkActio
                     onmessage(message) {
                         try {
                             if (message.event === 'extract_color_success') {
-                                const parsed = JSON.parse(message.data);
+                                const parsed = JSON.parse(message.data) as number[][];
 
                                 // Update asset metadata colors
                                 dispatch(assetActionsCreators.setTempColors(parsed));
