@@ -3,7 +3,7 @@ import { WidgetProps } from '@rjsf/utils';
 import { FocusEvent, useRef } from 'react';
 
 const convertRGBToHex = (rgb?: number[]) => {
-    return rgb ? '#' + rgb.map((c) => c.toString(16).padStart(2, '0')).join('') : '#000000';
+    return Array.isArray(rgb) ? '#' + rgb.map((c) => c.toString(16).padStart(2, '0')).join('') : '#000000';
 };
 
 const convertHexToRGB = (hex: string) => {
@@ -20,7 +20,7 @@ export const CustomColorWidget = (props: WidgetProps) => {
             clearTimeout(timeoutRef.current);
         }
         timeoutRef.current = setTimeout(() => {
-            props.onChange(convertHexToRGB(value));
+            props.onChange(value);
         }, 1000);
     };
 
@@ -39,7 +39,7 @@ export const CustomColorWidget = (props: WidgetProps) => {
                 onFocus={onFocus}
                 style={{ width: '100%' }}
                 onChange={debouncedChange}
-                value={convertRGBToHex(props.value)}
+                value={Array.isArray(props.value) ? convertRGBToHex(props.value) : props.value}
                 type="color"
             />
         </Box>
