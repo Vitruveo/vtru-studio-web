@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { Stack, Box, Typography } from '@mui/material';
 import { WalletProvider } from '@/app/home/components/apps/wallet';
-import { AccountSettingsProps, Creator } from './types';
+import { AccountSettingsProps } from './types';
 import Wallet from './wallet';
 import AddEmails from './addEmails';
 import { AccountDataList, AccountDataListButton, AccountDataListItem } from './components/account-data-list';
@@ -23,9 +23,7 @@ const AccountSettings = ({
     const [editCurrentModalValues, setEditCurrentModalValues] = useState<CreatorForm | undefined>(undefined);
     const currentCreatorIndex = useRef<number | null>(null);
 
-    const openModal = () => {
-        setOpen(true);
-    };
+    const openModal = () => setOpen(true);
 
     const closeModal = () => {
         setOpen(false);
@@ -39,6 +37,7 @@ const AccountSettings = ({
     };
 
     const addCreator = (form: CreatorForm) => {
+        console.log(form);
         setFieldValue('creators', [...values.creators, form]);
     };
 

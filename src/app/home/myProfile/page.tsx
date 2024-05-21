@@ -63,7 +63,7 @@ export default function ProfileSettings() {
         useFormik<AccountSettingsFormValues>({
             initialValues,
             // validationSchema: stepsSchemaValidation,
-            onSubmit: onSubmit,
+            onSubmit,
         });
 
     async function onSubmit(formValues: AccountSettingsFormValues) {

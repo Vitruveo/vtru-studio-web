@@ -33,7 +33,6 @@ export interface AccountSettingsFormValues {
     defaultCreator: Creator;
 }
 
-
 type AccountSettingsFormErros = FormikErrors<AccountSettingsFormValues>;
 
 export interface AccountSettingsProps extends FormikDefaultProps<AccountSettingsFormValues> {
