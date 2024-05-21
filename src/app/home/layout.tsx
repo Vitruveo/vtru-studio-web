@@ -55,12 +55,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     const token = useSelector((state) => state.user.token);
     const customizer = useSelector((state) => state.customizer);
     const email = useSelector((state) => state.user.login.email);
+    const canConsignArtwork = useSelector((state) => state.user.canConsignArtwork);
 
     useEffect(() => {
         if (!isValidToken(token)) {
             router.push('/login');
         }
     }, [token, router]);
+
+    useEffect(() => {
+        if (!canConsignArtwork) {
+            router.push('/home')
+        }
+    }, [canConsignArtwork])
 
     useEffect(() => {
         if (!webSocketService.socket) {
@@ -71,7 +78,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         }
     }, [webSocketService]);
 
-    // NOTE: NOT USING TRY CATCH BECAUSE WE WANT TO DISPLAY THE ERROR MESSAGE ONLY IF THE EMAIL IS NOT IN THE ALLOW LIST
     useEffect(() => {
         if (token && email) {
             (async () => {

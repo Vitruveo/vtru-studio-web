@@ -62,6 +62,11 @@ const removeEmptyProperties = (obj: Record<string, any> | any[] | null): Record<
     }
 };
 
+const convertHexToRGB = (hex: string) => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : [0, 0, 0];
+};
+
 export default function AssetMetadata() {
     const [sectionsStatus, setSectionsStatus] = useState<{ [key: string]: string }>({});
     const toast = useToastr();
@@ -100,7 +105,7 @@ export default function AssetMetadata() {
                     ...prevSections.context,
                     formData: {
                         ...prevSections.context.formData,
-                        colors: tempColors,
+                        colors: tempColors as any,
                     },
                 },
             }));
@@ -236,8 +241,18 @@ export default function AssetMetadata() {
         });
 
         if (skip) return;
-
         const isCompleted = !isValid.length || !isValid.includes(false);
+
+        const colors = (sections.context.formData as any).colors;
+
+        if (Array.isArray(colors)) {
+            (sections.context.formData as any).colors = colors.map((color) => {
+                if (typeof color === 'string') {
+                    return convertHexToRGB(color);
+                }
+                return color;
+            });
+        }
 
         dispatch(
             assetMetadataThunk(
@@ -252,7 +267,7 @@ export default function AssetMetadata() {
             )
         );
 
-        dispatch(assetActionsCreators.setTempColors([]))
+        dispatch(assetActionsCreators.setTempColors([]));
 
         handleUpdateStatus();
 
