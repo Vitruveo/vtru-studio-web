@@ -18,6 +18,7 @@ import CustomSelect from '../../components/forms/theme-elements/CustomSelect';
 import { Creator } from '../types';
 import { creatorSchema } from '../schemas/creator-schema';
 import creatorJSON from '../schemas/creators.json';
+import countriesMapper from '@/utils/mappers/countries';
 
 interface CreatorJSONEnumProperty {
     enum: string[];
@@ -68,9 +69,13 @@ const initialValues: CreatorForm = {
 const data: CreatorJSON = creatorJSON;
 
 export const CreatorModal = ({ open, onClose, onAdd, isEditing, onEdit, initialFormValues }: CreatorModalProps) => {
-
     return (
-        <Formik initialValues={initialFormValues ?? initialValues} enableReinitialize onSubmit={() => {}} validationSchema={creatorSchema}>
+        <Formik
+            initialValues={initialFormValues ?? initialValues}
+            enableReinitialize
+            onSubmit={() => {}}
+            validationSchema={creatorSchema}
+        >
             {({ values, handleChange, validateForm, errors, resetForm }) => (
                 <Dialog open={open} onClose={onClose}>
                     <DialogTitle>Add New Creator</DialogTitle>
@@ -190,7 +195,7 @@ export const CreatorModal = ({ open, onClose, onAdd, isEditing, onEdit, initialF
                                 >
                                     {data.creators.schema.items.properties.nationality.enum.map((item, index) => (
                                         <MenuItem value={item} key={index}>
-                                            {item}
+                                            {countriesMapper[item as keyof typeof countriesMapper]}
                                         </MenuItem>
                                     ))}
                                 </CustomSelect>
@@ -207,7 +212,7 @@ export const CreatorModal = ({ open, onClose, onAdd, isEditing, onEdit, initialF
                                 >
                                     {data.creators.schema.items.properties.residence.enum.map((item, index) => (
                                         <MenuItem value={item} key={index}>
-                                            {item}
+                                            {countriesMapper[item as keyof typeof countriesMapper]}
                                         </MenuItem>
                                     ))}
                                 </CustomSelect>
