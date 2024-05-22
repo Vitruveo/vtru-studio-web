@@ -75,6 +75,7 @@ export default function ProfileSettings() {
                     username: values.username,
                     emails: values.emails,
                     wallets: values.wallets,
+                    creators: [values.defaultCreator],
                 })
             );
 
@@ -132,7 +133,6 @@ export default function ProfileSettings() {
                     translation: texts.emailsTitle,
                     isValid: !!values.emails.length,
                 },
-
                 wallets: {
                     translation: texts.walletsTitle,
                     isValid: !!values.wallets.length,

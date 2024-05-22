@@ -37,7 +37,6 @@ const AccountSettings = ({
     };
 
     const addCreator = (form: CreatorForm) => {
-        console.log(form);
         setFieldValue('creators', [...values.creators, form]);
     };
 

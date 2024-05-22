@@ -4,6 +4,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ChangeStatusPayload, ConsignArtworkAssetStatus, ConsignArtworkSliceState } from './types';
 import { Email, Wallet } from '../user/types';
 import { AssetConsignArtwork } from '../asset/types';
+import { Creator } from '@/app/home/myProfile/types';
 
 export const stepsNames = {
     assetMedia: 'studio.consignArtwork.stepName.assetMedia',
@@ -96,10 +97,10 @@ export const consignArtworkSlice = createSlice({
     reducers: {
         checkIsCompletedProfile: (
             state,
-            action: PayloadAction<{ username: string; wallets: Wallet[]; emails: Email[] }>
+            action: PayloadAction<{ username: string; wallets: Wallet[]; emails: Email[]; creators: Creator[] }>
         ) => {
-            const { username, wallets, emails } = action.payload;
-            state.isCompletedProfile = !!(emails.length && wallets.length && username.length);
+            const { username, wallets, emails, creators } = action.payload;
+            state.isCompletedProfile = !!(emails.length && wallets.length && username.length && creators.length);
         },
         changeGoToConsignArtwork: (state, action: PayloadAction<boolean>) => {
             state.goToConsignArtwork = action.payload;
@@ -119,12 +120,12 @@ export const consignArtworkSlice = createSlice({
             state.creatorWallet = action.payload.creatorWallet;
             state.creatorContract = action.payload.creatorContract;
             state.creatorCredits = action.payload.creatorCredits;
-            state.status = action.payload.status
+            state.status = action.payload.status;
         },
         changeConsignArtworkAssetStatus: (state, action: PayloadAction<{ status: ConsignArtworkAssetStatus }>) => {
             const { status } = action.payload;
             state.status = status;
-        }
+        },
     },
 });
 
