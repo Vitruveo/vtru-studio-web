@@ -75,7 +75,6 @@ export default function ProfileSettings() {
                     username: values.username,
                     emails: values.emails,
                     wallets: values.wallets,
-                    creators: [values.defaultCreator],
                 })
             );
 
