@@ -1,6 +1,6 @@
 import { StepsFormValues } from '@/app/home/consignArtwork/types';
 import { APIResponse, Framework } from '../common/types';
-import { AccountSettingsFormValues } from '@/app/home/myProfile/types';
+import { AccountSettingsFormValues, Creator } from '@/app/home/myProfile/types';
 
 export interface Email {
     email: string;
@@ -128,6 +128,7 @@ export interface CreatorSchemaType {
     };
     roles: string[];
     framework: Framework;
+    creators: Array<Creator>;
 }
 
 export interface SendEmailCodeReq {
