@@ -128,7 +128,7 @@ export interface CreatorSchemaType {
     };
     roles: string[];
     framework: Framework;
-    creators: Array<Creator>;
+    creators: Creator;
 }
 
 export interface SendEmailCodeReq {

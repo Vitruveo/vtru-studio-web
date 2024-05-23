@@ -160,7 +160,7 @@ export function creatorAccountThunk(payload: StepsFormValues | AccountSettingsFo
                 emails: payload.emails as any,
                 wallets: payload.wallets,
                 framework: user.framework,
-                creators: [(payload as AccountSettingsFormValues).defaultCreator],
+                creators: (payload as AccountSettingsFormValues).defaultCreator,
             },
         });
 
