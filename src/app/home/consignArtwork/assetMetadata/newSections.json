@@ -598,7 +598,18 @@
         }
     },
     "creators": {
-        "formData": [],
+        "formData": [
+            {
+                "bio": "",
+                "ethnicity": "",
+                "gender": "",
+                "name": "",
+                "nationality": "",
+                "profileUrl": "",
+                "residence": "",
+                "roles": []
+            }
+        ],
         "schema": {
             "type": "array",
             "items": {

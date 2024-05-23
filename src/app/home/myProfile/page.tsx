@@ -39,6 +39,7 @@ export default function ProfileSettings() {
     const { username, emailDefault, walletDefault, emails, wallets, requestAvatarUpload } = useSelector(
         userSelector(['username', 'emailDefault', 'walletDefault', 'emails', 'wallets', 'requestAvatarUpload'])
     );
+    const creatorAsset = useSelector((state) => state.asset.assetMetadata?.creators.formData);
 
     const initialValues: AccountSettingsFormValues = {
         emailDefault: !emailDefault || !emailDefault.length ? emails[0]?.email : emailDefault,
@@ -46,17 +47,19 @@ export default function ProfileSettings() {
         username,
         emails: emails.filter((email) => email.checkedAt),
         wallets,
-        creators: [],
-        defaultCreator: {
-            bio: '',
-            ethnicity: '',
-            gender: '',
-            name: '',
-            nationality: '',
-            profileUrl: '',
-            residence: '',
-            roles: [],
-        },
+        creators: Array.isArray(creatorAsset) ? creatorAsset : [],
+        defaultCreator: Array.isArray(creatorAsset)
+            ? creatorAsset[0]
+            : {
+                  bio: '',
+                  ethnicity: '',
+                  gender: '',
+                  name: '',
+                  nationality: '',
+                  profileUrl: '',
+                  residence: '',
+                  roles: [],
+              },
     };
 
     const { handleSubmit, handleChange, setFieldValue, setFieldError, setErrors, values, errors } =
