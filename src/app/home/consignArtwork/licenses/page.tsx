@@ -144,6 +144,20 @@ export default function Licenses() {
     const handleSaveData = async (event?: React.FormEvent) => {
         if (event) event.preventDefault();
 
+        if (values.nft.added && !values.nft.availableLicenses) {
+            values.nft.availableLicenses = 1;
+        }
+
+        if (values.remix.added && !values.remix.availableLicenses) {
+            toast.display({ type: 'error', message: 'The available field must be greater than 0 on REMIX' });
+            return;
+        }
+
+        if (values.print.added && !values.print.availableLicenses) {
+            toast.display({ type: 'error', message: 'The available field must be greater than 0 on PRINT' });
+            return;
+        }
+
         if (
             values.nft.availableLicenses < 1 ||
             values.remix.availableLicenses < 1 ||

@@ -13,6 +13,7 @@ import {
 import { apiService } from '@/services/api';
 import { assetActionsCreators } from './slice';
 import { ASSET_STORAGE_BUCKET } from '@/constants/asset';
+import { BASE_URL_BATCH } from '@/constants/api';
 
 export async function requestDeleteFiles(data: RequestDeleteFilesReq): Promise<any> {
     if (!data.deleteKeys.length) return;
@@ -95,4 +96,12 @@ export async function extractAssetColors(id: string) {
 
 export async function validationConsign() {
     return apiService.get('/assets/consign/validation');
+}
+
+export async function consign(id: string) {
+    return axios.post(`${BASE_URL_BATCH}/consign/${id}`);
+}
+
+export async function eventsByTransaction(transaction: string) {
+    return axios.get(`${BASE_URL_BATCH}/events/${transaction}`);
 }

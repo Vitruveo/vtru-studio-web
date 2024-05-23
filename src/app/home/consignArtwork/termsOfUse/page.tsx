@@ -29,7 +29,9 @@ export default function ContractScreen() {
 
     const lgUp = useMediaQuery((th: Theme) => th.breakpoints.up('lg'));
     const currentLanguage = useSelector((state) => state.customizer.currentLanguage);
-    const { contract, isOriginal, generatedArtworkAI, notMintedOtherBlockchain } = useSelector((state) => state.asset);
+    const { contract, isOriginal, generatedArtworkAI, notMintedOtherBlockchain } = useSelector(
+        (state) => state.asset.terms
+    );
 
     const Contract = contracts[currentLanguage] || contracts.default;
 

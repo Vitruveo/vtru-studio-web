@@ -75,10 +75,12 @@ export interface Asset {
         preview: Format;
         print: Format;
     };
-    isOriginal: boolean;
-    generatedArtworkAI: boolean;
-    notMintedOtherBlockchain: boolean;
-    contract: boolean;
+    terms: {
+        isOriginal: boolean;
+        generatedArtworkAI: boolean;
+        notMintedOtherBlockchain: boolean;
+        contract: boolean;
+    };
     assetMetadata?: {
         isCompleted?: boolean;
     } & SectionsFormData;
@@ -108,6 +110,12 @@ export interface AssetConsignArtwork {
     status: ConsignArtworkAssetStatus;
 }
 
+export interface HistoryItems {
+    status: string;
+    message: string;
+    when: string;
+}
+
 export interface AssetSendRequestUploadReq {
     mimetype: string;
     originalName: string;
@@ -117,9 +125,23 @@ export interface AssetSendRequestUploadReq {
     };
 }
 
+export interface Consign {
+    transaction: string;
+    status: string;
+    message: string;
+    when: string;
+    steps: {
+        check: string | null;
+        c2pa: string | null;
+        ipfs: string | null;
+        contractExplorer: string | null;
+    };
+}
+
 export interface AssetSliceState extends Asset {
     error: string;
     validateConsign: boolean;
+    consign: Consign;
 }
 
 export interface AssetStorageReq {
