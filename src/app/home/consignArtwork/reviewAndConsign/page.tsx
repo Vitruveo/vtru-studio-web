@@ -82,27 +82,27 @@ const ConsignArtwork = () => {
     ];
 
     /* HANDLE WALLET CONNECTION */
-    useEffect(() => {
-        (async () => {
-            let hasWallet = false;
-            if (isConnected && address) {
-                for (const wallet of userWallets) {
-                    if (wallet.address === address) {
-                        dispatch(consignArtworkActionsCreators.setPreviewAndConsignWallet(wallet.address));
-                        hasWallet = true;
-                        break;
-                    }
-                }
-                if (!hasWallet) {
-                    toastr.display({
-                        type: 'error',
-                        message: 'Wallet not found, please add it to your account at your profile.',
-                    });
-                    await disconnectWallet();
-                }
-            }
-        })();
-    }, [isConnected, address]);
+    // useEffect(() => {
+    //     (async () => {
+    //         let hasWallet = false;
+    //         if (isConnected && address) {
+    //             for (const wallet of userWallets) {
+    //                 if (wallet.address === address) {
+    //                     dispatch(consignArtworkActionsCreators.setPreviewAndConsignWallet(wallet.address));
+    //                     hasWallet = true;
+    //                     break;
+    //                 }
+    //             }
+    //             if (!hasWallet) {
+    //                 toastr.display({
+    //                     type: 'error',
+    //                     message: 'Wallet not found, please add it to your account at your profile.',
+    //                 });
+    //                 await disconnectWallet();
+    //             }
+    //         }
+    //     })();
+    // }, [isConnected, address]);
 
     useEffect(() => {
         dispatch(validationConsignThunk());
