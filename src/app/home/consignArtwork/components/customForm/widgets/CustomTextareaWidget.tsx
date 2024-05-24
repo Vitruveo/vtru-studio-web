@@ -13,6 +13,10 @@ export const CustomTextareaWidget = (props: WidgetProps) => {
         props.onFocus(props.id, e.target.value);
     };
 
+    const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        props.onChange(e.target.value);
+    };
+
     return (
         <TextareaAutosize
             minRows={4}
@@ -20,7 +24,7 @@ export const CustomTextareaWidget = (props: WidgetProps) => {
             id={props.id}
             value={props.value}
             required={props.required}
-            onChange={props.onChange}
+            onChange={onChange}
             onBlur={onBlur}
             onFocus={onFocus}
             style={{
