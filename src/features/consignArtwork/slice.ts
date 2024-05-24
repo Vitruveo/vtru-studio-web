@@ -4,8 +4,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ChangeStatusPayload, ConsignArtworkAssetStatus, ConsignArtworkSliceState } from './types';
 import { Email, Wallet } from '../user/types';
 import { AssetConsignArtwork } from '../asset/types';
-import { set } from 'lodash';
-
+ 
 export const stepsNames = {
     assetMedia: 'studio.consignArtwork.stepName.assetMedia',
     auxiliaryMedia: 'studio.consignArtwork.stepName.auxiliaryMedia',

@@ -21,15 +21,6 @@ const MainWrapper = styled('div')(() => ({
     width: '100%',
 }));
 
-const PageWrapper = styled('div')(() => ({
-    display: 'flex',
-    flexGrow: 1,
-    paddingBottom: '30px',
-    flexDirection: 'column',
-    zIndex: 1,
-    backgroundColor: 'transparent',
-}));
-
 const PageFooterWrapper = styled('div')(() => ({
     display: 'flex',
     overflowX: 'hidden',
@@ -39,12 +30,7 @@ const PageFooterWrapper = styled('div')(() => ({
     backgroundColor: 'transparent',
 }));
 
-interface Props {
-    children: React.ReactNode;
-}
-
 const isValidToken = (token: string) => {
-    // Sua lógica de validação do token aqui
     return token !== null && token !== undefined && token !== '';
 };
 
@@ -55,19 +41,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     const token = useSelector((state) => state.user.token);
     const customizer = useSelector((state) => state.customizer);
     const email = useSelector((state) => state.user.login.email);
-    const canConsignArtwork = useSelector((state) => state.user.canConsignArtwork);
 
     useEffect(() => {
         if (!isValidToken(token)) {
             router.push('/login');
         }
     }, [token, router]);
-
-    useEffect(() => {
-        if (!canConsignArtwork) {
-            router.push('/home')
-        }
-    }, [canConsignArtwork])
 
     useEffect(() => {
         if (!webSocketService.socket) {
@@ -103,13 +82,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <MainWrapper>
             <title>Dashboard</title>
-            {/* ------------------------------------------- */}
-            {/* Sidebar */}
-            {/* ------------------------------------------- */}
+
             {customizer.isHorizontal ? '' : <Sidebar />}
-            {/* ------------------------------------------- */}
-            {/* Main Wrapper */}
-            {/* ------------------------------------------- */}
+
             <PageFooterWrapper
                 className="page-wrapper"
                 sx={{
@@ -120,30 +95,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     }),
                 }}
             >
-                {/* ------------------------------------------- */}
-                {/* Header */}
-                {/* ------------------------------------------- */}
                 {customizer.isHorizontal ? <HorizontalHeader /> : <Header />}
-                {/* PageContent */}
+
                 {customizer.isHorizontal ? <Navigation /> : ''}
                 <Box
                     sx={{
                         maxWidth: customizer.isLayout === 'boxed' ? 'lg' : '100%!important',
                     }}
                 >
-                    {/* ------------------------------------------- */}
-                    {/* PageContent */}
-                    {/* ------------------------------------------- */}
-
-                    <Box sx={{ minHeight: 'calc(100vh - 170px)' }}>
-                        {/* <Outlet /> */}
-                        {children}
-                        {/* <Index /> */}
-                    </Box>
-
-                    {/* ------------------------------------------- */}
-                    {/* End Page */}
-                    {/* ------------------------------------------- */}
+                    <Box sx={{ minHeight: 'calc(100vh - 170px)' }}>{children}</Box>
                 </Box>
             </PageFooterWrapper>
         </MainWrapper>
