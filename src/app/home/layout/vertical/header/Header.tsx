@@ -24,6 +24,7 @@ const Header = () => {
 
     // drawer
     const customizer = useSelector((state) => state.customizer);
+    const hasConsign = useSelector((state) => state.asset.contractExplorer?.tx);
 
     const AppBarStyled = styled(AppBar)(({ theme }) => ({
         boxShadow: 'none',
@@ -54,9 +55,11 @@ const Header = () => {
                 </IconButton>
                 <Box flexGrow={1} />
                 <Stack spacing={1} direction="row" alignItems="center">
-                    <WalletProvider>
-                        <ClaimContainer />
-                    </WalletProvider>
+                    {hasConsign && (
+                        <WalletProvider>
+                            <ClaimContainer />
+                        </WalletProvider>
+                    )}
                     <Rss />
                     <Language />
 

@@ -141,13 +141,13 @@ const ConsignArtwork = () => {
             actionTitle: texts.preview,
             actionFunc: handlePreview,
         },
-        creatorWallet: {
-            title: 'Creator Wallet',
-            actionTitle: previewAndConsign.creatorWallet?.value ? 'Disconnect' : 'Connect',
-            value: formatContent(previewAndConsign.creatorWallet?.value),
-            actionFunc: handleWalletConnection,
-            loading: isConnecting || isDisconnecting,
-        },
+        // creatorWallet: {
+        //     title: 'Creator Wallet',
+        //     actionTitle: previewAndConsign.creatorWallet?.value ? 'Disconnect' : 'Connect',
+        //     value: formatContent(previewAndConsign.creatorWallet?.value),
+        //     actionFunc: handleWalletConnection,
+        //     loading: isConnecting || isDisconnecting,
+        // },
         // creatorCredits: {
         //     title: 'Creator Credits',
         //     actionTitle: previewAndConsign.creatorCredits?.value ? 'Requested' : 'Request',
@@ -175,15 +175,15 @@ const ConsignArtwork = () => {
         //         );
         //     },
         // },
-        creatorContract: {
-            title: 'Creator Contract',
-            status: 'Not Created',
-            actionTitle: vault.transactionHash ? 'View' : 'Start',
-            value: formatContent(vault.transactionHash),
-            disabled: isCreatorContractDisabled,
-            loading: vault.isLoading,
-            actionFunc: handleCreatorContract,
-        },
+        // creatorContract: {
+        //     title: 'Creator Contract',
+        //     status: 'Not Created',
+        //     actionTitle: vault.transactionHash ? 'View' : 'Start',
+        //     value: formatContent(vault.transactionHash),
+        //     disabled: isCreatorContractDisabled,
+        //     loading: vault.isLoading,
+        //     actionFunc: handleCreatorContract,
+        // },
     };
 
     const handleSubmit = async (event?: React.FormEvent) => {

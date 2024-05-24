@@ -142,6 +142,7 @@
     },
     "taxonomy": {
         "formData": {
+            "arenabled": "no",
             "subject": [""],
             "tags": ["artwork"]
         },
