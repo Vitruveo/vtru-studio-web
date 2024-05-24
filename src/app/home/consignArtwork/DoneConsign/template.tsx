@@ -11,7 +11,7 @@ export default function DoneConsignTemplate({ children }: { children: React.Reac
     
     useEffect(() => {
         if (!isCompleted) {
-            router.push('/home');
+            router.push('/home/consignArtwork/reviewAndConsign');
         }
     }, [router]);
 
