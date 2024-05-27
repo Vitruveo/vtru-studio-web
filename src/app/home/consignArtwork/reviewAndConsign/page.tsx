@@ -15,6 +15,9 @@ import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { WalletProvider } from '../../components/apps/wallet';
 import { useToastr } from '@/app/hooks/useToastr';
 import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
+import { requestVaultThunk } from '@/features/user/thunks';
+import { WALLET_NETWORKS } from '@/constants/wallet';
+import { validationConsignThunk } from '@/features/asset/thunks';
 
 interface ConsignStepsProps {
     [key: string]: {
@@ -28,46 +31,27 @@ interface ConsignStepsProps {
     };
 }
 
+const formatContent = (address?: string | null) => {
+    if (!address) return undefined;
+    return address.slice(0, 6) + '...' + address.slice(-4);
+};
+
+const contractURL =
+    WALLET_NETWORKS == 'testnet' ? 'https://test-explorer.vitruveo.xyz/tx/' : 'https://explorer.vitruveo.xyz/tx/';
+
 const ConsignArtwork = () => {
     const theme = useTheme();
     const toastr = useToastr();
     const router = useRouter();
     const dispatch = useDispatch();
     const { language } = useI18n();
-    const { disconnectAsync } = useDisconnect();
-    const { isConnected, address } = useAccount();
+    const { disconnectAsync, isPending: isDisconnecting } = useDisconnect();
+    const { isConnected, address, isConnecting } = useAccount();
     const { openConnectModal } = useConnectModal();
-
-    const { status } = useSelector((state) => state.asset);
-    const { previewAndConsign } = useSelector((state) => state.consignArtwork);
-    const wallets = useSelector((state) => state.user.wallets);
-
-    // Handles the wallet address change
-    useEffect(() => {
-        let hasWallet = false;
-        if (isConnected && address) {
-            for (const wallet of wallets) {
-                if (wallet.address === address) {
-                    dispatch(
-                        consignArtworkActionsCreators.changePreviewAndConsign({
-                            creatorWallet: {
-                                checked: true,
-                                value: address,
-                            },
-                        })
-                    );
-                    hasWallet = true;
-                    break;
-                }
-            }
-            if (!hasWallet) {
-                toastr.display({
-                    type: 'error',
-                    message: 'Wallet not found, please add it to your account at your profile.',
-                });
-            }
-        }
-    }, [isConnected, address]);
+    const userWallets = useSelector((state) => state.user.wallets);
+    const previewAndConsign = useSelector((state) => state.consignArtwork.previewAndConsign);
+    const vault = useSelector((state) => state.user.vault);
+    const validateConsign = useSelector((state) => state.asset.validateConsign);
 
     const texts = {
         homeTitle: language['studio.home.title'],
@@ -97,19 +81,41 @@ const ConsignArtwork = () => {
         },
     ];
 
-    const handleSubmit = async (event?: React.FormEvent) => {
-        if (event) event.preventDefault();
-        router.push(`/home/consignArtwork/DoneConsign`);
+    /* HANDLE WALLET CONNECTION */
+    // useEffect(() => {
+    //     (async () => {
+    //         let hasWallet = false;
+    //         if (isConnected && address) {
+    //             for (const wallet of userWallets) {
+    //                 if (wallet.address === address) {
+    //                     dispatch(consignArtworkActionsCreators.setPreviewAndConsignWallet(wallet.address));
+    //                     hasWallet = true;
+    //                     break;
+    //                 }
+    //             }
+    //             if (!hasWallet) {
+    //                 toastr.display({
+    //                     type: 'error',
+    //                     message: 'Wallet not found, please add it to your account at your profile.',
+    //                 });
+    //                 await disconnectWallet();
+    //             }
+    //         }
+    //     })();
+    // }, [isConnected, address]);
+
+    useEffect(() => {
+        dispatch(validationConsignThunk());
+    }, []);
+
+    const disconnectWallet = async () => {
+        await disconnectAsync();
+        dispatch(consignArtworkActionsCreators.deletePreviewAndConsignWallet());
     };
 
-    const grayColor = theme.palette.text.disabled;
-
-    const handleWalletConnection = () => {
+    const handleWalletConnection = async () => {
         if (isConnected || previewAndConsign.creatorWallet?.value) {
-            disconnectAsync();
-            dispatch(
-                consignArtworkActionsCreators.changePreviewAndConsign({ creatorWallet: { checked: false, value: '' } })
-            );
+            await disconnectWallet();
             return;
         }
         openConnectModal?.();
@@ -119,83 +125,70 @@ const ConsignArtwork = () => {
         dispatch(consignArtworkThunks.checkPreview());
     };
 
+    const handleCreatorContract = async () => {
+        if (vault?.transactionHash) {
+            window.open(contractURL + vault.transactionHash, '_blank');
+            return;
+        }
+        dispatch(requestVaultThunk());
+    };
+
+    const isCreatorContractDisabled = vault.transactionHash ? false : !previewAndConsign.creatorWallet?.value;
+
     const consignSteps: ConsignStepsProps = {
         artworkListing: {
             title: texts.artworkListingTitle,
             actionTitle: texts.preview,
             actionFunc: handlePreview,
         },
-        creatorWallet: {
-            title: 'Creator Wallet',
-            actionTitle: previewAndConsign.creatorWallet?.value ? 'Disconnect' : 'Connect',
-            value:
-                previewAndConsign.creatorWallet?.value &&
-                previewAndConsign.creatorWallet?.value.slice(0, 6) +
-                    '...' +
-                    previewAndConsign.creatorWallet?.value.slice(-4),
-            actionFunc: handleWalletConnection,
-            disabled: false,
-        },
-        creatorCredits: {
-            title: 'Creator Credits',
-            actionTitle: previewAndConsign.creatorCredits?.value ? 'Requested' : 'Request',
-            value: previewAndConsign.creatorCredits?.value,
-            loading: previewAndConsign.creatorCredits?.loading,
-            disabled: true /*!previewAndConsign.creatorWallet?.value || previewAndConsign.creatorCredits?.value === 1*/,
-            actionFunc: async () => {
-                dispatch(
-                    consignArtworkActionsCreators.changePreviewAndConsign({
-                        creatorCredits: {
-                            checked: false,
-                            loading: true,
-                        },
-                    })
-                );
-                await new Promise((resolve) => setTimeout(resolve, 2000));
-                dispatch(
-                    consignArtworkActionsCreators.changePreviewAndConsign({
-                        creatorCredits: {
-                            checked: true,
-                            value: 1,
-                            loading: false,
-                        },
-                    })
-                );
-            },
-        },
-        creatorContract: {
-            title: 'Creator Contract',
-            status: 'Not Created',
-            actionTitle: previewAndConsign.creatorContract?.value ? 'View' : 'Start',
-            value: previewAndConsign.creatorContract?.value,
-            disabled: true /* !previewAndConsign.creatorWallet?.value */,
-            loading: previewAndConsign.creatorContract?.loading,
-            actionFunc: async () => {
-                if (previewAndConsign.creatorContract?.value) {
-                    window.open('https://explorer.vitruveo.xyz/', '_blank');
-                    return;
-                }
+        // creatorWallet: {
+        //     title: 'Creator Wallet',
+        //     actionTitle: previewAndConsign.creatorWallet?.value ? 'Disconnect' : 'Connect',
+        //     value: formatContent(previewAndConsign.creatorWallet?.value),
+        //     actionFunc: handleWalletConnection,
+        //     loading: isConnecting || isDisconnecting,
+        // },
+        // creatorCredits: {
+        //     title: 'Creator Credits',
+        //     actionTitle: previewAndConsign.creatorCredits?.value ? 'Requested' : 'Request',
+        //     value: previewAndConsign.creatorCredits?.value,
+        //     loading: previewAndConsign.creatorCredits?.loading,
+        //     disabled: true /*!previewAndConsign.creatorWallet?.value || previewAndConsign.creatorCredits?.value === 1*/,
+        //     actionFunc: async () => {
+        //         dispatch(
+        //             consignArtworkActionsCreators.changePreviewAndConsign({
+        //                 creatorCredits: {
+        //                     checked: false,
+        //                     loading: true,
+        //                 },
+        //             })
+        //         );
+        //         await new Promise((resolve) => setTimeout(resolve, 2000));
+        //         dispatch(
+        //             consignArtworkActionsCreators.changePreviewAndConsign({
+        //                 creatorCredits: {
+        //                     checked: true,
+        //                     value: 1,
+        //                     loading: false,
+        //                 },
+        //             })
+        //         );
+        //     },
+        // },
+        // creatorContract: {
+        //     title: 'Creator Contract',
+        //     status: 'Not Created',
+        //     actionTitle: vault.transactionHash ? 'View' : 'Start',
+        //     value: formatContent(vault.transactionHash),
+        //     disabled: isCreatorContractDisabled,
+        //     loading: vault.isLoading,
+        //     actionFunc: handleCreatorContract,
+        // },
+    };
 
-                dispatch(
-                    consignArtworkActionsCreators.changePreviewAndConsign({
-                        creatorContract: {
-                            checked: false,
-                            loading: true,
-                        },
-                    })
-                );
-                await new Promise((resolve) => setTimeout(resolve, 2000));
-                dispatch(
-                    consignArtworkActionsCreators.changePreviewAndConsign({
-                        creatorContract: {
-                            checked: true,
-                            value: '0x1234567890',
-                            loading: false,
-                        },
-                    })
-                );
-            },
-        },
+    const handleSubmit = async (event?: React.FormEvent) => {
+        if (event) event.preventDefault();
+        router.push(`/home/consignArtwork/DoneConsign`);
     };
 
     return (
@@ -204,11 +197,8 @@ const ConsignArtwork = () => {
                 submitText="Consign"
                 title={texts.consignArtworkTitle}
                 stepNumber={6}
+                submitDisabled={!validateConsign}
                 backOnclick={() => router.push(`/home/consignArtwork`)}
-                submitDisabled={
-                    !previewAndConsign.artworkListing
-                        ?.checked /* Object.values(previewAndConsign).some((v) => !v.checked) */
-                }
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
 
@@ -259,7 +249,9 @@ const ConsignArtwork = () => {
                                             height="100%"
                                             width="100%"
                                             color={v.status && !v.value ? 'white' : 'inherit'}
-                                            bgcolor={(v?.status && !v.value && grayColor) || '#EFEFEF'}
+                                            bgcolor={
+                                                (v?.status && !v.value && theme.palette.text.disabled) || '#EFEFEF'
+                                            }
                                         >
                                             {v.value || v.status}
                                         </Box>
@@ -267,12 +259,7 @@ const ConsignArtwork = () => {
                                     <Box width={120} marginLeft={1}>
                                         <Box width={100}>
                                             <Button
-                                                disabled={
-                                                    v?.disabled ||
-                                                    v?.loading ||
-                                                    status === 'published' ||
-                                                    status === 'preview'
-                                                }
+                                                disabled={v?.disabled || v?.loading}
                                                 onClick={v.actionFunc}
                                                 size="small"
                                                 variant="contained"
@@ -293,13 +280,13 @@ const ConsignArtwork = () => {
                                                 )}
                                             </Button>
                                         </Box>
-                                        {v.title != 'Artwork Listing' && v.title != 'Creator Wallet' && (
+                                        {/*v.title != 'Artwork Listing' && v.title != 'Creator Wallet' && (
                                             <Box position="relative" left="110px">
                                                 <Typography position="absolute" top="-26px">
                                                     {texts.comingSoon}
                                                 </Typography>
                                             </Box>
-                                        )}
+                                        )*/}
                                     </Box>
                                 </Box>
                             </Box>

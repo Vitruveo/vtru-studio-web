@@ -17,6 +17,9 @@ import Card from './common/card';
 import { LicenseProps } from './types';
 import { useI18n } from '@/app/hooks/useI18n';
 
+// TODO: AVAILABLE LICENSE SÓ VAI SER USADA QUANDO ELASTIC EDITIONS FOR SELECIONADO
+// NOTE: AVAILABLE LICENSE DESATIVADO POR ENQUANTO
+
 function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const [currentDescription, setCurrentDescription] = useState('nft.editionOption');
     const values = allValues.nft || {};
@@ -130,7 +133,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
         <Box width={700} display="flex" justifyContent="space-between" marginTop={2}>
             <Card disabled title="NFT-ART-1" added={values?.added} setAdded={handleAdded} width={320} height={400}>
                 {!values?.added ? (
-                    <Box paddingLeft={7} paddingTop={3} paddingRight={3}>
+                    <Box p={1.5}>
                         <Typography
                             style={{ wordWrap: 'break-word' }}
                             color="grey"
@@ -143,7 +146,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                         </Typography>
                     </Box>
                 ) : (
-                    <Box paddingTop={1} paddingLeft={3} width="100%">
+                    <Box p={1.5} width="100%">
                         <RadioGroup
                             aria-label="options"
                             name="nft.editionOption"
@@ -212,7 +215,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                             </Typography>
                                         </Box>
                                         <CustomTextField
-                                            name="nft.elastic.numberOfEditions"
+                                            name="nft.availableLicenses"
                                             type="number"
                                             InputProps={{
                                                 sx: {
@@ -220,7 +223,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                                     width: 90,
                                                 },
                                             }}
-                                            value={values.elastic.numberOfEditions}
+                                            value={values.availableLicenses}
                                             inputProps={{ maxLength: 185, style: { textAlign: 'right' } }}
                                             onChange={handleChange}
                                             fullWidth
@@ -246,7 +249,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                             fontSize="0.8rem"
                                             sx={{ whiteSpace: 'nowrap', width: 100, marginRight: 3 }}
                                         >
-                                            ${values.elastic.editionPrice * values.elastic.numberOfEditions}
+                                            ${values.elastic.editionPrice * values.availableLicenses}
                                         </Typography>
                                     </Box>
                                     <Box
@@ -279,7 +282,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                                     fontSize="0.8rem"
                                                     sx={{ whiteSpace: 'nowrap', width: 50 }}
                                                 >
-                                                    {Math.min(values.elastic.numberOfEditions / 10, 10).toFixed(2) +
+                                                    {Math.min(values.availableLicenses / 10, 10).toFixed(2) +
                                                         '%'}
                                                 </Typography>
                                             </Box>

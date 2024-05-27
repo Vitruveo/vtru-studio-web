@@ -14,8 +14,8 @@ import { TranslateFunction } from '@/i18n/types';
 import { handleGetFileType, handleGetFileWidthAndHeight } from '../assetMedia/helpers';
 import UploadProgressBar from '../components/uploadProgress';
 import { useDispatch, useSelector } from '@/store/hooks';
-import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 import { userActionsCreators } from '@/features/user/slice';
+import { useToastr } from '@/app/hooks/useToastr';
 
 interface MediaCardProps {
     deleteKeys: string[];
@@ -50,11 +50,7 @@ export default function MediaCard({
     handleUploadFile,
 }: MediaCardProps) {
     const imgRef = React.useRef<HTMLImageElement>(null);
-    const [toastr, setToastr] = useState<CustomizedSnackbarState>({
-        type: 'success',
-        open: false,
-        message: '',
-    });
+    const toast = useToastr();
     const [modalErrorOpen, setModalErrorOpen] = useState(false);
     const [mediaCrop, setMediaCrop] = useState<File | undefined>(undefined);
     const [showCrop, setShowCrop] = useState(false);
@@ -69,7 +65,9 @@ export default function MediaCard({
     const fileIsLocal = formatValue.file && typeof formatValue.file !== 'string';
 
     const fileStatus = formatValue.transactionId ? upload[formatValue.transactionId] : undefined;
-    const uploadSuccess = fileStatus ? fileStatus?.uploadProgress === 100 : formatValue.file && !fileIsLocal;
+    const uploadSuccess = fileStatus
+        ? fileStatus?.uploadProgress === 100
+        : formatValue.successUpload || (formatValue.file && !fileIsLocal);
 
     const mediaConfig = mediaConfigs[formatType as keyof typeof mediaConfigs] || {};
 
@@ -84,6 +82,12 @@ export default function MediaCard({
         async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
             const file = acceptedFiles[0];
 
+            const fileSize = file.size / 1024;
+            if (fileSize > parseInt(mediaConfig?.sizeMB.toString()) * 1024) {
+                toast.display({ message: 'File size exceeds the limit', type: 'warning' });
+                return;
+            }
+
             handleUploadFile({ formatUpload: formatType, file, maxSize: mediaConfig?.sizeMB.toString() });
             setFieldValue(`formats.${formatType}.file`, file);
         },
@@ -92,7 +96,13 @@ export default function MediaCard({
 
     const handleGetAccept = () => {
         let accept = {};
-        if (mediaConfig.type === 'Image') {
+
+        if (mediaConfig.type == 'Ar Video') {
+            accept = {
+                'image/jpeg': [],
+                'image/png': [],
+            };
+        } else if (mediaConfig.type === 'Image') {
             accept = {
                 'image/jpeg': [],
                 'image/png': [],
@@ -110,6 +120,7 @@ export default function MediaCard({
                 'application/zip': [],
             };
         }
+
         return accept;
     };
 
@@ -173,9 +184,8 @@ export default function MediaCard({
     useEffect(() => {
         if (notify === 'deleteAsset') {
             setFieldValue(`formats.codeZip`, { file: undefined, customFile: undefined });
-            setToastr({
+            toast.display({
                 message: 'Media deleted due to containing unauthorized content.',
-                open: true,
                 type: 'warning',
             });
             dispatch(userActionsCreators.change({ notify: '' }));
@@ -317,6 +327,7 @@ export default function MediaCard({
                                                         overflow: 'hidden',
                                                         textOverflow: 'ellipsis',
                                                         whiteSpace: 'nowrap',
+                                                        width: 140,
                                                     }}
                                                 >
                                                     {formatValue.name ||
@@ -369,13 +380,6 @@ export default function MediaCard({
             </Dialog>
 
             <ModalError format={formatType} open={modalErrorOpen} setClose={handleCloseModalError} />
-
-            <CustomizedSnackbar
-                type={toastr.type}
-                open={toastr.open}
-                message={toastr.message}
-                setOpentate={setToastr}
-            />
         </Box>
     );
 }

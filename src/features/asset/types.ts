@@ -25,8 +25,39 @@ export interface RequestAssetUpload {
     status: string;
     uploadProgress: number;
 }
+
+export interface ContractExplorer {
+    finishedAt: Date | null;
+    assetId: number;
+    assetRefId: number;
+    creatorRefId: number;
+    explorer: string;
+    tx: string;
+}
+
+export interface Ipfs {
+    original: string;
+    display: string;
+    exhibition: string;
+    preview: string;
+    print: string;
+    arImage: string;
+    arVideo: string;
+    btsImage: string;
+    btsVideo: string;
+    codeZip: string;
+    finishedAt: Date;
+}
+
+export interface c2pa {
+    finishedAt: Date;
+}
+
+export type ConsignArtworkSteps = 'c2pa' | 'ipfs' | 'contractExplorer';
+
 export interface Asset {
     _id: string;
+    tempColors: number[][];
     mediaAuxiliary: {
         description: string;
         formats: {
@@ -44,10 +75,12 @@ export interface Asset {
         preview: Format;
         print: Format;
     };
-    isOriginal: boolean;
-    generatedArtworkAI: boolean;
-    notMintedOtherBlockchain: boolean;
-    contract: boolean;
+    terms: {
+        isOriginal: boolean;
+        generatedArtworkAI: boolean;
+        notMintedOtherBlockchain: boolean;
+        contract: boolean;
+    };
     assetMetadata?: {
         isCompleted?: boolean;
     } & SectionsFormData;
@@ -64,6 +97,9 @@ export interface Asset {
         updatedBy: string | null;
     };
     consignArtwork?: AssetConsignArtwork;
+    c2pa?: c2pa;
+    contractExplorer?: ContractExplorer;
+    ipfs?: Ipfs;
 }
 
 export interface AssetConsignArtwork {
@@ -71,7 +107,13 @@ export interface AssetConsignArtwork {
     creatorWallet?: string;
     creatorCredits?: number;
     creatorContract?: string;
-    status: ConsignArtworkAssetStatus
+    status: ConsignArtworkAssetStatus;
+}
+
+export interface HistoryItems {
+    status: string;
+    message: string;
+    when: string;
 }
 
 export interface AssetSendRequestUploadReq {
@@ -83,8 +125,23 @@ export interface AssetSendRequestUploadReq {
     };
 }
 
+export interface Consign {
+    transaction: string;
+    status: string;
+    message: string;
+    when: string;
+    steps: {
+        check: string | null;
+        c2pa: string | null;
+        ipfs: string | null;
+        contractExplorer: string | null;
+    };
+}
+
 export interface AssetSliceState extends Asset {
     error: string;
+    validateConsign: boolean;
+    consign: Consign;
 }
 
 export interface AssetStorageReq {
@@ -101,6 +158,26 @@ export interface RequestDeleteFilesReq {
 
 export interface UpdateAssetStepReq {}
 
+export interface SigningMediaC2PAReq {
+    filename: string;
+    creator: string;
+    token: string;
+}
+
+export interface UploadIPFSByAssetIdReq {
+    id: string;
+}
+
+export interface UploadIPFSByAssetIdRes {
+    [key: string]: string;
+}
+
+export interface CreateContractByAssetIdReq {
+    id: string;
+}
+
 export type UpdateAssetStepApiRes = APIResponse<string>;
+export type UploadIPFSByAssetIdApiRes = void;
+export type CreateContractApiRes = void;
 export type GetAssetApiRes = APIResponse<Asset>;
 export type AssetSendRequestUploadApiRes = APIResponse<string>;

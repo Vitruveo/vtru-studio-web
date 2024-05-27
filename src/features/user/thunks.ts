@@ -1,3 +1,5 @@
+import * as wagmiCore from '@wagmi/core';
+import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { nanoid } from '@reduxjs/toolkit';
 import { StepsFormValues } from '@/app/home/consignArtwork/types';
 import {
@@ -14,6 +16,12 @@ import {
     changeAvatar,
     generalStorage,
     requestDeleteAvatar,
+    requestConnectWallet,
+    verifyConnectWallet,
+    requestSocialX,
+    requestSocialGoogle,
+    requestSocialFacebook,
+    removeSocial,
 } from './requests';
 import { userActionsCreators } from './slice';
 import {
@@ -39,11 +47,18 @@ import {
     ChangeAvatarReq,
     ChangeAvatarApiRes,
     GeneralStorageAvatarReq,
+    ResquestConnectWalletReq,
+    VerifyConnectWalletReq,
+    VerifyConnectWalletApiRes,
+    RequestConnectWalletRes,
+    RemoveSocialReq,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { getAssetThunk } from '../asset/thunks';
 import { AccountSettingsFormValues } from '@/app/home/myProfile/types';
 import { consignArtworkActionsCreators } from '../consignArtwork/slice';
+import { config } from '@/app/home/components/apps/wallet';
+import { BASE_URL_API } from '@/constants/api';
 
 export function userLoginThunk(payload: UserLoginReq): ReduxThunkAction<Promise<UserLoginApiRes>> {
     return async function (dispatch, getState) {
@@ -224,5 +239,121 @@ export function generalStorageAvatarThunk(payload: GeneralStorageAvatarReq): Red
         await dispatch(changeAvatarThunk({ fileId: payload.path, transactionId: payload.transactionId }));
 
         return res;
+    };
+}
+
+export function requestConnectWalletThunk(
+    payload: ResquestConnectWalletReq
+): ReduxThunkAction<Promise<RequestConnectWalletRes>> {
+    return async function (dispatch, getState) {
+        const response = await requestConnectWallet(payload);
+
+        if (!response.data?.nonce) throw new Error('nonce not found');
+
+        const signature = await wagmiCore.signMessage(config, {
+            account: payload.wallet,
+            message: response.data.nonce,
+        });
+
+        return { signature };
+    };
+}
+
+export function verifyConnectWalletThunk(
+    payload: VerifyConnectWalletReq
+): ReduxThunkAction<Promise<VerifyConnectWalletApiRes>> {
+    return async function (dispatch, getState) {
+        return verifyConnectWallet(payload);
+    };
+}
+
+export function requestVaultThunk(): ReduxThunkAction<Promise<void>> {
+    return function (dispatch, getState) {
+        dispatch(userActionsCreators.setVaultLoading(true));
+
+        const token = getState().user.token;
+        const ctrl = new AbortController();
+
+        const url = `${BASE_URL_API}/creators/vault`;
+        const headers = {
+            Accept: 'text/event-stream',
+            Authorization: `Bearer ${token}`,
+        };
+
+        return new Promise((resolve, reject) =>
+            fetchEventSource(url, {
+                method: 'POST',
+                headers,
+                signal: ctrl.signal,
+                onmessage(message) {
+                    if (message.event === 'vault_success') {
+                        try {
+                            const parsed = JSON.parse(message.data);
+                            dispatch(userActionsCreators.setVault(parsed));
+                        } finally {
+                            ctrl.abort();
+                            resolve();
+                        }
+                    }
+                    if (message.event === 'vault_error') {
+                        ctrl.abort();
+                        reject();
+                    }
+                },
+            })
+                .finally(() => {
+                    dispatch(userActionsCreators.setVaultLoading(false));
+                })
+                .catch(() => {
+                    reject();
+                })
+        );
+    };
+}
+
+export function requestSocialXThunk(): ReduxThunkAction<Promise<void>> {
+    return function () {
+        return requestSocialX().then((response) => {
+            if (response.data) {
+                window.open(response.data, '_blank');
+            }
+        });
+    };
+}
+
+export function requestSocialGoogleThunk(): ReduxThunkAction<Promise<void>> {
+    return function () {
+        return requestSocialGoogle().then((response) => {
+            if (response.data) {
+                window.open(response.data, '_blank');
+            }
+        });
+    };
+}
+
+export function requestSocialFacebookThunk(): ReduxThunkAction<Promise<void>> {
+    return function () {
+        return requestSocialFacebook().then((response) => {
+            if (response.data) {
+                window.open(response.data, '_blank');
+            }
+        });
+    };
+}
+
+export function removeSocialThunk(data: RemoveSocialReq): ReduxThunkAction<Promise<void>> {
+    return function (dispatch) {
+        return removeSocial(data).then(() => {
+            if (data.social === 'x') {
+                dispatch(userActionsCreators.changeSocialsX({ avatar: '', name: '' }));
+            }
+            if (data.social === 'facebook') {
+                dispatch(userActionsCreators.changeSocialsFacebook({ avatar: '', name: '' }));
+            }
+
+            if (data.social === 'google') {
+                dispatch(userActionsCreators.changeSocialsGoogle({ avatar: '', name: '' }));
+            }
+        });
     };
 }

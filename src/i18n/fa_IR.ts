@@ -26,8 +26,10 @@ const language: Translation = {
     'studio.userAccount.logout.button': 'خروج',
     'studio.userAccount.menu.title': 'پروفایل من',
     'studio.userAccount.menu.subtitle': 'تنظیمات کاربری',
+    'studio.userAccount.usernameNotFound': 'نام کاربری یافت نشد',
 
     /* My Profile */
+    'studio.myProfile.pasteCode': 'کد را وارد کنید',
     'studio.myProfile.title': 'پروفایل من',
     'studio.myProfile.subtitle': 'پروفایل ویتروو خود را با چندین آدرس ایمیل و کیف پول دلخواه خود سفارشی کنید.',
     'studio.myProfile.home': 'خانه',
@@ -237,6 +239,7 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.culture.description': 'فرهنگ اصلی برای این اثر',
 
     'studio.consignArtwork.assetMetadata.field.culture.enum.african': 'آفریقایی',
+    'studio.consignArtwork.assetMetadata.field.culture.enum.persian': 'فارسی',
     'studio.consignArtwork.assetMetadata.field.culture.enum.centralasian': 'آسیای مرکزی',
     'studio.consignArtwork.assetMetadata.field.culture.enum.eastasian': 'آسیای شرقی',
     'studio.consignArtwork.assetMetadata.field.culture.enum.islamic': 'اسلامی',

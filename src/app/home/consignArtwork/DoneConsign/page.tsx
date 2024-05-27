@@ -1,32 +1,50 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Stack, Typography } from '@mui/material';
+
+import { Grid, Stack, Typography } from '@mui/material';
 import { RotateAnimation } from '@/animations/RotateAnimation';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 import Breadcrumb, { BreadCrumbItem } from '../../layout/shared/breadcrumb/Breadcrumb';
 import { useRouter } from 'next/navigation';
 import { confetti } from '@tsparticles/confetti';
-import { useDispatch } from '@/store/hooks';
-import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
+import { useDispatch, useSelector } from '@/store/hooks';
 import { useToastr } from '@/app/hooks/useToastr';
+import AssetMediaPreview from '../components/assetMediaPreview';
+import { CONSIGN_STATUS_MAP, consignThunk } from '@/features/asset/thunks';
+
+type Status = undefined | 'completed' | 'pending' | 'done' | 'failed' | 'running' | 'finished';
 
 interface ConsignStep {
-    title: string;
-    status?: 'completed' | 'pending' | 'done' | 'error';
-    action: () => Promise<unknown>;
+    check: {
+        status: Status;
+        title: string;
+    };
+    c2pa: {
+        status: Status;
+        title: string;
+    };
+    ipfs: {
+        status: Status;
+        title: string;
+    };
+    contractExplorer: {
+        status: Status;
+        title: string;
+    };
 }
 
-const getListIcon = (status: ConsignStep['status']) => {
+const getListIcon = (status: ConsignStep[keyof ConsignStep]['status']) => {
     switch (status) {
         case 'completed':
             return '✔';
         case 'pending':
+        case 'running':
             return '⏳';
+        case 'finished':
         case 'done':
             return '🎉';
-        case 'error':
+        case 'failed':
             return '❌';
         default:
             return null;
@@ -55,72 +73,94 @@ const showConfetti = () => {
     });
 };
 
+const initialSteps = {
+    check: {
+        status: undefined,
+        title: 'Checking artwork files',
+    },
+    c2pa: {
+        status: undefined,
+        title: 'Signing media files using C2PA standard',
+    },
+    ipfs: {
+        status: undefined,
+        title: 'Uploading media files to IPFS decentralized storage',
+    },
+    contractExplorer: {
+        status: undefined,
+        title: 'Consigning artwork to Vitruveo blockchain',
+    },
+};
+
 export default function DoneConsign() {
-    const customizer = useSelector((state: any) => state.customizer); // TODO: ADICIONAR TIPAGEM CORRETA
     const router = useRouter();
     const dispatch = useDispatch();
     const toastr = useToastr();
 
-    const asyncAction = async () => {
-        await new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 5000)));
-    };
+    const asset = useSelector((state) => state.asset);
 
-    const [steps, setSteps] = useState<ConsignStep[]>([
-        {
-            title: 'Signing media files using C2PA standard',
-            action: asyncAction,
-        },
-        {
-            title: 'Uploading media files to IPFS decentralized storage',
-            action: asyncAction,
-        },
-        {
-            title: 'Consigning artwork to Vitruveo blockchain',
-            action: asyncAction,
-        },
-        {
-            title: 'Generating artwork listing',
-            action: asyncAction,
-        },
-        {
-            title: 'Your artwork is ready! View',
-            action: async () => asyncAction().then(() => showConfetti()),
-        },
-    ]);
+    const [steps, setSteps] = useState<ConsignStep>(initialSteps);
 
-    const changeStepStatus = (index: number, status: ConsignStep['status']) => {
-        steps[index].status = status;
-        setSteps([...steps]);
-    };
+    const isCompleted = Object.values(steps).every((step) => step.status === 'completed');
+    const hasError = asset.consign.status === CONSIGN_STATUS_MAP.failed;
 
     useEffect(() => {
-        const runSteps = async () => {
-            for await (const step of steps) {
-                const stepIndex = steps.indexOf(step);
-                const isLastStep = stepIndex === steps.length - 1;
-
-                changeStepStatus(stepIndex, 'pending');
-
-                try {
-                    await step.action();
-                    isLastStep ? changeStepStatus(stepIndex, 'done') : changeStepStatus(stepIndex, 'completed');
-                    setSteps([...steps]);
-                } catch (error) {
-                    step.status = 'error';
-                    toastr.display({ message: `Error on step ${stepIndex + 1}`, type: 'error' });
-                    break;
-                }
-            }
-        };
-        runSteps();
+        setSteps(initialSteps);
+        dispatch(consignThunk(asset._id));
     }, []);
 
-    const isDisabled = steps[steps.length - 1].status != 'done';
+    useEffect(() => {
+        if (isCompleted) {
+            showConfetti();
+        }
+    }, [isCompleted]);
+
+    useEffect(() => {
+        if (!steps.check.status && asset.consign.steps.check) {
+            setSteps((prevStep) => ({
+                ...prevStep,
+                check: {
+                    ...prevStep.check,
+                    status: 'completed',
+                },
+            }));
+        }
+
+        if (!steps.c2pa.status && asset.consign.steps.c2pa) {
+            setSteps((prevStep) => ({
+                ...prevStep,
+                c2pa: {
+                    ...prevStep.c2pa,
+                    status: 'completed',
+                },
+            }));
+        }
+
+        if (!steps.ipfs.status && asset.consign.steps.ipfs) {
+            setSteps((prevStep) => ({
+                ...prevStep,
+                ipfs: {
+                    ...prevStep.ipfs,
+                    status: 'completed',
+                },
+            }));
+        }
+
+        if (!steps.contractExplorer.status && asset.consign.steps.contractExplorer) {
+            setSteps((prevStep) => ({
+                ...prevStep,
+                contractExplorer: {
+                    ...prevStep.contractExplorer,
+                    status: 'completed',
+                },
+            }));
+        }
+    }, [asset.consign.steps, steps]);
 
     const handleSubmit = async (event: React.FormEvent) => {
         try {
             event.preventDefault();
-            dispatch(consignArtworkThunks.updateStatus('active'));
+
             router.push('/home/consignArtwork');
         } catch (error) {
             toastr.display({ message: 'Error updating consign artwork status', type: 'error' });
@@ -130,26 +170,62 @@ export default function DoneConsign() {
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
-                submitText="Done"
+                submitText={'Done'}
                 title={'Consign Artwork'}
-                submitDisabled={isDisabled}
-                hasBackButton={false}
+                submitDisabled={!isCompleted || hasError}
+                hasBackButton={hasError ? true : false}
             >
                 <Breadcrumb title={'Consign Artwork'} items={BCrumb} />
 
-                <Stack component="ul" spacing={1}>
-                    {steps.map((step, index) => (
-                        <li
-                            key={index}
-                            style={{ display: 'grid', gridTemplateColumns: '16px 1fr', gap: '12px', fontSize: 16 }}
+                <Grid container spacing={2}>
+                    <Grid item lg={6}>
+                        <Stack component="ul" spacing={1}>
+                            {Object.values(steps).map((step, index) => (
+                                <li
+                                    key={index}
+                                    style={{
+                                        display: 'flex',
+                                        gap: '12px',
+                                        fontSize: 16,
+                                        alignItems: 'flex-start',
+                                    }}
+                                >
+                                    <RotateAnimation isDisabled={step.status != 'pending'}>
+                                        {getListIcon(step.status)}
+                                    </RotateAnimation>
+                                    <Typography fontSize={20}>{step.title}</Typography>
+                                </li>
+                            ))}
+                        </Stack>
+                        <Stack
+                            style={{
+                                display: 'flex',
+                                gap: '12px',
+                                fontSize: 16,
+                                alignItems: 'flex-start',
+                                flexDirection: 'row',
+                            }}
                         >
-                            <RotateAnimation isDisabled={step.status != 'pending'}>
-                                {getListIcon(step.status)}
-                            </RotateAnimation>
-                            <Typography fontSize={16}>{step.title}</Typography>
-                        </li>
-                    ))}
-                </Stack>
+                            <RotateAnimation
+                                isDisabled={asset.consign.status !== 'pending' && asset.consign.status !== 'running'}
+                            >
+                                {getListIcon(asset.consign.status as ConsignStep[keyof ConsignStep]['status'])}{' '}
+                            </RotateAnimation>{' '}
+                            <Typography
+                                variant="h6"
+                                component="h2"
+                                style={{
+                                    wordBreak: 'break-all',
+                                }}
+                            >
+                                {asset.consign.message}
+                            </Typography>
+                        </Stack>
+                    </Grid>
+                    <Grid item lg={6}>
+                        <AssetMediaPreview />
+                    </Grid>
+                </Grid>
             </PageContainerFooter>
         </form>
     );

@@ -23,6 +23,7 @@ export interface FooterFormProps {
     saveOnClick?: () => void;
     secondaryText?: string;
     hasBackButton?: boolean;
+    hasSubmitButton?: boolean;
 }
 
 export function FooterForm({
@@ -36,6 +37,7 @@ export function FooterForm({
     backOnclick,
     secondaryText,
     hasBackButton = true,
+    hasSubmitButton,
 }: FooterFormProps) {
     const theme = useTheme();
 
@@ -176,16 +178,18 @@ export function FooterForm({
                             spacing={4}
                             flexDirection="row-reverse"
                         >
-                            <Button
-                                size="large"
-                                disabled={submitDisabled}
-                                type="submit"
-                                style={{ minWidth: 120, marginLeft: '20px' }}
-                                color="primary"
-                                variant="contained"
-                            >
-                                {submitText || texts.save}
-                            </Button>
+                            {hasSubmitButton && (
+                                <Button
+                                    size="large"
+                                    disabled={submitDisabled}
+                                    type="submit"
+                                    style={{ minWidth: 120, marginLeft: '20px' }}
+                                    color="primary"
+                                    variant="contained"
+                                >
+                                    {submitText || texts.save}
+                                </Button>
+                            )}
 
                             {hasBackButton && (
                                 <Link href={backPathRouter || '/home'} className="hover-text-primary">

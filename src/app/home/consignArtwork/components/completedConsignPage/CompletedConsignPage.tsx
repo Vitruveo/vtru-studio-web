@@ -9,6 +9,7 @@ import { useI18n } from '@/app/hooks/useI18n';
 import { ConsignArtworkAssetStatus } from '@/features/consignArtwork/types';
 import { useToastr } from '@/app/hooks/useToastr';
 import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
+import { EXPLORER_URL } from '@/constants/explorer';
 import { ChangeEvent } from 'react';
 
 // TODO: ADICIONAR TRADUÇÃO
@@ -18,12 +19,15 @@ interface FormType {
 }
 
 export const CompletedConsignPage = () => {
-    const { previewAndConsign, status } = useSelector((state) => state.consignArtwork);
-    const xL = useMediaQuery((them: Theme) => them.breakpoints.up('xl'));
-    const theme = useTheme();
     const dispatch = useDispatch();
+    const xL = useMediaQuery((them: Theme) => them.breakpoints.up('xl'));
     const { language } = useI18n();
+    const theme = useTheme();
     const toastr = useToastr();
+
+    const previewAndConsign = useSelector((state) => state.consignArtwork.previewAndConsign);
+    const status = useSelector((state) => state.consignArtwork.status);
+    const transactionHash = useSelector((state) => state.asset.contractExplorer?.tx);
 
     const grayColor = theme.palette.text.disabled;
 
@@ -57,11 +61,15 @@ export const CompletedConsignPage = () => {
             value: undefined,
         },
         creatorContract: {
-            title: 'Creator Contract',
+            title: 'Artwork Transaction',
             actionTitle: texts.view,
             value: previewAndConsign.creatorContract?.value,
             actionFunc: async () => {
-                window.open('https://explorer.vitruveo.xyz/', '_blank');
+                if (transactionHash) {
+                    window.open(`${EXPLORER_URL}/tx/${transactionHash}`, '_blank');
+                } else {
+                    toastr.display({ type: 'error', message: 'Explorer URL not found' });
+                }
             },
         },
     };
@@ -86,7 +94,7 @@ export const CompletedConsignPage = () => {
 
     return (
         <form onSubmit={formik.handleSubmit}>
-            <PageContainerFooter submitText="Update" secondaryText="Edit" submitDisabled={!formik.dirty}>
+            <PageContainerFooter hasBackButton>
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
                 <Grid display="flex" flexWrap="wrap" marginBottom={6} item xs={12} lg={6}>
                     <Box marginBottom={2}>

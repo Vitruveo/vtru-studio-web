@@ -21,6 +21,8 @@ const language: Translation = {
     'studio.home.myProfile': 'Мой профиль',
 
     /* User Account */
+    'studio.userAccount.usernameNotFound': 'Имя пользователя не найдено',
+    'studio.myProfile.pasteCode': 'Вставьте код из письма',
     'studio.userAccount.title': 'Учетная запись пользователя',
     'studio.userAccount.creator': 'Создатель',
     'studio.userAccount.logout.button': 'Выйти',
@@ -237,6 +239,7 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.culture.description': 'Основная культура',
 
     'studio.consignArtwork.assetMetadata.field.culture.enum.african': 'Африканская',
+    'studio.consignArtwork.assetMetadata.field.culture.enum.persian': 'Персидская',
     'studio.consignArtwork.assetMetadata.field.culture.enum.centralasian': 'Центральной Азии',
     'studio.consignArtwork.assetMetadata.field.culture.enum.eastasian': 'Восточноазиатская',
     'studio.consignArtwork.assetMetadata.field.culture.enum.islamic': 'Исламская',

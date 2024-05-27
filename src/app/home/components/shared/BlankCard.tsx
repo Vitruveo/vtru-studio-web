@@ -24,7 +24,7 @@ const BlankCard = ({ children, className, sx }: Props) => {
                 sx,
             }}
             className={className}
-            elevation={customizer.isCardShadow ? 9 : 0}
+            elevation={customizer.isCardShadow ? 16 : 0}
             variant={!customizer.isCardShadow ? 'outlined' : undefined}
         >
             {children}

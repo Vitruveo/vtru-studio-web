@@ -16,6 +16,8 @@ const SidebarItems = () => {
     const pathDirect = pathname;
     const pathWithoutLastPart = pathname.slice(0, pathname.lastIndexOf('/'));
 
+    const canConsignArtwork = useSelector((state) => state.user.canConsignArtwork);
+
     const customizer = useSelector((state) => state.customizer);
 
     const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
@@ -25,6 +27,10 @@ const SidebarItems = () => {
         <Box sx={{ px: 3 }}>
             <List sx={{ pt: 0 }} className="sidebarNav">
                 {Menuitems.map((item) => {
+                    if (item?.required === 'canConsignArtwork' && !canConsignArtwork) {
+                        item.href = '/home';
+                    }
+
                     // {/********SubHeader**********/}
                     if (item.subheader) {
                         return <NavGroup item={item} hideMenu={hideMenu} key={item.subheader} />;

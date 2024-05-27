@@ -4,6 +4,7 @@ import { WalletProvider } from '@/app/home/components/apps/wallet';
 import { AccountSettingsProps } from './types';
 import Wallet from './wallet';
 import AddEmails from './addEmails';
+import Socials from './Socials';
 import { AccountDataList, AccountDataListButton, AccountDataListItem } from './components/account-data-list';
 import { CreatorModal, CreatorForm } from './components/creator-modal';
 
@@ -68,6 +69,7 @@ const AccountSettings = ({
                         />
                     </WalletProvider>
                 </Box>
+                <Socials />
                 <AccountDataList
                     bottom={
                         <>

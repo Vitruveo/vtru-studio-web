@@ -23,7 +23,7 @@ const UploadProgressBar = ({ fileStatus }: UploadProgressBarProps) => {
     const { uploadProgress, status, transactionId } = fileStatus;
 
     const completed =
-        status === 'uploading'
+        status === 'saved' || status === 'uploading'
             ? uploadProgress || 1
             : status === 'requested'
               ? 'Preparing upload...'

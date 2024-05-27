@@ -39,7 +39,6 @@ const initialState: ConsignArtworkSliceState = {
             status: 'notStarted',
             statusName: statusName.notStarted,
         },
-
         licenses: {
             stepId: 'licenses',
             stepName: stepsNames.licenses,
@@ -121,10 +120,18 @@ export const consignArtworkSlice = createSlice({
             state.creatorContract = action.payload.creatorContract;
             state.creatorCredits = action.payload.creatorCredits;
             state.status = action.payload.status;
+            state.status = action.payload.status;
         },
         changeConsignArtworkAssetStatus: (state, action: PayloadAction<{ status: ConsignArtworkAssetStatus }>) => {
             const { status } = action.payload;
             state.status = status;
+        },
+        /* Creator Wallet */
+        setPreviewAndConsignWallet: (state, action: PayloadAction<string>) => {
+            state.previewAndConsign.creatorWallet = { checked: true, value: action.payload };
+        },
+        deletePreviewAndConsignWallet: (state) => {
+            state.previewAndConsign.creatorWallet = { checked: false, value: '' };
         },
     },
 });

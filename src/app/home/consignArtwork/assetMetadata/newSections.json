@@ -1,18 +1,19 @@
 {
     "context": {
         "formData": {
-            "colors": ["#000000"]
+            "colors": []
         },
         "schema": {
             "type": "object",
-            "required": ["title", "description", "culture", "mood", "colors", "orientation"],
+            "required": ["title", "description", "culture", "mood", "colors"],
             "properties": {
                 "title": {
                     "type": "string"
                 },
                 "description": {
                     "type": "string",
-                    "format": "textarea"
+                    "format": "textarea",
+                    "maxLength": 250
                 },
                 "culture": {
                     "type": "string",
@@ -24,6 +25,7 @@
                         "latinamerican",
                         "nativeamerican",
                         "oceanic",
+                        "persian",
                         "southasian",
                         "southeastasian",
                         "western"
@@ -85,19 +87,14 @@
                 },
                 "colors": {
                     "type": "array",
-                    "item": "color",
                     "minItems": 1,
-                    "maxItems": 3,
+                    "maxItems": 8,
                     "items": {
                         "type": "string"
                     }
                 },
                 "copyright": {
                     "type": "string"
-                },
-                "orientation": {
-                    "type": "string",
-                    "enum": ["horizontal", "vertical", "square"]
                 }
             }
         },
@@ -140,30 +137,18 @@
                     "label": false,
                     "placeholder": ""
                 }
-            },
-            "orientation": {
-                "ui:widget": "radios",
-                "classNames": "display-fixed"
             }
         }
     },
     "taxonomy": {
         "formData": {
+            "arenabled": "no",
             "subject": [""],
             "tags": ["artwork"]
         },
         "schema": {
             "type": "object",
-            "required": [
-                "objectType",
-                "aiGeneration",
-                "arenabled",
-                "nudity",
-                "category",
-                "collections",
-                "medium",
-                "style"
-            ],
+            "required": ["objectType", "aiGeneration", "nudity", "category", "collections", "medium", "style"],
             "properties": {
                 "objectType": {
                     "type": "string",
@@ -190,10 +175,6 @@
                 "aiGeneration": {
                     "type": "string",
                     "enum": ["full", "partial", "none"]
-                },
-                "arenabled": {
-                    "type": "string",
-                    "enum": ["yes", "no"]
                 },
                 "nudity": {
                     "type": "string",
@@ -2438,7 +2419,7 @@
                 "name": {
                     "ui:options": {
                         "label": false,
-                        "placeholder": ""
+                        "placeholder": "e.g John Doe"
                     }
                 },
                 "roles": {

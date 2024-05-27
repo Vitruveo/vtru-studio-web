@@ -21,15 +21,6 @@ const MainWrapper = styled('div')(() => ({
     width: '100%',
 }));
 
-const PageWrapper = styled('div')(() => ({
-    display: 'flex',
-    flexGrow: 1,
-    paddingBottom: '30px',
-    flexDirection: 'column',
-    zIndex: 1,
-    backgroundColor: 'transparent',
-}));
-
 const PageFooterWrapper = styled('div')(() => ({
     display: 'flex',
     overflowX: 'hidden',
@@ -39,12 +30,7 @@ const PageFooterWrapper = styled('div')(() => ({
     backgroundColor: 'transparent',
 }));
 
-interface Props {
-    children: React.ReactNode;
-}
-
 const isValidToken = (token: string) => {
-    // Sua lógica de validação do token aqui
     return token !== null && token !== undefined && token !== '';
 };
 
@@ -72,18 +58,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     }, [webSocketService]);
 
     useEffect(() => {
-        (async () => {
-            try {
-                await findEmailInAllowList(email);
-                dispatch(userActionsCreators.setCanConsignArtwork(true));
-            } catch (error) {
-                if (error instanceof AxiosError && error.response?.status === 404) {
-                    dispatch(userActionsCreators.setCanConsignArtwork(false));
-                } else {
-                    toast.display({ type: 'error', message: 'Something went wrong! Try again later.' });
+        if (token && email) {
+            (async () => {
+                try {
+                    // await findEmailInAllowList(email); // remove temporary
+                    dispatch(userActionsCreators.setCanConsignArtwork(true));
+                } catch (e) {
+                    const error = e as AxiosError;
+                    if (error.response?.status === 404) {
+                        dispatch(userActionsCreators.setCanConsignArtwork(false));
+                    } else {
+                        toast.display({ type: 'error', message: 'Something went wrong! Try again later.' });
+                    }
                 }
-            }
-        })();
+            })();
+        }
     }, [email]);
 
     const theme = useTheme();
@@ -93,13 +82,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <MainWrapper>
             <title>Dashboard</title>
-            {/* ------------------------------------------- */}
-            {/* Sidebar */}
-            {/* ------------------------------------------- */}
+
             {customizer.isHorizontal ? '' : <Sidebar />}
-            {/* ------------------------------------------- */}
-            {/* Main Wrapper */}
-            {/* ------------------------------------------- */}
+
             <PageFooterWrapper
                 className="page-wrapper"
                 sx={{
@@ -110,30 +95,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     }),
                 }}
             >
-                {/* ------------------------------------------- */}
-                {/* Header */}
-                {/* ------------------------------------------- */}
                 {customizer.isHorizontal ? <HorizontalHeader /> : <Header />}
-                {/* PageContent */}
+
                 {customizer.isHorizontal ? <Navigation /> : ''}
                 <Box
                     sx={{
                         maxWidth: customizer.isLayout === 'boxed' ? 'lg' : '100%!important',
                     }}
                 >
-                    {/* ------------------------------------------- */}
-                    {/* PageContent */}
-                    {/* ------------------------------------------- */}
-
-                    <Box sx={{ minHeight: 'calc(100vh - 170px)' }}>
-                        {/* <Outlet /> */}
-                        {children}
-                        {/* <Index /> */}
-                    </Box>
-
-                    {/* ------------------------------------------- */}
-                    {/* End Page */}
-                    {/* ------------------------------------------- */}
+                    <Box sx={{ minHeight: 'calc(100vh - 170px)' }}>{children}</Box>
                 </Box>
             </PageFooterWrapper>
         </MainWrapper>

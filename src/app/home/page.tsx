@@ -32,9 +32,7 @@ export default function Home() {
         myProfile: language['studio.home.myProfile'],
     } as { [key: string]: string };
 
-    const isPublished = status === 'preview';
-
-    const canConsignArtwork = useSelector((state) => state.user.canConsignArtwork);
+    const canConsignArtwork = useSelector((state) => state.user.canConsignArtwork);;
 
     const onConsignArtworkButtonClick = () => {
         if (!canConsignArtwork) return;
@@ -93,11 +91,11 @@ export default function Home() {
                         <Grid item xs={12} sm={6} md={3.5}>
                             <Link
                                 href={
-                                    isCompletedProfile
-                                        ? isPublished
-                                            ? '/home/consignArtwork/consignmentStatus'
-                                            : '/home/consignArtwork'
-                                        : '/home/myProfile'
+                                    !canConsignArtwork
+                                        ? '/home'
+                                        : isCompletedProfile
+                                          ? '/home/consignArtwork'
+                                          : '/home/myProfile'
                                 }
                                 passHref
                             >

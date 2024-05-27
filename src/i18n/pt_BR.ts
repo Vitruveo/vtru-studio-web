@@ -23,8 +23,10 @@ const language: Translation = {
     'studio.userAccount.logout.button': 'Sair',
     'studio.userAccount.menu.title': 'Meu Perfil',
     'studio.userAccount.menu.subtitle': 'Configurações do Usuário',
+    'studio.userAccount.usernameNotFound': 'Nome de usuário não encontrado',
 
     /* My Profile */
+    'studio.myProfile.pasteCode': 'Cole o código',
     'studio.myProfile.title': 'Meu Perfil',
     'studio.myProfile.subtitle': 'Personalize seu perfil Vitruveo com vários emails e endereços de carteira.',
     'studio.myProfile.home': 'Início',
@@ -235,6 +237,7 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.culture.description': 'Cultura principal desta obra',
 
     'studio.consignArtwork.assetMetadata.field.culture.enum.african': 'Africana',
+    'studio.consignArtwork.assetMetadata.field.culture.enum.persian': 'Persa',
     'studio.consignArtwork.assetMetadata.field.culture.enum.centralasian': 'Asiática Central',
     'studio.consignArtwork.assetMetadata.field.culture.enum.eastasian': 'Asiática Oriental',
     'studio.consignArtwork.assetMetadata.field.culture.enum.islamic': 'Islâmica',

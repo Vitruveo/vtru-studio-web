@@ -1,55 +1,63 @@
+import { WALLET_APP_NAME, WALLET_NETWORKS, WALLET_PROJECT_ID } from '@/constants/wallet';
+import { darkTheme, getDefaultConfig, RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { http } from '@wagmi/core';
+import { WagmiProvider } from 'wagmi';
 import '@rainbow-me/rainbowkit/styles.css';
-import React from 'react';
-import { RainbowKitProvider, getDefaultWallets, connectorsForWallets, Locale } from '@rainbow-me/rainbowkit';
-import { argentWallet, trustWallet, ledgerWallet } from '@rainbow-me/rainbowkit/wallets';
-import { configureChains, createConfig, WagmiConfig } from 'wagmi';
-import { mainnet, polygon, optimism, arbitrum, base, zora, goerli } from 'wagmi/chains';
-import { publicProvider } from 'wagmi/providers/public';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
 
-const { chains, publicClient, webSocketPublicClient } = configureChains(
-    [
-        mainnet,
-        polygon,
-        optimism,
-        arbitrum,
-        base,
-        zora,
-        ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true' ? [goerli] : []),
-    ],
-    [alchemyProvider({ apiKey: 'QVu1QOsFMNO67ap6rhDGnkvSi-3pvYXF' }), publicProvider()]
-);
-
-const projectId = 'e35af8e9cf766036d44374c2bd11ebbe';
-
-const { wallets } = getDefaultWallets({
-    appName: 'RainbowKit demo',
-    projectId,
-    chains,
-});
-
-const demoAppInfo = {
-    appName: 'Rainbowkit Demo',
+const vitruveoMainnet = {
+    id: 1490,
+    name: 'Vitruveo Mainnet',
+    network: 'vitruveo',
+    iconUrl: '/v-icon.png',
+    iconBackground: '#000',
+    nativeCurrency: {
+        decimals: 18,
+        name: 'Vitruveo',
+        symbol: 'VTRU',
+    },
+    rpcUrls: {
+        public: { http: ['https://rpc.vitruveo.xyz/'] },
+        default: { http: ['https://rpc.vitruveo.xyz/'] },
+    },
+    blockExplorers: {
+        default: { name: 'VitruveoScan', url: 'https://explorer.vitruveo.xyz' },
+        etherscan: { name: 'VitruveoScan', url: 'https://explorer.vitruveo.xyz' },
+    },
+    testnet: false,
 };
 
-const connectors = connectorsForWallets([
-    ...wallets,
-    {
-        groupName: 'Other',
-        wallets: [
-            argentWallet({ projectId, chains }),
-            trustWallet({ projectId, chains }),
-            ledgerWallet({ projectId, chains }),
-        ],
+const vitruveoTestnet = {
+    id: 14333,
+    name: 'Vitruveo Testnet',
+    network: 'vitruveo-testnet',
+    iconUrl: '/v-icon.png',
+    iconBackground: '#000',
+    nativeCurrency: {
+        decimals: 18,
+        name: 'Vitruveo Testnet',
+        symbol: 'tVTRU',
     },
-]);
+    rpcUrls: {
+        public: { http: ['https://test-rpc.vitruveo.xyz/'] },
+        default: { http: ['https://test-rpc.vitruveo.xyz/'] },
+    },
+    blockExplorers: {
+        default: { name: 'VitruveoScan', url: 'https://test-explorer.vitruveo.xyz' },
+        etherscan: { name: 'VitruveoScan', url: 'https://test-explorer.vitruveo.xyz' },
+    },
+    testnet: false,
+};
 
-const wagmiConfig = createConfig({
-    autoConnect: true,
-    connectors,
-    publicClient,
-    webSocketPublicClient,
+export const config = getDefaultConfig({
+    appName: WALLET_APP_NAME,
+    projectId: WALLET_PROJECT_ID,
+    chains: WALLET_NETWORKS == 'mainnet' ? [vitruveoMainnet] : [vitruveoTestnet],
+    ssr: false,
+    transports: WALLET_NETWORKS == 'mainnet' ? { [vitruveoMainnet.id]: http() } : { [vitruveoTestnet.id]: http() },
 });
+
+const queryClient = new QueryClient();
 
 interface Props {
     children: React.ReactNode;
@@ -57,10 +65,10 @@ interface Props {
 
 export function WalletProvider({ children }: Props) {
     return (
-        <WagmiConfig config={wagmiConfig}>
-            <RainbowKitProvider appInfo={demoAppInfo} chains={chains} locale="en">
-                {children}
-            </RainbowKitProvider>
-        </WagmiConfig>
+        <WagmiProvider config={config}>
+            <QueryClientProvider client={queryClient}>
+                <RainbowKitProvider theme={darkTheme()}>{children}</RainbowKitProvider>
+            </QueryClientProvider>
+        </WagmiProvider>
     );
 }

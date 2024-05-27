@@ -24,6 +24,11 @@ export const debouncedUsernameValidation = debounce(async (username, setFieldErr
         }
     } catch (e) {
         const error = e as AxiosError<CreatorUsernameExistApiRes>;
+
+        if (error.response?.status === 400) {
+            setFieldError('Username invalid');
+            return;
+        }
         setFieldError('');
     }
 }, 700);

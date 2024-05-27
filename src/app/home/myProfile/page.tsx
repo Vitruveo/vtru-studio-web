@@ -70,38 +70,42 @@ export default function ProfileSettings() {
         });
 
     async function onSubmit(formValues: AccountSettingsFormValues) {
-        if (!formValues.username || formValues.username?.length === 0) setUsernameError(texts.usernameRequiredError);
-        else {
-            dispatch(saveStepWizardThunk({ step: 0, values }));
+        if (!formValues.username || formValues.username?.length === 0) {
+            setUsernameError(texts.usernameRequiredError);
+            return;
+        }
+
+        if (errors.username || usernameError) return;
+
+        dispatch(saveStepWizardThunk({ step: 0, values }));
+        dispatch(
+            consignArtworkActionsCreators.checkIsCompletedProfile({
+                username: values.username,
+                emails: values.emails,
+                wallets: values.wallets,
+            })
+        );
+
+        if (resetAvatar) {
+            dispatch(changeAvatarThunk({ fileId: '' }));
+            toast.display({ message: texts.saveMessage, type: 'success' });
+
+            setTimeout(() => {
+                router.push('/home');
+            }, 500);
+        } else if (changeAvatarFile) {
             dispatch(
-                consignArtworkActionsCreators.checkIsCompletedProfile({
-                    username: values.username,
-                    emails: values.emails,
-                    wallets: values.wallets,
+                sendRequestUploadThunk({
+                    mimetype: changeAvatarFile!.type,
+                    originalName: changeAvatarFile!.name,
                 })
             );
+        } else {
+            toast.display({ message: texts.saveMessage, type: 'success' });
 
-            if (resetAvatar) {
-                dispatch(changeAvatarThunk({ fileId: '' }));
-                toast.display({ message: texts.saveMessage, type: 'success' });
-
-                setTimeout(() => {
-                    router.push('/home');
-                }, 500);
-            } else if (changeAvatarFile) {
-                dispatch(
-                    sendRequestUploadThunk({
-                        mimetype: changeAvatarFile!.type,
-                        originalName: changeAvatarFile!.name,
-                    })
-                );
-            } else {
-                toast.display({ message: texts.saveMessage, type: 'success' });
-
-                setTimeout(() => {
-                    router.push('/home');
-                }, 500);
-            }
+            setTimeout(() => {
+                router.push('/home');
+            }, 500);
         }
     }
 
@@ -197,9 +201,13 @@ export default function ProfileSettings() {
         const file = event.target.files?.[0];
 
         if (file) {
+            if (!file?.type.includes('image')) {
+                toast.display({ type: 'warning', message: 'File is not an image. ' });
+                return;
+            }
             const fileSize = file.size / 1024;
             if (fileSize > 800) {
-                toast.display({ type: 'warning', message: 'File size is too big' });
+                toast.display({ type: 'warning', message: 'File size is too big. Max size 800kb' });
             } else {
                 setChangeAvatarFile(file);
             }
@@ -260,6 +268,7 @@ export default function ProfileSettings() {
                                                     src={isNewAvatar}
                                                     alt={'user1'}
                                                     sx={{
+                                                        backgroundColor: '#ffffcc',
                                                         width: 120,
                                                         height: 120,
                                                         margin: '0 auto',

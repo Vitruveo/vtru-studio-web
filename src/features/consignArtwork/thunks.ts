@@ -36,22 +36,14 @@ export function updateStatus(status: ConsignArtworkAssetStatus): ReduxThunkActio
 export function checkPreview(): ReduxThunkAction {
     return async (dispatch, getState) => {
         try {
-            cookie.set('token', getState().user.token, { path: '/', domain: window.location.hostname });
-            const URL = `${CONSIGN_ARTWORK_PREVIEW_URL}/preview/${getState().asset._id}/seoTitle`;
-            window.open(URL, '_blank');
-            await updateAssetStep({
-                stepName: 'consignArtworkListing',
-                consignArtwork: {
-                    listing: new Date().toISOString(),
-                },
-            });
-            dispatch(
-                consignArtworkActionsCreators.changePreviewAndConsign({
-                    artworkListing: {
-                        checked: true,
-                    },
-                })
-            );
+            const assetId = getState().asset._id;
+            const domain = window.location.hostname.replace('studio.', '');
+            cookie.set('token', getState().user.token, { path: '/', domain });
+
+            if (assetId) {
+                const URL = `${CONSIGN_ARTWORK_PREVIEW_URL}/preview/${assetId}/${Date.now()}`;
+                window.open(URL, '_blank');
+            }
         } catch (error) {
             dispatch(
                 toastrActionsCreators.displayToastr({
@@ -63,7 +55,29 @@ export function checkPreview(): ReduxThunkAction {
     };
 }
 
+export function preview(): ReduxThunkAction {
+    return async (dispatch, getState) => {
+        try {
+            const assetId = getState().asset._id;
+            const username = getState().user.username;
+
+            if (!username || !assetId) throw new Error('Username or assetId not found');
+
+            const URL = `${CONSIGN_ARTWORK_PREVIEW_URL}/${username}/${assetId}/${Date.now()}`;
+            window.open(URL, '_blank');
+        } catch (error) {
+            dispatch(
+                toastrActionsCreators.displayToastr({
+                    message: 'Error preview',
+                    type: 'error',
+                })
+            );
+        }
+    };
+}
+
 export const consignArtworkThunks = {
     updateStatus,
     checkPreview,
+    preview,
 };
