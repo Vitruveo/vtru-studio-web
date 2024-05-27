@@ -29,7 +29,11 @@ interface CompletedConsignTableStatusProps {
     isDisabled?: boolean;
 }
 
-export const CompletedConsignTableStatus = ({ selectedStatus, onStatusChange, isDisabled }: CompletedConsignTableStatusProps) => {
+export const CompletedConsignTableStatus = ({
+    selectedStatus,
+    onStatusChange,
+    isDisabled,
+}: CompletedConsignTableStatusProps) => {
     const { language } = useI18n();
 
     const texts = {
@@ -117,7 +121,7 @@ export const CompletedConsignTableStatus = ({ selectedStatus, onStatusChange, is
                                     <TableCell scope="row">
                                         <Box display="flex" alignItems="center">
                                             <Radio
-                                                disabled={isDisabled || row.status == 'locked'}
+                                                disabled={isDisabled || row.status == 'blocked'}
                                                 name="selectedStatus"
                                                 value={row.status}
                                                 checked={row.status == selectedStatus}

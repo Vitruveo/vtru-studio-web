@@ -86,7 +86,7 @@ export const CompletedConsignPage = () => {
 
     const handleStatusChange = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value as ConsignArtworkAssetStatus;
-        if (value === 'locked') {
+        if (value === 'blocked') {
             return;
         }
         formik.setFieldValue('selectedStatus', value);
@@ -156,7 +156,7 @@ export const CompletedConsignPage = () => {
                                 <CompletedConsignTableStatus
                                     selectedStatus={formik.values.selectedStatus}
                                     onStatusChange={handleStatusChange}
-                                    isDisabled={formik.values.selectedStatus == 'locked'}
+                                    isDisabled={formik.values.selectedStatus == 'blocked'}
                                 />
                             </Box>
                         </Box>

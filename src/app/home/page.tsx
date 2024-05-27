@@ -32,7 +32,7 @@ export default function Home() {
         myProfile: language['studio.home.myProfile'],
     } as { [key: string]: string };
 
-    const canConsignArtwork = useSelector((state) => state.user.canConsignArtwork);;
+    const canConsignArtwork = useSelector((state) => state.user.canConsignArtwork);
 
     const onConsignArtworkButtonClick = () => {
         if (!canConsignArtwork) return;
