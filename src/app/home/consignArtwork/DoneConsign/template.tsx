@@ -5,10 +5,16 @@ import React, { useEffect } from 'react';
 
 export default function DoneConsignTemplate({ children }: { children: React.ReactNode }) {
     const router = useRouter();
-    const reviewAndConsign = useSelector((state) => state.consignArtwork.completedSteps.reviewAndConsign);
+    const steps = useSelector((state) => state.consignArtwork.completedSteps);
 
-    const isCompleted = reviewAndConsign.status === 'completed'
-    
+    // auxilaryMedia is optional so we don't need to check for it
+    // reviewAndConsign is the last step so we don't need to check for it
+    const isCompleted =
+        steps.assetMedia.status === 'completed' &&
+        steps.assetMetadata.status === 'completed' &&
+        steps.licenses.status === 'completed' &&
+        steps.termsOfUse.status === 'completed';
+
     useEffect(() => {
         if (!isCompleted) {
             router.push('/home/consignArtwork/reviewAndConsign');
