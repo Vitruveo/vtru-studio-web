@@ -15,7 +15,7 @@ export const ClaimContainer = () => {
     const { data: client } = useConnectorClient();
     const { openConnectModal } = useConnectModal();
     const token = useSelector((state) => state.user.token);
-    const [isModalOpen, setIsModalOpen] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const closeModal = () => {
         setIsModalOpen(false);
