@@ -18,8 +18,6 @@ export default function Home() {
     const { language } = useI18n();
     const dispatch = useDispatch();
 
-    const status = useSelector((state) => state.asset.status);
-
     const isCompletedProfile = useSelector((state) => state.consignArtwork.isCompletedProfile);
     const customizer = useSelector((state) => state.customizer);
 
