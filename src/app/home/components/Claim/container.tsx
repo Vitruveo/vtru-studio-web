@@ -6,6 +6,7 @@ import { BASE_URL_BATCH } from '@/constants/api';
 import { useEffect, useState } from 'react';
 import { useToastr } from '@/app/hooks/useToastr';
 import { useSelector } from '@/store/hooks';
+import ClaimedModal from './ClaimedModal';
 
 export const ClaimContainer = () => {
     const { isConnected } = useAccount();
@@ -14,6 +15,11 @@ export const ClaimContainer = () => {
     const { data: client } = useConnectorClient();
     const { openConnectModal } = useConnectModal();
     const token = useSelector((state) => state.user.token);
+    const [isModalOpen, setIsModalOpen] = useState(true);
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
 
     useEffect(() => {
         const getBalance = async () => {
@@ -57,7 +63,7 @@ export const ClaimContainer = () => {
 
             const responseData = await response.json();
             if (response.ok) {
-                alert('Transaction submitted successfully');
+                setIsModalOpen(true);
             } else {
                 throw new Error(responseData.error);
             }
@@ -67,17 +73,20 @@ export const ClaimContainer = () => {
     };
 
     return (
-        <ClaimComponent
-            data={{
-                value: balance.toFixed(4),
-                symbol: 'VTRU',
-                disabled: balance <= 0 || !client,
-                isConnected,
-            }}
-            actions={{
-                onClaim,
-                onConnect,
-            }}
-        />
+        <>
+            <ClaimedModal isOpen={isModalOpen} handleClose={closeModal} />
+            <ClaimComponent
+                data={{
+                    value: balance.toFixed(4),
+                    symbol: 'VTRU',
+                    disabled: balance <= 0 || !client,
+                    isConnected,
+                }}
+                actions={{
+                    onClaim,
+                    onConnect,
+                }}
+            />
+        </>
     );
 };
