@@ -922,7 +922,7 @@ const language: Translation = {
     'studio.sidebar.consign': 'Подать Работу',
     'studio.sidebar.artistGuide': 'Руководство художника',
     'studio.sidebar.community': 'Сообщество',
-    'studio.sidebar.support': 'Поддержка',
+    'studio.sidebar.supportChannel': 'Канал поддержки',
 
     /* Footer */
     'studio.footer.thisStep': 'Текущий шаг',
