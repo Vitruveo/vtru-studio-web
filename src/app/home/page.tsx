@@ -18,8 +18,6 @@ export default function Home() {
     const { language } = useI18n();
     const dispatch = useDispatch();
 
-    const status = useSelector((state) => state.asset.status);
-
     const isCompletedProfile = useSelector((state) => state.consignArtwork.isCompletedProfile);
     const customizer = useSelector((state) => state.customizer);
 
@@ -33,6 +31,11 @@ export default function Home() {
     } as { [key: string]: string };
 
     const canConsignArtwork = useSelector((state) => state.user.canConsignArtwork);
+
+    const onConsignArtworkButtonClick = () => {
+        if (!canConsignArtwork) return;
+        dispatch(consignArtworkActionsCreators.changeGoToConsignArtwork(true));
+    };
 
     return (
         <Container
@@ -97,9 +100,7 @@ export default function Home() {
                                 <Button
                                     disabled={!canConsignArtwork}
                                     variant="contained"
-                                    onClick={() =>
-                                        dispatch(consignArtworkActionsCreators.changeGoToConsignArtwork(true))
-                                    }
+                                    onClick={onConsignArtworkButtonClick}
                                     fullWidth
                                 >
                                     {texts.consign}

@@ -108,6 +108,7 @@ const AssetMediaPreview = (props: AssetMediaPreviewProps) => {
                             src={currentSrcType}
                             width={width}
                             height={height}
+                            alt="media_preview"
                         />
                     )}
                 </CardContent>

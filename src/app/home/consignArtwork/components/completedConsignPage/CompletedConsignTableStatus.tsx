@@ -26,9 +26,14 @@ interface ConsignTableItem {
 interface CompletedConsignTableStatusProps {
     selectedStatus: ConsignArtworkAssetStatus;
     onStatusChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    isDisabled?: boolean;
 }
 
-export const CompletedConsignTableStatus = ({ selectedStatus, onStatusChange }: CompletedConsignTableStatusProps) => {
+export const CompletedConsignTableStatus = ({
+    selectedStatus,
+    onStatusChange,
+    isDisabled,
+}: CompletedConsignTableStatusProps) => {
     const { language } = useI18n();
 
     const texts = {
@@ -116,7 +121,7 @@ export const CompletedConsignTableStatus = ({ selectedStatus, onStatusChange }: 
                                     <TableCell scope="row">
                                         <Box display="flex" alignItems="center">
                                             <Radio
-                                                disabled={isBlocked}
+                                                disabled={isDisabled || row.status == 'blocked'}
                                                 name="selectedStatus"
                                                 value={row.status}
                                                 checked={row.status == selectedStatus}

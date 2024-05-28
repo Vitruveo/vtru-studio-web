@@ -10,6 +10,7 @@ import { ConsignArtworkAssetStatus } from '@/features/consignArtwork/types';
 import { useToastr } from '@/app/hooks/useToastr';
 import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
 import { EXPLORER_URL } from '@/constants/explorer';
+import { ChangeEvent } from 'react';
 
 // TODO: ADICIONAR TRADUÇÃO
 
@@ -49,7 +50,7 @@ export const CompletedConsignPage = () => {
     } as { [key: string]: string };
 
     const handlePreview = () => {
-        dispatch(consignArtworkThunks.preview());
+        dispatch(consignArtworkThunks.checkPreview());
     };
 
     const consignSteps = {
@@ -82,6 +83,14 @@ export const CompletedConsignPage = () => {
             to: '/home/consignArtwork',
         },
     ];
+
+    const handleStatusChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value as ConsignArtworkAssetStatus;
+        if (value === 'blocked') {
+            return;
+        }
+        formik.setFieldValue('selectedStatus', value);
+    };
 
     return (
         <form onSubmit={formik.handleSubmit}>
@@ -143,14 +152,13 @@ export const CompletedConsignPage = () => {
                                     </Box>
                                 </Box>
                             ))}
-                            {
-                                <Box mt={4}>
-                                    <CompletedConsignTableStatus
-                                        selectedStatus={formik.values.selectedStatus}
-                                        onStatusChange={formik.handleChange}
-                                    />
-                                </Box>
-                            }
+                            <Box mt={4}>
+                                <CompletedConsignTableStatus
+                                    selectedStatus={formik.values.selectedStatus}
+                                    onStatusChange={handleStatusChange}
+                                    isDisabled={formik.values.selectedStatus == 'blocked'}
+                                />
+                            </Box>
                         </Box>
                     </Box>
                     <Box flex={1} display="flex" justifyContent={!xL ? 'flex-start' : 'center'}>

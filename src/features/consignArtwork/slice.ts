@@ -4,6 +4,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ChangeStatusPayload, ConsignArtworkAssetStatus, ConsignArtworkSliceState } from './types';
 import { Email, Wallet } from '../user/types';
 import { AssetConsignArtwork } from '../asset/types';
+import { Creator } from '@/app/home/myProfile/types';
 
 export const stepsNames = {
     assetMedia: 'studio.consignArtwork.stepName.assetMedia',
@@ -118,6 +119,7 @@ export const consignArtworkSlice = createSlice({
             state.creatorWallet = action.payload.creatorWallet;
             state.creatorContract = action.payload.creatorContract;
             state.creatorCredits = action.payload.creatorCredits;
+            state.status = action.payload.status;
             state.status = action.payload.status;
         },
         changeConsignArtworkAssetStatus: (state, action: PayloadAction<{ status: ConsignArtworkAssetStatus }>) => {

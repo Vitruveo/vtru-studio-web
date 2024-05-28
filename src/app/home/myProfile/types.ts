@@ -1,6 +1,18 @@
 import { FormikErrors } from 'formik';
 import { FormikDefaultProps } from '@/app/common/types';
 
+// NOTE: USANDO INTERFACE POIS O YUP NÃO ESTÁ CONSEGUINDO INFERIR A TIPAGEM DO ROLES
+export interface Creator {
+    name: string;
+    roles: string[];
+    bio: string;
+    profileUrl: string;
+    nationality?: string;
+    residence?: string;
+    ethnicity?: string;
+    gender: string;
+}
+
 interface Wallet {
     address: string;
 }
@@ -18,17 +30,7 @@ export interface AccountSettingsFormValues {
     wallets: Wallet[];
     walletDefault: string;
     creators: Creator[];
-}
-
-export interface Creator {
-    name: string;
-    roles: string[];
-    bio: string;
-    profileUrl: string;
-    nationality: string;
-    residence: string;
-    ethnicity: string;
-    gender: string;
+    defaultCreator: Creator;
 }
 
 type AccountSettingsFormErros = FormikErrors<AccountSettingsFormValues>;

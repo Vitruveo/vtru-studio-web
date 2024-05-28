@@ -1,5 +1,5 @@
 'use client';
-import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import { Avatar, Box, Button, CardContent, Grid, Typography } from '@mui/material';
@@ -39,105 +39,34 @@ export default function ProfileSettings() {
     const { username, emailDefault, walletDefault, emails, wallets, requestAvatarUpload } = useSelector(
         userSelector(['username', 'emailDefault', 'walletDefault', 'emails', 'wallets', 'requestAvatarUpload'])
     );
+    const creatorAsset = useSelector((state) => state.asset.assetMetadata?.creators.formData);
 
-    useEffect(() => {
-        if (requestAvatarUpload.status === 'ready') {
-            dispatch(
-                generalStorageAvatarThunk({
-                    file: changeAvatarFile!,
-                    path: requestAvatarUpload.path,
-                    url: requestAvatarUpload.url,
-                    transactionId: requestAvatarUpload.transactionId,
-                })
-            );
-
-            toast.display({ message: texts.saveMessage, type: 'success' });
-
-            setTimeout(() => {
-                router.push('/home');
-            }, 500);
-        }
-    }, [requestAvatarUpload.status]);
-
-    useEffect(() => {
-        if (!isCompletedProfile && goToConsignArtwork) {
-            const fields = {
-                username: {
-                    translation: texts.usernameTitle,
-                    isValid: !!values.username,
-                },
-                emails: {
-                    translation: texts.emailsTitle,
-                    isValid: !!values.emails.length,
-                },
-
-                wallets: {
-                    translation: texts.walletsTitle,
-                    isValid: !!values.wallets.length,
-                },
-            };
-
-            const invalidFields = Object.entries(fields).filter(([key, value]) => !value.isValid);
-
-            dispatch(consignArtworkActionsCreators.changeGoToConsignArtwork(false));
-            toast.display({
-                type: 'warning',
-                message: (
-                    <Box>
-                        {`${texts.accessConsignMessage}`}
-                        <Box>
-                            Fill in the fields: {`${invalidFields.map(([key, value]) => value.translation).join(', ')}`}
-                        </Box>
-                    </Box>
-                ),
-            });
-        }
-    }, [isCompletedProfile, goToConsignArtwork]);
-
-    const initialValues = useMemo(
-        () => ({
-            emailDefault: !emailDefault || !emailDefault.length ? emails[0]?.email : emailDefault,
-            walletDefault: !walletDefault || !walletDefault.length ? wallets[0]?.address || '' : walletDefault,
-            username,
-            emails: emails.filter((email) => email.checkedAt),
-            wallets,
-            creators: [],
-        }),
-        []
-    );
-
-    const texts = {
-        title: language['studio.myProfile.title'],
-        subtitle: language['studio.myProfile.subtitle'],
-        home: language['studio.myProfile.home'],
-        emailsTitle: language['studio.myProfile.form.emails.title'],
-        walletsTitle: language['studio.myProfile.form.wallets.title'],
-        usernameTitle: language['studio.myProfile.form.username.title'],
-        usernamePlaceholder: language['studio.myProfile.form.username.placeholder'],
-        saveMessage: language['studio.myProfile.saveMessage'],
-        usernameRequiredError: language['studio.myProfile.form.usernameRequired.error'],
-        accessConsignMessage: language['studio.myProfile.accessConsignMessage'],
-        profileTitle: language['studio.myProfile.form.profile.title'],
-        profileResetButton: language['studio.myProfile.form.profile.reset.button'],
-        profileUploadButton: language['studio.myProfile.form.profile.upload.button'],
-        profileDescription: language['studio.myProfile.form.profile.description'],
-    } as { [key: string]: string };
-
-    const BCrumb = [
-        {
-            to: '/home',
-            title: texts.home,
-        },
-        {
-            title: texts.title,
-        },
-    ];
+    const initialValues: AccountSettingsFormValues = {
+        emailDefault: !emailDefault || !emailDefault.length ? emails[0]?.email : emailDefault,
+        walletDefault: !walletDefault || !walletDefault.length ? wallets[0]?.address || '' : walletDefault,
+        username,
+        emails: emails.filter((email) => email.checkedAt),
+        wallets,
+        creators: Array.isArray(creatorAsset) ? creatorAsset : [],
+        defaultCreator: Array.isArray(creatorAsset)
+            ? creatorAsset[0]
+            : {
+                  bio: '',
+                  ethnicity: '',
+                  gender: '',
+                  name: '',
+                  nationality: '',
+                  profileUrl: '',
+                  residence: '',
+                  roles: [],
+              },
+    };
 
     const { handleSubmit, handleChange, setFieldValue, setFieldError, setErrors, values, errors } =
         useFormik<AccountSettingsFormValues>({
             initialValues,
             // validationSchema: stepsSchemaValidation,
-            onSubmit: onSubmit,
+            onSubmit,
         });
 
     async function onSubmit(formValues: AccountSettingsFormValues) {
@@ -179,6 +108,86 @@ export default function ProfileSettings() {
             }, 500);
         }
     }
+
+    useEffect(() => {
+        if (requestAvatarUpload.status === 'ready') {
+            dispatch(
+                generalStorageAvatarThunk({
+                    file: changeAvatarFile!,
+                    path: requestAvatarUpload.path,
+                    url: requestAvatarUpload.url,
+                    transactionId: requestAvatarUpload.transactionId,
+                })
+            );
+
+            toast.display({ message: texts.saveMessage, type: 'success' });
+
+            setTimeout(() => {
+                router.push('/home');
+            }, 500);
+        }
+    }, [requestAvatarUpload.status]);
+
+    useEffect(() => {
+        if (!isCompletedProfile && goToConsignArtwork) {
+            const fields = {
+                username: {
+                    translation: texts.usernameTitle,
+                    isValid: !!values.username,
+                },
+                emails: {
+                    translation: texts.emailsTitle,
+                    isValid: !!values.emails.length,
+                },
+                wallets: {
+                    translation: texts.walletsTitle,
+                    isValid: !!values.wallets.length,
+                },
+            };
+
+            const invalidFields = Object.entries(fields).filter(([key, value]) => !value.isValid);
+
+            dispatch(consignArtworkActionsCreators.changeGoToConsignArtwork(false));
+            toast.display({
+                type: 'warning',
+                message: (
+                    <Box>
+                        {`${texts.accessConsignMessage}`}
+                        <Box>
+                            Fill in the fields: {`${invalidFields.map(([key, value]) => value.translation).join(', ')}`}
+                        </Box>
+                    </Box>
+                ),
+            });
+        }
+    }, [isCompletedProfile, goToConsignArtwork]);
+
+    const texts = {
+        title: language['studio.myProfile.title'],
+        subtitle: language['studio.myProfile.subtitle'],
+        home: language['studio.myProfile.home'],
+        emailsTitle: language['studio.myProfile.form.emails.title'],
+        walletsTitle: language['studio.myProfile.form.wallets.title'],
+        usernameTitle: language['studio.myProfile.form.username.title'],
+        usernamePlaceholder: language['studio.myProfile.form.username.placeholder'],
+        saveMessage: language['studio.myProfile.saveMessage'],
+        usernameRequiredError: language['studio.myProfile.form.usernameRequired.error'],
+        accessConsignMessage: language['studio.myProfile.accessConsignMessage'],
+        profileTitle: language['studio.myProfile.form.profile.title'],
+        profileResetButton: language['studio.myProfile.form.profile.reset.button'],
+        profileUploadButton: language['studio.myProfile.form.profile.upload.button'],
+        profileDescription: language['studio.myProfile.form.profile.description'],
+    } as { [key: string]: string };
+
+    const BCrumb = [
+        {
+            to: '/home',
+            title: texts.home,
+        },
+        {
+            title: texts.title,
+        },
+    ];
 
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (handleChange) handleChange(e);
