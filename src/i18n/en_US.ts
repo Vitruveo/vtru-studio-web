@@ -923,6 +923,7 @@ const language: Translation = {
     'studio.sidebar.consign': 'Consign Artwork',
     'studio.sidebar.artistGuide': 'Artist Guide',
     'studio.sidebar.community': 'Community',
+    'studio.sidebar.support': 'Support',
 
     /* Footer */
     'studio.footer.thisStep': 'This step is',
