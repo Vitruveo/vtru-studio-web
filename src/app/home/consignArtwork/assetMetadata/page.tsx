@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import Typography from '@mui/material/Typography';
@@ -246,12 +246,21 @@ export default function AssetMetadata() {
         const colors = (sections.context.formData as any).colors;
 
         if (Array.isArray(colors)) {
-            (sections.context.formData as any).colors = colors.map((color) => {
+            (sections.context.formData as any).colors = colors.filter(Boolean).map((color) => {
                 if (typeof color === 'string') {
                     return convertHexToRGB(color);
                 }
                 return color;
             });
+        }
+
+        const collections = (sections.taxonomy.formData as any).collections;
+        if (Array.isArray(collections)) {
+            (sections.taxonomy.formData as any).collections = collections.filter(Boolean);
+        }
+        const subject = (sections.taxonomy.formData as any).subject;
+        if (Array.isArray(subject)) {
+            (sections.taxonomy.formData as any).subject = subject.filter(Boolean);
         }
 
         dispatch(

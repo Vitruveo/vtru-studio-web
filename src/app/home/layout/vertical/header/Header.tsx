@@ -13,6 +13,8 @@ import { toggleMobileSidebar, toggleSidebar } from '@/features/customizer/slice'
 import { Rss } from './Rss';
 import Profile from './Profile';
 import Language from './Language';
+import { ClaimContainer } from '@/app/home/components/Claim/container';
+import { WalletProvider } from '@/app/home/components/apps/wallet';
 
 const Header = () => {
     const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
@@ -22,6 +24,7 @@ const Header = () => {
 
     // drawer
     const customizer = useSelector((state) => state.customizer);
+    const hasConsign = useSelector((state) => state.asset.contractExplorer?.tx);
 
     const AppBarStyled = styled(AppBar)(({ theme }) => ({
         boxShadow: 'none',
@@ -50,9 +53,13 @@ const Header = () => {
                 >
                     <IconMenu2 size="20" />
                 </IconButton>
-
                 <Box flexGrow={1} />
                 <Stack spacing={1} direction="row" alignItems="center">
+                    {hasConsign && (
+                        <WalletProvider>
+                            <ClaimContainer />
+                        </WalletProvider>
+                    )}
                     <Rss />
                     <Language />
 

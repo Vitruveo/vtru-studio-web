@@ -4,7 +4,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ChangeStatusPayload, ConsignArtworkAssetStatus, ConsignArtworkSliceState } from './types';
 import { Email, Wallet } from '../user/types';
 import { AssetConsignArtwork } from '../asset/types';
-import { set } from 'lodash';
 
 export const stepsNames = {
     assetMedia: 'studio.consignArtwork.stepName.assetMedia',
@@ -39,7 +38,6 @@ const initialState: ConsignArtworkSliceState = {
             status: 'notStarted',
             statusName: statusName.notStarted,
         },
-
         licenses: {
             stepId: 'licenses',
             stepName: stepsNames.licenses,

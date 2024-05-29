@@ -2,8 +2,8 @@ import { Box } from '@mui/material';
 import { WidgetProps } from '@rjsf/utils';
 import { FocusEvent, useRef } from 'react';
 
-const convertRGBToHex = (rgb?: number[]) => {
-    return Array.isArray(rgb) ? '#' + rgb.map((c) => c.toString(16).padStart(2, '0')).join('') : '#000000';
+const convertRGBToHex = (rgb: number[]) => {
+    return '#' + rgb.map((c) => c.toString(16).padStart(2, '0')).join('');
 };
 
 const convertHexToRGB = (hex: string) => {
@@ -16,12 +16,13 @@ export const CustomColorWidget = (props: WidgetProps) => {
 
     const debouncedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
+
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
         }
         timeoutRef.current = setTimeout(() => {
             props.onChange(value);
-        }, 1000);
+        }, 300);
     };
 
     const onFocus = (e: FocusEvent<HTMLInputElement, Element>) => {

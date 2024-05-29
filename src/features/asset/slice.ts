@@ -66,10 +66,12 @@ const initialState: AssetSliceState = {
     assetMetadata: undefined,
     licenses: undefined,
     requestAssetUpload: {},
-    isOriginal: false,
-    generatedArtworkAI: false,
-    notMintedOtherBlockchain: false,
-    contract: false,
+    terms: {
+        isOriginal: false,
+        generatedArtworkAI: false,
+        notMintedOtherBlockchain: false,
+        contract: false,
+    },
     framework: {
         createdAt: null,
         updatedAt: null,
@@ -78,6 +80,18 @@ const initialState: AssetSliceState = {
     },
     status: '',
     validateConsign: false,
+    consign: {
+        transaction: '',
+        status: '',
+        message: '',
+        when: '',
+        steps: {
+            check: null,
+            c2pa: null,
+            ipfs: null,
+            contractExplorer: null,
+        },
+    },
     error: '',
 };
 
@@ -165,6 +179,9 @@ export const assetSlice = createSlice({
                 ...action.payload,
             };
         },
+        clearRequestAssetUpload: (state) => {
+            state.requestAssetUpload = {}
+        },
         requestAssetUpload: (state, action) => {
             state.requestAssetUpload[action.payload.transactionId] = {
                 ...state.requestAssetUpload[action.payload.transactionId],
@@ -186,6 +203,32 @@ export const assetSlice = createSlice({
         },
         setValidationConsign: (state, action: PayloadAction<boolean>) => {
             state.validateConsign = action.payload;
+        },
+        setConeignTransaction: (state, action: PayloadAction<string>) => {
+            state.consign.transaction = action.payload;
+        },
+        setConsignInfo: (
+            state,
+            action: PayloadAction<{
+                status: string;
+                message: string;
+                when: string;
+            }>
+        ) => {
+            state.consign.message = action.payload.message;
+            state.consign.status = action.payload.status;
+            state.consign.when = action.payload.when;
+        },
+        setConsignStep: (
+            state,
+            action: PayloadAction<{
+                step: 'check' | 'c2pa' | 'ipfs' | 'contractExplorer';
+            }>
+        ) => {
+            state.consign.steps[action.payload.step] = new Date().toISOString();
+        },
+        resetConsign: (state) => {
+            state.consign = initialState.consign;
         },
     },
 });

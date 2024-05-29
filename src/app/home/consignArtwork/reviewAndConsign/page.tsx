@@ -82,27 +82,27 @@ const ConsignArtwork = () => {
     ];
 
     /* HANDLE WALLET CONNECTION */
-    useEffect(() => {
-        (async () => {
-            let hasWallet = false;
-            if (isConnected && address) {
-                for (const wallet of userWallets) {
-                    if (wallet.address === address) {
-                        dispatch(consignArtworkActionsCreators.setPreviewAndConsignWallet(wallet.address));
-                        hasWallet = true;
-                        break;
-                    }
-                }
-                if (!hasWallet) {
-                    toastr.display({
-                        type: 'error',
-                        message: 'Wallet not found, please add it to your account at your profile.',
-                    });
-                    await disconnectWallet();
-                }
-            }
-        })();
-    }, [isConnected, address]);
+    // useEffect(() => {
+    //     (async () => {
+    //         let hasWallet = false;
+    //         if (isConnected && address) {
+    //             for (const wallet of userWallets) {
+    //                 if (wallet.address === address) {
+    //                     dispatch(consignArtworkActionsCreators.setPreviewAndConsignWallet(wallet.address));
+    //                     hasWallet = true;
+    //                     break;
+    //                 }
+    //             }
+    //             if (!hasWallet) {
+    //                 toastr.display({
+    //                     type: 'error',
+    //                     message: 'Wallet not found, please add it to your account at your profile.',
+    //                 });
+    //                 await disconnectWallet();
+    //             }
+    //         }
+    //     })();
+    // }, [isConnected, address]);
 
     useEffect(() => {
         dispatch(validationConsignThunk());
@@ -141,13 +141,13 @@ const ConsignArtwork = () => {
             actionTitle: texts.preview,
             actionFunc: handlePreview,
         },
-        creatorWallet: {
-            title: 'Creator Wallet',
-            actionTitle: previewAndConsign.creatorWallet?.value ? 'Disconnect' : 'Connect',
-            value: formatContent(previewAndConsign.creatorWallet?.value),
-            actionFunc: handleWalletConnection,
-            loading: isConnecting || isDisconnecting,
-        },
+        // creatorWallet: {
+        //     title: 'Creator Wallet',
+        //     actionTitle: previewAndConsign.creatorWallet?.value ? 'Disconnect' : 'Connect',
+        //     value: formatContent(previewAndConsign.creatorWallet?.value),
+        //     actionFunc: handleWalletConnection,
+        //     loading: isConnecting || isDisconnecting,
+        // },
         // creatorCredits: {
         //     title: 'Creator Credits',
         //     actionTitle: previewAndConsign.creatorCredits?.value ? 'Requested' : 'Request',
@@ -175,15 +175,15 @@ const ConsignArtwork = () => {
         //         );
         //     },
         // },
-        creatorContract: {
-            title: 'Creator Contract',
-            status: 'Not Created',
-            actionTitle: vault.transactionHash ? 'View' : 'Start',
-            value: formatContent(vault.transactionHash),
-            disabled: isCreatorContractDisabled,
-            loading: vault.isLoading,
-            actionFunc: handleCreatorContract,
-        },
+        // creatorContract: {
+        //     title: 'Creator Contract',
+        //     status: 'Not Created',
+        //     actionTitle: vault.transactionHash ? 'View' : 'Start',
+        //     value: formatContent(vault.transactionHash),
+        //     disabled: isCreatorContractDisabled,
+        //     loading: vault.isLoading,
+        //     actionFunc: handleCreatorContract,
+        // },
     };
 
     const handleSubmit = async (event?: React.FormEvent) => {

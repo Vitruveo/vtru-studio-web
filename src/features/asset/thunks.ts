@@ -8,6 +8,8 @@ import {
     requestDeleteFiles,
     signingMediaC2PA,
     validationConsign,
+    consign,
+    eventsByTransaction,
 } from './requests';
 import {
     AssetSendRequestUploadApiRes,
@@ -17,6 +19,7 @@ import {
     ConsignArtworkSteps,
     CreateContractApiRes,
     CreateContractByAssetIdReq,
+    HistoryItems,
     RequestDeleteFilesReq,
     SigningMediaC2PAReq,
     UploadIPFSByAssetIdApiRes,
@@ -105,15 +108,15 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
                     consignArtworkActionsCreators.changeStatusStep({
                         stepId: 'termsOfUse',
                         status:
-                            response.data.contract &&
-                            response.data.isOriginal &&
-                            response.data.generatedArtworkAI &&
-                            response.data.notMintedOtherBlockchain
+                            response.data.terms.contract &&
+                            response.data.terms.isOriginal &&
+                            response.data.terms.generatedArtworkAI &&
+                            response.data.terms.notMintedOtherBlockchain
                                 ? 'completed'
-                                : response.data.contract ||
-                                    response.data.isOriginal ||
-                                    response.data.generatedArtworkAI ||
-                                    response.data.notMintedOtherBlockchain
+                                : response.data.terms.contract ||
+                                    response.data.terms.isOriginal ||
+                                    response.data.terms.generatedArtworkAI ||
+                                    response.data.terms.notMintedOtherBlockchain
                                   ? 'inProgress'
                                   : 'notStarted',
                     })
@@ -124,10 +127,12 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
                         _id: response.data._id,
                         assetMetadata: response.data.assetMetadata,
                         licenses: response.data.licenses,
-                        isOriginal: response.data.isOriginal,
-                        generatedArtworkAI: response.data.generatedArtworkAI,
-                        notMintedOtherBlockchain: response.data.notMintedOtherBlockchain,
-                        contract: response.data.contract,
+                        terms: {
+                            isOriginal: response.data.terms.isOriginal,
+                            generatedArtworkAI: response.data.terms.generatedArtworkAI,
+                            notMintedOtherBlockchain: response.data.terms.notMintedOtherBlockchain,
+                            contract: response.data.terms.contract,
+                        },
                         status: response.data.status,
                     })
                 );
@@ -406,10 +411,12 @@ export function contractThunk(payload: TermsOfUseFormValues): ReduxThunkAction<P
 
         dispatch(
             assetActionsCreators.change({
-                isOriginal: payload.isOriginal,
-                generatedArtworkAI: payload.generatedArtworkAI,
-                notMintedOtherBlockchain: payload.notMintedOtherBlockchain,
-                contract: payload.contract,
+                terms: {
+                    isOriginal: payload.isOriginal,
+                    generatedArtworkAI: payload.generatedArtworkAI,
+                    notMintedOtherBlockchain: payload.notMintedOtherBlockchain,
+                    contract: payload.contract,
+                },
             })
         );
     };
@@ -618,5 +625,83 @@ export function validationConsignThunk(): ReduxThunkAction<Promise<void>> {
                     })
                 );
             });
+    };
+}
+
+export function consignThunk(id: string): ReduxThunkAction<Promise<void>> {
+    return function (dispatch) {
+        return consign(id).then((response) => {
+            dispatch(assetActionsCreators.resetConsign());
+
+            dispatch(assetActionsCreators.setConeignTransaction(response.data.transaction));
+            dispatch(eventTransactionThunk());
+        });
+    };
+}
+
+export const CONSIGN_STATUS_MAP = {
+    pending: 'pending',
+    running: 'running',
+    finished: 'finished',
+    failed: 'failed',
+};
+
+export const CONSIGN_MESSAGE_MAP = {
+    check: 'Checked all media files',
+    c2pa: 'Signed asset',
+    ipfs: 'IPFS hashes checked',
+};
+
+export function eventTransactionThunk(): ReduxThunkAction<Promise<void>> {
+    return function (dispatch, getState) {
+        const transaction = getState().asset.consign.transaction;
+        if (!transaction) return Promise.resolve();
+
+        return eventsByTransaction(transaction).then((response) => {
+            dispatch(
+                assetActionsCreators.setConsignInfo({
+                    message: response.data.data.current.message,
+                    status: response.data.data.current.status,
+                    when: response.data.data.current.when,
+                })
+            );
+
+            if (
+                !getState().asset.consign.steps.check &&
+                response.data.data.history.some((item: HistoryItems) => item.message === CONSIGN_MESSAGE_MAP.check)
+            ) {
+                dispatch(assetActionsCreators.setConsignStep({ step: 'check' }));
+            }
+
+            if (
+                !getState().asset.consign.steps.c2pa &&
+                response.data.data.history.some((item: HistoryItems) => item.message === CONSIGN_MESSAGE_MAP.c2pa)
+            ) {
+                dispatch(assetActionsCreators.setConsignStep({ step: 'c2pa' }));
+            }
+
+            if (
+                !getState().asset.consign.steps.ipfs &&
+                response.data.data.history.some((item: HistoryItems) => item.message === CONSIGN_MESSAGE_MAP.ipfs)
+            ) {
+                dispatch(assetActionsCreators.setConsignStep({ step: 'ipfs' }));
+            }
+
+            if (
+                !getState().asset.consign.steps.contractExplorer &&
+                response.data.data.current.status === CONSIGN_STATUS_MAP.finished
+            ) {
+                dispatch(assetActionsCreators.setConsignStep({ step: 'contractExplorer' }));
+            }
+
+            if (
+                response.data.data.current.status === CONSIGN_STATUS_MAP.pending ||
+                response.data.data.current.status === CONSIGN_STATUS_MAP.running
+            ) {
+                setTimeout(() => {
+                    dispatch(eventTransactionThunk());
+                }, 1_000);
+            }
+        });
     };
 }
