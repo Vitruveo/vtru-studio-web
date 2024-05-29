@@ -592,7 +592,13 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.awardUrl': 'URL do Prêmio',
     'studio.consignArtwork.assetMetadata.field.awardUrl.description': 'Link para informações do prêmio',
     'studio.consignArtwork.assetMetadata.field.errors': (data) =>
-        `${data.message === 'required' || data.message === 'minItems' ? 'Campo obrigatório' : ''}`,
+        `${
+            data.message === 'required' || data.message === 'minItems'
+                ? 'Campo obrigatório'
+                : data.message === 'format'
+                  ? 'Formato inválido'
+                  : ''
+        }`,
 
     /* Licenças */
     'studio.consignArtwork.licenses.title': 'Licenças',
