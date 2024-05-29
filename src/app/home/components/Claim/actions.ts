@@ -15,3 +15,49 @@ export const clientToSigner = (client: Client<Transport, Chain, Account>) => {
     const signer = new JsonRpcSigner(providerClient, account.address);
     return signer;
 };
+
+export const createSignedMessage = async ({
+    name,
+    action,
+    method,
+    client,
+}: {
+    name: string;
+    action: string;
+    method: string;
+    client: Client<Transport, Chain, Account>;
+}) => {
+    const signer = clientToSigner(client!);
+
+    const domain = {
+        name: 'Vitruveo Studio',
+        version: '1',
+        chainId: Number((await provider.getNetwork()).chainId),
+    };
+
+    const types = {
+        Transaction: [
+            { name: 'name', type: 'string' },
+            { name: 'action', type: 'string' },
+            { name: 'method', type: 'string' },
+            { name: 'timestamp', type: 'uint' },
+        ],
+    };
+
+    const tx = {
+        name,
+        action,
+        method,
+        timestamp: Math.floor(Date.now() / 1000),
+    };
+
+    const signedMessage = await signer.signTypedData(domain, types, tx);
+
+    return {
+        domain,
+        types,
+        tx,
+        signedMessage,
+        signer,
+    };
+};

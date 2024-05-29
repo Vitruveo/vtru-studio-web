@@ -5,7 +5,7 @@
         },
         "schema": {
             "type": "object",
-            "required": ["title", "description", "culture", "mood", "colors"],
+            "required": ["title", "description", "culture", "mood"],
             "properties": {
                 "title": {
                     "type": "string"
