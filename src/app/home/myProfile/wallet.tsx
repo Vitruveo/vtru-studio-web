@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IconButton, Radio, RadioGroup, Theme, Typography, useMediaQuery, Box } from '@mui/material';
 import { useAccount, useDisconnect, useAccountEffect } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
@@ -15,24 +15,26 @@ const Wallet = ({ values, setFieldValue }: AccountSettingsProps) => {
     const toast = useToastr();
     const { language } = useI18n();
     const dispatch = useDispatch();
-    const { connectors } = useDisconnect();
+    const { connectors, disconnectAsync } = useDisconnect();
     const { isConnected, address } = useAccount();
     const { openConnectModal } = useConnectModal();
 
-    useAccountEffect({
-        async onConnect() {
-            await handleWalletDisconnection();
-        },
-    });
+    const [addedNewWallet, setAddedNewWallet] = useState(false);
+
+    // useAccountEffect({
+    //     async onConnect() {
+    //         await handleWalletDisconnection();
+    //     },
+    // });
+
+    // useEffect(() => {
+    //     if (isConnected) {
+    //         handleWalletDisconnection();
+    //     }
+    // }, []);
 
     useEffect(() => {
-        if (isConnected) {
-            handleWalletDisconnection();
-        }
-    }, []);
-
-    useEffect(() => {
-        if (address && isConnected) {
+        if (address && isConnected && addedNewWallet) {
             handleSignWallet({ address });
         }
     }, [address, isConnected]);
@@ -40,6 +42,9 @@ const Wallet = ({ values, setFieldValue }: AccountSettingsProps) => {
     const handleWalletDisconnection = async () => {
         for await (const connector of connectors) {
             await connector.disconnect();
+            await disconnectAsync({
+                connector,
+            });
         }
     };
 
@@ -52,6 +57,10 @@ const Wallet = ({ values, setFieldValue }: AccountSettingsProps) => {
     } as { [key: string]: string };
 
     const onConnectWalletClick = async () => {
+        if (isConnected) {
+            await handleWalletDisconnection();
+        }
+        setAddedNewWallet(true);
         openConnectModal?.();
     };
 
@@ -89,6 +98,9 @@ const Wallet = ({ values, setFieldValue }: AccountSettingsProps) => {
             } else {
                 toast.display({ message: 'Error on connect wallet', type: 'error' });
             }
+        } finally {
+            await handleWalletDisconnection();
+            setAddedNewWallet(false);
         }
     };
 
@@ -160,10 +172,10 @@ const Wallet = ({ values, setFieldValue }: AccountSettingsProps) => {
                             style={{ width: '85%', marginLeft: '10%' }}
                             variant="contained"
                             onClick={onConnectWalletClick}
-                            loading={isConnected}
-                            disabled={isConnected}
+                            loading={isConnected && addedNewWallet}
+                            disabled={isConnected && addedNewWallet}
                         >
-                            {texts.connectButton}
+                            {isConnected ? 'Disconnect' : 'Add'}
                         </LoadingButton>
                     </Box>
                 </Box>

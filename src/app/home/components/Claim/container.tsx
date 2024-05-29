@@ -9,7 +9,7 @@ import { useSelector } from '@/store/hooks';
 import ClaimedModal from './ClaimedModal';
 
 export const ClaimContainer = () => {
-    const { isConnected } = useAccount();
+    const { isConnected, address } = useAccount();
     const [balance, setBalance] = useState(0);
     const toastr = useToastr();
     const { data: client } = useConnectorClient();
@@ -81,6 +81,7 @@ export const ClaimContainer = () => {
                     symbol: 'VTRU',
                     disabled: balance <= 0 || !client,
                     isConnected,
+                    address,
                 }}
                 actions={{
                     onClaim,
