@@ -227,8 +227,18 @@ export default function AssetMetadata() {
                     );
 
                     if (message) {
+                        const checkPath = path.split('/');
                         isValid.push(false);
-                        return { ...acc, [path]: { __errors: [message] } };
+                        if (checkPath.length === 1) {
+                            return { ...acc, [path]: { __errors: [message] } };
+                        } else {
+                            return {
+                                ...acc,
+                                [checkPath[0]]: {
+                                    [checkPath[1]]: { __errors: [message] },
+                                },
+                            };
+                        }
                     }
 
                     return acc;
