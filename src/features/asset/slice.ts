@@ -179,6 +179,9 @@ export const assetSlice = createSlice({
                 ...action.payload,
             };
         },
+        clearRequestAssetUpload: (state) => {
+            state.requestAssetUpload = {}
+        },
         requestAssetUpload: (state, action) => {
             state.requestAssetUpload[action.payload.transactionId] = {
                 ...state.requestAssetUpload[action.payload.transactionId],
