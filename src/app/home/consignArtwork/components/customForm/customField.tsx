@@ -87,7 +87,7 @@ function CustomFieldTemplate({
 
     return (
         <Box className={classNames}>
-            <Box mb={1} display='flex' justifyContent='space-between'>
+            <Box mb={1} display="flex" justifyContent="space-between">
                 <Box>
                     <Typography fontSize="0.9rem" fontWeight="bold" className="MuiFormLabel-root MuiInputLabel-root">
                         {`${formattedLabel} ${withNumber}`}
@@ -99,13 +99,11 @@ function CustomFieldTemplate({
                         </Typography>
                     )}
                 </Box>
-                {
-                    id == 'root_colors' && (
-                        <IconButton onClick={onRefreshColors}>
-                            <RefreshIcon />
-                        </IconButton>
-                    )
-                }
+                {id == 'root_colors' && (
+                    <IconButton onClick={onRefreshColors}>
+                        <RefreshIcon />
+                    </IconButton>
+                )}
             </Box>
             <Box position="relative" display="flex" alignItems="center">
                 {children}
