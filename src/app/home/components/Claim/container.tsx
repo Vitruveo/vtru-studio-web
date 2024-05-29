@@ -17,6 +17,8 @@ export const ClaimContainer = () => {
     const token = useSelector((state) => state.user.token);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const vaultTransactionHash = useSelector((state) => state?.user?.vault?.transactionHash);
+
     const closeModal = () => {
         setIsModalOpen(false);
     };
@@ -82,6 +84,7 @@ export const ClaimContainer = () => {
                     disabled: balance <= 0 || !client,
                     isConnected,
                     address,
+                    vaultTransactionHash,
                 }}
                 actions={{
                     onClaim,
