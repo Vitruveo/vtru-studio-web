@@ -194,10 +194,12 @@ const ConsignArtwork = () => {
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
-                submitText="Consign"
+                // submitText="Consign"
+                submitText="Maintenance"
                 title={texts.consignArtworkTitle}
                 stepNumber={6}
-                submitDisabled={!validateConsign}
+                submitDisabled={true}
+                // submitDisabled={!validateConsign}
                 backOnclick={() => router.push(`/home/consignArtwork`)}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />

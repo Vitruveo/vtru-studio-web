@@ -16,9 +16,10 @@ export default function DoneConsignTemplate({ children }: { children: React.Reac
         steps.termsOfUse.status === 'completed';
 
     useEffect(() => {
-        if (!isCompleted) {
-            router.push('/home/consignArtwork/reviewAndConsign');
-        }
+        // if (!isCompleted) {
+        //     router.push('/home/consignArtwork/reviewAndConsign');
+        // }
+        router.push('/home/consignArtwork/reviewAndConsign');
     }, [router]);
 
     if (!isCompleted) return;
