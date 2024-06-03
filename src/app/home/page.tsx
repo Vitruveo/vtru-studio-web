@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { useI18n } from '../hooks/useI18n';
 import Image from 'next/image';
+import BannerVault from './components/bannerVault/banner';
 
 export default function Home() {
     const { language } = useI18n();
@@ -43,6 +44,7 @@ export default function Home() {
             }}
         >
             <PageContainer title={texts.title}>
+                <BannerVault />
                 <Breadcrumb title={texts.title} />
 
                 <Box maxWidth={800} padding={3} mt={3}>
