@@ -24,6 +24,7 @@ import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { useI18n } from '@/app/hooks/useI18n';
 import { useAvatar } from './useAvatar';
 import { useToastr } from '@/app/hooks/useToastr';
+import BannerVault from '../components/bannerVault/banner';
 
 export default function ProfileSettings() {
     const toast = useToastr();
@@ -218,17 +219,7 @@ export default function ProfileSettings() {
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter backPathRouter="/home" title={texts.title}>
-                <Box
-                    sx={{
-                        backgroundColor: '#EAD391',
-                        textAlign: 'center',
-                        fontWeight: 'bold',
-                        padding: 1,
-                    }}
-                >
-                    If you are a new user, funds will be held in your Creator Vault for 5 days after a sale. After that
-                    you may Claim the funds from any wallet in your account.
-                </Box>
+                <BannerVault />
                 <Box margin="auto 0" marginBottom={10} display="relative">
                     <Breadcrumb title={texts.title} items={BCrumb} />
 
