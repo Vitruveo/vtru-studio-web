@@ -22,7 +22,12 @@ export const ClaimComponent = ({ data, actions }: Props) => {
     return (
         <Stack direction="row" gap={1} alignItems="center">
             {vaultTransactionHash ? (
-                <a href={`${EXPLORER_URL}/tx/${vaultTransactionHash}`} target="_blank" rel="noreferrer">
+                <a
+                    href={`${EXPLORER_URL}/tx/${vaultTransactionHash}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ color: 'black' }}
+                >
                     {value} <strong>{symbol}</strong>
                 </a>
             ) : (
