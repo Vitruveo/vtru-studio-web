@@ -18,6 +18,7 @@ import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
 import { requestVaultThunk } from '@/features/user/thunks';
 import { WALLET_NETWORKS } from '@/constants/wallet';
 import { validationConsignThunk } from '@/features/asset/thunks';
+import { request } from 'http';
 
 interface ConsignStepsProps {
     [key: string]: {
@@ -65,6 +66,7 @@ const ConsignArtwork = () => {
         artworkListingTitle: language['studio.consignArtwork.artworkListing'],
         preview: language['studio.consignArtwork.consignmentStatus.preview.title'],
         comingSoon: language['studio.consignArtwork.comingSoon'],
+        requestConsign: language['studio.consignArtwork.requestConsign'],
     } as { [key: string]: string };
 
     const BCrumb = [
@@ -194,7 +196,7 @@ const ConsignArtwork = () => {
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
-                submitText="Consign"
+                submitText={texts.requestConsign}
                 title={texts.consignArtworkTitle}
                 stepNumber={6}
                 submitDisabled={!validateConsign}
