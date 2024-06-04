@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useAccount, useDisconnect } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
@@ -51,7 +51,7 @@ const ConsignArtwork = () => {
     const userWallets = useSelector((state) => state.user.wallets);
     const previewAndConsign = useSelector((state) => state.consignArtwork.previewAndConsign);
     const vault = useSelector((state) => state.user.vault);
-    const { validateConsign } = useSelector((state) => state.asset);
+    const { validateConsign, consignArtwork } = useSelector((state) => state.asset);
 
     const texts = {
         homeTitle: language['studio.home.title'],
@@ -67,6 +67,8 @@ const ConsignArtwork = () => {
         comingSoon: language['studio.consignArtwork.comingSoon'],
         requestConsign: language['studio.consignArtwork.requestConsign'],
     } as { [key: string]: string };
+
+    const [requestButtonTitle, setRequestButtonTitle] = useState<string | undefined>(texts.requestConsign);
 
     const BCrumb = [
         {
@@ -108,6 +110,12 @@ const ConsignArtwork = () => {
     useEffect(() => {
         dispatch(validationConsignThunk());
     }, []);
+
+    useEffect(() => {
+        if (consignArtwork?.status === 'pending') setRequestButtonTitle('Request Consign Pending');
+        else if (consignArtwork?.status === 'rejected') setRequestButtonTitle(undefined);
+        else if (consignArtwork?.status === 'active') setRequestButtonTitle('Consign');
+    }, [consignArtwork?.status]);
 
     const disconnectWallet = async () => {
         await disconnectAsync();
@@ -190,17 +198,18 @@ const ConsignArtwork = () => {
     const handleSubmit = async (event?: React.FormEvent) => {
         if (event) event.preventDefault();
         dispatch(requestConsignThunk());
-        router.push(`/home/consignArtwork/DoneConsign`);
+        // router.push(`/home/consignArtwork/DoneConsign`);
     };
 
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
-                submitText={texts.requestConsign}
+                submitText={requestButtonTitle}
                 title={texts.consignArtworkTitle}
                 stepNumber={6}
-                submitDisabled={!validateConsign}
+                submitDisabled={!validateConsign || consignArtwork?.status === 'pending'}
                 backOnclick={() => router.push(`/home/consignArtwork`)}
+                display={!!requestButtonTitle}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
 
