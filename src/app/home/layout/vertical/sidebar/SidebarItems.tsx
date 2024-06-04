@@ -9,6 +9,8 @@ import NavGroup from './NavGroup/NavGroup';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { toggleMobileSidebar } from '@/features/customizer/slice';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
+import Image from 'next/image';
+import WhatHappensBanner from 'public/images/breadcrumb/what-happens-banner.png';
 
 const SidebarItems = () => {
     const dispatch = useDispatch();
@@ -66,6 +68,18 @@ const SidebarItems = () => {
                         );
                     }
                 })}
+                <a
+                    href="https://dreamer.vitruveo.xyz/what-happens-after-my-artwork-is-collected"
+                    target="_blank"
+                    rel="noreferrer"
+                >
+                    <Image
+                        src={WhatHappensBanner}
+                        width={224}
+                        height={224}
+                        alt="What Happens After My Artwork Is Collected"
+                    />
+                </a>
             </List>
         </Box>
     );
