@@ -18,7 +18,6 @@ import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
 import { requestVaultThunk } from '@/features/user/thunks';
 import { WALLET_NETWORKS } from '@/constants/wallet';
 import { validationConsignThunk } from '@/features/asset/thunks';
-import { request } from 'http';
 
 interface ConsignStepsProps {
     [key: string]: {
