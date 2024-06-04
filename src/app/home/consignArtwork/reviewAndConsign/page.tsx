@@ -17,7 +17,7 @@ import { useToastr } from '@/app/hooks/useToastr';
 import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
 import { requestVaultThunk } from '@/features/user/thunks';
 import { WALLET_NETWORKS } from '@/constants/wallet';
-import { validationConsignThunk } from '@/features/asset/thunks';
+import { requestConsignThunk, validationConsignThunk } from '@/features/asset/thunks';
 
 interface ConsignStepsProps {
     [key: string]: {
@@ -51,7 +51,7 @@ const ConsignArtwork = () => {
     const userWallets = useSelector((state) => state.user.wallets);
     const previewAndConsign = useSelector((state) => state.consignArtwork.previewAndConsign);
     const vault = useSelector((state) => state.user.vault);
-    const validateConsign = useSelector((state) => state.asset.validateConsign);
+    const { validateConsign } = useSelector((state) => state.asset);
 
     const texts = {
         homeTitle: language['studio.home.title'],
@@ -189,6 +189,7 @@ const ConsignArtwork = () => {
 
     const handleSubmit = async (event?: React.FormEvent) => {
         if (event) event.preventDefault();
+        dispatch(requestConsignThunk());
         router.push(`/home/consignArtwork/DoneConsign`);
     };
 

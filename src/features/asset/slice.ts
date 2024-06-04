@@ -180,7 +180,7 @@ export const assetSlice = createSlice({
             };
         },
         clearRequestAssetUpload: (state) => {
-            state.requestAssetUpload = {}
+            state.requestAssetUpload = {};
         },
         requestAssetUpload: (state, action) => {
             state.requestAssetUpload[action.payload.transactionId] = {
@@ -229,6 +229,13 @@ export const assetSlice = createSlice({
         },
         resetConsign: (state) => {
             state.consign = initialState.consign;
+        },
+        setRequestConsignStatusPending: (state) => {
+            if (!state.consignArtwork) {
+                state.consignArtwork = { status: 'pending' };
+            } else {
+                state.consignArtwork.status = 'pending';
+            }
         },
     },
 });
