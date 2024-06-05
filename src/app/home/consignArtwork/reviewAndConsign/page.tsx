@@ -33,23 +33,17 @@ const ConsignArtwork = () => {
 
     const texts = {
         homeTitle: language['studio.home.title'],
-        stepPublishMessageSuccess: language['studio.consignArtwork.stepPublishMessageSuccess'],
         consignArtworkTitle: language['studio.consignArtwork.title'],
-        consignArtworkSubtitle: language['studio.consignArtwork.subtitle'],
-        // consignArtworkSubtitleLink: language['studio.consignArtwork.subtitle.link'],
-        optional: language['studio.consignArtwork.optional'],
-        moreInformation: language['studio.consignArtwork.subtitle.moreInformation'],
         reviewAndConsign: language['studio.consignArtwork.stepName.reviewAndConsign'],
         artworkListingTitle: language['studio.consignArtwork.artworkListing'],
         preview: language['studio.consignArtwork.consignmentStatus.preview.title'],
-        comingSoon: language['studio.consignArtwork.comingSoon'],
         requestConsign: language['studio.consignArtwork.requestConsign'],
     } as { [key: string]: string };
 
     const requestButtonTitle = useMemo(() => {
-        if (consignArtwork?.status === 'pending') return 'Request Consign Pending';
+        if (consignArtwork?.status === 'pending' || consignArtwork?.status === 'running')
+            return 'Request Consign Pending';
         else if (consignArtwork?.status === 'rejected') return undefined;
-        else if (consignArtwork?.status === 'running') return 'Request Consign Running';
         return texts.requestConsign;
     }, [consignArtwork?.status]);
 
@@ -185,6 +179,19 @@ const ConsignArtwork = () => {
                             </Box>
                         ))}
                     </Box>
+                    {consignArtwork?.status === 'rejected' && (
+                        <Box
+                            sx={{
+                                backgroundColor: '#EAD391',
+                                fontWeight: 'bold',
+                                padding: 1,
+                            }}
+                        >
+                            <Typography variant="h6" fontWeight="normal" color="GrayText">
+                                Your Asset was rejected
+                            </Typography>
+                        </Box>
+                    )}
                 </Box>
             </PageContainerFooter>
         </form>
