@@ -71,6 +71,7 @@ const language: Translation = {
     'studio.consignArtwork.stepName.termsOfUse': 'شرایط استفاده',
     'studio.consignArtwork.stepName.auxiliaryMedia': 'رسانه‌های کمکی',
     'studio.consignArtwork.stepName.reviewAndConsign': 'بررسی و ارسال',
+    'studio.consignArtwork.requestConsign': 'درخواست امضاء قرارداد',
     'studio.consignArtwork.optional': 'اختیاری',
     'studio.consignArtwork.artworkListing': 'فهرست آثار هنری',
     'studio.consignArtwork.artworkConsignedTitle': 'آثار هنری شما در حال حاضر ارسال شده است.',

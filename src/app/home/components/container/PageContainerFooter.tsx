@@ -9,6 +9,7 @@ type Props = {
     title?: string;
     submitText?: string;
     secondaryText?: string;
+    display?: boolean;
 } & FooterFormProps;
 
 const PageContainerFooter = ({
@@ -25,7 +26,8 @@ const PageContainerFooter = ({
     submitDisabled,
     secondaryText,
     hasBackButton,
-    hasSubmitButton=true
+    hasSubmitButton = true,
+    display,
 }: Props) => (
     <FooterForm
         maxHeight={maxHeight}
@@ -39,6 +41,7 @@ const PageContainerFooter = ({
         secondaryText={secondaryText}
         hasBackButton={hasBackButton}
         hasSubmitButton={hasSubmitButton}
+        display={display}
     >
         <HelmetProvider>
             <div>
