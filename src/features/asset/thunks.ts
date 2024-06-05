@@ -65,6 +65,7 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
 
             if (response.data) {
                 if (response.data.consignArtwork) {
+                    dispatch(assetActionsCreators.change({ consignArtwork: response.data.consignArtwork }));
                     dispatch(consignArtworkActionsCreators.changeConsignArtwork(response.data.consignArtwork));
                     dispatch(
                         consignArtworkActionsCreators.changePreviewAndConsign({

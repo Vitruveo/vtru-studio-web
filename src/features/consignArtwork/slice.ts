@@ -114,10 +114,10 @@ export const consignArtworkSlice = createSlice({
             state.completedSteps[stepId].status = status;
         },
         changeConsignArtwork: (state, action: PayloadAction<AssetConsignArtwork>) => {
-            state.artworkListing = action.payload.artworkListing;
-            state.creatorWallet = action.payload.creatorWallet;
-            state.creatorContract = action.payload.creatorContract;
-            state.creatorCredits = action.payload.creatorCredits;
+            state.artworkListing = action.payload?.artworkListing;
+            state.creatorWallet = action.payload?.creatorWallet;
+            state.creatorContract = action.payload?.creatorContract;
+            state.creatorCredits = action.payload?.creatorCredits;
             state.status = action.payload.status;
         },
         changeConsignArtworkAssetStatus: (state, action: PayloadAction<{ status: ConsignArtworkAssetStatus }>) => {
