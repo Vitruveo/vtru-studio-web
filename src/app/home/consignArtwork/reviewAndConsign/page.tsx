@@ -180,15 +180,24 @@ const ConsignArtwork = () => {
                         ))}
                     </Box>
                     {consignArtwork?.status === 'rejected' && (
-                        <Box
-                            sx={{
-                                backgroundColor: '#EAD391',
-                                fontWeight: 'bold',
-                                padding: 1,
-                            }}
-                        >
+                        <Box>
+                            <Box
+                                sx={{
+                                    backgroundColor: '#EAD391',
+                                    fontWeight: 'bold',
+                                    padding: 1,
+                                    marginBottom: 2,
+                                }}
+                            >
+                                <Typography variant="h6" fontWeight="normal" color="GrayText">
+                                    Your artwork was flagged as possible fraud
+                                </Typography>
+                            </Box>
                             <Typography variant="h6" fontWeight="normal" color="GrayText">
-                                Your Asset was rejected
+                                If you think you have been flagged incorrectly, please fill the following form:{' '}
+                                <a href="https://vtru.xyz/blockappeal" target="_blank" rel="noreferrer">
+                                    https://vtru.xyz/blockappeal
+                                </a>
                             </Typography>
                         </Box>
                     )}
