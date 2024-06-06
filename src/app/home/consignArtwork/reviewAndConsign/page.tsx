@@ -190,11 +190,11 @@ const ConsignArtwork = () => {
                                 }}
                             >
                                 <Typography variant="h6" fontWeight="normal" color="GrayText">
-                                    Your artwork was flagged as possible fraud
+                                    Your artwork did not pass our moderation review.
                                 </Typography>
                             </Box>
                             <Typography variant="h6" fontWeight="normal" color="GrayText">
-                                If you think you have been flagged incorrectly, please fill the following form:{' '}
+                                If you think you have been flagged incorrectly, please submit the following form:{' '}
                                 <a href="https://vtru.xyz/blockappeal" target="_blank" rel="noreferrer">
                                     https://vtru.xyz/blockappeal
                                 </a>
