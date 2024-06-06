@@ -24,6 +24,7 @@ export interface FooterFormProps {
     secondaryText?: string;
     hasBackButton?: boolean;
     hasSubmitButton?: boolean;
+    display?: boolean;
 }
 
 export function FooterForm({
@@ -38,6 +39,7 @@ export function FooterForm({
     secondaryText,
     hasBackButton = true,
     hasSubmitButton,
+    display = true,
 }: FooterFormProps) {
     const theme = useTheme();
 
@@ -154,6 +156,7 @@ export function FooterForm({
                                     style={{ marginLeft: '20px', whiteSpace: 'nowrap', minWidth: 120 }}
                                     color="primary"
                                     variant="contained"
+                                    sx={!display ? { display: 'none' } : {}}
                                 >
                                     {submitText || 'Save'}
                                 </Button>

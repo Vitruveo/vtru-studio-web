@@ -10,6 +10,7 @@ import {
     validationConsign,
     consign,
     eventsByTransaction,
+    requestConsign,
 } from './requests';
 import {
     AssetSendRequestUploadApiRes,
@@ -64,6 +65,7 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
 
             if (response.data) {
                 if (response.data.consignArtwork) {
+                    dispatch(assetActionsCreators.change({ consignArtwork: response.data.consignArtwork }));
                     dispatch(consignArtworkActionsCreators.changeConsignArtwork(response.data.consignArtwork));
                     dispatch(
                         consignArtworkActionsCreators.changePreviewAndConsign({
@@ -703,5 +705,12 @@ export function eventTransactionThunk(): ReduxThunkAction<Promise<void>> {
                 }, 1_000);
             }
         });
+    };
+}
+
+export function requestConsignThunk(): ReduxThunkAction<void> {
+    return function (dispatch) {
+        dispatch(assetActionsCreators.setRequestConsignStatusPending());
+        requestConsign();
     };
 }

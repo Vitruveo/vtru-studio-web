@@ -105,3 +105,7 @@ export async function consign(id: string) {
 export async function eventsByTransaction(transaction: string) {
     return axios.get(`${BASE_URL_BATCH}/events/${transaction}`);
 }
+
+export async function requestConsign() {
+    return apiService.post(`/requestConsign`, {});
+}

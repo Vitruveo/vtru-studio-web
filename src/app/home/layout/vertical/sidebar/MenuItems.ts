@@ -50,7 +50,7 @@ const Menuitems: MenuitemsType[] = [
         title: 'studio.sidebar.supportChannel',
         icon: IconHelp,
         external: true,
-        href: '//dreamverse.vitruveo.xyz/groups/vtru-studio/chat',
+        href: '//dreamverse.vitruveo.xyz/',
     },
     // {
     //   id: uniqueId(),
