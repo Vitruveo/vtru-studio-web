@@ -1,4 +1,4 @@
-import { Button, Stack, Typography } from '@mui/material';
+import { Button, CircularProgress, Stack, Typography } from '@mui/material';
 import { EXPLORER_URL } from '@/constants/explorer';
 
 interface Props {
@@ -9,6 +9,8 @@ interface Props {
         isConnected: boolean;
         address: `0x${string}` | undefined;
         vaultTransactionHash: string | null;
+        loading: boolean;
+        isBlocked: boolean;
     };
     actions: {
         onClaim: () => void;
@@ -17,10 +19,11 @@ interface Props {
 }
 
 export const ClaimComponent = ({ data, actions }: Props) => {
-    const { value, symbol, disabled, isConnected, address, vaultTransactionHash } = data;
+    const { value, symbol, disabled, isConnected, address, vaultTransactionHash, loading, isBlocked } = data;
     const { onClaim, onConnect } = actions;
     return (
         <Stack direction="row" gap={1} alignItems="center">
+            {isConnected && isBlocked && <Typography color="red">Your funds are on temporary hold</Typography>}
             {vaultTransactionHash ? (
                 <a
                     href={`${EXPLORER_URL}/tx/${vaultTransactionHash}`}
@@ -36,7 +39,7 @@ export const ClaimComponent = ({ data, actions }: Props) => {
                 </Typography>
             )}
             <Button size="small" variant="contained" disabled={disabled} onClick={onClaim}>
-                Claim
+                Claim {loading && <CircularProgress size={16} style={{ marginLeft: 10 }} />}
             </Button>
             {isConnected && address && (
                 <Typography>
