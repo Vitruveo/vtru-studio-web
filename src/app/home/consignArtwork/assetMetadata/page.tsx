@@ -254,6 +254,10 @@ export default function AssetMetadata() {
             });
         }
 
+        const tags = (sections.taxonomy.formData as any).tags;
+        if (Array.isArray(tags)) {
+            (sections.taxonomy.formData as any).tags = tags.filter(Boolean);
+        }
         const collections = (sections.taxonomy.formData as any).collections;
         if (Array.isArray(collections)) {
             (sections.taxonomy.formData as any).collections = collections.filter(Boolean);
@@ -261,6 +265,30 @@ export default function AssetMetadata() {
         const subject = (sections.taxonomy.formData as any).subject;
         if (Array.isArray(subject)) {
             (sections.taxonomy.formData as any).subject = subject.filter(Boolean);
+        }
+        const creators = sections.creators.formData as any[];
+        creators.forEach((creator) => {
+            const roles = creator.roles;
+            if (Array.isArray(roles)) {
+                creator.roles = roles.filter(Boolean);
+            }
+        });
+        sections.creators.formData = creators.filter((creator) => {
+            const keys = Object.keys(creator);
+            return !(
+                keys.length === 1 &&
+                keys[0] === 'roles' &&
+                Array.isArray(creator.roles) &&
+                creator.roles.length === 0
+            );
+        });
+        const exhibitions = (sections.provenance.formData as any).exhibitions;
+        if (Array.isArray(exhibitions)) {
+            (sections.provenance.formData as any).exhibitions = exhibitions.filter((e) => Object.keys(e).length !== 0);
+        }
+        const awards = (sections.provenance.formData as any).awards;
+        if (Array.isArray(awards)) {
+            (sections.provenance.formData as any).awards = awards.filter((a) => Object.keys(a).length !== 0);
         }
 
         dispatch(
