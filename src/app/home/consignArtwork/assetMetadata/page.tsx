@@ -207,6 +207,13 @@ export default function AssetMetadata() {
         );
     };
 
+    const filterArray = (object: any, key: string) => {
+        const value = object[key];
+        if (Array.isArray(value)) {
+            object[key] = value.filter(Boolean);
+        }
+    };
+
     const handleSaveData = async (event?: React.FormEvent, skip?: boolean) => {
         if (event) event.preventDefault();
 
@@ -254,18 +261,10 @@ export default function AssetMetadata() {
             });
         }
 
-        const tags = (sections.taxonomy.formData as any).tags;
-        if (Array.isArray(tags)) {
-            (sections.taxonomy.formData as any).tags = tags.filter(Boolean);
-        }
-        const collections = (sections.taxonomy.formData as any).collections;
-        if (Array.isArray(collections)) {
-            (sections.taxonomy.formData as any).collections = collections.filter(Boolean);
-        }
-        const subject = (sections.taxonomy.formData as any).subject;
-        if (Array.isArray(subject)) {
-            (sections.taxonomy.formData as any).subject = subject.filter(Boolean);
-        }
+        const formData = sections.taxonomy.formData as any;
+        const keys = ['tags', 'collections', 'subject'];
+        keys.forEach((key) => filterArray(formData, key));
+
         const creators = sections.creators.formData as any[];
         creators.forEach((creator) => {
             const roles = creator.roles;
@@ -274,10 +273,10 @@ export default function AssetMetadata() {
             }
         });
         sections.creators.formData = creators.filter((creator) => {
-            const keys = Object.keys(creator);
+            const objKeys = Object.keys(creator);
             return !(
-                keys.length === 1 &&
-                keys[0] === 'roles' &&
+                objKeys.length === 1 &&
+                objKeys[0] === 'roles' &&
                 Array.isArray(creator.roles) &&
                 creator.roles.length === 0
             );
