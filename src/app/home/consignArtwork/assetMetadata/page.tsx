@@ -213,6 +213,12 @@ export default function AssetMetadata() {
             object[key] = value.filter(Boolean);
         }
     };
+    const filterObjects = (object: any, key: string) => {
+        const value = object[key];
+        if (Array.isArray(value)) {
+            object[key] = value.filter((item) => Object.keys(item).length !== 0);
+        }
+    };
 
     const handleSaveData = async (event?: React.FormEvent, skip?: boolean) => {
         if (event) event.preventDefault();
@@ -261,18 +267,14 @@ export default function AssetMetadata() {
             });
         }
 
-        const formData = sections.taxonomy.formData as any;
-        const keys = ['tags', 'collections', 'subject'];
-        keys.forEach((key) => filterArray(formData, key));
+        const formDataTaxonomy = sections.taxonomy.formData as any;
+        const taxonomyKeys = ['tags', 'collections', 'subject'];
+        taxonomyKeys.forEach((key) => filterArray(formDataTaxonomy, key));
 
-        const creators = sections.creators.formData as any[];
-        creators.forEach((creator) => {
-            const roles = creator.roles;
-            if (Array.isArray(roles)) {
-                creator.roles = roles.filter(Boolean);
-            }
-        });
-        sections.creators.formData = creators.filter((creator) => {
+        const formDataCreators = sections.creators.formData as any[];
+        formDataCreators.forEach((creator) => filterArray(creator, 'roles'));
+
+        sections.creators.formData = formDataCreators.filter((creator) => {
             const objKeys = Object.keys(creator);
             return !(
                 objKeys.length === 1 &&
@@ -281,14 +283,10 @@ export default function AssetMetadata() {
                 creator.roles.length === 0
             );
         });
-        const exhibitions = (sections.provenance.formData as any).exhibitions;
-        if (Array.isArray(exhibitions)) {
-            (sections.provenance.formData as any).exhibitions = exhibitions.filter((e) => Object.keys(e).length !== 0);
-        }
-        const awards = (sections.provenance.formData as any).awards;
-        if (Array.isArray(awards)) {
-            (sections.provenance.formData as any).awards = awards.filter((a) => Object.keys(a).length !== 0);
-        }
+
+        const formDataProvenance = sections.provenance.formData as any;
+        const provenanceKeys = ['exhibitions', 'awards'];
+        provenanceKeys.forEach((key) => filterObjects(formDataProvenance, key));
 
         dispatch(
             assetMetadataThunk(
