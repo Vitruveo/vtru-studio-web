@@ -23,7 +23,7 @@ export const ClaimComponent = ({ data, actions }: Props) => {
     const { onClaim, onConnect } = actions;
     return (
         <Stack direction="row" gap={1} alignItems="center">
-            {isConnected && isBlocked && <Typography color="red">Your funds are on temporary hold</Typography>}
+            {isConnected && isBlocked && <Typography color="red">Account blocked — fund claims disabled</Typography>}
             {vaultTransactionHash ? (
                 <a
                     href={`${EXPLORER_URL}/tx/${vaultTransactionHash}`}
