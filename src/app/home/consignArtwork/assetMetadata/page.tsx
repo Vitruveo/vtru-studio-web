@@ -207,6 +207,19 @@ export default function AssetMetadata() {
         );
     };
 
+    const filterArray = (object: any, key: string) => {
+        const value = object[key];
+        if (Array.isArray(value)) {
+            object[key] = value.filter(Boolean);
+        }
+    };
+    const filterObjects = (object: any, key: string) => {
+        const value = object[key];
+        if (Array.isArray(value)) {
+            object[key] = value.filter((item) => Object.keys(item).length !== 0);
+        }
+    };
+
     const handleSaveData = async (event?: React.FormEvent, skip?: boolean) => {
         if (event) event.preventDefault();
 
@@ -264,14 +277,26 @@ export default function AssetMetadata() {
             });
         }
 
-        const collections = (sections.taxonomy.formData as any).collections;
-        if (Array.isArray(collections)) {
-            (sections.taxonomy.formData as any).collections = collections.filter(Boolean);
-        }
-        const subject = (sections.taxonomy.formData as any).subject;
-        if (Array.isArray(subject)) {
-            (sections.taxonomy.formData as any).subject = subject.filter(Boolean);
-        }
+        const formDataTaxonomy = sections.taxonomy.formData as any;
+        const taxonomyKeys = ['tags', 'collections', 'subject'];
+        taxonomyKeys.forEach((key) => filterArray(formDataTaxonomy, key));
+
+        const formDataCreators = sections.creators.formData as any[];
+        formDataCreators.forEach((creator) => filterArray(creator, 'roles'));
+
+        sections.creators.formData = formDataCreators.filter((creator) => {
+            const objKeys = Object.keys(creator);
+            return !(
+                objKeys.length === 1 &&
+                objKeys[0] === 'roles' &&
+                Array.isArray(creator.roles) &&
+                creator.roles.length === 0
+            );
+        });
+
+        const formDataProvenance = sections.provenance.formData as any;
+        const provenanceKeys = ['exhibitions', 'awards'];
+        provenanceKeys.forEach((key) => filterObjects(formDataProvenance, key));
 
         dispatch(
             assetMetadataThunk(
