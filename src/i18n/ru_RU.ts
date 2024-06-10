@@ -755,7 +755,13 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.awardUrl.description': 'Ссылка на описание награды',
 
     'studio.consignArtwork.assetMetadata.field.errors': (data: { message: string }) =>
-        `${data.message === 'required' || data.message === 'minItems' ? 'поле обязательно для заполнения' : ''}`,
+        `${
+            data.message === 'required' || data.message === 'minItems'
+                ? 'Поле обязательно для заполнения'
+                : data.message === 'format'
+                  ? 'Неверный формат'
+                  : ''
+        }`,
 
     /* Licenses */
 
