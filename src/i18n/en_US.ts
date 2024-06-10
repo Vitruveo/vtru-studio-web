@@ -72,6 +72,7 @@ const language: Translation = {
     'studio.consignArtwork.stepName.termsOfUse': 'Terms of Use',
     'studio.consignArtwork.stepName.auxiliaryMedia': 'Auxiliary Media',
     'studio.consignArtwork.stepName.reviewAndConsign': 'Review And Consign',
+    'studio.consignArtwork.requestConsign': 'Request Consignment',
     'studio.consignArtwork.optional': 'optional',
     'studio.consignArtwork.artworkListing': 'Artwork Listing',
     'studio.consignArtwork.artworkConsignedTitle': 'Your artwork is currently consigned.',
@@ -929,6 +930,7 @@ const language: Translation = {
     'studio.sidebar.consign': 'Consign Artwork',
     'studio.sidebar.artistGuide': 'Artist Guide',
     'studio.sidebar.community': 'Community',
+    'studio.sidebar.supportChannel': 'Support Channel',
 
     /* Footer */
     'studio.footer.thisStep': 'This step is',

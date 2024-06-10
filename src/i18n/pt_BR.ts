@@ -68,6 +68,7 @@ const language: Translation = {
     'studio.consignArtwork.stepName.termsOfUse': 'Termos de Uso',
     'studio.consignArtwork.stepName.auxiliaryMedia': 'Mídia Auxiliar',
     'studio.consignArtwork.stepName.reviewAndConsign': 'Revisar e Consignar',
+    'studio.consignArtwork.requestConsign': 'Solicitar Consignação',
     'studio.consignArtwork.optional': 'opcional',
     'studio.consignArtwork.artworkListing': 'Listagem de Obra de Arte',
     'studio.consignArtwork.artworkConsignedTitle': 'Sua obra de arte está atualmente consignada.',
@@ -764,6 +765,7 @@ const language: Translation = {
     'studio.sidebar.consign': 'Consignar Obra de Arte',
     'studio.sidebar.artistGuide': 'Guia do Artista',
     'studio.sidebar.community': 'Comunidade',
+    'studio.sidebar.supportChannel': 'Canal de Suporte',
 
     /* Footer */
     'studio.footer.thisStep': 'Esta etapa está',

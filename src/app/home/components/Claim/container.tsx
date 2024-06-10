@@ -4,18 +4,18 @@ import { ClaimComponent } from './components';
 import { createSignedMessage } from './actions';
 import { BASE_URL_BATCH } from '@/constants/api';
 import { useEffect, useState } from 'react';
-import { useToastr } from '@/app/hooks/useToastr';
 import { useSelector } from '@/store/hooks';
 import ClaimedModal from './ClaimedModal';
 
 export const ClaimContainer = () => {
     const { isConnected, address } = useAccount();
     const [balance, setBalance] = useState(0);
-    const toastr = useToastr();
     const { data: client } = useConnectorClient();
     const { openConnectModal } = useConnectModal();
     const token = useSelector((state) => state.user.token);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [isBlocked, setIsBlocked] = useState(false);
 
     const vaultTransactionHash = useSelector((state) => state?.user?.vault?.transactionHash);
 
@@ -25,19 +25,24 @@ export const ClaimContainer = () => {
 
     useEffect(() => {
         const getBalance = async () => {
+            setLoading(true);
             try {
                 const response = await fetch(`${BASE_URL_BATCH}/wallet/balance`, {
                     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 });
 
-                const { data } = (await response.json()) as { data: string };
+                const data = await response.json();
 
-                setBalance(Number(data));
-            } catch {
-                toastr.display({
-                    type: 'error',
-                    message: 'Failed to get balance',
-                });
+                if (response.status === 403 && data.code === 'vitruveo.batch.api.balance.disabled') {
+                    setIsBlocked(true);
+                    return;
+                }
+
+                setBalance(Number(data.data));
+            } catch (error) {
+                // do nothing
+            } finally {
+                setLoading(false);
             }
         };
         getBalance();
@@ -48,6 +53,7 @@ export const ClaimContainer = () => {
     };
 
     const onClaim = async () => {
+        setLoading(true);
         try {
             const { domain, signedMessage, signer, tx, types } = await createSignedMessage({
                 name: 'Creator Vault',
@@ -70,7 +76,9 @@ export const ClaimContainer = () => {
                 throw new Error(responseData.error);
             }
         } catch (error) {
-            console.error('Transaction failed:', error);
+            // do nothing
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -81,10 +89,12 @@ export const ClaimContainer = () => {
                 data={{
                     value: balance.toFixed(4),
                     symbol: 'VTRU',
-                    disabled: balance <= 0 || !client,
+                    disabled: loading || balance <= 0 || !client,
                     isConnected,
                     address,
                     vaultTransactionHash,
+                    loading,
+                    isBlocked,
                 }}
                 actions={{
                     onClaim,

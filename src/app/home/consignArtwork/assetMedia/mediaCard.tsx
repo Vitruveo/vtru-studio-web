@@ -32,6 +32,8 @@ import { useSelector } from '@/store/hooks';
 import UploadProgressBar from '../components/uploadProgress';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 import { ASSET_STORAGE_URL } from '@/constants/asset';
+import { useDispatch } from 'react-redux';
+import { assetActionsCreators } from '@/features/asset/slice';
 
 interface MediaCardProps {
     deleteKeys: string[];
@@ -102,6 +104,7 @@ export default function MediaCard({
     const [currentSrcType, setCurrentSrcType] = useState<string>(urlAssetFile);
     const [dimensionError, setDimensionError] = useState<boolean>();
     const [sizeError, setSizeError] = useState<boolean>();
+    const dispatch = useDispatch();
 
     const [toastr, setToastr] = useState<CustomizedSnackbarState>({
         type: 'success',
@@ -156,60 +159,57 @@ export default function MediaCard({
         return true;
     }
 
-    const onDrop = useCallback(
-        async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
-            // fileRejections.forEach(({ file, errors }) => {
-            //     if (errors[0].code === 'file-too-large') {
-            //         setSizeError(true);
-            //         setModalErrorOpen(true);
-            //     }
-            // });
-            // if (fileRejections.length > 0) return;
-            const imgWidthAndHeight = await handleGetFileWidthAndHeight(acceptedFiles[0]);
+    const onDrop = async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
+        // fileRejections.forEach(({ file, errors }) => {
+        //     if (errors[0].code === 'file-too-large') {
+        //         setSizeError(true);
+        //         setModalErrorOpen(true);
+        //     }
+        // });
+        // if (fileRejections.length > 0) return;
+        const imgWidthAndHeight = await handleGetFileWidthAndHeight(acceptedFiles[0]);
 
-            // const isValid = compareDimensions({
-            //     configHeight: mediaConfig.height,
-            //     configWidth: mediaConfig.width,
-            //     imageHeight: imgWidthAndHeight.height,
-            //     imageWidth: imgWidthAndHeight.width,
-            // });
+        // const isValid = compareDimensions({
+        //     configHeight: mediaConfig.height,
+        //     configWidth: mediaConfig.width,
+        //     imageHeight: imgWidthAndHeight.height,
+        //     imageWidth: imgWidthAndHeight.width,
+        // });
 
-            // if (!isValid) {
-            //     setDimensionError(true);
-            //     setModalErrorOpen(true);
-            //     return;
-            // }
+        // if (!isValid) {
+        //     setDimensionError(true);
+        //     setModalErrorOpen(true);
+        //     return;
+        // }
 
-            if (isVideo) {
-                const videoDuration = await getVideoDuration(acceptedFiles[0]);
-                if (formatType === 'preview' && videoDuration > 5) {
-                    setMediaCrop(acceptedFiles[0]);
-                    setShowVideoPreview(true);
-                    return;
-                }
-            }
-
-            if (
-                isVideo ||
-                (imgWidthAndHeight.width === mediaConfig.width && imgWidthAndHeight.height === mediaConfig.height)
-            ) {
-                const checkSize = isVideo ? mediaConfig.sizeMB?.video : mediaConfig.sizeMB?.image;
-
-                handleUploadFile({
-                    width: mediaConfig.width,
-                    height: mediaConfig.height,
-                    formatUpload: formatType,
-                    file: acceptedFiles[0],
-                    maxSize: checkSize.toString(),
-                });
-                setFieldValue(`formats.${formatType}`, { file: acceptedFiles[0] });
-            } else {
+        if (isVideo) {
+            const videoDuration = await getVideoDuration(acceptedFiles[0]);
+            if (formatType === 'preview' && videoDuration > 5) {
                 setMediaCrop(acceptedFiles[0]);
-                setShowCrop(true);
+                setShowVideoPreview(true);
+                return;
             }
-        },
-        [setFieldValue]
-    );
+        }
+
+        if (
+            isVideo ||
+            (imgWidthAndHeight.width === mediaConfig.width && imgWidthAndHeight.height === mediaConfig.height)
+        ) {
+            const checkSize = isVideo ? mediaConfig.sizeMB?.video : mediaConfig.sizeMB?.image;
+
+            await handleUploadFile({
+                width: mediaConfig.width,
+                height: mediaConfig.height,
+                formatUpload: formatType,
+                file: acceptedFiles[0],
+                maxSize: checkSize.toString(),
+            });
+            setFieldValue(`formats.${formatType}.file`, acceptedFiles[0]);
+        } else {
+            setMediaCrop(acceptedFiles[0]);
+            setShowCrop(true);
+        }
+    };
 
     const handleGetAccept = () => {
         let accept = {};
@@ -247,6 +247,7 @@ export default function MediaCard({
         if (fileStatus?.path) newDeleteKeys.push(fileStatus.path);
 
         if (formatType === 'original') {
+            dispatch(assetActionsCreators.clearRequestAssetUpload());
             Object.values(formats).forEach((v) => {
                 const uploadFormat = upload[v.transactionId];
                 if (v.file && uploadFormat) {

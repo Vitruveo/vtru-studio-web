@@ -1,5 +1,6 @@
 import { uniqueId } from 'lodash';
 import { IconPhotoUp, IconBook, IconBrandWechat } from '@tabler/icons-react';
+import { IconHelp } from '@tabler/icons-react';
 
 interface MenuitemsType {
     [x: string]: any;
@@ -44,7 +45,13 @@ const Menuitems: MenuitemsType[] = [
         external: true,
         href: '//dreamverse.vitruveo.xyz/',
     },
-
+    {
+        id: uniqueId(),
+        title: 'studio.sidebar.supportChannel',
+        icon: IconHelp,
+        external: true,
+        href: '//dreamverse.vitruveo.xyz/',
+    },
     // {
     //   id: uniqueId(),
     //   title: "General",

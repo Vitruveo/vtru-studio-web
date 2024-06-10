@@ -73,6 +73,7 @@ const language: Translation = {
     'studio.consignArtwork.stepName.termsOfUse': 'Условия использования',
     'studio.consignArtwork.stepName.auxiliaryMedia': 'Вспомогательные Медиа',
     'studio.consignArtwork.stepName.reviewAndConsign': 'Рассмотрение и отправка',
+    'studio.consignArtwork.requestConsign': 'Запросить передачу',
     'studio.consignArtwork.optional': 'необязательный',
     'studio.consignArtwork.artworkListing': 'список произведений искусства',
     'studio.consignArtwork.artworkConsignedTitle': 'Ваша работа в настоящее время отправлена.',
@@ -928,6 +929,7 @@ const language: Translation = {
     'studio.sidebar.consign': 'Подать Работу',
     'studio.sidebar.artistGuide': 'Руководство художника',
     'studio.sidebar.community': 'Сообщество',
+    'studio.sidebar.supportChannel': 'Канал поддержки',
 
     /* Footer */
     'studio.footer.thisStep': 'Текущий шаг',
