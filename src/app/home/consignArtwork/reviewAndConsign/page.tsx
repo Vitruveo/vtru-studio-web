@@ -40,12 +40,36 @@ const ConsignArtwork = () => {
         requestConsign: language['studio.consignArtwork.requestConsign'],
     } as { [key: string]: string };
 
-    const requestButtonTitle = useMemo(() => {
-        if (consignArtwork?.status === 'pending' || consignArtwork?.status === 'running')
-            return 'Request Consign Pending';
-        else if (consignArtwork?.status === 'rejected') return undefined;
-        return texts.requestConsign;
-    }, [consignArtwork?.status]);
+    const textsForConsignArtWorkStatus = {
+        pending: {
+            buttontitle: 'Request Consign Pending',
+            message:
+                'Your artwork is being reviewed by our team and you will be notified when it is made available for purchase',
+        },
+        running: {
+            buttontitle: 'Request Consign Pending',
+            message:
+                'Your artwork is being reviewed by our team and you will be notified when it is made available for purchase',
+        },
+        rejected: {
+            buttontitle: undefined,
+            message: 'Your artwork did not pass our moderation review.',
+        },
+        default: {
+            buttontitle: texts.requestConsign,
+            message:
+                'Nice work! Your artwork is ready for request consignment. Once you submit it our team will review it and approve accordingly',
+        },
+    } as { [key: string]: { buttontitle: string | undefined; message: string } };
+
+    const getConsignArtworkStatus = (status: string | undefined) => {
+        return textsForConsignArtWorkStatus[status || 'default'];
+    };
+
+    const consignArtworkStatus = useMemo(
+        () => getConsignArtworkStatus(consignArtwork?.status),
+        [consignArtwork?.status]
+    );
 
     const BCrumb = [
         {
@@ -85,23 +109,18 @@ const ConsignArtwork = () => {
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
-                submitText={requestButtonTitle}
+                submitText={consignArtworkStatus.buttontitle}
                 title={texts.consignArtworkTitle}
                 stepNumber={6}
                 submitDisabled={
                     !validateConsign || consignArtwork?.status === 'pending' || consignArtwork?.status === 'running'
                 }
                 backOnclick={() => router.push(`/home/consignArtwork`)}
-                display={!!requestButtonTitle}
+                display={!!consignArtworkStatus}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
 
                 <Box marginBottom={2}>
-                    <Box>
-                        <Typography variant="h6" fontWeight="normal" color="GrayText">
-                            🎉 Nice work! Your artwork is ready for consignment.
-                        </Typography>
-                    </Box>
                     <Box maxWidth={600} p={2}>
                         {Object.values(consignSteps).map((v) => (
                             <Box
@@ -179,28 +198,28 @@ const ConsignArtwork = () => {
                             </Box>
                         ))}
                     </Box>
-                    {consignArtwork?.status === 'rejected' && (
-                        <Box>
-                            <Box
-                                sx={{
-                                    backgroundColor: '#EAD391',
-                                    fontWeight: 'bold',
-                                    padding: 1,
-                                    marginBottom: 2,
-                                }}
-                            >
-                                <Typography variant="h6" fontWeight="normal" color="GrayText">
-                                    Your artwork did not pass our moderation review.
-                                </Typography>
-                            </Box>
+                    <Box>
+                        <Box
+                            sx={{
+                                backgroundColor: '#EAD391',
+                                fontWeight: 'bold',
+                                padding: 1,
+                                marginBottom: 2,
+                            }}
+                        >
+                            <Typography variant="h6" fontWeight="normal" color="GrayText">
+                                {consignArtworkStatus.message}
+                            </Typography>
+                        </Box>
+                        {consignArtwork?.status === 'rejected' && (
                             <Typography variant="h6" fontWeight="normal" color="GrayText">
                                 If you think you have been flagged incorrectly, please submit the following form:{' '}
                                 <a href="https://vtru.xyz/blockappeal" target="_blank" rel="noreferrer">
                                     https://vtru.xyz/blockappeal
                                 </a>
                             </Typography>
-                        </Box>
-                    )}
+                        )}
+                    </Box>
                 </Box>
             </PageContainerFooter>
         </form>
