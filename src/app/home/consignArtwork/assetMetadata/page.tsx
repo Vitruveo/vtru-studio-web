@@ -230,9 +230,9 @@ export default function AssetMetadata() {
 
             if (ajvValidator.errors?.length) {
                 const errorSchema = ajvValidator.errors?.reduce((acc, error) => {
-                    let path = error.instancePath.substring(1);
-                    if (!path && error.params && 'missingProperty' in error.params) {
-                        path = error.params.missingProperty;
+                    let path: string = error.instancePath.substring(1);
+                    if (error.params?.missingProperty) {
+                        path = path ? `${path}/${error.params.missingProperty}` : error.params.missingProperty;
                     }
 
                     const message = (language[`studio.consignArtwork.assetMetadata.field.errors`] as TranslateFunction)(
@@ -240,18 +240,19 @@ export default function AssetMetadata() {
                     );
 
                     if (message) {
-                        const checkPath = path.split('/');
+                        const [parentPath, childPath] = path.split('/');
                         isValid.push(false);
-                        if (checkPath.length === 1) {
-                            return { ...acc, [path]: { __errors: [message] } };
-                        } else {
-                            return {
-                                ...acc,
-                                [checkPath[0]]: {
-                                    [checkPath[1]]: { __errors: [message] },
-                                },
-                            };
-                        }
+                        return childPath
+                            ? {
+                                  ...acc,
+                                  [parentPath]: {
+                                      ...acc[parentPath],
+                                      [childPath]: {
+                                          __errors: [...(acc[parentPath]?.[childPath]?.__errors || []), message],
+                                      },
+                                  },
+                              }
+                            : { ...acc, [parentPath]: { __errors: [message] } };
                     }
 
                     return acc;
