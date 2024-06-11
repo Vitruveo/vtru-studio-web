@@ -5,10 +5,11 @@ import { useState } from 'react';
 
 interface ConsignMessageProps {
     validateConsign: AssetSliceState['validateConsign'];
+    message: string;
 }
 
-const ConsignMessage = ({ validateConsign }: ConsignMessageProps) => {
-    const { status, message } = validateConsign;
+const ConsignMessage = ({ validateConsign, message }: ConsignMessageProps) => {
+    const { status } = validateConsign;
     const [copyText, setCopyText] = useState<string>('Copy');
     const handleCopyErrorMessage = () => {
         navigator.clipboard.writeText(message || '').then(() => {
@@ -53,7 +54,7 @@ const ConsignMessage = ({ validateConsign }: ConsignMessageProps) => {
                 }}
             >
                 <Typography variant="h6" fontWeight="normal" color="white">
-                    {message}
+                    {validateConsign.message}
                     <Tooltip title={copyText} placement="top">
                         <IconCopy onClick={handleCopyErrorMessage} style={{ cursor: 'pointer' }} />
                     </Tooltip>
