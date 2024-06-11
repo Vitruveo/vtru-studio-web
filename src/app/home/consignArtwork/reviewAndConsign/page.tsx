@@ -1,8 +1,8 @@
 'use client';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useRouter } from 'next/navigation';
-import { Button, Typography, useTheme } from '@mui/material';
+import { Button, Tooltip, Typography, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
@@ -11,6 +11,7 @@ import PageContainerFooter from '../../components/container/PageContainerFooter'
 
 import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
 import { requestConsignThunk, validationConsignThunk } from '@/features/asset/thunks';
+import { IconCopy } from '@tabler/icons-react';
 
 interface ConsignStepsProps {
     [key: string]: {
@@ -29,7 +30,10 @@ const ConsignArtwork = () => {
     const router = useRouter();
     const dispatch = useDispatch();
     const { language } = useI18n();
+    const toastr = useSelector((state) => state.toastr);
     const { validateConsign, consignArtwork } = useSelector((state) => state.asset);
+    const [copyText, setCopyText] = useState<string>('Copy');
+    const errorMessage = useRef<string>();
 
     const texts = {
         homeTitle: language['studio.home.title'],
@@ -71,6 +75,10 @@ const ConsignArtwork = () => {
         [consignArtwork?.status]
     );
 
+    useMemo(() => {
+        if (toastr && toastr.message) errorMessage.current = toastr.message.toString();
+    }, [toastr?.message]);
+
     const BCrumb = [
         {
             to: '/home',
@@ -101,6 +109,15 @@ const ConsignArtwork = () => {
         },
     };
 
+    const handleCopyErrorMessage = () => {
+        navigator.clipboard.writeText(errorMessage.current || '').then(() => {
+            setCopyText('Copied');
+            setTimeout(() => {
+                setCopyText('Copy');
+            }, 5000);
+        });
+    };
+
     const handleSubmit = async (event?: React.FormEvent) => {
         if (event) event.preventDefault();
         dispatch(requestConsignThunk());
@@ -116,7 +133,7 @@ const ConsignArtwork = () => {
                     !validateConsign || consignArtwork?.status === 'pending' || consignArtwork?.status === 'running'
                 }
                 backOnclick={() => router.push(`/home/consignArtwork`)}
-                display={!!consignArtworkStatus}
+                display={!!consignArtworkStatus.buttontitle}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
 
@@ -201,15 +218,24 @@ const ConsignArtwork = () => {
                     <Box>
                         <Box
                             sx={{
-                                backgroundColor: '#EAD391',
+                                backgroundColor: errorMessage.current ? '#FA896B' : '#EAD391',
                                 fontWeight: 'bold',
                                 padding: 1,
                                 marginBottom: 2,
                             }}
                         >
-                            <Typography variant="h6" fontWeight="normal" color="GrayText">
-                                {consignArtworkStatus.message}
-                            </Typography>
+                            {errorMessage.current ? (
+                                <Typography variant="h6" fontWeight="normal" color="white">
+                                    {errorMessage.current}
+                                    <Tooltip title={copyText} placement="top">
+                                        <IconCopy onClick={handleCopyErrorMessage} style={{ cursor: 'pointer' }} />
+                                    </Tooltip>
+                                </Typography>
+                            ) : (
+                                <Typography variant="h6" fontWeight="normal" color="GrayText">
+                                    {consignArtworkStatus.message}
+                                </Typography>
+                            )}
                         </Box>
                         {consignArtwork?.status === 'rejected' && (
                             <Typography variant="h6" fontWeight="normal" color="GrayText">
