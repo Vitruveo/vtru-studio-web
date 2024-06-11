@@ -84,12 +84,25 @@ const Wallet = ({ values, setFieldValue }: AccountSettingsProps) => {
             const { signature } = await dispatch(requestConnectWalletThunk({ wallet: data.address }));
             await dispatch(verifyConnectWalletThunk({ signature, wallet: data.address }));
 
-            const walletExists = values.wallets.find((wallet) => wallet.address === data.address);
+            const walletExists = values.wallets.find((wallet) => wallet.address === data.address && !wallet.archived);
 
             if (walletExists) {
                 toast.display({ message: 'Wallet already exists', type: 'error' });
             } else {
-                setFieldValue('wallets', [{ address }, ...values.wallets]); // set address to wallets
+                const walletIndex = values.wallets.findIndex((wallet) => wallet.address === data.address);
+                if (walletIndex !== -1) {
+                    setFieldValue(
+                        'wallets',
+                        values.wallets.map((item) => {
+                            if (item.address === data.address) {
+                                return { ...item, archived: false };
+                            }
+                            return item;
+                        })
+                    );
+                } else {
+                    setFieldValue('wallets', [{ address: data.address, archived: false }, ...values.wallets]);
+                }
                 toast.display({ message: 'Wallet connected', type: 'success' });
             }
         } catch (error) {
@@ -127,40 +140,48 @@ const Wallet = ({ values, setFieldValue }: AccountSettingsProps) => {
                     name="emailDefault"
                     onChange={(v) => handleWalletDefaultChange(v.target.value)}
                 >
-                    {values.wallets.slice().map((item, index) => (
-                        <Box key={item.address} display="flex" justifyContent="flex-start" alignItems="center" mb={2}>
-                            <Typography variant="body1" style={{ width: '70%' }}>
-                                {handleFormatWallet(item.address)}
-                            </Typography>
-                            <Box display="flex" justifyContent="center" alignItems="center" width="20%">
-                                <Box
-                                    display="flex"
-                                    justifyContent="center"
-                                    alignItems="center"
-                                    style={{ margin: 0, padding: 0 }}
-                                >
-                                    <Radio sx={{ padding: 0 }} value={item.address} />
+                    {values.wallets
+                        .filter((item) => !item.archived)
+                        .map((item, index) => (
+                            <Box
+                                key={item.address}
+                                display="flex"
+                                justifyContent="flex-start"
+                                alignItems="center"
+                                mb={2}
+                            >
+                                <Typography variant="body1" style={{ width: '70%' }}>
+                                    {handleFormatWallet(item.address)}
+                                </Typography>
+                                <Box display="flex" justifyContent="center" alignItems="center" width="20%">
+                                    <Box
+                                        display="flex"
+                                        justifyContent="center"
+                                        alignItems="center"
+                                        style={{ margin: 0, padding: 0 }}
+                                    >
+                                        <Radio sx={{ padding: 0 }} value={item.address} />
+                                    </Box>
+                                </Box>
+                                <Box display="flex" justifyContent="center" alignItems="center" width="10%">
+                                    <IconButton
+                                        disabled={item.address === checkDefaultWallet}
+                                        sx={{ padding: 0, margin: 0 }}
+                                        size="small"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDeleteWallet(index);
+                                        }}
+                                    >
+                                        <IconTrash
+                                            color={item.address === checkDefaultWallet ? '#A9A9A9' : 'red'}
+                                            size="16"
+                                            stroke={1.5}
+                                        />
+                                    </IconButton>
                                 </Box>
                             </Box>
-                            <Box display="flex" justifyContent="center" alignItems="center" width="10%">
-                                <IconButton
-                                    disabled={item.address === checkDefaultWallet}
-                                    sx={{ padding: 0, margin: 0 }}
-                                    size="small"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleDeleteWallet(index);
-                                    }}
-                                >
-                                    <IconTrash
-                                        color={item.address === checkDefaultWallet ? '#A9A9A9' : 'red'}
-                                        size="16"
-                                        stroke={1.5}
-                                    />
-                                </IconButton>
-                            </Box>
-                        </Box>
-                    ))}
+                        ))}
                 </RadioGroup>
                 <Box mt={1} width="100%" display="flex" alignItems="center" justifyContent="space-between">
                     <Typography width="70%" color="GrayText">

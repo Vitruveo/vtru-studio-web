@@ -754,7 +754,13 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.awardUrl.description': 'لینک به اطلاعات جایزه',
 
     'studio.consignArtwork.assetMetadata.field.errors': (data: { message: string }) =>
-        `${data.message === 'required' || data.message === 'minItems' ? 'فیلد موردنیاز است' : ''}`,
+        `${
+            data.message === 'required' || data.message === 'minItems'
+                ? 'این فیلد الزامی است'
+                : data.message === 'format'
+                  ? 'فرمت این فیلد اشتباه است'
+                  : ''
+        }`,
 
     /* Licenses */
     'studio.consignArtwork.licenses.title': 'لایسنس‌ها',

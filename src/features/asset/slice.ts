@@ -79,7 +79,7 @@ const initialState: AssetSliceState = {
         updatedBy: null,
     },
     status: '',
-    validateConsign: false,
+    validateConsign: { status: '', message: '' },
     consign: {
         transaction: '',
         status: '',
@@ -201,7 +201,7 @@ export const assetSlice = createSlice({
         setTempColors: (state, action: PayloadAction<number[][]>) => {
             state.tempColors = action.payload;
         },
-        setValidationConsign: (state, action: PayloadAction<boolean>) => {
+        setValidationConsign: (state, action: PayloadAction<AssetSliceState['validateConsign']>) => {
             state.validateConsign = action.payload;
         },
         setConeignTransaction: (state, action: PayloadAction<string>) => {

@@ -140,7 +140,10 @@ export interface Consign {
 
 export interface AssetSliceState extends Asset {
     error: string;
-    validateConsign: boolean;
+    validateConsign: {
+        status: 'success' | 'error' | 'loading' | '';
+        message?: string;
+    };
     consign: Consign;
 }
 
