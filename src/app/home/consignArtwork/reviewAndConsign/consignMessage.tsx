@@ -21,8 +21,8 @@ const ConsignMessage = ({ validateConsign }: ConsignMessageProps) => {
 
     if (status === 'loading') {
         return (
-            <Box sx={{ padding: 1, marginBottom: 2 }}>
-                <CircularProgress sx={{ color: '#13DFAA' }} />;
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <CircularProgress sx={{ color: '#13DFAA' }} />
             </Box>
         );
     }
