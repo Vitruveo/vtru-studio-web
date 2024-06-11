@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useRouter } from 'next/navigation';
-import { Button, Tooltip, Typography, useTheme } from '@mui/material';
+import { Button, CircularProgress, Tooltip, Typography, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
@@ -12,6 +12,8 @@ import PageContainerFooter from '../../components/container/PageContainerFooter'
 import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
 import { requestConsignThunk, validationConsignThunk } from '@/features/asset/thunks';
 import { IconCopy } from '@tabler/icons-react';
+import { ConsignArtworkAssetStatus } from '@/features/consignArtwork/types';
+import { AssetSliceState } from '@/features/asset/types';
 
 interface ConsignStepsProps {
     [key: string]: {
@@ -25,15 +27,73 @@ interface ConsignStepsProps {
     };
 }
 
+interface ConsignMessageProps {
+    validateConsign: AssetSliceState['validateConsign'];
+}
+
+const ConsignMessage = ({ validateConsign }: ConsignMessageProps) => {
+    const { status, message } = validateConsign;
+    const [copyText, setCopyText] = useState<string>('Copy');
+    const handleCopyErrorMessage = () => {
+        navigator.clipboard.writeText(message || '').then(() => {
+            setCopyText('Copied');
+            setTimeout(() => {
+                setCopyText('Copy');
+            }, 5000);
+        });
+    };
+
+    if (status === 'loading') {
+        return (
+            <Box sx={{ padding: 1, marginBottom: 2 }}>
+                <CircularProgress sx={{ color: '#13DFAA' }} />;
+            </Box>
+        );
+    }
+    if (status === 'success') {
+        return (
+            <Box
+                sx={{
+                    backgroundColor: '#EAD391',
+                    fontWeight: 'bold',
+                    padding: 1,
+                    marginBottom: 2,
+                }}
+            >
+                <Typography variant="h6" fontWeight="normal" color="GrayText">
+                    {message}
+                </Typography>
+            </Box>
+        );
+    }
+    if (status === 'error') {
+        return (
+            <Box
+                sx={{
+                    backgroundColor: '#FA896B',
+                    fontWeight: 'bold',
+                    padding: 1,
+                    marginBottom: 2,
+                }}
+            >
+                <Typography variant="h6" fontWeight="normal" color="white">
+                    {message}
+                    <Tooltip title={copyText} placement="top">
+                        <IconCopy onClick={handleCopyErrorMessage} style={{ cursor: 'pointer' }} />
+                    </Tooltip>
+                </Typography>
+            </Box>
+        );
+    }
+};
+
 const ConsignArtwork = () => {
     const theme = useTheme();
     const router = useRouter();
     const dispatch = useDispatch();
     const { language } = useI18n();
-    const toastr = useSelector((state) => state.toastr);
     const { validateConsign, consignArtwork } = useSelector((state) => state.asset);
     const [copyText, setCopyText] = useState<string>('Copy');
-    const errorMessage = useRef<string>();
 
     const texts = {
         homeTitle: language['studio.home.title'],
@@ -66,18 +126,13 @@ const ConsignArtwork = () => {
         },
     } as { [key: string]: { buttontitle: string | undefined; message: string } };
 
-    const getConsignArtworkStatus = (status: string | undefined) => {
-        return textsForConsignArtWorkStatus[status || 'default'];
-    };
+    const getConsignArtworkStatus = (status: ConsignArtworkAssetStatus | undefined) =>
+        textsForConsignArtWorkStatus[status || 'default'];
 
     const consignArtworkStatus = useMemo(
         () => getConsignArtworkStatus(consignArtwork?.status),
         [consignArtwork?.status]
     );
-
-    useMemo(() => {
-        if (toastr && toastr.message) errorMessage.current = toastr.message.toString();
-    }, [toastr?.message]);
 
     const BCrumb = [
         {
@@ -109,15 +164,6 @@ const ConsignArtwork = () => {
         },
     };
 
-    const handleCopyErrorMessage = () => {
-        navigator.clipboard.writeText(errorMessage.current || '').then(() => {
-            setCopyText('Copied');
-            setTimeout(() => {
-                setCopyText('Copy');
-            }, 5000);
-        });
-    };
-
     const handleSubmit = async (event?: React.FormEvent) => {
         if (event) event.preventDefault();
         dispatch(requestConsignThunk());
@@ -130,7 +176,9 @@ const ConsignArtwork = () => {
                 title={texts.consignArtworkTitle}
                 stepNumber={6}
                 submitDisabled={
-                    !validateConsign || consignArtwork?.status === 'pending' || consignArtwork?.status === 'running'
+                    validateConsign.status !== 'success' ||
+                    consignArtwork?.status === 'pending' ||
+                    consignArtwork?.status === 'running'
                 }
                 backOnclick={() => router.push(`/home/consignArtwork`)}
                 display={!!consignArtworkStatus.buttontitle}
@@ -216,27 +264,7 @@ const ConsignArtwork = () => {
                         ))}
                     </Box>
                     <Box>
-                        <Box
-                            sx={{
-                                backgroundColor: errorMessage.current ? '#FA896B' : '#EAD391',
-                                fontWeight: 'bold',
-                                padding: 1,
-                                marginBottom: 2,
-                            }}
-                        >
-                            {errorMessage.current ? (
-                                <Typography variant="h6" fontWeight="normal" color="white">
-                                    {errorMessage.current}
-                                    <Tooltip title={copyText} placement="top">
-                                        <IconCopy onClick={handleCopyErrorMessage} style={{ cursor: 'pointer' }} />
-                                    </Tooltip>
-                                </Typography>
-                            ) : (
-                                <Typography variant="h6" fontWeight="normal" color="GrayText">
-                                    {consignArtworkStatus.message}
-                                </Typography>
-                            )}
-                        </Box>
+                        <ConsignMessage validateConsign={validateConsign} />
                         {consignArtwork?.status === 'rejected' && (
                             <Typography variant="h6" fontWeight="normal" color="GrayText">
                                 If you think you have been flagged incorrectly, please submit the following form:{' '}
