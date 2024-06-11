@@ -30,6 +30,7 @@ export interface CompletedSteps {
 
 interface Wallet {
     address: string;
+    archived: boolean;
 }
 
 export interface License {

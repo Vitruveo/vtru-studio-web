@@ -10,6 +10,7 @@ export interface Email {
 
 export interface Wallet {
     address: string;
+    archived: boolean;
 }
 
 export interface User {
