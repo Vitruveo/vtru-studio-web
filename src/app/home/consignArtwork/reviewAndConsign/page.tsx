@@ -122,7 +122,7 @@ const ConsignArtwork = () => {
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
-                submitText={consignArtworkStatus.buttontitle}
+                submitText={consignArtworkStatus?.buttontitle || textsForConsignArtWorkStatus['default'].buttontitle}
                 title={texts.consignArtworkTitle}
                 stepNumber={6}
                 submitDisabled={
@@ -131,7 +131,7 @@ const ConsignArtwork = () => {
                     consignArtwork?.status === 'running'
                 }
                 backOnclick={() => router.push(`/home/consignArtwork`)}
-                display={!!consignArtworkStatus.buttontitle}
+                display={!!consignArtworkStatus?.buttontitle}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
 
