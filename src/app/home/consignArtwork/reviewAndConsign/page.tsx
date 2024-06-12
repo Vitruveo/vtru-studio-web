@@ -202,7 +202,7 @@ const ConsignArtwork = () => {
                         ))}
                     </Box>
                     <Box>
-                        <ConsignMessage validateConsign={validateConsign} />
+                        <ConsignMessage validateConsign={validateConsign} message={consignArtworkStatus.message} />
 
                         {consignArtwork?.status === 'rejected' && (
                             <Typography variant="h6" fontWeight="normal" color="GrayText">
