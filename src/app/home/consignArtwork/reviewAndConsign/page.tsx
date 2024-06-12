@@ -59,6 +59,10 @@ const ConsignArtwork = () => {
             buttontitle: undefined,
             message: 'Your artwork did not pass our moderation review.',
         },
+        active: {
+            buttontitle: undefined,
+            message: 'Your artwork is active',
+        },
         default: {
             buttontitle: texts.requestConsign,
             message:
@@ -214,7 +218,10 @@ const ConsignArtwork = () => {
                         ))}
                     </Box>
                     <Box>
-                        <ConsignMessage validateConsign={validateConsign} message={consignArtworkStatus.message} />
+                        <ConsignMessage
+                            validateConsign={validateConsign}
+                            message={consignArtworkStatus?.message || textsForConsignArtWorkStatus['default'].message}
+                        />
                         {consignArtwork?.status === 'pending' && (
                             <Box display="flex" justifyContent={'space-between'}>
                                 <CompletedConsignTableStatus onStatusChange={() => {}} selectedStatus="preview" />
