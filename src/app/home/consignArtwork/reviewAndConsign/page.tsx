@@ -13,6 +13,8 @@ import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
 import { requestConsignThunk, validationConsignThunk } from '@/features/asset/thunks';
 import { ConsignArtworkAssetStatus } from '@/features/consignArtwork/types';
 import ConsignMessage from './consignMessage';
+import { CompletedConsignTableStatus } from '../components/completedConsignPage/CompletedConsignTableStatus';
+import AssetMediaPreview from '../components/assetMediaPreview';
 
 interface ConsignStepsProps {
     [key: string]: {
@@ -93,6 +95,9 @@ const ConsignArtwork = () => {
     const handlePreview = () => {
         dispatch(consignArtworkThunks.checkPreview());
     };
+    const handleCancelRequestConsign = () => {
+        console.log('canceled');
+    };
 
     const consignSteps: ConsignStepsProps = {
         artworkListing: {
@@ -100,6 +105,13 @@ const ConsignArtwork = () => {
             actionTitle: texts.preview,
             actionFunc: handlePreview,
         },
+        ...(consignArtwork?.status === 'pending' && {
+            cancelRequest: {
+                title: 'Cancel Request Consignment',
+                actionTitle: 'Cancel',
+                actionFunc: handleCancelRequestConsign,
+            },
+        }),
     };
 
     const handleSubmit = async (event?: React.FormEvent) => {
@@ -203,6 +215,12 @@ const ConsignArtwork = () => {
                     </Box>
                     <Box>
                         <ConsignMessage validateConsign={validateConsign} message={consignArtworkStatus.message} />
+                        {consignArtwork?.status === 'pending' && (
+                            <Box display="flex" justifyContent={'space-between'}>
+                                <CompletedConsignTableStatus onStatusChange={() => {}} selectedStatus="preview" />
+                                <AssetMediaPreview />
+                            </Box>
+                        )}
 
                         {consignArtwork?.status === 'rejected' && (
                             <Typography variant="h6" fontWeight="normal" color="GrayText">
