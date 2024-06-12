@@ -1,6 +1,6 @@
 {
     "name": "my-app",
-    "version": "0.1.280",
+    "version": "0.1.293",
     "private": true,
     "scripts": {
         "dev": "next dev",

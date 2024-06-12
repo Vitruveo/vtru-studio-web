@@ -186,7 +186,7 @@ const Section = ({
                     errors={errors}
                     transformErrors={(errorsT) => {
                         errorsT.forEach((error) => {
-                            if (error.name === 'required') {
+                            if (error.name === 'required' || error.name === 'format') {
                                 error.message = (
                                     language[`studio.consignArtwork.assetMetadata.field.errors`] as TranslateFunction
                                 )({ message: error.name });

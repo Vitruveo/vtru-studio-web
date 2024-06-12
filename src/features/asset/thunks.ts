@@ -610,19 +610,18 @@ export function extractAssetColorsThunk({ id }: { id: string }): ReduxThunkActio
 
 export function validationConsignThunk(): ReduxThunkAction<Promise<void>> {
     return function (dispatch) {
-        dispatch(assetActionsCreators.setValidationConsign(false));
+        dispatch(assetActionsCreators.setValidationConsign({ status: 'loading', message: '' }));
 
         return validationConsign()
             .then((response) => {
                 if (response.data) {
-                    dispatch(assetActionsCreators.setValidationConsign(true));
+                    dispatch(assetActionsCreators.setValidationConsign({ status: 'success', message: '' }));
                 }
             })
             .catch((error) => {
-                dispatch(assetActionsCreators.setValidationConsign(false));
                 dispatch(
-                    toastrActionsCreators.displayToastr({
-                        type: 'error',
+                    assetActionsCreators.setValidationConsign({
+                        status: 'error',
                         message: error instanceof AxiosError ? error.response?.data?.args : 'Unknown error',
                     })
                 );

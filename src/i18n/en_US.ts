@@ -758,7 +758,13 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.awardUrl.description': 'Link to award information',
 
     'studio.consignArtwork.assetMetadata.field.errors': (data: { message: string }) =>
-        `${data.message === 'required' || data.message === 'minItems' ? 'Field required' : ''}`,
+        `${
+            data.message === 'required' || data.message === 'minItems'
+                ? 'Field required'
+                : data.message === 'format'
+                  ? 'Invalid format'
+                  : ''
+        }`,
 
     /* Licenses */
 

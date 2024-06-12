@@ -3,6 +3,7 @@ import { FormikDefaultProps } from '@/app/common/types';
 
 interface Wallet {
     address: string;
+    archived: boolean;
 }
 
 export interface EmailFormValues {
