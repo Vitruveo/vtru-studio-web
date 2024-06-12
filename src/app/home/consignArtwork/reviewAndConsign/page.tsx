@@ -57,6 +57,10 @@ const ConsignArtwork = () => {
             buttontitle: undefined,
             message: 'Your artwork did not pass our moderation review.',
         },
+        active: {
+            buttontitle: undefined,
+            message: 'Your artwork is active',
+        },
         default: {
             buttontitle: texts.requestConsign,
             message:
@@ -110,7 +114,7 @@ const ConsignArtwork = () => {
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
-                submitText={consignArtworkStatus.buttontitle}
+                submitText={consignArtworkStatus?.buttontitle || textsForConsignArtWorkStatus['default'].buttontitle}
                 title={texts.consignArtworkTitle}
                 stepNumber={6}
                 submitDisabled={
@@ -119,7 +123,7 @@ const ConsignArtwork = () => {
                     consignArtwork?.status === 'running'
                 }
                 backOnclick={() => router.push(`/home/consignArtwork`)}
-                display={!!consignArtworkStatus.buttontitle}
+                display={!!consignArtworkStatus?.buttontitle}
             >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
 
@@ -202,7 +206,10 @@ const ConsignArtwork = () => {
                         ))}
                     </Box>
                     <Box>
-                        <ConsignMessage validateConsign={validateConsign} message={consignArtworkStatus.message} />
+                        <ConsignMessage
+                            validateConsign={validateConsign}
+                            message={consignArtworkStatus?.message || textsForConsignArtWorkStatus['default'].message}
+                        />
 
                         {consignArtwork?.status === 'rejected' && (
                             <Typography variant="h6" fontWeight="normal" color="GrayText">
