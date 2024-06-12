@@ -96,7 +96,7 @@ const ConsignArtwork = () => {
         dispatch(consignArtworkThunks.checkPreview());
     };
     const handleCancelRequestConsign = () => {
-        console.log('canceled');
+        // do something
     };
 
     const consignSteps: ConsignStepsProps = {
