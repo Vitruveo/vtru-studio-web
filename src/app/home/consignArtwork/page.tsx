@@ -34,6 +34,7 @@ const ConsignArtwork = () => {
     const { previewAndConsign } = useSelector((state) => state.consignArtwork);
     const { completedSteps } = useSelector((state) => state.consignArtwork);
     const hasContract = useSelector((state) => state.asset?.contractExplorer?.explorer);
+    const consignArtworkStatus = useSelector((state) => state.consignArtwork?.status);
 
     const checkAllCompletedSteps = Object.values(completedSteps)
         .filter((v) => !v.optional && v.stepId !== 'reviewAndConsign')
@@ -93,7 +94,7 @@ const ConsignArtwork = () => {
 
     const isConsignCompleted = previewAndConsign.artworkListing?.checked;
 
-    if (isConsignCompleted && hasContract) {
+    if (isConsignCompleted && (hasContract || consignArtworkStatus === 'active')) {
         return <CompletedConsignPage />;
     }
 
