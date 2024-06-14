@@ -11,6 +11,7 @@ import { useToastr } from '@/app/hooks/useToastr';
 import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
 import { EXPLORER_URL } from '@/constants/explorer';
 import BannerVault from '@/app/home/components/bannerVault/banner';
+import { ChangeEvent } from 'react';
 
 // TODO: ADICIONAR TRADUÇÃO
 
@@ -51,6 +52,9 @@ export const CompletedConsignPage = () => {
 
     const handlePreview = () => {
         dispatch(consignArtworkThunks.preview());
+    };
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (status !== 'active') formik.handleChange(e);
     };
 
     const consignSteps = {
@@ -149,7 +153,7 @@ export const CompletedConsignPage = () => {
                                 <Box mt={4}>
                                     <CompletedConsignTableStatus
                                         selectedStatus={formik.values.selectedStatus}
-                                        onStatusChange={formik.handleChange}
+                                        onStatusChange={handleChange}
                                     />
                                 </Box>
                             }
