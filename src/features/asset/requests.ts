@@ -109,3 +109,7 @@ export async function eventsByTransaction(transaction: string) {
 export async function requestConsign() {
     return apiService.post(`/requestConsign`, {});
 }
+
+export async function deleteRequestConsign() {
+    return apiService.delete('/requestConsign');
+}

@@ -10,7 +10,7 @@ import { useI18n } from '@/app/hooks/useI18n';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 
 import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
-import { requestConsignThunk, validationConsignThunk } from '@/features/asset/thunks';
+import { requestConsignThunk, validationConsignThunk, deleteRequestConsignThunk } from '@/features/asset/thunks';
 import { ConsignArtworkAssetStatus } from '@/features/consignArtwork/types';
 import ConsignMessage from './consignMessage';
 import { CompletedConsignTableStatus } from '../components/completedConsignPage/CompletedConsignTableStatus';
@@ -100,7 +100,7 @@ const ConsignArtwork = () => {
         dispatch(consignArtworkThunks.checkPreview());
     };
     const handleCancelRequestConsign = () => {
-        // do something
+        dispatch(deleteRequestConsignThunk());
     };
 
     const consignSteps: ConsignStepsProps = {
