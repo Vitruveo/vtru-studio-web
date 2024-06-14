@@ -63,7 +63,7 @@ const ConsignArtwork = () => {
             buttontitle: undefined,
             message: 'Your artwork is active',
         },
-        default: {
+        draft: {
             buttontitle: texts.requestConsign,
             message:
                 'Nice work! Your artwork is ready for request consignment. Once you submit it our team will review it and approve accordingly',
@@ -71,7 +71,7 @@ const ConsignArtwork = () => {
     } as { [key: string]: { buttontitle: string | undefined; message: string } };
 
     const getConsignArtworkStatus = (status: ConsignArtworkAssetStatus | undefined) =>
-        textsForConsignArtWorkStatus[status || 'default'];
+        textsForConsignArtWorkStatus[status || 'draft'];
 
     const consignArtworkStatus = useMemo(
         () => getConsignArtworkStatus(consignArtwork?.status),
@@ -126,7 +126,7 @@ const ConsignArtwork = () => {
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
-                submitText={consignArtworkStatus?.buttontitle || textsForConsignArtWorkStatus['default'].buttontitle}
+                submitText={consignArtworkStatus?.buttontitle || textsForConsignArtWorkStatus['draft'].buttontitle}
                 title={texts.consignArtworkTitle}
                 stepNumber={6}
                 submitDisabled={
@@ -220,7 +220,7 @@ const ConsignArtwork = () => {
                     <Box>
                         <ConsignMessage
                             validateConsign={validateConsign}
-                            message={consignArtworkStatus?.message || textsForConsignArtWorkStatus['default'].message}
+                            message={consignArtworkStatus?.message || textsForConsignArtWorkStatus['draft'].message}
                         />
                         {consignArtwork?.status === 'pending' && (
                             <Box display="flex" justifyContent={'space-between'}>
