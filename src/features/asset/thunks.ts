@@ -11,6 +11,7 @@ import {
     consign,
     eventsByTransaction,
     requestConsign,
+    deleteRequestConsign,
 } from './requests';
 import {
     AssetSendRequestUploadApiRes,
@@ -711,5 +712,15 @@ export function requestConsignThunk(): ReduxThunkAction<void> {
     return function (dispatch) {
         dispatch(assetActionsCreators.setRequestConsignStatusPending());
         requestConsign();
+    };
+}
+
+export function deleteRequestConsignThunk(): ReduxThunkAction<void> {
+    return function (dispatch, getState) {
+        const consignArtworkStatus = getState().consignArtwork.status;
+        if (consignArtworkStatus === 'pending') {
+            deleteRequestConsign();
+            dispatch(assetActionsCreators.setRequestConsignStatusDraft());
+        }
     };
 }

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Container from '@mui/material/Container';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useRouter } from 'next/navigation';
-import { Box, Button, Stack, Theme, Typography, useTheme } from '@mui/material';
+import { Box, Button, Stack, Theme, Typography } from '@mui/material';
 import { useSelector } from '@/store/hooks';
 import { StepStatus } from '@/features/consignArtwork/types';
 import { useI18n } from '@/app/hooks/useI18n';
@@ -41,10 +41,9 @@ export function FooterForm({
     hasSubmitButton,
     display = true,
 }: FooterFormProps) {
-    const theme = useTheme();
-
     const customizer = useSelector((state) => state.customizer);
     const router = useRouter();
+    const status = useSelector((state) => state.consignArtwork.status);
 
     const { language } = useI18n();
 
@@ -184,7 +183,7 @@ export function FooterForm({
                             {hasSubmitButton && (
                                 <Button
                                     size="large"
-                                    disabled={submitDisabled}
+                                    disabled={submitDisabled || status === 'active'}
                                     type="submit"
                                     style={{ minWidth: 120, marginLeft: '20px' }}
                                     color="primary"
