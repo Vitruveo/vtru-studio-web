@@ -109,13 +109,15 @@ const ConsignArtwork = () => {
             actionTitle: texts.preview,
             actionFunc: handlePreview,
         },
-        ...(consignArtwork?.status === 'pending' && {
-            cancelRequest: {
-                title: 'Cancel Request Consignment',
-                actionTitle: 'Cancel',
-                actionFunc: handleCancelRequestConsign,
-            },
-        }),
+        ...(consignArtwork?.status === 'pending'
+            ? {
+                  cancelRequest: {
+                      title: 'Cancel Request Consignment',
+                      actionTitle: 'Cancel',
+                      actionFunc: handleCancelRequestConsign,
+                  },
+              }
+            : {}),
     };
 
     const handleSubmit = async (event?: React.FormEvent) => {
