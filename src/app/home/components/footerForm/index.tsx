@@ -183,7 +183,7 @@ export function FooterForm({
                             {hasSubmitButton && (
                                 <Button
                                     size="large"
-                                    disabled={submitDisabled || status === 'active'}
+                                    // disabled={submitDisabled || status === 'active'}
                                     type="submit"
                                     style={{ minWidth: 120, marginLeft: '20px' }}
                                     color="primary"

@@ -149,6 +149,8 @@ export default function ProfileSettings() {
 
         if (errors.username || usernameError) return;
 
+        console.log({ values });
+
         dispatch(saveStepWizardThunk({ step: 0, values }));
         dispatch(
             consignArtworkActionsCreators.checkIsCompletedProfile({
@@ -218,7 +220,7 @@ export default function ProfileSettings() {
 
     return (
         <form onSubmit={handleSubmit}>
-            <PageContainerFooter backPathRouter="/home" title={texts.title}>
+            <PageContainerFooter submitDisabled={false} backPathRouter="/home" title={texts.title}>
                 <BannerVault />
                 <Box margin="auto 0" marginBottom={10} display="relative">
                     <Breadcrumb title={texts.title} items={BCrumb} />
