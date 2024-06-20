@@ -22,8 +22,8 @@ import {
     requestSocialGoogle,
     requestSocialFacebook,
     removeSocial,
-    deleteWallet,
-    addWallet,
+    deleteWallets,
+    addWallets,
     getWalletsVault,
 } from './requests';
 import { userActionsCreators } from './slice';
@@ -192,11 +192,10 @@ export function creatorAccountThunk(payload: StepsFormValues | AccountSettingsFo
             })
         );
 
-        const res = await getWalletsVault({ id: user._id });
-
         if (user.vault?.createdAt) {
+            const res = await getWalletsVault();
             const newWallets = payload.wallets.filter((v) => !v.archived);
-            const oldWallets: Wallet[] = (res?.data?.data || []).map((v: string) => ({ address: v }));
+            const oldWallets = (res?.data || []).map((v: string) => ({ address: v }));
 
             const checkChangeWallets =
                 newWallets.length !== oldWallets.length ||
@@ -213,17 +212,13 @@ export function creatorAccountThunk(payload: StepsFormValues | AccountSettingsFo
                 const addedWallets = newWallets.filter((w) => !oldWallets.map((w2) => w2.address).includes(w.address));
 
                 if (deletedWallets.length) {
-                    for (const v of deletedWallets) {
-                        await deleteWallet({ id: user._id, address: v.address });
-                        await new Promise((resolve) => setTimeout(resolve, 5000));
-                    }
+                    await deleteWallets({ walletsAddress: deletedWallets.map((v) => v.address) });
+                    await new Promise((resolve) => setTimeout(resolve, 5000));
                 }
 
                 if (addedWallets.length) {
-                    for (const v of addedWallets) {
-                        await addWallet({ id: user._id, address: v.address });
-                        await new Promise((resolve) => setTimeout(resolve, 5000));
-                    }
+                    await addWallets({ walletsAddress: addedWallets.map((v) => v.address) });
+                    await new Promise((resolve) => setTimeout(resolve, 5000));
                 }
             }
         }

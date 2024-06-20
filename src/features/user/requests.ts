@@ -39,6 +39,7 @@ import {
 } from './types';
 import { Framework } from '../common/types';
 import { BASE_URL_BATCH } from '@/constants/api';
+import { apiServiceBatch } from '@/services/apiBatch';
 
 export async function userLoginReq(data: UserLoginReq): Promise<UserLoginApiRes> {
     const res = await apiService.post<string>(`/creators/login`, data);
@@ -153,14 +154,14 @@ export function removeSocial({ social }: RemoveSocialReq): Promise<RemoveSocialA
     return apiService.delete(`/creators/socials/${social}`);
 }
 
-export async function getWalletsVault(payload: { id: string }) {
-    return axios.get(`${BASE_URL_BATCH}/wallet/vaultWallets/${payload.id}`);
+export async function getWalletsVault() {
+    return apiServiceBatch.get<string[]>(`/wallet/vaultWallets`);
 }
 
-export async function addWallet(payload: { id: string; address: string }) {
-    return axios.post(`${BASE_URL_BATCH}/wallet/addVaultWallet`, payload);
+export async function addWallets(payload: { walletsAddress: string[] }) {
+    return apiServiceBatch.post(`/wallet/addVaultWallets`, payload);
 }
 
-export async function deleteWallet(payload: { id: string; address: string }) {
-    return axios.delete(`${BASE_URL_BATCH}/wallet/removeVaultWallet`, { data: payload });
+export async function deleteWallets(payload: { walletsAddress: string[] }) {
+    return apiServiceBatch.delete(`/wallet/removeVaultWallets`, { data: payload });
 }
