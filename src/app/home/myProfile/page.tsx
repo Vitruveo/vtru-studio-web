@@ -149,8 +149,6 @@ export default function ProfileSettings() {
 
         if (errors.username || usernameError) return;
 
-        console.log({ values });
-
         dispatch(saveStepWizardThunk({ step: 0, values }));
         dispatch(
             consignArtworkActionsCreators.checkIsCompletedProfile({
