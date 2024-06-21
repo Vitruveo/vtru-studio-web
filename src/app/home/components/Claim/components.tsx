@@ -1,5 +1,6 @@
-import { Button, CircularProgress, Stack, Typography } from '@mui/material';
+import { Button, CircularProgress, Stack, Typography, Popover } from '@mui/material';
 import { EXPLORER_URL } from '@/constants/explorer';
+import { useState } from 'react';
 
 interface Props {
     data: {
@@ -15,12 +16,20 @@ interface Props {
     actions: {
         onClaim: () => void;
         onConnect: () => void;
+        onDisconnect: () => void;
     };
 }
 
 export const ClaimComponent = ({ data, actions }: Props) => {
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+
     const { value, symbol, disabled, isConnected, address, vaultTransactionHash, loading, isBlocked } = data;
-    const { onClaim, onConnect } = actions;
+    const { onClaim, onConnect, onDisconnect } = actions;
+    const open = Boolean(anchorEl);
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget);
+    const handleClose = () => setAnchorEl(null);
+
     return (
         <Stack direction="row" gap={1} alignItems="center">
             {isConnected && isBlocked && <Typography color="red">Account blocked — fund claims disabled</Typography>}
@@ -42,9 +51,24 @@ export const ClaimComponent = ({ data, actions }: Props) => {
                 Claim {loading && <CircularProgress size={16} style={{ marginLeft: 10 }} />}
             </Button>
             {isConnected && address && (
-                <Typography>
-                    {address.slice(0, 6)}...{address.slice(-4)}
-                </Typography>
+                <>
+                    <Button onClick={handleClick}>
+                        {address.slice(0, 6)}...{address.slice(-4)}
+                    </Button>
+                    <Popover
+                        open={open}
+                        anchorEl={anchorEl}
+                        onClose={handleClose}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }}
+                    >
+                        <Button size="small" variant="contained" onClick={onDisconnect}>
+                            Disconnect
+                        </Button>
+                    </Popover>
+                </>
             )}
 
             {!isConnected && (
