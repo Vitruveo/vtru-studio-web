@@ -10,7 +10,6 @@ import { ConsignArtworkAssetStatus } from '@/features/consignArtwork/types';
 import { useToastr } from '@/app/hooks/useToastr';
 import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
 import { EXPLORER_URL } from '@/constants/explorer';
-import BannerVault from '@/app/home/components/bannerVault/banner';
 import { ChangeEvent } from 'react';
 
 // TODO: ADICIONAR TRADUÇÃO
@@ -91,7 +90,6 @@ export const CompletedConsignPage = () => {
     return (
         <form onSubmit={formik.handleSubmit}>
             <PageContainerFooter hasBackButton>
-                <BannerVault />
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
                 <Grid display="flex" flexWrap="wrap" marginBottom={6} item xs={12} lg={6}>
                     <Box marginBottom={2}>
