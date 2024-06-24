@@ -43,7 +43,6 @@ export function FooterForm({
 }: FooterFormProps) {
     const customizer = useSelector((state) => state.customizer);
     const router = useRouter();
-    const status = useSelector((state) => state.consignArtwork.status);
 
     const { language } = useI18n();
 
@@ -183,7 +182,7 @@ export function FooterForm({
                             {hasSubmitButton && (
                                 <Button
                                     size="large"
-                                    disabled={submitDisabled || status === 'active'}
+                                    disabled={submitDisabled}
                                     type="submit"
                                     style={{ minWidth: 120, marginLeft: '20px' }}
                                     color="primary"

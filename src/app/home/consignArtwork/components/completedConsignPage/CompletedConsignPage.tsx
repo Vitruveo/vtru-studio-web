@@ -27,6 +27,7 @@ export const CompletedConsignPage = () => {
 
     const previewAndConsign = useSelector((state) => state.consignArtwork.previewAndConsign);
     const status = useSelector((state) => state.consignArtwork.status);
+    const userIsBlocked = useSelector((state) => state.user?.vault?.isBlocked);
     const transactionHash = useSelector((state) => state.asset.contractExplorer?.tx);
 
     const grayColor = theme.palette.text.disabled;
@@ -89,7 +90,10 @@ export const CompletedConsignPage = () => {
 
     return (
         <form onSubmit={formik.handleSubmit}>
-            <PageContainerFooter hasBackButton>
+            <PageContainerFooter
+                submitDisabled={status === 'active' || status === 'blocked' || userIsBlocked}
+                hasBackButton
+            >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
                 <Grid display="flex" flexWrap="wrap" marginBottom={6} item xs={12} lg={6}>
                     <Box marginBottom={2}>

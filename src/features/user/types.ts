@@ -35,6 +35,7 @@ export interface User {
     framework: Framework;
     canConsignArtwork: boolean;
     vault: {
+        isBlocked: boolean;
         transactionHash: string | null;
         createdAt: string | null;
         isLoading: boolean;
