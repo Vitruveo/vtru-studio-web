@@ -10,7 +10,7 @@ import { ConsignArtworkAssetStatus } from '@/features/consignArtwork/types';
 import { useToastr } from '@/app/hooks/useToastr';
 import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
 import { EXPLORER_URL } from '@/constants/explorer';
-import BannerVault from '@/app/home/components/bannerVault/banner';
+import { ChangeEvent } from 'react';
 
 // TODO: ADICIONAR TRADUÇÃO
 
@@ -27,6 +27,7 @@ export const CompletedConsignPage = () => {
 
     const previewAndConsign = useSelector((state) => state.consignArtwork.previewAndConsign);
     const status = useSelector((state) => state.consignArtwork.status);
+    const userIsBlocked = useSelector((state) => state.user?.vault?.isBlocked);
     const transactionHash = useSelector((state) => state.asset.contractExplorer?.tx);
 
     const grayColor = theme.palette.text.disabled;
@@ -51,6 +52,9 @@ export const CompletedConsignPage = () => {
 
     const handlePreview = () => {
         dispatch(consignArtworkThunks.preview());
+    };
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (status !== 'active') formik.handleChange(e);
     };
 
     const consignSteps = {
@@ -86,8 +90,10 @@ export const CompletedConsignPage = () => {
 
     return (
         <form onSubmit={formik.handleSubmit}>
-            <PageContainerFooter hasBackButton>
-                <BannerVault />
+            <PageContainerFooter
+                submitDisabled={status === 'active' || status === 'blocked' || userIsBlocked}
+                hasBackButton
+            >
                 <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
                 <Grid display="flex" flexWrap="wrap" marginBottom={6} item xs={12} lg={6}>
                     <Box marginBottom={2}>
@@ -149,7 +155,7 @@ export const CompletedConsignPage = () => {
                                 <Box mt={4}>
                                     <CompletedConsignTableStatus
                                         selectedStatus={formik.values.selectedStatus}
-                                        onStatusChange={formik.handleChange}
+                                        onStatusChange={handleChange}
                                     />
                                 </Box>
                             }

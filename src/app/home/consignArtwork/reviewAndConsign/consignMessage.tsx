@@ -47,18 +47,23 @@ const ConsignMessage = ({ validateConsign, message }: ConsignMessageProps) => {
         return (
             <Box
                 sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
                     backgroundColor: '#FA896B',
-                    fontWeight: 'bold',
                     padding: 1,
-                    marginBottom: 2,
+                    margin: 1,
                 }}
             >
-                <Typography variant="h6" fontWeight="normal" color="white">
+                <Typography variant="h6" fontWeight="normal" color="white" sx={{ whiteSpace: 'pre-wrap' }}>
                     {validateConsign.message}
-                    <Tooltip title={copyText} placement="top">
-                        <IconCopy onClick={handleCopyErrorMessage} style={{ cursor: 'pointer' }} />
-                    </Tooltip>
                 </Typography>
+                <Tooltip title={copyText} placement="top">
+                    <IconCopy
+                        onClick={handleCopyErrorMessage}
+                        style={{ cursor: 'pointer', color: 'white' }}
+                        size={32}
+                    />
+                </Tooltip>
             </Box>
         );
     }

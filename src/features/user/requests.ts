@@ -1,3 +1,4 @@
+import axios, { AxiosResponse } from 'axios';
 import { apiService } from '@/services/api';
 import {
     AddCreatorEmailApiRes,
@@ -37,6 +38,8 @@ import {
     RemoveSocialReq,
 } from './types';
 import { Framework } from '../common/types';
+import { BASE_URL_BATCH } from '@/constants/api';
+import { apiServiceBatch } from '@/services/apiBatch';
 
 export async function userLoginReq(data: UserLoginReq): Promise<UserLoginApiRes> {
     const res = await apiService.post<string>(`/creators/login`, data);
@@ -149,4 +152,16 @@ export function requestSocialFacebook(): Promise<SocialsFacebookApiRes> {
 
 export function removeSocial({ social }: RemoveSocialReq): Promise<RemoveSocialApiRes> {
     return apiService.delete(`/creators/socials/${social}`);
+}
+
+export async function getWalletsVault() {
+    return apiServiceBatch.get<string[]>(`/wallet/vaultWallets`);
+}
+
+export async function addWallets(payload: { walletsAddress: string[] }) {
+    return apiServiceBatch.post(`/wallet/addVaultWallets`, payload);
+}
+
+export async function deleteWallets(payload: { walletsAddress: string[] }) {
+    return apiServiceBatch.delete(`/wallet/removeVaultWallets`, { data: payload });
 }

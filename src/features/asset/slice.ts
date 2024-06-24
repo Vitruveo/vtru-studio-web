@@ -237,6 +237,9 @@ export const assetSlice = createSlice({
                 state.consignArtwork.status = 'pending';
             }
         },
+        setRequestConsignStatusDraft: (state) => {
+            state.consignArtwork!.status = 'draft';
+        },
     },
 });
 

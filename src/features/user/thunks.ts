@@ -22,6 +22,9 @@ import {
     requestSocialGoogle,
     requestSocialFacebook,
     removeSocial,
+    deleteWallets,
+    addWallets,
+    getWalletsVault,
 } from './requests';
 import { userActionsCreators } from './slice';
 import {
@@ -52,6 +55,7 @@ import {
     VerifyConnectWalletApiRes,
     RequestConnectWalletRes,
     RemoveSocialReq,
+    Wallet,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { getAssetThunk } from '../asset/thunks';
@@ -187,6 +191,37 @@ export function creatorAccountThunk(payload: StepsFormValues | AccountSettingsFo
                 emails: payload.emails,
             })
         );
+
+        if (user.vault?.createdAt) {
+            const res = await getWalletsVault();
+            const newWallets = payload.wallets.filter((v) => !v.archived);
+            const oldWallets = (res?.data || []).map((v: string) => ({ address: v }));
+
+            const checkChangeWallets =
+                newWallets.length !== oldWallets.length ||
+                newWallets.reduce((acc, cur) => {
+                    if (!oldWallets.find((v) => v.address === cur.address)) return true;
+                    return acc;
+                }, false);
+
+            if (checkChangeWallets) {
+                const deletedWallets = oldWallets.filter(
+                    (w) => !newWallets.map((w2) => w2.address).includes(w.address)
+                );
+
+                const addedWallets = newWallets.filter((w) => !oldWallets.map((w2) => w2.address).includes(w.address));
+
+                if (deletedWallets.length) {
+                    await deleteWallets({ walletsAddress: deletedWallets.map((v) => v.address) });
+                    await new Promise((resolve) => setTimeout(resolve, 5000));
+                }
+
+                if (addedWallets.length) {
+                    await addWallets({ walletsAddress: addedWallets.map((v) => v.address) });
+                    await new Promise((resolve) => setTimeout(resolve, 5000));
+                }
+            }
+        }
     };
 }
 

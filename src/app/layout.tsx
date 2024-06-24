@@ -29,7 +29,7 @@ const MyApp = ({ children }: { children: React.ReactNode }) => {
                                 main: '#13DFAA',
                                 light: '#FEFEFE',
                                 dark: '#2AA077',
-                                contrastText: '#FEFEFE',
+                                contrastText: '#333333',
                             },
                             secondary: {
                                 main: '#59D6A9',
@@ -41,7 +41,7 @@ const MyApp = ({ children }: { children: React.ReactNode }) => {
                                 main: '#13DEB9',
                                 light: '#E6FFFA',
                                 dark: '#02b3a9',
-                                contrastText: '#ffffff',
+                                contrastText: '#333333',
                             },
                             info: {
                                 main: '#539BFF',
@@ -75,6 +75,7 @@ const MyApp = ({ children }: { children: React.ReactNode }) => {
                             },
                             action: {
                                 disabledBackground: 'rgba(73,82,88,0.12)',
+                                disabled: '#333333',
                                 hoverOpacity: 0.02,
                                 hover: '#f6f9fc',
                             },

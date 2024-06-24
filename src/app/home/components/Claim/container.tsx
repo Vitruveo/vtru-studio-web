@@ -1,4 +1,4 @@
-import { useAccount, useConnectorClient } from 'wagmi';
+import { useAccount, useConnectorClient, useDisconnect } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { ClaimComponent } from './components';
 import { createSignedMessage } from './actions';
@@ -11,6 +11,7 @@ export const ClaimContainer = () => {
     const { isConnected, address } = useAccount();
     const [balance, setBalance] = useState(0);
     const { data: client } = useConnectorClient();
+    const { connectors, disconnectAsync } = useDisconnect();
     const { openConnectModal } = useConnectModal();
     const token = useSelector((state) => state.user.token);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -50,6 +51,15 @@ export const ClaimContainer = () => {
 
     const onConnect = async () => {
         openConnectModal?.();
+    };
+
+    const onDisconnect = async () => {
+        for await (const connector of connectors) {
+            await connector.disconnect();
+            await disconnectAsync({
+                connector,
+            });
+        }
     };
 
     const onClaim = async () => {
@@ -99,6 +109,7 @@ export const ClaimContainer = () => {
                 actions={{
                     onClaim,
                     onConnect,
+                    onDisconnect,
                 }}
             />
         </>
