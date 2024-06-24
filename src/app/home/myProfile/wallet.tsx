@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { IconButton, Radio, RadioGroup, Theme, Typography, useMediaQuery, Box } from '@mui/material';
-import { useAccount, useDisconnect, useAccountEffect } from 'wagmi';
+import { useAccount, useDisconnect } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { IconTrash } from '@tabler/icons-react';
 import { LoadingButton } from '@mui/lab';
@@ -20,18 +20,6 @@ const Wallet = ({ values, setFieldValue }: AccountSettingsProps) => {
     const { openConnectModal } = useConnectModal();
 
     const [addedNewWallet, setAddedNewWallet] = useState(false);
-
-    // useAccountEffect({
-    //     async onConnect() {
-    //         await handleWalletDisconnection();
-    //     },
-    // });
-
-    // useEffect(() => {
-    //     if (isConnected) {
-    //         handleWalletDisconnection();
-    //     }
-    // }, []);
 
     useEffect(() => {
         if (address && isConnected && addedNewWallet) {

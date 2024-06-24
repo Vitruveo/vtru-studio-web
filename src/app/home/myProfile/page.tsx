@@ -24,7 +24,6 @@ import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { useI18n } from '@/app/hooks/useI18n';
 import { useAvatar } from './useAvatar';
 import { useToastr } from '@/app/hooks/useToastr';
-import BannerVault from '../components/bannerVault/banner';
 
 export default function ProfileSettings() {
     const toast = useToastr();
@@ -219,7 +218,6 @@ export default function ProfileSettings() {
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter submitDisabled={false} backPathRouter="/home" title={texts.title}>
-                <BannerVault />
                 <Box margin="auto 0" marginBottom={10} display="relative">
                     <Breadcrumb title={texts.title} items={BCrumb} />
 
