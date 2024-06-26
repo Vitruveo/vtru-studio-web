@@ -1,4 +1,4 @@
-import { useAccount, useConnectorClient, useDisconnect } from 'wagmi';
+import { useAccount, useDisconnect, useWalletClient, useConnect } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { ClaimComponent } from './components';
 import { createSignedMessage } from './actions';
@@ -8,15 +8,17 @@ import { useSelector } from '@/store/hooks';
 import ClaimedModal from './ClaimedModal';
 
 export const ClaimContainer = () => {
-    const { isConnected, address } = useAccount();
     const [balance, setBalance] = useState(0);
-    const { data: client } = useConnectorClient();
-    const { connectors, disconnectAsync } = useDisconnect();
-    const { openConnectModal } = useConnectModal();
     const token = useSelector((state) => state.user.token);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [isBlocked, setIsBlocked] = useState(false);
+
+    const { connectors } = useConnect();
+    const { isConnected, address } = useAccount();
+    const { data: client } = useWalletClient();
+    const { disconnectAsync } = useDisconnect();
+    const { openConnectModal } = useConnectModal();
 
     const vaultTransactionHash = useSelector((state) => state?.user?.vault?.transactionHash);
 
@@ -56,10 +58,8 @@ export const ClaimContainer = () => {
     const onDisconnect = async () => {
         for await (const connector of connectors) {
             await connector.disconnect();
-            await disconnectAsync({
-                connector,
-            });
         }
+        await disconnectAsync();
     };
 
     const onClaim = async () => {
@@ -71,14 +71,12 @@ export const ClaimContainer = () => {
                 method: 'claimStudio',
                 client: client!,
             });
-
             // Send the signed message to backend
             const response = await fetch(`${BASE_URL_BATCH}/claim`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ signer: signer.address, domain, types, tx, signedMessage }),
             });
-
             const responseData = await response.json();
             if (response.ok) {
                 setIsModalOpen(true);

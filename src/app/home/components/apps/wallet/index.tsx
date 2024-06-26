@@ -1,8 +1,9 @@
-import { WALLET_APP_NAME, WALLET_NETWORKS, WALLET_PROJECT_ID } from '@/constants/wallet';
-import { darkTheme, getDefaultConfig, RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { darkTheme, RainbowKitProvider, connectorsForWallets } from '@rainbow-me/rainbowkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { http } from '@wagmi/core';
-import { WagmiProvider } from 'wagmi';
+import { WagmiConfig, configureChains, createConfig } from 'wagmi';
+import { publicProvider } from 'wagmi/providers/public';
+import { walletConnectWallet, metaMaskWallet, coinbaseWallet, rainbowWallet } from '@rainbow-me/rainbowkit/wallets';
+import { WALLET_APP_NAME, WALLET_NETWORKS, WALLET_PROJECT_ID } from '@/constants/wallet';
 import '@rainbow-me/rainbowkit/styles.css';
 
 const vitruveoMainnet = {
@@ -49,12 +50,32 @@ const vitruveoTestnet = {
     testnet: false,
 };
 
-export const config = getDefaultConfig({
-    appName: WALLET_APP_NAME,
+const { chains, publicClient } = configureChains(
+    WALLET_NETWORKS === 'mainnet' ? [vitruveoMainnet] : [vitruveoTestnet],
+    [publicProvider()]
+);
+
+const walletDefaultOptions = {
     projectId: WALLET_PROJECT_ID,
-    chains: WALLET_NETWORKS == 'mainnet' ? [vitruveoMainnet] : [vitruveoTestnet],
-    ssr: false,
-    transports: WALLET_NETWORKS == 'mainnet' ? { [vitruveoMainnet.id]: http() } : { [vitruveoTestnet.id]: http() },
+    chains,
+};
+
+const connectors = connectorsForWallets([
+    {
+        groupName: 'Recommended',
+        wallets: [
+            metaMaskWallet({ ...walletDefaultOptions, UNSTABLE_shimOnConnectSelectAccount: true }),
+            coinbaseWallet({ appName: WALLET_APP_NAME, chains }),
+            walletConnectWallet(walletDefaultOptions),
+            rainbowWallet(walletDefaultOptions),
+        ],
+    },
+]);
+
+export const config = createConfig({
+    autoConnect: false,
+    connectors,
+    publicClient,
 });
 
 const queryClient = new QueryClient();
@@ -65,10 +86,12 @@ interface Props {
 
 export function WalletProvider({ children }: Props) {
     return (
-        <WagmiProvider config={config}>
+        <WagmiConfig config={config}>
             <QueryClientProvider client={queryClient}>
-                <RainbowKitProvider theme={darkTheme()}>{children}</RainbowKitProvider>
+                <RainbowKitProvider chains={chains} theme={darkTheme()} appInfo={{ appName: WALLET_APP_NAME }}>
+                    {children}
+                </RainbowKitProvider>
             </QueryClientProvider>
-        </WagmiProvider>
+        </WagmiConfig>
     );
 }
