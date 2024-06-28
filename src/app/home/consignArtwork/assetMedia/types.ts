@@ -43,7 +43,7 @@ export interface FormatsMedia {
     display: FormatMedia;
     exhibition: FormatMedia;
     preview: FormatMedia;
-    print: FormatMedia;
+    print?: FormatMedia;
 }
 
 export interface AssetMediaFormValues {
