@@ -1,4 +1,4 @@
-import * as wagmiCore from '@wagmi/core';
+import { signMessage } from '@wagmi/core';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { nanoid } from '@reduxjs/toolkit';
 import { StepsFormValues } from '@/app/home/consignArtwork/types';
@@ -284,8 +284,8 @@ export function requestConnectWalletThunk(
 
         if (!response.data?.nonce) throw new Error('nonce not found');
 
-        const signature = await wagmiCore.signMessage(config, {
-            account: payload.wallet,
+        const signature = await signMessage({
+            // account: payload.wallet,
             message: response.data.nonce,
         });
 

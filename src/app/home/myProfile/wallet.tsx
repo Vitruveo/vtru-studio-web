@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { IconButton, Radio, RadioGroup, Theme, Typography, useMediaQuery, Box } from '@mui/material';
-import { useAccount, useDisconnect } from 'wagmi';
+import { useAccount, useDisconnect, useConnect } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { IconTrash } from '@tabler/icons-react';
 import { LoadingButton } from '@mui/lab';
@@ -15,7 +15,8 @@ const Wallet = ({ values, setFieldValue }: AccountSettingsProps) => {
     const toast = useToastr();
     const { language } = useI18n();
     const dispatch = useDispatch();
-    const { connectors, disconnectAsync } = useDisconnect();
+    const { disconnectAsync } = useDisconnect();
+    const { connectors } = useConnect();
     const { isConnected, address } = useAccount();
     const { openConnectModal } = useConnectModal();
 
@@ -28,12 +29,12 @@ const Wallet = ({ values, setFieldValue }: AccountSettingsProps) => {
     }, [address, isConnected]);
 
     const handleWalletDisconnection = async () => {
-        for await (const connector of connectors) {
-            await connector.disconnect();
-            await disconnectAsync({
-                connector,
-            });
+        for (const connector of connectors) {
+            if (connector.ready) {
+                await connector.disconnect();
+            }
         }
+        await disconnectAsync();
     };
 
     const texts = {
@@ -100,7 +101,6 @@ const Wallet = ({ values, setFieldValue }: AccountSettingsProps) => {
                 toast.display({ message: 'Error on connect wallet', type: 'error' });
             }
         } finally {
-            await handleWalletDisconnection();
             setAddedNewWallet(false);
         }
     };
@@ -111,85 +111,77 @@ const Wallet = ({ values, setFieldValue }: AccountSettingsProps) => {
         !values.walletDefault || !values.walletDefault.length ? values.wallets[0]?.address : values.walletDefault;
 
     return (
-        <>
-            <Box maxWidth={!xl ? 300 : 400} display="flex" flexDirection="column" my={1}>
-                <Box display="flex" justifyContent="flex-start" mb={2}>
-                    <Typography variant="subtitle1" fontWeight={600} style={{ width: '70%' }}>
-                        Wallets
-                    </Typography>
-                    <Typography variant="subtitle1" fontWeight={600} style={{ width: '20%', textAlign: 'center' }}>
-                        Default
-                    </Typography>
-                    <Box width="10%" />
-                </Box>
-                <RadioGroup
-                    defaultValue={checkDefaultWallet}
-                    aria-label="options"
-                    name="emailDefault"
-                    onChange={(v) => handleWalletDefaultChange(v.target.value)}
-                >
-                    {values.wallets
-                        .filter((item) => !item.archived)
-                        .map((item, index) => (
-                            <Box
-                                key={item.address}
-                                display="flex"
-                                justifyContent="flex-start"
-                                alignItems="center"
-                                mb={2}
-                            >
-                                <Typography variant="body1" style={{ width: '70%' }}>
-                                    {handleFormatWallet(item.address)}
-                                </Typography>
-                                <Box display="flex" justifyContent="center" alignItems="center" width="20%">
-                                    <Box
-                                        display="flex"
-                                        justifyContent="center"
-                                        alignItems="center"
-                                        style={{ margin: 0, padding: 0 }}
-                                    >
-                                        <Radio sx={{ padding: 0 }} value={item.address} />
-                                    </Box>
-                                </Box>
-                                <Box display="flex" justifyContent="center" alignItems="center" width="10%">
-                                    <IconButton
-                                        disabled={item.address === checkDefaultWallet}
-                                        sx={{ padding: 0, margin: 0 }}
-                                        size="small"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleDeleteWallet(index);
-                                        }}
-                                    >
-                                        <IconTrash
-                                            color={item.address === checkDefaultWallet ? '#A9A9A9' : 'red'}
-                                            size="16"
-                                            stroke={1.5}
-                                        />
-                                    </IconButton>
+        <Box maxWidth={!xl ? 300 : 400} display="flex" flexDirection="column" my={1}>
+            <Box display="flex" justifyContent="flex-start" mb={2}>
+                <Typography variant="subtitle1" fontWeight={600} style={{ width: '70%' }}>
+                    Wallets
+                </Typography>
+                <Typography variant="subtitle1" fontWeight={600} style={{ width: '20%', textAlign: 'center' }}>
+                    Default
+                </Typography>
+                <Box width="10%" />
+            </Box>
+            <RadioGroup
+                defaultValue={checkDefaultWallet}
+                aria-label="options"
+                name="emailDefault"
+                onChange={(v) => handleWalletDefaultChange(v.target.value)}
+            >
+                {values.wallets
+                    .filter((item) => !item.archived)
+                    .map((item, index) => (
+                        <Box key={item.address} display="flex" justifyContent="flex-start" alignItems="center" mb={2}>
+                            <Typography variant="body1" style={{ width: '70%' }}>
+                                {handleFormatWallet(item.address)}
+                            </Typography>
+                            <Box display="flex" justifyContent="center" alignItems="center" width="20%">
+                                <Box
+                                    display="flex"
+                                    justifyContent="center"
+                                    alignItems="center"
+                                    style={{ margin: 0, padding: 0 }}
+                                >
+                                    <Radio sx={{ padding: 0 }} value={item.address} />
                                 </Box>
                             </Box>
-                        ))}
-                </RadioGroup>
-                <Box mt={1} width="100%" display="flex" alignItems="center" justifyContent="space-between">
-                    <Typography width="70%" color="GrayText">
-                        {values.wallets?.length ? texts.walletPlaceholderAdded : texts.walletPlaceholder}
-                    </Typography>
-                    <Box width="30%" display="flex" justifyContent="center">
-                        <LoadingButton
-                            size="small"
-                            style={{ width: '85%', marginLeft: '10%' }}
-                            variant="contained"
-                            onClick={onConnectWalletClick}
-                            loading={isConnected && addedNewWallet}
-                            disabled={isConnected && addedNewWallet}
-                        >
-                            {isConnected ? 'Disconnect' : 'Add'}
-                        </LoadingButton>
-                    </Box>
+                            <Box display="flex" justifyContent="center" alignItems="center" width="10%">
+                                <IconButton
+                                    disabled={item.address === checkDefaultWallet}
+                                    sx={{ padding: 0, margin: 0 }}
+                                    size="small"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDeleteWallet(index);
+                                    }}
+                                >
+                                    <IconTrash
+                                        color={item.address === checkDefaultWallet ? '#A9A9A9' : 'red'}
+                                        size="16"
+                                        stroke={1.5}
+                                    />
+                                </IconButton>
+                            </Box>
+                        </Box>
+                    ))}
+            </RadioGroup>
+            <Box mt={1} width="100%" display="flex" alignItems="center" justifyContent="space-between">
+                <Typography width="70%" color="GrayText">
+                    {values.wallets?.length ? texts.walletPlaceholderAdded : texts.walletPlaceholder}
+                </Typography>
+                <Box width="30%" display="flex" justifyContent="center">
+                    <LoadingButton
+                        size="small"
+                        style={{ width: '85%', marginLeft: '10%' }}
+                        variant="contained"
+                        onClick={onConnectWalletClick}
+                        loading={isConnected && addedNewWallet}
+                        disabled={isConnected && addedNewWallet}
+                    >
+                        {isConnected ? 'Disconnect' : 'Add'}
+                    </LoadingButton>
                 </Box>
             </Box>
-        </>
+        </Box>
     );
 };
 
