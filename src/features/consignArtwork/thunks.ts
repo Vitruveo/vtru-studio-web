@@ -63,7 +63,7 @@ export function preview(): ReduxThunkAction {
 
             if (!username || !assetId) throw new Error('Username or assetId not found');
 
-            const URL = `${CONSIGN_ARTWORK_PREVIEW_URL}/${username}/${assetId}/${Date.now()}`;
+            const URL = `${CONSIGN_ARTWORK_PREVIEW_URL}/${username}/${assetId}`;
             window.open(URL, '_blank');
         } catch (error) {
             dispatch(
