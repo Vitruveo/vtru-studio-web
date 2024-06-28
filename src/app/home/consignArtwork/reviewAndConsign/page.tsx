@@ -63,6 +63,10 @@ const ConsignArtwork = () => {
             buttontitle: undefined,
             message: 'Your artwork is active',
         },
+        blocked: {
+            buttontitle: undefined,
+            message: 'Your artwork is blocked',
+        },
         draft: {
             buttontitle: texts.requestConsign,
             message:
