@@ -6,6 +6,8 @@ import { BASE_URL_BATCH } from '@/constants/api';
 import { useEffect, useState } from 'react';
 import { useSelector } from '@/store/hooks';
 import ClaimedModal from './ClaimedModal';
+import { useToastr } from '@/app/hooks/useToastr';
+import { useRouter } from 'next/navigation';
 
 export const ClaimContainer = () => {
     const [balance, setBalance] = useState(0);
@@ -19,8 +21,11 @@ export const ClaimContainer = () => {
     const { data: client } = useWalletClient();
     const { disconnectAsync } = useDisconnect();
     const { openConnectModal } = useConnectModal();
+    const router = useRouter();
+    const toast = useToastr();
 
     const vaultTransactionHash = useSelector((state) => state?.user?.vault?.transactionHash);
+    const wallets = useSelector((state) => state.user.wallets);
 
     const closeModal = () => {
         setIsModalOpen(false);
@@ -63,30 +68,36 @@ export const ClaimContainer = () => {
     };
 
     const onClaim = async () => {
-        setLoading(true);
-        try {
-            const { domain, signedMessage, signer, tx, types } = await createSignedMessage({
-                name: 'Creator Vault',
-                action: 'Claim $VTRU earnings from Vault',
-                method: 'claimStudio',
-                client: client!,
-            });
-            // Send the signed message to backend
-            const response = await fetch(`${BASE_URL_BATCH}/claim`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ signer: signer.address, domain, types, tx, signedMessage }),
-            });
-            const responseData = await response.json();
-            if (response.ok) {
-                setIsModalOpen(true);
-            } else {
-                throw new Error(responseData.error);
+        if (wallets.find((wallet) => !wallet.archived && wallet.address === address)) {
+            setLoading(true);
+            try {
+                const { domain, signedMessage, signer, tx, types } = await createSignedMessage({
+                    name: 'Creator Vault',
+                    action: 'Claim $VTRU earnings from Vault',
+                    method: 'claimStudio',
+                    client: client!,
+                });
+                // Send the signed message to backend
+                const response = await fetch(`${BASE_URL_BATCH}/claim`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ signer: signer.address, domain, types, tx, signedMessage }),
+                });
+                const responseData = await response.json();
+                if (response.ok) {
+                    setIsModalOpen(true);
+                } else {
+                    throw new Error(responseData.error);
+                }
+            } catch (error) {
+                // do nothing
+            } finally {
+                setLoading(false);
             }
-        } catch (error) {
-            // do nothing
-        } finally {
-            setLoading(false);
+        } else {
+            toast.display({ type: 'warning', message: 'Add the wallet to your profile before' });
+            await onDisconnect();
+            router.push('/home/myProfile');
         }
     };
 
