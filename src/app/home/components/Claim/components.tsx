@@ -63,6 +63,10 @@ export const ClaimComponent = ({ data, actions }: Props) => {
                             vertical: 'bottom',
                             horizontal: 'left',
                         }}
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
+                        }}
                     >
                         <Button size="small" variant="contained" onClick={onDisconnect}>
                             Disconnect
