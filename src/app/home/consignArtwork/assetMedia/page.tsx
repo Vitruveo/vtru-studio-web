@@ -188,7 +188,7 @@ export default function AssetMedia() {
         );
 
         const deleteFormats = Object.entries(values.formats)
-            .filter(([key, value]) => !initialValues.formats[key as keyof FormatsMedia].file)
+            .filter(([key, value]) => !initialValues.formats[key as keyof FormatsMedia]?.file)
             .map(([key, _]) => key);
 
         if (deleteFormats.length) await dispatch(assetMediaThunk({ deleteFormats }));
@@ -391,18 +391,22 @@ export default function AssetMedia() {
                             <Box marginTop={1} display="flex" flexWrap="wrap">
                                 {Object.entries(values.formats).map(([formatType, value], index) => (
                                     <Box style={{ marginRight: '10px' }} key={index}>
-                                        <MediaCard
-                                            key={index}
-                                            errors={errors}
-                                            formats={values.formats}
-                                            formatType={formatType}
-                                            formatValue={value}
-                                            deleteKeys={values.deleteKeys}
-                                            urlAssetFile={urlAssetFile}
-                                            definition={values.formats?.original?.definition}
-                                            setFieldValue={setFieldValue}
-                                            handleUploadFile={handleUploadFile}
-                                        />
+                                        {formatType !== 'print' ? (
+                                            <MediaCard
+                                                key={index}
+                                                errors={errors}
+                                                formats={values.formats}
+                                                formatType={formatType}
+                                                formatValue={value}
+                                                deleteKeys={values.deleteKeys}
+                                                urlAssetFile={urlAssetFile}
+                                                definition={values.formats?.original?.definition}
+                                                setFieldValue={setFieldValue}
+                                                handleUploadFile={handleUploadFile}
+                                            />
+                                        ) : (
+                                            <></>
+                                        )}
                                     </Box>
                                 ))}
                             </Box>

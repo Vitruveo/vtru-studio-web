@@ -73,7 +73,7 @@ export interface Asset {
         display: Format;
         exhibition: Format;
         preview: Format;
-        print: Format;
+        print?: Format;
     };
     terms: {
         isOriginal: boolean;
