@@ -147,17 +147,48 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                     </Box>
                 ) : (
                     <Box p={1.5} width="100%">
+                        <Box alignItems="center" justifyContent="space-between" display="flex" marginTop={1}>
+                            <Box marginRight={1} width={100}>
+                                <Typography>{texts.license}</Typography>
+                            </Box>
+                            <Box alignItems="center" justifyContent="space-between" display="flex" width={300}>
+                                <CustomSelect
+                                    sx={{ backgroundColor: '#fff' }}
+                                    InputProps={{
+                                        sx: {
+                                            backgroundColor: '#fff',
+                                        },
+                                    }}
+                                    name="nft.license"
+                                    value={values.license}
+                                    onChange={(v: SelectChangeEvent<string>) =>
+                                        handleCustomChange('nft.license', v.target.value)
+                                    }
+                                    size="small"
+                                    fullWidth
+                                    variant="outlined"
+                                >
+                                    {licenses?.map((option) => (
+                                        <MenuItem key={option.license} value={option.license}>
+                                            {option.license}
+                                        </MenuItem>
+                                    ))}
+                                </CustomSelect>
+                                <IconButton
+                                    title={aboutLicenses}
+                                    sx={{ padding: 0, marginLeft: 1 }}
+                                    onClick={() => window.open(aboutLicenses, '_blank')}
+                                >
+                                    <InfoIcon color="primary" />
+                                </IconButton>
+                            </Box>
+                        </Box>
                         <RadioGroup
                             aria-label="options"
                             name="nft.editionOption"
                             value={values.editionOption}
                             onChange={(v) => handleCustomChange('nft.editionOption', v.target.value)}
                         >
-                            <FormControlLabel
-                                value="elastic"
-                                control={<Radio disabled />}
-                                label={texts.elasticEditionsTitle}
-                            />
                             {values.editionOption === 'elastic' && (
                                 <Box marginLeft={4}>
                                     <Box display="flex" alignItems="center" justifyContent="space-between">
@@ -282,8 +313,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                                     fontSize="0.8rem"
                                                     sx={{ whiteSpace: 'nowrap', width: 50 }}
                                                 >
-                                                    {Math.min(values.availableLicenses / 10, 10).toFixed(2) +
-                                                        '%'}
+                                                    {Math.min(values.availableLicenses / 10, 10).toFixed(2) + '%'}
                                                 </Typography>
                                             </Box>
                                         </Box>
@@ -307,7 +337,6 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                         </Typography>
                                     </Box>
                                     <CustomTextField
-                                        disabled
                                         name="nft.single.editionPrice"
                                         type="number"
                                         InputProps={{
@@ -326,11 +355,15 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                 </Box>
                             )}
                             <FormControlLabel
+                                value="elastic"
+                                control={<Radio disabled />}
+                                label={texts.elasticEditionsTitle}
+                            />
+                            <FormControlLabel
                                 value="unlimited"
                                 control={<Radio disabled />}
                                 label={texts.unlimitedEditionsTitle}
                             />
-
                             {values.editionOption === 'unlimited' && (
                                 <Box marginLeft={4} display="flex" alignItems="center" justifyContent="space-between">
                                     <Box marginRight={1}>
@@ -366,43 +399,6 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                 </Box>
                             )}
                         </RadioGroup>
-                        <Box alignItems="center" justifyContent="space-between" display="flex" marginTop={1}>
-                            <Box marginRight={1} width={100}>
-                                <Typography>{texts.license}</Typography>
-                            </Box>
-                            <Box alignItems="center" justifyContent="space-between" display="flex" width={300}>
-                                <CustomSelect
-                                    disabled
-                                    sx={{ backgroundColor: '#fff' }}
-                                    InputProps={{
-                                        sx: {
-                                            backgroundColor: '#fff',
-                                        },
-                                    }}
-                                    name="nft.license"
-                                    value={values.license}
-                                    onChange={(v: SelectChangeEvent<string>) =>
-                                        handleCustomChange('nft.license', v.target.value)
-                                    }
-                                    size="small"
-                                    fullWidth
-                                    variant="outlined"
-                                >
-                                    {licenses?.map((option) => (
-                                        <MenuItem key={option.license} value={option.license}>
-                                            {option.license}
-                                        </MenuItem>
-                                    ))}
-                                </CustomSelect>
-                                <IconButton
-                                    title={aboutLicenses}
-                                    sx={{ padding: 0, marginLeft: 1 }}
-                                    onClick={() => window.open(aboutLicenses, '_blank')}
-                                >
-                                    <InfoIcon color="primary" />
-                                </IconButton>
-                            </Box>
-                        </Box>
                     </Box>
                 )}
             </Card>
