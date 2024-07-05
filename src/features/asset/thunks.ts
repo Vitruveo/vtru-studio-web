@@ -12,6 +12,9 @@ import {
     eventsByTransaction,
     requestConsign,
     deleteRequestConsign,
+    getAssetById,
+    createNewAsset,
+    deleteAsset,
 } from './requests';
 import {
     AssetSendRequestUploadApiRes,
@@ -19,8 +22,10 @@ import {
     AssetStatus,
     AssetStorageReq,
     ConsignArtworkSteps,
+    CreateAssetApiRes,
     CreateContractApiRes,
     CreateContractByAssetIdReq,
+    GetAssetApiRes,
     HistoryItems,
     RequestDeleteFilesReq,
     SigningMediaC2PAReq,
@@ -39,6 +44,7 @@ import { FormatsAuxiliayMedia } from '@/app/home/consignArtwork/auxiliaryMedia/t
 
 import { BASE_URL_API } from '@/constants/api';
 import { toastrActionsCreators } from '../toastr/slice';
+import { userActionsCreators } from '../user/slice';
 
 export function requestDeleteURLThunk(payload: RequestDeleteFilesReq): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
@@ -59,10 +65,26 @@ export function assetStorageThunk(payload: Omit<AssetStorageReq, 'dispatch'>): R
     };
 }
 
-export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
+export function createNewAssetThunk(): ReduxThunkAction<Promise<string>> {
+    return async function (dispatch, getState) {
+        const response = await createNewAsset();
+
+        return response.data?.insertedId || '';
+    };
+}
+
+export function deleteAssetThunk(id: string): ReduxThunkAction<Promise<void>> {
+    return async function (dispatch, getState) {
+        await deleteAsset(id);
+        dispatch(userActionsCreators.removeAsset(id));
+    };
+}
+
+export function getAssetThunk(id: string): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
         try {
-            const response = await getAsset();
+            dispatch(assetActionsCreators.resetAsset());
+            const response = await getAssetById(id);
 
             if (response.data) {
                 if (response.data.consignArtwork) {
@@ -107,38 +129,61 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
                     dispatch(assetActionsCreators.change({ c2pa: response.data.c2pa }));
                 }
 
-                dispatch(
-                    consignArtworkActionsCreators.changeStatusStep({
-                        stepId: 'termsOfUse',
-                        status:
-                            response.data.terms.contract &&
-                            response.data.terms.isOriginal &&
-                            response.data.terms.generatedArtworkAI &&
-                            response.data.terms.notMintedOtherBlockchain
-                                ? 'completed'
-                                : response.data.terms.contract ||
-                                    response.data.terms.isOriginal ||
-                                    response.data.terms.generatedArtworkAI ||
-                                    response.data.terms.notMintedOtherBlockchain
-                                  ? 'inProgress'
-                                  : 'notStarted',
-                    })
-                );
+                if (response.data.terms) {
+                    dispatch(
+                        consignArtworkActionsCreators.changeStatusStep({
+                            stepId: 'termsOfUse',
+                            status:
+                                response.data.terms.contract &&
+                                response.data.terms.isOriginal &&
+                                response.data.terms.generatedArtworkAI &&
+                                response.data.terms.notMintedOtherBlockchain
+                                    ? 'completed'
+                                    : response.data.terms.contract ||
+                                        response.data.terms.isOriginal ||
+                                        response.data.terms.generatedArtworkAI ||
+                                        response.data.terms.notMintedOtherBlockchain
+                                      ? 'inProgress'
+                                      : 'notStarted',
+                        })
+                    );
+                }
 
                 dispatch(
                     assetActionsCreators.change({
                         _id: response.data._id,
-                        assetMetadata: response.data.assetMetadata,
-                        licenses: response.data.licenses,
-                        terms: {
-                            isOriginal: response.data.terms.isOriginal,
-                            generatedArtworkAI: response.data.terms.generatedArtworkAI,
-                            notMintedOtherBlockchain: response.data.terms.notMintedOtherBlockchain,
-                            contract: response.data.terms.contract,
-                        },
-                        status: response.data.status,
+                        status: response.data?.status,
                     })
                 );
+
+                if (response.data.assetMetadata) {
+                    dispatch(
+                        assetActionsCreators.change({
+                            assetMetadata: response.data.assetMetadata,
+                        })
+                    );
+                }
+
+                if (response.data.licenses) {
+                    dispatch(
+                        assetActionsCreators.change({
+                            licenses: response.data.licenses,
+                        })
+                    );
+                }
+
+                if (response.data.terms) {
+                    dispatch(
+                        assetActionsCreators.change({
+                            terms: {
+                                isOriginal: response.data.terms.isOriginal,
+                                generatedArtworkAI: response.data.terms.generatedArtworkAI,
+                                notMintedOtherBlockchain: response.data.terms.notMintedOtherBlockchain,
+                                contract: response.data.terms.contract,
+                            },
+                        })
+                    );
+                }
 
                 if (response.data.formats && Object.values(response.data.formats).find((v) => v !== null)) {
                     const formatAssetsFormats = Object.entries(
@@ -171,6 +216,13 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
 
                     dispatch(assetActionsCreators.changeFormats(formatAssetsFormats));
                     dispatch(consignArtworkActionsCreators.changeStatusStep({ stepId: 'assetMedia', status }));
+                } else {
+                    dispatch(
+                        consignArtworkActionsCreators.changeStatusStep({
+                            stepId: 'assetMedia',
+                            status: 'notStarted',
+                        })
+                    );
                 }
 
                 if (
@@ -206,6 +258,13 @@ export function getAssetThunk(): ReduxThunkAction<Promise<any>> {
                             status: 'completed',
                         })
                     );
+                } else {
+                    dispatch(
+                        consignArtworkActionsCreators.changeStatusStep({
+                            stepId: 'auxiliaryMedia',
+                            status: 'notStarted',
+                        })
+                    );
                 }
             }
 
@@ -239,6 +298,7 @@ export function auxiliaryMediaThunk(payload: {
             }, {});
 
         await updateAssetStep({
+            id: getState().user.selectedAsset,
             mediaAuxiliary: {
                 description: payload.description,
                 formats: { ...formatsPersist, ...payload.formats },
@@ -321,6 +381,7 @@ export function assetMediaThunk(payload: {
             }, {});
 
         await updateAssetStep({
+            id: getState().user.selectedAsset,
             formats: { ...formatsPersist, ...payload.formats },
             stepName: 'assetUpload',
         });
@@ -369,6 +430,7 @@ export function assetMetadataThunk(
 ): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
         await updateAssetStep({
+            id: getState().user.selectedAsset,
             assetMetadata: {
                 ...payload,
             },
@@ -395,6 +457,7 @@ export function licenseThunk(payload: LicensesFormValues): ReduxThunkAction<Prom
             ...payload,
             licenses: payload,
             stepName: 'license',
+            id: getState().user.selectedAsset,
         });
 
         dispatch(
@@ -410,6 +473,7 @@ export function contractThunk(payload: TermsOfUseFormValues): ReduxThunkAction<P
         const response = await updateAssetStep({
             ...payload,
             stepName: 'contract',
+            id: getState().user.selectedAsset,
         });
 
         dispatch(
@@ -430,6 +494,7 @@ export function publishThunk(payload: { status: AssetStatus }): ReduxThunkAction
         const response = await updateAssetStep({
             ...payload,
             stepName: 'publish',
+            id: getState().user.selectedAsset,
         });
 
         dispatch(
@@ -444,7 +509,9 @@ export function sendRequestUploadThunk(
     payload: AssetSendRequestUploadReq
 ): ReduxThunkAction<Promise<AssetSendRequestUploadApiRes>> {
     return async function (dispatch, getState) {
+        const assetSelected = getState().user.selectedAsset;
         const response = await sendRequestUpload({
+            id: assetSelected,
             mimetype: payload.mimetype,
             originalName: payload.originalName,
             transactionId: payload.transactionId,
@@ -522,8 +589,6 @@ export function createContractThunk(data: CreateContractByAssetIdReq): ReduxThun
                     signal: ctrl.signal,
                     onmessage(message) {
                         if (message.event === 'consign_success') {
-                            dispatch(getAssetThunk());
-
                             ctrl.abort();
                             resolve();
                         }
@@ -555,6 +620,7 @@ export function updateConsignArtworkStepThunk(payload: {
         await updateAssetStep({
             stepName: payload.stepName,
             [payload.stepName]: reqBodyStep,
+            id: getState().user.selectedAsset,
         });
 
         dispatch(assetActionsCreators.change({ [payload.stepName]: reqBodyStep }));
@@ -610,10 +676,10 @@ export function extractAssetColorsThunk({ id }: { id: string }): ReduxThunkActio
 }
 
 export function validationConsignThunk(): ReduxThunkAction<Promise<void>> {
-    return function (dispatch) {
+    return function (dispatch, getState) {
         dispatch(assetActionsCreators.setValidationConsign({ status: 'loading', message: '' }));
 
-        return validationConsign()
+        return validationConsign(getState().user.selectedAsset)
             .then((response) => {
                 if (response.data) {
                     dispatch(assetActionsCreators.setValidationConsign({ status: 'success', message: '' }));
@@ -709,9 +775,9 @@ export function eventTransactionThunk(): ReduxThunkAction<Promise<void>> {
 }
 
 export function requestConsignThunk(): ReduxThunkAction<void> {
-    return function (dispatch) {
+    return function (dispatch, getState) {
         dispatch(assetActionsCreators.setRequestConsignStatusPending());
-        requestConsign();
+        requestConsign(getState().user.selectedAsset);
     };
 }
 
@@ -719,7 +785,7 @@ export function deleteRequestConsignThunk(): ReduxThunkAction<void> {
     return function (dispatch, getState) {
         const consignArtworkStatus = getState().consignArtwork.status;
         if (consignArtworkStatus === 'pending') {
-            deleteRequestConsign();
+            deleteRequestConsign(getState().user.selectedAsset);
             dispatch(assetActionsCreators.setRequestConsignStatusDraft());
         }
     };

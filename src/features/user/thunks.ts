@@ -58,11 +58,12 @@ import {
     Wallet,
 } from './types';
 import { ReduxThunkAction } from '@/store';
-import { getAssetThunk } from '../asset/thunks';
 import { AccountSettingsFormValues } from '@/app/home/myProfile/types';
 import { consignArtworkActionsCreators } from '../consignArtwork/slice';
 import { config } from '@/app/home/components/apps/wallet';
 import { BASE_URL_API } from '@/constants/api';
+import { getAssetById, getMyAssets } from '../asset/requests';
+import { ASSET_STORAGE_URL } from '@/constants/asset';
 
 export function userLoginThunk(payload: UserLoginReq): ReduxThunkAction<Promise<UserLoginApiRes>> {
     return async function (dispatch, getState) {
@@ -80,7 +81,7 @@ export function userOTPConfirmThunk(payload: UserOTPConfirmReq): ReduxThunkActio
         if (response) {
             response.data?.creator;
             await dispatch(userActionsCreators.otpConfirm(response));
-            await dispatch(getAssetThunk());
+
             if (response.data?.creator)
                 dispatch(consignArtworkActionsCreators.checkIsCompletedProfile(response.data?.creator));
         }
@@ -372,6 +373,35 @@ export function requestSocialFacebookThunk(): ReduxThunkAction<Promise<void>> {
                 window.open(response.data, '_blank');
             }
         });
+    };
+}
+
+export function requestMyAssetsThunk(): ReduxThunkAction<Promise<void>> {
+    return function (dispatch) {
+        return getMyAssets().then((response) => {
+            if (response.data?.length) {
+                dispatch(
+                    userActionsCreators.setMyAssets(
+                        response.data.map((asset: any) => ({
+                            _id: asset._id,
+                            title: asset.assetMetadata?.context?.formData?.title || 'Untitled',
+                            image: !asset?.formats?.preview?.path
+                                ? 'https://cdn.vectorstock.com/i/500p/65/30/default-image-icon-missing-picture-page-vector-40546530.jpg'
+                                : `${ASSET_STORAGE_URL}/${asset.formats.preview.path}`,
+                            status: asset.consignArtwork?.status || 'Draft',
+                            collections: asset?.assetMetadata?.taxonomy?.formData?.collections || [],
+                        }))
+                    )
+                );
+            }
+        });
+    };
+}
+
+export function getAssetByIdThunk(id: string): ReduxThunkAction<Promise<any>> {
+    return async function (dispatch) {
+        const response = await getAssetById(id);
+        return response;
     };
 }
 

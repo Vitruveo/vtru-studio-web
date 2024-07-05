@@ -1,27 +1,31 @@
 'use client';
 
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import Link from 'next/link';
+import { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button, Container, MenuItem, Select, Box, Grid, Typography } from '@mui/material';
+import { IconCircle, IconCircleFilled, IconPlus, IconTrash } from '@tabler/icons-react';
+import Image from 'next/image';
 
-import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
+import { useDispatch, useSelector } from '@/store/hooks';
+import { useI18n } from '../hooks/useI18n';
+import { requestMyAssetsThunk } from '@/features/user/thunks';
+import { userActionsCreators } from '@/features/user/slice';
+import { createNewAssetThunk, deleteAssetThunk } from '@/features/asset/thunks';
+import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import PageContainer from '@/app/home/components/container/PageContainer';
 
-import { Button, Container } from '@mui/material';
-import { useDispatch, useSelector } from '@/store/hooks';
-import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
-import { useI18n } from '../hooks/useI18n';
-import Image from 'next/image';
+const filters = ['Draft', 'Pending', 'Listed', 'Sold', 'All'];
 
 export default function Home() {
     const { language } = useI18n();
     const dispatch = useDispatch();
+    const router = useRouter();
 
-    const status = useSelector((state) => state.asset.status);
-
-    const isCompletedProfile = useSelector((state) => state.consignArtwork.isCompletedProfile);
+    const assets = useSelector((state) => state.user.assets);
     const customizer = useSelector((state) => state.customizer);
+
+    const [collectionSelected, setCollectionSelected] = useState('all');
+    const [filterSelected, setFilterSelected] = useState('all');
 
     const texts = {
         title: language['studio.home.title'],
@@ -32,7 +36,37 @@ export default function Home() {
         myProfile: language['studio.home.myProfile'],
     } as { [key: string]: string };
 
-    const canConsignArtwork = useSelector((state) => state.user.canConsignArtwork);
+    useEffect(() => {
+        dispatch(userActionsCreators.setSelectedAsset(''));
+        dispatch(consignArtworkActionsCreators.resetConsignArtwork());
+        dispatch(requestMyAssetsThunk());
+    }, []);
+
+    const collections = assets.reduce<string[]>((acc, asset) => {
+        asset.collections.forEach((collection: string) => {
+            if (!acc.includes(collection)) {
+                acc.push(collection);
+            }
+        });
+
+        return acc;
+    }, []);
+
+    const data = useMemo(() => {
+        if (collectionSelected.toUpperCase() === 'ALL') {
+            return assets;
+        }
+
+        return assets.filter((asset: any) => asset?.collections?.includes(collectionSelected));
+    }, [assets, collectionSelected]);
+
+    const dataFiltered = useMemo(() => {
+        if (filterSelected.toUpperCase() === 'ALL') {
+            return data;
+        }
+
+        return data.filter((asset: any) => asset?.status?.toUpperCase() === filterSelected.toUpperCase());
+    }, [data, filterSelected]);
 
     return (
         <Container
@@ -43,9 +77,7 @@ export default function Home() {
             }}
         >
             <PageContainer title={texts.title}>
-                <Breadcrumb title={texts.title} />
-
-                <Box maxWidth={800} padding={3} mt={3}>
+                <Box pb={10} paddingInline={3}>
                     <Box display="flex" flexWrap="wrap" rowGap={1} alignItems="center">
                         <Typography marginRight={1} fontSize="1.7rem" alignSelf="center">
                             {texts.welcome}
@@ -65,48 +97,192 @@ export default function Home() {
                             }}
                         />
                     </Box>
-                    <Box marginTop={4}>
-                        <Typography variant="h4" color="primary">
-                            {texts.transform}
-                        </Typography>
+                    <Box mt={2}>
+                        <button
+                            style={{
+                                backgroundColor: '#D8C2D9',
+                                borderRadius: '10px',
+                                padding: '20px',
+                                display: 'flex',
+                                flexDirection: 'row',
+                                gap: '20px',
+                                alignItems: 'center',
+                                width: '100%',
+                                border: 'none',
+                                cursor: 'pointer',
+                                transition: '0.3s',
+                            }}
+                            onMouseEnter={(event) => {
+                                event.currentTarget.style.backgroundColor = '#C4AAB3';
+                            }}
+                            onMouseLeave={(event) => {
+                                event.currentTarget.style.backgroundColor = '#D8C2D9';
+                            }}
+                            onClick={async () => {
+                                const assetId = await dispatch(createNewAssetThunk());
+                                dispatch(userActionsCreators.setSelectedAsset(assetId));
+                                router.push('/home/consignArtwork');
+                            }}
+                        >
+                            <IconPlus
+                                size={40}
+                                style={{
+                                    backgroundColor: '#fff',
+                                    borderRadius: '5px',
+                                    padding: '5px',
+                                }}
+                            />
+                            <Typography sx={{ fontSize: 22 }}>Consign a new asset</Typography>
+                        </button>
                     </Box>
-                    <Box marginTop={4}>
-                        <Typography variant="h4" color="primary">
-                            {texts.software}
-                        </Typography>
-                    </Box>
-                    <Grid marginTop={3} container spacing={2}>
-                        <Grid item xs={12} sm={6} md={3.5}>
-                            <Link href="/home/myProfile" passHref>
-                                <Button variant="contained" fullWidth>
-                                    {texts.myProfile}
-                                </Button>
-                            </Link>
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={3.5}>
-                            <Link
-                                href={
-                                    !canConsignArtwork
-                                        ? '/home'
-                                        : isCompletedProfile
-                                          ? '/home/consignArtwork'
-                                          : '/home/myProfile'
-                                }
-                                passHref
+                    <Box display="flex" alignItems="center" justifyContent="space-between" mt={2}>
+                        <Box display="flex" flexDirection="row" alignItems="center" gap={2}>
+                            <Typography variant="h4">Collection:</Typography>
+                            <Select
+                                defaultValue="all"
+                                style={{
+                                    minWidth: 200,
+                                }}
+                                onChange={(event) => setCollectionSelected(event.target.value)}
                             >
+                                <MenuItem value="all">All</MenuItem>
+
+                                {collections.map((collection, index) => (
+                                    <MenuItem key={index} value={collection}>
+                                        {collection}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </Box>
+                        <Box display="flex" flexDirection="row" alignItems="center" gap={2}>
+                            {filters.map((filter, index) => (
                                 <Button
-                                    disabled={!canConsignArtwork}
-                                    variant="contained"
-                                    onClick={() =>
-                                        dispatch(consignArtworkActionsCreators.changeGoToConsignArtwork(true))
-                                    }
-                                    fullWidth
+                                    key={index}
+                                    onClick={() => setFilterSelected(filter)}
+                                    variant="text"
+                                    style={{
+                                        color: filterSelected === filter ? '#000' : '#666',
+                                        border: filterSelected === filter ? '1px solid #000' : 'none',
+                                        transition: '0.3s',
+                                        textDecoration: 'underline',
+                                        fontSize: 18,
+                                    }}
                                 >
-                                    {texts.consign}
+                                    {filter}
                                 </Button>
-                            </Link>
+                            ))}
+                        </Box>
+                    </Box>
+                    <Box mt={2}>
+                        <Grid container spacing={12}>
+                            {dataFiltered.map((asset, index) => (
+                                <Grid item key={index} sm={6} md={4} lg={3}>
+                                    <button
+                                        style={{
+                                            backgroundColor: '#fff',
+                                            borderRadius: '10px',
+                                            cursor: 'pointer',
+                                            transition: '0.3s',
+                                            border: 'none',
+                                            padding: '0px',
+                                            margin: '0px',
+                                            position: 'relative',
+                                        }}
+                                        onMouseEnter={(event) => {
+                                            event.currentTarget.style.boxShadow = '0px 0px 10px 0px #000';
+                                        }}
+                                        onMouseLeave={(event) => {
+                                            event.currentTarget.style.boxShadow = 'none';
+                                        }}
+                                        onClick={() => {
+                                            dispatch(userActionsCreators.setSelectedAsset(asset._id));
+                                            router.push('/home/consignArtwork');
+                                        }}
+                                    >
+                                        <button
+                                            style={{
+                                                position: 'absolute',
+                                                top: 10,
+                                                right: 10,
+                                                backgroundColor: '#fff',
+                                                color: '#000',
+
+                                                padding: '5px',
+                                                borderRadius: '5px',
+                                                cursor: 'pointer',
+                                                transition: '0.3s',
+                                                border: '1px solid #fff',
+                                            }}
+                                            onClick={(event) => {
+                                                event.stopPropagation();
+
+                                                dispatch(deleteAssetThunk(asset._id));
+                                            }}
+                                            onMouseEnter={(event) => {
+                                                event.currentTarget.style.backgroundColor = '#000';
+                                                event.currentTarget.style.borderColor = '#ff0000';
+                                            }}
+                                            onMouseLeave={(event) => {
+                                                event.currentTarget.style.backgroundColor = '#fff';
+                                                event.currentTarget.style.borderColor = '#fff';
+                                            }}
+                                        >
+                                            <IconTrash size={20} color="#ff0000" />
+                                        </button>
+                                        <img
+                                            src={asset.image}
+                                            alt="bg"
+                                            width={300}
+                                            height={300}
+                                            style={{
+                                                objectFit: 'cover',
+                                                borderTopLeftRadius: 10,
+                                                borderTopRightRadius: 10,
+                                            }}
+                                        />
+                                        <Box
+                                            sx={{
+                                                backgroundColor: '#e6e6e6',
+                                                padding: '10px',
+                                                marginTop: -1,
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                gap: 1,
+                                                borderBottomLeftRadius: 10,
+                                                borderBottomRightRadius: 10,
+                                            }}
+                                        >
+                                            <Typography
+                                                variant="h6"
+                                                sx={{
+                                                    textAlign: 'left',
+                                                }}
+                                            >
+                                                {asset.title}
+                                            </Typography>
+                                            <Box display="flex" alignItems="center" gap={1}>
+                                                {asset.status === 'SOLD' && (
+                                                    <IconCircleFilled
+                                                        size={20}
+                                                        style={{
+                                                            color: '#ff0000',
+                                                        }}
+                                                    />
+                                                )}
+                                                <Typography>{asset.status}</Typography>
+                                            </Box>
+                                            <Button
+                                                variant="text"
+                                                style={{ color: '#000', textDecoration: 'underline' }}
+                                            >
+                                                View
+                                            </Button>
+                                        </Box>
+                                    </button>
+                                </Grid>
+                            ))}
                         </Grid>
-                    </Grid>
+                    </Box>
                 </Box>
             </PageContainer>
         </Container>

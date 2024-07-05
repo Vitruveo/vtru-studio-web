@@ -13,6 +13,14 @@ export interface Wallet {
     archived: boolean;
 }
 
+export interface Assets {
+    _id: string;
+    title: string;
+    image: string;
+    status: string;
+    collections: string[];
+}
+
 export interface User {
     _id: string;
     name: string;
@@ -54,6 +62,8 @@ export interface User {
             avatar: string;
         };
     };
+    assets: Assets[];
+    selectedAsset: string;
 }
 
 export interface vaultProps {
