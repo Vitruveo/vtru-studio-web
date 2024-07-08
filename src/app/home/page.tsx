@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Container, MenuItem, Select, Box, Grid, Typography } from '@mui/material';
-import { IconCircle, IconCircleFilled, IconPlus, IconTrash } from '@tabler/icons-react';
+import { Button, Container, MenuItem, Select, Box, Grid, Typography, CircularProgress } from '@mui/material';
+import { IconCircleFilled, IconPlus, IconTrash } from '@tabler/icons-react';
+import RSelect from 'react-select';
 import Image from 'next/image';
 
 import { useDispatch, useSelector } from '@/store/hooks';
@@ -26,6 +27,8 @@ export default function Home() {
 
     const [collectionSelected, setCollectionSelected] = useState('all');
     const [filterSelected, setFilterSelected] = useState('all');
+    const [cloneId, setCloneId] = useState<string | undefined>(undefined);
+    const [loading, setLoading] = useState(false);
 
     const texts = {
         title: language['studio.home.title'],
@@ -77,6 +80,26 @@ export default function Home() {
             }}
         >
             <PageContainer title={texts.title}>
+                {loading ? (
+                    <div
+                        style={{
+                            position: 'absolute',
+                            top: '0',
+                            left: '0',
+                            width: '100%',
+                            height: '100%',
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            zIndex: 1000,
+                        }}
+                    >
+                        <CircularProgress size={100} />
+                    </div>
+                ) : (
+                    <></>
+                )}
                 <Box pb={10} paddingInline={3}>
                     <Box display="flex" flexWrap="wrap" rowGap={1} alignItems="center">
                         <Typography marginRight={1} fontSize="1.7rem" alignSelf="center">
@@ -111,28 +134,65 @@ export default function Home() {
                                 border: 'none',
                                 cursor: 'pointer',
                                 transition: '0.3s',
-                            }}
-                            onMouseEnter={(event) => {
-                                event.currentTarget.style.backgroundColor = '#C4AAB3';
-                            }}
-                            onMouseLeave={(event) => {
-                                event.currentTarget.style.backgroundColor = '#D8C2D9';
-                            }}
-                            onClick={async () => {
-                                const assetId = await dispatch(createNewAssetThunk());
-                                dispatch(userActionsCreators.setSelectedAsset(assetId));
-                                router.push('/home/consignArtwork');
+                                justifyContent: 'space-between',
                             }}
                         >
-                            <IconPlus
-                                size={40}
-                                style={{
-                                    backgroundColor: '#fff',
-                                    borderRadius: '5px',
-                                    padding: '5px',
+                            <div
+                                onClick={async () => {
+                                    setLoading(true);
+                                    const assetId = await dispatch(createNewAssetThunk(cloneId));
+                                    dispatch(userActionsCreators.setSelectedAsset(assetId));
+                                    router.push('/home/consignArtwork');
+                                    setLoading(false);
                                 }}
-                            />
-                            <Typography sx={{ fontSize: 22 }}>Consign a new asset</Typography>
+                                onMouseEnter={(event) => {
+                                    event.currentTarget.style.color = '#fff';
+                                }}
+                                onMouseLeave={(event) => {
+                                    event.currentTarget.style.color = '#000';
+                                }}
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    gap: 10,
+                                    alignItems: 'center',
+                                    transition: '0.3s',
+                                }}
+                            >
+                                <IconPlus
+                                    size={40}
+                                    style={{
+                                        backgroundColor: '#fff',
+                                        borderRadius: '5px',
+                                        padding: '5px',
+                                        transition: '0.3s',
+                                    }}
+                                    onMouseEnter={(event) => {
+                                        // rotate on hover
+                                        event.currentTarget.style.transform = 'rotate(180deg)';
+                                    }}
+                                    onMouseLeave={(event) => {
+                                        event.currentTarget.style.transform = 'rotate(0deg)';
+                                    }}
+                                    color="#000"
+                                />
+                                <Typography sx={{ fontSize: 22 }}>Consign a new asset</Typography>
+                            </div>
+                            <RSelect
+                                placeholder="Clone and consign from..."
+                                options={assets.map((asset) => ({
+                                    value: asset._id,
+                                    label: asset.title,
+                                }))}
+                                onChange={(event) => setCloneId(event?.value)}
+                                isClearable
+                                styles={{
+                                    container: (provided) => ({
+                                        ...provided,
+                                        minWidth: 200,
+                                    }),
+                                }}
+                            ></RSelect>
                         </button>
                     </Box>
                     <Box display="flex" alignItems="center" justifyContent="space-between" mt={2}>

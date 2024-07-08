@@ -86,10 +86,12 @@ export async function getAssetById(id: string): Promise<GetAssetApiRes> {
     return res;
 }
 
-export async function createNewAsset(): Promise<CreateAssetApiRes> {
+export async function createNewAsset(cloneId?: string): Promise<CreateAssetApiRes> {
     const res = await apiService.post<{
         insertedId: string;
-    }>('/assets', {});
+    }>('/assets', {
+        ...(cloneId && { cloneId }),
+    });
     return res;
 }
 
