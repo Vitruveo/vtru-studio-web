@@ -4,7 +4,9 @@ import {
     AssetSendRequestUploadApiRes,
     AssetSendRequestUploadReq,
     AssetStorageReq,
+    CreateAssetApiRes,
     GetAssetApiRes,
+    GetAssetsApiRes,
     RequestDeleteFilesReq,
     SigningMediaC2PAReq,
     UpdateAssetStepApiRes,
@@ -65,7 +67,7 @@ export async function assetStorage({ file, url, dispatch, transactionId }: Asset
 }
 
 export async function updateAssetStep(data: UpdateAssetStepReq): Promise<UpdateAssetStepApiRes> {
-    const res = await apiService.put<string>('/assets', data);
+    const res = await apiService.put<string>(`/assets/${data.id}/form`, data);
     return res;
 }
 
@@ -74,8 +76,32 @@ export async function getAsset(): Promise<GetAssetApiRes> {
     return res;
 }
 
+export async function getMyAssets(): Promise<GetAssetsApiRes> {
+    const res = await apiService.get<Asset[]>(`/assets`);
+    return res;
+}
+
+export async function getAssetById(id: string): Promise<GetAssetApiRes> {
+    const res = await apiService.get<Asset>(`/assets/${id}`);
+    return res;
+}
+
+export async function createNewAsset(cloneId?: string): Promise<CreateAssetApiRes> {
+    const res = await apiService.post<{
+        insertedId: string;
+    }>('/assets', {
+        ...(cloneId && { cloneId }),
+    });
+    return res;
+}
+
+export async function deleteAsset(id: string): Promise<any> {
+    const res = await apiService.delete(`/assets/${id}/form`);
+    return res;
+}
+
 export async function sendRequestUpload(data: AssetSendRequestUploadReq): Promise<AssetSendRequestUploadApiRes> {
-    const res = await apiService.post<string>('/assets/request/upload', data);
+    const res = await apiService.post<string>(`/assets/request/upload/${data.id}`, data);
     return res;
 }
 
@@ -94,8 +120,8 @@ export async function extractAssetColors(id: string) {
     return res;
 }
 
-export async function validationConsign() {
-    return apiService.get('/assets/consign/validation');
+export async function validationConsign(id: string) {
+    return apiService.get(`/assets/consign/validation/${id}`);
 }
 
 export async function consign(id: string) {
@@ -106,10 +132,10 @@ export async function eventsByTransaction(transaction: string) {
     return axios.get(`${BASE_URL_BATCH}/events/${transaction}`);
 }
 
-export async function requestConsign() {
-    return apiService.post(`/requestConsign`, {});
+export async function requestConsign(id: string) {
+    return apiService.post(`/requestConsign/${id}`, {});
 }
 
-export async function deleteRequestConsign() {
-    return apiService.delete('/requestConsign');
+export async function deleteRequestConsign(id: string) {
+    return apiService.delete(`/requestConsign/${id}`);
 }
