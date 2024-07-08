@@ -117,6 +117,7 @@ export interface HistoryItems {
 }
 
 export interface AssetSendRequestUploadReq {
+    id: string;
     mimetype: string;
     originalName: string;
     transactionId: string;
@@ -159,7 +160,10 @@ export interface RequestDeleteFilesReq {
     transactionId: string;
 }
 
-export interface UpdateAssetStepReq {}
+export interface UpdateAssetStepReq {
+    id: string;
+    [key: string]: any;
+}
 
 export interface SigningMediaC2PAReq {
     filename: string;
@@ -183,4 +187,8 @@ export type UpdateAssetStepApiRes = APIResponse<string>;
 export type UploadIPFSByAssetIdApiRes = void;
 export type CreateContractApiRes = void;
 export type GetAssetApiRes = APIResponse<Asset>;
+export type CreateAssetApiRes = APIResponse<{
+    insertedId: string;
+}>;
+export type GetAssetsApiRes = APIResponse<Asset[]>;
 export type AssetSendRequestUploadApiRes = APIResponse<string>;

@@ -31,6 +31,7 @@ const ConsignArtwork = () => {
     const dispatch = useDispatch();
 
     const { status } = useSelector((state) => state.asset);
+    const selectedAsset = useSelector((state) => state.user.selectedAsset);
     const { previewAndConsign } = useSelector((state) => state.consignArtwork);
     const { completedSteps } = useSelector((state) => state.consignArtwork);
     const hasContract = useSelector((state) => state.asset?.contractExplorer?.explorer);
@@ -78,7 +79,7 @@ const ConsignArtwork = () => {
     const xs = useMediaQuery((them: Theme) => them.breakpoints.up('xs'));
 
     useEffect(() => {
-        dispatch(getAssetThunk());
+        dispatch(getAssetThunk(selectedAsset));
     }, []);
 
     useEffect(() => {

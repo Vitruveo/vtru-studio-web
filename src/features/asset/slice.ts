@@ -196,7 +196,9 @@ export const assetSlice = createSlice({
         },
         // TODO: CORRIGIR TIPAGEM
         setArEnabled: (state: any, action: PayloadAction<boolean>) => {
-            state.assetMetadata.taxonomy.formData.arenabled = action.payload == true ? 'yes' : 'no';
+            if (state.assetMetadata?.taxonomy) {
+                state.assetMetadata.taxonomy.formData.arenabled = action.payload == true ? 'yes' : 'no';
+            }
         },
         setTempColors: (state, action: PayloadAction<number[][]>) => {
             state.tempColors = action.payload;
@@ -239,6 +241,9 @@ export const assetSlice = createSlice({
         },
         setRequestConsignStatusDraft: (state) => {
             state.consignArtwork!.status = 'draft';
+        },
+        resetAsset: (state) => {
+            return initialState;
         },
     },
 });

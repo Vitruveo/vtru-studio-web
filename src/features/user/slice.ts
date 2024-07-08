@@ -58,6 +58,8 @@ const initialState: UserSliceState = {
             avatar: '',
         },
     },
+    assets: [],
+    selectedAsset: '',
 };
 
 export const userSlice = createSlice({
@@ -139,6 +141,15 @@ export const userSlice = createSlice({
         },
         setVaultLoading: (state, action: PayloadAction<boolean>) => {
             state.vault.isLoading = action.payload;
+        },
+        setMyAssets: (state, action: PayloadAction<UserSliceState['assets']>) => {
+            state.assets = action.payload;
+        },
+        setSelectedAsset: (state, action: PayloadAction<string>) => {
+            state.selectedAsset = action.payload;
+        },
+        removeAsset: (state, action: PayloadAction<string>) => {
+            state.assets = state.assets.filter((asset) => asset._id !== action.payload);
         },
     },
 });

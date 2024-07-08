@@ -14,6 +14,7 @@ export function updateStatus(status: ConsignArtworkAssetStatus): ReduxThunkActio
                 consignArtwork: {
                     status: status,
                 },
+                id: getState().user.selectedAsset,
             });
             dispatch(consignArtworkActionsCreators.changeConsignArtworkAssetStatus({ status: status }));
             dispatch(
