@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Container, MenuItem, Select, Box, Grid, Typography, CircularProgress } from '@mui/material';
+import { Button, Container, MenuItem, Select, Box, Grid, Typography, CircularProgress, Tooltip } from '@mui/material';
 import { IconCircleFilled, IconPlus, IconTrash } from '@tabler/icons-react';
 import RSelect from 'react-select';
 import Image from 'next/image';
@@ -71,6 +71,14 @@ export default function Home() {
         return data.filter((asset: any) => asset?.status?.toUpperCase() === filterSelected.toUpperCase());
     }, [data, filterSelected]);
 
+    const handleCreateNewAsset = async (assetClonedId?: string) => {
+        setLoading(true);
+        const assetId = await dispatch(createNewAssetThunk(assetClonedId || cloneId));
+        dispatch(userActionsCreators.setSelectedAsset(assetId));
+        router.push('/home/consignArtwork');
+        setLoading(false);
+    };
+
     return (
         <Container
             sx={{
@@ -138,13 +146,7 @@ export default function Home() {
                             }}
                         >
                             <div
-                                onClick={async () => {
-                                    setLoading(true);
-                                    const assetId = await dispatch(createNewAssetThunk(cloneId));
-                                    dispatch(userActionsCreators.setSelectedAsset(assetId));
-                                    router.push('/home/consignArtwork');
-                                    setLoading(false);
-                                }}
+                                onClick={() => handleCreateNewAsset()}
                                 onMouseEnter={(event) => {
                                     event.currentTarget.style.color = '#fff';
                                 }}
@@ -259,36 +261,67 @@ export default function Home() {
                                             router.push('/home/consignArtwork');
                                         }}
                                     >
-                                        <button
-                                            style={{
-                                                position: 'absolute',
-                                                top: 10,
-                                                right: 10,
-                                                backgroundColor: '#fff',
-                                                color: '#000',
+                                        <Tooltip title="Duplicate asset" placement="top">
+                                            <button
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: 10,
+                                                    right: 10,
+                                                    backgroundColor: '#fff',
+                                                    color: '#000',
 
-                                                padding: '5px',
-                                                borderRadius: '5px',
-                                                cursor: 'pointer',
-                                                transition: '0.3s',
-                                                border: '1px solid #fff',
-                                            }}
-                                            onClick={(event) => {
-                                                event.stopPropagation();
+                                                    padding: '5px',
+                                                    borderRadius: '5px',
+                                                    cursor: 'pointer',
+                                                    transition: '0.3s',
+                                                    border: '1px solid #fff',
+                                                }}
+                                                onMouseEnter={(event) => {
+                                                    event.currentTarget.style.backgroundColor = '#000';
+                                                    event.currentTarget.style.borderColor = '#13DFAA';
+                                                }}
+                                                onMouseLeave={(event) => {
+                                                    event.currentTarget.style.backgroundColor = '#fff';
+                                                    event.currentTarget.style.borderColor = '#fff';
+                                                }}
+                                                onClick={() => handleCreateNewAsset(asset._id)}
+                                            >
+                                                <IconPlus size={20} color="#13DFAA" />
+                                            </button>
+                                        </Tooltip>
+                                        <Tooltip title="Delete asset" placement="top">
+                                            <button
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: 60,
+                                                    right: 10,
+                                                    backgroundColor: '#fff',
+                                                    color: '#000',
 
-                                                dispatch(deleteAssetThunk(asset._id));
-                                            }}
-                                            onMouseEnter={(event) => {
-                                                event.currentTarget.style.backgroundColor = '#000';
-                                                event.currentTarget.style.borderColor = '#ff0000';
-                                            }}
-                                            onMouseLeave={(event) => {
-                                                event.currentTarget.style.backgroundColor = '#fff';
-                                                event.currentTarget.style.borderColor = '#fff';
-                                            }}
-                                        >
-                                            <IconTrash size={20} color="#ff0000" />
-                                        </button>
+                                                    padding: '5px',
+                                                    borderRadius: '5px',
+                                                    cursor: 'pointer',
+                                                    transition: '0.3s',
+                                                    border: '1px solid #fff',
+                                                }}
+                                                onClick={(event) => {
+                                                    event.stopPropagation();
+
+                                                    dispatch(deleteAssetThunk(asset._id));
+                                                }}
+                                                onMouseEnter={(event) => {
+                                                    event.currentTarget.style.backgroundColor = '#000';
+                                                    event.currentTarget.style.borderColor = '#ff0000';
+                                                }}
+                                                onMouseLeave={(event) => {
+                                                    event.currentTarget.style.backgroundColor = '#fff';
+                                                    event.currentTarget.style.borderColor = '#fff';
+                                                }}
+                                            >
+                                                <IconTrash size={20} color="#ff0000" />
+                                            </button>
+                                        </Tooltip>
+
                                         <img
                                             src={asset.image}
                                             alt="bg"
