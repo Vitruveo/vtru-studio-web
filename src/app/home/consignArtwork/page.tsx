@@ -79,8 +79,8 @@ const ConsignArtwork = () => {
     const xs = useMediaQuery((them: Theme) => them.breakpoints.up('xs'));
 
     useEffect(() => {
-        dispatch(getAssetThunk(selectedAsset));
-    }, []);
+        if (selectedAsset) dispatch(getAssetThunk(selectedAsset));
+    }, [selectedAsset]);
 
     useEffect(() => {
         if (checkAllCompletedSteps) {
