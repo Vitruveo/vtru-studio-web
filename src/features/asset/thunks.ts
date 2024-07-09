@@ -223,6 +223,8 @@ export function getAssetThunk(id: string): ReduxThunkAction<Promise<any>> {
                             status: 'notStarted',
                         })
                     );
+                    // clear assetMedia
+                    dispatch(assetActionsCreators.changeFormats({}));
                 }
 
                 if (
