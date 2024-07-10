@@ -23,6 +23,7 @@
     align-items: flex-start;
 }
 
+
 .MuiBox-root > .form-group > div.MuiBox-root:nth-child(1) {
     display: none;
 }
