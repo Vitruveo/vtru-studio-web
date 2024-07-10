@@ -13,6 +13,7 @@ import { requestMyAssetsThunk } from '@/features/user/thunks';
 import { userActionsCreators } from '@/features/user/slice';
 import { createNewAssetThunk, deleteAssetThunk } from '@/features/asset/thunks';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
+import { assetActionsCreators } from '@/features/asset/slice';
 import PageContainer from '@/app/home/components/container/PageContainer';
 import { MintExplorer } from '@/features/user/types';
 import { relative } from 'path';
@@ -62,6 +63,7 @@ export default function Home() {
     useEffect(() => {
         dispatch(userActionsCreators.setSelectedAsset(''));
         dispatch(consignArtworkActionsCreators.resetConsignArtwork());
+        dispatch(assetActionsCreators.resetAsset());
         dispatch(requestMyAssetsThunk());
     }, []);
 
@@ -96,10 +98,11 @@ export default function Home() {
 
     const handleCreateNewAsset = async (assetClonedId?: string) => {
         setLoading(true);
-        const assetId = await dispatch(createNewAssetThunk(assetClonedId || cloneId));
-        dispatch(userActionsCreators.setSelectedAsset(assetId));
-        router.push('/home/consignArtwork');
-        setLoading(false);
+        dispatch(createNewAssetThunk(assetClonedId || cloneId))
+            .then(() => {
+                router.push('/home/consignArtwork');
+            })
+            .finally(() => setLoading(false));
     };
 
     return (
