@@ -13,6 +13,7 @@ import { requestMyAssetsThunk } from '@/features/user/thunks';
 import { userActionsCreators } from '@/features/user/slice';
 import { createNewAssetThunk, deleteAssetThunk } from '@/features/asset/thunks';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
+import { assetActionsCreators } from '@/features/asset/slice';
 import PageContainer from '@/app/home/components/container/PageContainer';
 
 const filters = ['Draft', 'Pending', 'Listed', 'Sold', 'All'];
@@ -42,6 +43,7 @@ export default function Home() {
     useEffect(() => {
         dispatch(userActionsCreators.setSelectedAsset(''));
         dispatch(consignArtworkActionsCreators.resetConsignArtwork());
+        dispatch(assetActionsCreators.resetAsset());
         dispatch(requestMyAssetsThunk());
     }, []);
 
