@@ -75,8 +75,7 @@ export default function Home() {
 
     const handleCreateNewAsset = async (assetClonedId?: string) => {
         setLoading(true);
-        const assetId = await dispatch(createNewAssetThunk(assetClonedId || cloneId));
-        dispatch(userActionsCreators.setSelectedAsset(assetId));
+        dispatch(createNewAssetThunk(assetClonedId || cloneId));
         router.push('/home/consignArtwork');
         setLoading(false);
     };

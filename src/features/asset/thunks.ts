@@ -65,11 +65,11 @@ export function assetStorageThunk(payload: Omit<AssetStorageReq, 'dispatch'>): R
     };
 }
 
-export function createNewAssetThunk(cloneId?: string): ReduxThunkAction<Promise<string>> {
+export function createNewAssetThunk(cloneId?: string): ReduxThunkAction<Promise<void>> {
     return async function (dispatch, getState) {
         const response = await createNewAsset(cloneId);
 
-        return response.data?.insertedId || '';
+        dispatch(userActionsCreators.setSelectedAsset(response.data?.insertedId || ''));
     };
 }
 
