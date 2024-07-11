@@ -287,7 +287,10 @@ export default function Home() {
                                                     event.currentTarget.style.backgroundColor = '#fff';
                                                     event.currentTarget.style.borderColor = '#fff';
                                                 }}
-                                                onClick={() => handleCreateNewAsset(asset._id)}
+                                                onClick={(event) => {
+                                                    event.stopPropagation();
+                                                    handleCreateNewAsset(asset._id);
+                                                }}
                                             >
                                                 <IconPlus size={20} color="#13DFAA" />
                                             </button>
