@@ -15,8 +15,28 @@ import { createNewAssetThunk, deleteAssetThunk } from '@/features/asset/thunks';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { assetActionsCreators } from '@/features/asset/slice';
 import PageContainer from '@/app/home/components/container/PageContainer';
+import { MintExplorer } from '@/features/user/types';
+import { LicensesFormValues } from './consignArtwork/licenses/types';
 
 const filters = ['Draft', 'Pending', 'Listed', 'Sold', 'All'];
+
+const getButtonText = (status: string, mintExplorer?: MintExplorer) => {
+    if (status.toUpperCase() === 'DRAFT') return 'Edit';
+    if (status.toUpperCase() === 'PENDING') return 'View';
+    if (status.toUpperCase() === 'ACTIVE' && mintExplorer?.transactionHash) return 'View Transaction';
+    if (status.toUpperCase() === 'ACTIVE') return 'View Listing';
+    return 'View';
+};
+
+const getStatusText = (status: string, mintExplorer?: MintExplorer) => {
+    if (status.toUpperCase() === 'ACTIVE' && mintExplorer?.transactionHash) return 'Sold';
+    if (status.toUpperCase() === 'ACTIVE') return 'Listed';
+    return status;
+};
+
+const getPriceText = (licenses: LicensesFormValues) => {
+    return licenses?.nft.elastic.editionPrice ? `Price: ${licenses.nft.elastic.editionPrice}` : '';
+};
 
 export default function Home() {
     const { language } = useI18n();
@@ -70,7 +90,10 @@ export default function Home() {
             return data;
         }
 
-        return data.filter((asset: any) => asset?.status?.toUpperCase() === filterSelected.toUpperCase());
+        return data.filter((asset: any) => {
+            const statusText = getStatusText(asset.status, asset.mintExplorer);
+            return statusText.toUpperCase() === filterSelected.toUpperCase();
+        });
     }, [data, filterSelected]);
 
     const handleCreateNewAsset = async (assetClonedId?: string) => {
@@ -239,9 +262,18 @@ export default function Home() {
                         </Box>
                     </Box>
                     <Box mt={2}>
-                        <Grid container spacing={12}>
+                        <Grid container spacing={2} padding={2}>
                             {dataFiltered.map((asset, index) => (
-                                <Grid item key={index} sm={6} md={4} lg={3}>
+                                <Grid
+                                    item
+                                    key={index}
+                                    sm={6}
+                                    md={4}
+                                    lg={3}
+                                    sx={{
+                                        marginRight: '75px',
+                                    }}
+                                >
                                     <button
                                         style={{
                                             backgroundColor: '#fff',
@@ -349,32 +381,69 @@ export default function Home() {
                                                 gap: 1,
                                                 borderBottomLeftRadius: 10,
                                                 borderBottomRightRadius: 10,
+                                                height: 90,
                                             }}
                                         >
                                             <Typography
                                                 variant="h6"
                                                 sx={{
                                                     textAlign: 'left',
+                                                    marginBottom: '-10px',
                                                 }}
                                             >
                                                 {asset.title}
                                             </Typography>
-                                            <Box display="flex" alignItems="center" gap={1}>
-                                                {asset.status === 'SOLD' && (
-                                                    <IconCircleFilled
-                                                        size={20}
-                                                        style={{
-                                                            color: '#ff0000',
-                                                        }}
-                                                    />
-                                                )}
-                                                <Typography>{asset.status}</Typography>
+                                            <Box display="flex" alignItems="center" gap={1} marginBottom={0}>
+                                                <Typography>
+                                                    {getStatusText(asset.status, asset.mintExplorer)}
+                                                </Typography>
                                             </Box>
+                                            <Typography
+                                                sx={{
+                                                    textAlign: 'left',
+                                                    marginTop: '-10px',
+                                                    color:
+                                                        asset?.licenses?.nft.single.editionPrice === 0
+                                                            ? 'transparent'
+                                                            : 'inherit',
+                                                    marginBottom:
+                                                        asset?.licenses?.nft.single.editionPrice === 0
+                                                            ? 'transparent'
+                                                            : '0px',
+                                                }}
+                                            >
+                                                {asset.mintExplorer
+                                                    ? `$${asset?.licenses?.nft.single.editionPrice}.00`
+                                                    : asset?.licenses?.nft.single.editionPrice}
+                                            </Typography>
+
+                                            {asset.mintExplorer && (
+                                                <IconCircleFilled
+                                                    size={20}
+                                                    style={{
+                                                        color: '#ff0000',
+                                                        position: 'absolute',
+                                                        bottom: '20px',
+                                                        left: '260px',
+                                                    }}
+                                                />
+                                            )}
+                                            <Typography>{getPriceText(asset.licenses)}</Typography>
                                             <Button
                                                 variant="text"
-                                                style={{ color: '#000', textDecoration: 'underline' }}
+                                                style={{
+                                                    color: '#000',
+                                                    textDecoration: 'underline',
+                                                    textAlign: 'left',
+                                                    justifyContent: 'flex-start',
+                                                    float: 'left',
+                                                    paddingLeft: '0',
+                                                    position: 'relative',
+                                                    top: '-20px',
+                                                    paddingTop: '0',
+                                                }}
                                             >
-                                                View
+                                                {getButtonText(asset.status, asset.mintExplorer)}
                                             </Button>
                                         </Box>
                                     </button>

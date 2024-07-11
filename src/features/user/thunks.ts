@@ -390,6 +390,8 @@ export function requestMyAssetsThunk(): ReduxThunkAction<Promise<void>> {
                                 : `${ASSET_STORAGE_URL}/${asset.formats.preview.path}`,
                             status: asset.consignArtwork?.status || 'Draft',
                             collections: asset?.assetMetadata?.taxonomy?.formData?.collections || [],
+                            mintExplorer: asset?.mintExplorer,
+                            licenses: asset?.licenses,
                         }))
                     )
                 );
