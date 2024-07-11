@@ -1,7 +1,7 @@
 'use client';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { UserSliceState, vaultProps } from './types';
+import { UserSliceState, VaultProps } from './types';
 
 const initialState: UserSliceState = {
     _id: '',
@@ -135,7 +135,7 @@ export const userSlice = createSlice({
         setCanConsignArtwork: (state, action: PayloadAction<boolean>) => {
             state.canConsignArtwork = action.payload;
         },
-        setVault: (state, action: PayloadAction<vaultProps>) => {
+        setVault: (state, action: PayloadAction<VaultProps>) => {
             state.vault.transactionHash = action.payload.transactionHash;
             state.vault.createdAt = action.payload.createdAt;
         },

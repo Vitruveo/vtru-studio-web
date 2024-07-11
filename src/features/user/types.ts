@@ -1,6 +1,7 @@
 import { StepsFormValues } from '@/app/home/consignArtwork/types';
 import { APIResponse, Framework } from '../common/types';
 import { AccountSettingsFormValues } from '@/app/home/myProfile/types';
+import { LicensesFormValues } from '@/app/home/consignArtwork/licenses/types';
 
 export interface Email {
     email: string;
@@ -19,8 +20,8 @@ export interface Assets {
     image: string;
     status: string;
     collections: string[];
+    licenses: LicensesFormValues;
     mintExplorer?: MintExplorer;
-    licenses?: MintExplorer;
 }
 
 export interface User {
@@ -234,13 +235,3 @@ export interface MintExplorer {
     address: string | null;
     createdAt: string | null;
 }
-
-export interface licenses {
-    transactionHash: string;
-    explorerUrl: string | null;
-    address: string | null;
-    createdAt: string | null;
-}
-
-
-

@@ -16,7 +16,7 @@ import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { assetActionsCreators } from '@/features/asset/slice';
 import PageContainer from '@/app/home/components/container/PageContainer';
 import { MintExplorer } from '@/features/user/types';
-import { relative } from 'path';
+import { LicensesFormValues } from './consignArtwork/licenses/types';
 
 const filters = ['Draft', 'Pending', 'Listed', 'Sold', 'All'];
 
@@ -34,8 +34,8 @@ const getStatusText = (status: string, mintExplorer?: MintExplorer) => {
     return status;
 };
 
-const getPriceText = (licenses: any) => {
-    return licenses?.print?.unitPrice ? `Price: ${licenses.print.unitPrice}` : '';
+const getPriceText = (licenses: LicensesFormValues) => {
+    return licenses?.nft.elastic.editionPrice ? `Price: ${licenses.nft.elastic.editionPrice}` : '';
 };
 
 export default function Home() {
@@ -396,23 +396,22 @@ export default function Home() {
                                                 </Typography>
                                             </Box>
                                             <Typography
-                                                size={20}
                                                 sx={{
                                                     textAlign: 'left',
                                                     marginTop: '-10px',
                                                     color:
-                                                        asset.licenses.nft.single.editionPrice === 0
+                                                        asset?.licenses?.nft.single.editionPrice === 0
                                                             ? 'transparent'
                                                             : 'inherit',
                                                     marginBottom:
-                                                        asset.licenses.nft.single.editionPrice === 0
+                                                        asset?.licenses?.nft.single.editionPrice === 0
                                                             ? 'transparent'
                                                             : '0px',
                                                 }}
                                             >
                                                 {asset.mintExplorer
-                                                    ? `$${asset.licenses.nft.single.editionPrice}.00`
-                                                    : asset.licenses.nft.single.editionPrice}
+                                                    ? `$${asset?.licenses?.nft.single.editionPrice}.00`
+                                                    : asset?.licenses?.nft.single.editionPrice}
                                             </Typography>
 
                                             {asset.mintExplorer && (
