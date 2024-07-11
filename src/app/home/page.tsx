@@ -262,18 +262,9 @@ export default function Home() {
                         </Box>
                     </Box>
                     <Box mt={2}>
-                        <Grid container spacing={2} padding={2}>
+                        <Grid container spacing={3} padding={3}>
                             {dataFiltered.map((asset, index) => (
-                                <Grid
-                                    item
-                                    key={index}
-                                    sm={6}
-                                    md={4}
-                                    lg={3}
-                                    sx={{
-                                        marginRight: '75px',
-                                    }}
-                                >
+                                <Grid item key={index} sm={6} md={6} lg={4}>
                                     <button
                                         style={{
                                             backgroundColor: '#fff',
@@ -403,18 +394,18 @@ export default function Home() {
                                                     textAlign: 'left',
                                                     marginTop: '-10px',
                                                     color:
-                                                        asset?.licenses?.nft.single.editionPrice === 0
-                                                            ? 'transparent'
-                                                            : 'inherit',
+                                                        getStatusText(asset.status, asset.mintExplorer) === 'Sold'
+                                                            ? 'inherit'
+                                                            : 'transparent',
                                                     marginBottom:
-                                                        asset?.licenses?.nft.single.editionPrice === 0
-                                                            ? 'transparent'
-                                                            : '0px',
+                                                        getStatusText(asset.status, asset.mintExplorer) === 'Sold'
+                                                            ? '0px'
+                                                            : '20px',
                                                 }}
                                             >
                                                 {asset.mintExplorer
                                                     ? `$${asset?.licenses?.nft.single.editionPrice}.00`
-                                                    : asset?.licenses?.nft.single.editionPrice}
+                                                    : ''}
                                             </Typography>
 
                                             {asset.mintExplorer && (
