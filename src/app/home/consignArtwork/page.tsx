@@ -119,7 +119,7 @@ const ConsignArtwork = () => {
                 <Grid container>
                     <Grid item md={12} lg={6}>
                         <Box marginBottom={2}>
-                            <Stack gap={1}>
+                            <Stack gap={1} pl={2}>
                                 <Typography variant="h6" fontWeight="normal" color="GrayText">
                                     {texts.consignArtworkSubtitle}
                                 </Typography>

@@ -102,7 +102,7 @@ export const CompletedConsignPage = () => {
                 />
                 <Grid display="flex" flexWrap="wrap" marginBottom={6} item xs={12} lg={6}>
                     <Box marginBottom={2}>
-                        <Box>
+                        <Box pl={2}>
                             <Typography variant="h6" fontWeight="normal" color="GrayText">
                                 {texts.consignedTitle}
                             </Typography>
