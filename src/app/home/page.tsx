@@ -50,6 +50,7 @@ const filters = ['Draft', 'Pending', 'Listed', 'Sold', 'All'];
 
 const getButtonText = (status: string, mintExplorer?: MintExplorer) => {
     if (status.toUpperCase() === 'DRAFT') return 'Edit';
+    if (status.toUpperCase() === 'REJECTED') return 'Edit';
     if (status.toUpperCase() === 'PENDING') return 'View';
     if (status.toUpperCase() === 'ACTIVE' && mintExplorer?.transactionHash) return 'View Transaction';
     if (status.toUpperCase() === 'ACTIVE') return 'View Listing';
@@ -59,7 +60,7 @@ const getButtonText = (status: string, mintExplorer?: MintExplorer) => {
 const getStatusText = (status: string, mintExplorer?: MintExplorer) => {
     if (status.toUpperCase() === 'ACTIVE' && mintExplorer?.transactionHash) return 'Sold';
     if (status.toUpperCase() === 'ACTIVE') return 'Listed';
-    return status;
+    return status.charAt(0).toUpperCase() + status.slice(1);
 };
 
 const getStatus = (status: string, mintExplorer?: MintExplorer) => {
@@ -67,6 +68,7 @@ const getStatus = (status: string, mintExplorer?: MintExplorer) => {
     if (status.toUpperCase() === 'PENDING') return 'Pending';
     if (status.toUpperCase() === 'ACTIVE' && mintExplorer?.transactionHash) return 'Sold';
     if (status.toUpperCase() === 'ACTIVE') return 'Listed';
+    if (status.toUpperCase() === 'REJECTED') return 'Rejected';
     return status;
 };
 
@@ -480,6 +482,9 @@ export default function Home() {
                                                     : ''}
                                             </Typography>
                                             {getStatus(asset.status, asset.mintExplorer) === 'Draft' && (
+                                                <IconEdit style={iconStyle} />
+                                            )}
+                                            {getStatus(asset.status, asset.mintExplorer) === 'Rejected' && (
                                                 <IconEdit style={iconStyle} />
                                             )}
                                             {getStatus(asset.status, asset.mintExplorer) === 'Pending' && (
