@@ -63,7 +63,6 @@ const language: Translation = {
     'studio.consignArtwork.title': 'قرارداد آثار هنری',
     'studio.consignArtwork.subtitle.moreInformation': 'برای اطلاعات بیشتر به سایت',
     'studio.consignArtwork.subtitle': 'تمام وظایف مورد نیاز را انجام دهید و اثر هنری خود را امضاء کنید',
-    'studio.consignArtwork.assetPreview': 'پیش نمایش دارایی',
 
     'studio.consignArtwork.stepName.assetMedia': 'رسانه دارایی',
     'studio.consignArtwork.stepName.assetMetadata': 'فهرست دارایی',

@@ -5,7 +5,6 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
 import BlankCard from '@/app/home/components/shared/BlankCard';
-import { useI18n } from '@/app/hooks/useI18n';
 import { ASSET_STORAGE_URL, NO_IMAGE_ASSET } from '@/constants/asset';
 import Image from 'next/image';
 
@@ -31,12 +30,6 @@ const AssetMediaPreview = (props: AssetMediaPreviewProps) => {
     const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const smUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
 
-    const { language } = useI18n();
-
-    const texts = {
-        preview: language['studio.consignArtwork.assetPreview'],
-    } as { [key: string]: string };
-
     const handleError = () => {};
 
     const handleLoad = () => {
@@ -53,10 +46,7 @@ const AssetMediaPreview = (props: AssetMediaPreviewProps) => {
             style={{ opacity: fileIsload ? 0 : 1, display: fileIsload ? 'none' : '' }}
         >
             <Box display={'flex'} gap={2}>
-                <Typography marginBottom={2} fontSize="1.2rem" fontWeight="500">
-                    {texts.preview}
-                </Typography>
-                <Typography marginBottom={2} fontSize="1.2rem" fontWeight="100">
+                <Typography variant="h3" mb={1}>
                     {(assetMetadata?.context.formData as any)?.title ?? 'Untitled'}
                 </Typography>
             </Box>
