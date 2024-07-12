@@ -78,7 +78,7 @@ const language: Translation = {
     'studio.consignArtwork.stepStatus.completed': 'تکمیل شده',
     'studio.consignArtwork.stepStatus.inProgress': 'در حال انجام',
     'studio.consignArtwork.stepStatus.notStarted': 'شروع نشده',
-    'studio.consignArtwork.stepStatus.error': 'خطا',
+    'studio.consignArtwork.stepStatus.error': 'ناقص',
     'studio.consignArtwork.stepPublishMessageSuccess': 'با موفقیت منتشر شد!',
 
     'studio.consignArtwork.stepButton': (data: { status: string }) =>

@@ -75,7 +75,7 @@ const language: Translation = {
     'studio.consignArtwork.stepStatus.completed': 'Concluído',
     'studio.consignArtwork.stepStatus.inProgress': 'Em Andamento',
     'studio.consignArtwork.stepStatus.notStarted': 'Não Iniciado',
-    'studio.consignArtwork.stepStatus.error': 'Erro',
+    'studio.consignArtwork.stepStatus.error': 'Incompleto',
     'studio.consignArtwork.stepPublishMessageSuccess': 'Consignado com sucesso!',
 
     'studio.consignArtwork.stepButton': (data: { status: string }) =>
