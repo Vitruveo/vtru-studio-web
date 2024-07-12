@@ -39,6 +39,7 @@ import { userActionsCreators } from '@/features/user/slice';
 import { createNewAssetThunk, deleteAssetThunk } from '@/features/asset/thunks';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { assetActionsCreators } from '@/features/asset/slice';
+import { setFilter } from '@/features/filters/filtersSlice';
 import PageContainer from '@/app/home/components/container/PageContainer';
 import { MintExplorer } from '@/features/user/types';
 import { LicensesFormValues } from './consignArtwork/licenses/types';
@@ -91,9 +92,9 @@ export default function Home() {
 
     const assets = useSelector((state) => state.user.assets);
     const customizer = useSelector((state) => state.customizer);
+    const selectedFilter = useSelector((state) => state.filters.selectedFilter);
 
     const [collectionSelected, setCollectionSelected] = useState('all');
-    const [filterSelected, setFilterSelected] = useState('all');
     const [cloneId, setCloneId] = useState<string | undefined>(undefined);
     const [loading, setLoading] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -112,14 +113,7 @@ export default function Home() {
         dispatch(consignArtworkActionsCreators.resetConsignArtwork());
         dispatch(assetActionsCreators.resetAsset());
         dispatch(requestMyAssetsThunk());
-    }, []);
-
-    useEffect(() => {
-        const savedFilter = localStorage.getItem('filterSelected');
-        if (savedFilter) {
-            setFilterSelected(savedFilter);
-        }
-    }, []);
+    }, [dispatch]);
 
     const collections = assets.reduce<string[]>((acc, asset) => {
         asset.collections.forEach((collection: string) => {
@@ -140,15 +134,15 @@ export default function Home() {
     }, [assets, collectionSelected]);
 
     const dataFiltered = useMemo(() => {
-        if (filterSelected.toUpperCase() === 'ALL') {
+        if (selectedFilter.toUpperCase() === 'ALL') {
             return data;
         }
 
         return data.filter((asset: any) => {
             const statusText = getStatusText(asset.status, asset.mintExplorer);
-            return statusText.toUpperCase() === filterSelected.toUpperCase();
+            return statusText.toUpperCase() === selectedFilter.toUpperCase();
         });
-    }, [data, filterSelected]);
+    }, [data, selectedFilter]);
 
     const handleCreateNewAsset = async (assetClonedId?: string) => {
         setLoading(true);
@@ -164,8 +158,7 @@ export default function Home() {
     };
 
     const handleFilterChange = (filter: string) => {
-        setFilterSelected(filter);
-        localStorage.setItem('filterSelected', filter);
+        dispatch(setFilter(filter));
     };
 
     return (
@@ -217,7 +210,7 @@ export default function Home() {
                             }}
                         />
                     </Box>
-                    <Box mt={2} paddingRight={2}>
+                    <Box mt={2}>
                         <button
                             style={{
                                 backgroundColor: '#D8C2D9',
@@ -337,8 +330,8 @@ export default function Home() {
                                         onClick={() => handleFilterChange(filter)}
                                         variant="text"
                                         style={{
-                                            color: filterSelected === filter ? '#000' : '#666',
-                                            border: filterSelected === filter ? '1px solid #000' : 'none',
+                                            color: selectedFilter === filter ? '#000' : '#666',
+                                            border: selectedFilter === filter ? '1px solid #000' : 'none',
                                             transition: '0.3s',
                                             textDecoration: 'underline',
                                             fontSize: 18,
@@ -350,7 +343,7 @@ export default function Home() {
                             </Box>
                         )}
                     </Box>
-                    <Box mt={2} marginLeft={-1}>
+                    <Box mt={2}>
                         <Grid container spacing={2} padding={1}>
                             {dataFiltered.map((asset, index) => (
                                 <Grid item key={index} sm={6} md={6} lg={4}>

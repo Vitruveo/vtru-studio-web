@@ -2,12 +2,12 @@ import { combineReducers, Reducer, AnyAction } from '@reduxjs/toolkit';
 
 import webSocketService from '@/services/websocket';
 import { websocketSlice } from '@/features/ws';
-
 import { userSlice } from '../features/user';
 import { consignArtworkSlice } from '../features/consignArtwork';
 import { customizerSlice } from '../features/customizer';
 import { assetSlice } from '@/features/asset';
 import { toastrSlice } from '@/features/toastr/slice';
+import filtersSlice from '@/features/filters/filtersSlice'; // Importe o filtersSlice
 
 interface RootState {
     user: ReturnType<typeof userSlice.reducer>;
@@ -16,6 +16,7 @@ interface RootState {
     websocket: ReturnType<typeof websocketSlice.reducer>;
     asset: ReturnType<typeof assetSlice.reducer>;
     toastr: ReturnType<typeof toastrSlice.reducer>;
+    filters: ReturnType<typeof filtersSlice>; 
 }
 
 const appReducer = combineReducers<RootState>({
@@ -25,6 +26,7 @@ const appReducer = combineReducers<RootState>({
     websocket: websocketSlice.reducer,
     asset: assetSlice.reducer,
     toastr: toastrSlice.reducer,
+    filters: filtersSlice, 
 });
 
 export const reducer: Reducer<RootState, AnyAction> = (state: RootState | undefined, action: AnyAction) => {
