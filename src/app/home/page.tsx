@@ -78,6 +78,15 @@ export default function Home() {
     const router = useRouter();
     const isMobile = useMediaQuery('(max-width: 600px)');
     const isTablet = useMediaQuery('(max-width: 900px)');
+    const iconStyle: CSSProperties = {
+        position: 'absolute',
+        width: '80px',
+        height: '45px',
+        zIndex: '9999',
+        bottom: '5px',
+        left: '233px',
+        color: '#595959',
+    };
 
     const assets = useSelector((state) => state.user.assets);
     const customizer = useSelector((state) => state.customizer);
@@ -473,43 +482,13 @@ export default function Home() {
                                                     : ''}
                                             </Typography>
                                             {getStatusIcon(asset.status, asset.mintExplorer) === 'Draft' && (
-                                                <IconEdit
-                                                    style={{
-                                                        position: 'absolute',
-                                                        width: '80px',
-                                                        height: '45px',
-                                                        zIndex: '9999',
-                                                        bottom: '5px',
-                                                        left: '233px',
-                                                        color: '#595959',
-                                                    }}
-                                                />
+                                                <IconEdit style={iconStyle} />
                                             )}
                                             {getStatusIcon(asset.status, asset.mintExplorer) === 'Pending' && (
-                                                <IconScanEye
-                                                    style={{
-                                                        position: 'absolute',
-                                                        width: '80px',
-                                                        height: '45px',
-                                                        zIndex: '9999',
-                                                        bottom: '5px',
-                                                        left: '233px',
-                                                        color: '#595959',
-                                                    }}
-                                                />
+                                                <IconScanEye style={iconStyle} />
                                             )}
                                             {getStatusIcon(asset.status, asset.mintExplorer) === 'Listed' && (
-                                                <IconTag
-                                                    style={{
-                                                        position: 'absolute',
-                                                        width: '80px',
-                                                        height: '45px',
-                                                        zIndex: '9999',
-                                                        bottom: '5px',
-                                                        left: '233px',
-                                                        color: '#595959',
-                                                    }}
-                                                />
+                                                <IconTag style={iconStyle} />
                                             )}
                                             {asset.mintExplorer && (
                                                 <IconCircleFilled
