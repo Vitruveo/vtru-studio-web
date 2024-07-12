@@ -47,7 +47,7 @@ import { IconEdit } from '@tabler/icons-react';
 const iconStyle: CSSProperties = {
     position: 'absolute',
     width: '80px',
-    height: '45px',
+    height: '30px',
     zIndex: '9999',
     bottom: '5px',
     left: '233px',
