@@ -114,6 +114,13 @@ export default function Home() {
         dispatch(requestMyAssetsThunk());
     }, []);
 
+    useEffect(() => {
+        const savedFilter = localStorage.getItem('filterSelected');
+        if (savedFilter) {
+            setFilterSelected(savedFilter);
+        }
+    }, []);
+
     const collections = assets.reduce<string[]>((acc, asset) => {
         asset.collections.forEach((collection: string) => {
             if (!acc.includes(collection)) {
@@ -154,6 +161,11 @@ export default function Home() {
 
     const handleDrawerToggle = () => {
         setDrawerOpen(!drawerOpen);
+    };
+
+    const handleFilterChange = (filter: string) => {
+        setFilterSelected(filter);
+        localStorage.setItem('filterSelected', filter);
     };
 
     return (
@@ -205,7 +217,7 @@ export default function Home() {
                             }}
                         />
                     </Box>
-                    <Box mt={2}>
+                    <Box mt={2} paddingRight={2}>
                         <button
                             style={{
                                 backgroundColor: '#D8C2D9',
@@ -307,7 +319,7 @@ export default function Home() {
                                                 button
                                                 key={index}
                                                 onClick={() => {
-                                                    setFilterSelected(filter);
+                                                    handleFilterChange(filter);
                                                     handleDrawerToggle();
                                                 }}
                                             >
@@ -322,7 +334,7 @@ export default function Home() {
                                 {filters.map((filter, index) => (
                                     <Button
                                         key={index}
-                                        onClick={() => setFilterSelected(filter)}
+                                        onClick={() => handleFilterChange(filter)}
                                         variant="text"
                                         style={{
                                             color: filterSelected === filter ? '#000' : '#666',
@@ -338,7 +350,7 @@ export default function Home() {
                             </Box>
                         )}
                     </Box>
-                    <Box mt={2}>
+                    <Box mt={2} marginLeft={-1}>
                         <Grid container spacing={2} padding={1}>
                             {dataFiltered.map((asset, index) => (
                                 <Grid item key={index} sm={6} md={6} lg={4}>
