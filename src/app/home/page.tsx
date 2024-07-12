@@ -36,6 +36,16 @@ import { MintExplorer } from '@/features/user/types';
 import { LicensesFormValues } from './consignArtwork/licenses/types';
 import { IconEdit } from '@tabler/icons-react';
 
+const iconStyle: CSSProperties = {
+    position: 'absolute',
+    width: '80px',
+    height: '30px',
+    zIndex: '9999',
+    bottom: '5px',
+    left: '233px',
+    color: '#595959',
+};
+
 const filters = ['Draft', 'Pending', 'Listed', 'Sold', 'All'];
 
 const getButtonText = (status: string, mintExplorer?: MintExplorer) => {
@@ -70,15 +80,6 @@ export default function Home() {
     const router = useRouter();
     const isMobile = useMediaQuery('(max-width: 600px)');
     const isTablet = useMediaQuery('(max-width: 900px)');
-    const iconStyle: CSSProperties = {
-        position: 'absolute',
-        width: '80px',
-        height: '45px',
-        zIndex: '9999',
-        bottom: '5px',
-        left: '233px',
-        color: '#595959',
-    };
 
     const assets = useSelector((state) => state.user.assets);
     const customizer = useSelector((state) => state.customizer);

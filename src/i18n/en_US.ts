@@ -80,7 +80,7 @@ const language: Translation = {
     'studio.consignArtwork.stepStatus.completed': 'Completed',
     'studio.consignArtwork.stepStatus.inProgress': 'In Progress',
     'studio.consignArtwork.stepStatus.notStarted': 'Not Started',
-    'studio.consignArtwork.stepStatus.error': 'Error',
+    'studio.consignArtwork.stepStatus.error': 'Incomplete',
     'studio.consignArtwork.stepPublishMessageSuccess': 'Published successfully!',
 
     'studio.consignArtwork.stepButton': (data: { status: string }) =>
