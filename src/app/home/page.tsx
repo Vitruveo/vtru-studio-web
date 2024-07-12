@@ -62,7 +62,7 @@ const getStatusText = (status: string, mintExplorer?: MintExplorer) => {
     return status;
 };
 
-const getStatusIcon = (status: string, mintExplorer?: MintExplorer) => {
+const getStatus = (status: string, mintExplorer?: MintExplorer) => {
     if (status.toUpperCase() === 'DRAFT') return 'Draft';
     if (status.toUpperCase() === 'PENDING') return 'Pending';
     if (status.toUpperCase() === 'ACTIVE' && mintExplorer?.transactionHash) return 'Sold';
@@ -387,38 +387,40 @@ export default function Home() {
                                                 <IconCopyPlus size={20} color="#13DFAA" />
                                             </button>
                                         </Tooltip>
-                                        <Tooltip title="Delete asset" placement="top">
-                                            <button
-                                                style={{
-                                                    position: 'absolute',
-                                                    top: 60,
-                                                    right: 10,
-                                                    backgroundColor: '#fff',
-                                                    color: '#000',
+                                        {!['Pending', 'Sold'].includes(getStatus(asset.status, asset.mintExplorer)) && (
+                                            <Tooltip title="Delete asset" placement="top">
+                                                <button
+                                                    style={{
+                                                        position: 'absolute',
+                                                        top: 60,
+                                                        right: 10,
+                                                        backgroundColor: '#fff',
+                                                        color: '#000',
 
-                                                    padding: '5px',
-                                                    borderRadius: '5px',
-                                                    cursor: 'pointer',
-                                                    transition: '0.3s',
-                                                    border: '1px solid #fff',
-                                                }}
-                                                onClick={(event) => {
-                                                    event.stopPropagation();
+                                                        padding: '5px',
+                                                        borderRadius: '5px',
+                                                        cursor: 'pointer',
+                                                        transition: '0.3s',
+                                                        border: '1px solid #fff',
+                                                    }}
+                                                    onClick={(event) => {
+                                                        event.stopPropagation();
 
-                                                    dispatch(deleteAssetThunk(asset._id));
-                                                }}
-                                                onMouseEnter={(event) => {
-                                                    event.currentTarget.style.backgroundColor = '#000';
-                                                    event.currentTarget.style.borderColor = '#ff0000';
-                                                }}
-                                                onMouseLeave={(event) => {
-                                                    event.currentTarget.style.backgroundColor = '#fff';
-                                                    event.currentTarget.style.borderColor = '#fff';
-                                                }}
-                                            >
-                                                <IconTrash size={20} color="#ff0000" />
-                                            </button>
-                                        </Tooltip>
+                                                        dispatch(deleteAssetThunk(asset._id));
+                                                    }}
+                                                    onMouseEnter={(event) => {
+                                                        event.currentTarget.style.backgroundColor = '#000';
+                                                        event.currentTarget.style.borderColor = '#ff0000';
+                                                    }}
+                                                    onMouseLeave={(event) => {
+                                                        event.currentTarget.style.backgroundColor = '#fff';
+                                                        event.currentTarget.style.borderColor = '#fff';
+                                                    }}
+                                                >
+                                                    <IconTrash size={20} color="#ff0000" />
+                                                </button>
+                                            </Tooltip>
+                                        )}
 
                                         <Image
                                             src={asset.image}
@@ -477,13 +479,13 @@ export default function Home() {
                                                     ? `$${asset?.licenses?.nft.single.editionPrice}.00`
                                                     : ''}
                                             </Typography>
-                                            {getStatusIcon(asset.status, asset.mintExplorer) === 'Draft' && (
+                                            {getStatus(asset.status, asset.mintExplorer) === 'Draft' && (
                                                 <IconEdit style={iconStyle} />
                                             )}
-                                            {getStatusIcon(asset.status, asset.mintExplorer) === 'Pending' && (
+                                            {getStatus(asset.status, asset.mintExplorer) === 'Pending' && (
                                                 <IconScanEye style={iconStyle} />
                                             )}
-                                            {getStatusIcon(asset.status, asset.mintExplorer) === 'Listed' && (
+                                            {getStatus(asset.status, asset.mintExplorer) === 'Listed' && (
                                                 <IconTag style={iconStyle} />
                                             )}
                                             {asset.mintExplorer && (
