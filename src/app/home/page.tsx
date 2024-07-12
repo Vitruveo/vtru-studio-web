@@ -2,8 +2,33 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Container, MenuItem, Select, Box, Grid, Typography, CircularProgress, Tooltip } from '@mui/material';
-import { IconCircleFilled, IconPlus, IconTrash } from '@tabler/icons-react';
+import {
+    Button,
+    Container,
+    MenuItem,
+    Select,
+    Box,
+    Grid,
+    Typography,
+    CircularProgress,
+    Tooltip,
+    IconButton,
+    Drawer,
+    List,
+    ListItem,
+    ListItemText,
+    useMediaQuery,
+} from '@mui/material';
+import { Menu as MenuIcon } from '@mui/icons-material';
+import {
+    IconCircleFilled,
+    IconCopyPlus,
+    IconEyeCheck,
+    IconPlus,
+    IconScanEye,
+    IconTag,
+    IconTrash,
+} from '@tabler/icons-react';
 import RSelect from 'react-select';
 import Image from 'next/image';
 
@@ -17,6 +42,7 @@ import { assetActionsCreators } from '@/features/asset/slice';
 import PageContainer from '@/app/home/components/container/PageContainer';
 import { MintExplorer } from '@/features/user/types';
 import { LicensesFormValues } from './consignArtwork/licenses/types';
+import { IconEdit } from '@tabler/icons-react';
 
 const filters = ['Draft', 'Pending', 'Listed', 'Sold', 'All'];
 
@@ -34,6 +60,14 @@ const getStatusText = (status: string, mintExplorer?: MintExplorer) => {
     return status;
 };
 
+const getStatusIcon = (status: string, mintExplorer?: MintExplorer) => {
+    if (status.toUpperCase() === 'DRAFT') return 'Draft';
+    if (status.toUpperCase() === 'PENDING') return 'Pending';
+    if (status.toUpperCase() === 'ACTIVE' && mintExplorer?.transactionHash) return 'Sold';
+    if (status.toUpperCase() === 'ACTIVE') return 'Listed';
+    return status;
+};
+
 const getPriceText = (licenses: LicensesFormValues) => {
     return licenses?.nft.elastic.editionPrice ? `Price: ${licenses.nft.elastic.editionPrice}` : '';
 };
@@ -42,6 +76,17 @@ export default function Home() {
     const { language } = useI18n();
     const dispatch = useDispatch();
     const router = useRouter();
+    const isMobile = useMediaQuery('(max-width: 600px)');
+    const isTablet = useMediaQuery('(max-width: 900px)');
+    const iconStyle: CSSProperties = {
+        position: 'absolute',
+        width: '80px',
+        height: '45px',
+        zIndex: '9999',
+        bottom: '5px',
+        left: '233px',
+        color: '#595959',
+    };
 
     const assets = useSelector((state) => state.user.assets);
     const customizer = useSelector((state) => state.customizer);
@@ -50,6 +95,7 @@ export default function Home() {
     const [filterSelected, setFilterSelected] = useState('all');
     const [cloneId, setCloneId] = useState<string | undefined>(undefined);
     const [loading, setLoading] = useState(false);
+    const [drawerOpen, setDrawerOpen] = useState(false);
 
     const texts = {
         title: language['studio.home.title'],
@@ -103,6 +149,10 @@ export default function Home() {
                 router.push('/home/consignArtwork');
             })
             .finally(() => setLoading(false));
+    };
+
+    const handleDrawerToggle = () => {
+        setDrawerOpen(!drawerOpen);
     };
 
     return (
@@ -206,6 +256,7 @@ export default function Home() {
                                 />
                                 <Typography sx={{ fontSize: 22 }}>Consign a new asset</Typography>
                             </div>
+
                             <RSelect
                                 placeholder="Clone and consign from..."
                                 options={assets.map((asset) => ({
@@ -217,7 +268,8 @@ export default function Home() {
                                 styles={{
                                     container: (provided) => ({
                                         ...provided,
-                                        minWidth: 200,
+                                        minWidth: 163,
+                                        width: isMobile ? 163 : 'auto',
                                     }),
                                 }}
                             ></RSelect>
@@ -229,7 +281,7 @@ export default function Home() {
                             <Select
                                 defaultValue="all"
                                 style={{
-                                    minWidth: 200,
+                                    minWidth: 163,
                                 }}
                                 onChange={(event) => setCollectionSelected(event.target.value)}
                             >
@@ -242,27 +294,51 @@ export default function Home() {
                                 ))}
                             </Select>
                         </Box>
-                        <Box display="flex" flexDirection="row" alignItems="center" gap={2}>
-                            {filters.map((filter, index) => (
-                                <Button
-                                    key={index}
-                                    onClick={() => setFilterSelected(filter)}
-                                    variant="text"
-                                    style={{
-                                        color: filterSelected === filter ? '#000' : '#666',
-                                        border: filterSelected === filter ? '1px solid #000' : 'none',
-                                        transition: '0.3s',
-                                        textDecoration: 'underline',
-                                        fontSize: 18,
-                                    }}
-                                >
-                                    {filter}
-                                </Button>
-                            ))}
-                        </Box>
+                        {isMobile || isTablet ? (
+                            <Box display="flex" alignItems="center" gap={2}>
+                                <IconButton onClick={handleDrawerToggle}>
+                                    <MenuIcon />
+                                </IconButton>
+                                <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerToggle}>
+                                    <List>
+                                        {filters.map((filter, index) => (
+                                            <ListItem
+                                                button
+                                                key={index}
+                                                onClick={() => {
+                                                    setFilterSelected(filter);
+                                                    handleDrawerToggle();
+                                                }}
+                                            >
+                                                <ListItemText primary={filter} />
+                                            </ListItem>
+                                        ))}
+                                    </List>
+                                </Drawer>
+                            </Box>
+                        ) : (
+                            <Box display="flex" flexDirection="row" alignItems="center" gap={2}>
+                                {filters.map((filter, index) => (
+                                    <Button
+                                        key={index}
+                                        onClick={() => setFilterSelected(filter)}
+                                        variant="text"
+                                        style={{
+                                            color: filterSelected === filter ? '#000' : '#666',
+                                            border: filterSelected === filter ? '1px solid #000' : 'none',
+                                            transition: '0.3s',
+                                            textDecoration: 'underline',
+                                            fontSize: 18,
+                                        }}
+                                    >
+                                        {filter}
+                                    </Button>
+                                ))}
+                            </Box>
+                        )}
                     </Box>
                     <Box mt={2}>
-                        <Grid container spacing={3} padding={3}>
+                        <Grid container spacing={2} padding={1}>
                             {dataFiltered.map((asset, index) => (
                                 <Grid item key={index} sm={6} md={6} lg={4}>
                                     <button
@@ -315,7 +391,7 @@ export default function Home() {
                                                     handleCreateNewAsset(asset._id);
                                                 }}
                                             >
-                                                <IconPlus size={20} color="#13DFAA" />
+                                                <IconCopyPlus size={20} color="#13DFAA" />
                                             </button>
                                         </Tooltip>
                                         <Tooltip title="Delete asset" placement="top">
@@ -373,6 +449,7 @@ export default function Home() {
                                                 borderBottomLeftRadius: 10,
                                                 borderBottomRightRadius: 10,
                                                 height: 90,
+                                                paddingLeft: '13px',
                                             }}
                                         >
                                             <Typography
@@ -407,15 +484,25 @@ export default function Home() {
                                                     ? `$${asset?.licenses?.nft.single.editionPrice}.00`
                                                     : ''}
                                             </Typography>
-
+                                            {getStatusIcon(asset.status, asset.mintExplorer) === 'Draft' && (
+                                                <IconEdit style={iconStyle} />
+                                            )}
+                                            {getStatusIcon(asset.status, asset.mintExplorer) === 'Pending' && (
+                                                <IconScanEye style={iconStyle} />
+                                            )}
+                                            {getStatusIcon(asset.status, asset.mintExplorer) === 'Listed' && (
+                                                <IconTag style={iconStyle} />
+                                            )}
                                             {asset.mintExplorer && (
                                                 <IconCircleFilled
                                                     size={20}
                                                     style={{
                                                         color: '#ff0000',
                                                         position: 'absolute',
-                                                        bottom: '20px',
-                                                        left: '260px',
+                                                        bottom: '6px',
+                                                        left: '233px',
+                                                        height: '35px',
+                                                        width: '80px',
                                                     }}
                                                 />
                                             )}
@@ -432,6 +519,7 @@ export default function Home() {
                                                     position: 'relative',
                                                     top: '-20px',
                                                     paddingTop: '0',
+                                                    marginTop: '-3px',
                                                 }}
                                             >
                                                 {getButtonText(asset.status, asset.mintExplorer)}
