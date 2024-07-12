@@ -420,7 +420,7 @@ export default function Home() {
                                             </button>
                                         </Tooltip>
 
-                                        <img
+                                        <Image
                                             src={asset.image}
                                             alt="bg"
                                             width={300}
