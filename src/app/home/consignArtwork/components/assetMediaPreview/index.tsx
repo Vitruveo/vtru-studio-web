@@ -67,7 +67,7 @@ const AssetMediaPreview = (props: AssetMediaPreviewProps) => {
                 >
                     <Image
                         style={{
-                            objectFit: 'contain',
+                            objectFit: 'cover',
                             opacity: fileIsload ? 0 : 1,
                             display: fileIsload ? 'none' : '',
                         }}
