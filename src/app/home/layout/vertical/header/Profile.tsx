@@ -59,6 +59,7 @@ const Profile = () => {
                 sx={{
                     ...(typeof anchorEl2 === 'object' && {
                         color: 'primary.main',
+                        paddingLeft: '23px',
                     }),
                 }}
                 onClick={handleClick2}
@@ -91,7 +92,7 @@ const Profile = () => {
                 }}
             >
                 <Typography variant="h5">{texts.title}</Typography>
-                <Stack direction="row" py={3} spacing={2} alignItems="center">
+                <Stack direction="row" py={3} spacing={2} alignItems="center" paddingRight={3}>
                     <Avatar src={avatarSrc} alt={'ProfileImg'} sx={{ width: 95, height: 95 }} />
                     <Box>
                         <Typography variant="subtitle2" color="textPrimary" fontWeight={600}>
