@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { CSSProperties, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
     Button,
@@ -20,15 +20,7 @@ import {
     useMediaQuery,
 } from '@mui/material';
 import { Menu as MenuIcon } from '@mui/icons-material';
-import {
-    IconCircleFilled,
-    IconCopyPlus,
-    IconEyeCheck,
-    IconPlus,
-    IconScanEye,
-    IconTag,
-    IconTrash,
-} from '@tabler/icons-react';
+import { IconCircleFilled, IconCopyPlus, IconPlus, IconScanEye, IconTag, IconTrash } from '@tabler/icons-react';
 import RSelect from 'react-select';
 import Image from 'next/image';
 
