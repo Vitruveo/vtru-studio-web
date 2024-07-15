@@ -7,6 +7,7 @@ import CardContent from '@mui/material/CardContent';
 import BlankCard from '@/app/home/components/shared/BlankCard';
 import { ASSET_STORAGE_URL, NO_IMAGE_ASSET } from '@/constants/asset';
 import Image from 'next/image';
+import isVideoExtension from '@/utils/isVideo';
 
 interface AssetMediaPreviewProps {
     width?: number;
@@ -17,6 +18,7 @@ interface AssetMediaPreviewProps {
 const AssetMediaPreview = (props: AssetMediaPreviewProps) => {
     const { formats, assetMetadata } = useSelector((state) => state.asset);
     const path = formats?.preview?.path ? `${ASSET_STORAGE_URL}/${formats.preview.path}` : NO_IMAGE_ASSET;
+    const isVideo = isVideoExtension(path);
 
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
     const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
@@ -39,16 +41,22 @@ const AssetMediaPreview = (props: AssetMediaPreviewProps) => {
                     sx={{ width: '100%' }}
                     style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
                 >
-                    <Image
-                        style={{
-                            objectFit: 'cover',
-                        }}
-                        onError={handleError}
-                        src={path}
-                        width={width}
-                        height={height}
-                        alt="asset preview"
-                    />
+                    {isVideo ? (
+                        <video autoPlay muted loop style={{ objectFit: 'cover' }}>
+                            <source src={path} type="video/mp4" />
+                        </video>
+                    ) : (
+                        <Image
+                            style={{
+                                objectFit: 'cover',
+                            }}
+                            onError={handleError}
+                            src={path}
+                            width={width}
+                            height={height}
+                            alt="asset preview"
+                        />
+                    )}
                 </CardContent>
             </BlankCard>
         </Box>
