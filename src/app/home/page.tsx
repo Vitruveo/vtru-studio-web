@@ -582,7 +582,7 @@ export default function Home() {
                     <Button onClick={handleDeleteCancel} color="primary">
                         Cancel
                     </Button>
-                    <Button onClick={handleDeleteConfirm} color="secondary" autoFocus>
+                    <Button onClick={handleDeleteConfirm} color="error" variant="outlined">
                         Delete
                     </Button>
                 </DialogActions>
