@@ -185,6 +185,9 @@ export default function Home() {
                     <></>
                 )}
                 <Box pb={10}>
+                    <Typography variant="h3" marginBottom={2}>
+                        Studio is currently down for maintenance. You will be able to check our new features soon!
+                    </Typography>
                     <Box display="flex" flexWrap="wrap" rowGap={1} alignItems="center">
                         <Typography marginRight={1} fontSize="1.7rem" alignSelf="center">
                             {texts.welcome}
