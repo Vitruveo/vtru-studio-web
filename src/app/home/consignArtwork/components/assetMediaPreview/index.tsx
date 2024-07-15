@@ -1,5 +1,5 @@
 import { useSelector } from '@/store/hooks';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Theme, useMediaQuery } from '@mui/material';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -15,16 +15,8 @@ interface AssetMediaPreviewProps {
 }
 
 const AssetMediaPreview = (props: AssetMediaPreviewProps) => {
-    const [fileIsload, setFileIsload] = useState(true);
-
     const { formats, assetMetadata } = useSelector((state) => state.asset);
     const path = formats?.preview?.path ? `${ASSET_STORAGE_URL}/${formats.preview.path}` : NO_IMAGE_ASSET;
-
-    useEffect(() => {
-        if (path === NO_IMAGE_ASSET) {
-            setFileIsload(false);
-        }
-    }, [path]);
 
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
     const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
@@ -32,19 +24,11 @@ const AssetMediaPreview = (props: AssetMediaPreviewProps) => {
 
     const handleError = () => {};
 
-    const handleLoad = () => {
-        setFileIsload(false);
-    };
-
     const width = lgUp || mdUp || smUp ? 500 : 320;
     const height = lgUp || mdUp || smUp ? 500 : 320;
 
     return (
-        <Box
-            maxWidth={props.maxWidth}
-            width={props.maxWidth && '100%'}
-            style={{ opacity: fileIsload ? 0 : 1, display: fileIsload ? 'none' : '' }}
-        >
+        <Box maxWidth={props.maxWidth} width={props.maxWidth && '100%'}>
             <Box display={'flex'} gap={2}>
                 <Typography variant="h3" mb={1}>
                     {(assetMetadata?.context.formData as any)?.title ?? 'Untitled'}
@@ -58,10 +42,7 @@ const AssetMediaPreview = (props: AssetMediaPreviewProps) => {
                     <Image
                         style={{
                             objectFit: 'cover',
-                            opacity: fileIsload ? 0 : 1,
-                            display: fileIsload ? 'none' : '',
                         }}
-                        onLoad={handleLoad}
                         onError={handleError}
                         src={path}
                         width={width}
