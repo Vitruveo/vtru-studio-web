@@ -185,7 +185,7 @@ export default function Home() {
                 ) : (
                     <></>
                 )}
-                <Box pb={10} paddingInline={3}>
+                <Box pb={10}>
                     <Box display="flex" flexWrap="wrap" rowGap={1} alignItems="center">
                         <Typography marginRight={1} fontSize="1.7rem" alignSelf="center">
                             {texts.welcome}
@@ -338,7 +338,7 @@ export default function Home() {
                             </Box>
                         )}
                     </Box>
-                    <Box mt={2}>
+                    <Box mt={2} style={{ maxHeight: '100vh', overflow: 'scroll' }}>
                         <Grid container spacing={2} padding={1}>
                             {dataFiltered.map((asset, index) => (
                                 <Grid item key={index} sm={6} md={6} lg={4}>
