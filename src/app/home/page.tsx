@@ -158,8 +158,8 @@ export default function Home() {
     return (
         <Container
             sx={{
-                overflow: 'auto',
-                maxHeight: '85vh',
+                // overflow: 'auto',
+                // maxHeight: '85vh',
                 maxWidth: customizer.isLayout === 'boxed' ? 'lg' : '100%!important',
             }}
         >
@@ -340,7 +340,7 @@ export default function Home() {
                             </Box>
                         )}
                     </Box>
-                    <Box mt={2} style={{ maxHeight: '100vh', overflowY: 'scroll' }}>
+                    <Box mt={2} style={{ maxHeight: 'calc(100vh - 420px)', overflowY: 'scroll' }}>
                         <Grid container spacing={2} padding={1}>
                             {dataFiltered.map((asset, index) => (
                                 <Grid item key={index} sm={6} md={6} lg={4}>
