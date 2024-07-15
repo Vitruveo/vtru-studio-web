@@ -394,7 +394,9 @@ export default function Home() {
                                                 <IconCopyPlus size={20} color="#13DFAA" />
                                             </button>
                                         </Tooltip>
-                                        {!['Pending', 'Sold'].includes(getStatus(asset.status, asset.mintExplorer)) && (
+                                        {!['Pending', 'Sold', 'Listed'].includes(
+                                            getStatus(asset.status, asset.mintExplorer)
+                                        ) && (
                                             <Tooltip title="Delete asset" placement="top">
                                                 <button
                                                     style={{
