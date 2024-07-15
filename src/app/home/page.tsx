@@ -174,6 +174,7 @@ export default function Home() {
     const handleDeleteCancel = () => {
         setOpenDeleteDialog(false);
         setAssetToDelete(null);
+    };
 
     const handleFilterChange = (filter: string) => {
         dispatch(setFilter(filter));
@@ -432,28 +433,28 @@ export default function Home() {
                                                         right: 10,
                                                         backgroundColor: '#fff',
                                                         color: '#000',
-                                                    padding: '5px',
-                                                    borderRadius: '5px',
-                                                    cursor: 'pointer',
-                                                    transition: '0.3s',
-                                                    border: '1px solid #fff',
-                                                }}
-                                                onClick={(event) => {
-                                                    event.stopPropagation();
-                                                    handleDeleteClick(asset._id);
-                                                }}
-                                                onMouseEnter={(event) => {
-                                                    event.currentTarget.style.backgroundColor = '#000';
-                                                    event.currentTarget.style.borderColor = '#ff0000';
-                                                }}
-                                                onMouseLeave={(event) => {
-                                                    event.currentTarget.style.backgroundColor = '#fff';
-                                                    event.currentTarget.style.borderColor = '#fff';
-                                                }}
-                                            >
-                                                <IconTrash size={20} color="#ff0000" />
-                                            </button>
-                                        </Tooltip>
+                                                        padding: '5px',
+                                                        borderRadius: '5px',
+                                                        cursor: 'pointer',
+                                                        transition: '0.3s',
+                                                        border: '1px solid #fff',
+                                                    }}
+                                                    onClick={(event) => {
+                                                        event.stopPropagation();
+                                                        handleDeleteClick(asset._id);
+                                                    }}
+                                                    onMouseEnter={(event) => {
+                                                        event.currentTarget.style.backgroundColor = '#000';
+                                                        event.currentTarget.style.borderColor = '#ff0000';
+                                                    }}
+                                                    onMouseLeave={(event) => {
+                                                        event.currentTarget.style.backgroundColor = '#fff';
+                                                        event.currentTarget.style.borderColor = '#fff';
+                                                    }}
+                                                >
+                                                    <IconTrash size={20} color="#ff0000" />
+                                                </button>
+                                            </Tooltip>
                                         )}
 
                                         <Image
