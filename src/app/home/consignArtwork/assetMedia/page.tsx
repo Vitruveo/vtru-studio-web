@@ -35,6 +35,8 @@ export default function AssetMedia() {
     const router = useRouter();
     const dispatch = useDispatch();
 
+    const selectedAsset = useSelector((state) => state.user.selectedAsset);
+
     const initialValues = useMemo(
         () => ({
             deleteKeys: [],
@@ -151,6 +153,7 @@ export default function AssetMedia() {
                 },
                 originalName: file!.name,
                 transactionId,
+                id: selectedAsset,
             })
         );
 

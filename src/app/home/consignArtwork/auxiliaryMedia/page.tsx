@@ -149,6 +149,7 @@ export default function AssetMedia() {
                 },
                 originalName: file!.name,
                 transactionId,
+                id: asset._id,
             })
         );
 

@@ -1,6 +1,7 @@
 import { StepsFormValues } from '@/app/home/consignArtwork/types';
 import { APIResponse, Framework } from '../common/types';
 import { AccountSettingsFormValues } from '@/app/home/myProfile/types';
+import { LicensesFormValues } from '@/app/home/consignArtwork/licenses/types';
 
 export interface Email {
     email: string;
@@ -11,6 +12,16 @@ export interface Email {
 export interface Wallet {
     address: string;
     archived: boolean;
+}
+
+export interface Assets {
+    _id: string;
+    title: string;
+    image: string;
+    status: string;
+    collections: string[];
+    licenses: LicensesFormValues;
+    mintExplorer?: MintExplorer;
 }
 
 export interface User {
@@ -54,9 +65,11 @@ export interface User {
             avatar: string;
         };
     };
+    assets: Assets[];
+    selectedAsset: string;
 }
 
-export interface vaultProps {
+export interface VaultProps {
     transactionHash: string;
     createdAt: string;
 }
@@ -67,6 +80,7 @@ interface RequestAvatarUpload {
     path: string;
     status: string;
 }
+
 export interface UserSliceState extends User {
     requestAvatarUpload: RequestAvatarUpload;
     token: string;
@@ -214,3 +228,10 @@ export type VerifyCodeApiRes = APIResponse<User>;
 export type ChangeAvatarApiRes = APIResponse<ChangeAvatarRes>;
 export type RequestConnectWalletApiRes = APIResponse<ResquestConnectWalletRes>;
 export type VerifyConnectWalletApiRes = APIResponse;
+
+export interface MintExplorer {
+    transactionHash: string;
+    explorerUrl: string | null;
+    address: string | null;
+    createdAt: string | null;
+}

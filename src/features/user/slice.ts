@@ -1,7 +1,7 @@
 'use client';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { UserSliceState, vaultProps } from './types';
+import { UserSliceState, VaultProps } from './types';
 
 const initialState: UserSliceState = {
     _id: '',
@@ -58,6 +58,8 @@ const initialState: UserSliceState = {
             avatar: '',
         },
     },
+    assets: [],
+    selectedAsset: '',
 };
 
 export const userSlice = createSlice({
@@ -133,12 +135,21 @@ export const userSlice = createSlice({
         setCanConsignArtwork: (state, action: PayloadAction<boolean>) => {
             state.canConsignArtwork = action.payload;
         },
-        setVault: (state, action: PayloadAction<vaultProps>) => {
+        setVault: (state, action: PayloadAction<VaultProps>) => {
             state.vault.transactionHash = action.payload.transactionHash;
             state.vault.createdAt = action.payload.createdAt;
         },
         setVaultLoading: (state, action: PayloadAction<boolean>) => {
             state.vault.isLoading = action.payload;
+        },
+        setMyAssets: (state, action: PayloadAction<UserSliceState['assets']>) => {
+            state.assets = action.payload;
+        },
+        setSelectedAsset: (state, action: PayloadAction<string>) => {
+            state.selectedAsset = action.payload;
+        },
+        removeAsset: (state, action: PayloadAction<string>) => {
+            state.assets = state.assets.filter((asset) => asset._id !== action.payload);
         },
     },
 });

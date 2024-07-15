@@ -131,6 +131,9 @@ export const consignArtworkSlice = createSlice({
         deletePreviewAndConsignWallet: (state) => {
             state.previewAndConsign.creatorWallet = { checked: false, value: '' };
         },
+        resetConsignArtwork: (state) => {
+            return initialState;
+        },
     },
 });
 
