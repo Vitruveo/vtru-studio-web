@@ -48,6 +48,7 @@ const Header = () => {
                 {/* ------------------------------------------- */}
                 <IconButton
                     color="inherit"
+                    style={{ padding: '0' }}
                     aria-label="menu"
                     onClick={lgUp ? () => dispatch(toggleSidebar()) : () => dispatch(toggleMobileSidebar())}
                 >

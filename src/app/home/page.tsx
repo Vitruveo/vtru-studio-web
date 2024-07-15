@@ -184,7 +184,7 @@ export default function Home() {
                 ) : (
                     <></>
                 )}
-                <Box pb={10} paddingInline={3}>
+                <Box pb={10}>
                     <Typography variant="h3" marginBottom={2}>
                         Studio is currently down for maintenance. You will be able to check our new features soon!
                     </Typography>
@@ -340,7 +340,7 @@ export default function Home() {
                             </Box>
                         )}
                     </Box>
-                    <Box mt={2}>
+                    <Box mt={2} style={{ maxHeight: '100vh', overflowY: 'scroll' }}>
                         <Grid container spacing={2} padding={1}>
                             {dataFiltered.map((asset, index) => (
                                 <Grid item key={index} sm={6} md={6} lg={4}>
@@ -476,7 +476,6 @@ export default function Home() {
                                             <Typography
                                                 sx={{
                                                     textAlign: 'left',
-                                                    marginTop: '-10px',
                                                     color:
                                                         getStatusText(asset.status, asset.mintExplorer) === 'Sold'
                                                             ? 'inherit'
@@ -485,6 +484,10 @@ export default function Home() {
                                                         getStatusText(asset.status, asset.mintExplorer) === 'Sold'
                                                             ? '0px'
                                                             : '20px',
+                                                    marginTop:
+                                                        getStatusText(asset.status, asset.mintExplorer) === 'blocked'
+                                                            ? '-30px'
+                                                            : '-10px',
                                                 }}
                                             >
                                                 {asset.mintExplorer
