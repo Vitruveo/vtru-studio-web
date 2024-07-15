@@ -31,6 +31,7 @@ import { userActionsCreators } from '@/features/user/slice';
 import { createNewAssetThunk, deleteAssetThunk } from '@/features/asset/thunks';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { assetActionsCreators } from '@/features/asset/slice';
+import { setFilter } from '@/features/filters/filtersSlice';
 import PageContainer from '@/app/home/components/container/PageContainer';
 import { MintExplorer } from '@/features/user/types';
 import { LicensesFormValues } from './consignArtwork/licenses/types';
@@ -85,9 +86,9 @@ export default function Home() {
 
     const assets = useSelector((state) => state.user.assets);
     const customizer = useSelector((state) => state.customizer);
+    const selectedFilter = useSelector((state) => state.filters.selectedFilter);
 
     const [collectionSelected, setCollectionSelected] = useState('all');
-    const [filterSelected, setFilterSelected] = useState('all');
     const [cloneId, setCloneId] = useState<string | undefined>(undefined);
     const [loading, setLoading] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -106,7 +107,7 @@ export default function Home() {
         dispatch(consignArtworkActionsCreators.resetConsignArtwork());
         dispatch(assetActionsCreators.resetAsset());
         dispatch(requestMyAssetsThunk());
-    }, []);
+    }, [dispatch]);
 
     const collections = assets.reduce<string[]>((acc, asset) => {
         asset.collections.forEach((collection: string) => {
@@ -127,15 +128,15 @@ export default function Home() {
     }, [assets, collectionSelected]);
 
     const dataFiltered = useMemo(() => {
-        if (filterSelected.toUpperCase() === 'ALL') {
+        if (selectedFilter.toUpperCase() === 'ALL') {
             return data;
         }
 
         return data.filter((asset: any) => {
             const statusText = getStatusText(asset.status, asset.mintExplorer);
-            return statusText.toUpperCase() === filterSelected.toUpperCase();
+            return statusText.toUpperCase() === selectedFilter.toUpperCase();
         });
-    }, [data, filterSelected]);
+    }, [data, selectedFilter]);
 
     const handleCreateNewAsset = async (assetClonedId?: string) => {
         setLoading(true);
@@ -148,6 +149,10 @@ export default function Home() {
 
     const handleDrawerToggle = () => {
         setDrawerOpen(!drawerOpen);
+    };
+
+    const handleFilterChange = (filter: string) => {
+        dispatch(setFilter(filter));
     };
 
     return (
@@ -301,7 +306,7 @@ export default function Home() {
                                                 button
                                                 key={index}
                                                 onClick={() => {
-                                                    setFilterSelected(filter);
+                                                    handleFilterChange(filter);
                                                     handleDrawerToggle();
                                                 }}
                                             >
@@ -316,11 +321,11 @@ export default function Home() {
                                 {filters.map((filter, index) => (
                                     <Button
                                         key={index}
-                                        onClick={() => setFilterSelected(filter)}
+                                        onClick={() => handleFilterChange(filter)}
                                         variant="text"
                                         style={{
-                                            color: filterSelected === filter ? '#000' : '#666',
-                                            border: filterSelected === filter ? '1px solid #000' : 'none',
+                                            color: selectedFilter === filter ? '#000' : '#666',
+                                            border: selectedFilter === filter ? '1px solid #000' : 'none',
                                             transition: '0.3s',
                                             textDecoration: 'underline',
                                             fontSize: 18,
