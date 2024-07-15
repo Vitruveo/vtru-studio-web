@@ -18,6 +18,11 @@ import {
     ListItem,
     ListItemText,
     useMediaQuery,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
 } from '@mui/material';
 import { Menu as MenuIcon } from '@mui/icons-material';
 import { IconCircleFilled, IconCopyPlus, IconPlus, IconScanEye, IconTag, IconTrash } from '@tabler/icons-react';
@@ -92,6 +97,8 @@ export default function Home() {
     const [cloneId, setCloneId] = useState<string | undefined>(undefined);
     const [loading, setLoading] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [assetToDelete, setAssetToDelete] = useState<string | null>(null);
 
     const texts = {
         title: language['studio.home.title'],
@@ -149,6 +156,24 @@ export default function Home() {
 
     const handleDrawerToggle = () => {
         setDrawerOpen(!drawerOpen);
+    };
+
+    const handleDeleteClick = (assetId: string) => {
+        setAssetToDelete(assetId);
+        setOpenDeleteDialog(true);
+    };
+
+    const handleDeleteConfirm = () => {
+        if (assetToDelete) {
+            dispatch(deleteAssetThunk(assetToDelete));
+        }
+        setOpenDeleteDialog(false);
+        setAssetToDelete(null);
+    };
+
+    const handleDeleteCancel = () => {
+        setOpenDeleteDialog(false);
+        setAssetToDelete(null);
     };
 
     const handleFilterChange = (filter: string) => {
@@ -408,7 +433,6 @@ export default function Home() {
                                                         right: 10,
                                                         backgroundColor: '#fff',
                                                         color: '#000',
-
                                                         padding: '5px',
                                                         borderRadius: '5px',
                                                         cursor: 'pointer',
@@ -417,8 +441,7 @@ export default function Home() {
                                                     }}
                                                     onClick={(event) => {
                                                         event.stopPropagation();
-
-                                                        dispatch(deleteAssetThunk(asset._id));
+                                                        handleDeleteClick(asset._id);
                                                     }}
                                                     onMouseEnter={(event) => {
                                                         event.currentTarget.style.backgroundColor = '#000';
@@ -545,6 +568,28 @@ export default function Home() {
                     </Box>
                 </Box>
             </PageContainer>
+
+            <Dialog
+                open={openDeleteDialog}
+                onClose={handleDeleteCancel}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{'Delete Asset'}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Do you really want to delete this asset?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDeleteCancel} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleDeleteConfirm} color="secondary" autoFocus>
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Container>
     );
 }
