@@ -20,15 +20,7 @@ import {
     useMediaQuery,
 } from '@mui/material';
 import { Menu as MenuIcon } from '@mui/icons-material';
-import {
-    IconCircleFilled,
-    IconCopyPlus,
-    IconEyeCheck,
-    IconPlus,
-    IconScanEye,
-    IconTag,
-    IconTrash,
-} from '@tabler/icons-react';
+import { IconCircleFilled, IconCopyPlus, IconPlus, IconScanEye, IconTag, IconTrash } from '@tabler/icons-react';
 import RSelect from 'react-select';
 import Image from 'next/image';
 
@@ -39,6 +31,7 @@ import { userActionsCreators } from '@/features/user/slice';
 import { createNewAssetThunk, deleteAssetThunk } from '@/features/asset/thunks';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { assetActionsCreators } from '@/features/asset/slice';
+import { setFilter } from '@/features/filters/filtersSlice';
 import PageContainer from '@/app/home/components/container/PageContainer';
 import { MintExplorer } from '@/features/user/types';
 import { LicensesFormValues } from './consignArtwork/licenses/types';
@@ -58,6 +51,7 @@ const filters = ['Draft', 'Pending', 'Listed', 'Sold', 'All'];
 
 const getButtonText = (status: string, mintExplorer?: MintExplorer) => {
     if (status.toUpperCase() === 'DRAFT') return 'Edit';
+    if (status.toUpperCase() === 'REJECTED') return 'Edit';
     if (status.toUpperCase() === 'PENDING') return 'View';
     if (status.toUpperCase() === 'ACTIVE' && mintExplorer?.transactionHash) return 'View Transaction';
     if (status.toUpperCase() === 'ACTIVE') return 'View Listing';
@@ -67,14 +61,15 @@ const getButtonText = (status: string, mintExplorer?: MintExplorer) => {
 const getStatusText = (status: string, mintExplorer?: MintExplorer) => {
     if (status.toUpperCase() === 'ACTIVE' && mintExplorer?.transactionHash) return 'Sold';
     if (status.toUpperCase() === 'ACTIVE') return 'Listed';
-    return status;
+    return status.charAt(0).toUpperCase() + status.slice(1);
 };
 
-const getStatusIcon = (status: string, mintExplorer?: MintExplorer) => {
+const getStatus = (status: string, mintExplorer?: MintExplorer) => {
     if (status.toUpperCase() === 'DRAFT') return 'Draft';
     if (status.toUpperCase() === 'PENDING') return 'Pending';
     if (status.toUpperCase() === 'ACTIVE' && mintExplorer?.transactionHash) return 'Sold';
     if (status.toUpperCase() === 'ACTIVE') return 'Listed';
+    if (status.toUpperCase() === 'REJECTED') return 'Rejected';
     return status;
 };
 
@@ -91,9 +86,9 @@ export default function Home() {
 
     const assets = useSelector((state) => state.user.assets);
     const customizer = useSelector((state) => state.customizer);
+    const selectedFilter = useSelector((state) => state.filters.selectedFilter);
 
     const [collectionSelected, setCollectionSelected] = useState('all');
-    const [filterSelected, setFilterSelected] = useState('all');
     const [cloneId, setCloneId] = useState<string | undefined>(undefined);
     const [loading, setLoading] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -112,7 +107,7 @@ export default function Home() {
         dispatch(consignArtworkActionsCreators.resetConsignArtwork());
         dispatch(assetActionsCreators.resetAsset());
         dispatch(requestMyAssetsThunk());
-    }, []);
+    }, [dispatch]);
 
     const collections = assets.reduce<string[]>((acc, asset) => {
         asset.collections.forEach((collection: string) => {
@@ -133,15 +128,15 @@ export default function Home() {
     }, [assets, collectionSelected]);
 
     const dataFiltered = useMemo(() => {
-        if (filterSelected.toUpperCase() === 'ALL') {
+        if (selectedFilter.toUpperCase() === 'ALL') {
             return data;
         }
 
         return data.filter((asset: any) => {
             const statusText = getStatusText(asset.status, asset.mintExplorer);
-            return statusText.toUpperCase() === filterSelected.toUpperCase();
+            return statusText.toUpperCase() === selectedFilter.toUpperCase();
         });
-    }, [data, filterSelected]);
+    }, [data, selectedFilter]);
 
     const handleCreateNewAsset = async (assetClonedId?: string) => {
         setLoading(true);
@@ -154,6 +149,10 @@ export default function Home() {
 
     const handleDrawerToggle = () => {
         setDrawerOpen(!drawerOpen);
+    };
+
+    const handleFilterChange = (filter: string) => {
+        dispatch(setFilter(filter));
     };
 
     return (
@@ -307,7 +306,7 @@ export default function Home() {
                                                 button
                                                 key={index}
                                                 onClick={() => {
-                                                    setFilterSelected(filter);
+                                                    handleFilterChange(filter);
                                                     handleDrawerToggle();
                                                 }}
                                             >
@@ -322,11 +321,11 @@ export default function Home() {
                                 {filters.map((filter, index) => (
                                     <Button
                                         key={index}
-                                        onClick={() => setFilterSelected(filter)}
+                                        onClick={() => handleFilterChange(filter)}
                                         variant="text"
                                         style={{
-                                            color: filterSelected === filter ? '#000' : '#666',
-                                            border: filterSelected === filter ? '1px solid #000' : 'none',
+                                            color: selectedFilter === filter ? '#000' : '#666',
+                                            border: selectedFilter === filter ? '1px solid #000' : 'none',
                                             transition: '0.3s',
                                             textDecoration: 'underline',
                                             fontSize: 18,
@@ -395,40 +394,44 @@ export default function Home() {
                                                 <IconCopyPlus size={20} color="#13DFAA" />
                                             </button>
                                         </Tooltip>
-                                        <Tooltip title="Delete asset" placement="top">
-                                            <button
-                                                style={{
-                                                    position: 'absolute',
-                                                    top: 60,
-                                                    right: 10,
-                                                    backgroundColor: '#fff',
-                                                    color: '#000',
+                                        {!['Pending', 'Sold', 'Listed'].includes(
+                                            getStatus(asset.status, asset.mintExplorer)
+                                        ) && (
+                                            <Tooltip title="Delete asset" placement="top">
+                                                <button
+                                                    style={{
+                                                        position: 'absolute',
+                                                        top: 60,
+                                                        right: 10,
+                                                        backgroundColor: '#fff',
+                                                        color: '#000',
 
-                                                    padding: '5px',
-                                                    borderRadius: '5px',
-                                                    cursor: 'pointer',
-                                                    transition: '0.3s',
-                                                    border: '1px solid #fff',
-                                                }}
-                                                onClick={(event) => {
-                                                    event.stopPropagation();
+                                                        padding: '5px',
+                                                        borderRadius: '5px',
+                                                        cursor: 'pointer',
+                                                        transition: '0.3s',
+                                                        border: '1px solid #fff',
+                                                    }}
+                                                    onClick={(event) => {
+                                                        event.stopPropagation();
 
-                                                    dispatch(deleteAssetThunk(asset._id));
-                                                }}
-                                                onMouseEnter={(event) => {
-                                                    event.currentTarget.style.backgroundColor = '#000';
-                                                    event.currentTarget.style.borderColor = '#ff0000';
-                                                }}
-                                                onMouseLeave={(event) => {
-                                                    event.currentTarget.style.backgroundColor = '#fff';
-                                                    event.currentTarget.style.borderColor = '#fff';
-                                                }}
-                                            >
-                                                <IconTrash size={20} color="#ff0000" />
-                                            </button>
-                                        </Tooltip>
+                                                        dispatch(deleteAssetThunk(asset._id));
+                                                    }}
+                                                    onMouseEnter={(event) => {
+                                                        event.currentTarget.style.backgroundColor = '#000';
+                                                        event.currentTarget.style.borderColor = '#ff0000';
+                                                    }}
+                                                    onMouseLeave={(event) => {
+                                                        event.currentTarget.style.backgroundColor = '#fff';
+                                                        event.currentTarget.style.borderColor = '#fff';
+                                                    }}
+                                                >
+                                                    <IconTrash size={20} color="#ff0000" />
+                                                </button>
+                                            </Tooltip>
+                                        )}
 
-                                        <img
+                                        <Image
                                             src={asset.image}
                                             alt="bg"
                                             width={300}
@@ -485,13 +488,16 @@ export default function Home() {
                                                     ? `$${asset?.licenses?.nft.single.editionPrice}.00`
                                                     : ''}
                                             </Typography>
-                                            {getStatusIcon(asset.status, asset.mintExplorer) === 'Draft' && (
+                                            {getStatus(asset.status, asset.mintExplorer) === 'Draft' && (
                                                 <IconEdit style={iconStyle} />
                                             )}
-                                            {getStatusIcon(asset.status, asset.mintExplorer) === 'Pending' && (
+                                            {getStatus(asset.status, asset.mintExplorer) === 'Rejected' && (
+                                                <IconEdit style={iconStyle} />
+                                            )}
+                                            {getStatus(asset.status, asset.mintExplorer) === 'Pending' && (
                                                 <IconScanEye style={iconStyle} />
                                             )}
-                                            {getStatusIcon(asset.status, asset.mintExplorer) === 'Listed' && (
+                                            {getStatus(asset.status, asset.mintExplorer) === 'Listed' && (
                                                 <IconTag style={iconStyle} />
                                             )}
                                             {asset.mintExplorer && (

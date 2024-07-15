@@ -31,6 +31,7 @@ const ConsignArtwork = () => {
     const dispatch = useDispatch();
 
     const { status } = useSelector((state) => state.asset);
+    const formData = useSelector((state) => state.asset.assetMetadata?.context.formData);
     const selectedAsset = useSelector((state) => state.user.selectedAsset);
     const { previewAndConsign } = useSelector((state) => state.consignArtwork);
     const { completedSteps } = useSelector((state) => state.consignArtwork);
@@ -109,12 +110,16 @@ const ConsignArtwork = () => {
                     data: { status },
                 })}
             >
-                <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
+                <Breadcrumb
+                    title={texts.consignArtworkTitle}
+                    items={BCrumb}
+                    assetTitle={(formData as any)?.title ?? 'Untitled'}
+                />
 
                 <Grid container>
                     <Grid item md={12} lg={6}>
                         <Box marginBottom={2}>
-                            <Stack gap={1}>
+                            <Stack gap={1} pl={2}>
                                 <Typography variant="h6" fontWeight="normal" color="GrayText">
                                     {texts.consignArtworkSubtitle}
                                 </Typography>
