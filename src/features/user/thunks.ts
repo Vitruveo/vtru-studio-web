@@ -55,15 +55,13 @@ import {
     VerifyConnectWalletApiRes,
     RequestConnectWalletRes,
     RemoveSocialReq,
-    Wallet,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { AccountSettingsFormValues } from '@/app/home/myProfile/types';
 import { consignArtworkActionsCreators } from '../consignArtwork/slice';
-import { config } from '@/app/home/components/apps/wallet';
 import { BASE_URL_API } from '@/constants/api';
 import { getAssetById, getMyAssets } from '../asset/requests';
-import { ASSET_STORAGE_URL } from '@/constants/asset';
+import { ASSET_STORAGE_URL, NO_IMAGE_ASSET } from '@/constants/asset';
 
 export function userLoginThunk(payload: UserLoginReq): ReduxThunkAction<Promise<UserLoginApiRes>> {
     return async function (dispatch, getState) {
@@ -386,7 +384,7 @@ export function requestMyAssetsThunk(): ReduxThunkAction<Promise<void>> {
                             _id: asset._id,
                             title: asset.assetMetadata?.context?.formData?.title || 'Untitled',
                             image: !asset?.formats?.preview?.path
-                                ? 'https://cdn.vectorstock.com/i/500p/65/30/default-image-icon-missing-picture-page-vector-40546530.jpg'
+                                ? NO_IMAGE_ASSET
                                 : `${ASSET_STORAGE_URL}/${asset.formats.preview.path}`,
                             status: asset.consignArtwork?.status || 'Draft',
                             collections: asset?.assetMetadata?.taxonomy?.formData?.collections || [],
