@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef } from 'react';
 import smartcrop from 'smartcrop';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
