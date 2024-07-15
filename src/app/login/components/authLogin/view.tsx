@@ -52,6 +52,9 @@ function LoginView({ values, errors, disabled, handleChange, handleSubmit }: Log
                     }}
                 />
             </Box>
+            <Typography variant="h3" marginBottom={2}>
+                Studio is currently down for maintenance. You will be able to check our new features soon!
+            </Typography>
             <form onSubmit={handleSubmit}>
                 <Stack>
                     <Box>
@@ -81,7 +84,9 @@ function LoginView({ values, errors, disabled, handleChange, handleSubmit }: Log
                 </Stack>
                 <Box>
                     <Button
-                        color="primary"
+                        style={{
+                            backgroundColor: 'gray',
+                        }}
                         disabled={disabled}
                         variant="contained"
                         size="large"
