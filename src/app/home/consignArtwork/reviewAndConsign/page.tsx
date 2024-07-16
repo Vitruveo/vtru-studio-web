@@ -101,11 +101,12 @@ const ConsignArtwork = () => {
 
     useEffect(() => {
         dispatch(validationConsignThunk());
-    }, []);
+    }, [dispatch]);
 
     const handlePreview = () => {
         dispatch(consignArtworkThunks.checkPreview());
     };
+
     const handleCancelRequestConsign = () => {
         dispatch(deleteRequestConsignThunk());
     };
@@ -146,7 +147,8 @@ const ConsignArtwork = () => {
                 submitDisabled={
                     validateConsign.status !== 'success' ||
                     consignArtwork?.status === 'pending' ||
-                    consignArtwork?.status === 'running'
+                    consignArtwork?.status === 'running' ||
+                    !username // Adiciona a verificação do username aqui também
                 }
                 backOnclick={() => router.push(`/home/consignArtwork`)}
                 display={!!consignArtworkStatus?.buttontitle}
