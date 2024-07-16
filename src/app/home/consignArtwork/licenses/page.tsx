@@ -13,7 +13,7 @@ import { LicensesFormValues } from './types';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
 import { ModalBackConfirm } from '../modalBackConfirm';
-import Nft from './nft';
+import Nft, { checkStepProgress } from './nft';
 import Print from './print';
 import Stream from './stream';
 import Remix from './remix';
@@ -119,15 +119,13 @@ export default function Licenses() {
                 dispatch(
                     consignArtworkActionsCreators.changeStatusStep({
                         stepId: 'licenses',
-                        status: Object.values(values).filter((v) => v?.added).length ? 'completed' : 'inProgress',
+                        status: checkStepProgress({ values }),
                     })
                 );
 
                 router.push(showBackModal ? '/home/consignArtwork' : `/home/consignArtwork/termsOfUse`);
             },
         });
-
-    const licensesAdded = Object.values(values).filter((v) => v?.added);
 
     const handleCloseBackModal = () => {
         setShowBackModal(false);
@@ -188,7 +186,7 @@ export default function Licenses() {
             <PageContainerFooter
                 submitText={texts.nextButton}
                 title={texts.consignArtworkTitle}
-                stepStatus={licensesAdded.length > 0 ? 'completed' : 'inProgress'}
+                stepStatus={checkStepProgress({ values })}
                 stepNumber={3}
                 backOnclick={handleOpenBackModal}
             >

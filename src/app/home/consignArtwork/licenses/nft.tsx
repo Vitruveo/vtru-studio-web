@@ -14,20 +14,28 @@ import CustomSelect from '@/app/home/components/forms/theme-elements/CustomSelec
 import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
 import CustomCheckbox from '@/app/home/components/forms/theme-elements/CustomCheckbox';
 import Card from './common/card';
-import { LicenseProps } from './types';
+import { LicenseProps, LicensesFormValues } from './types';
 import { useI18n } from '@/app/hooks/useI18n';
 import { formatCurrency } from '@/utils/formatCurrency';
+import { StepStatus } from '@/features/consignArtwork/types';
 
 // TODO: AVAILABLE LICENSE SÓ VAI SER USADA QUANDO ELASTIC EDITIONS FOR SELECIONADO
 // NOTE: AVAILABLE LICENSE DESATIVADO POR ENQUANTO
+export const maxPrice = 10000;
+export const minPrice = 10;
+export const checkStepProgress = ({ values }: { values: LicensesFormValues }): StepStatus => {
+    return Object.values(values).filter((v) => v?.added).length &&
+        values.nft.single.editionPrice >= minPrice &&
+        values.nft.single.editionPrice <= maxPrice
+        ? 'completed'
+        : 'inProgress';
+};
 
 function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const [helperText, setHelperText] = useState('');
     const [currentDescription, setCurrentDescription] = useState('nft.editionOption');
     const values = allValues.nft || {};
 
-    const maxPrice = 10000;
-    const minPrice = 10;
     useEffect(() => {
         if (values.single.editionPrice < minPrice) {
             setHelperText(`Minimum price is ${formatCurrency({ value: minPrice })}`);
