@@ -1,8 +1,8 @@
 'use client';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useRouter } from 'next/navigation';
-import { Button, Typography, useTheme } from '@mui/material';
+import { Button, Typography, useTheme, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
@@ -34,6 +34,9 @@ const ConsignArtwork = () => {
     const dispatch = useDispatch();
     const { language } = useI18n();
     const { validateConsign, consignArtwork } = useSelector((state) => state.asset);
+    const profile = useSelector((state) => state.user.profile);
+    const [username, setUsername] = useState(profile?.username || '');
+    const [usernameError, setUsernameError] = useState(false);
 
     const texts = {
         homeTitle: language['studio.home.title'],
@@ -126,6 +129,11 @@ const ConsignArtwork = () => {
 
     const handleSubmit = async (event?: React.FormEvent) => {
         if (event) event.preventDefault();
+        if (!username) {
+            setUsernameError(true);
+            return;
+        }
+        setUsernameError(false);
         dispatch(requestConsignThunk());
     };
 
@@ -243,6 +251,17 @@ const ConsignArtwork = () => {
                                 </a>
                             </Typography>
                         )}
+
+                        {/* Username field with error handling */}
+                        <TextField
+                            label="Username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            error={usernameError}
+                            helperText={usernameError ? 'Username is required' : ''}
+                            fullWidth
+                            margin="normal"
+                        />
                     </Box>
                 </Box>
             </PageContainerFooter>

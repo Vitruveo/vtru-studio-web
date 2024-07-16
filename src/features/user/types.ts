@@ -39,6 +39,7 @@ export interface User {
     wallets: Wallet[];
     emails: Email[];
     profile: {
+        username: string;
         avatar: string | null;
         phone: string | null;
         language: string | null;
