@@ -41,6 +41,7 @@ import PageContainer from '@/app/home/components/container/PageContainer';
 import { MintExplorer } from '@/features/user/types';
 import { LicensesFormValues } from './consignArtwork/licenses/types';
 import { IconEdit } from '@tabler/icons-react';
+import isVideoExtension from '@/utils/isVideo';
 
 const iconStyle: CSSProperties = {
     position: 'absolute',
@@ -454,17 +455,35 @@ export default function Home() {
                                             </Tooltip>
                                         )}
 
-                                        <Image
-                                            src={asset.image}
-                                            alt="bg"
-                                            width={300}
-                                            height={300}
-                                            style={{
-                                                objectFit: 'cover',
-                                                borderTopLeftRadius: 10,
-                                                borderTopRightRadius: 10,
-                                            }}
-                                        />
+                                        {isVideoExtension(asset.image) ? (
+                                            <video
+                                                autoPlay
+                                                muted
+                                                loop
+                                                style={{
+                                                    objectFit: 'cover',
+                                                    borderTopLeftRadius: 10,
+                                                    borderTopRightRadius: 10,
+                                                }}
+                                                width={300}
+                                                height={300}
+                                            >
+                                                <source src={asset.image} type="video/mp4" />
+                                            </video>
+                                        ) : (
+                                            <Image
+                                                src={asset.image}
+                                                alt="bg"
+                                                width={300}
+                                                height={300}
+                                                style={{
+                                                    objectFit: 'cover',
+                                                    borderTopLeftRadius: 10,
+                                                    borderTopRightRadius: 10,
+                                                }}
+                                            />
+                                        )}
+
                                         <Box
                                             sx={{
                                                 backgroundColor: '#e6e6e6',
