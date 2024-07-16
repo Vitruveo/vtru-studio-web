@@ -18,17 +18,14 @@ import {
     ListItem,
     ListItemText,
     useMediaQuery,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
 } from '@mui/material';
 import { Menu as MenuIcon } from '@mui/icons-material';
-import {
-    IconCircleFilled,
-    IconCopyPlus,
-    IconEyeCheck,
-    IconPlus,
-    IconScanEye,
-    IconTag,
-    IconTrash,
-} from '@tabler/icons-react';
+import { IconCircleFilled, IconCopyPlus, IconPlus, IconScanEye, IconTag, IconTrash } from '@tabler/icons-react';
 import RSelect from 'react-select';
 import Image from 'next/image';
 
@@ -39,10 +36,12 @@ import { userActionsCreators } from '@/features/user/slice';
 import { createNewAssetThunk, deleteAssetThunk } from '@/features/asset/thunks';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { assetActionsCreators } from '@/features/asset/slice';
+import { setFilter } from '@/features/filters/filtersSlice';
 import PageContainer from '@/app/home/components/container/PageContainer';
 import { MintExplorer } from '@/features/user/types';
 import { LicensesFormValues } from './consignArtwork/licenses/types';
 import { IconEdit } from '@tabler/icons-react';
+import isVideoExtension from '@/utils/isVideo';
 
 const iconStyle: CSSProperties = {
     position: 'absolute',
@@ -58,6 +57,7 @@ const filters = ['Draft', 'Pending', 'Listed', 'Sold', 'All'];
 
 const getButtonText = (status: string, mintExplorer?: MintExplorer) => {
     if (status.toUpperCase() === 'DRAFT') return 'Edit';
+    if (status.toUpperCase() === 'REJECTED') return 'Edit';
     if (status.toUpperCase() === 'PENDING') return 'View';
     if (status.toUpperCase() === 'ACTIVE' && mintExplorer?.transactionHash) return 'View Transaction';
     if (status.toUpperCase() === 'ACTIVE') return 'View Listing';
@@ -67,14 +67,15 @@ const getButtonText = (status: string, mintExplorer?: MintExplorer) => {
 const getStatusText = (status: string, mintExplorer?: MintExplorer) => {
     if (status.toUpperCase() === 'ACTIVE' && mintExplorer?.transactionHash) return 'Sold';
     if (status.toUpperCase() === 'ACTIVE') return 'Listed';
-    return status;
+    return status.charAt(0).toUpperCase() + status.slice(1);
 };
 
-const getStatusIcon = (status: string, mintExplorer?: MintExplorer) => {
+const getStatus = (status: string, mintExplorer?: MintExplorer) => {
     if (status.toUpperCase() === 'DRAFT') return 'Draft';
     if (status.toUpperCase() === 'PENDING') return 'Pending';
     if (status.toUpperCase() === 'ACTIVE' && mintExplorer?.transactionHash) return 'Sold';
     if (status.toUpperCase() === 'ACTIVE') return 'Listed';
+    if (status.toUpperCase() === 'REJECTED') return 'Rejected';
     return status;
 };
 
@@ -91,12 +92,14 @@ export default function Home() {
 
     const assets = useSelector((state) => state.user.assets);
     const customizer = useSelector((state) => state.customizer);
+    const selectedFilter = useSelector((state) => state.filters.selectedFilter);
 
     const [collectionSelected, setCollectionSelected] = useState('all');
-    const [filterSelected, setFilterSelected] = useState('all');
     const [cloneId, setCloneId] = useState<string | undefined>(undefined);
     const [loading, setLoading] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [assetToDelete, setAssetToDelete] = useState<string | null>(null);
 
     const texts = {
         title: language['studio.home.title'],
@@ -112,7 +115,7 @@ export default function Home() {
         dispatch(consignArtworkActionsCreators.resetConsignArtwork());
         dispatch(assetActionsCreators.resetAsset());
         dispatch(requestMyAssetsThunk());
-    }, []);
+    }, [dispatch]);
 
     const collections = assets.reduce<string[]>((acc, asset) => {
         asset.collections.forEach((collection: string) => {
@@ -133,15 +136,15 @@ export default function Home() {
     }, [assets, collectionSelected]);
 
     const dataFiltered = useMemo(() => {
-        if (filterSelected.toUpperCase() === 'ALL') {
+        if (selectedFilter.toUpperCase() === 'ALL') {
             return data;
         }
 
         return data.filter((asset: any) => {
             const statusText = getStatusText(asset.status, asset.mintExplorer);
-            return statusText.toUpperCase() === filterSelected.toUpperCase();
+            return statusText.toUpperCase() === selectedFilter.toUpperCase();
         });
-    }, [data, filterSelected]);
+    }, [data, selectedFilter]);
 
     const handleCreateNewAsset = async (assetClonedId?: string) => {
         setLoading(true);
@@ -156,11 +159,33 @@ export default function Home() {
         setDrawerOpen(!drawerOpen);
     };
 
+    const handleDeleteClick = (assetId: string) => {
+        setAssetToDelete(assetId);
+        setOpenDeleteDialog(true);
+    };
+
+    const handleDeleteConfirm = () => {
+        if (assetToDelete) {
+            dispatch(deleteAssetThunk(assetToDelete));
+        }
+        setOpenDeleteDialog(false);
+        setAssetToDelete(null);
+    };
+
+    const handleDeleteCancel = () => {
+        setOpenDeleteDialog(false);
+        setAssetToDelete(null);
+    };
+
+    const handleFilterChange = (filter: string) => {
+        dispatch(setFilter(filter));
+    };
+
     return (
         <Container
             sx={{
-                overflow: 'auto',
-                maxHeight: '85vh',
+                // overflow: 'auto',
+                // maxHeight: '85vh',
                 maxWidth: customizer.isLayout === 'boxed' ? 'lg' : '100%!important',
             }}
         >
@@ -307,7 +332,7 @@ export default function Home() {
                                                 button
                                                 key={index}
                                                 onClick={() => {
-                                                    setFilterSelected(filter);
+                                                    handleFilterChange(filter);
                                                     handleDrawerToggle();
                                                 }}
                                             >
@@ -322,11 +347,11 @@ export default function Home() {
                                 {filters.map((filter, index) => (
                                     <Button
                                         key={index}
-                                        onClick={() => setFilterSelected(filter)}
+                                        onClick={() => handleFilterChange(filter)}
                                         variant="text"
                                         style={{
-                                            color: filterSelected === filter ? '#000' : '#666',
-                                            border: filterSelected === filter ? '1px solid #000' : 'none',
+                                            color: selectedFilter === filter ? '#000' : '#666',
+                                            border: selectedFilter === filter ? '1px solid #000' : 'none',
                                             transition: '0.3s',
                                             textDecoration: 'underline',
                                             fontSize: 18,
@@ -338,7 +363,7 @@ export default function Home() {
                             </Box>
                         )}
                     </Box>
-                    <Box mt={2}>
+                    <Box mt={2} style={{ maxHeight: 'calc(100vh - 420px)', overflowY: 'scroll' }}>
                         <Grid container spacing={2} padding={1}>
                             {dataFiltered.map((asset, index) => (
                                 <Grid item key={index} sm={6} md={6} lg={4}>
@@ -395,50 +420,70 @@ export default function Home() {
                                                 <IconCopyPlus size={20} color="#13DFAA" />
                                             </button>
                                         </Tooltip>
-                                        <Tooltip title="Delete asset" placement="top">
-                                            <button
+                                        {!['Pending', 'Sold', 'Listed'].includes(
+                                            getStatus(asset.status, asset.mintExplorer)
+                                        ) && (
+                                            <Tooltip title="Delete asset" placement="top">
+                                                <button
+                                                    style={{
+                                                        position: 'absolute',
+                                                        top: 60,
+                                                        right: 10,
+                                                        backgroundColor: '#fff',
+                                                        color: '#000',
+                                                        padding: '5px',
+                                                        borderRadius: '5px',
+                                                        cursor: 'pointer',
+                                                        transition: '0.3s',
+                                                        border: '1px solid #fff',
+                                                    }}
+                                                    onClick={(event) => {
+                                                        event.stopPropagation();
+                                                        handleDeleteClick(asset._id);
+                                                    }}
+                                                    onMouseEnter={(event) => {
+                                                        event.currentTarget.style.backgroundColor = '#000';
+                                                        event.currentTarget.style.borderColor = '#ff0000';
+                                                    }}
+                                                    onMouseLeave={(event) => {
+                                                        event.currentTarget.style.backgroundColor = '#fff';
+                                                        event.currentTarget.style.borderColor = '#fff';
+                                                    }}
+                                                >
+                                                    <IconTrash size={20} color="#ff0000" />
+                                                </button>
+                                            </Tooltip>
+                                        )}
+
+                                        {isVideoExtension(asset.image) ? (
+                                            <video
+                                                autoPlay
+                                                muted
+                                                loop
                                                 style={{
-                                                    position: 'absolute',
-                                                    top: 60,
-                                                    right: 10,
-                                                    backgroundColor: '#fff',
-                                                    color: '#000',
-
-                                                    padding: '5px',
-                                                    borderRadius: '5px',
-                                                    cursor: 'pointer',
-                                                    transition: '0.3s',
-                                                    border: '1px solid #fff',
+                                                    objectFit: 'cover',
+                                                    borderTopLeftRadius: 10,
+                                                    borderTopRightRadius: 10,
                                                 }}
-                                                onClick={(event) => {
-                                                    event.stopPropagation();
-
-                                                    dispatch(deleteAssetThunk(asset._id));
-                                                }}
-                                                onMouseEnter={(event) => {
-                                                    event.currentTarget.style.backgroundColor = '#000';
-                                                    event.currentTarget.style.borderColor = '#ff0000';
-                                                }}
-                                                onMouseLeave={(event) => {
-                                                    event.currentTarget.style.backgroundColor = '#fff';
-                                                    event.currentTarget.style.borderColor = '#fff';
-                                                }}
+                                                width={300}
+                                                height={300}
                                             >
-                                                <IconTrash size={20} color="#ff0000" />
-                                            </button>
-                                        </Tooltip>
+                                                <source src={asset.image} type="video/mp4" />
+                                            </video>
+                                        ) : (
+                                            <Image
+                                                src={asset.image}
+                                                alt="bg"
+                                                width={300}
+                                                height={300}
+                                                style={{
+                                                    objectFit: 'cover',
+                                                    borderTopLeftRadius: 10,
+                                                    borderTopRightRadius: 10,
+                                                }}
+                                            />
+                                        )}
 
-                                        <img
-                                            src={asset.image}
-                                            alt="bg"
-                                            width={300}
-                                            height={300}
-                                            style={{
-                                                objectFit: 'cover',
-                                                borderTopLeftRadius: 10,
-                                                borderTopRightRadius: 10,
-                                            }}
-                                        />
                                         <Box
                                             sx={{
                                                 backgroundColor: '#e6e6e6',
@@ -470,7 +515,6 @@ export default function Home() {
                                             <Typography
                                                 sx={{
                                                     textAlign: 'left',
-                                                    marginTop: '-10px',
                                                     color:
                                                         getStatusText(asset.status, asset.mintExplorer) === 'Sold'
                                                             ? 'inherit'
@@ -479,19 +523,26 @@ export default function Home() {
                                                         getStatusText(asset.status, asset.mintExplorer) === 'Sold'
                                                             ? '0px'
                                                             : '20px',
+                                                    marginTop:
+                                                        getStatusText(asset.status, asset.mintExplorer) === 'blocked'
+                                                            ? '-30px'
+                                                            : '-10px',
                                                 }}
                                             >
                                                 {asset.mintExplorer
                                                     ? `$${asset?.licenses?.nft.single.editionPrice}.00`
                                                     : ''}
                                             </Typography>
-                                            {getStatusIcon(asset.status, asset.mintExplorer) === 'Draft' && (
+                                            {getStatus(asset.status, asset.mintExplorer) === 'Draft' && (
                                                 <IconEdit style={iconStyle} />
                                             )}
-                                            {getStatusIcon(asset.status, asset.mintExplorer) === 'Pending' && (
+                                            {getStatus(asset.status, asset.mintExplorer) === 'Rejected' && (
+                                                <IconEdit style={iconStyle} />
+                                            )}
+                                            {getStatus(asset.status, asset.mintExplorer) === 'Pending' && (
                                                 <IconScanEye style={iconStyle} />
                                             )}
-                                            {getStatusIcon(asset.status, asset.mintExplorer) === 'Listed' && (
+                                            {getStatus(asset.status, asset.mintExplorer) === 'Listed' && (
                                                 <IconTag style={iconStyle} />
                                             )}
                                             {asset.mintExplorer && (
@@ -533,6 +584,28 @@ export default function Home() {
                     </Box>
                 </Box>
             </PageContainer>
+
+            <Dialog
+                open={openDeleteDialog}
+                onClose={handleDeleteCancel}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{'Delete Asset'}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Do you really want to delete this asset?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDeleteCancel} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleDeleteConfirm} color="error" variant="outlined">
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Container>
     );
 }

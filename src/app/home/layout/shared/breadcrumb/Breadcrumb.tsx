@@ -16,25 +16,28 @@ interface BreadCrumbType {
     items?: BreadCrumbItem[];
     title: string;
     children?: JSX.Element;
+    assetTitle?: string;
 }
 
-const Breadcrumb = ({ subtitle, items, title, children }: BreadCrumbType) => (
+const Breadcrumb = ({ subtitle, items, title, children, assetTitle }: BreadCrumbType) => (
     <Grid
         container
         sx={{
             backgroundColor: 'primary.light',
             borderRadius: (theme: Theme) => theme.shape.borderRadius / 4,
-            p: '30px 25px 20px',
+            p: '30px 16px 20px',
             marginBottom: '30px',
             position: 'relative',
             overflow: 'hidden',
         }}
     >
-        <Grid item xs={12} sm={6} lg={8} mb={1}>
+        <Grid item xs={12} sm={6} lg={8} mb={1} display={'flex'} flexDirection={'column'} gap={0.5}>
             <Typography variant="h4">{title}</Typography>
-            <Typography color="textSecondary" variant="h6" fontWeight={400} mt={0.8} mb={0}>
-                {subtitle}
-            </Typography>
+            {subtitle && (
+                <Typography color="textSecondary" variant="h6" fontWeight={400} mt={0.8} mb={0}>
+                    {subtitle}
+                </Typography>
+            )}
             <Breadcrumbs
                 separator={<IconCircle size="5" fill="textSecondary" fillOpacity={'0.6'} style={{ margin: '0 5px' }} />}
                 sx={{ alignItems: 'center', mt: items ? '10px' : '' }}
@@ -54,6 +57,11 @@ const Breadcrumb = ({ subtitle, items, title, children }: BreadCrumbType) => (
                       ))
                     : ''}
             </Breadcrumbs>
+            {assetTitle && (
+                <Typography variant="h2" color="textSecondary" mt={1}>
+                    {assetTitle}
+                </Typography>
+            )}
         </Grid>
         <Grid item xs={12} sm={6} lg={4} display="flex" alignItems="flex-end">
             <Box

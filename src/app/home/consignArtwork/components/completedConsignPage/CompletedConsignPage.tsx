@@ -26,6 +26,7 @@ export const CompletedConsignPage = () => {
     const toastr = useToastr();
 
     const previewAndConsign = useSelector((state) => state.consignArtwork.previewAndConsign);
+    const formData = useSelector((state) => state.asset.assetMetadata?.context.formData);
     const status = useSelector((state) => state.consignArtwork.status);
     const userIsBlocked = useSelector((state) => state.user?.vault?.isBlocked);
     const transactionHash = useSelector((state) => state.asset.contractExplorer?.tx);
@@ -94,10 +95,14 @@ export const CompletedConsignPage = () => {
                 submitDisabled={status === 'active' || status === 'blocked' || userIsBlocked}
                 hasBackButton
             >
-                <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
+                <Breadcrumb
+                    title={texts.consignArtworkTitle}
+                    items={BCrumb}
+                    assetTitle={(formData as any)?.title ?? 'Untitled'}
+                />
                 <Grid display="flex" flexWrap="wrap" marginBottom={6} item xs={12} lg={6}>
                     <Box marginBottom={2}>
-                        <Box>
+                        <Box pl={2}>
                             <Typography variant="h6" fontWeight="normal" color="GrayText">
                                 {texts.consignedTitle}
                             </Typography>

@@ -65,7 +65,6 @@ const language: Translation = {
     'studio.consignArtwork.title': 'Consignar Obra de Arte',
     'studio.consignArtwork.subtitle.moreInformation': 'Para más información visita el',
     'studio.consignArtwork.subtitle': 'Completa todas las tareas requeridas y consigna tu obra de arte',
-    'studio.consignArtwork.assetPreview': 'Vista Previa del Activo',
 
     'studio.consignArtwork.stepName.assetMedia': 'Medios del Activo',
     'studio.consignArtwork.stepName.assetMetadata': 'Metadatos del Activo',
@@ -80,7 +79,7 @@ const language: Translation = {
     'studio.consignArtwork.stepStatus.completed': 'Completado',
     'studio.consignArtwork.stepStatus.inProgress': 'En Progreso',
     'studio.consignArtwork.stepStatus.notStarted': 'No Iniciado',
-    'studio.consignArtwork.stepStatus.error': 'Error',
+    'studio.consignArtwork.stepStatus.error': 'Incompleto',
     'studio.consignArtwork.stepPublishMessageSuccess': '¡Publicado con éxito!',
 
     'studio.consignArtwork.stepButton': (data: { status: string }) =>

@@ -2,6 +2,7 @@ import { StepsFormValues } from '@/app/home/consignArtwork/types';
 import { APIResponse, Framework } from '../common/types';
 import { AccountSettingsFormValues } from '@/app/home/myProfile/types';
 import { LicensesFormValues } from '@/app/home/consignArtwork/licenses/types';
+import { ContractExplorer } from '../asset/types';
 
 export interface Email {
     email: string;
@@ -22,6 +23,7 @@ export interface Assets {
     collections: string[];
     licenses: LicensesFormValues;
     mintExplorer?: MintExplorer;
+    contractExplorer?: ContractExplorer;
 }
 
 export interface User {

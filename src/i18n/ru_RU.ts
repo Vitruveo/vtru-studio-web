@@ -65,7 +65,6 @@ const language: Translation = {
     'studio.consignArtwork.subtitle': 'Выполните все необходимые задачи и передайте свое произведение искусства',
     'studio.consignArtwork.subtitle.moreInformation': 'Для детального описание посетите страницу',
     'studio.consignArtwork.subtitle.link': 'Dreamer.',
-    'studio.consignArtwork.assetPreview': 'Предпросмотр ресурса',
 
     'studio.consignArtwork.stepName.assetMedia': 'Медиафайлы',
     'studio.consignArtwork.stepName.assetMetadata': 'Метаданные мадиафайлов',
@@ -80,7 +79,7 @@ const language: Translation = {
     'studio.consignArtwork.stepStatus.completed': 'Завершено',
     'studio.consignArtwork.stepStatus.inProgress': 'В процессе',
     'studio.consignArtwork.stepStatus.notStarted': 'Не начато',
-    'studio.consignArtwork.stepStatus.error': 'Ошибка',
+    'studio.consignArtwork.stepStatus.error': 'Не завершено',
     'studio.consignArtwork.stepPublishMessageSuccess': 'Успешно опубликовано!',
 
     'studio.consignArtwork.stepButton': (data: { status: string }) =>
