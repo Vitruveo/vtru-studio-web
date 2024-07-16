@@ -16,6 +16,7 @@ import CustomCheckbox from '@/app/home/components/forms/theme-elements/CustomChe
 import Card from './common/card';
 import { LicenseProps } from './types';
 import { useI18n } from '@/app/hooks/useI18n';
+import { formatCurrency } from '@/utils/formatCurrency';
 
 // TODO: AVAILABLE LICENSE SÓ VAI SER USADA QUANDO ELASTIC EDITIONS FOR SELECIONADO
 // NOTE: AVAILABLE LICENSE DESATIVADO POR ENQUANTO
@@ -29,10 +30,10 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const minPrice = 10;
     useEffect(() => {
         if (values.single.editionPrice < minPrice) {
-            setHelperText(`Minimum price is $${minPrice}`);
+            setHelperText(`Minimum price is ${formatCurrency({ value: minPrice })}`);
         }
         if (values.single.editionPrice > maxPrice) {
-            setHelperText(`Maximum price is $${maxPrice}`);
+            setHelperText(`Maximum price is ${formatCurrency({ value: maxPrice })}`);
         }
         if (values.single.editionPrice >= minPrice && values.single.editionPrice <= maxPrice) {
             setHelperText('');
