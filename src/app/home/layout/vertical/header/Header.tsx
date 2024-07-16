@@ -18,13 +18,12 @@ import { WalletProvider } from '@/app/home/components/apps/wallet';
 
 const Header = () => {
     const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
-    const lgDown = useMediaQuery((theme: any) => theme.breakpoints.down('lg'));
 
     const dispatch = useDispatch();
 
     // drawer
     const customizer = useSelector((state) => state.customizer);
-    const hasConsign = useSelector((state) => state.asset.contractExplorer?.tx);
+    const hasConsign = useSelector((state) => state.user.assets?.some((asset) => asset.contractExplorer?.tx));
 
     const AppBarStyled = styled(AppBar)(({ theme }) => ({
         boxShadow: 'none',
