@@ -23,8 +23,7 @@ const Header = () => {
 
     // drawer
     const customizer = useSelector((state) => state.customizer);
-    const assets = useSelector((state) => state.user.assets);
-    const hasConsign = assets?.some((asset) => asset.mintExplorer?.transactionHash);
+    const hasConsign = useSelector((state) => state.user.assets?.some((asset) => asset.contractExplorer?.tx));
 
     const AppBarStyled = styled(AppBar)(({ theme }) => ({
         boxShadow: 'none',
