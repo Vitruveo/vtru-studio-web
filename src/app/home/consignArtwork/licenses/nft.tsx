@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Box,
     FormControlLabel,
@@ -21,8 +21,23 @@ import { useI18n } from '@/app/hooks/useI18n';
 // NOTE: AVAILABLE LICENSE DESATIVADO POR ENQUANTO
 
 function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
+    const [helperText, setHelperText] = useState('');
     const [currentDescription, setCurrentDescription] = useState('nft.editionOption');
     const values = allValues.nft || {};
+
+    const maxPrice = 10000;
+    const minPrice = 10;
+    useEffect(() => {
+        if (values.single.editionPrice < minPrice) {
+            setHelperText(`Minimum price is $${minPrice}`);
+        }
+        if (values.single.editionPrice > maxPrice) {
+            setHelperText(`Maximum price is $${maxPrice}`);
+        }
+        if (values.single.editionPrice >= minPrice && values.single.editionPrice <= maxPrice) {
+            setHelperText('');
+        }
+    }, [values.single.editionPrice]);
 
     const { language } = useI18n();
 
@@ -322,7 +337,12 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                             )}
                             <FormControlLabel value="single" control={<Radio />} label={texts.singleEditionTitle} />
                             {values.editionOption === 'single' && (
-                                <Box marginLeft={4} display="flex" alignItems="center" justifyContent="space-between">
+                                <Box
+                                    marginLeft={4}
+                                    display="flex"
+                                    alignItems={helperText ? 'flex-start' : 'center'}
+                                    justifyContent="space-between"
+                                >
                                     <Box marginRight={1}>
                                         <Typography
                                             fontSize="0.8rem"
@@ -340,17 +360,22 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                         name="nft.single.editionPrice"
                                         type="number"
                                         InputProps={{
+                                            inputProps: {
+                                                style: { textAlign: 'center' },
+                                            },
                                             sx: {
                                                 backgroundColor: '#fff',
                                                 width: 90,
                                             },
                                         }}
+                                        required
                                         value={values.single.editionPrice}
-                                        inputProps={{ maxLength: 185, style: { textAlign: 'right' } }}
                                         onChange={handleChange}
                                         fullWidth
                                         size="small"
                                         variant="outlined"
+                                        helperText={helperText}
+                                        error={!!helperText}
                                     />
                                 </Box>
                             )}
