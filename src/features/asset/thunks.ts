@@ -22,10 +22,8 @@ import {
     AssetStatus,
     AssetStorageReq,
     ConsignArtworkSteps,
-    CreateAssetApiRes,
     CreateContractApiRes,
     CreateContractByAssetIdReq,
-    GetAssetApiRes,
     HistoryItems,
     RequestDeleteFilesReq,
     SigningMediaC2PAReq,
@@ -37,14 +35,14 @@ import { assetActionsCreators } from './slice';
 import { FormatMediaSave, FormatsMedia } from '@/app/home/consignArtwork/assetMedia/types';
 import { LicensesFormValues } from '@/app/home/consignArtwork/licenses/types';
 import { TermsOfUseFormValues } from '@/app/home/consignArtwork/termsOfUse/types';
-import { consignArtworkActionsCreators, stepsNames } from '../consignArtwork/slice';
+import { consignArtworkActionsCreators } from '../consignArtwork/slice';
 import { ASSET_STORAGE_URL } from '@/constants/asset';
 import { SectionsFormData } from '@/app/home/consignArtwork/assetMetadata/page';
 import { FormatsAuxiliayMedia } from '@/app/home/consignArtwork/auxiliaryMedia/types';
 
 import { BASE_URL_API } from '@/constants/api';
-import { toastrActionsCreators } from '../toastr/slice';
 import { userActionsCreators } from '../user/slice';
+import { checkStepProgress, maxPrice, minPrice } from '@/app/home/consignArtwork/licenses/nft';
 
 export function requestDeleteURLThunk(payload: RequestDeleteFilesReq): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
@@ -112,10 +110,14 @@ export function getAssetThunk(id: string): ReduxThunkAction<Promise<any>> {
                     );
                 }
 
-                if (response.data.licenses && Object.values(response.data.licenses).filter((v) => v.added)?.length)
+                if (response.data.licenses) {
                     dispatch(
-                        consignArtworkActionsCreators.changeStatusStep({ stepId: 'licenses', status: 'completed' })
+                        consignArtworkActionsCreators.changeStatusStep({
+                            stepId: 'licenses',
+                            status: checkStepProgress({ values: response.data.licenses }),
+                        })
                     );
+                }
 
                 if (response.data.contractExplorer) {
                     dispatch(assetActionsCreators.changeContractExplorer(response.data.contractExplorer));
