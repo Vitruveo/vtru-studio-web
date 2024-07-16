@@ -59,7 +59,6 @@ const Profile = () => {
                 sx={{
                     ...(typeof anchorEl2 === 'object' && {
                         color: 'primary.main',
-                        paddingLeft: '23px',
                     }),
                 }}
                 onClick={handleClick2}
