@@ -188,6 +188,7 @@ export default function AssetMedia() {
             .map(([key, _]) => key);
 
         if (deleteFormats.length) await dispatch(auxiliaryMediaThunk({ deleteFormats }));
+        await dispatch(auxiliaryMediaThunk({ description: getDescriptionJSONString(initialValues.description) }));
 
         router.push('/home/consignArtwork');
     };
