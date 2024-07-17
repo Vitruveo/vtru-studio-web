@@ -28,6 +28,7 @@ import { useToastr } from '@/app/hooks/useToastr';
 export default function AssetMedia() {
     const toast = useToastr();
     const asset = useSelector((state) => state.asset);
+    const formData = useSelector((state) => state.asset.assetMetadata?.context.formData);
     const [showBackModal, setShowBackModal] = useState(false);
     const [showFormtsInfo, setShowFormatsInfo] = useState(true);
     const { language } = useI18n();
@@ -345,7 +346,11 @@ export default function AssetMedia() {
                 stepNumber={1}
                 title={texts.consignArtworkTitle}
             >
-                <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
+                <Breadcrumb
+                    title={texts.consignArtworkTitle}
+                    items={BCrumb}
+                    assetTitle={(formData as any)?.title ?? 'Untitled'}
+                />
 
                 <Stack marginBottom={10} maxWidth={{ xs: '100%', sm: '100%', md: '100%' }}>
                     <Typography marginBottom={2} fontSize="1.2rem" fontWeight="500">

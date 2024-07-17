@@ -17,7 +17,6 @@ import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
 import { assetActionsCreators } from '@/features/asset/slice';
 import { requestDeleteFiles } from '@/features/asset/requests';
-import { CustomTextareaAutosize } from '../../components/forms/theme-elements/CustomTextarea';
 import { useToastr } from '@/app/hooks/useToastr';
 import { RichEditor } from '../../components/rich-editor/rich-editor';
 import { createDescriptionInitialState, getDescriptionJSONString, getDescriptionText } from './helpers';
@@ -55,6 +54,7 @@ export default function AssetMedia() {
     ];
 
     const asset = useSelector((state) => state.asset);
+    const formData = useSelector((state) => state.asset.assetMetadata?.context.formData);
 
     // TODO: COLOCAR TIPAGEM CORRETA
     const isAREnabled = useSelector((state: any) => state.asset.assetMetadata?.taxonomy.formData?.arenabled) == 'yes';
@@ -309,7 +309,11 @@ export default function AssetMedia() {
                 stepNumber={5}
                 title={texts.consignArtworkTitle}
             >
-                <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
+                <Breadcrumb
+                    title={texts.consignArtworkTitle}
+                    items={BCrumb}
+                    assetTitle={(formData as any)?.title ?? 'Untitled'}
+                />
 
                 <Stack marginBottom={10} maxWidth={{ xs: '100%', sm: '100%', md: '100%' }} alignItems="flex-start">
                     <Typography marginBottom={2} fontSize="1.2rem" fontWeight="500">

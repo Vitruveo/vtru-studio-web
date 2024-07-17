@@ -34,6 +34,7 @@ const ConsignArtwork = () => {
     const dispatch = useDispatch();
     const { language } = useI18n();
     const { validateConsign, consignArtwork } = useSelector((state) => state.asset);
+    const formData = useSelector((state) => state.asset.assetMetadata?.context.formData);
 
     const texts = {
         homeTitle: language['studio.home.title'],
@@ -143,7 +144,11 @@ const ConsignArtwork = () => {
                 backOnclick={() => router.push(`/home/consignArtwork`)}
                 display={!!consignArtworkStatus?.buttontitle}
             >
-                <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
+                <Breadcrumb
+                    title={texts.consignArtworkTitle}
+                    items={BCrumb}
+                    assetTitle={(formData as any)?.title ?? 'Untitled'}
+                />
 
                 <Box marginBottom={2}>
                     <Box maxWidth={600} p={2}>

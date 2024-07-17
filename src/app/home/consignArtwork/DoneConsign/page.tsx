@@ -98,6 +98,7 @@ export default function DoneConsign() {
     const toastr = useToastr();
 
     const asset = useSelector((state) => state.asset);
+    const formData = useSelector((state) => state.asset.assetMetadata?.context.formData);
 
     const [steps, setSteps] = useState<ConsignStep>(initialSteps);
 
@@ -175,7 +176,11 @@ export default function DoneConsign() {
                 submitDisabled={!isCompleted || hasError}
                 hasBackButton={hasError ? true : false}
             >
-                <Breadcrumb title={'Consign Artwork'} items={BCrumb} />
+                <Breadcrumb
+                    title={'Consign Artwork'}
+                    items={BCrumb}
+                    assetTitle={(formData as any)?.title ?? 'Untitled'}
+                />
 
                 <Grid container spacing={2}>
                     <Grid item lg={6}>

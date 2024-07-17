@@ -32,6 +32,7 @@ export default function ContractScreen() {
     const { contract, isOriginal, generatedArtworkAI, notMintedOtherBlockchain } = useSelector(
         (state) => state.asset.terms
     );
+    const formData = useSelector((state) => state.asset.assetMetadata?.context.formData);
 
     const Contract = contracts[currentLanguage] || contracts.default;
 
@@ -151,7 +152,11 @@ export default function ContractScreen() {
                 title={texts.consignArtworkTitle}
                 backOnclick={handleOpenBackModal}
             >
-                <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
+                <Breadcrumb
+                    title={texts.consignArtworkTitle}
+                    items={BCrumb}
+                    assetTitle={(formData as any)?.title ?? 'Untitled'}
+                />
                 <Box marginBottom={lgUp ? 0 : 8}>
                     <Typography marginBottom={2} fontSize="1.2rem" fontWeight="500">
                         {texts.termsOfUseTitle}
