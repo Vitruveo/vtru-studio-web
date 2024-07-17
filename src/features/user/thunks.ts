@@ -389,6 +389,7 @@ export function requestMyAssetsThunk(): ReduxThunkAction<Promise<void>> {
                             status: asset.consignArtwork?.status || 'Draft',
                             collections: asset?.assetMetadata?.taxonomy?.formData?.collections || [],
                             mintExplorer: asset?.mintExplorer,
+                            contractExplorer: asset?.contractExplorer,
                             licenses: asset?.licenses,
                         }))
                     )
