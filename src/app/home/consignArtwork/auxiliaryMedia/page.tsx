@@ -366,6 +366,11 @@ export default function AssetMedia() {
                                 <RichEditor
                                     editorState={values.description}
                                     onChange={(state) => {
+                                        dispatch(
+                                            assetActionsCreators.changeAuxiliaryMediaDescription(
+                                                getDescriptionJSONString(state)
+                                            )
+                                        );
                                         setFieldValue('description', state);
                                     }}
                                 />
