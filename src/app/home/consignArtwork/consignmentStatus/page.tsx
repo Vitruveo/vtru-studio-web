@@ -1,8 +1,8 @@
 'use client';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
-import { usePathname, useRouter } from 'next/navigation';
-import { Button, Grid, Radio, RadioGroup, Theme, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { useRouter } from 'next/navigation';
+import { Button, Grid, Radio, RadioGroup, Typography } from '@mui/material';
 
 import Box from '@mui/material/Box';
 
@@ -23,22 +23,17 @@ const ConsignArtwork = () => {
     });
 
     const assetStatus = useSelector((state) => state.asset.status);
+    const formData = useSelector((state) => state.asset.assetMetadata?.context.formData);
 
     const checkStatus = assetStatus === 'draft' ? 'Draft' : 'Preview';
 
     const [statusRadio, setStatusRadio] = useState(checkStatus);
 
-    const pathname = usePathname();
     const router = useRouter();
 
     const { language } = useI18n();
 
-    const theme = useTheme();
     const dispatch = useDispatch();
-
-    const { completedSteps } = useSelector((state) => state.consignArtwork);
-
-    const lgUp = useMediaQuery((th: Theme) => th.breakpoints.up('lg'));
 
     const texts = {
         consignArtworkTitle: language['studio.consignArtwork.title'],
@@ -141,7 +136,11 @@ const ConsignArtwork = () => {
                 title={texts.consignArtworkTitle}
                 submitText={texts.viewArtworkButton}
             >
-                <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
+                <Breadcrumb
+                    title={texts.consignArtworkTitle}
+                    items={BCrumb}
+                    assetTitle={(formData as any)?.title ?? 'Untitled'}
+                />
                 <Grid marginBottom={10} item xs={12} lg={6}>
                     <Typography marginBottom={2} marginRight={1} fontSize="1.2rem" fontWeight="500">
                         {texts.title}

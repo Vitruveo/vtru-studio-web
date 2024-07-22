@@ -36,6 +36,7 @@ export default function Licenses() {
     const dispatch = useDispatch();
 
     const { licenses: licensesState, formats } = useSelector((state) => state.asset);
+    const formData = useSelector((state) => state.asset.assetMetadata?.context.formData);
     const selectPreviewAsset = Object.entries(formats).find(([key]) => key === 'print');
     const printExists = selectPreviewAsset && selectPreviewAsset[1].file;
 
@@ -190,7 +191,11 @@ export default function Licenses() {
                 stepNumber={3}
                 backOnclick={handleOpenBackModal}
             >
-                <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
+                <Breadcrumb
+                    title={texts.consignArtworkTitle}
+                    items={BCrumb}
+                    assetTitle={(formData as any)?.title ?? 'Untitled'}
+                />
 
                 <Box marginBottom={10}>
                     <Box

@@ -74,6 +74,7 @@ export default function AssetMetadata() {
 
     const asset = useSelector((state) => state.asset);
     const { assetMetadata } = asset;
+    const formData = assetMetadata?.context.formData;
 
     const sectionsFormat = Object.entries(sectionsJSON).reduce(
         (acc, [key, value]) => ({
@@ -350,7 +351,11 @@ export default function AssetMetadata() {
                 title={texts.consignArtworkTitle}
                 backOnclick={handleOpenBackModal}
             >
-                <Breadcrumb title={texts.consignArtworkTitle} items={BCrumb} />
+                <Breadcrumb
+                    title={texts.consignArtworkTitle}
+                    items={BCrumb}
+                    assetTitle={(formData as any)?.title ?? 'Untitled'}
+                />
                 <Box alignItems="flex-start" height="auto" display="flex" flexWrap="wrap">
                     <Box width={680}>
                         <Typography marginBottom={2} fontSize="1.2rem" fontWeight="500">
