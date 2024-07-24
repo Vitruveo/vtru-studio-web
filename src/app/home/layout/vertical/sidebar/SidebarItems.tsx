@@ -68,18 +68,6 @@ const SidebarItems = () => {
                         );
                     }
                 })}
-                <a
-                    href="https://dreamer.vitruveo.xyz/what-happens-after-my-artwork-is-collected"
-                    target="_blank"
-                    rel="noreferrer"
-                >
-                    <Image
-                        src={WhatHappensBanner}
-                        width={224}
-                        height={224}
-                        alt="What Happens After My Artwork Is Collected"
-                    />
-                </a>
             </List>
         </Box>
     );
