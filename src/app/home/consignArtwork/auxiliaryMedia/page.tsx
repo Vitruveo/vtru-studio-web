@@ -21,6 +21,26 @@ import { useToastr } from '@/app/hooks/useToastr';
 import { RichEditor } from '../../components/rich-editor/rich-editor';
 import { createDescriptionInitialState, getDescriptionJSONString, getDescriptionText } from './helpers';
 
+const maxFileSizes = {
+    image: {
+        original: 500 * 1024 * 1024, // 500MB
+        display: 10 * 1024 * 1024, // 10MB
+        preview: 250 * 1024, // 250KB
+        exhibition: 10 * 1024 * 1024, // 10MB
+        print: 500 * 1024 * 1024, // 500MB,
+    },
+    video: {
+        original: 500 * 1024 * 1024, // 500MB
+        display: 100 * 1024 * 1024, // 100MB
+        preview: 1 * 1024 * 1024, // 1MB
+        exhibition: 100 * 1024 * 1024, // 100MB
+        print: Number.POSITIVE_INFINITY, // N/A (infinite size)
+    },
+};
+
+type MediaType = 'image' | 'video';
+type FormatUploadType = 'original' | 'display' | 'preview' | 'exhibition' | 'print';
+
 export default function AssetMedia() {
     const [showBackModal, setShowBackModal] = useState(false);
     const toast = useToastr();
@@ -119,14 +139,21 @@ export default function AssetMedia() {
     const handleUploadFile = async ({
         formatUpload,
         file,
-        maxSize,
+        mediaType,
     }: {
-        formatUpload: string;
+        formatUpload: FormatUploadType;
         file: File;
-        maxSize: string;
+        mediaType: MediaType;
     }) => {
         if (!file) {
             toast.display({ message: 'File format not supported', type: 'warning' });
+            return;
+        }
+
+        const maxSize = maxFileSizes[mediaType][formatUpload];
+
+        if (file.size > maxSize) {
+            toast.display({ message: `File exceeds the maximum size of ${maxSize / (1024 * 1024)} MB`, type: 'warning' });
             return;
         }
 
@@ -145,7 +172,7 @@ export default function AssetMedia() {
                 mimetype: file.type,
                 metadata: {
                     formatUpload,
-                    maxSize,
+                    maxSize: maxSize.toString(), // Converting to string
                 },
                 originalName: file!.name,
                 transactionId,
@@ -335,7 +362,7 @@ export default function AssetMedia() {
                                         formatType={formatType}
                                         formatValue={value}
                                         setFieldValue={setFieldValue}
-                                        handleUploadFile={handleUploadFile}
+                                        handleUploadFile={({ file }) => handleUploadFile({ formatUpload: formatType as FormatUploadType, file, mediaType: formatType === 'arVideo' ? 'video' : 'image' })}
                                     />
                                 </Box>
                             ))}
