@@ -6,12 +6,16 @@ import React, { useEffect } from 'react';
 export default function ConsignArtworkTemplate({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const canConsignArtwork = useSelector((state) => state.user.canConsignArtwork);
+    const status = useSelector((state) => state.consignArtwork.status);
 
     useEffect(() => {
         if (!canConsignArtwork) {
             router.push('/home');
         }
-    }, [router]);
+        if (status === 'pending') {
+            router.push('/home/consignArtwork/reviewAndConsign');
+        }
+    }, [router, status]);
 
     if (!canConsignArtwork) return;
 
