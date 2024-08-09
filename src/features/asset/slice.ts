@@ -41,26 +41,46 @@ const initialState: AssetSliceState = {
             file: undefined,
             customFile: undefined,
             transactionId: undefined,
+            validation: {
+                isValid: false,
+                message: '',
+            },
         },
         display: {
             file: undefined,
             customFile: undefined,
             transactionId: undefined,
+            validation: {
+                isValid: false,
+                message: '',
+            },
         },
         exhibition: {
             file: undefined,
             customFile: undefined,
             transactionId: undefined,
+            validation: {
+                isValid: false,
+                message: '',
+            },
         },
         preview: {
             file: undefined,
             customFile: undefined,
             transactionId: undefined,
+            validation: {
+                isValid: false,
+                message: '',
+            },
         },
         print: {
             file: undefined,
             customFile: undefined,
             transactionId: undefined,
+            validation: {
+                isValid: false,
+                message: '',
+            },
         },
     },
     assetMetadata: undefined,
@@ -244,6 +264,21 @@ export const assetSlice = createSlice({
         },
         setRequestConsignStatusDraft: (state) => {
             state.consignArtwork!.status = 'draft';
+        },
+        setFormatValidation: (
+            state,
+            action: PayloadAction<{
+                format: keyof AssetSliceState['formats'];
+                isValid: boolean;
+                message: string;
+            }>
+        ) => {
+            const format = state.formats[action.payload.format];
+            if (format)
+                format.validation = {
+                    isValid: action.payload.isValid,
+                    message: action.payload.message,
+                };
         },
         resetAsset: (state) => {
             return initialState;

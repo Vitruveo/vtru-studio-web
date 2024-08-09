@@ -15,6 +15,7 @@ import {
     getAssetById,
     createNewAsset,
     deleteAsset,
+    validateUploadedMedia,
 } from './requests';
 import {
     AssetSendRequestUploadApiRes,
@@ -29,6 +30,7 @@ import {
     SigningMediaC2PAReq,
     UploadIPFSByAssetIdApiRes,
     UploadIPFSByAssetIdReq,
+    ValidateUploadedMediaReq,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { assetActionsCreators } from './slice';
@@ -42,7 +44,7 @@ import { FormatsAuxiliayMedia } from '@/app/home/consignArtwork/auxiliaryMedia/t
 
 import { BASE_URL_API } from '@/constants/api';
 import { userActionsCreators } from '../user/slice';
-import { checkStepProgress, maxPrice, minPrice } from '@/app/home/consignArtwork/licenses/nft';
+import { checkStepProgress } from '@/app/home/consignArtwork/licenses/nft';
 
 export function requestDeleteURLThunk(payload: RequestDeleteFilesReq): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
@@ -792,5 +794,31 @@ export function deleteRequestConsignThunk(): ReduxThunkAction<void> {
             deleteRequestConsign(getState().user.selectedAsset);
             dispatch(assetActionsCreators.setRequestConsignStatusDraft());
         }
+    };
+}
+
+export function validateUploadedMediaThunk(payload: ValidateUploadedMediaReq): ReduxThunkAction<Promise<void>> {
+    return function (dispatch, getState) {
+        return validateUploadedMedia(payload)
+            .then((response) => {
+                if (response.status === 200) {
+                    dispatch(
+                        assetActionsCreators.setFormatValidation({
+                            format: payload.media as keyof FormatsMedia,
+                            isValid: true,
+                            message: '',
+                        })
+                    );
+                }
+            })
+            .catch((error) => {
+                dispatch(
+                    assetActionsCreators.setFormatValidation({
+                        format: payload.media as keyof FormatsMedia,
+                        isValid: false,
+                        message: error instanceof AxiosError ? error.response?.data?.message : 'Error validating media',
+                    })
+                );
+            });
     };
 }

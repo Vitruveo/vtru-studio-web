@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
-import { IconTrash } from '@tabler/icons-react';
+import { IconExclamationCircle, IconTrash } from '@tabler/icons-react';
 import {
     Box,
     SvgIcon,
@@ -14,7 +14,14 @@ import {
     CircularProgress,
 } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { AssetMediaFormErros, AssetMediaFormValues, Definition, FormatMedia, OriginalFormatMedia } from './types';
+import {
+    AssetMediaFormErros,
+    AssetMediaFormValues,
+    Definition,
+    FormatMedia,
+    FormatsMedia,
+    OriginalFormatMedia,
+} from './types';
 import Crop from '../components/crop';
 import VideoPreview, { RangeTime } from './videoPreview';
 import {
@@ -32,8 +39,9 @@ import { useSelector } from '@/store/hooks';
 import UploadProgressBar from '../components/uploadProgress';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 import { ASSET_STORAGE_URL } from '@/constants/asset';
-import { useDispatch } from 'react-redux';
+import { useDispatch } from '@/store/hooks';
 import { assetActionsCreators } from '@/features/asset/slice';
+import { validateUploadedMediaThunk } from '@/features/asset/thunks';
 
 interface MediaCardProps {
     deleteKeys: string[];
@@ -126,7 +134,8 @@ export default function MediaCard({
     const mediaWidth = formats.original.width;
     const mediaHeight = formats.original.height;
 
-    const upload = useSelector((state) => state.asset.requestAssetUpload);
+    const { requestAssetUpload: upload, formats: assetFormats } = useSelector((state) => state.asset);
+    const format = assetFormats[formatType as keyof FormatsMedia];
     const originalMediaInfo = handleGetFileType(formats.original.file!);
     const isVideo = originalMediaInfo.mediaType === 'video' && formatType !== 'print';
 
@@ -353,6 +362,21 @@ export default function MediaCard({
         }
     }, [uploadSuccess]);
 
+    useEffect(() => {
+        const requestAssetUploadComplete = Object.values(upload)?.filter(
+            (item) => item.transactionId && item.url && item.uploadProgress === 100 && item.status === 'completed'
+        );
+        const requestUploadComplete = Object.values(requestAssetUploadComplete);
+        if (requestUploadComplete?.length && fileStatus && definition && format)
+            dispatch(
+                validateUploadedMediaThunk({
+                    media: formatType,
+                    path: '',
+                    orientation: definition,
+                })
+            );
+    }, [upload]);
+
     return (
         <Box marginLeft={1} width={160}>
             <Box marginTop={2} height={20} display="flex" alignItems="center" justifyContent="space-between">
@@ -457,6 +481,18 @@ export default function MediaCard({
                                 >
                                     <CircularProgress color="primary" />
                                 </Box>
+                                <Box
+                                    display={
+                                        (assetFormats && format?.validation?.isValid) || !format?.load ? 'none' : 'flex'
+                                    }
+                                    justifyContent="center"
+                                    height={100}
+                                    alignItems="center"
+                                    textAlign="center"
+                                >
+                                    <IconExclamationCircle color="red" size={50} />
+                                </Box>
+
                                 {formatType !== 'print' && originalMediaInfo.mediaType === 'video' ? (
                                     <video
                                         ref={videoRef}

@@ -36,6 +36,10 @@ export interface OriginalFormatMedia extends FormatMedia {
     height?: number;
     size?: number;
     successUpload?: boolean;
+    validation: {
+        isValid: boolean;
+        message: string;
+    };
 }
 
 export interface FormatsMedia {
