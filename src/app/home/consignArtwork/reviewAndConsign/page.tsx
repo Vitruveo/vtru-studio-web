@@ -241,7 +241,7 @@ const ConsignArtwork = () => {
                         )}
 
                         {consignArtwork?.status === 'rejected' && (
-                            <Typography variant="h6" fontWeight="normal" color="GrayText">
+                            <Typography variant="h6" fontWeight="normal" color="GrayText" pt={1} pl={2}>
                                 If you think you have been flagged incorrectly, please submit the following form:{' '}
                                 <a href="https://vtru.xyz/blockappeal" target="_blank" rel="noreferrer">
                                     https://vtru.xyz/blockappeal
