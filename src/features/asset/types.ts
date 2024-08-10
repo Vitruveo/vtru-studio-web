@@ -100,6 +100,14 @@ export interface Asset {
     c2pa?: c2pa;
     contractExplorer?: ContractExplorer;
     ipfs?: Ipfs;
+    comments?: Comments[];
+}
+
+export interface Comments {
+    id: string;
+    comment: string;
+    when: string;
+    isPublic: boolean;
 }
 
 export interface AssetConsignArtwork {

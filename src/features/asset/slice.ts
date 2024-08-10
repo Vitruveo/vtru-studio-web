@@ -1,7 +1,7 @@
 'use client';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import { AssetSliceState } from './types';
+import { AssetSliceState, Comments } from './types';
 
 const initialState: AssetSliceState = {
     _id: '',
@@ -93,6 +93,7 @@ const initialState: AssetSliceState = {
         },
     },
     error: '',
+    comments: [],
 };
 
 export const assetSlice = createSlice({
@@ -244,6 +245,9 @@ export const assetSlice = createSlice({
         },
         setRequestConsignStatusDraft: (state) => {
             state.consignArtwork!.status = 'draft';
+        },
+        setRequestConsignComments: (state, action: PayloadAction<Comments[]>) => {
+            state.comments = action.payload;
         },
         resetAsset: (state) => {
             return initialState;
