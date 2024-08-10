@@ -371,7 +371,7 @@ export default function MediaCard({
             dispatch(
                 validateUploadedMediaThunk({
                     media: formatType,
-                    path: '',
+                    path: fileStatus.path,
                     orientation: definition,
                 })
             );
