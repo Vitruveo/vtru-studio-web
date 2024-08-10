@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useMemo, useState } from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
-import { IconExclamationCircle, IconTrash } from '@tabler/icons-react';
+import { IconTrash } from '@tabler/icons-react';
 import {
     Box,
     SvgIcon,
@@ -481,18 +481,6 @@ export default function MediaCard({
                                 >
                                     <CircularProgress color="primary" />
                                 </Box>
-                                <Box
-                                    display={
-                                        (assetFormats && format?.validation?.isValid) || !format?.load ? 'none' : 'flex'
-                                    }
-                                    justifyContent="center"
-                                    height={100}
-                                    alignItems="center"
-                                    textAlign="center"
-                                >
-                                    <IconExclamationCircle color="red" size={50} />
-                                </Box>
-
                                 {formatType !== 'print' && originalMediaInfo.mediaType === 'video' ? (
                                     <video
                                         ref={videoRef}

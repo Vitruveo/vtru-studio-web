@@ -43,6 +43,7 @@ export default function AssetMedia() {
         .map(([_key, value]) => value?.validation?.message)
         .filter(Boolean)
         .join('\n');
+    const isAllValid = Object.values(formats).every((item) => item?.validation?.isValid);
 
     const initialValues = useMemo(
         () => ({
@@ -93,12 +94,14 @@ export default function AssetMedia() {
                 dispatch(
                     consignArtworkActionsCreators.changeStatusStep({
                         stepId: 'assetMedia',
-                        status: getStepStatus({
-                            formats:
-                                JSON.stringify(initialValues.formats) === JSON.stringify(values.formats)
-                                    ? asset.formats
-                                    : values.formats,
-                        }),
+                        status: isAllValid
+                            ? getStepStatus({
+                                  formats:
+                                      JSON.stringify(initialValues.formats) === JSON.stringify(values.formats)
+                                          ? asset.formats
+                                          : values.formats,
+                              })
+                            : 'inProgress',
                     })
                 );
 
@@ -206,7 +209,7 @@ export default function AssetMedia() {
         router.push('/home/consignArtwork');
     };
 
-    const checkStepProgress = getStepStatus({ formats: values.formats });
+    const checkStepProgress = isAllValid ? getStepStatus({ formats: values.formats }) : 'inProgress';
 
     useEffect(() => {
         dispatch(consignArtworkActionsCreators.changeStatusStep({ stepId: 'assetMedia', status: checkStepProgress }));

@@ -84,6 +84,7 @@ export function getAssetThunk(id: string): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
         try {
             dispatch(assetActionsCreators.resetAsset());
+            const isAllValid = Object.values(getState().asset.formats).every((item) => item?.validation?.isValid);
             const response = await getAssetById(id);
 
             if (response.data) {
@@ -207,7 +208,7 @@ export function getAssetThunk(id: string): ReduxThunkAction<Promise<any>> {
                     }, {} as FormatsMedia);
 
                     const status =
-                        Object.entries(formatAssetsFormats).length < 4
+                        Object.entries(formatAssetsFormats).length < 4 || !isAllValid
                             ? 'inProgress'
                             : Object.entries(formatAssetsFormats)
                                     .filter(([key]) => key !== 'print')
