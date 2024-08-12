@@ -142,5 +142,5 @@ export async function deleteRequestConsign(id: string) {
 }
 
 export async function validateUploadedMedia(data: ValidateUploadedMediaReq) {
-    return axios.post(`${BASE_URL_BATCH}/assets/validate`, { ...data });
+    return axios.post(`${BASE_URL_BATCH}/assets/validate`, data);
 }
