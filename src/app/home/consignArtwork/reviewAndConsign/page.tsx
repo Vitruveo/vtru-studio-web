@@ -141,7 +141,7 @@ const ConsignArtwork = () => {
                     consignArtwork?.status === 'pending' ||
                     consignArtwork?.status === 'running'
                 }
-                backOnclick={() => router.push(`/home/consignArtwork`)}
+                backOnclick={() => router.push(`/home/${consignArtwork?.status === 'pending' ? '' : 'consignArtwork'}`)}
                 display={!!consignArtworkStatus?.buttontitle}
             >
                 <Breadcrumb
