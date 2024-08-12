@@ -90,6 +90,7 @@ export default function AssetMedia() {
                     await requestDeleteFiles({
                         deleteKeys: values.deleteKeys.filter(Boolean),
                         transactionId: nanoid(),
+                        assetId: asset._id,
                     });
 
                 const deleteFormats = Object.entries(formValues.formats)

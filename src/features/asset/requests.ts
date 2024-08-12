@@ -21,7 +21,7 @@ import { BASE_URL_BATCH } from '@/constants/api';
 export async function requestDeleteFiles(data: RequestDeleteFilesReq): Promise<any> {
     if (!data.deleteKeys.length) return;
 
-    const res = await apiService.delete('/assets/request/deleteFile', data);
+    const res = await apiService.delete(`/assets/request/deleteFile/${data.assetId}`, data);
     return res;
 }
 

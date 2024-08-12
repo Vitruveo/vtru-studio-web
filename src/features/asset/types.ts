@@ -162,6 +162,7 @@ export interface AssetStorageReq {
 export interface RequestDeleteFilesReq {
     deleteKeys: string[];
     transactionId: string;
+    assetId: string;
 }
 
 export interface UpdateAssetStepReq {

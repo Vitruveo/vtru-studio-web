@@ -84,8 +84,13 @@ export function getAssetThunk(id: string): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
         try {
             dispatch(assetActionsCreators.resetAsset());
-            const isAllValid = Object.values(getState().asset.formats).every((item) => item?.validation?.isValid);
             const response = await getAssetById(id);
+
+            const isAllValid = response.data?.formats
+                ? Object.entries(response.data?.formats)
+                      .filter(([key]) => key !== 'print')
+                      .every(([_, item]) => item?.validation?.isValid)
+                : false;
 
             if (response.data) {
                 if (response.data.consignArtwork) {

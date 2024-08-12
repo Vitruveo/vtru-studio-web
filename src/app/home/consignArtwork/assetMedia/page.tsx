@@ -43,7 +43,10 @@ export default function AssetMedia() {
         .map(([_key, value]) => value?.validation?.message)
         .filter(Boolean)
         .join('\n');
-    const isAllValid = Object.values(formats).every((item) => item?.validation?.isValid);
+
+    const isAllValid = Object.entries(formats)
+        .filter(([key]) => key !== 'print')
+        .every(([_, item]) => item?.validation?.isValid);
 
     const initialValues = useMemo(
         () => ({
@@ -108,6 +111,7 @@ export default function AssetMedia() {
                 await requestDeleteFiles({
                     deleteKeys: values.deleteKeys.filter(Boolean),
                     transactionId: nanoid(),
+                    assetId: selectedAsset,
                 });
 
                 const deleteFormats = Object.entries(values.formats)
