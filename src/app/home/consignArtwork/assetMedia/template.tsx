@@ -12,13 +12,14 @@ export default function AssetMediaTemplate({ children }: { children: React.React
     useEffect(() => {
         if (formats && !validated) {
             Object.entries(formats).forEach(([key, value]) => {
-                if (key === 'print') return;
-                const data = {
-                    media: key,
-                    path: value.path || '',
-                    orientation: definition || '',
-                };
-                dispatch(validateUploadedMediaThunk(data));
+                if (value.path && definition && key !== 'print') {
+                    const data = {
+                        media: key,
+                        path: value.path,
+                        orientation: definition,
+                    };
+                    dispatch(validateUploadedMediaThunk(data));
+                }
             });
             setValidated(true);
         }
