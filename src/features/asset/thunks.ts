@@ -801,7 +801,7 @@ export function getRequestConsignCommentsThunk({ id }: { id: string }): ReduxThu
         return getRequestConsignComments(id)
             .then((response) => {
                 if (Array.isArray(response.data)) {
-                    dispatch(assetActionsCreators.setRequestConsignComments(response.data));
+                    dispatch(assetActionsCreators.setRequestConsignComments(response.data[0].comments));
                 }
             })
             .catch((error) => {
