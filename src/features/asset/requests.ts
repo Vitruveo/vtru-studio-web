@@ -141,6 +141,10 @@ export async function deleteRequestConsign(id: string) {
     return apiService.delete(`/requestConsign/${id}`);
 }
 
+export async function getRequestConsignComments(id: string) {
+    return apiService.get(`/requestConsign/comments/${id}`);
+}
+
 export async function validateUploadedMedia(data: ValidateUploadedMediaReq) {
     return axios.post(`${BASE_URL_BATCH}/assets/validate`, data);
 }

@@ -391,6 +391,7 @@ export function requestMyAssetsThunk(): ReduxThunkAction<Promise<void>> {
                             mintExplorer: asset?.mintExplorer,
                             contractExplorer: asset?.contractExplorer,
                             licenses: asset?.licenses,
+                            countComments: asset?.countComments,
                         }))
                     )
                 );

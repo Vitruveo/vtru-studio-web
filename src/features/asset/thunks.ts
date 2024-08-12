@@ -15,6 +15,7 @@ import {
     getAssetById,
     createNewAsset,
     deleteAsset,
+    getRequestConsignComments,
     validateUploadedMedia,
 } from './requests';
 import {
@@ -800,6 +801,20 @@ export function deleteRequestConsignThunk(): ReduxThunkAction<void> {
             deleteRequestConsign(getState().user.selectedAsset);
             dispatch(assetActionsCreators.setRequestConsignStatusDraft());
         }
+    };
+}
+
+export function getRequestConsignCommentsThunk({ id }: { id: string }): ReduxThunkAction<Promise<any>> {
+    return function (dispatch, getState) {
+        return getRequestConsignComments(id)
+            .then((response) => {
+                if (Array.isArray(response.data)) {
+                    dispatch(assetActionsCreators.setRequestConsignComments(response.data[0].comments));
+                }
+            })
+            .catch((error) => {
+                // do nothing
+            });
     };
 }
 

@@ -24,6 +24,7 @@ export interface Assets {
     licenses: LicensesFormValues;
     mintExplorer?: MintExplorer;
     contractExplorer?: ContractExplorer;
+    countComments: number;
 }
 
 export interface User {

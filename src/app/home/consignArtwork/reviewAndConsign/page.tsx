@@ -15,6 +15,7 @@ import { ConsignArtworkAssetStatus } from '@/features/consignArtwork/types';
 import ConsignMessage from './consignMessage';
 import { CompletedConsignTableStatus } from '../components/completedConsignPage/CompletedConsignTableStatus';
 import AssetMediaPreview from '../components/assetMediaPreview';
+import Comments from '../components/comments';
 
 interface ConsignStepsProps {
     [key: string]: {
@@ -33,7 +34,7 @@ const ConsignArtwork = () => {
     const router = useRouter();
     const dispatch = useDispatch();
     const { language } = useI18n();
-    const { validateConsign, consignArtwork } = useSelector((state) => state.asset);
+    const { validateConsign, consignArtwork, _id } = useSelector((state) => state.asset);
     const formData = useSelector((state) => state.asset.assetMetadata?.context.formData);
 
     const texts = {
@@ -241,12 +242,15 @@ const ConsignArtwork = () => {
                         )}
 
                         {consignArtwork?.status === 'rejected' && (
-                            <Typography variant="h6" fontWeight="normal" color="GrayText">
-                                If you think you have been flagged incorrectly, please submit the following form:{' '}
-                                <a href="https://vtru.xyz/blockappeal" target="_blank" rel="noreferrer">
-                                    https://vtru.xyz/blockappeal
-                                </a>
-                            </Typography>
+                            <Box display={'flex'} flexDirection={'column'} pt={1} pl={2}>
+                                <Typography variant="h6" fontWeight="normal" color="GrayText" mb={2}>
+                                    If you think you have been flagged incorrectly, please submit the following form:{' '}
+                                    <a href="https://vtru.xyz/blockappeal" target="_blank" rel="noreferrer">
+                                        https://vtru.xyz/blockappeal
+                                    </a>
+                                </Typography>
+                                <Comments assetId={_id} />
+                            </Box>
                         )}
                     </Box>
                 </Box>
