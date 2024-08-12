@@ -11,6 +11,7 @@ import {
     SigningMediaC2PAReq,
     UpdateAssetStepApiRes,
     UpdateAssetStepReq,
+    ValidateUploadedMediaReq,
 } from './types';
 import { apiService } from '@/services/api';
 import { assetActionsCreators } from './slice';
@@ -138,4 +139,8 @@ export async function requestConsign(id: string) {
 
 export async function deleteRequestConsign(id: string) {
     return apiService.delete(`/requestConsign/${id}`);
+}
+
+export async function validateUploadedMedia(data: ValidateUploadedMediaReq) {
+    return axios.post(`${BASE_URL_BATCH}/assets/validate`, { ...data });
 }

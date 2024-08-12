@@ -16,6 +16,10 @@ interface Format {
     name?: string;
     customFile?: FileType;
     transactionId?: string;
+    validation?: {
+        isValid: boolean;
+        message: string;
+    };
 }
 
 export interface RequestAssetUpload {
@@ -181,6 +185,12 @@ export interface UploadIPFSByAssetIdRes {
 
 export interface CreateContractByAssetIdReq {
     id: string;
+}
+
+export interface ValidateUploadedMediaReq {
+    media: string;
+    path: string;
+    orientation: string;
 }
 
 export type UpdateAssetStepApiRes = APIResponse<string>;

@@ -37,6 +37,13 @@ export default function AssetMedia() {
     const dispatch = useDispatch();
 
     const selectedAsset = useSelector((state) => state.user.selectedAsset);
+    const formats = useSelector((state) => state.asset.formats);
+
+    const errorMessages = Object.entries(formats)
+        .map(([_key, value]) => value?.validation?.message)
+        .filter(Boolean)
+        .join('\n');
+    const isAllValid = Object.values(formats).every((item) => item?.validation?.isValid);
 
     const initialValues = useMemo(
         () => ({
@@ -87,12 +94,14 @@ export default function AssetMedia() {
                 dispatch(
                     consignArtworkActionsCreators.changeStatusStep({
                         stepId: 'assetMedia',
-                        status: getStepStatus({
-                            formats:
-                                JSON.stringify(initialValues.formats) === JSON.stringify(values.formats)
-                                    ? asset.formats
-                                    : values.formats,
-                        }),
+                        status: isAllValid
+                            ? getStepStatus({
+                                  formats:
+                                      JSON.stringify(initialValues.formats) === JSON.stringify(values.formats)
+                                          ? asset.formats
+                                          : values.formats,
+                              })
+                            : 'inProgress',
                     })
                 );
 
@@ -200,7 +209,7 @@ export default function AssetMedia() {
         router.push('/home/consignArtwork');
     };
 
-    const checkStepProgress = getStepStatus({ formats: values.formats });
+    const checkStepProgress = isAllValid ? getStepStatus({ formats: values.formats }) : 'inProgress';
 
     useEffect(() => {
         dispatch(consignArtworkActionsCreators.changeStatusStep({ stepId: 'assetMedia', status: checkStepProgress }));
@@ -390,12 +399,27 @@ export default function AssetMedia() {
                                 </Box>
                             )}
 
-                            {/* <Typography marginTop={2} color="grey" fontSize="1rem" fontWeight="bold">
-                                {(language['studio.consignArtwork.assetMedia.definition'] as TranslateFunction)({
-                                    definition: values.definition,
-                                })}{' '}
-                                {texts.assets}
-                            </Typography> */}
+                            {errorMessages && (
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        backgroundColor: '#FA896B',
+                                        margin: '10px 0',
+                                        padding: 1,
+                                    }}
+                                >
+                                    <Typography
+                                        variant="h6"
+                                        fontWeight="normal"
+                                        color="white"
+                                        sx={{ whiteSpace: 'pre-wrap' }}
+                                    >
+                                        {errorMessages}
+                                    </Typography>
+                                </Box>
+                            )}
+
                             <Box marginTop={1} display="flex" flexWrap="wrap">
                                 {Object.entries(values.formats).map(([formatType, value], index) => (
                                     <Box style={{ marginRight: '10px' }} key={index}>

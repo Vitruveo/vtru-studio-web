@@ -178,7 +178,7 @@ export default function AssetMedia() {
     const handleCancelBackModal = async () => {
         dispatch(
             consignArtworkActionsCreators.changeStatusStep({
-                stepId: 'assetMedia',
+                stepId: 'auxiliaryMedia',
                 status: 'completed',
             })
         );
