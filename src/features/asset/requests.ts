@@ -11,6 +11,7 @@ import {
     SigningMediaC2PAReq,
     UpdateAssetStepApiRes,
     UpdateAssetStepReq,
+    ValidateUploadedMediaReq,
 } from './types';
 import { apiService } from '@/services/api';
 import { assetActionsCreators } from './slice';
@@ -20,7 +21,7 @@ import { BASE_URL_BATCH } from '@/constants/api';
 export async function requestDeleteFiles(data: RequestDeleteFilesReq): Promise<any> {
     if (!data.deleteKeys.length) return;
 
-    const res = await apiService.delete('/assets/request/deleteFile', data);
+    const res = await apiService.delete(`/assets/request/deleteFile/${data.assetId}`, data);
     return res;
 }
 
@@ -142,4 +143,8 @@ export async function deleteRequestConsign(id: string) {
 
 export async function getRequestConsignComments(id: string) {
     return apiService.get(`/requestConsign/comments/${id}`);
+}
+
+export async function validateUploadedMedia(data: ValidateUploadedMediaReq) {
+    return axios.post(`${BASE_URL_BATCH}/assets/validate`, data);
 }

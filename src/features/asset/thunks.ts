@@ -16,6 +16,7 @@ import {
     createNewAsset,
     deleteAsset,
     getRequestConsignComments,
+    validateUploadedMedia,
 } from './requests';
 import {
     AssetSendRequestUploadApiRes,
@@ -30,6 +31,7 @@ import {
     SigningMediaC2PAReq,
     UploadIPFSByAssetIdApiRes,
     UploadIPFSByAssetIdReq,
+    ValidateUploadedMediaReq,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { assetActionsCreators } from './slice';
@@ -43,7 +45,7 @@ import { FormatsAuxiliayMedia } from '@/app/home/consignArtwork/auxiliaryMedia/t
 
 import { BASE_URL_API } from '@/constants/api';
 import { userActionsCreators } from '../user/slice';
-import { checkStepProgress, maxPrice, minPrice } from '@/app/home/consignArtwork/licenses/nft';
+import { checkStepProgress } from '@/app/home/consignArtwork/licenses/nft';
 
 export function requestDeleteURLThunk(payload: RequestDeleteFilesReq): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
@@ -84,6 +86,12 @@ export function getAssetThunk(id: string): ReduxThunkAction<Promise<any>> {
         try {
             dispatch(assetActionsCreators.resetAsset());
             const response = await getAssetById(id);
+
+            const isAllValid = response.data?.formats
+                ? Object.entries(response.data?.formats)
+                      .filter(([key]) => key !== 'print')
+                      .every(([_, item]) => item?.validation?.isValid)
+                : false;
 
             if (response.data) {
                 if (response.data.consignArtwork) {
@@ -206,7 +214,7 @@ export function getAssetThunk(id: string): ReduxThunkAction<Promise<any>> {
                     }, {} as FormatsMedia);
 
                     const status =
-                        Object.entries(formatAssetsFormats).length < 4
+                        Object.entries(formatAssetsFormats).length < 4 || !isAllValid
                             ? 'inProgress'
                             : Object.entries(formatAssetsFormats)
                                     .filter(([key]) => key !== 'print')
@@ -806,6 +814,32 @@ export function getRequestConsignCommentsThunk({ id }: { id: string }): ReduxThu
             })
             .catch((error) => {
                 // do nothing
+            });
+    };
+}
+
+export function validateUploadedMediaThunk(payload: ValidateUploadedMediaReq): ReduxThunkAction<Promise<void>> {
+    return function (dispatch, getState) {
+        return validateUploadedMedia(payload)
+            .then((response) => {
+                if (response.status === 200) {
+                    dispatch(
+                        assetActionsCreators.setFormatValidation({
+                            format: payload.media as keyof FormatsMedia,
+                            isValid: true,
+                            message: '',
+                        })
+                    );
+                }
+            })
+            .catch((error) => {
+                dispatch(
+                    assetActionsCreators.setFormatValidation({
+                        format: payload.media as keyof FormatsMedia,
+                        isValid: false,
+                        message: error instanceof AxiosError ? error.response?.data?.message : 'Error validating media',
+                    })
+                );
             });
     };
 }

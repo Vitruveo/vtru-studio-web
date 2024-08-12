@@ -90,6 +90,7 @@ export default function AssetMedia() {
                     await requestDeleteFiles({
                         deleteKeys: values.deleteKeys.filter(Boolean),
                         transactionId: nanoid(),
+                        assetId: asset._id,
                     });
 
                 const deleteFormats = Object.entries(formValues.formats)
@@ -178,7 +179,7 @@ export default function AssetMedia() {
     const handleCancelBackModal = async () => {
         dispatch(
             consignArtworkActionsCreators.changeStatusStep({
-                stepId: 'assetMedia',
+                stepId: 'auxiliaryMedia',
                 status: 'completed',
             })
         );
