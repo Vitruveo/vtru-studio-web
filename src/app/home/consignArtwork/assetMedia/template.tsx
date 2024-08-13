@@ -12,7 +12,12 @@ export default function AssetMediaTemplate({ children }: { children: React.React
     useEffect(() => {
         if (formats && !validated) {
             Object.entries(formats).forEach(([key, value]) => {
-                if (value.path && definition && key !== 'print' && value.validation?.isValid === false) {
+                if (
+                    value.path &&
+                    definition &&
+                    key !== 'print' &&
+                    (!value.validation || value.validation?.isValid === false)
+                ) {
                     dispatch(
                         validateUploadedMediaThunk({
                             assetId: _id,
