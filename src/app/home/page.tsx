@@ -561,13 +561,14 @@ export default function Home() {
                                             {getStatus(asset.status, asset.mintExplorer) === 'Rejected' && (
                                                 <IconEdit style={iconStyle} />
                                             )}
-                                            {getStatus(asset.status, asset.mintExplorer) === 'Rejected' && (
-                                                <div style={iconStyleComment}>
-                                                    <Badge badgeContent={asset.countComments} color="primary">
-                                                        <IconMessage />
-                                                    </Badge>
-                                                </div>
-                                            )}
+                                            {getStatus(asset.status, asset.mintExplorer) === 'Rejected' &&
+                                                asset.countComments > 0 && (
+                                                    <div style={iconStyleComment}>
+                                                        <Badge badgeContent={asset.countComments} color="primary">
+                                                            <IconMessage />
+                                                        </Badge>
+                                                    </div>
+                                                )}
                                             {getStatus(asset.status, asset.mintExplorer) === 'Pending' && (
                                                 <IconScanEye style={iconStyle} />
                                             )}
