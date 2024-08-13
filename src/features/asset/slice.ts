@@ -277,18 +277,26 @@ export const assetSlice = createSlice({
         setRequestConsignComments: (state, action: PayloadAction<Comments[]>) => {
             state.comments = action.payload;
         },
-        setFormatValidation: (
+        setFormatValidationConfirmed: (state) => {
+            Object.values(state.formats).forEach((format) => {
+                if (format)
+                    format.validation = {
+                        isValid: true,
+                        message: '',
+                    };
+            });
+        },
+        setFormatValidationError: (
             state,
             action: PayloadAction<{
                 format: keyof AssetSliceState['formats'];
-                isValid: boolean;
                 message: string;
             }>
         ) => {
             const format = state.formats[action.payload.format];
             if (format)
                 format.validation = {
-                    isValid: action.payload.isValid,
+                    isValid: false,
                     message: action.payload.message,
                 };
         },

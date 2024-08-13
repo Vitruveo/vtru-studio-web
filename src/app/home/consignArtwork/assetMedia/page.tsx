@@ -216,10 +216,6 @@ export default function AssetMedia() {
     const checkStepProgress = isAllValid ? getStepStatus({ formats: values.formats }) : 'inProgress';
 
     useEffect(() => {
-        dispatch(consignArtworkActionsCreators.changeStatusStep({ stepId: 'assetMedia', status: checkStepProgress }));
-    }, [checkStepProgress]);
-
-    useEffect(() => {
         if (values.formats?.original?.definition) {
             const requestAssetUploadNotUsed = Object.values(asset.requestAssetUpload)?.filter(
                 (item) => item.transactionId && item.url && item.status === 'ready'
@@ -314,6 +310,7 @@ export default function AssetMedia() {
                         ...values,
                         formats: responseUpload.reduce((acc, cur) => ({ ...acc, ...cur }), {} as FormatMediaSave),
                         load: true,
+                        formatsFields: values.formats,
                     })
                 );
         }

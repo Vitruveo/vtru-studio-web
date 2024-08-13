@@ -145,6 +145,6 @@ export async function getRequestConsignComments(id: string) {
     return apiService.get(`/requestConsign/comments/${id}`);
 }
 
-export async function validateUploadedMedia({ assetId, ...data }: ValidateUploadedMediaReq) {
-    return axios.post(`${BASE_URL_BATCH}/assets/validate/${assetId}`, data);
+export async function validateUploadedMedia(data: ValidateUploadedMediaReq) {
+    return axios.post(`${BASE_URL_BATCH}/assets/validate/${data.assetId}`);
 }

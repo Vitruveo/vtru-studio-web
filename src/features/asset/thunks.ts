@@ -347,6 +347,7 @@ export function assetMediaThunk(payload: {
     formats?: FormatMediaSave;
     deleteFormats?: string[];
     load?: boolean;
+    formatsFields?: FormatsMedia;
 }): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
         dispatch(assetActionsCreators.changeLoadingMediaData('running'));
@@ -430,6 +431,22 @@ export function assetMediaThunk(payload: {
         dispatch(assetActionsCreators.changeFormats(formatAssetsFormats));
         if (payload.deleteFormats?.length) dispatch(assetActionsCreators.removeFormats(payload.deleteFormats));
         dispatch(assetActionsCreators.changeLoadingMediaData('finished'));
+
+        const currentFormats = Object.entries(getState().asset.formats).filter(([key, value]) => key !== 'print');
+        const hasFiles = currentFormats.every(([key, value]) => value.path);
+
+        const currentFormatsFields = Object.entries(payload?.formatsFields || {}).filter(
+            ([key, value]) => key !== 'print'
+        );
+        const hasFilesFormatFields = currentFormatsFields.every(([key, value]) => value.file);
+
+        if (hasFiles && hasFilesFormatFields) {
+            dispatch(
+                validateUploadedMediaThunk({
+                    assetId: getState().asset._id,
+                })
+            );
+        }
     };
 }
 
@@ -824,25 +841,29 @@ export function validateUploadedMediaThunk(payload: ValidateUploadedMediaReq): R
     return function (dispatch, getState) {
         dispatch(assetActionsCreators.changeLoading(true));
         return validateUploadedMedia(payload)
-            .then((response) => {
-                if (response.status === 200) {
+            .then(() => {
+                dispatch(assetActionsCreators.setFormatValidationConfirmed());
+            })
+            .catch((error) => {
+                if (error instanceof AxiosError && error.response?.status === 400) {
+                    const data = error.response.data;
+
+                    data.data.forEach((item: any) => {
+                        dispatch(
+                            assetActionsCreators.setFormatValidationError({
+                                format: item.media,
+                                message: item.message,
+                            })
+                        );
+                    });
+
                     dispatch(
-                        assetActionsCreators.setFormatValidation({
-                            format: payload.media as keyof FormatsMedia,
-                            isValid: true,
-                            message: '',
+                        consignArtworkActionsCreators.changeStatusStep({
+                            stepId: 'assetMedia',
+                            status: 'inProgress',
                         })
                     );
                 }
-            })
-            .catch((error) => {
-                dispatch(
-                    assetActionsCreators.setFormatValidation({
-                        format: payload.media as keyof FormatsMedia,
-                        isValid: false,
-                        message: error instanceof AxiosError ? error.response?.data?.message : 'Error validating media',
-                    })
-                );
             })
             .finally(() => {
                 dispatch(assetActionsCreators.changeLoading(false));

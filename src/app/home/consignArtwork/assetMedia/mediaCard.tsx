@@ -368,23 +368,6 @@ export default function MediaCard({
         }
     }, [uploadSuccess]);
 
-    useEffect(() => {
-        const requestAssetUploadComplete = Object.values(upload)?.filter(
-            (item) => item.transactionId && item.url && item.uploadProgress === 100 && item.status === 'completed'
-        );
-        const requestUploadComplete = Object.values(requestAssetUploadComplete);
-        if (requestUploadComplete?.length && fileStatus && definition && format && isLoadingMediaData === 'finished') {
-            dispatch(
-                validateUploadedMediaThunk({
-                    assetId: _id,
-                    media: formatType,
-                    path: fileStatus.path,
-                    orientation: definition,
-                })
-            );
-        }
-    }, [upload, isLoadingMediaData]);
-
     return (
         <Box marginLeft={1} width={160}>
             <Box marginTop={2} height={20} display="flex" alignItems="center" justifyContent="space-between">
