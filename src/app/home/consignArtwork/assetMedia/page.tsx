@@ -317,7 +317,7 @@ export default function AssetMedia() {
                     })
                 );
         }
-    }, [asset.requestAssetUpload, values?.formats]);
+    }, [values?.formats]);
 
     const file = values?.formats?.original?.file;
 

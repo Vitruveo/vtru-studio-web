@@ -198,6 +198,7 @@ export interface CreateContractByAssetIdReq {
 }
 
 export interface ValidateUploadedMediaReq {
+    assetId: string;
     media: string;
     path: string;
     orientation: string;

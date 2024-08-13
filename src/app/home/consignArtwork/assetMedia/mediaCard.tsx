@@ -135,7 +135,7 @@ export default function MediaCard({
     const mediaWidth = formats.original.width;
     const mediaHeight = formats.original.height;
 
-    const { requestAssetUpload: upload, formats: assetFormats } = useSelector((state) => state.asset);
+    const { requestAssetUpload: upload, formats: assetFormats, _id } = useSelector((state) => state.asset);
     const format = assetFormats[formatType as keyof FormatsMedia];
     const originalMediaInfo = handleGetFileType(formats.original.file!);
     const isVideo = originalMediaInfo.mediaType === 'video' && formatType !== 'print';
@@ -371,6 +371,7 @@ export default function MediaCard({
         if (requestUploadComplete?.length && fileStatus && definition && format)
             dispatch(
                 validateUploadedMediaThunk({
+                    assetId: _id,
                     media: formatType,
                     path: fileStatus.path,
                     orientation: definition,
