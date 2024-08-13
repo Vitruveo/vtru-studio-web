@@ -18,7 +18,7 @@ export default function Comments({ assetId }: CommentsProps) {
     if (comments?.length === 0) return;
 
     return (
-        <Box width={'40vw'}>
+        <Box>
             <Typography variant="h5" mb={1}>
                 Moderator&apos;s Note
             </Typography>
