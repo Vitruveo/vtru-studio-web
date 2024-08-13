@@ -440,7 +440,7 @@ export function assetMediaThunk(payload: {
         );
         const hasFilesFormatFields = currentFormatsFields.every(([key, value]) => value.file);
 
-        if (hasFiles && hasFilesFormatFields) {
+        if (hasFiles && hasFilesFormatFields && !payload.deleteFormats?.length) {
             dispatch(
                 validateUploadedMediaThunk({
                     assetId: getState().asset._id,
