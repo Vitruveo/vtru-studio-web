@@ -39,6 +39,8 @@ export default function AssetMedia() {
     const selectedAsset = useSelector((state) => state.user.selectedAsset);
     const formats = useSelector((state) => state.asset.formats);
 
+    const originalMediaInfo = handleGetFileType(formats.original.file!);
+
     const errorMessages = Object.entries(formats)
         .map(([_key, value]) => value?.validation?.message)
         .filter(Boolean)
@@ -146,6 +148,8 @@ export default function AssetMedia() {
     }) => {
         const transactionId = nanoid();
 
+        const isVideo = originalMediaInfo.mediaType === 'video';
+
         dispatch(
             assetActionsCreators.requestAssetUpload({
                 key: formatUpload,
@@ -156,7 +160,7 @@ export default function AssetMedia() {
 
         dispatch(
             sendRequestUploadThunk({
-                mimetype: file!.type,
+                mimetype: !isVideo && formatUpload !== 'original' ? 'image/jpeg' : file!.type,
                 metadata: {
                     width: width?.toString(),
                     height: height?.toString(),
