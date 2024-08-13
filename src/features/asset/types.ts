@@ -63,6 +63,7 @@ export interface Asset {
     _id: string;
     tempColors: number[][];
     isLoading: boolean;
+    isLoadingMediaData: string;
     mediaAuxiliary: {
         description: string;
         formats: {

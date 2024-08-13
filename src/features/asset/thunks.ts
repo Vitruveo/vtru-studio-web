@@ -349,6 +349,7 @@ export function assetMediaThunk(payload: {
     load?: boolean;
 }): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
+        dispatch(assetActionsCreators.changeLoadingMediaData('running'));
         const formatsState = getState().asset.formats;
         const assetMetadata = getState().asset.assetMetadata as SectionsFormData;
 
@@ -428,6 +429,7 @@ export function assetMediaThunk(payload: {
 
         dispatch(assetActionsCreators.changeFormats(formatAssetsFormats));
         if (payload.deleteFormats?.length) dispatch(assetActionsCreators.removeFormats(payload.deleteFormats));
+        dispatch(assetActionsCreators.changeLoadingMediaData('finished'));
     };
 }
 

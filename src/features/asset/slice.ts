@@ -7,6 +7,7 @@ const initialState: AssetSliceState = {
     _id: '',
     tempColors: [],
     isLoading: false,
+    isLoadingMediaData: 'notStarted',
     mediaAuxiliary: {
         description: '',
         formats: {
@@ -123,6 +124,9 @@ export const assetSlice = createSlice({
     reducers: {
         changeLoading: (state, action: PayloadAction<boolean>) => {
             state.isLoading = action.payload;
+        },
+        changeLoadingMediaData: (state, action: PayloadAction<string>) => {
+            state.isLoadingMediaData = action.payload;
         },
         changeFormatsMediaAuxiliary: (state, action: PayloadAction<Partial<AssetSliceState['mediaAuxiliary']>>) => {
             return {
