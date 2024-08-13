@@ -249,7 +249,9 @@ const ConsignArtwork = () => {
                                         https://vtru.xyz/blockappeal
                                     </a>
                                 </Typography>
-                                <Comments assetId={_id} />
+                                <Box width={'44vw'}>
+                                    <Comments assetId={_id} />
+                                </Box>
                             </Box>
                         )}
                     </Box>
