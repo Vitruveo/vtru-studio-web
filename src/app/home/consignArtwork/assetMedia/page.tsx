@@ -58,6 +58,7 @@ export default function AssetMedia() {
         []
     );
 
+    // check if there is any file being uploaded
     const isUploading =
         asset.requestAssetUpload && Object.values(asset.requestAssetUpload).some((item) => item.status === 'uploading');
 
