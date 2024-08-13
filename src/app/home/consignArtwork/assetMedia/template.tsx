@@ -6,19 +6,26 @@ import React, { useEffect, useState } from 'react';
 export default function AssetMediaTemplate({ children }: { children: React.ReactNode }) {
     const [validated, setValidated] = useState(false);
     const dispatch = useDispatch();
-    const formats = useSelector((state) => state.asset.formats);
+    const { formats, _id } = useSelector((state) => state.asset);
     const definition = formats?.original.definition;
 
     useEffect(() => {
         if (formats && !validated) {
             Object.entries(formats).forEach(([key, value]) => {
-                if (value.path && definition && key !== 'print') {
-                    const data = {
-                        media: key,
-                        path: value.path,
-                        orientation: definition,
-                    };
-                    dispatch(validateUploadedMediaThunk(data));
+                if (
+                    value.path &&
+                    definition &&
+                    key !== 'print' &&
+                    (!value.validation || value.validation?.isValid === false)
+                ) {
+                    dispatch(
+                        validateUploadedMediaThunk({
+                            assetId: _id,
+                            media: key,
+                            path: value.path,
+                            orientation: definition,
+                        })
+                    );
                 }
             });
             setValidated(true);

@@ -135,7 +135,12 @@ export default function MediaCard({
     const mediaWidth = formats.original.width;
     const mediaHeight = formats.original.height;
 
-    const { requestAssetUpload: upload, formats: assetFormats } = useSelector((state) => state.asset);
+    const {
+        requestAssetUpload: upload,
+        formats: assetFormats,
+        _id,
+        isLoadingMediaData,
+    } = useSelector((state) => state.asset);
     const format = assetFormats[formatType as keyof FormatsMedia];
     const originalMediaInfo = handleGetFileType(formats.original.file!);
     const isVideo = originalMediaInfo.mediaType === 'video' && formatType !== 'print';
@@ -368,15 +373,17 @@ export default function MediaCard({
             (item) => item.transactionId && item.url && item.uploadProgress === 100 && item.status === 'completed'
         );
         const requestUploadComplete = Object.values(requestAssetUploadComplete);
-        if (requestUploadComplete?.length && fileStatus && definition && format)
+        if (requestUploadComplete?.length && fileStatus && definition && format && isLoadingMediaData === 'finished') {
             dispatch(
                 validateUploadedMediaThunk({
+                    assetId: _id,
                     media: formatType,
                     path: fileStatus.path,
                     orientation: definition,
                 })
             );
-    }, [upload]);
+        }
+    }, [upload, isLoadingMediaData]);
 
     return (
         <Box marginLeft={1} width={160}>
