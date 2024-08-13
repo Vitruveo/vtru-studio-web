@@ -820,6 +820,7 @@ export function getRequestConsignCommentsThunk({ id }: { id: string }): ReduxThu
 
 export function validateUploadedMediaThunk(payload: ValidateUploadedMediaReq): ReduxThunkAction<Promise<void>> {
     return function (dispatch, getState) {
+        dispatch(assetActionsCreators.changeLoading(true));
         return validateUploadedMedia(payload)
             .then((response) => {
                 if (response.status === 200) {
@@ -840,6 +841,9 @@ export function validateUploadedMediaThunk(payload: ValidateUploadedMediaReq): R
                         message: error instanceof AxiosError ? error.response?.data?.message : 'Error validating media',
                     })
                 );
+            })
+            .finally(() => {
+                dispatch(assetActionsCreators.changeLoading(false));
             });
     };
 }

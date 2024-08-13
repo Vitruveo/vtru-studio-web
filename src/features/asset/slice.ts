@@ -6,6 +6,7 @@ import { AssetSliceState, Comments } from './types';
 const initialState: AssetSliceState = {
     _id: '',
     tempColors: [],
+    isLoading: false,
     mediaAuxiliary: {
         description: '',
         formats: {
@@ -120,6 +121,9 @@ export const assetSlice = createSlice({
     name: 'asset',
     initialState,
     reducers: {
+        changeLoading: (state, action: PayloadAction<boolean>) => {
+            state.isLoading = action.payload;
+        },
         changeFormatsMediaAuxiliary: (state, action: PayloadAction<Partial<AssetSliceState['mediaAuxiliary']>>) => {
             return {
                 ...state,

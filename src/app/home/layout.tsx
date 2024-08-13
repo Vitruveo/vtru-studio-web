@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { useRouter } from 'next/navigation';
 import webSocketService from '@/services/websocket';
 import { connectWebSocketThunk, loginWebSocketThunk } from '@/features/ws/thunks';
-import { addAllowList, findEmailInAllowList } from '@/features/allowList/requests';
 import { userActionsCreators } from '@/features/user/slice';
 import { useToastr } from '../hooks/useToastr';
 import { AxiosError } from 'axios';
@@ -39,6 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     const router = useRouter();
     const dispatch = useDispatch();
     const token = useSelector((state) => state.user.token);
+    const isLoading = useSelector((state) => state.asset.isLoading);
     const customizer = useSelector((state) => state.customizer);
     const email = useSelector((state) => state.user.login.email);
 
@@ -77,10 +77,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
     const theme = useTheme();
 
+    const LoadingOverlay = () => (
+        <Box
+            position="fixed"
+            top={0}
+            left={0}
+            width="100vw"
+            height="100vh"
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            bgcolor="rgba(0, 0, 0, 0.5)"
+            zIndex={9999}
+        />
+    );
+
     if (!isValidToken(token)) return <div />;
 
     return (
         <MainWrapper>
+            {isLoading && <LoadingOverlay />}
             <title>Dashboard</title>
 
             {customizer.isHorizontal ? '' : <Sidebar />}

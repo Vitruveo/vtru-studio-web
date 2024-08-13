@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import CloseIcon from '@mui/icons-material/Close';
 import { Stack } from '@mui/system';
-import { Box, IconButton, Typography } from '@mui/material';
+import { Box, CircularProgress, IconButton, Typography } from '@mui/material';
 
 import { useDispatch, useSelector } from '@/store/hooks';
 import { AssetMediaFormValues, FormatMediaSave, FormatsMedia } from './types';
@@ -349,8 +349,30 @@ export default function AssetMedia() {
         return file && file instanceof File ? URL.createObjectURL(file) : file ? (file as string) : '';
     }, [file]);
 
+    const LoadingOverlay = () => (
+        <Box
+            position="fixed"
+            top={0}
+            left={0}
+            width="100vw"
+            height="100vh"
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            bgcolor="rgba(0, 0, 0, 0.5)"
+            zIndex={9999}
+        >
+            <Typography variant="h2" color="white">
+                Validating medias...
+            </Typography>
+            <CircularProgress color="primary" size={150} />
+        </Box>
+    );
+
     return (
         <form onSubmit={handleSubmit}>
+            {asset.isLoading && <LoadingOverlay />}
             <PageContainerFooter
                 submitDisabled={isUploading}
                 backOnclick={handleOpenBackModal}

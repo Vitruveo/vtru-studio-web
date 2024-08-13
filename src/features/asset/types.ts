@@ -62,6 +62,7 @@ export type ConsignArtworkSteps = 'c2pa' | 'ipfs' | 'contractExplorer';
 export interface Asset {
     _id: string;
     tempColors: number[][];
+    isLoading: boolean;
     mediaAuxiliary: {
         description: string;
         formats: {
