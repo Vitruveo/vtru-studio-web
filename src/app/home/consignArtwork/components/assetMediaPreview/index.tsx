@@ -42,7 +42,7 @@ const AssetMediaPreview = (props: AssetMediaPreviewProps) => {
                     style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
                 >
                     {isVideo ? (
-                        <video autoPlay muted loop style={{ objectFit: 'cover' }}>
+                        <video autoPlay muted loop style={{ objectFit: 'cover', width, height }}>
                             <source src={path} type="video/mp4" />
                         </video>
                     ) : (

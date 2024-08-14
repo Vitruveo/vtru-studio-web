@@ -31,7 +31,7 @@ const ConsignArtwork = () => {
     const theme = useTheme();
     const dispatch = useDispatch();
 
-    const { status } = useSelector((state) => state.asset);
+    const { status, consignArtwork } = useSelector((state) => state.asset);
     const formData = useSelector((state) => state.asset.assetMetadata?.context.formData);
     const selectedAsset = useSelector((state) => state.user.selectedAsset);
     const { previewAndConsign } = useSelector((state) => state.consignArtwork);
@@ -117,7 +117,9 @@ const ConsignArtwork = () => {
                     assetTitle={(formData as any)?.title ?? 'Untitled'}
                 />
                 <Box ml={2}>
-                    {['pending', 'rejected'].includes(consignArtworkStatus) && <Comments assetId={selectedAsset} />}
+                    {['pending', 'rejected'].includes(consignArtwork?.status || '') && (
+                        <Comments assetId={selectedAsset} />
+                    )}
                 </Box>
                 <Grid container>
                     <Grid item md={12} lg={6}>
