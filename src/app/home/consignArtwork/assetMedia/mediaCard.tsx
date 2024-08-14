@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
 import { IconTrash } from '@tabler/icons-react';
 import {
@@ -14,7 +14,14 @@ import {
     CircularProgress,
 } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { AssetMediaFormErros, AssetMediaFormValues, Definition, FormatMedia, OriginalFormatMedia } from './types';
+import {
+    AssetMediaFormErros,
+    AssetMediaFormValues,
+    Definition,
+    FormatMedia,
+    FormatsMedia,
+    OriginalFormatMedia,
+} from './types';
 import Crop from '../components/crop';
 import VideoPreview, { RangeTime } from './videoPreview';
 import {
@@ -32,8 +39,10 @@ import { useSelector } from '@/store/hooks';
 import UploadProgressBar from '../components/uploadProgress';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 import { ASSET_STORAGE_URL } from '@/constants/asset';
-import { useDispatch } from 'react-redux';
+import { useDispatch } from '@/store/hooks';
 import { assetActionsCreators } from '@/features/asset/slice';
+import { validateUploadedMediaThunk } from '@/features/asset/thunks';
+import { IconCircleX } from '@tabler/icons-react';
 
 interface MediaCardProps {
     deleteKeys: string[];
@@ -126,7 +135,13 @@ export default function MediaCard({
     const mediaWidth = formats.original.width;
     const mediaHeight = formats.original.height;
 
-    const upload = useSelector((state) => state.asset.requestAssetUpload);
+    const {
+        requestAssetUpload: upload,
+        formats: assetFormats,
+        _id,
+        isLoadingMediaData,
+    } = useSelector((state) => state.asset);
+    const format = assetFormats[formatType as keyof FormatsMedia];
     const originalMediaInfo = handleGetFileType(formats.original.file!);
     const isVideo = originalMediaInfo.mediaType === 'video' && formatType !== 'print';
 
@@ -358,17 +373,35 @@ export default function MediaCard({
             <Box marginTop={2} height={20} display="flex" alignItems="center" justifyContent="space-between">
                 <Box display="flex" alignItems="center">
                     <SvgIcon style={{ width: 20 }}>
-                        <circle cx="12" cy="12" r="12" fill={uploadSuccess ? '#4CAF50' : '#D3D3D3'} />
-                        <CheckCircleOutlineIcon
-                            fontSize="small"
-                            style={{
-                                color: '#FFFFFF',
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                transform: 'translate(-50%, -50%)',
-                            }}
-                        />
+                        {!format?.validation?.message ? (
+                            <>
+                                <circle cx="12" cy="12" r="12" fill={uploadSuccess ? '#4CAF50' : '#D3D3D3'} />
+                                <CheckCircleOutlineIcon
+                                    fontSize="small"
+                                    style={{
+                                        color: '#FFFFFF',
+                                        position: 'absolute',
+                                        top: '50%',
+                                        left: '50%',
+                                        transform: 'translate(-50%, -50%)',
+                                    }}
+                                />
+                            </>
+                        ) : (
+                            <>
+                                <circle cx="12" cy="12" r="12" fill={'red'} />
+                                <IconCircleX
+                                    fontSize="small"
+                                    style={{
+                                        color: '#FFFFFF',
+                                        position: 'absolute',
+                                        top: '50%',
+                                        left: '50%',
+                                        transform: 'translate(-50%, -50%)',
+                                    }}
+                                />
+                            </>
+                        )}
                     </SvgIcon>
 
                     <Typography marginLeft={1} color="grey" variant="h6" fontWeight="normal">

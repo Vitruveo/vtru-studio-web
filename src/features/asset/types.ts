@@ -16,6 +16,10 @@ interface Format {
     name?: string;
     customFile?: FileType;
     transactionId?: string;
+    validation?: {
+        isValid: boolean;
+        message: string;
+    };
 }
 
 export interface RequestAssetUpload {
@@ -58,6 +62,8 @@ export type ConsignArtworkSteps = 'c2pa' | 'ipfs' | 'contractExplorer';
 export interface Asset {
     _id: string;
     tempColors: number[][];
+    isLoading: boolean;
+    isLoadingMediaData: string;
     mediaAuxiliary: {
         description: string;
         formats: {
@@ -100,6 +106,14 @@ export interface Asset {
     c2pa?: c2pa;
     contractExplorer?: ContractExplorer;
     ipfs?: Ipfs;
+    comments?: Comments[];
+}
+
+export interface Comments {
+    id: string;
+    comment: string;
+    when: string;
+    isPublic: boolean;
 }
 
 export interface AssetConsignArtwork {
@@ -158,6 +172,7 @@ export interface AssetStorageReq {
 export interface RequestDeleteFilesReq {
     deleteKeys: string[];
     transactionId: string;
+    assetId: string;
 }
 
 export interface UpdateAssetStepReq {
@@ -181,6 +196,10 @@ export interface UploadIPFSByAssetIdRes {
 
 export interface CreateContractByAssetIdReq {
     id: string;
+}
+
+export interface ValidateUploadedMediaReq {
+    assetId: string;
 }
 
 export type UpdateAssetStepApiRes = APIResponse<string>;

@@ -23,9 +23,18 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    Badge,
 } from '@mui/material';
 import { Menu as MenuIcon } from '@mui/icons-material';
-import { IconCircleFilled, IconCopyPlus, IconPlus, IconScanEye, IconTag, IconTrash } from '@tabler/icons-react';
+import {
+    IconCircleFilled,
+    IconCopyPlus,
+    IconMessage,
+    IconPlus,
+    IconScanEye,
+    IconTag,
+    IconTrash,
+} from '@tabler/icons-react';
 import RSelect from 'react-select';
 import Image from 'next/image';
 
@@ -49,10 +58,19 @@ const iconStyle: CSSProperties = {
     height: '30px',
     zIndex: '9999',
     bottom: '5px',
-    left: '233px',
+    right: '-20px',
     color: '#595959',
 };
 
+const iconStyleComment: CSSProperties = {
+    position: 'absolute',
+    width: '80px',
+    height: '30px',
+    zIndex: '9999',
+    bottom: '0px',
+    right: '20px',
+    color: '#595959',
+};
 const filters = ['Draft', 'Pending', 'Listed', 'Sold', 'All'];
 
 const getButtonText = (status: string, mintExplorer?: MintExplorer) => {
@@ -377,6 +395,8 @@ export default function Home() {
                                             padding: '0px',
                                             margin: '0px',
                                             position: 'relative',
+                                            minWidth: '300px',
+                                            minHeight: '380px',
                                         }}
                                         onMouseEnter={(event) => {
                                             event.currentTarget.style.boxShadow = '0px 0px 10px 0px #000';
@@ -464,6 +484,7 @@ export default function Home() {
                                                     objectFit: 'cover',
                                                     borderTopLeftRadius: 10,
                                                     borderTopRightRadius: 10,
+                                                    minHeight: 300,
                                                 }}
                                                 width={300}
                                                 height={300}
@@ -480,6 +501,7 @@ export default function Home() {
                                                     objectFit: 'cover',
                                                     borderTopLeftRadius: 10,
                                                     borderTopRightRadius: 10,
+                                                    minHeight: 300,
                                                 }}
                                             />
                                         )}
@@ -539,6 +561,16 @@ export default function Home() {
                                             {getStatus(asset.status, asset.mintExplorer) === 'Rejected' && (
                                                 <IconEdit style={iconStyle} />
                                             )}
+                                            {['Pending', 'Rejected'].includes(
+                                                getStatus(asset.status, asset.mintExplorer)
+                                            ) &&
+                                                asset.countComments > 0 && (
+                                                    <div style={iconStyleComment}>
+                                                        <Badge badgeContent={asset.countComments} color="primary">
+                                                            <IconMessage />
+                                                        </Badge>
+                                                    </div>
+                                                )}
                                             {getStatus(asset.status, asset.mintExplorer) === 'Pending' && (
                                                 <IconScanEye style={iconStyle} />
                                             )}

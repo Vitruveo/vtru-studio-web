@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import CloseIcon from '@mui/icons-material/Close';
 import { Stack } from '@mui/system';
-import { Box, IconButton, Typography } from '@mui/material';
+import { Box, CircularProgress, IconButton, Typography } from '@mui/material';
 
 import { useDispatch, useSelector } from '@/store/hooks';
 import { AssetMediaFormValues, FormatMediaSave, FormatsMedia } from './types';
@@ -37,6 +37,18 @@ export default function AssetMedia() {
     const dispatch = useDispatch();
 
     const selectedAsset = useSelector((state) => state.user.selectedAsset);
+    const formats = useSelector((state) => state.asset.formats);
+
+    const originalMediaInfo = handleGetFileType(formats.original.file!);
+
+    const errorMessages = Object.entries(formats)
+        .map(([_key, value]) => value?.validation?.message)
+        .filter(Boolean)
+        .join('\n');
+
+    const isAllValid = Object.entries(formats)
+        .filter(([key]) => key !== 'print')
+        .every(([_, item]) => item?.validation?.isValid);
 
     const initialValues = useMemo(
         () => ({
@@ -46,6 +58,7 @@ export default function AssetMedia() {
         []
     );
 
+    // check if there is any file being uploaded
     const isUploading =
         asset.requestAssetUpload && Object.values(asset.requestAssetUpload).some((item) => item.status === 'uploading');
 
@@ -87,18 +100,21 @@ export default function AssetMedia() {
                 dispatch(
                     consignArtworkActionsCreators.changeStatusStep({
                         stepId: 'assetMedia',
-                        status: getStepStatus({
-                            formats:
-                                JSON.stringify(initialValues.formats) === JSON.stringify(values.formats)
-                                    ? asset.formats
-                                    : values.formats,
-                        }),
+                        status: isAllValid
+                            ? getStepStatus({
+                                  formats:
+                                      JSON.stringify(initialValues.formats) === JSON.stringify(values.formats)
+                                          ? asset.formats
+                                          : values.formats,
+                              })
+                            : 'inProgress',
                     })
                 );
 
                 await requestDeleteFiles({
                     deleteKeys: values.deleteKeys.filter(Boolean),
                     transactionId: nanoid(),
+                    assetId: selectedAsset,
                 });
 
                 const deleteFormats = Object.entries(values.formats)
@@ -133,6 +149,8 @@ export default function AssetMedia() {
     }) => {
         const transactionId = nanoid();
 
+        const isVideo = originalMediaInfo.mediaType === 'video';
+
         dispatch(
             assetActionsCreators.requestAssetUpload({
                 key: formatUpload,
@@ -143,7 +161,7 @@ export default function AssetMedia() {
 
         dispatch(
             sendRequestUploadThunk({
-                mimetype: file!.type,
+                mimetype: !isVideo && formatUpload !== 'original' ? 'image/jpeg' : file!.type,
                 metadata: {
                     width: width?.toString(),
                     height: height?.toString(),
@@ -200,11 +218,7 @@ export default function AssetMedia() {
         router.push('/home/consignArtwork');
     };
 
-    const checkStepProgress = getStepStatus({ formats: values.formats });
-
-    useEffect(() => {
-        dispatch(consignArtworkActionsCreators.changeStatusStep({ stepId: 'assetMedia', status: checkStepProgress }));
-    }, [checkStepProgress]);
+    const checkStepProgress = isAllValid ? getStepStatus({ formats: values.formats }) : 'inProgress';
 
     useEffect(() => {
         if (values.formats?.original?.definition) {
@@ -301,6 +315,7 @@ export default function AssetMedia() {
                         ...values,
                         formats: responseUpload.reduce((acc, cur) => ({ ...acc, ...cur }), {} as FormatMediaSave),
                         load: true,
+                        formatsFields: values.formats,
                     })
                 );
         }
@@ -336,8 +351,30 @@ export default function AssetMedia() {
         return file && file instanceof File ? URL.createObjectURL(file) : file ? (file as string) : '';
     }, [file]);
 
+    const LoadingOverlay = () => (
+        <Box
+            position="fixed"
+            top={0}
+            left={0}
+            width="100vw"
+            height="100vh"
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            bgcolor="rgba(0, 0, 0, 0.5)"
+            zIndex={9999}
+        >
+            <Typography variant="h2" color="white">
+                Validating medias...
+            </Typography>
+            <CircularProgress color="primary" size={150} />
+        </Box>
+    );
+
     return (
         <form onSubmit={handleSubmit}>
+            {asset.isLoading && <LoadingOverlay />}
             <PageContainerFooter
                 submitDisabled={isUploading}
                 backOnclick={handleOpenBackModal}
@@ -390,12 +427,27 @@ export default function AssetMedia() {
                                 </Box>
                             )}
 
-                            {/* <Typography marginTop={2} color="grey" fontSize="1rem" fontWeight="bold">
-                                {(language['studio.consignArtwork.assetMedia.definition'] as TranslateFunction)({
-                                    definition: values.definition,
-                                })}{' '}
-                                {texts.assets}
-                            </Typography> */}
+                            {errorMessages && (
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        backgroundColor: '#FA896B',
+                                        margin: '10px 0',
+                                        padding: 1,
+                                    }}
+                                >
+                                    <Typography
+                                        variant="h6"
+                                        fontWeight="normal"
+                                        color="white"
+                                        sx={{ whiteSpace: 'pre-wrap' }}
+                                    >
+                                        {errorMessages}
+                                    </Typography>
+                                </Box>
+                            )}
+
                             <Box marginTop={1} display="flex" flexWrap="wrap">
                                 {Object.entries(values.formats).map(([formatType, value], index) => (
                                     <Box style={{ marginRight: '10px' }} key={index}>

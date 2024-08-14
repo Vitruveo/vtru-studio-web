@@ -1,11 +1,13 @@
 'use client';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import { AssetSliceState } from './types';
+import { AssetSliceState, Comments } from './types';
 
 const initialState: AssetSliceState = {
     _id: '',
     tempColors: [],
+    isLoading: false,
+    isLoadingMediaData: 'notStarted',
     mediaAuxiliary: {
         description: '',
         formats: {
@@ -41,26 +43,46 @@ const initialState: AssetSliceState = {
             file: undefined,
             customFile: undefined,
             transactionId: undefined,
+            validation: {
+                isValid: false,
+                message: '',
+            },
         },
         display: {
             file: undefined,
             customFile: undefined,
             transactionId: undefined,
+            validation: {
+                isValid: false,
+                message: '',
+            },
         },
         exhibition: {
             file: undefined,
             customFile: undefined,
             transactionId: undefined,
+            validation: {
+                isValid: false,
+                message: '',
+            },
         },
         preview: {
             file: undefined,
             customFile: undefined,
             transactionId: undefined,
+            validation: {
+                isValid: false,
+                message: '',
+            },
         },
         print: {
             file: undefined,
             customFile: undefined,
             transactionId: undefined,
+            validation: {
+                isValid: false,
+                message: '',
+            },
         },
     },
     assetMetadata: undefined,
@@ -93,12 +115,19 @@ const initialState: AssetSliceState = {
         },
     },
     error: '',
+    comments: [],
 };
 
 export const assetSlice = createSlice({
     name: 'asset',
     initialState,
     reducers: {
+        changeLoading: (state, action: PayloadAction<boolean>) => {
+            state.isLoading = action.payload;
+        },
+        changeLoadingMediaData: (state, action: PayloadAction<string>) => {
+            state.isLoadingMediaData = action.payload;
+        },
         changeFormatsMediaAuxiliary: (state, action: PayloadAction<Partial<AssetSliceState['mediaAuxiliary']>>) => {
             return {
                 ...state,
@@ -244,6 +273,32 @@ export const assetSlice = createSlice({
         },
         setRequestConsignStatusDraft: (state) => {
             state.consignArtwork!.status = 'draft';
+        },
+        setRequestConsignComments: (state, action: PayloadAction<Comments[]>) => {
+            state.comments = action.payload;
+        },
+        setFormatValidationConfirmed: (state) => {
+            Object.values(state.formats).forEach((format) => {
+                if (format)
+                    format.validation = {
+                        isValid: true,
+                        message: '',
+                    };
+            });
+        },
+        setFormatValidationError: (
+            state,
+            action: PayloadAction<{
+                format: keyof AssetSliceState['formats'];
+                message: string;
+            }>
+        ) => {
+            const format = state.formats[action.payload.format];
+            if (format)
+                format.validation = {
+                    isValid: false,
+                    message: action.payload.message,
+                };
         },
         resetAsset: (state) => {
             return initialState;
