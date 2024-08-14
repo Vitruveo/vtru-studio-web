@@ -561,7 +561,9 @@ export default function Home() {
                                             {getStatus(asset.status, asset.mintExplorer) === 'Rejected' && (
                                                 <IconEdit style={iconStyle} />
                                             )}
-                                            {getStatus(asset.status, asset.mintExplorer) === 'Rejected' &&
+                                            {['Pending', 'Rejected'].includes(
+                                                getStatus(asset.status, asset.mintExplorer)
+                                            ) &&
                                                 asset.countComments > 0 && (
                                                     <div style={iconStyleComment}>
                                                         <Badge badgeContent={asset.countComments} color="primary">

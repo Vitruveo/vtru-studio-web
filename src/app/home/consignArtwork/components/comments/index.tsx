@@ -1,15 +1,15 @@
 import { getRequestConsignCommentsThunk } from '@/features/asset/thunks';
 import { useDispatch, useSelector } from '@/store/hooks';
-import { formatDate } from '@/utils/formatDate';
 import { Box, Typography } from '@mui/material';
 import { useEffect } from 'react';
+import { format } from 'date-fns';
 
 interface CommentsProps {
     assetId: string;
 }
 export default function Comments({ assetId }: CommentsProps) {
     const dispatch = useDispatch();
-    const comments = useSelector((state) => state.asset.comments);
+    const comments = useSelector((state) => state.asset.comments || []);
 
     useEffect(() => {
         dispatch(getRequestConsignCommentsThunk({ id: assetId }));
@@ -18,31 +18,35 @@ export default function Comments({ assetId }: CommentsProps) {
     if (comments?.length === 0) return;
 
     return (
-        <Box>
-            <Typography variant="h5" mb={1}>
+        <Box marginBlock={3}>
+            <Typography variant="h6" mb={1}>
                 Moderator&apos;s Note
             </Typography>
             <Box>
-                {comments?.map((comment) => (
-                    <Box
-                        key={comment.id}
-                        display="flex"
-                        flexDirection="column"
-                        p={2}
-                        border="2px solid #47D7BC"
-                        borderRadius={2}
-                        mb={1}
-                    >
-                        <Box display="flex" justifyContent="space-between">
-                            <Typography variant="body1" flexGrow={1} mr={2}>
+                {[...comments]
+                    .sort((a, b) => new Date(b.when).getTime() - new Date(a.when).getTime())
+                    .map((comment) => (
+                        <Box
+                            key={comment.id}
+                            display="flex"
+                            justifyContent="center"
+                            alignItems="center"
+                            gap={1}
+                            flexDirection="row"
+                            p={2}
+                            borderRadius={1}
+                            mb={1}
+                            boxShadow={'0 0 1px 0 rgba(0,0,0,0.31),0 11px 20px -8px rgba(0,0,0,0.25)'}
+                        >
+                            <Typography variant="caption" flexShrink={0}>
+                                {format(new Date(comment.when), 'dd/MM/yyyy HH:mm')}
+                                {': '}
+                            </Typography>
+                            <Typography variant="caption" flexGrow={1} mr={2}>
                                 {comment.comment}
                             </Typography>
-                            <Typography variant="caption" flexShrink={0}>
-                                {formatDate(comment.when)}
-                            </Typography>
                         </Box>
-                    </Box>
-                ))}
+                    ))}
             </Box>
         </Box>
     );
