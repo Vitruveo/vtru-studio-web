@@ -36,6 +36,7 @@ const ConsignArtwork = () => {
     const { language } = useI18n();
     const { validateConsign, consignArtwork, _id } = useSelector((state) => state.asset);
     const formData = useSelector((state) => state.asset.assetMetadata?.context.formData);
+    const consignStatus = useSelector((state) => state.consignArtwork?.status);
 
     const texts = {
         homeTitle: language['studio.home.title'],
@@ -234,14 +235,17 @@ const ConsignArtwork = () => {
                             validateConsign={validateConsign}
                             message={consignArtworkStatus?.message || textsForConsignArtWorkStatus['draft'].message}
                         />
-                        {consignArtwork?.status === 'pending' && (
-                            <Box display="flex" justifyContent={'space-between'}>
-                                <CompletedConsignTableStatus onStatusChange={() => {}} selectedStatus="preview" />
-                                <AssetMediaPreview />
+                        {consignStatus === 'pending' && (
+                            <Box ml={2}>
+                                <Comments assetId={_id} />
+                                <Box display="flex" justifyContent={'space-between'}>
+                                    <CompletedConsignTableStatus onStatusChange={() => {}} selectedStatus="preview" />
+                                    <AssetMediaPreview />
+                                </Box>
                             </Box>
                         )}
 
-                        {consignArtwork?.status === 'rejected' && (
+                        {consignStatus === 'rejected' && (
                             <Box display={'flex'} flexDirection={'column'} pt={1} pl={2}>
                                 <Typography variant="h6" fontWeight="normal" color="GrayText" mb={2}>
                                     If you think you have been flagged incorrectly, please submit the following form:{' '}
@@ -249,8 +253,6 @@ const ConsignArtwork = () => {
                                         https://vtru.xyz/blockappeal
                                     </a>
                                 </Typography>
-
-                                <Comments assetId={_id} />
                             </Box>
                         )}
                     </Box>

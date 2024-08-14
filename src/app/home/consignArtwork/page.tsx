@@ -116,8 +116,9 @@ const ConsignArtwork = () => {
                     items={BCrumb}
                     assetTitle={(formData as any)?.title ?? 'Untitled'}
                 />
-
-                <Comments assetId={selectedAsset} />
+                <Box ml={2}>
+                    {['pending', 'rejected'].includes(consignArtworkStatus) && <Comments assetId={selectedAsset} />}
+                </Box>
                 <Grid container>
                     <Grid item md={12} lg={6}>
                         <Box marginBottom={2}>

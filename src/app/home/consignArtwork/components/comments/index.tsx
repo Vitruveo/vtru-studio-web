@@ -19,7 +19,7 @@ export default function Comments({ assetId }: CommentsProps) {
 
     return (
         <Box marginBlock={3}>
-            <Typography variant="h5" mb={1}>
+            <Typography variant="h6" mb={1}>
                 Moderator&apos;s Note
             </Typography>
             <Box>

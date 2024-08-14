@@ -35,6 +35,7 @@ const ConsignMessage = ({ validateConsign, message }: ConsignMessageProps) => {
                     fontWeight: 'bold',
                     padding: 1,
                     marginBottom: 2,
+                    marginLeft: 2,
                 }}
             >
                 <Typography variant="h6" fontWeight="normal" color="GrayText">
