@@ -233,6 +233,7 @@ const ConsignArtwork = () => {
                         <ConsignMessage
                             validateConsign={validateConsign}
                             message={consignArtworkStatus?.message || textsForConsignArtWorkStatus['draft'].message}
+                            consignStatus={consignArtwork?.status || 'draft'}
                         />
                         {consignArtwork?.status === 'pending' && (
                             <Box ml={2}>

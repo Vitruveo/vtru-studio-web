@@ -6,9 +6,10 @@ import { useState } from 'react';
 interface ConsignMessageProps {
     validateConsign: AssetSliceState['validateConsign'];
     message: string;
+    consignStatus: string;
 }
 
-const ConsignMessage = ({ validateConsign, message }: ConsignMessageProps) => {
+const ConsignMessage = ({ validateConsign, message, consignStatus }: ConsignMessageProps) => {
     const { status } = validateConsign;
     const [copyText, setCopyText] = useState<string>('Copy');
     const handleCopyErrorMessage = () => {
@@ -44,7 +45,7 @@ const ConsignMessage = ({ validateConsign, message }: ConsignMessageProps) => {
             </Box>
         );
     }
-    if (status === 'error') {
+    if (status === 'error' && consignStatus !== 'pending') {
         return (
             <Box
                 sx={{
