@@ -234,7 +234,7 @@ const ConsignArtwork = () => {
                             validateConsign={validateConsign}
                             message={consignArtworkStatus?.message || textsForConsignArtWorkStatus['draft'].message}
                         />
-                        {consignArtwork?.status === 'pending' && (
+                        {consignArtwork?.status !== 'rejected' && (
                             <Box ml={2}>
                                 <Comments assetId={_id} />
                                 <Box display="flex" justifyContent={'space-between'}>
