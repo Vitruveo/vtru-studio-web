@@ -26,6 +26,7 @@ interface ConsignStepsProps {
         loading?: boolean;
         disabled?: boolean;
         actionFunc: () => void;
+        show: boolean;
     };
 }
 
@@ -114,16 +115,14 @@ const ConsignArtwork = () => {
             title: texts.artworkListingTitle,
             actionTitle: texts.preview,
             actionFunc: handlePreview,
+            show: true,
         },
-        ...(consignArtwork?.status === 'pending'
-            ? {
-                  cancelRequest: {
-                      title: 'Cancel Request Consignment',
-                      actionTitle: 'Cancel',
-                      actionFunc: handleCancelRequestConsign,
-                  },
-              }
-            : {}),
+        cancelRequest: {
+            title: 'Cancel Request Consignment',
+            actionTitle: 'Cancel',
+            actionFunc: handleCancelRequestConsign,
+            show: consignArtwork?.status === 'pending',
+        },
     };
 
     const handleSubmit = async (event?: React.FormEvent) => {
@@ -142,7 +141,15 @@ const ConsignArtwork = () => {
                     consignArtwork?.status === 'pending' ||
                     consignArtwork?.status === 'running'
                 }
-                backOnclick={() => router.push(`/home/${consignArtwork?.status === 'pending' ? '' : 'consignArtwork'}`)}
+                backOnclick={() => {
+                    if (consignArtwork?.status === 'pending') {
+                        router.push('/home');
+
+                        return;
+                    }
+
+                    router.push('/home/consignArtwork');
+                }}
                 display={!!consignArtworkStatus?.buttontitle}
             >
                 <Breadcrumb
@@ -153,81 +160,83 @@ const ConsignArtwork = () => {
 
                 <Box marginBottom={2}>
                     <Box maxWidth={600} p={2}>
-                        {Object.values(consignSteps).map((v) => (
-                            <Box
-                                sx={{ alignItems: 'center!important' }}
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="space-between"
-                                flexWrap="wrap"
-                                key={v.title}
-                            >
-                                <Box flex={2}>
-                                    <Typography
-                                        sx={{
-                                            whiteSpace: 'nowrap',
-                                            textOverflow: 'ellipsis',
-                                            overflow: 'hidden',
-                                        }}
-                                        my={2}
-                                        variant="h6"
-                                        fontWeight="normal"
-                                        color="GrayText"
-                                    >
-                                        {v.title}
-                                    </Typography>
-                                </Box>
-                                <Box flex={2} display="flex">
-                                    <Box
-                                        style={{
-                                            opacity: !v.value && !v.status ? 0 : 1,
-                                        }}
-                                        width={110}
-                                        display="flex"
-                                        alignItems="center"
-                                    >
+                        {Object.values(consignSteps)
+                            .filter((v) => v.show)
+                            .map((v) => (
+                                <Box
+                                    sx={{ alignItems: 'center!important' }}
+                                    display="flex"
+                                    alignItems="center"
+                                    justifyContent="space-between"
+                                    flexWrap="wrap"
+                                    key={v.title}
+                                >
+                                    <Box flex={2}>
+                                        <Typography
+                                            sx={{
+                                                whiteSpace: 'nowrap',
+                                                textOverflow: 'ellipsis',
+                                                overflow: 'hidden',
+                                            }}
+                                            my={2}
+                                            variant="h6"
+                                            fontWeight="normal"
+                                            color="GrayText"
+                                        >
+                                            {v.title}
+                                        </Typography>
+                                    </Box>
+                                    <Box flex={2} display="flex">
                                         <Box
+                                            style={{
+                                                opacity: !v.value && !v.status ? 0 : 1,
+                                            }}
+                                            width={110}
                                             display="flex"
                                             alignItems="center"
-                                            justifyContent="center"
-                                            height="100%"
-                                            width="100%"
-                                            color={v.status && !v.value ? 'white' : 'inherit'}
-                                            bgcolor={
-                                                (v?.status && !v.value && theme.palette.text.disabled) || '#EFEFEF'
-                                            }
                                         >
-                                            {v.value || v.status}
-                                        </Box>
-                                    </Box>
-                                    <Box width={120} marginLeft={1}>
-                                        <Box width={100}>
-                                            <Button
-                                                disabled={v?.disabled || v?.loading}
-                                                onClick={v.actionFunc}
-                                                size="small"
-                                                variant="contained"
-                                                fullWidth
+                                            <Box
+                                                display="flex"
+                                                alignItems="center"
+                                                justifyContent="center"
+                                                height="100%"
+                                                width="100%"
+                                                color={v.status && !v.value ? 'white' : 'inherit'}
+                                                bgcolor={
+                                                    (v?.status && !v.value && theme.palette.text.disabled) || '#EFEFEF'
+                                                }
                                             >
-                                                {v.loading ? (
-                                                    <Box
-                                                        sx={{
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center',
-                                                        }}
-                                                    >
-                                                        Loading...
-                                                    </Box>
-                                                ) : (
-                                                    v.actionTitle
-                                                )}
-                                            </Button>
+                                                {v.value || v.status}
+                                            </Box>
+                                        </Box>
+                                        <Box width={120} marginLeft={1}>
+                                            <Box width={100}>
+                                                <Button
+                                                    disabled={v?.disabled || v?.loading}
+                                                    onClick={v.actionFunc}
+                                                    size="small"
+                                                    variant="contained"
+                                                    fullWidth
+                                                >
+                                                    {v.loading ? (
+                                                        <Box
+                                                            sx={{
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                            }}
+                                                        >
+                                                            Loading...
+                                                        </Box>
+                                                    ) : (
+                                                        v.actionTitle
+                                                    )}
+                                                </Button>
+                                            </Box>
                                         </Box>
                                     </Box>
                                 </Box>
-                            </Box>
-                        ))}
+                            ))}
                     </Box>
                     <Box>
                         <ConsignMessage
