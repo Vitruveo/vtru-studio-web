@@ -117,9 +117,7 @@ const ConsignArtwork = () => {
                     assetTitle={(formData as any)?.title ?? 'Untitled'}
                 />
                 <Box ml={2}>
-                    {['pending', 'rejected'].includes(consignArtwork?.status || '') && (
-                        <Comments assetId={selectedAsset} />
-                    )}
+                    <Comments assetId={selectedAsset} />
                 </Box>
                 <Grid container>
                     <Grid item md={12} lg={6}>

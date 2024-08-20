@@ -815,9 +815,10 @@ export function requestConsignThunk(): ReduxThunkAction<void> {
 
 export function deleteRequestConsignThunk(): ReduxThunkAction<void> {
     return function (dispatch, getState) {
-        const consignArtworkStatus = getState().consignArtwork.status;
+        const consignArtworkStatus = getState().asset.consignArtwork?.status;
+
         if (consignArtworkStatus === 'pending') {
-            deleteRequestConsign(getState().user.selectedAsset);
+            deleteRequestConsign(getState().asset._id);
             dispatch(assetActionsCreators.setRequestConsignStatusDraft());
         }
     };

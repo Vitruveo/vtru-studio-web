@@ -6,7 +6,7 @@ import React, { useEffect } from 'react';
 export default function ConsignArtworkTemplate({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const canConsignArtwork = useSelector((state) => state.user.canConsignArtwork);
-    const status = useSelector((state) => state.consignArtwork.status);
+    const status = useSelector((state) => state.asset.consignArtwork?.status);
 
     useEffect(() => {
         if (!canConsignArtwork) {
