@@ -17,6 +17,7 @@ import {
     deleteAsset,
     getRequestConsignComments,
     validateUploadedMedia,
+    validateUploadedAuxiliaryMedia,
 } from './requests';
 import {
     AssetSendRequestUploadApiRes,
@@ -31,6 +32,7 @@ import {
     SigningMediaC2PAReq,
     UploadIPFSByAssetIdApiRes,
     UploadIPFSByAssetIdReq,
+    ValidateUploadedAuxiliaryMediaReq,
     ValidateUploadedMediaReq,
 } from './types';
 import { ReduxThunkAction } from '@/store';
@@ -90,6 +92,11 @@ export function getAssetThunk(id: string): ReduxThunkAction<Promise<any>> {
             const isAllValid = response.data?.formats
                 ? Object.entries(response.data?.formats)
                       .filter(([key]) => key !== 'print')
+                      .every(([_, item]) => item?.validation?.isValid)
+                : false;
+            const isAllValidAuxMedia = response.data?.mediaAuxiliary?.formats
+                ? Object.entries(response.data?.mediaAuxiliary?.formats)
+                      .filter(([_key, value]) => value?.file)
                       .every(([_, item]) => item?.validation?.isValid)
                 : false;
 
@@ -268,7 +275,7 @@ export function getAssetThunk(id: string): ReduxThunkAction<Promise<any>> {
                     dispatch(
                         consignArtworkActionsCreators.changeStatusStep({
                             stepId: 'auxiliaryMedia',
-                            status: 'completed',
+                            status: isAllValidAuxMedia ? 'completed' : 'inProgress',
                         })
                     );
                 } else {
@@ -338,6 +345,7 @@ export function auxiliaryMediaThunk(payload: {
                 description: payload.description,
             })
         );
+
         if (payload.deleteFormats?.length)
             dispatch(assetActionsCreators.removeFormatsMediaAuxiliary(payload.deleteFormats));
     };
@@ -479,13 +487,9 @@ export function assetMetadataThunk(
     };
 }
 
-// export function creatorMetadataThunk(payload: StepsFormValues): ReduxThunkAction<Promise<any>> {
-//     return async function (dispatch, getState) {};
-// }
-
 export function licenseThunk(payload: LicensesFormValues): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
-        const response = await updateAssetStep({
+        await updateAssetStep({
             ...payload,
             licenses: payload,
             stepName: 'license',
@@ -502,7 +506,7 @@ export function licenseThunk(payload: LicensesFormValues): ReduxThunkAction<Prom
 
 export function contractThunk(payload: TermsOfUseFormValues): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
-        const response = await updateAssetStep({
+        await updateAssetStep({
             ...payload,
             stepName: 'contract',
             id: getState().user.selectedAsset,
@@ -523,7 +527,7 @@ export function contractThunk(payload: TermsOfUseFormValues): ReduxThunkAction<P
 
 export function publishThunk(payload: { status: AssetStatus }): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
-        const response = await updateAssetStep({
+        updateAssetStep({
             ...payload,
             stepName: 'publish',
             id: getState().user.selectedAsset,
@@ -864,6 +868,35 @@ export function validateUploadedMediaThunk(payload: ValidateUploadedMediaReq): R
                             status: 'inProgress',
                         })
                     );
+                }
+            })
+            .finally(() => {
+                dispatch(assetActionsCreators.changeLoading(false));
+            });
+    };
+}
+
+export function validateUploadedAuxiliaryMediaThunk(
+    payload: ValidateUploadedAuxiliaryMediaReq
+): ReduxThunkAction<Promise<void>> {
+    return function (dispatch, getState) {
+        dispatch(assetActionsCreators.changeLoading(true));
+        return validateUploadedAuxiliaryMedia(payload)
+            .then(() => {
+                dispatch(assetActionsCreators.setAuxiliaryMediaValidationConfirmed());
+            })
+            .catch((error) => {
+                if (error instanceof AxiosError && error.response?.status === 400) {
+                    const data = error.response.data;
+
+                    data.data.forEach((item: any) => {
+                        dispatch(
+                            assetActionsCreators.setAuxiliaryMediaValidationError({
+                                format: item.media,
+                                message: item.message,
+                            })
+                        );
+                    });
                 }
             })
             .finally(() => {
