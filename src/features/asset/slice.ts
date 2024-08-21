@@ -15,26 +15,46 @@ const initialState: AssetSliceState = {
                 file: undefined,
                 customFile: undefined,
                 transactionId: undefined,
+                validation: {
+                    isValid: false,
+                    message: '',
+                },
             },
             arVideo: {
                 file: undefined,
                 customFile: undefined,
                 transactionId: undefined,
+                validation: {
+                    isValid: false,
+                    message: '',
+                },
             },
             btsImage: {
                 file: undefined,
                 customFile: undefined,
                 transactionId: undefined,
+                validation: {
+                    isValid: false,
+                    message: '',
+                },
             },
             btsVideo: {
                 file: undefined,
                 customFile: undefined,
                 transactionId: undefined,
+                validation: {
+                    isValid: false,
+                    message: '',
+                },
             },
             codeZip: {
                 file: undefined,
                 customFile: undefined,
                 transactionId: undefined,
+                validation: {
+                    isValid: false,
+                    message: '',
+                },
             },
         },
     },
@@ -294,6 +314,29 @@ export const assetSlice = createSlice({
             }>
         ) => {
             const format = state.formats[action.payload.format];
+            if (format)
+                format.validation = {
+                    isValid: false,
+                    message: action.payload.message,
+                };
+        },
+        setAuxiliaryMediaValidationConfirmed: (state) => {
+            Object.values(state.mediaAuxiliary.formats).forEach((format) => {
+                if (format)
+                    format.validation = {
+                        isValid: true,
+                        message: '',
+                    };
+            });
+        },
+        setAuxiliaryMediaValidationError: (
+            state,
+            action: PayloadAction<{
+                format: keyof AssetSliceState['mediaAuxiliary']['formats'];
+                message: string;
+            }>
+        ) => {
+            const format = state.mediaAuxiliary.formats[action.payload.format];
             if (format)
                 format.validation = {
                     isValid: false,

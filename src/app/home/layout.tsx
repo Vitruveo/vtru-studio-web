@@ -13,6 +13,7 @@ import { connectWebSocketThunk, loginWebSocketThunk } from '@/features/ws/thunks
 import { userActionsCreators } from '@/features/user/slice';
 import { useToastr } from '../hooks/useToastr';
 import { AxiosError } from 'axios';
+import LoadingOverlay from './components/LoadingOverlay';
 
 const MainWrapper = styled('div')(() => ({
     display: 'flex',
@@ -76,22 +77,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     }, [email]);
 
     const theme = useTheme();
-
-    const LoadingOverlay = () => (
-        <Box
-            position="fixed"
-            top={0}
-            left={0}
-            width="100vw"
-            height="100vh"
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            bgcolor="rgba(0, 0, 0, 0.5)"
-            zIndex={9999}
-        />
-    );
 
     if (!isValidToken(token)) return <div />;
 

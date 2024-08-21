@@ -12,7 +12,12 @@ import PageContainerFooter from '../../components/container/PageContainerFooter'
 import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
 import MediaCard from './mediaCard';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
-import { auxiliaryMediaThunk, assetStorageThunk, sendRequestUploadThunk } from '@/features/asset/thunks';
+import {
+    auxiliaryMediaThunk,
+    assetStorageThunk,
+    sendRequestUploadThunk,
+    validateUploadedAuxiliaryMediaThunk,
+} from '@/features/asset/thunks';
 import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
 import { assetActionsCreators } from '@/features/asset/slice';
@@ -20,6 +25,8 @@ import { requestDeleteFiles } from '@/features/asset/requests';
 import { useToastr } from '@/app/hooks/useToastr';
 import { RichEditor } from '../../components/rich-editor/rich-editor';
 import { createDescriptionInitialState, getDescriptionJSONString, getDescriptionText } from './helpers';
+import LoadingOverlay from '../../components/LoadingOverlay';
+import ErrorMessage from '../../components/errorMessage';
 
 export default function AssetMedia() {
     const [showBackModal, setShowBackModal] = useState(false);
@@ -55,6 +62,16 @@ export default function AssetMedia() {
 
     const asset = useSelector((state) => state.asset);
     const formData = useSelector((state) => state.asset.assetMetadata?.context.formData);
+    const formats = useSelector((state) => state.asset.mediaAuxiliary.formats);
+
+    const errorMessages = Object.entries(formats)
+        .map(([_key, value]) => value?.validation?.message)
+        .filter(Boolean)
+        .join('\n');
+
+    const isAllValid = Object.entries(formats)
+        .filter(([_key, value]) => value?.file)
+        .every(([_key, value]) => value?.validation?.isValid);
 
     // TODO: COLOCAR TIPAGEM CORRETA
     const isAREnabled = useSelector((state: any) => state.asset.assetMetadata?.taxonomy.formData?.arenabled) == 'yes';
@@ -75,14 +92,21 @@ export default function AssetMedia() {
     const { values, errors, setFieldValue, handleSubmit } = useFormik<AssetMediaFormValues>({
         initialValues,
         onSubmit: async (formValues) => {
-            if (JSON.stringify(initialValues) === JSON.stringify(values) && !values.deleteKeys.length)
+            dispatch(validateUploadedAuxiliaryMediaThunk({ assetId: asset._id }));
+            setShowBackModal(false);
+            if (
+                JSON.stringify(initialValues) === JSON.stringify(values) &&
+                !values.deleteKeys.length &&
+                !asset.isLoading &&
+                isAllValid
+            )
                 router.push('/home/consignArtwork');
             else {
                 if (Object.values(values.formats).find((v) => v.file) || getDescriptionText(values.description).length)
                     dispatch(
                         consignArtworkActionsCreators.changeStatusStep({
                             stepId: 'auxiliaryMedia',
-                            status: 'completed',
+                            status: isAllValid ? 'completed' : 'inProgress',
                         })
                     );
 
@@ -103,7 +127,7 @@ export default function AssetMedia() {
                         description: getDescriptionJSONString(formValues.description),
                     })
                 );
-                router.push('/home/consignArtwork');
+                if (!asset.isLoading && isAllValid) router.push('/home/consignArtwork');
             }
         },
     });
@@ -180,7 +204,7 @@ export default function AssetMedia() {
         dispatch(
             consignArtworkActionsCreators.changeStatusStep({
                 stepId: 'auxiliaryMedia',
-                status: 'completed',
+                status: isAllValid ? 'completed' : 'inProgress',
             })
         );
 
@@ -196,7 +220,9 @@ export default function AssetMedia() {
 
     const checkStepProgress =
         Object.values(asset.mediaAuxiliary.formats).find((v) => v.file) || getDescriptionText(values.description).length
-            ? 'completed'
+            ? isAllValid
+                ? 'completed'
+                : 'inProgress'
             : 'inProgress';
 
     useEffect(() => {
@@ -303,6 +329,7 @@ export default function AssetMedia() {
 
     return (
         <form onSubmit={handleSubmit}>
+            {asset.isLoading && <LoadingOverlay title="Validating Auxiliary Media..." showProgress />}
             <PageContainerFooter
                 backOnclick={handleOpenBackModal}
                 submitText={texts.nextButton}
@@ -316,13 +343,15 @@ export default function AssetMedia() {
                     assetTitle={(formData as any)?.title ?? 'Untitled'}
                 />
 
-                <Stack marginBottom={10} maxWidth={{ xs: '100%', sm: '100%', md: '100%' }} alignItems="flex-start">
+                <Stack marginBottom={10} maxWidth={{ xs: '100%', sm: '100%', md: '100%' }}>
                     <Typography marginBottom={2} fontSize="1.2rem" fontWeight="500">
                         {texts.assetMediaTitle}
                     </Typography>
                     <Typography fontSize="1.1rem" fontWeight="normal" color="GrayText">
                         {texts.assetMediaDescription}
                     </Typography>
+
+                    {errorMessages && <ErrorMessage message={errorMessages} />}
 
                     <Box>
                         <Box marginTop={1} display="flex" flexWrap="wrap">

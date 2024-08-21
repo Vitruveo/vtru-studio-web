@@ -11,6 +11,7 @@ import {
     SigningMediaC2PAReq,
     UpdateAssetStepApiRes,
     UpdateAssetStepReq,
+    ValidateUploadedAuxiliaryMediaReq,
     ValidateUploadedMediaReq,
 } from './types';
 import { apiService } from '@/services/api';
@@ -147,4 +148,8 @@ export async function getRequestConsignComments(id: string) {
 
 export async function validateUploadedMedia(data: ValidateUploadedMediaReq) {
     return axios.post(`${BASE_URL_BATCH}/assets/validate/${data.assetId}`);
+}
+
+export async function validateUploadedAuxiliaryMedia(data: ValidateUploadedAuxiliaryMediaReq) {
+    return axios.post(`${BASE_URL_BATCH}/assets/validateAuxiliary/${data.assetId}`);
 }

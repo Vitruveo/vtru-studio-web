@@ -202,6 +202,10 @@ export interface ValidateUploadedMediaReq {
     assetId: string;
 }
 
+export interface ValidateUploadedAuxiliaryMediaReq {
+    assetId: string;
+}
+
 export type UpdateAssetStepApiRes = APIResponse<string>;
 export type UploadIPFSByAssetIdApiRes = void;
 export type CreateContractApiRes = void;

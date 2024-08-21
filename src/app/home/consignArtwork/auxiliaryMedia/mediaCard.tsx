@@ -16,6 +16,7 @@ import UploadProgressBar from '../components/uploadProgress';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { userActionsCreators } from '@/features/user/slice';
 import { useToastr } from '@/app/hooks/useToastr';
+import { IconCircleX } from '@tabler/icons-react';
 
 interface MediaCardProps {
     deleteKeys: string[];
@@ -62,6 +63,9 @@ export default function MediaCard({
 
     const upload = useSelector((state) => state.asset.requestAssetUpload);
     const notify = useSelector((state) => state.user.notify);
+    const auxiliaryFormats = useSelector((state) => state.asset.mediaAuxiliary.formats);
+    const format = auxiliaryFormats[formatType as keyof typeof auxiliaryFormats];
+
     const fileIsLocal = formatValue.file && typeof formatValue.file !== 'string';
 
     const fileStatus = formatValue.transactionId ? upload[formatValue.transactionId] : undefined;
@@ -197,16 +201,35 @@ export default function MediaCard({
             <Box marginTop={2} height={20} display="flex" alignItems="center" justifyContent="space-between">
                 <Box display="flex" alignItems="center">
                     <SvgIcon style={{ width: 20 }}>
-                        <circle cx="12" cy="12" r="12" fill={uploadSuccess ? '#4CAF50' : '#D3D3D3'} />
-                        <CheckCircleOutlineIcon
-                            fontSize="small"
-                            style={{
-                                color: '#FFFFFF',
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                            }}
-                        />
+                        {!format?.validation?.message ? (
+                            <>
+                                <circle cx="12" cy="12" r="12" fill={uploadSuccess ? '#4CAF50' : '#D3D3D3'} />
+                                <CheckCircleOutlineIcon
+                                    fontSize="small"
+                                    style={{
+                                        color: '#FFFFFF',
+                                        position: 'absolute',
+                                        top: '50%',
+                                        left: '50%',
+                                        transform: 'translate(-50%, -50%)',
+                                    }}
+                                />
+                            </>
+                        ) : (
+                            <>
+                                <circle cx="12" cy="12" r="12" fill={'red'} />
+                                <IconCircleX
+                                    fontSize="small"
+                                    style={{
+                                        color: '#FFFFFF',
+                                        position: 'absolute',
+                                        top: '50%',
+                                        left: '50%',
+                                        transform: 'translate(-50%, -50%)',
+                                    }}
+                                />
+                            </>
+                        )}
                     </SvgIcon>
 
                     <Typography marginLeft={1} color="grey" variant="h6" fontWeight="normal">
