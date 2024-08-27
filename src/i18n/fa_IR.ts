@@ -771,8 +771,7 @@ const language: Translation = {
     'studio.consignArtwork.licenses.delete.button': 'حذف',
     'studio.consignArtwork.licenses.add.button': 'اضافه',
     'studio.consignArtwork.licenses.warning':
-        'آثار تولید اولیه به فروش ام‌اف‌تی به ارزش 150 دلار تضمین شده‌اند. لطفاً لایسنس NFT-ART-1 را انتخاب کنید، ادیشن تکی را انتخاب کرده و مبلغ 150 دلار را وارد کنید. همچنین می‌توانید لایسنس‌های اضافی را نیز انتخاب کنید.',
-
+        'فروش آثار هنری جنسیس به قیمت 150 دلار تضمین شده است. لطفا مجوز NFT-ART-1، Single Edition را انتخاب کنید و 150 دلار را وارد کنید. می توانید مجوزهای اضافی را نیز انتخاب کنید.',
     'studio.consignArtwork.licenses.field.checkBoolean': (data: { checkBoolean: unknown }) =>
         `${data.checkBoolean === true ? 'بله' : data.checkBoolean === false ? 'خیر' : data.checkBoolean}`,
     'studio.consignArtwork.licenses.field.errors': (data: { message: string }) =>
@@ -804,7 +803,7 @@ const language: Translation = {
         'CC0 (به نام CC Zero) ابزار اهدای عمومی است که امکان داده است که خالقان حق نشر خود را رها کنند و اثرات خود را به دامنه عمومی جهانی بگذارند. CC0 به کاربران اجازه می‌دهد تا مواد را در هر رسانه یا فرمتی، بدون هیچ شرایطی، توزیع، ترکیب، سازگار و ساخته شده روی آن بگذارند.',
 
     'studio.consignArtwork.licenses.nft.description':
-        'این مجوز اثر هنری را برای فروش زیر یکی از مدل‌های قیمت‌گذاری انتشار می‌دهد. هنگام فروخته شدن، یک NFT از اثر هنری ساخته و به خریدار تحویل داده می‌شود.',
+        'این مجوز باعث می شود اثر هنری برای فروش تحت یکی از چندین مدل قیمت گذاری نسخه موجود باشد. هنگام فروخته شدن، دارایی دیجیتال اثر هنری ضرب شده و به خریدار تحویل داده می شود.',
     'studio.consignArtwork.licenses.nft.enable':
         'این مجوز را فعال کنید اگر می‌خواهید خریداران مالکیت یک مجموعه دیجیتال از اثر هنری را داشته باشند.',
 
