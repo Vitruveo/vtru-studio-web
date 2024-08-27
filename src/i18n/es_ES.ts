@@ -731,7 +731,7 @@ const language: Translation = {
     'studio.consignArtwork.licenses.delete.button': 'Eliminar',
     'studio.consignArtwork.licenses.add.button': 'Añadir',
     'studio.consignArtwork.licenses.warning':
-        'Las obras de Génesis han sido garantizadas para una venta de NFT por $150. Por favor, seleccione la licencia NFT-ART-1, Edición Única e ingrese $150. También puede seleccionar licencias adicionales.',
+        'Las obras de Génesis han sido garantizadas para una venta de activo digital por $150. Por favor, seleccione la licencia NFT-ART-1, Edición Única e ingrese $150. También puede seleccionar licencias adicionales.',
     'studio.consignArtwork.licenses.field.checkBoolean': (data: { checkBoolean: unknown }) =>
         `${data.checkBoolean === true ? 'sí' : data.checkBoolean === false ? 'no' : data.checkBoolean}`,
     'studio.consignArtwork.licenses.field.errors': (data: { message: string }) =>
@@ -762,7 +762,7 @@ const language: Translation = {
         'CC0 (también conocida como CC Zero) es una herramienta de dedicación pública, que permite a los creadores renunciar a sus derechos de autor y poner sus obras en el dominio público mundial. CC0 permite a los reutilizadores distribuir, remezclar, adaptar y construir sobre el material en cualquier medio o formato, sin condiciones.',
 
     'studio.consignArtwork.licenses.nft.description':
-        'Esta licencia hace que la obra de arte esté disponible para la venta bajo uno de varios modelos de precios de edición. Cuando se vende, se acuña un NFT de la obra de arte y se entrega al comprador.',
+        'Esta licencia permite que la obra de arte esté disponible para su venta según uno de los distintos modelos de precios de edición. Cuando se vende, se crea un activo digital de la obra de arte y se entrega al comprador.',
     'studio.consignArtwork.licenses.nft.enable':
         'Habilite esta licencia si desea que los compradores tengan la propiedad de un coleccionable digital de la obra de arte.',
 
