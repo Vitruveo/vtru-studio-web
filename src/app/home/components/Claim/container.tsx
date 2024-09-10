@@ -6,6 +6,7 @@ import { BASE_URL_BATCH } from '@/constants/api';
 import { useEffect, useState } from 'react';
 import { useSelector } from '@/store/hooks';
 import ClaimedModal from './ClaimedModal';
+import StakeModal from './StakeModal';
 import { useToastr } from '@/app/hooks/useToastr';
 import { useRouter } from 'next/navigation';
 
@@ -104,6 +105,7 @@ export const ClaimContainer = () => {
     return (
         <>
             <ClaimedModal isOpen={isModalOpen} handleClose={closeModal} />
+            <StakeModal isOpen={true} handleClose={closeModal} />
             <ClaimComponent
                 data={{
                     value: balance.toFixed(4),
