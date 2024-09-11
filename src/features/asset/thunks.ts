@@ -17,6 +17,7 @@ import {
     deleteAsset,
     getRequestConsignComments,
     validateUploadedMedia,
+    updatePrice,
 } from './requests';
 import {
     AssetSendRequestUploadApiRes,
@@ -29,6 +30,7 @@ import {
     HistoryItems,
     RequestDeleteFilesReq,
     SigningMediaC2PAReq,
+    UpdatePriceReq,
     UploadIPFSByAssetIdApiRes,
     UploadIPFSByAssetIdReq,
     ValidateUploadedMediaReq,
@@ -90,7 +92,7 @@ export function getAssetThunk(id: string): ReduxThunkAction<Promise<any>> {
             const isAllValid = response.data?.formats
                 ? Object.entries(response.data?.formats)
                       .filter(([key]) => key !== 'print')
-                      .every(([_, item]) => item?.validation?.isValid)
+                      .every(([_, item]) => (item?.validation ? item.validation.isValid : item.path))
                 : false;
 
             if (response.data) {
@@ -173,6 +175,10 @@ export function getAssetThunk(id: string): ReduxThunkAction<Promise<any>> {
                             assetMetadata: response.data.assetMetadata,
                         })
                     );
+                }
+
+                if (response.data.mintExplorer) {
+                    dispatch(assetActionsCreators.change({ mintExplorer: response.data.mintExplorer }));
                 }
 
                 if (response.data.licenses) {
@@ -868,6 +874,17 @@ export function validateUploadedMediaThunk(payload: ValidateUploadedMediaReq): R
             })
             .finally(() => {
                 dispatch(assetActionsCreators.changeLoading(false));
+            });
+    };
+}
+
+export function updatePriceThuk(payload: UpdatePriceReq): ReduxThunkAction<Promise<boolean>> {
+    return function (dispatch, getState) {
+        return updatePrice(payload)
+            .then((response) => true)
+            .catch((error) => {
+                console.log(error);
+                return false;
             });
     };
 }

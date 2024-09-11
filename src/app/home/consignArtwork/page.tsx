@@ -36,7 +36,8 @@ const ConsignArtwork = () => {
     const selectedAsset = useSelector((state) => state.user.selectedAsset);
     const { previewAndConsign } = useSelector((state) => state.consignArtwork);
     const { completedSteps } = useSelector((state) => state.consignArtwork);
-    const hasContract = useSelector((state) => state.asset?.contractExplorer?.explorer);
+    const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
+    const hasMinted = useSelector((state) => !!state.asset?.mintExplorer);
     const consignArtworkStatus = useSelector((state) => state.consignArtwork?.status);
 
     const checkAllCompletedSteps = Object.values(completedSteps)
@@ -95,9 +96,7 @@ const ConsignArtwork = () => {
         if (!status?.length) dispatch(publishThunk({ status: 'draft' }));
     }, [status]);
 
-    const isConsignCompleted = previewAndConsign.artworkListing?.checked;
-
-    if (isConsignCompleted && (hasContract || consignArtworkStatus === 'active')) {
+    if (hasMinted) {
         return <CompletedConsignPage />;
     }
 
@@ -110,6 +109,7 @@ const ConsignArtwork = () => {
                 submitText={(language['studio.consignArtwork.publishButton'] as TranslateFunction)({
                     data: { status },
                 })}
+                hasSubmitButton={!hasContract}
             >
                 <Breadcrumb
                     title={texts.consignArtworkTitle}
@@ -201,13 +201,15 @@ const ConsignArtwork = () => {
                                                     variant="contained"
                                                     fullWidth
                                                 >
-                                                    {(
-                                                        language[
-                                                            'studio.consignArtwork.stepButton'
-                                                        ] as TranslateFunction
-                                                    )({
-                                                        status: v.status,
-                                                    })}
+                                                    {hasContract
+                                                        ? 'View'
+                                                        : (
+                                                              language[
+                                                                  'studio.consignArtwork.stepButton'
+                                                              ] as TranslateFunction
+                                                          )({
+                                                              status: v.status,
+                                                          })}
                                                 </Button>
                                             </Box>
                                         </Grid>

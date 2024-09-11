@@ -32,6 +32,7 @@ export default function ContractScreen() {
     const { contract, isOriginal, generatedArtworkAI, notMintedOtherBlockchain } = useSelector(
         (state) => state.asset.terms
     );
+    const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
     const formData = useSelector((state) => state.asset.assetMetadata?.context.formData);
 
     const Contract = contracts[currentLanguage] || contracts.default;
@@ -74,6 +75,11 @@ export default function ContractScreen() {
     const { values, errors, setFieldValue, validateForm, handleSubmit } = useFormik<TermsOfUseFormValues>({
         initialValues,
         onSubmit: async (formValues) => {
+            if (hasContract) {
+                router.push('/home/consignArtwork/auxiliaryMedia');
+                return;
+            }
+
             if (JSON.stringify(initialValues) === JSON.stringify(values)) {
                 router.push(`/home/consignArtwork/auxiliaryMedia`);
             } else {
@@ -131,6 +137,11 @@ export default function ContractScreen() {
     };
 
     const handleOpenBackModal = () => {
+        if (hasContract) {
+            router.push(`/home/consignArtwork`);
+            return;
+        }
+
         if (JSON.stringify(initialValues) === JSON.stringify(values)) {
             router.push(`/home/consignArtwork`);
         } else {
@@ -147,7 +158,7 @@ export default function ContractScreen() {
         <form onSubmit={handleSubmit}>
             <PageContainerFooter
                 submitText={texts.nextButton}
-                stepStatus={checkStatus}
+                stepStatus={hasContract ? 'completed' : checkStatus}
                 stepNumber={4}
                 title={texts.consignArtworkTitle}
                 backOnclick={handleOpenBackModal}

@@ -57,6 +57,13 @@ export interface c2pa {
     finishedAt: Date;
 }
 
+export interface MintExplorer {
+    transactionHash: string;
+    explorerUrl: string;
+    address: string;
+    createdAt: Date;
+}
+
 export type ConsignArtworkSteps = 'c2pa' | 'ipfs' | 'contractExplorer';
 
 export interface Asset {
@@ -105,6 +112,7 @@ export interface Asset {
     consignArtwork?: AssetConsignArtwork;
     c2pa?: c2pa;
     contractExplorer?: ContractExplorer;
+    mintExplorer?: MintExplorer;
     ipfs?: Ipfs;
     comments?: Comments[];
 }
@@ -200,6 +208,10 @@ export interface CreateContractByAssetIdReq {
 
 export interface ValidateUploadedMediaReq {
     assetId: string;
+}
+export interface UpdatePriceReq {
+    assetId: string;
+    price: number;
 }
 
 export type UpdateAssetStepApiRes = APIResponse<string>;

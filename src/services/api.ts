@@ -44,4 +44,8 @@ export const apiService = {
         const response: AxiosResponse = await api.delete(url, { data });
         return response.data;
     },
+    patch: async <T = unknown, E = any>(url: string, data: any): Promise<APIResponse<T, E>> => {
+        const response: AxiosResponse = await api.patch(url, data);
+        return response.data;
+    },
 };

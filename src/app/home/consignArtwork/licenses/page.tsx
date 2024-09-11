@@ -36,6 +36,7 @@ export default function Licenses() {
     const dispatch = useDispatch();
 
     const { licenses: licensesState, formats } = useSelector((state) => state.asset);
+    const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
     const formData = useSelector((state) => state.asset.assetMetadata?.context.formData);
     const selectPreviewAsset = Object.entries(formats).find(([key]) => key === 'print');
     const printExists = selectPreviewAsset && selectPreviewAsset[1].file;
@@ -133,6 +134,11 @@ export default function Licenses() {
     };
 
     const handleOpenBackModal = () => {
+        if (hasContract) {
+            router.push(`/home/consignArtwork`);
+            return;
+        }
+
         if (JSON.stringify(initialValues) === JSON.stringify(values)) {
             router.push(`/home/consignArtwork`);
         } else {
@@ -142,6 +148,10 @@ export default function Licenses() {
 
     const handleSaveData = async (event?: React.FormEvent) => {
         if (event) event.preventDefault();
+        if (hasContract) {
+            router.push('/home/consignArtwork/termsOfUse');
+            return;
+        }
 
         if (values.nft.added && !values.nft.availableLicenses) {
             values.nft.availableLicenses = 1;
