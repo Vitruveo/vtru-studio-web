@@ -153,6 +153,11 @@ export default function AssetMedia() {
         rangeTimeStart?: string;
         rangeTimeEnd?: string;
     }) => {
+        if (hasContract) {
+            toast.display({ type: 'warning', message: 'You cannot upload new files after signing the contract' });
+            return;
+        }
+
         const transactionId = nanoid();
 
         const isVideo = originalMediaInfo.mediaType === 'video';

@@ -132,6 +132,11 @@ export default function AssetMedia() {
         file: File;
         maxSize: string;
     }) => {
+        if (hasContract) {
+            toast.display({ message: 'You cannot upload files after signing the contract', type: 'warning' });
+            return;
+        }
+
         if (!file) {
             toast.display({ message: 'File format not supported', type: 'warning' });
             return;
