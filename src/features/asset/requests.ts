@@ -15,6 +15,7 @@ import {
     UpdateAssetStepReq,
     UpdatePriceReq,
     ValidateUploadedMediaReq,
+    signMessageReq,
 } from './types';
 import { apiService } from '@/services/api';
 import { assetActionsCreators } from './slice';
@@ -158,4 +159,14 @@ export async function updatePrice({ assetId, price }: UpdatePriceReq) {
 
 export async function checkLicenseEditable({ assetId }: CheckLicenseEditableReq): Promise<CheckLicenseEditableRes> {
     return apiService.get(`/assets/${assetId}/isLicenseEditable`);
+}
+
+export async function signMessage({ signer, domain, types, tx, signedMessage }: signMessageReq) {
+    return axios.post(`${BASE_URL_BATCH}/assets/verify`, {
+        signer,
+        domain,
+        types,
+        tx,
+        signedMessage,
+    });
 }

@@ -16,11 +16,11 @@ export const ClaimContainer = () => {
     const [loading, setLoading] = useState(false);
     const [isBlocked, setIsBlocked] = useState(false);
 
-    const { connectors } = useConnect();
     const { isConnected, address } = useAccount();
     const { data: client } = useWalletClient();
-    const { disconnectAsync } = useDisconnect();
+    const { disconnect } = useDisconnect();
     const { openConnectModal } = useConnectModal();
+
     const router = useRouter();
     const toast = useToastr();
 
@@ -61,10 +61,7 @@ export const ClaimContainer = () => {
     };
 
     const onDisconnect = async () => {
-        for await (const connector of connectors) {
-            await connector.disconnect();
-        }
-        await disconnectAsync();
+        await disconnect();
     };
 
     const onClaim = async () => {

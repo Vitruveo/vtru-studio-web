@@ -3,6 +3,7 @@ import { APIResponse } from '../common/types';
 import { SectionsFormData } from '@/app/home/consignArtwork/assetMetadata/page';
 import { OriginalFormatMedia } from '@/app/home/consignArtwork/assetMedia/types';
 import { ConsignArtworkAssetStatus } from '../consignArtwork/types';
+import { Account, Chain, Client, Transport } from 'viem';
 
 export type AssetStatus = 'draft' | 'published' | 'archived' | 'preview' | '';
 
@@ -215,6 +216,39 @@ export interface UpdatePriceReq {
 }
 export interface CheckLicenseEditableReq {
     assetId: string;
+}
+
+export interface signerParams {
+    client: Client<Transport, Chain, Account>;
+    assetKey: string;
+    price: number;
+}
+
+export interface signMessageReq {
+    signer: string;
+    domain: {
+        name: string;
+        version: string;
+        chainId: number;
+    };
+    types: {
+        Transaction: {
+            name: string;
+            type: string;
+        }[];
+    };
+    tx: {
+        name: string;
+        action: string;
+        method: string;
+        assetKey: string;
+        price: number;
+        licenseTypeId: number;
+        quantity: number;
+        contract: string;
+        timestamp: number;
+    };
+    signedMessage: string;
 }
 
 export type UpdateAssetStepApiRes = APIResponse<string>;

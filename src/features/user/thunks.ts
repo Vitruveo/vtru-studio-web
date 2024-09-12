@@ -62,6 +62,7 @@ import { consignArtworkActionsCreators } from '../consignArtwork/slice';
 import { BASE_URL_API } from '@/constants/api';
 import { getAssetById, getMyAssets } from '../asset/requests';
 import { ASSET_STORAGE_URL, NO_IMAGE_ASSET } from '@/constants/asset';
+import { config } from '@/app/home/components/apps/wallet';
 
 export function userLoginThunk(payload: UserLoginReq): ReduxThunkAction<Promise<UserLoginApiRes>> {
     return async function (dispatch, getState) {
@@ -283,7 +284,7 @@ export function requestConnectWalletThunk(
 
         if (!response.data?.nonce) throw new Error('nonce not found');
 
-        const signature = await signMessage({
+        const signature = await signMessage(config, {
             // account: payload.wallet,
             message: response.data.nonce,
         });

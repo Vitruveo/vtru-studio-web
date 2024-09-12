@@ -11,6 +11,7 @@ import {
     Typography,
 } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
+import { useAccount, useConnectorClient } from 'wagmi';
 import CustomSelect from '@/app/home/components/forms/theme-elements/CustomSelect';
 import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
 import CustomCheckbox from '@/app/home/components/forms/theme-elements/CustomCheckbox';
@@ -20,7 +21,7 @@ import { useI18n } from '@/app/hooks/useI18n';
 import { formatCurrency } from '@/utils/formatCurrency';
 import { StepStatus } from '@/features/consignArtwork/types';
 import { useDispatch, useSelector } from '@/store/hooks';
-import { checkLicenseEditableThunk, updatePriceThuk } from '@/features/asset/thunks';
+import { checkLicenseEditableThunk, signerThunk, updatePriceThuk } from '@/features/asset/thunks';
 import UpdatePriceModal from './UpdatedPriceModal';
 import { useToastr } from '@/app/hooks/useToastr';
 
@@ -51,6 +52,9 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
 
     const hasConsign = useSelector((state) => !!state.asset.contractExplorer);
     const assetId = useSelector((state) => state.asset._id);
+
+    const { data: client } = useConnectorClient();
+    const { address } = useAccount();
 
     useEffect(() => {
         const fecthCanEdit = async () => {
@@ -183,12 +187,27 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
 
     const handleSubmitUpdatePrice = async () => {
         setLoading(true);
+        const verify = await dispatch(
+            signerThunk({ assetKey: assetId, price: values.single.editionPrice, client: client! })
+        );
+        if (!verify) {
+            toastr.display({ type: 'error', message: 'Error signing message' });
+            setLoading(false);
+            return;
+        }
+
         const response = await dispatch(updatePriceThuk({ price: values.single.editionPrice, assetId }));
         setLoading(false);
         if (response) {
             setOpen(true);
             setIsEditing(false);
         } else toastr.display({ type: 'error', message: 'Error updating price' });
+    };
+
+    const renderMessage = () => {
+        if (!address) return 'Connect Wallet to Edit';
+
+        return 'Edit';
     };
 
     return (
@@ -476,32 +495,33 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                     </Box>
                 )}
                 <Box>
-                    {!isEditing ? (
-                        <Button
-                            disabled={!canEdit}
-                            variant="contained"
-                            color="primary"
-                            fullWidth
-                            onClick={handleToggleEdit}
-                        >
-                            Edit
-                        </Button>
-                    ) : (
-                        <Box display="flex" gap={2}>
-                            <Button variant="outlined" color="error" fullWidth onClick={handleToggleEdit}>
-                                Cancel
-                            </Button>
+                    {hasConsign &&
+                        (!isEditing ? (
                             <Button
+                                disabled={!canEdit || !address}
                                 variant="contained"
                                 color="primary"
-                                disabled={loading || !!helperText}
                                 fullWidth
-                                onClick={handleSubmitUpdatePrice}
+                                onClick={handleToggleEdit}
                             >
-                                Confirm
+                                {renderMessage()}
                             </Button>
-                        </Box>
-                    )}
+                        ) : (
+                            <Box display="flex" gap={2}>
+                                <Button variant="outlined" color="error" fullWidth onClick={handleToggleEdit}>
+                                    Cancel
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    disabled={loading || !!helperText}
+                                    fullWidth
+                                    onClick={handleSubmitUpdatePrice}
+                                >
+                                    Confirm
+                                </Button>
+                            </Box>
+                        ))}
                 </Box>
             </Card>
             <Box marginTop={2} width={300}>

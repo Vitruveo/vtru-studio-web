@@ -18,6 +18,7 @@ import Print from './print';
 import Stream from './stream';
 import Remix from './remix';
 import { useToastr } from '@/app/hooks/useToastr';
+import { WalletProvider } from '../../components/apps/wallet';
 
 const allLicenses = {
     NFT: Nft,
@@ -242,13 +243,15 @@ export default function Licenses() {
 
                         {Object.values(allLicensesFiltered).map((License, i) => (
                             <Box key={i} id={Object.keys(allLicensesFiltered)[i]}>
-                                <License
-                                    allValues={values}
-                                    setFieldValue={setFieldValue}
-                                    handleChange={handleChange}
-                                    handleSubmit={handleSubmit}
-                                    setFieldError={setFieldError}
-                                />
+                                <WalletProvider>
+                                    <License
+                                        allValues={values}
+                                        setFieldValue={setFieldValue}
+                                        handleChange={handleChange}
+                                        handleSubmit={handleSubmit}
+                                        setFieldError={setFieldError}
+                                    />
+                                </WalletProvider>
                             </Box>
                         ))}
                     </Grid>

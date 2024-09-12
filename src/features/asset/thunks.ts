@@ -19,6 +19,7 @@ import {
     validateUploadedMedia,
     updatePrice,
     checkLicenseEditable,
+    signMessage,
 } from './requests';
 import {
     AssetSendRequestUploadApiRes,
@@ -36,6 +37,7 @@ import {
     UploadIPFSByAssetIdApiRes,
     UploadIPFSByAssetIdReq,
     ValidateUploadedMediaReq,
+    signerParams,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { assetActionsCreators } from './slice';
@@ -50,6 +52,8 @@ import { FormatsAuxiliayMedia } from '@/app/home/consignArtwork/auxiliaryMedia/t
 import { BASE_URL_API } from '@/constants/api';
 import { userActionsCreators } from '../user/slice';
 import { checkStepProgress } from '@/app/home/consignArtwork/licenses/nft';
+import { clientToSigner, network, provider } from '@/services/web3';
+import schema from '@/services/web3/contracts.json';
 
 export function requestDeleteURLThunk(payload: RequestDeleteFilesReq): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
@@ -899,5 +903,68 @@ export function checkLicenseEditableThunk(payload: CheckLicenseEditableReq): Red
                 console.log(error);
                 return false;
             });
+    };
+}
+
+export function signerThunk(payload: signerParams): ReduxThunkAction<Promise<boolean>> {
+    return async function (dispatch, getState) {
+        try {
+            const { client, assetKey, price } = payload;
+
+            const signer = clientToSigner(client);
+
+            const contractAddress = schema[network].AssetRegistry;
+
+            const domain = {
+                name: 'Vitruveo Studio',
+                version: '1',
+                chainId: Number((await provider.getNetwork()).chainId),
+            };
+
+            const types = {
+                Transaction: [
+                    { name: 'name', type: 'string' },
+                    { name: 'action', type: 'string' },
+                    { name: 'method', type: 'string' },
+                    { name: 'assetKey', type: 'string' },
+                    { name: 'price', type: 'uint' },
+                    { name: 'licenseTypeId', type: 'uint' },
+                    { name: 'quantity', type: 'uint' },
+                    { name: 'contract', type: 'address' },
+                    { name: 'timestamp', type: 'uint' },
+                ],
+            };
+
+            const tx = {
+                name: 'Asset Registry',
+                action: 'Update price',
+                method: 'updateLicensePrice',
+                assetKey: assetKey,
+                price,
+                licenseTypeId: 1,
+                quantity: 1,
+                contract: contractAddress,
+                timestamp: Math.floor(Date.now() / 1000),
+            };
+
+            // Sign the message
+            const signedMessage = await signer.signTypedData(domain, types, tx);
+
+            const response = await signMessage({
+                tx,
+                signedMessage,
+                signer: signer.address,
+                types,
+                domain,
+            });
+
+            if (response.status !== 200) {
+                return false;
+            }
+
+            return true;
+        } catch (error) {
+            return false;
+        }
     };
 }
