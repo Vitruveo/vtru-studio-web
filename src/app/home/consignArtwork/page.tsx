@@ -145,76 +145,80 @@ const ConsignArtwork = () => {
                                 </Typography>
                             </Stack>
                             <Box p={2}>
-                                {Object.values(completedSteps).map((v) => (
-                                    <Grid
-                                        sx={{ alignItems: 'center!important' }}
-                                        container
-                                        display="flex"
-                                        alignItems="center"
-                                        justifyContent="space-between"
-                                        key={v.stepId}
-                                    >
-                                        <Grid item lg={5} xl={4}>
-                                            <Typography
-                                                title={`${language[v.stepName] as string} ${
-                                                    v.optional ? ` (${texts.optional})` : ''
-                                                } `}
-                                                sx={{
-                                                    whiteSpace: 'nowrap',
-                                                    textOverflow: 'ellipsis',
-                                                    overflow: 'hidden',
-                                                    width: xL || smUp || xs ? 300 : 130,
-                                                }}
-                                                my={2}
-                                                variant="h6"
-                                                fontWeight="normal"
-                                                color="GrayText"
-                                            >
-                                                {language[v.stepName] as string}
-                                                {v.optional ? ` (${texts.optional})` : ''}
-                                            </Typography>
-                                        </Grid>
-                                        <Grid display="flex" flexWrap="wrap" item lg={7} xl={8}>
-                                            <Box width={110} display="flex" alignItems="center">
-                                                <Box
-                                                    display="flex"
-                                                    alignItems="center"
-                                                    justifyContent="center"
-                                                    height="100%"
-                                                    width="100%"
-                                                    color="white"
-                                                    bgcolor={
-                                                        (v.status === 'completed' && successColor) ||
-                                                        (v.status === 'notStarted' && grayColor) ||
-                                                        warningColor
-                                                    }
+                                {Object.values(completedSteps).map((v) => {
+                                    return (
+                                        <Grid
+                                            sx={{ alignItems: 'center!important' }}
+                                            container
+                                            display="flex"
+                                            alignItems="center"
+                                            justifyContent="space-between"
+                                            key={v.stepId}
+                                        >
+                                            <Grid item lg={5} xl={4}>
+                                                <Typography
+                                                    title={`${language[v.stepName] as string} ${
+                                                        v.optional ? ` (${texts.optional})` : ''
+                                                    } `}
+                                                    sx={{
+                                                        whiteSpace: 'nowrap',
+                                                        textOverflow: 'ellipsis',
+                                                        overflow: 'hidden',
+                                                        width: xL || smUp || xs ? 300 : 130,
+                                                    }}
+                                                    my={2}
+                                                    variant="h6"
+                                                    fontWeight="normal"
+                                                    color="GrayText"
                                                 >
-                                                    {language[v.statusName] as string}
+                                                    {language[v.stepName] as string}
+                                                    {v.optional ? ` (${texts.optional})` : ''}
+                                                </Typography>
+                                            </Grid>
+                                            <Grid display="flex" flexWrap="wrap" item lg={7} xl={8}>
+                                                <Box width={110} display="flex" alignItems="center">
+                                                    <Box
+                                                        display="flex"
+                                                        alignItems="center"
+                                                        justifyContent="center"
+                                                        height="100%"
+                                                        width="100%"
+                                                        color="white"
+                                                        bgcolor={
+                                                            (v.status === 'completed' && successColor) ||
+                                                            (v.status === 'notStarted' && grayColor) ||
+                                                            warningColor
+                                                        }
+                                                    >
+                                                        {language[v.statusName] as string}
+                                                    </Box>
                                                 </Box>
-                                            </Box>
-                                            <Box width={100} marginLeft={1}>
-                                                <Button
-                                                    style={{ opacity: v.stepId === 'reviewAndConsign' ? 0 : 1 }}
-                                                    disabled={v.stepId === 'reviewAndConsign'}
-                                                    onClick={() => handleChangePage(v.stepId, v.status)}
-                                                    size="small"
-                                                    variant="contained"
-                                                    fullWidth
-                                                >
-                                                    {hasContract
-                                                        ? 'View'
-                                                        : (
-                                                              language[
-                                                                  'studio.consignArtwork.stepButton'
-                                                              ] as TranslateFunction
-                                                          )({
-                                                              status: v.status,
-                                                          })}
-                                                </Button>
-                                            </Box>
+                                                <Box width={100} marginLeft={1}>
+                                                    <Button
+                                                        style={{ opacity: v.stepId === 'reviewAndConsign' ? 0 : 1 }}
+                                                        disabled={v.stepId === 'reviewAndConsign'}
+                                                        onClick={() => handleChangePage(v.stepId, v.status)}
+                                                        size="small"
+                                                        variant="contained"
+                                                        fullWidth
+                                                    >
+                                                        {hasContract
+                                                            ? v.stepId === 'licenses'
+                                                                ? 'View/Edit'
+                                                                : 'View'
+                                                            : (
+                                                                  language[
+                                                                      'studio.consignArtwork.stepButton'
+                                                                  ] as TranslateFunction
+                                                              )({
+                                                                  status: v.status,
+                                                              })}
+                                                    </Button>
+                                                </Box>
+                                            </Grid>
                                         </Grid>
-                                    </Grid>
-                                ))}
+                                    );
+                                })}
                             </Box>
                         </Box>
                     </Grid>

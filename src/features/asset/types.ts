@@ -213,6 +213,9 @@ export interface UpdatePriceReq {
     assetId: string;
     price: number;
 }
+export interface CheckLicenseEditableReq {
+    assetId: string;
+}
 
 export type UpdateAssetStepApiRes = APIResponse<string>;
 export type UploadIPFSByAssetIdApiRes = void;
@@ -223,3 +226,4 @@ export type CreateAssetApiRes = APIResponse<{
 }>;
 export type GetAssetsApiRes = APIResponse<Asset[]>;
 export type AssetSendRequestUploadApiRes = APIResponse<string>;
+export type CheckLicenseEditableRes = APIResponse<boolean>;

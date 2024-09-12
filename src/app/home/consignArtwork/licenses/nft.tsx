@@ -20,7 +20,7 @@ import { useI18n } from '@/app/hooks/useI18n';
 import { formatCurrency } from '@/utils/formatCurrency';
 import { StepStatus } from '@/features/consignArtwork/types';
 import { useDispatch, useSelector } from '@/store/hooks';
-import { updatePriceThuk } from '@/features/asset/thunks';
+import { checkLicenseEditableThunk, updatePriceThuk } from '@/features/asset/thunks';
 import UpdatePriceModal from './UpdatedPriceModal';
 import { useToastr } from '@/app/hooks/useToastr';
 
@@ -45,11 +45,20 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
+    const [canEdit, setCanEdit] = useState(false);
 
     const values = allValues.nft || {};
 
     const hasConsign = useSelector((state) => !!state.asset.contractExplorer);
     const assetId = useSelector((state) => state.asset._id);
+
+    useEffect(() => {
+        const fecthCanEdit = async () => {
+            const response = await dispatch(checkLicenseEditableThunk({ assetId }));
+            setCanEdit(response);
+        };
+        fecthCanEdit();
+    }, []);
 
     useEffect(() => {
         if (values.single.editionPrice < minPrice) {
@@ -468,7 +477,13 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                 )}
                 <Box>
                     {!isEditing ? (
-                        <Button variant="contained" color="primary" fullWidth onClick={handleToggleEdit}>
+                        <Button
+                            disabled={!canEdit}
+                            variant="contained"
+                            color="primary"
+                            fullWidth
+                            onClick={handleToggleEdit}
+                        >
                             Edit
                         </Button>
                     ) : (

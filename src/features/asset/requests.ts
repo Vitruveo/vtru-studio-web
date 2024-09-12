@@ -4,6 +4,8 @@ import {
     AssetSendRequestUploadApiRes,
     AssetSendRequestUploadReq,
     AssetStorageReq,
+    CheckLicenseEditableReq,
+    CheckLicenseEditableRes,
     CreateAssetApiRes,
     GetAssetApiRes,
     GetAssetsApiRes,
@@ -152,4 +154,8 @@ export async function validateUploadedMedia(data: ValidateUploadedMediaReq) {
 
 export async function updatePrice({ assetId, price }: UpdatePriceReq) {
     return apiService.patch(`/assets/${assetId}/price`, { price });
+}
+
+export async function checkLicenseEditable({ assetId }: CheckLicenseEditableReq): Promise<CheckLicenseEditableRes> {
+    return apiService.get(`/assets/${assetId}/isLicenseEditable`);
 }

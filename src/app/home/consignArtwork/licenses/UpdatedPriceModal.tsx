@@ -43,7 +43,7 @@ export default function UpdatePriceModal({ isOpen, handleClose }: ModalProps) {
                             borderTopRightRadius: 0,
                         }}
                     >
-                        <Typography variant="h6">Your update price was successful. Check your asset.</Typography>
+                        <Typography variant="h6">Your update was successful. Check your asset.</Typography>
                     </Box>
                 </Box>
             </Box>

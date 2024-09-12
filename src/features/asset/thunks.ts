@@ -18,12 +18,14 @@ import {
     getRequestConsignComments,
     validateUploadedMedia,
     updatePrice,
+    checkLicenseEditable,
 } from './requests';
 import {
     AssetSendRequestUploadApiRes,
     AssetSendRequestUploadReq,
     AssetStatus,
     AssetStorageReq,
+    CheckLicenseEditableReq,
     ConsignArtworkSteps,
     CreateContractApiRes,
     CreateContractByAssetIdReq,
@@ -882,6 +884,17 @@ export function updatePriceThuk(payload: UpdatePriceReq): ReduxThunkAction<Promi
     return function (dispatch, getState) {
         return updatePrice(payload)
             .then((response) => true)
+            .catch((error) => {
+                console.log(error);
+                return false;
+            });
+    };
+}
+
+export function checkLicenseEditableThunk(payload: CheckLicenseEditableReq): ReduxThunkAction<Promise<boolean>> {
+    return function (dispatch, getState) {
+        return checkLicenseEditable(payload)
+            .then((response) => response.data as boolean)
             .catch((error) => {
                 console.log(error);
                 return false;
