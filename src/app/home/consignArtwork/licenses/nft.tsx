@@ -52,6 +52,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
 
     const hasConsign = useSelector((state) => !!state.asset.contractExplorer);
     const assetId = useSelector((state) => state.asset._id);
+    const wallets = useSelector((state) => state.user.wallets);
 
     const { data: client } = useConnectorClient();
     const { address } = useAccount();
@@ -193,6 +194,14 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
         if (!verify) {
             toastr.display({ type: 'error', message: 'Error signing message' });
             setLoading(false);
+            return;
+        }
+
+        if (!wallets.some(wallet => wallet.address === address)) {
+            // wallet not found
+
+            setLoading(false);
+            toastr.display({ type: 'error', message: 'Wallet not found in your account' });
             return;
         }
 
