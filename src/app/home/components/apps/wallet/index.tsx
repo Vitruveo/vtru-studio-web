@@ -1,10 +1,12 @@
-import { darkTheme, RainbowKitProvider, connectorsForWallets } from '@rainbow-me/rainbowkit';
+import { WagmiProvider } from 'wagmi';
+import { RainbowKitProvider, getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { WagmiConfig, configureChains, createConfig } from 'wagmi';
-import { publicProvider } from 'wagmi/providers/public';
-import { walletConnectWallet, metaMaskWallet, coinbaseWallet, rainbowWallet } from '@rainbow-me/rainbowkit/wallets';
 import { WALLET_APP_NAME, WALLET_NETWORKS, WALLET_PROJECT_ID } from '@/constants/wallet';
 import '@rainbow-me/rainbowkit/styles.css';
+
+interface EtheriumProviderProps {
+    children: React.ReactNode;
+}
 
 const vitruveoMainnet = {
     id: 1490,
@@ -47,51 +49,22 @@ const vitruveoTestnet = {
         default: { name: 'VitruveoScan', url: 'https://test-explorer.vitruveo.xyz' },
         etherscan: { name: 'VitruveoScan', url: 'https://test-explorer.vitruveo.xyz' },
     },
-    testnet: false,
+    testnet: true,
 };
 
-const { chains, publicClient } = configureChains(
-    WALLET_NETWORKS === 'mainnet' ? [vitruveoMainnet] : [vitruveoTestnet],
-    [publicProvider()]
-);
-
-const walletDefaultOptions = {
+export const config = getDefaultConfig({
+    appName: WALLET_APP_NAME,
     projectId: WALLET_PROJECT_ID,
-    chains,
-};
-
-const connectors = connectorsForWallets([
-    {
-        groupName: 'Recommended',
-        wallets: [
-            metaMaskWallet({ ...walletDefaultOptions, UNSTABLE_shimOnConnectSelectAccount: true }),
-            coinbaseWallet({ appName: WALLET_APP_NAME, chains }),
-            walletConnectWallet(walletDefaultOptions),
-            rainbowWallet(walletDefaultOptions),
-        ],
-    },
-]);
-
-export const config = createConfig({
-    autoConnect: false,
-    connectors,
-    publicClient,
+    chains: WALLET_NETWORKS == 'mainnet' ? [vitruveoMainnet] : [vitruveoTestnet],
 });
 
-const queryClient = new QueryClient();
-
-interface Props {
-    children: React.ReactNode;
-}
-
-export function WalletProvider({ children }: Props) {
+export function WalletProvider({ children }: EtheriumProviderProps) {
+    const queryClient = new QueryClient();
     return (
-        <WagmiConfig config={config}>
+        <WagmiProvider config={config}>
             <QueryClientProvider client={queryClient}>
-                <RainbowKitProvider chains={chains} theme={darkTheme()} appInfo={{ appName: WALLET_APP_NAME }}>
-                    {children}
-                </RainbowKitProvider>
+                <RainbowKitProvider>{children}</RainbowKitProvider>
             </QueryClientProvider>
-        </WagmiConfig>
+        </WagmiProvider>
     );
 }

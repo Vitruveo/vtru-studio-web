@@ -3,6 +3,7 @@ import { APIResponse } from '../common/types';
 import { SectionsFormData } from '@/app/home/consignArtwork/assetMetadata/page';
 import { OriginalFormatMedia } from '@/app/home/consignArtwork/assetMedia/types';
 import { ConsignArtworkAssetStatus } from '../consignArtwork/types';
+import { Account, Chain, Client, Transport } from 'viem';
 
 export type AssetStatus = 'draft' | 'published' | 'archived' | 'preview' | '';
 
@@ -57,6 +58,13 @@ export interface c2pa {
     finishedAt: Date;
 }
 
+export interface MintExplorer {
+    transactionHash: string;
+    explorerUrl: string;
+    address: string;
+    createdAt: Date;
+}
+
 export type ConsignArtworkSteps = 'c2pa' | 'ipfs' | 'contractExplorer';
 
 export interface Asset {
@@ -105,6 +113,7 @@ export interface Asset {
     consignArtwork?: AssetConsignArtwork;
     c2pa?: c2pa;
     contractExplorer?: ContractExplorer;
+    mintExplorer?: MintExplorer;
     ipfs?: Ipfs;
     comments?: Comments[];
 }
@@ -201,6 +210,46 @@ export interface CreateContractByAssetIdReq {
 export interface ValidateUploadedMediaReq {
     assetId: string;
 }
+export interface UpdatePriceReq {
+    assetId: string;
+    price: number;
+}
+export interface CheckLicenseEditableReq {
+    assetId: string;
+}
+
+export interface signerParams {
+    client: Client<Transport, Chain, Account>;
+    assetKey: string;
+    price: number;
+}
+
+export interface signMessageReq {
+    signer: string;
+    domain: {
+        name: string;
+        version: string;
+        chainId: number;
+    };
+    types: {
+        Transaction: {
+            name: string;
+            type: string;
+        }[];
+    };
+    tx: {
+        name: string;
+        action: string;
+        method: string;
+        assetKey: string;
+        price: number;
+        licenseTypeId: number;
+        quantity: number;
+        contract: string;
+        timestamp: number;
+    };
+    signedMessage: string;
+}
 
 export type UpdateAssetStepApiRes = APIResponse<string>;
 export type UploadIPFSByAssetIdApiRes = void;
@@ -211,3 +260,4 @@ export type CreateAssetApiRes = APIResponse<{
 }>;
 export type GetAssetsApiRes = APIResponse<Asset[]>;
 export type AssetSendRequestUploadApiRes = APIResponse<string>;
+export type CheckLicenseEditableRes = APIResponse<boolean>;

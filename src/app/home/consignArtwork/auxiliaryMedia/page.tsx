@@ -55,6 +55,7 @@ export default function AssetMedia() {
 
     const asset = useSelector((state) => state.asset);
     const formData = useSelector((state) => state.asset.assetMetadata?.context.formData);
+    const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
 
     // TODO: COLOCAR TIPAGEM CORRETA
     const isAREnabled = useSelector((state: any) => state.asset.assetMetadata?.taxonomy.formData?.arenabled) == 'yes';
@@ -75,6 +76,11 @@ export default function AssetMedia() {
     const { values, errors, setFieldValue, handleSubmit } = useFormik<AssetMediaFormValues>({
         initialValues,
         onSubmit: async (formValues) => {
+            if (hasContract) {
+                router.push('/home/consignArtwork');
+                return;
+            }
+
             if (JSON.stringify(initialValues) === JSON.stringify(values) && !values.deleteKeys.length)
                 router.push('/home/consignArtwork');
             else {
@@ -126,6 +132,11 @@ export default function AssetMedia() {
         file: File;
         maxSize: string;
     }) => {
+        if (hasContract) {
+            toast.display({ message: 'You cannot upload files after signing the contract', type: 'warning' });
+            return;
+        }
+
         if (!file) {
             toast.display({ message: 'File format not supported', type: 'warning' });
             return;
@@ -162,6 +173,11 @@ export default function AssetMedia() {
     };
 
     const handleOpenBackModal = () => {
+        if (hasContract) {
+            router.push(`/home/consignArtwork`);
+            return;
+        }
+
         if (
             JSON.stringify(initialValues.formats) === JSON.stringify(values.formats) &&
             values.description === initialValues.description
@@ -173,6 +189,11 @@ export default function AssetMedia() {
     };
 
     const handleSaveData = () => {
+        if (hasContract) {
+            router.push(`/home/consignArtwork`);
+            return;
+        }
+
         handleSubmit();
     };
 
@@ -200,6 +221,8 @@ export default function AssetMedia() {
             : 'inProgress';
 
     useEffect(() => {
+        if (hasContract) return;
+
         dispatch(
             consignArtworkActionsCreators.changeStatusStep({ stepId: 'auxiliaryMedia', status: checkStepProgress })
         );
@@ -306,7 +329,7 @@ export default function AssetMedia() {
             <PageContainerFooter
                 backOnclick={handleOpenBackModal}
                 submitText={texts.nextButton}
-                stepStatus={checkStepProgress}
+                stepStatus={hasContract ? 'completed' : checkStepProgress}
                 stepNumber={5}
                 title={texts.consignArtworkTitle}
             >

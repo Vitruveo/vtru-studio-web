@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
     Box,
+    Button,
     FormControlLabel,
     IconButton,
     MenuItem,
@@ -10,6 +11,7 @@ import {
     Typography,
 } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
+import { useAccount, useConnectorClient } from 'wagmi';
 import CustomSelect from '@/app/home/components/forms/theme-elements/CustomSelect';
 import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
 import CustomCheckbox from '@/app/home/components/forms/theme-elements/CustomCheckbox';
@@ -18,6 +20,10 @@ import { LicenseProps, LicensesFormValues } from './types';
 import { useI18n } from '@/app/hooks/useI18n';
 import { formatCurrency } from '@/utils/formatCurrency';
 import { StepStatus } from '@/features/consignArtwork/types';
+import { useDispatch, useSelector } from '@/store/hooks';
+import { checkLicenseEditableThunk, signerThunk, updatePriceThuk } from '@/features/asset/thunks';
+import UpdatePriceModal from './UpdatedPriceModal';
+import { useToastr } from '@/app/hooks/useToastr';
 
 // TODO: AVAILABLE LICENSE SÓ VAI SER USADA QUANDO ELASTIC EDITIONS FOR SELECIONADO
 // NOTE: AVAILABLE LICENSE DESATIVADO POR ENQUANTO
@@ -32,9 +38,32 @@ export const checkStepProgress = ({ values }: { values: LicensesFormValues }): S
 };
 
 function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
+    const dispatch = useDispatch();
+    const toastr = useToastr();
+
     const [helperText, setHelperText] = useState('');
     const [currentDescription, setCurrentDescription] = useState('nft.editionOption');
+    const [isEditing, setIsEditing] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [canEdit, setCanEdit] = useState(false);
+
     const values = allValues.nft || {};
+
+    const hasConsign = useSelector((state) => !!state.asset.contractExplorer);
+    const assetId = useSelector((state) => state.asset._id);
+    const wallets = useSelector((state) => state.user.wallets);
+
+    const { data: client } = useConnectorClient();
+    const { address } = useAccount();
+
+    useEffect(() => {
+        const fecthCanEdit = async () => {
+            const response = await dispatch(checkLicenseEditableThunk({ assetId }));
+            setCanEdit(response);
+        };
+        fecthCanEdit();
+    }, []);
 
     useEffect(() => {
         if (values.single.editionPrice < minPrice) {
@@ -153,6 +182,43 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
         setFieldValue(field, value);
     };
 
+    const handleToggleEdit = () => {
+        setIsEditing(!isEditing);
+    };
+
+    const handleSubmitUpdatePrice = async () => {
+        setLoading(true);
+        const verify = await dispatch(
+            signerThunk({ assetKey: assetId, price: values.single.editionPrice, client: client! })
+        );
+        if (!verify) {
+            toastr.display({ type: 'error', message: 'Error signing message' });
+            setLoading(false);
+            return;
+        }
+
+        if (!wallets.some(wallet => wallet.address === address)) {
+            // wallet not found
+
+            setLoading(false);
+            toastr.display({ type: 'error', message: 'Wallet not found in your account' });
+            return;
+        }
+
+        const response = await dispatch(updatePriceThuk({ price: values.single.editionPrice, assetId }));
+        setLoading(false);
+        if (response) {
+            setOpen(true);
+            setIsEditing(false);
+        } else toastr.display({ type: 'error', message: 'Error updating price' });
+    };
+
+    const renderMessage = () => {
+        if (!address) return 'Connect Wallet to Edit';
+
+        return 'Edit';
+    };
+
     return (
         <Box width={700} display="flex" justifyContent="space-between" marginTop={2}>
             <Card disabled title="NFT-ART-1" added={values?.added} setAdded={handleAdded} width={320} height={400}>
@@ -191,6 +257,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                     size="small"
                                     fullWidth
                                     variant="outlined"
+                                    disabled={hasConsign}
                                 >
                                     {licenses?.map((option) => (
                                         <MenuItem key={option.license} value={option.license}>
@@ -385,6 +452,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                         variant="outlined"
                                         helperText={helperText}
                                         error={!!helperText}
+                                        disabled={hasConsign && !isEditing}
                                     />
                                 </Box>
                             )}
@@ -435,6 +503,35 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                         </RadioGroup>
                     </Box>
                 )}
+                <Box>
+                    {hasConsign &&
+                        (!isEditing ? (
+                            <Button
+                                disabled={!canEdit || !address}
+                                variant="contained"
+                                color="primary"
+                                fullWidth
+                                onClick={handleToggleEdit}
+                            >
+                                {renderMessage()}
+                            </Button>
+                        ) : (
+                            <Box display="flex" gap={2}>
+                                <Button variant="outlined" color="error" fullWidth onClick={handleToggleEdit}>
+                                    Cancel
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    disabled={loading || !!helperText}
+                                    fullWidth
+                                    onClick={handleSubmitUpdatePrice}
+                                >
+                                    Confirm
+                                </Button>
+                            </Box>
+                        ))}
+                </Box>
             </Card>
             <Box marginTop={2} width={300}>
                 <Typography color="gray" fontSize="1.1rem" fontWeight="bold">
@@ -519,6 +616,8 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                     </Typography>
                 )}
             </Box>
+
+            <UpdatePriceModal isOpen={open} handleClose={() => setOpen(false)} />
         </Box>
     );
 }

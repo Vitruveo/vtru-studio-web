@@ -4,6 +4,8 @@ import {
     AssetSendRequestUploadApiRes,
     AssetSendRequestUploadReq,
     AssetStorageReq,
+    CheckLicenseEditableReq,
+    CheckLicenseEditableRes,
     CreateAssetApiRes,
     GetAssetApiRes,
     GetAssetsApiRes,
@@ -11,7 +13,9 @@ import {
     SigningMediaC2PAReq,
     UpdateAssetStepApiRes,
     UpdateAssetStepReq,
+    UpdatePriceReq,
     ValidateUploadedMediaReq,
+    signMessageReq,
 } from './types';
 import { apiService } from '@/services/api';
 import { assetActionsCreators } from './slice';
@@ -147,4 +151,22 @@ export async function getRequestConsignComments(id: string) {
 
 export async function validateUploadedMedia(data: ValidateUploadedMediaReq) {
     return axios.post(`${BASE_URL_BATCH}/assets/validate/${data.assetId}`);
+}
+
+export async function updatePrice({ assetId, price }: UpdatePriceReq) {
+    return apiService.patch(`/assets/${assetId}/price`, { price });
+}
+
+export async function checkLicenseEditable({ assetId }: CheckLicenseEditableReq): Promise<CheckLicenseEditableRes> {
+    return apiService.get(`/assets/${assetId}/isLicenseEditable`);
+}
+
+export async function signMessage({ signer, domain, types, tx, signedMessage }: signMessageReq) {
+    return axios.post(`${BASE_URL_BATCH}/assets/verify`, {
+        signer,
+        domain,
+        types,
+        tx,
+        signedMessage,
+    });
 }

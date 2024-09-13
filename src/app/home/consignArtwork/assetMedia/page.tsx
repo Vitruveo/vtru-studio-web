@@ -38,6 +38,7 @@ export default function AssetMedia() {
 
     const selectedAsset = useSelector((state) => state.user.selectedAsset);
     const formats = useSelector((state) => state.asset.formats);
+    const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
 
     const originalMediaInfo = handleGetFileType(formats.original.file!);
 
@@ -94,6 +95,11 @@ export default function AssetMedia() {
     const { values, errors, setFieldValue, handleSubmit } = useFormik<AssetMediaFormValues>({
         initialValues,
         onSubmit: async () => {
+            if (hasContract) {
+                router.push('/home/consignArtwork/assetMetadata');
+                return;
+            }
+
             const hasChanges = !(JSON.stringify(initialValues) === JSON.stringify(values) && !values.deleteKeys.length);
 
             if (hasChanges) {
@@ -147,6 +153,11 @@ export default function AssetMedia() {
         rangeTimeStart?: string;
         rangeTimeEnd?: string;
     }) => {
+        if (hasContract) {
+            toast.display({ type: 'warning', message: 'You cannot upload new files after signing the contract' });
+            return;
+        }
+
         const transactionId = nanoid();
 
         const isVideo = originalMediaInfo.mediaType === 'video';
@@ -184,6 +195,11 @@ export default function AssetMedia() {
     };
 
     const handleOpenBackModal = () => {
+        if (hasContract) {
+            router.push(`/home/consignArtwork`);
+            return;
+        }
+
         if (isUploading) {
             toast.display({ type: 'warning', message: 'Please wait until the upload is complete' });
             return;
@@ -379,7 +395,7 @@ export default function AssetMedia() {
                 submitDisabled={isUploading}
                 backOnclick={handleOpenBackModal}
                 submitText={texts.nextButton}
-                stepStatus={checkStepProgress}
+                stepStatus={hasContract ? 'completed' : checkStepProgress}
                 stepNumber={1}
                 title={texts.consignArtworkTitle}
             >
