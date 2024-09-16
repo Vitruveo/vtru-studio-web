@@ -24,6 +24,7 @@ import {
     DialogContentText,
     DialogTitle,
     Badge,
+    Pagination,
 } from '@mui/material';
 import { Menu as MenuIcon } from '@mui/icons-material';
 import {
@@ -108,7 +109,7 @@ export default function Home() {
     const isMobile = useMediaQuery('(max-width: 600px)');
     const isTablet = useMediaQuery('(max-width: 900px)');
 
-    const assets = useSelector((state) => state.user.assets);
+    const { assets, currentPage } = useSelector((state) => state.user);
     const customizer = useSelector((state) => state.customizer);
     const selectedFilter = useSelector((state) => state.filters.selectedFilter);
 
@@ -132,10 +133,10 @@ export default function Home() {
         dispatch(userActionsCreators.setSelectedAsset(''));
         dispatch(consignArtworkActionsCreators.resetConsignArtwork());
         dispatch(assetActionsCreators.resetAsset());
-        dispatch(requestMyAssetsThunk());
+        dispatch(requestMyAssetsThunk({ page: currentPage }));
     }, [dispatch]);
 
-    const collections = assets.reduce<string[]>((acc, asset) => {
+    const collections = assets.data.reduce<string[]>((acc, asset) => {
         asset.collections.forEach((collection: string) => {
             if (!acc.includes(collection)) {
                 acc.push(collection);
@@ -150,15 +151,16 @@ export default function Home() {
             return assets;
         }
 
-        return assets.filter((asset: any) => asset?.collections?.includes(collectionSelected));
+        return assets.data.filter((asset: any) => asset?.collections?.includes(collectionSelected));
     }, [assets, collectionSelected]);
 
     const dataFiltered = useMemo(() => {
         if (selectedFilter.toUpperCase() === 'ALL') {
-            return data;
+            return Array.isArray(data) ? data : data.data;
         }
 
-        return data.filter((asset: any) => {
+        const assetsForFiltering = Array.isArray(data) ? data : data.data;
+        return assetsForFiltering.filter((asset: any) => {
             const statusText = getStatusText(asset.status, asset.mintExplorer);
             return statusText.toUpperCase() === selectedFilter.toUpperCase();
         });
@@ -303,7 +305,7 @@ export default function Home() {
 
                             <RSelect
                                 placeholder="Clone and consign from..."
-                                options={assets.map((asset) => ({
+                                options={assets.data.map((asset) => ({
                                     value: asset._id,
                                     label: asset.title,
                                 }))}
@@ -613,6 +615,15 @@ export default function Home() {
                             ))}
                         </Grid>
                     </Box>
+                    <Pagination
+                        count={assets.totalPage}
+                        page={currentPage}
+                        color="primary"
+                        onChange={(_event, value) => {
+                            dispatch(userActionsCreators.setCurrentPage(value));
+                            dispatch(requestMyAssetsThunk({ page: value }));
+                        }}
+                    />
                 </Box>
             </PageContainer>
 

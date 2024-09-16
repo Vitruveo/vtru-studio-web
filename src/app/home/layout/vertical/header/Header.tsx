@@ -23,7 +23,7 @@ const Header = () => {
 
     // drawer
     const customizer = useSelector((state) => state.customizer);
-    const hasConsign = useSelector((state) => state.user.assets?.some((asset) => asset.contractExplorer?.tx));
+    const hasConsign = useSelector((state) => state.user.assets?.data.some((asset) => asset.contractExplorer?.tx));
 
     const AppBarStyled = styled(AppBar)(({ theme }) => ({
         boxShadow: 'none',
