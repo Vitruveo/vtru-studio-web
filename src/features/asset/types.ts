@@ -25,6 +25,7 @@ interface Format {
 
 export interface GetMyAssetsReq {
     page?: number;
+    status?: string;
 }
 
 export interface RequestAssetUpload {

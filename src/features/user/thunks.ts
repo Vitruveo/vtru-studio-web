@@ -376,9 +376,9 @@ export function requestSocialFacebookThunk(): ReduxThunkAction<Promise<void>> {
     };
 }
 
-export function requestMyAssetsThunk({ page }: RequestMyAssetThunkReq): ReduxThunkAction<Promise<void>> {
+export function requestMyAssetsThunk({ page, status }: RequestMyAssetThunkReq): ReduxThunkAction<Promise<void>> {
     return function (dispatch) {
-        return getMyAssets({ page }).then((response) => {
+        return getMyAssets({ page, status }).then((response) => {
             if (response.data?.data.length) {
                 dispatch(
                     userActionsCreators.setMyAssets({

@@ -211,6 +211,7 @@ export interface RemoveSocialReq {
 
 export interface RequestMyAssetThunkReq {
     page: number;
+    status: string;
 }
 
 export interface ResquestConnectWalletRes {

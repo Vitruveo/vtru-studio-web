@@ -133,7 +133,7 @@ export default function Home() {
         dispatch(userActionsCreators.setSelectedAsset(''));
         dispatch(consignArtworkActionsCreators.resetConsignArtwork());
         dispatch(assetActionsCreators.resetAsset());
-        dispatch(requestMyAssetsThunk({ page: currentPage }));
+        dispatch(requestMyAssetsThunk({ page: currentPage, status: selectedFilter }));
     }, [dispatch]);
 
     const collections = assets.data.reduce<string[]>((acc, asset) => {
@@ -199,13 +199,12 @@ export default function Home() {
 
     const handleFilterChange = (filter: string) => {
         dispatch(setFilter(filter));
+        dispatch(requestMyAssetsThunk({ page: currentPage, status: filter.toLowerCase() }));
     };
 
     return (
         <Container
             sx={{
-                // overflow: 'auto',
-                // maxHeight: '85vh',
                 maxWidth: customizer.isLayout === 'boxed' ? 'lg' : '100%!important',
             }}
         >
@@ -621,7 +620,7 @@ export default function Home() {
                         color="primary"
                         onChange={(_event, value) => {
                             dispatch(userActionsCreators.setCurrentPage(value));
-                            dispatch(requestMyAssetsThunk({ page: value }));
+                            dispatch(requestMyAssetsThunk({ page: value, status: selectedFilter }));
                         }}
                     />
                 </Box>

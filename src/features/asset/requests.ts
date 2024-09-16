@@ -83,8 +83,8 @@ export async function getAsset(): Promise<GetAssetApiRes> {
     return res;
 }
 
-export async function getMyAssets({ page }: GetMyAssetsReq): Promise<GetAssetsApiRes> {
-    const res = await apiService.get<AssetPaginated>(`/assets?page=${page}`);
+export async function getMyAssets({ page, status }: GetMyAssetsReq): Promise<GetAssetsApiRes> {
+    const res = await apiService.get<AssetPaginated>(`/assets?page=${page}&status=${status}`);
     return res;
 }
 
