@@ -78,6 +78,7 @@ export interface User {
     };
     collections: { collection: string }[];
     currentPage: number;
+    sort: string;
     selectedAsset: string;
 }
 
@@ -215,6 +216,7 @@ export interface RequestMyAssetThunkReq {
     page: number;
     status: string;
     collection: string;
+    sort: string;
 }
 
 export interface ResquestConnectWalletRes {

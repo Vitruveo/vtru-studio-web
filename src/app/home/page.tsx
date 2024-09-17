@@ -109,7 +109,7 @@ export default function Home() {
     const isMobile = useMediaQuery('(max-width: 600px)');
     const isTablet = useMediaQuery('(max-width: 900px)');
 
-    const { assets, currentPage, collections } = useSelector((state) => state.user);
+    const { assets, currentPage, collections, sort } = useSelector((state) => state.user);
     const customizer = useSelector((state) => state.customizer);
     const selectedFilter = useSelector((state) => state.filters.selectedFilter);
 
@@ -132,7 +132,9 @@ export default function Home() {
         dispatch(userActionsCreators.setSelectedAsset(''));
         dispatch(consignArtworkActionsCreators.resetConsignArtwork());
         dispatch(assetActionsCreators.resetAsset());
-        dispatch(requestMyAssetsThunk({ page: currentPage, status: selectedFilter, collection: assets.collection }));
+        dispatch(
+            requestMyAssetsThunk({ page: currentPage, status: selectedFilter, collection: assets.collection, sort })
+        );
     }, [dispatch]);
 
     const handleCreateNewAsset = async (assetClonedId?: string) => {
@@ -169,7 +171,12 @@ export default function Home() {
     const handleFilterChange = (filter: string) => {
         dispatch(setFilter(filter));
         dispatch(
-            requestMyAssetsThunk({ page: currentPage, status: filter.toLowerCase(), collection: assets.collection })
+            requestMyAssetsThunk({
+                page: currentPage,
+                status: filter,
+                collection: assets.collection,
+                sort,
+            })
         );
     };
 
@@ -306,17 +313,44 @@ export default function Home() {
                                             page: currentPage,
                                             collection: event.target.value,
                                             status: selectedFilter,
+                                            sort,
                                         })
                                     );
                                 }}
                             >
                                 <MenuItem value="all">All</MenuItem>
 
-                                {collections?.map((item, index) => (
-                                    <MenuItem key={index} value={item.collection}>
-                                        {item.collection}
-                                    </MenuItem>
-                                ))}
+                                {collections
+                                    ?.slice()
+                                    .sort((a, b) => a.collection.localeCompare(b.collection))
+                                    .map((item, index) => (
+                                        <MenuItem key={index} value={item.collection}>
+                                            {item.collection}
+                                        </MenuItem>
+                                    ))}
+                            </Select>
+                        </Box>
+                        <Box display="flex" flexDirection="row" alignItems="center" gap={2}>
+                            <Typography variant="h4">Sort:</Typography>
+                            <Select
+                                defaultValue="consignNewToOld"
+                                style={{
+                                    minWidth: 163,
+                                }}
+                                onChange={(event) => {
+                                    dispatch(userActionsCreators.setSort(event.target.value));
+                                    dispatch(
+                                        requestMyAssetsThunk({
+                                            page: currentPage,
+                                            collection: assets.collection,
+                                            status: selectedFilter,
+                                            sort: event.target.value,
+                                        })
+                                    );
+                                }}
+                            >
+                                <MenuItem value="consignNewToOld">Consign New To Old</MenuItem>
+                                <MenuItem value="consignOldToNew">Consign Old To New</MenuItem>
                             </Select>
                         </Box>
                         {isMobile || isTablet ? (
@@ -605,8 +639,14 @@ export default function Home() {
                                     page: value,
                                     status: selectedFilter,
                                     collection: assets.collection,
+                                    sort,
                                 })
                             );
+                        }}
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            marginTop: 2,
                         }}
                     />
                 </Box>

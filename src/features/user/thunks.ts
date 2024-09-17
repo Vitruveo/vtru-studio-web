@@ -380,9 +380,10 @@ export function requestMyAssetsThunk({
     page,
     status,
     collection,
+    sort,
 }: RequestMyAssetThunkReq): ReduxThunkAction<Promise<void>> {
     return function (dispatch) {
-        return getMyAssets({ page, status, collection }).then((response) => {
+        return getMyAssets({ page, status, collection, sort }).then((response) => {
             if (response.data) {
                 dispatch(
                     userActionsCreators.setMyAssets({

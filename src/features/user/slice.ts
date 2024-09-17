@@ -68,6 +68,7 @@ const initialState: UserSliceState = {
     },
     collections: [],
     currentPage: 1,
+    sort: 'consignNewToOld',
     selectedAsset: '',
 };
 
@@ -165,6 +166,9 @@ export const userSlice = createSlice({
         },
         setSelectedCollection: (state, action: PayloadAction<string>) => {
             state.assets.collection = action.payload;
+        },
+        setSort: (state, action: PayloadAction<string>) => {
+            state.sort = action.payload;
         },
         removeAsset: (state, action: PayloadAction<string>) => {
             state.assets = {

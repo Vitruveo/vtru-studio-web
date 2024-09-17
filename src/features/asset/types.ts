@@ -27,6 +27,7 @@ export interface GetMyAssetsReq {
     page?: number;
     status?: string;
     collection?: string;
+    sort?: string;
 }
 
 export interface RequestAssetUpload {
