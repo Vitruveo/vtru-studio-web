@@ -26,6 +26,7 @@ interface Format {
 export interface GetMyAssetsReq {
     page?: number;
     status?: string;
+    collection?: string;
 }
 
 export interface RequestAssetUpload {
@@ -129,6 +130,8 @@ export interface AssetPaginated {
     page: number;
     total: number;
     totalPage: number;
+    collection: string;
+    collections: { collection: string }[];
 }
 
 export interface Comments {

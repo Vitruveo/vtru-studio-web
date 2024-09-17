@@ -109,11 +109,10 @@ export default function Home() {
     const isMobile = useMediaQuery('(max-width: 600px)');
     const isTablet = useMediaQuery('(max-width: 900px)');
 
-    const { assets, currentPage } = useSelector((state) => state.user);
+    const { assets, currentPage, collections } = useSelector((state) => state.user);
     const customizer = useSelector((state) => state.customizer);
     const selectedFilter = useSelector((state) => state.filters.selectedFilter);
 
-    const [collectionSelected, setCollectionSelected] = useState('all');
     const [cloneId, setCloneId] = useState<string | undefined>(undefined);
     const [loading, setLoading] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -133,38 +132,8 @@ export default function Home() {
         dispatch(userActionsCreators.setSelectedAsset(''));
         dispatch(consignArtworkActionsCreators.resetConsignArtwork());
         dispatch(assetActionsCreators.resetAsset());
-        dispatch(requestMyAssetsThunk({ page: currentPage, status: selectedFilter }));
+        dispatch(requestMyAssetsThunk({ page: currentPage, status: selectedFilter, collection: assets.collection }));
     }, [dispatch]);
-
-    const collections = assets.data.reduce<string[]>((acc, asset) => {
-        asset.collections.forEach((collection: string) => {
-            if (!acc.includes(collection)) {
-                acc.push(collection);
-            }
-        });
-
-        return acc;
-    }, []);
-
-    const data = useMemo(() => {
-        if (collectionSelected.toUpperCase() === 'ALL') {
-            return assets;
-        }
-
-        return assets.data.filter((asset: any) => asset?.collections?.includes(collectionSelected));
-    }, [assets, collectionSelected]);
-
-    const dataFiltered = useMemo(() => {
-        if (selectedFilter.toUpperCase() === 'ALL') {
-            return Array.isArray(data) ? data : data.data;
-        }
-
-        const assetsForFiltering = Array.isArray(data) ? data : data.data;
-        return assetsForFiltering.filter((asset: any) => {
-            const statusText = getStatusText(asset.status, asset.mintExplorer);
-            return statusText.toUpperCase() === selectedFilter.toUpperCase();
-        });
-    }, [data, selectedFilter]);
 
     const handleCreateNewAsset = async (assetClonedId?: string) => {
         setLoading(true);
@@ -199,7 +168,9 @@ export default function Home() {
 
     const handleFilterChange = (filter: string) => {
         dispatch(setFilter(filter));
-        dispatch(requestMyAssetsThunk({ page: currentPage, status: filter.toLowerCase() }));
+        dispatch(
+            requestMyAssetsThunk({ page: currentPage, status: filter.toLowerCase(), collection: assets.collection })
+        );
     };
 
     return (
@@ -328,13 +299,22 @@ export default function Home() {
                                 style={{
                                     minWidth: 163,
                                 }}
-                                onChange={(event) => setCollectionSelected(event.target.value)}
+                                onChange={(event) => {
+                                    dispatch(userActionsCreators.setSelectedCollection(event.target.value));
+                                    dispatch(
+                                        requestMyAssetsThunk({
+                                            page: currentPage,
+                                            collection: event.target.value,
+                                            status: selectedFilter,
+                                        })
+                                    );
+                                }}
                             >
                                 <MenuItem value="all">All</MenuItem>
 
-                                {collections.map((collection, index) => (
-                                    <MenuItem key={index} value={collection}>
-                                        {collection}
+                                {collections?.map((item, index) => (
+                                    <MenuItem key={index} value={item.collection}>
+                                        {item.collection}
                                     </MenuItem>
                                 ))}
                             </Select>
@@ -384,7 +364,7 @@ export default function Home() {
                     </Box>
                     <Box mt={2} style={{ maxHeight: 'calc(100vh - 420px)', overflowY: 'scroll' }}>
                         <Grid container spacing={2} padding={1}>
-                            {dataFiltered.map((asset, index) => (
+                            {assets.data.map((asset, index) => (
                                 <Grid item key={index} sm={6} md={6} lg={4}>
                                     <button
                                         style={{
@@ -620,7 +600,13 @@ export default function Home() {
                         color="primary"
                         onChange={(_event, value) => {
                             dispatch(userActionsCreators.setCurrentPage(value));
-                            dispatch(requestMyAssetsThunk({ page: value, status: selectedFilter }));
+                            dispatch(
+                                requestMyAssetsThunk({
+                                    page: value,
+                                    status: selectedFilter,
+                                    collection: assets.collection,
+                                })
+                            );
                         }}
                     />
                 </Box>

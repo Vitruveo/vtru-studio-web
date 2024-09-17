@@ -74,7 +74,9 @@ export interface User {
         page: number;
         total: number;
         totalPage: number;
+        collection: string;
     };
+    collections: { collection: string }[];
     currentPage: number;
     selectedAsset: string;
 }
@@ -212,6 +214,7 @@ export interface RemoveSocialReq {
 export interface RequestMyAssetThunkReq {
     page: number;
     status: string;
+    collection: string;
 }
 
 export interface ResquestConnectWalletRes {

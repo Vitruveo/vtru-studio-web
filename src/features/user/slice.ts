@@ -64,7 +64,9 @@ const initialState: UserSliceState = {
         page: 0,
         total: 0,
         totalPage: 0,
+        collection: '',
     },
+    collections: [],
     currentPage: 1,
     selectedAsset: '',
 };
@@ -157,6 +159,12 @@ export const userSlice = createSlice({
         },
         setCurrentPage: (state, action: PayloadAction<number>) => {
             state.currentPage = action.payload;
+        },
+        setCollections: (state, action: PayloadAction<UserSliceState['collections']>) => {
+            state.collections = action.payload;
+        },
+        setSelectedCollection: (state, action: PayloadAction<string>) => {
+            state.assets.collection = action.payload;
         },
         removeAsset: (state, action: PayloadAction<string>) => {
             state.assets = {
