@@ -356,8 +356,6 @@ export default function Home() {
                                         </MenuItem>
                                     ))}
                             </Select>
-                        </Box>
-                        <Box display="flex" flexDirection="row" alignItems="center" gap={2}>
                             <Typography variant="h4">Sort:</Typography>
                             <Select
                                 defaultValue="consignNewToOld"
@@ -376,8 +374,8 @@ export default function Home() {
                                     );
                                 }}
                             >
-                                <MenuItem value="consignNewToOld">Consign New To Old</MenuItem>
-                                <MenuItem value="consignOldToNew">Consign Old To New</MenuItem>
+                                <MenuItem value="consignNewToOld">Consigned — New to Old</MenuItem>
+                                <MenuItem value="consignOldToNew">Consigned — Old to New</MenuItem>
                             </Select>
                         </Box>
                         {isMobile || isTablet ? (
