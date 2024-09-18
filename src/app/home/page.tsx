@@ -1,6 +1,6 @@
 'use client';
 
-import { CSSProperties, useEffect, useMemo, useState } from 'react';
+import { CSSProperties, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
     Button,
@@ -108,11 +108,11 @@ export default function Home() {
     const router = useRouter();
     const isMobile = useMediaQuery('(max-width: 600px)');
     const isTablet = useMediaQuery('(max-width: 900px)');
-
     const { assets, currentPage, collections, sort } = useSelector((state) => state.user);
     const customizer = useSelector((state) => state.customizer);
     const selectedFilter = useSelector((state) => state.filters.selectedFilter);
 
+    const topRef = useRef<HTMLDivElement>(null);
     const [cloneId, setCloneId] = useState<string | undefined>(undefined);
     const [loading, setLoading] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -128,6 +128,19 @@ export default function Home() {
         myProfile: language['studio.home.myProfile'],
     } as { [key: string]: string };
 
+    const handleScrollToTop = () => {
+        if (topRef.current) {
+            topRef.current.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+            });
+        }
+    };
+
+    useEffect(() => {
+        handleScrollToTop();
+    }, [currentPage]);
+
     useEffect(() => {
         dispatch(userActionsCreators.setSelectedAsset(''));
         dispatch(consignArtworkActionsCreators.resetConsignArtwork());
@@ -136,6 +149,20 @@ export default function Home() {
             requestMyAssetsThunk({ page: currentPage, status: selectedFilter, collection: assets.collection, sort })
         );
     }, [dispatch]);
+
+    useEffect(() => {
+        if (assets.data.length === 0) {
+            dispatch(userActionsCreators.setCurrentPage(1));
+            dispatch(
+                requestMyAssetsThunk({
+                    page: 1,
+                    status: selectedFilter,
+                    collection: assets.collection,
+                    sort,
+                })
+            );
+        }
+    }, [assets]);
 
     const handleCreateNewAsset = async (assetClonedId?: string) => {
         setLoading(true);
@@ -281,7 +308,7 @@ export default function Home() {
                             </div>
 
                             <RSelect
-                                placeholder="Clone and consign from..."
+                                placeholder="Duplicate asset and consign from..."
                                 options={assets.data.map((asset) => ({
                                     value: asset._id,
                                     label: asset.title,
@@ -396,7 +423,7 @@ export default function Home() {
                             </Box>
                         )}
                     </Box>
-                    <Box mt={2} style={{ maxHeight: 'calc(100vh - 420px)', overflowY: 'scroll' }}>
+                    <Box mt={2} style={{ maxHeight: 'calc(100vh - 370px)', overflowY: 'scroll' }} ref={topRef}>
                         <Grid container spacing={2} padding={1}>
                             {assets.data.map((asset, index) => (
                                 <Grid item key={index} sm={6} md={6} lg={4}>
