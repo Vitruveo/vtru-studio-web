@@ -102,7 +102,7 @@ export const ClaimContainer = () => {
     return (
         <>
             <ClaimedModal isOpen={isModalOpen} handleClose={closeModal} />
-            <StakeModal isOpen={true} handleClose={closeModal} />
+            <StakeModal isOpen={true} handleClose={closeModal} available={balance} />
             <ClaimComponent
                 data={{
                     value: balance.toFixed(4),
