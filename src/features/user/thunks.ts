@@ -55,6 +55,7 @@ import {
     VerifyConnectWalletApiRes,
     RequestConnectWalletRes,
     RemoveSocialReq,
+    RequestMyAssetThunkReq,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { AccountSettingsFormValues } from '@/app/home/myProfile/types';
@@ -62,6 +63,7 @@ import { consignArtworkActionsCreators } from '../consignArtwork/slice';
 import { BASE_URL_API } from '@/constants/api';
 import { getAssetById, getMyAssets } from '../asset/requests';
 import { ASSET_STORAGE_URL, NO_IMAGE_ASSET } from '@/constants/asset';
+import { config } from '@/app/home/components/apps/wallet';
 
 export function userLoginThunk(payload: UserLoginReq): ReduxThunkAction<Promise<UserLoginApiRes>> {
     return async function (dispatch, getState) {
@@ -283,7 +285,7 @@ export function requestConnectWalletThunk(
 
         if (!response.data?.nonce) throw new Error('nonce not found');
 
-        const signature = await signMessage({
+        const signature = await signMessage(config, {
             // account: payload.wallet,
             message: response.data.nonce,
         });
@@ -374,13 +376,18 @@ export function requestSocialFacebookThunk(): ReduxThunkAction<Promise<void>> {
     };
 }
 
-export function requestMyAssetsThunk(): ReduxThunkAction<Promise<void>> {
+export function requestMyAssetsThunk({
+    page,
+    status,
+    collection,
+    sort,
+}: RequestMyAssetThunkReq): ReduxThunkAction<Promise<void>> {
     return function (dispatch) {
-        return getMyAssets().then((response) => {
-            if (response.data?.length) {
+        return getMyAssets({ page, status, collection, sort }).then((response) => {
+            if (response.data) {
                 dispatch(
-                    userActionsCreators.setMyAssets(
-                        response.data.map((asset: any) => ({
+                    userActionsCreators.setMyAssets({
+                        data: response.data.data.map((asset: any) => ({
                             _id: asset._id,
                             title: asset.assetMetadata?.context?.formData?.title || 'Untitled',
                             image: !asset?.formats?.preview?.path
@@ -392,9 +399,15 @@ export function requestMyAssetsThunk(): ReduxThunkAction<Promise<void>> {
                             contractExplorer: asset?.contractExplorer,
                             licenses: asset?.licenses,
                             countComments: asset?.countComments,
-                        }))
-                    )
+                        })),
+                        limit: response.data.limit,
+                        page: response.data.page,
+                        total: response.data.total,
+                        totalPage: response.data.totalPage,
+                        collection: response.data.collection,
+                    })
                 );
+                dispatch(userActionsCreators.setCollections(response.data.collections));
             }
         });
     };

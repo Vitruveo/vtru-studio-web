@@ -72,6 +72,7 @@ export default function AssetMetadata() {
     const toast = useToastr();
     const tempColors = useSelector((state) => state.asset.tempColors);
 
+    const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
     const asset = useSelector((state) => state.asset);
     const { assetMetadata } = asset;
     const formData = assetMetadata?.context.formData;
@@ -176,6 +177,11 @@ export default function AssetMetadata() {
     };
 
     const handleOpenBackModal = () => {
+        if (hasContract) {
+            router.push(`/home/consignArtwork`);
+            return;
+        }
+
         // Object.values(sectionsFormat).forEach((v, i) => {
         //     if (JSON.stringify(v.formData) !== JSON.stringify(Object.values(sections)[i].formData)) {
         //         console.log('v.formData', v.formData, Object.values(sections)[i].formData);
@@ -223,6 +229,10 @@ export default function AssetMetadata() {
 
     const handleSaveData = async (event?: React.FormEvent, skip?: boolean) => {
         if (event) event.preventDefault();
+        if (hasContract) {
+            router.push('/home/consignArtwork/licenses');
+            return;
+        }
 
         const isValid: boolean[] = [];
 
@@ -323,7 +333,7 @@ export default function AssetMetadata() {
     };
 
     useEffect(() => {
-        if (assetMetadata) handleSaveData(undefined, true);
+        if (assetMetadata && !hasContract) handleSaveData(undefined, true);
     }, []);
 
     useEffect(() => {
@@ -346,7 +356,7 @@ export default function AssetMetadata() {
         <form onSubmit={handleSaveData}>
             <PageContainerFooter
                 submitText={texts.nextButton}
-                stepStatus={status}
+                stepStatus={hasContract ? 'completed' : status}
                 stepNumber={2}
                 title={texts.consignArtworkTitle}
                 backOnclick={handleOpenBackModal}

@@ -24,6 +24,7 @@ import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { useI18n } from '@/app/hooks/useI18n';
 import { useAvatar } from './useAvatar';
 import { useToastr } from '@/app/hooks/useToastr';
+import { BASE_URL_SEARCH } from '@/constants/search';
 
 export default function ProfileSettings() {
     const toast = useToastr();
@@ -34,10 +35,11 @@ export default function ProfileSettings() {
     const [resetAvatar, setResetAvatar] = useState(false);
     const [usernameError, setUsernameError] = useState('');
     const [changeAvatarFile, setChangeAvatarFile] = useState<File>();
+    const [copySearchMessage, setCopySearchMessage] = useState('Copy my search URL');
 
     const { isCompletedProfile, goToConsignArtwork } = useSelector((state) => state.consignArtwork);
-    const { username, emailDefault, walletDefault, emails, wallets, requestAvatarUpload } = useSelector(
-        userSelector(['username', 'emailDefault', 'walletDefault', 'emails', 'wallets', 'requestAvatarUpload'])
+    const { _id, username, emailDefault, walletDefault, emails, wallets, requestAvatarUpload } = useSelector(
+        userSelector(['_id', 'username', 'emailDefault', 'walletDefault', 'emails', 'wallets', 'requestAvatarUpload'])
     );
 
     useEffect(() => {
@@ -136,7 +138,6 @@ export default function ProfileSettings() {
     const { handleSubmit, handleChange, setFieldValue, setFieldError, setErrors, values, errors } =
         useFormik<AccountSettingsFormValues>({
             initialValues,
-            // validationSchema: stepsSchemaValidation,
             onSubmit: onSubmit,
         });
 
@@ -207,6 +208,14 @@ export default function ProfileSettings() {
 
     const handleOnClickReset = () => {
         setResetAvatar(true);
+    };
+
+    const handleCopySearchUrl = () => {
+        navigator.clipboard.writeText(`${BASE_URL_SEARCH}/?creatorId=${_id}`);
+        setCopySearchMessage('Copied!');
+        setTimeout(() => {
+            setCopySearchMessage('Copy my search URL');
+        }, 2_000); // 2 seconds
     };
 
     const isNewAvatar = resetAvatar
@@ -288,6 +297,9 @@ export default function ProfileSettings() {
                                                 </Typography>
                                             </Box>
                                         </Box>
+                                        <Button variant="contained" onClick={handleCopySearchUrl}>
+                                            {copySearchMessage}
+                                        </Button>
                                     </Box>
                                 </CardContent>
                             </BlankCard>
