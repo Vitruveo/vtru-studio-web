@@ -1,6 +1,6 @@
 'use client';
 
-import { CSSProperties, useEffect, useMemo, useState } from 'react';
+import { CSSProperties, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
     Button,
@@ -24,6 +24,7 @@ import {
     DialogContentText,
     DialogTitle,
     Badge,
+    Pagination,
 } from '@mui/material';
 import { Menu as MenuIcon } from '@mui/icons-material';
 import {
@@ -107,12 +108,11 @@ export default function Home() {
     const router = useRouter();
     const isMobile = useMediaQuery('(max-width: 600px)');
     const isTablet = useMediaQuery('(max-width: 900px)');
-
-    const assets = useSelector((state) => state.user.assets);
+    const { assets, currentPage, collections, sort } = useSelector((state) => state.user);
     const customizer = useSelector((state) => state.customizer);
     const selectedFilter = useSelector((state) => state.filters.selectedFilter);
 
-    const [collectionSelected, setCollectionSelected] = useState('all');
+    const topRef = useRef<HTMLDivElement>(null);
     const [cloneId, setCloneId] = useState<string | undefined>(undefined);
     const [loading, setLoading] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -128,41 +128,41 @@ export default function Home() {
         myProfile: language['studio.home.myProfile'],
     } as { [key: string]: string };
 
+    const handleScrollToTop = () => {
+        if (topRef.current) {
+            topRef.current.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+            });
+        }
+    };
+
+    useEffect(() => {
+        handleScrollToTop();
+    }, [currentPage]);
+
     useEffect(() => {
         dispatch(userActionsCreators.setSelectedAsset(''));
         dispatch(consignArtworkActionsCreators.resetConsignArtwork());
         dispatch(assetActionsCreators.resetAsset());
-        dispatch(requestMyAssetsThunk());
+        dispatch(
+            requestMyAssetsThunk({ page: currentPage, status: selectedFilter, collection: assets.collection, sort })
+        );
     }, [dispatch]);
 
-    const collections = assets.reduce<string[]>((acc, asset) => {
-        asset.collections.forEach((collection: string) => {
-            if (!acc.includes(collection)) {
-                acc.push(collection);
-            }
-        });
-
-        return acc;
-    }, []);
-
-    const data = useMemo(() => {
-        if (collectionSelected.toUpperCase() === 'ALL') {
-            return assets;
+    useEffect(() => {
+        if (assets.data.length === 0) {
+            dispatch(userActionsCreators.setCurrentPage(1));
+            dispatch(
+                requestMyAssetsThunk({
+                    page: 1,
+                    status: selectedFilter,
+                    collection: assets.collection,
+                    sort,
+                })
+            );
         }
-
-        return assets.filter((asset: any) => asset?.collections?.includes(collectionSelected));
-    }, [assets, collectionSelected]);
-
-    const dataFiltered = useMemo(() => {
-        if (selectedFilter.toUpperCase() === 'ALL') {
-            return data;
-        }
-
-        return data.filter((asset: any) => {
-            const statusText = getStatusText(asset.status, asset.mintExplorer);
-            return statusText.toUpperCase() === selectedFilter.toUpperCase();
-        });
-    }, [data, selectedFilter]);
+    }, [assets]);
 
     const handleCreateNewAsset = async (assetClonedId?: string) => {
         setLoading(true);
@@ -197,13 +197,19 @@ export default function Home() {
 
     const handleFilterChange = (filter: string) => {
         dispatch(setFilter(filter));
+        dispatch(
+            requestMyAssetsThunk({
+                page: currentPage,
+                status: filter,
+                collection: assets.collection,
+                sort,
+            })
+        );
     };
 
     return (
         <Container
             sx={{
-                // overflow: 'auto',
-                // maxHeight: '85vh',
                 maxWidth: customizer.isLayout === 'boxed' ? 'lg' : '100%!important',
             }}
         >
@@ -302,8 +308,8 @@ export default function Home() {
                             </div>
 
                             <RSelect
-                                placeholder="Clone and consign from..."
-                                options={assets.map((asset) => ({
+                                placeholder="Duplicate asset and consign from..."
+                                options={assets.data.map((asset) => ({
                                     value: asset._id,
                                     label: asset.title,
                                 }))}
@@ -327,15 +333,49 @@ export default function Home() {
                                 style={{
                                     minWidth: 163,
                                 }}
-                                onChange={(event) => setCollectionSelected(event.target.value)}
+                                onChange={(event) => {
+                                    dispatch(userActionsCreators.setSelectedCollection(event.target.value));
+                                    dispatch(
+                                        requestMyAssetsThunk({
+                                            page: currentPage,
+                                            collection: event.target.value,
+                                            status: selectedFilter,
+                                            sort,
+                                        })
+                                    );
+                                }}
                             >
                                 <MenuItem value="all">All</MenuItem>
 
-                                {collections.map((collection, index) => (
-                                    <MenuItem key={index} value={collection}>
-                                        {collection}
-                                    </MenuItem>
-                                ))}
+                                {collections
+                                    ?.slice()
+                                    .sort((a, b) => a.collection.localeCompare(b.collection))
+                                    .map((item, index) => (
+                                        <MenuItem key={index} value={item.collection}>
+                                            {item.collection}
+                                        </MenuItem>
+                                    ))}
+                            </Select>
+                            <Typography variant="h4">Sort:</Typography>
+                            <Select
+                                defaultValue="consignNewToOld"
+                                style={{
+                                    minWidth: 163,
+                                }}
+                                onChange={(event) => {
+                                    dispatch(userActionsCreators.setSort(event.target.value));
+                                    dispatch(
+                                        requestMyAssetsThunk({
+                                            page: currentPage,
+                                            collection: assets.collection,
+                                            status: selectedFilter,
+                                            sort: event.target.value,
+                                        })
+                                    );
+                                }}
+                            >
+                                <MenuItem value="consignNewToOld">Consigned — New to Old</MenuItem>
+                                <MenuItem value="consignOldToNew">Consigned — Old to New</MenuItem>
                             </Select>
                         </Box>
                         {isMobile || isTablet ? (
@@ -381,9 +421,9 @@ export default function Home() {
                             </Box>
                         )}
                     </Box>
-                    <Box mt={2} style={{ maxHeight: 'calc(100vh - 420px)', overflowY: 'scroll' }}>
+                    <Box mt={2} style={{ maxHeight: 'calc(100vh - 370px)', overflowY: 'scroll' }} ref={topRef}>
                         <Grid container spacing={2} padding={1}>
-                            {dataFiltered.map((asset, index) => (
+                            {assets.data.map((asset, index) => (
                                 <Grid item key={index} sm={6} md={6} lg={4}>
                                     <button
                                         style={{
@@ -613,6 +653,27 @@ export default function Home() {
                             ))}
                         </Grid>
                     </Box>
+                    <Pagination
+                        count={assets.totalPage}
+                        page={currentPage}
+                        color="primary"
+                        onChange={(_event, value) => {
+                            dispatch(userActionsCreators.setCurrentPage(value));
+                            dispatch(
+                                requestMyAssetsThunk({
+                                    page: value,
+                                    status: selectedFilter,
+                                    collection: assets.collection,
+                                    sort,
+                                })
+                            );
+                        }}
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            marginTop: 2,
+                        }}
+                    />
                 </Box>
             </PageContainer>
 

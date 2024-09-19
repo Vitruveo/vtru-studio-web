@@ -55,6 +55,7 @@ import {
     VerifyConnectWalletApiRes,
     RequestConnectWalletRes,
     RemoveSocialReq,
+    RequestMyAssetThunkReq,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { AccountSettingsFormValues } from '@/app/home/myProfile/types';
@@ -375,13 +376,18 @@ export function requestSocialFacebookThunk(): ReduxThunkAction<Promise<void>> {
     };
 }
 
-export function requestMyAssetsThunk(): ReduxThunkAction<Promise<void>> {
+export function requestMyAssetsThunk({
+    page,
+    status,
+    collection,
+    sort,
+}: RequestMyAssetThunkReq): ReduxThunkAction<Promise<void>> {
     return function (dispatch) {
-        return getMyAssets().then((response) => {
-            if (response.data?.length) {
+        return getMyAssets({ page, status, collection, sort }).then((response) => {
+            if (response.data) {
                 dispatch(
-                    userActionsCreators.setMyAssets(
-                        response.data.map((asset: any) => ({
+                    userActionsCreators.setMyAssets({
+                        data: response.data.data.map((asset: any) => ({
                             _id: asset._id,
                             title: asset.assetMetadata?.context?.formData?.title || 'Untitled',
                             image: !asset?.formats?.preview?.path
@@ -393,9 +399,15 @@ export function requestMyAssetsThunk(): ReduxThunkAction<Promise<void>> {
                             contractExplorer: asset?.contractExplorer,
                             licenses: asset?.licenses,
                             countComments: asset?.countComments,
-                        }))
-                    )
+                        })),
+                        limit: response.data.limit,
+                        page: response.data.page,
+                        total: response.data.total,
+                        totalPage: response.data.totalPage,
+                        collection: response.data.collection,
+                    })
                 );
+                dispatch(userActionsCreators.setCollections(response.data.collections));
             }
         });
     };

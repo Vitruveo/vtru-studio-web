@@ -58,7 +58,17 @@ const initialState: UserSliceState = {
             avatar: '',
         },
     },
-    assets: [],
+    assets: {
+        data: [],
+        limit: 0,
+        page: 0,
+        total: 0,
+        totalPage: 0,
+        collection: '',
+    },
+    collections: [],
+    currentPage: 1,
+    sort: 'consignNewToOld',
     selectedAsset: '',
 };
 
@@ -148,8 +158,23 @@ export const userSlice = createSlice({
         setSelectedAsset: (state, action: PayloadAction<string>) => {
             state.selectedAsset = action.payload;
         },
+        setCurrentPage: (state, action: PayloadAction<number>) => {
+            state.currentPage = action.payload;
+        },
+        setCollections: (state, action: PayloadAction<UserSliceState['collections']>) => {
+            state.collections = action.payload;
+        },
+        setSelectedCollection: (state, action: PayloadAction<string>) => {
+            state.assets.collection = action.payload;
+        },
+        setSort: (state, action: PayloadAction<string>) => {
+            state.sort = action.payload;
+        },
         removeAsset: (state, action: PayloadAction<string>) => {
-            state.assets = state.assets.filter((asset) => asset._id !== action.payload);
+            state.assets = {
+                ...state.assets,
+                data: state.assets.data.filter((asset) => asset._id !== action.payload),
+            };
         },
     },
 });

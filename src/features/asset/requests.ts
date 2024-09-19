@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import {
     Asset,
+    AssetPaginated,
     AssetSendRequestUploadApiRes,
     AssetSendRequestUploadReq,
     AssetStorageReq,
@@ -9,6 +10,7 @@ import {
     CreateAssetApiRes,
     GetAssetApiRes,
     GetAssetsApiRes,
+    GetMyAssetsReq,
     RequestDeleteFilesReq,
     SigningMediaC2PAReq,
     UpdateAssetStepApiRes,
@@ -81,8 +83,10 @@ export async function getAsset(): Promise<GetAssetApiRes> {
     return res;
 }
 
-export async function getMyAssets(): Promise<GetAssetsApiRes> {
-    const res = await apiService.get<Asset[]>(`/assets`);
+export async function getMyAssets({ page, status, collection = '', sort }: GetMyAssetsReq): Promise<GetAssetsApiRes> {
+    const res = await apiService.get<AssetPaginated>(
+        `/assets?page=${page}&status=${status?.toLowerCase()}&collection=${collection}&sort=${sort}`
+    );
     return res;
 }
 

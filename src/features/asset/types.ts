@@ -23,6 +23,13 @@ interface Format {
     };
 }
 
+export interface GetMyAssetsReq {
+    page?: number;
+    status?: string;
+    collection?: string;
+    sort?: string;
+}
+
 export interface RequestAssetUpload {
     transactionId: string;
     url: string;
@@ -116,6 +123,16 @@ export interface Asset {
     mintExplorer?: MintExplorer;
     ipfs?: Ipfs;
     comments?: Comments[];
+}
+
+export interface AssetPaginated {
+    data: Asset[];
+    limit: number;
+    page: number;
+    total: number;
+    totalPage: number;
+    collection: string;
+    collections: { collection: string }[];
 }
 
 export interface Comments {
@@ -258,6 +275,6 @@ export type GetAssetApiRes = APIResponse<Asset>;
 export type CreateAssetApiRes = APIResponse<{
     insertedId: string;
 }>;
-export type GetAssetsApiRes = APIResponse<Asset[]>;
+export type GetAssetsApiRes = APIResponse<AssetPaginated>;
 export type AssetSendRequestUploadApiRes = APIResponse<string>;
 export type CheckLicenseEditableRes = APIResponse<boolean>;

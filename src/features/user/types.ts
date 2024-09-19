@@ -68,7 +68,17 @@ export interface User {
             avatar: string;
         };
     };
-    assets: Assets[];
+    assets: {
+        data: Assets[];
+        limit: number;
+        page: number;
+        total: number;
+        totalPage: number;
+        collection: string;
+    };
+    collections: { collection: string }[];
+    currentPage: number;
+    sort: string;
     selectedAsset: string;
 }
 
@@ -200,6 +210,13 @@ export interface ResquestConnectWalletReq {
 
 export interface RemoveSocialReq {
     social: string;
+}
+
+export interface RequestMyAssetThunkReq {
+    page: number;
+    status: string;
+    collection: string;
+    sort: string;
 }
 
 export interface ResquestConnectWalletRes {
