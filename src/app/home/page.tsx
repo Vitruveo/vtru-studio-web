@@ -112,6 +112,7 @@ export default function Home() {
     const { assets, currentPage, collections, sort } = useSelector((state) => state.user);
     const customizer = useSelector((state) => state.customizer);
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
+    const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const smUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
     const selectedFilter = useSelector((state) => state.filters.selectedFilter);
 
@@ -441,8 +442,20 @@ export default function Home() {
                             </Box>
                         )}
                     </Box>
-                    <Box mt={2} style={{ maxHeight: 'calc(100vh - 330px)', overflowY: 'scroll' }} ref={topRef}>
-                        <Grid container spacing={2} padding={1}>
+                    <Box
+                        mt={2}
+                        style={{
+                            maxHeight: lgUp
+                                ? 'calc(100vh - 330px)'
+                                : mdUp || smUp
+                                  ? 'calc(100vh - 400px)'
+                                  : 'calc(100vh - 500px)',
+                            overflowY: 'scroll',
+                            overflowX: 'hidden',
+                        }}
+                        ref={topRef}
+                    >
+                        <Grid container spacing={2} padding={1} width={'100%'} justifyContent={'center'}>
                             {assets.data.map((asset, index) => (
                                 <Grid item key={index} sm={6} md={6} lg={4}>
                                     <button
@@ -691,7 +704,6 @@ export default function Home() {
                                 display: 'flex',
                                 justifyContent: 'center',
                                 marginTop: 2,
-                                marginBottom: 12,
                             }}
                         />
                     </Box>

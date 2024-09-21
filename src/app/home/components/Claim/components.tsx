@@ -31,7 +31,7 @@ export const ClaimComponent = ({ data, actions }: Props) => {
     const handleClose = () => setAnchorEl(null);
 
     return (
-        <Stack direction="row" gap={1} alignItems="center">
+        <Stack direction={smUp ? 'row' : 'column'} gap={1} alignItems="center">
             {isConnected && isBlocked && <Typography color="red">Account blocked — fund claims disabled</Typography>}
             {vaultTransactionHash ? (
                 <a
@@ -47,7 +47,7 @@ export const ClaimComponent = ({ data, actions }: Props) => {
                     {value} <strong>{symbol}</strong>
                 </Typography>
             )}
-            <Box display={'flex'} flexDirection={smUp ? 'row' : 'column'} gap={2}>
+            <Box display={'flex'} gap={2}>
                 <Button size="small" variant="contained" disabled={disabled} onClick={onClaim}>
                     Claim {loading && <CircularProgress size={16} style={{ marginLeft: 10 }} />}
                 </Button>
