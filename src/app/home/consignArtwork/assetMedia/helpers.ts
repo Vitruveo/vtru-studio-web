@@ -28,7 +28,7 @@ export const mediaConfigs = {
             ppi: 72,
             sizeMB: {
                 image: 0.25,
-                video: 1,
+                video: 4,
             },
             required: true,
         },
@@ -70,7 +70,7 @@ export const mediaConfigs = {
             ppi: 72,
             sizeMB: {
                 image: 0.244,
-                video: 1,
+                video: 4,
             },
             required: true,
         },
@@ -112,7 +112,7 @@ export const mediaConfigs = {
             ppi: 72,
             sizeMB: {
                 image: 0.244,
-                video: 1,
+                video: 4,
             },
             required: true,
         },
