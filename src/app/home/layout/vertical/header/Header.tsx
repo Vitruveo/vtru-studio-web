@@ -18,7 +18,7 @@ import { WalletProvider } from '@/app/home/components/apps/wallet';
 
 const Header = () => {
     const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
-
+    const smUp = useMediaQuery((theme: any) => theme.breakpoints.up('sm'));
     const dispatch = useDispatch();
 
     // drawer
@@ -60,8 +60,10 @@ const Header = () => {
                             <ClaimContainer />
                         </WalletProvider>
                     )}
-                    <Rss />
-                    <Language />
+                    <Box display={'flex'} flexDirection={smUp ? 'row' : 'column'}>
+                        <Rss />
+                        <Language />
+                    </Box>
 
                     <Profile />
                 </Stack>
