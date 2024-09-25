@@ -490,7 +490,7 @@ export default function Home() {
                                                     right: 10,
                                                     backgroundColor: '#fff',
                                                     color: '#000',
-
+                                                    zIndex: 1,
                                                     padding: '5px',
                                                     borderRadius: '5px',
                                                     cursor: 'pointer',
@@ -524,6 +524,7 @@ export default function Home() {
                                                         right: 10,
                                                         backgroundColor: '#fff',
                                                         color: '#000',
+                                                        zIndex: 1,
                                                         padding: '5px',
                                                         borderRadius: '5px',
                                                         cursor: 'pointer',
