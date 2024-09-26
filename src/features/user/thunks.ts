@@ -165,7 +165,7 @@ export function sendRequestUploadThunk(
     };
 }
 
-export function creatorAccountThunk(payload: StepsFormValues | AccountSettingsFormValues): ReduxThunkAction<void> {
+export function creatorAccountThunk(payload: AccountSettingsFormValues): ReduxThunkAction<void> {
     return async function (dispatch, getState) {
         const user = getState().user;
 
@@ -179,6 +179,9 @@ export function creatorAccountThunk(payload: StepsFormValues | AccountSettingsFo
                 username: payload.username,
                 emails: payload.emails as any,
                 wallets: payload.wallets,
+                links: payload.links,
+                careerAchievements: payload.careerAchievements,
+                personalDetails: payload.personalDetails,
                 framework: user.framework,
             },
         });
@@ -188,6 +191,9 @@ export function creatorAccountThunk(payload: StepsFormValues | AccountSettingsFo
                 emailDefault: payload.emailDefault,
                 walletDefault: payload.walletDefault,
                 username: payload.username,
+                links: payload.links,
+                careerAchievements: payload.careerAchievements,
+                personalDetails: payload.personalDetails,
                 wallets: payload.wallets,
                 emails: payload.emails,
             })

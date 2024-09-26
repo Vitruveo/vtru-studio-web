@@ -1,5 +1,6 @@
 import { FormikErrors } from 'formik';
 import { FormikDefaultProps } from '@/app/common/types';
+import { CareerAchievements, Link, PersonalDetails } from '@/features/user/types';
 
 interface Wallet {
     address: string;
@@ -17,22 +18,13 @@ export interface AccountSettingsFormValues {
     emails: EmailFormValues[];
     emailDefault: string;
     wallets: Wallet[];
+    links: Link[];
     walletDefault: string;
-    creators: Creator[];
+    personalDetails?: PersonalDetails;
+    careerAchievements?: CareerAchievements;
 }
 
-export interface Creator {
-    name: string;
-    roles: string[];
-    bio: string;
-    profileUrl: string;
-    nationality: string;
-    residence: string;
-    ethnicity: string;
-    gender: string;
-}
-
-type AccountSettingsFormErros = FormikErrors<AccountSettingsFormValues>;
+export type AccountSettingsFormErros = FormikErrors<AccountSettingsFormValues>;
 
 export interface AccountSettingsProps extends FormikDefaultProps<AccountSettingsFormValues> {
     values: AccountSettingsFormValues;

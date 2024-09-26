@@ -1,6 +1,6 @@
 {
     "name": "my-app",
-    "version": "0.1.397",
+    "version": "0.1.398",
     "private": true,
     "scripts": {
         "dev": "next dev",
@@ -15,9 +15,9 @@
         "@emotion/styled": "^11.11.0",
         "@ethersproject/bignumber": "^5.7.0",
         "@microsoft/fetch-event-source": "^2.0.1",
-        "@mui/icons-material": "^5.14.13",
+        "@mui/icons-material": "^5.15.13",
         "@mui/lab": "^5.0.0-alpha.148",
-        "@mui/material": "^5.14.13",
+        "@mui/material": "^5.16.7",
         "@mui/styled-engine-sc": "^6.0.0-alpha.1",
         "@mui/x-date-pickers": "^5.0.15",
         "@pqina/react-pintura": "^9.0.3",

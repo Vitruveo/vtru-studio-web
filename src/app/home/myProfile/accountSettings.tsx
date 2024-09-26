@@ -32,7 +32,6 @@ const AccountSettings = ({
                         />
                     </WalletProvider>
                 </Box>
-                <Socials />
             </Box>
         </Stack>
     );

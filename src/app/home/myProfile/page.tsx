@@ -2,7 +2,7 @@
 import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
-import { Avatar, Box, Button, CardContent, Grid, Typography } from '@mui/material';
+import { Avatar, Box, Button, CardContent, Grid, Typography, Tabs, Tab, Divider } from '@mui/material';
 import { useDispatch, useSelector } from '@/store/hooks';
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 import BlankCard from '../components/shared/BlankCard';
@@ -25,6 +25,29 @@ import { useI18n } from '@/app/hooks/useI18n';
 import { useAvatar } from './useAvatar';
 import { useToastr } from '@/app/hooks/useToastr';
 import { BASE_URL_SEARCH } from '@/constants/search';
+import ProfileTabs from './tabs/index';
+
+interface TabPanelProps {
+    children?: React.ReactNode;
+    index: number;
+    value: number;
+}
+
+function TabPanel(props: TabPanelProps) {
+    const { children, value, index, ...other } = props;
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+            {value === index && <Box>{children}</Box>}
+        </div>
+    );
+}
 
 export default function ProfileSettings() {
     const toast = useToastr();
@@ -35,11 +58,32 @@ export default function ProfileSettings() {
     const [resetAvatar, setResetAvatar] = useState(false);
     const [usernameError, setUsernameError] = useState('');
     const [changeAvatarFile, setChangeAvatarFile] = useState<File>();
-    const [copySearchMessage, setCopySearchMessage] = useState('Copy my search URL');
 
     const { isCompletedProfile, goToConsignArtwork } = useSelector((state) => state.consignArtwork);
-    const { _id, username, emailDefault, walletDefault, emails, wallets, requestAvatarUpload } = useSelector(
-        userSelector(['_id', 'username', 'emailDefault', 'walletDefault', 'emails', 'wallets', 'requestAvatarUpload'])
+    const {
+        _id,
+        username,
+        personalDetails,
+        careerAchievements,
+        emailDefault,
+        walletDefault,
+        emails,
+        wallets,
+        links,
+        requestAvatarUpload,
+    } = useSelector(
+        userSelector([
+            '_id',
+            'username',
+            'personalDetails',
+            'careerAchievements',
+            'emailDefault',
+            'walletDefault',
+            'emails',
+            'wallets',
+            'links',
+            'requestAvatarUpload',
+        ])
     );
 
     useEffect(() => {
@@ -101,9 +145,11 @@ export default function ProfileSettings() {
             emailDefault: !emailDefault || !emailDefault.length ? emails[0]?.email : emailDefault,
             walletDefault: !walletDefault || !walletDefault.length ? wallets[0]?.address || '' : walletDefault,
             username,
+            personalDetails: personalDetails,
+            careerAchievements: careerAchievements,
             emails: emails.filter((email) => email.checkedAt),
             wallets,
-            creators: [],
+            links,
         }),
         []
     );
@@ -210,14 +256,6 @@ export default function ProfileSettings() {
         setResetAvatar(true);
     };
 
-    const handleCopySearchUrl = () => {
-        navigator.clipboard.writeText(`${BASE_URL_SEARCH}/?creatorId=${_id}`);
-        setCopySearchMessage('Copied!');
-        setTimeout(() => {
-            setCopySearchMessage('Copy my search URL');
-        }, 2_000); // 2 seconds
-    };
-
     const isNewAvatar = resetAvatar
         ? '/images/profile/profileDefault.png'
         : changeAvatarFile instanceof File
@@ -236,8 +274,26 @@ export default function ProfileSettings() {
                         </Typography>
                     </Box>
 
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} lg={6}>
+                    <Grid item xs={12} lg={12}>
+                        <ProfileTabs
+                            values={values}
+                            errors={errors}
+                            texts={texts}
+                            setFieldValue={setFieldValue}
+                            setFieldError={setFieldError}
+                            setErrors={setErrors}
+                            handleChange={handleChange}
+                            handleSubmit={handleSubmit}
+                            identity={{
+                                isNewAvatar,
+                                usernameError,
+                                handleFileChange,
+                                handleOnClickReset,
+                                handleUsernameChange,
+                            }}
+                        />
+
+                        {/* <Grid item xs={12} lg={6}>
                             <BlankCard>
                                 <CardContent sx={{ height: { xs: 'auto', lg: '500px' } }}>
                                     <Box my={2} maxWidth={250}>
@@ -321,7 +377,7 @@ export default function ProfileSettings() {
                                     />
                                 </CardContent>
                             </BlankCard>
-                        </Grid>
+                        </Grid> */}
                     </Grid>
                 </Box>
             </PageContainerFooter>

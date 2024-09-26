@@ -15,6 +15,25 @@ export interface Wallet {
     archived: boolean;
 }
 
+export interface Link {
+    name: string;
+    url: string;
+}
+
+export interface PersonalDetails {
+    bio: string;
+    ethnicity: string;
+    gender: string;
+    nationality: string;
+    residence: string;
+    plusCode: string;
+}
+
+export interface CareerAchievements {
+    exhibitions: Link[];
+    awards: Link[];
+}
+
 export interface Assets {
     _id: string;
     title: string;
@@ -39,6 +58,9 @@ export interface User {
     emailDefault: string;
     wallets: Wallet[];
     emails: Email[];
+    personalDetails?: PersonalDetails;
+    careerAchievements?: CareerAchievements;
+    links: Link[];
     profile: {
         avatar: string | null;
         phone: string | null;
@@ -170,6 +192,9 @@ export interface CreatorSchemaType {
         codeHash: string | null;
         checkedAt: Date | null;
     }>;
+    links: Link[];
+    personalDetails: PersonalDetails;
+    careerAchievements: CareerAchievements;
     wallets: Array<{
         address: string;
     }>;

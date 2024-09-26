@@ -1,5 +1,6 @@
 import { FormikErrors } from 'formik';
 import { FormikDefaultProps } from '@/app/common/types';
+import { Link } from '@/features/user/types';
 
 export interface MetadataDefinitionTypes {
     domain?: string;
@@ -72,6 +73,7 @@ export interface StepsFormValues {
     walletDefault: string;
     emails: EmailFormValues[];
     wallets: Wallet[];
+    links: Link[];
     asset: {
         file: File | undefined;
         formats: {

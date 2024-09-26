@@ -14,6 +14,9 @@ const initialState: UserSliceState = {
     login: {
         email: '',
     },
+    personalDetails: undefined,
+    careerAchievements: undefined,
+    links: [],
     wallets: [],
     emails: [],
     profile: {
@@ -92,6 +95,9 @@ export const userSlice = createSlice({
             state.emails = creator.emails;
             state.username = creator.username;
             state.wallets = creator.wallets;
+            state.links = creator.links;
+            state.personalDetails = creator.personalDetails;
+            state.careerAchievements = creator.careerAchievements;
             state.profile = creator.profile;
             state.emailDefault = creator.emailDefault;
             state.walletDefault = creator.walletDefault;
