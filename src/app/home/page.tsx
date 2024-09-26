@@ -123,6 +123,8 @@ export default function Home() {
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [assetToDelete, setAssetToDelete] = useState<string | null>(null);
 
+    const generalVault = useSelector((state) => state.user.generalVault);
+
     const texts = {
         title: language['studio.home.title'],
         welcome: language['studio.home.wellcome'],
@@ -144,6 +146,12 @@ export default function Home() {
     useEffect(() => {
         handleScrollToTop();
     }, [currentPage]);
+
+    useEffect(() => {
+        if (generalVault) {
+            router.push('/home/myProfile');
+        }
+    }, [generalVault]);
 
     useEffect(() => {
         dispatch(userActionsCreators.setSelectedAsset(''));
@@ -210,6 +218,8 @@ export default function Home() {
             })
         );
     };
+
+    if (generalVault) return <></>;
 
     return (
         <Container

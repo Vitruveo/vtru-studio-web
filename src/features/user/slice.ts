@@ -38,6 +38,7 @@ const initialState: UserSliceState = {
     status: '',
     error: '',
     canConsignArtwork: false,
+    generalVault: undefined,
     vault: {
         isBlocked: false,
         transactionHash: null,
@@ -95,6 +96,7 @@ export const userSlice = createSlice({
             state.profile = creator.profile;
             state.emailDefault = creator.emailDefault;
             state.walletDefault = creator.walletDefault;
+            state.generalVault = creator.generalVault;
             state.vault.transactionHash = creator?.vault?.transactionHash || null;
             state.vault.createdAt = creator?.vault?.createdAt || null;
             state.vault.isBlocked = creator?.vault?.isBlocked || false;
