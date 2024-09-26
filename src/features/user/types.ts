@@ -54,6 +54,12 @@ export interface User {
         createdAt: string | null;
         isLoading: boolean;
     };
+    generalVault?: {
+        isBlocked: boolean;
+        transactionHash: string | null;
+        createdAt: string | null;
+        isLoading: boolean;
+    };
     socials: {
         x: {
             name: string;

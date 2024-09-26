@@ -18,6 +18,7 @@ export default function ConfirmContainer() {
     const dispatch = useDispatch();
 
     const login = useSelector((state) => state.user.login);
+    const generalVault = useSelector((state) => state.user.generalVault);
 
     const router = useRouter();
 
@@ -42,7 +43,7 @@ export default function ConfirmContainer() {
                         await dispatch(loginWebSocketThunk());
                         setToastr({ open: true, type: 'success', message: 'OTP confirmed!' });
 
-                        if (resOTPConfirm.data?.creator.username) {
+                        if (!generalVault && resOTPConfirm.data?.creator.username) {
                             router.push('/home');
                         } else {
                             router.push('/home/myProfile');
