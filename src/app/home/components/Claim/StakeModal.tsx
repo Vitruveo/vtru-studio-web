@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Button, FormControl, MenuItem, Modal as MuiModal, Select, Typography } from '@mui/material';
+import { Box, Button, Modal as MuiModal, Slider, Typography } from '@mui/material';
 
 interface ModalProps {
     isOpen: boolean;
@@ -17,33 +17,22 @@ const labelMapper = {
 
 export default function StakeModal({ isOpen, handleClose, available }: ModalProps) {
     const [unassigned, setUnassigned] = useState(available);
-    const [selectOptions, setSelectOptions] = useState([0, 0, 0, 0, 0]);
     const [selectValues, setSelectValues] = useState([0, 0, 0, 0, 0]);
 
     const handleSelectChange = (index: number, value: number) => {
-        const newValues = [...selectOptions];
-        newValues[index] = value;
-        setSelectOptions(newValues);
-
         const newSelectValues = [...selectValues];
-        newSelectValues[index] = available * (value / 100);
-        setSelectValues(newSelectValues);
+        const totalAssigned = newSelectValues.reduce((acc, cur) => acc + cur, 0) - newSelectValues[index] + value;
 
-        const remainder = available - newSelectValues.reduce((acc, cur) => acc + cur, 0);
-        setUnassigned(remainder);
-    };
-
-    const handleGetOptions = (index: number) => {
-        const total = selectOptions.reduce((acc, cur, i) => (i !== index ? acc + cur : acc), 0);
-        const maxSum = 100;
-        const steps = 10;
-        const max = maxSum - total;
-        const options = [];
-        for (let i = 0; i <= max; i += steps) {
-            options.push(i);
+        if (totalAssigned <= 100) {
+            newSelectValues[index] = value;
+            setSelectValues(newSelectValues);
+            const totalAssignedPercentage = totalAssigned / 100;
+            const remainder = available * (1 - totalAssignedPercentage);
+            setUnassigned(remainder);
         }
-        return options;
     };
+
+    const totalAssigned = selectValues.reduce((acc, cur) => acc + cur, 0);
 
     return (
         <MuiModal open={isOpen} onClose={handleClose}>
@@ -61,7 +50,6 @@ export default function StakeModal({ isOpen, handleClose, available }: ModalProp
                             <Typography variant="caption">Available</Typography>
                             <Typography variant="h3">{available.toFixed(2)} VTRU</Typography>
                         </Box>
-
                         <Box>
                             <Typography variant="caption">Unassigned</Typography>
                             <Typography variant="h3">{unassigned.toFixed(2)} VTRU</Typography>
@@ -69,23 +57,16 @@ export default function StakeModal({ isOpen, handleClose, available }: ModalProp
                     </Box>
 
                     <Box mb={2}>
-                        {selectOptions.map((value, index) => (
+                        {Array.from({ length: 5 }).map((_, index) => (
                             <Box display="flex" alignItems="center" gap={3} mb={1} key={index}>
-                                <FormControl>
-                                    <Select
-                                        value={value}
-                                        onChange={(e) => handleSelectChange(index, e.target.value as number)}
-                                        sx={{ width: 90 }}
-                                    >
-                                        {handleGetOptions(index).map((option) => (
-                                            <MenuItem key={option} value={option}>
-                                                {option}%
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
+                                <Slider
+                                    sx={{ width: 90 }}
+                                    value={selectValues[index]}
+                                    onChange={(_e, v) => handleSelectChange(index, v as number)}
+                                    disabled={totalAssigned === 100 && selectValues[index] === 0}
+                                />
                                 <Typography variant="caption">
-                                    {selectValues[index].toFixed(2)} {labelMapper[index]}
+                                    {selectValues[index].toFixed(0)}% {labelMapper[index]}
                                 </Typography>
                             </Box>
                         ))}
