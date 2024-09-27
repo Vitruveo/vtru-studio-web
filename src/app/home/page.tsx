@@ -56,21 +56,15 @@ import isVideoExtension from '@/utils/isVideo';
 
 const iconStyle: CSSProperties = {
     position: 'absolute',
-    width: '80px',
-    height: '30px',
-    zIndex: '9999',
-    bottom: '5px',
-    right: '-20px',
+    bottom: 15,
+    right: 10,
     color: '#595959',
 };
 
 const iconStyleComment: CSSProperties = {
     position: 'absolute',
-    width: '80px',
-    height: '30px',
-    zIndex: '9999',
-    bottom: '0px',
-    right: '20px',
+    bottom: 15,
+    right: 50,
     color: '#595959',
 };
 const filters = ['Draft', 'Pending', 'Listed', 'Sold', 'All'];
@@ -162,20 +156,6 @@ export default function Home() {
         );
     }, [dispatch]);
 
-    useEffect(() => {
-        if (assets.data.length === 0) {
-            dispatch(userActionsCreators.setCurrentPage(1));
-            dispatch(
-                requestMyAssetsThunk({
-                    page: 1,
-                    status: selectedFilter,
-                    collection: assets.collection,
-                    sort,
-                })
-            );
-        }
-    }, [assets]);
-
     const handleCreateNewAsset = async (assetClonedId?: string) => {
         setLoading(true);
         dispatch(createNewAssetThunk(assetClonedId || cloneId))
@@ -209,9 +189,10 @@ export default function Home() {
 
     const handleFilterChange = (filter: string) => {
         dispatch(setFilter(filter));
+        dispatch(userActionsCreators.setCurrentPage(1));
         dispatch(
             requestMyAssetsThunk({
-                page: currentPage,
+                page: 1,
                 status: filter,
                 collection: assets.collection,
                 sort,
@@ -363,9 +344,10 @@ export default function Home() {
                                     }}
                                     onChange={(event) => {
                                         dispatch(userActionsCreators.setSelectedCollection(event.target.value));
+                                        dispatch(userActionsCreators.setCurrentPage(1));
                                         dispatch(
                                             requestMyAssetsThunk({
-                                                page: currentPage,
+                                                page: 1,
                                                 collection: event.target.value,
                                                 status: selectedFilter,
                                                 sort,
@@ -597,100 +579,88 @@ export default function Home() {
                                                 marginTop: -1,
                                                 display: 'flex',
                                                 flexDirection: 'column',
-                                                gap: 1,
                                                 borderBottomLeftRadius: 10,
                                                 borderBottomRightRadius: 10,
-                                                height: 90,
+                                                height: asset?.mintExplorer ? 110 : 90,
                                                 paddingLeft: '13px',
+                                                position: 'relative',
                                             }}
                                         >
                                             <Typography
                                                 variant="h6"
                                                 sx={{
+                                                    textOverflow: 'ellipsis',
+                                                    whiteSpace: 'nowrap',
+                                                    maxWidth: 270,
+                                                    overflowX: 'hidden',
                                                     textAlign: 'left',
-                                                    marginBottom: '-10px',
                                                 }}
                                             >
                                                 {asset.title}
                                             </Typography>
-                                            <Box display="flex" alignItems="center" gap={1} marginBottom={0}>
-                                                <Typography>
-                                                    {getStatusText(asset.status, asset.mintExplorer)}
-                                                </Typography>
-                                            </Box>
                                             <Typography
-                                                sx={{
+                                                style={{
                                                     textAlign: 'left',
-                                                    color:
-                                                        getStatusText(asset.status, asset.mintExplorer) === 'Sold'
-                                                            ? 'inherit'
-                                                            : 'transparent',
-                                                    marginBottom:
-                                                        getStatusText(asset.status, asset.mintExplorer) === 'Sold'
-                                                            ? '0px'
-                                                            : '20px',
-                                                    marginTop:
-                                                        getStatusText(asset.status, asset.mintExplorer) === 'blocked'
-                                                            ? '-30px'
-                                                            : '-10px',
                                                 }}
                                             >
-                                                {asset.mintExplorer
-                                                    ? `$${asset?.licenses?.nft.single.editionPrice}.00`
-                                                    : ''}
+                                                {getStatusText(asset.status, asset.mintExplorer)}
                                             </Typography>
+
+                                            {asset.mintExplorer && (
+                                                <Typography
+                                                    sx={{
+                                                        textAlign: 'left',
+                                                    }}
+                                                >
+                                                    {`$${asset?.licenses?.nft.single.editionPrice}.00`}
+                                                </Typography>
+                                            )}
+
+                                            <Button
+                                                variant="text"
+                                                style={{
+                                                    justifyContent: 'unset',
+                                                    padding: 0,
+                                                    color: '#000',
+                                                    textDecoration: 'underline',
+                                                }}
+                                            >
+                                                {getButtonText(asset.status, asset.mintExplorer)}
+                                            </Button>
+
+                                            {asset.mintExplorer && (
+                                                <IconCircleFilled
+                                                    size={40}
+                                                    style={{
+                                                        color: '#ff0000',
+                                                        position: 'absolute',
+                                                        bottom: 10,
+                                                        right: 10,
+                                                    }}
+                                                />
+                                            )}
+
                                             {getStatus(asset.status, asset.mintExplorer) === 'Draft' && (
-                                                <IconEdit style={iconStyle} />
+                                                <IconEdit size={30} style={iconStyle} />
                                             )}
                                             {getStatus(asset.status, asset.mintExplorer) === 'Rejected' && (
-                                                <IconEdit style={iconStyle} />
+                                                <IconEdit size={30} style={iconStyle} />
                                             )}
                                             {getStatus(asset.status, asset.mintExplorer) !== 'Sold' &&
                                                 getStatus(asset.status, asset.mintExplorer) !== 'Listed' &&
                                                 asset.countComments > 0 && (
                                                     <div style={iconStyleComment}>
                                                         <Badge badgeContent={asset.countComments} color="primary">
-                                                            <IconMessage />
+                                                            <IconMessage size={30} />
                                                         </Badge>
                                                     </div>
                                                 )}
                                             {getStatus(asset.status, asset.mintExplorer) === 'Pending' && (
-                                                <IconScanEye style={iconStyle} />
+                                                <IconScanEye size={30} style={iconStyle} />
                                             )}
                                             {getStatus(asset.status, asset.mintExplorer) === 'Listed' && (
-                                                <IconTag style={iconStyle} />
+                                                <IconTag size={30} style={iconStyle} />
                                             )}
-                                            {asset.mintExplorer && (
-                                                <IconCircleFilled
-                                                    size={20}
-                                                    style={{
-                                                        color: '#ff0000',
-                                                        position: 'absolute',
-                                                        bottom: '6px',
-                                                        left: '233px',
-                                                        height: '35px',
-                                                        width: '80px',
-                                                    }}
-                                                />
-                                            )}
-                                            <Typography>{getPriceText(asset.licenses)}</Typography>
-                                            <Button
-                                                variant="text"
-                                                style={{
-                                                    color: '#000',
-                                                    textDecoration: 'underline',
-                                                    textAlign: 'left',
-                                                    justifyContent: 'flex-start',
-                                                    float: 'left',
-                                                    paddingLeft: '0',
-                                                    position: 'relative',
-                                                    top: '-20px',
-                                                    paddingTop: '0',
-                                                    marginTop: '-3px',
-                                                }}
-                                            >
-                                                {getButtonText(asset.status, asset.mintExplorer)}
-                                            </Button>
                                         </Box>
                                     </button>
                                 </Grid>
