@@ -63,7 +63,6 @@ const language: Translation = {
     /* Consign Artwork */
     'studio.consignArtwork.form.next.button': 'Siguiente',
     'studio.consignArtwork.title': 'Consignar Obra de Arte',
-    'studio.consignArtwork.subtitle.moreInformation': 'Para más información visita el',
     'studio.consignArtwork.subtitle': 'Completa todas las tareas requeridas y consigna tu obra de arte',
 
     'studio.consignArtwork.stepName.assetMedia': 'Medios del Activo',
