@@ -63,8 +63,6 @@ const language: Translation = {
     'studio.consignArtwork.form.next.button': 'Далее',
     'studio.consignArtwork.title': 'Подать Работу',
     'studio.consignArtwork.subtitle': 'Выполните все необходимые задачи и передайте свое произведение искусства',
-    'studio.consignArtwork.subtitle.moreInformation': 'Для детального описание посетите страницу',
-    'studio.consignArtwork.subtitle.link': 'Dreamer.',
 
     'studio.consignArtwork.stepName.assetMedia': 'Медиафайлы',
     'studio.consignArtwork.stepName.assetMetadata': 'Метаданные мадиафайлов',
