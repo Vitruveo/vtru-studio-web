@@ -61,7 +61,6 @@ const language: Translation = {
     /* Consign Artwork */
     'studio.consignArtwork.form.next.button': 'بعدی',
     'studio.consignArtwork.title': 'قرارداد آثار هنری',
-    'studio.consignArtwork.subtitle.moreInformation': 'برای اطلاعات بیشتر به سایت',
     'studio.consignArtwork.subtitle': 'تمام وظایف مورد نیاز را انجام دهید و اثر هنری خود را امضاء کنید',
 
     'studio.consignArtwork.stepName.assetMedia': 'رسانه دارایی',
