@@ -49,9 +49,7 @@ const ConsignArtwork = () => {
         stepPublishMessageSuccess: language['studio.consignArtwork.stepPublishMessageSuccess'],
         consignArtworkTitle: language['studio.consignArtwork.title'],
         consignArtworkSubtitle: language['studio.consignArtwork.subtitle'],
-        consignArtworkSubtitleLink: language['studio.consignArtwork.subtitle.link'],
         optional: language['studio.consignArtwork.optional'],
-        moreInformation: language['studio.consignArtwork.subtitle.moreInformation'],
     } as { [key: string]: string };
 
     const BCrumb = [
@@ -122,26 +120,9 @@ const ConsignArtwork = () => {
                 <Grid container>
                     <Grid item md={12} lg={6}>
                         <Box marginBottom={2}>
-                            <Stack gap={1} pl={2}>
+                            <Stack pl={2}>
                                 <Typography variant="h6" fontWeight="normal" color="GrayText">
                                     {texts.consignArtworkSubtitle}
-                                </Typography>
-                                <Typography variant="h6" fontWeight="normal" color="GrayText">
-                                    {texts.moreInformation}{' '}
-                                    <Typography
-                                        variant="caption"
-                                        display="inline"
-                                        style={{
-                                            fontSize: 16,
-                                            fontWeight: 400,
-                                            color: '#007BFF',
-                                            cursor: 'pointer',
-                                            textDecoration: 'underline',
-                                        }}
-                                        onClick={() => window.open('https://dreamer.vitruveo.xyz/', '_blank')}
-                                    >
-                                        {texts.consignArtworkSubtitleLink}
-                                    </Typography>
                                 </Typography>
                             </Stack>
                             <Box p={2}>

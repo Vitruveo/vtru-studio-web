@@ -58,7 +58,6 @@ const language: Translation = {
     /* Consign Artwork */
     'studio.consignArtwork.form.next.button': 'Próximo',
     'studio.consignArtwork.title': 'Consignar Obra de Arte',
-    'studio.consignArtwork.subtitle.moreInformation': 'Para mais informações, visite o',
     'studio.consignArtwork.subtitle': 'Complete todas as tarefas necessárias e consigne sua obra de arte',
 
     'studio.consignArtwork.stepName.assetMedia': 'Mídia de Ativo',
@@ -762,9 +761,7 @@ const language: Translation = {
 
     /* Sidebar */
     'studio.sidebar.consign': 'Consignar Obra de Arte',
-    'studio.sidebar.artistGuide': 'Guia do Artista',
-    'studio.sidebar.community': 'Comunidade',
-    'studio.sidebar.supportChannel': 'Canal de Suporte',
+    'studio.sidebar.community': 'Apoio Comunitário',
 
     /* Footer */
     'studio.footer.thisStep': 'Esta etapa está',

@@ -61,7 +61,6 @@ const language: Translation = {
     /* Consign Artwork */
     'studio.consignArtwork.form.next.button': 'بعدی',
     'studio.consignArtwork.title': 'قرارداد آثار هنری',
-    'studio.consignArtwork.subtitle.moreInformation': 'برای اطلاعات بیشتر به سایت',
     'studio.consignArtwork.subtitle': 'تمام وظایف مورد نیاز را انجام دهید و اثر هنری خود را امضاء کنید',
 
     'studio.consignArtwork.stepName.assetMedia': 'رسانه دارایی',
@@ -922,9 +921,7 @@ const language: Translation = {
 
     /* Sidebar */
     'studio.sidebar.consign': 'قرارداد آثار هنری',
-    'studio.sidebar.artistGuide': 'راهنمای هنرمند',
-    'studio.sidebar.community': 'جامعه',
-    'studio.sidebar.supportChannel': 'کانال پشتیبانی',
+    'studio.sidebar.community': 'پشتیبانی جامعه',
 
     /* Footer */
     'studio.footer.thisStep': 'این مرحله انجام شده است',
