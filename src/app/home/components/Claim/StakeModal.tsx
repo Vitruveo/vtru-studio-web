@@ -4,6 +4,7 @@ import { Box, Button, Modal as MuiModal, Slider, Typography } from '@mui/materia
 interface ModalProps {
     isOpen: boolean;
     handleClose: () => void;
+    claimAllocate: (values: number[]) => void;
     available: number;
 }
 
@@ -15,7 +16,7 @@ const labelMapper = {
     4: 'Allocate to VIBE Creator Equity Pool',
 } as { [key: number]: string };
 
-export default function StakeModal({ isOpen, handleClose, available }: ModalProps) {
+export default function StakeModal({ isOpen, handleClose, available, claimAllocate }: ModalProps) {
     const [unassigned, setUnassigned] = useState(available);
     const [selectValues, setSelectValues] = useState([0, 0, 0, 0, 0]);
 
@@ -76,7 +77,9 @@ export default function StakeModal({ isOpen, handleClose, available }: ModalProp
                         <Typography variant="h5">
                             <a href="#">How-to Guide</a>
                         </Typography>
-                        <Button variant="contained">Go</Button>
+                        <Button variant="contained" onClick={() => claimAllocate(selectValues)}>
+                            Go
+                        </Button>
                     </Box>
                 </Box>
             </Box>

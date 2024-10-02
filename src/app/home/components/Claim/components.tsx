@@ -17,6 +17,7 @@ interface Props {
         onClaim: () => void;
         onConnect: () => void;
         onDisconnect: () => void;
+        openStakModal: () => void;
     };
 }
 
@@ -24,7 +25,7 @@ export const ClaimComponent = ({ data, actions }: Props) => {
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
     const { value, symbol, disabled, isConnected, address, vaultTransactionHash, loading, isBlocked } = data;
-    const { onClaim, onConnect, onDisconnect } = actions;
+    const { onClaim, onConnect, onDisconnect, openStakModal } = actions;
     const open = Boolean(anchorEl);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget);
@@ -47,7 +48,7 @@ export const ClaimComponent = ({ data, actions }: Props) => {
                     {value} <strong>{symbol}</strong>
                 </Typography>
             )}
-            <Button size="small" variant="contained" disabled={disabled} onClick={onClaim}>
+            <Button size="small" variant="contained" disabled={disabled} onClick={openStakModal}>
                 Claim {loading && <CircularProgress size={16} style={{ marginLeft: 10 }} />}
             </Button>
             {isConnected && address && (
