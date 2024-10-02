@@ -1,4 +1,5 @@
 import { Box, Modal as MuiModal, Typography } from '@mui/material';
+import Link from 'next/link';
 
 interface ModalProps {
     isOpen: boolean;
@@ -38,12 +39,17 @@ export default function ClaimedModal({ isOpen, handleClose }: ModalProps) {
                         gap={5}
                         sx={{
                             backgroundColor: '#fff',
-
                             borderTopLeftRadius: 0,
                             borderTopRightRadius: 0,
                         }}
                     >
                         <Typography variant="h6">Your claim was successful. Check your wallet.</Typography>
+                        <Typography variant="body1">
+                            Check active stakes on{' '}
+                            <a href="https://scope.vitruveo.xyz/staking/vtru" target="_new">
+                                Scope
+                            </a>
+                        </Typography>
                     </Box>
                 </Box>
             </Box>
