@@ -86,11 +86,11 @@ const initValues = ({
                 ...formData.value,
                 country: creator.personalDetails?.residence,
                 plusCode: creator.personalDetails?.plusCode,
-                exhibitions: creator.careerAchievements?.exhibitions?.map((v) => ({
+                exhibitions: creator.artworkRecognition?.exhibitions?.map((v) => ({
                     exhibitionName: v.name,
                     exhibitionUrl: v.url,
                 })),
-                awards: creator.careerAchievements?.awards?.map((v) => ({ awardName: v.name, awardUrl: v.url })),
+                awards: creator.artworkRecognition?.awards?.map((v) => ({ awardName: v.name, awardUrl: v.url })),
             };
         default:
             return formData.value;

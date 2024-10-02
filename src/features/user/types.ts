@@ -29,9 +29,23 @@ export interface PersonalDetails {
     plusCode: string;
 }
 
-export interface CareerAchievements {
-    exhibitions: Link[];
-    awards: Link[];
+export interface ArtworkType {
+    type: 'assetRef' | 'upload';
+    value: string;
+    title: string;
+}
+
+export interface ArtworkRecognition {
+    exhibitions: {
+        name: string;
+        url: string;
+        artwork: ArtworkType;
+    }[];
+    awards: {
+        name: string;
+        url: string;
+        artwork: ArtworkType;
+    }[];
 }
 
 export interface Assets {
@@ -46,6 +60,14 @@ export interface Assets {
     countComments: number;
 }
 
+export interface RequestUpload {
+    transactionId: string;
+    url?: string;
+    path?: string;
+    status: string;
+    uploadProgress?: number;
+}
+
 export interface User {
     _id: string;
     name: string;
@@ -58,8 +80,9 @@ export interface User {
     emailDefault: string;
     wallets: Wallet[];
     emails: Email[];
+    requestsUpload?: { [key: string]: RequestUpload };
     personalDetails?: PersonalDetails;
-    careerAchievements?: CareerAchievements;
+    artworkRecognition?: ArtworkRecognition;
     links: Link[];
     profile: {
         avatar: string | null;
@@ -109,15 +132,8 @@ export interface VaultProps {
     createdAt: string;
 }
 
-interface RequestAvatarUpload {
-    transactionId: string;
-    url: string;
-    path: string;
-    status: string;
-}
-
 export interface UserSliceState extends User {
-    requestAvatarUpload: RequestAvatarUpload;
+    requestAvatarUpload: RequestUpload;
     token: string;
     status: string;
     error: string;
@@ -150,14 +166,22 @@ export interface AddCreatorEmailReq {
 
 export interface CreatorSendRequestUploadReq {
     mimetype: string;
+    requestsUpload?: boolean;
     originalName: string;
     transactionId?: string;
+    origin?: string;
 }
 
 export interface GeneralStorageAvatarReq {
     transactionId?: string;
     url: string;
     file: File;
+    path: string;
+}
+
+export interface GeneralStorageReq {
+    transactionId: string;
+    url: string;
     path: string;
 }
 
@@ -173,7 +197,7 @@ export interface UserOTPConfirmRes {
 
 export interface SaveStepWizardReq {
     step: number;
-    values: StepsFormValues | AccountSettingsFormValues;
+    values: AccountSettingsFormValues;
 }
 
 export interface CreatorSchemaType {
@@ -194,7 +218,7 @@ export interface CreatorSchemaType {
     }>;
     links: Link[];
     personalDetails: PersonalDetails;
-    careerAchievements: CareerAchievements;
+    artworkRecognition: ArtworkRecognition;
     wallets: Array<{
         address: string;
     }>;
@@ -225,6 +249,7 @@ export interface ChangeAvatarReq {
 export interface RequestDeleteAvatarReq {
     deleteKeys: string[];
     transactionId: string;
+    origin?: string;
 }
 
 export type ChangeAvatarRes = string;
@@ -238,6 +263,7 @@ export interface RemoveSocialReq {
 }
 
 export interface RequestMyAssetThunkReq {
+    limit?: number;
     page: number;
     status: string;
     collection: string;
@@ -255,6 +281,13 @@ export interface VerifyConnectWalletReq {
 
 export interface RequestConnectWalletRes {
     signature: string;
+}
+
+export interface GeneralStorageReq {
+    transactionId: string;
+    url: string;
+    file: File;
+    dispatch?: any;
 }
 
 export type RemoveSocialApiRes = APIResponse;

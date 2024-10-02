@@ -1,6 +1,6 @@
 import { FormikErrors } from 'formik';
 import { FormikDefaultProps } from '@/app/common/types';
-import { CareerAchievements, Link, PersonalDetails } from '@/features/user/types';
+import { ArtworkRecognition, Link, PersonalDetails, RequestUpload } from '@/features/user/types';
 
 interface Wallet {
     address: string;
@@ -21,7 +21,9 @@ export interface AccountSettingsFormValues {
     links: Link[];
     walletDefault: string;
     personalDetails?: PersonalDetails;
-    careerAchievements?: CareerAchievements;
+    artworkRecognition?: ArtworkRecognition;
+    requestsUpload?: { [key: string]: RequestUpload };
+    deleteKeys?: string[];
 }
 
 export type AccountSettingsFormErros = FormikErrors<AccountSettingsFormValues>;

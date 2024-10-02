@@ -6,7 +6,7 @@ import { debounce } from 'lodash';
 const StyledTextarea = styled(TextareaAutosize)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     width: '100%',
-    border: `1px solid ${darken(theme.palette.divider, 0.2)}`,
+    border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadius,
     padding: theme.spacing(1),
     fontSize: theme.typography.fontSize,

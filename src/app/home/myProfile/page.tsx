@@ -64,7 +64,7 @@ export default function ProfileSettings() {
         _id,
         username,
         personalDetails,
-        careerAchievements,
+        artworkRecognition,
         emailDefault,
         walletDefault,
         emails,
@@ -76,7 +76,7 @@ export default function ProfileSettings() {
             '_id',
             'username',
             'personalDetails',
-            'careerAchievements',
+            'artworkRecognition',
             'emailDefault',
             'walletDefault',
             'emails',
@@ -91,8 +91,8 @@ export default function ProfileSettings() {
             dispatch(
                 generalStorageAvatarThunk({
                     file: changeAvatarFile!,
-                    path: requestAvatarUpload.path,
-                    url: requestAvatarUpload.url,
+                    path: requestAvatarUpload.path!,
+                    url: requestAvatarUpload.url!,
                     transactionId: requestAvatarUpload.transactionId,
                 })
             );
@@ -146,7 +146,7 @@ export default function ProfileSettings() {
             walletDefault: !walletDefault || !walletDefault.length ? wallets[0]?.address || '' : walletDefault,
             username,
             personalDetails: personalDetails,
-            careerAchievements: careerAchievements,
+            artworkRecognition: artworkRecognition,
             emails: emails.filter((email) => email.checkedAt),
             wallets,
             links,

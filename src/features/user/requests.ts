@@ -36,10 +36,12 @@ import {
     SocialsFacebookApiRes,
     RemoveSocialApiRes,
     RemoveSocialReq,
+    GeneralStorageReq,
 } from './types';
 import { Framework } from '../common/types';
 import { BASE_URL_BATCH } from '@/constants/api';
 import { apiServiceBatch } from '@/services/apiBatch';
+import { userActionsCreators } from './slice';
 
 export async function userLoginReq(data: UserLoginReq): Promise<UserLoginApiRes> {
     const res = await apiService.post<string>(`/creators/login`, data);
@@ -116,7 +118,7 @@ export async function deleteAvatar(url: string): Promise<any> {
     return res;
 }
 
-export async function generalStorage(data: GeneralStorageAvatarReq): Promise<any> {
+export async function generalStorageAvatar(data: GeneralStorageAvatarReq): Promise<any> {
     const res = await fetch(data.url, {
         method: 'PUT',
         body: data.file,
@@ -125,7 +127,48 @@ export async function generalStorage(data: GeneralStorageAvatarReq): Promise<any
     return res;
 }
 
-export async function requestDeleteAvatar(data: RequestDeleteAvatarReq): Promise<any> {
+export async function generalStorage({ file, url, dispatch, transactionId }: GeneralStorageReq): Promise<any> {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+
+        xhr.open('PUT', url, true);
+
+        xhr.upload.onprogress = function (event) {
+            if (event.lengthComputable) {
+                const percentCompleted = Math.round((event.loaded * 100) / event.total);
+                dispatch(
+                    userActionsCreators.requestsUpload({
+                        transactionId,
+                        status: 'uploading',
+                        uploadProgress: percentCompleted,
+                    })
+                );
+            }
+        };
+
+        xhr.onload = function () {
+            if (this.status >= 200 && this.status < 300) {
+                resolve(xhr.response);
+            } else {
+                reject({
+                    status: this.status,
+                    statusText: xhr.statusText,
+                });
+            }
+        };
+
+        xhr.onerror = function () {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText,
+            });
+        };
+
+        xhr.send(file);
+    });
+}
+
+export async function requestDeleteFile(data: RequestDeleteAvatarReq): Promise<any> {
     const res = await apiService.delete('/creators/request/deleteFile', data);
     return res;
 }

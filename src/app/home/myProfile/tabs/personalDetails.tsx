@@ -5,7 +5,6 @@ import {
     FormControl,
     Grid,
     MenuItem,
-    Select,
     SelectChangeEvent,
     Theme,
     Typography,
@@ -18,6 +17,7 @@ import sectionsJSON from '../../consignArtwork/assetMetadata/newSections.json';
 import { useI18n } from '@/app/hooks/useI18n';
 import { getSectionFields, mergeSelectOptions } from './utils';
 import { CustomTextarea } from '../../components/forms/theme-elements/CustomTextarea';
+import CustomSelect from '../../components/forms/theme-elements/CustomSelect';
 
 export interface PersonalDetailsProps extends ProfileTabsGeneralProps {}
 
@@ -33,7 +33,7 @@ const PersonalDetails = ({ values, setFieldValue }: PersonalDetailsProps) => {
 
     const getOptions = useCallback(mergeSelectOptions, []);
 
-    const handleChangeSelect = (e: SelectChangeEvent<string>) => {
+    const handleChangeSelect = (e: SelectChangeEvent<unknown>) => {
         setFieldValue(`personalDetails.${e.target.name}`, e.target.value);
     };
 
@@ -76,7 +76,7 @@ const PersonalDetails = ({ values, setFieldValue }: PersonalDetailsProps) => {
                                     </Typography>
                                 </Box>
                                 <FormControl fullWidth variant="outlined" size="small">
-                                    <Select
+                                    <CustomSelect
                                         name="ethnicity"
                                         value={values.personalDetails?.ethnicity}
                                         onChange={handleChangeSelect}
@@ -86,7 +86,7 @@ const PersonalDetails = ({ values, setFieldValue }: PersonalDetailsProps) => {
                                                 {ethnicity}
                                             </MenuItem>
                                         ))}
-                                    </Select>
+                                    </CustomSelect>
                                 </FormControl>
                             </Box>
                             <Box my={2}>
@@ -96,7 +96,7 @@ const PersonalDetails = ({ values, setFieldValue }: PersonalDetailsProps) => {
                                     </Typography>
                                 </Box>
                                 <FormControl fullWidth variant="outlined" size="small">
-                                    <Select
+                                    <CustomSelect
                                         name="gender"
                                         value={values.personalDetails?.gender}
                                         onChange={handleChangeSelect}
@@ -106,7 +106,7 @@ const PersonalDetails = ({ values, setFieldValue }: PersonalDetailsProps) => {
                                                 {gender}
                                             </MenuItem>
                                         ))}
-                                    </Select>
+                                    </CustomSelect>
                                 </FormControl>
                             </Box>
                         </Box>
@@ -127,7 +127,7 @@ const PersonalDetails = ({ values, setFieldValue }: PersonalDetailsProps) => {
                                     </Typography>
                                 </Box>
                                 <FormControl fullWidth variant="outlined" size="small">
-                                    <Select
+                                    <CustomSelect
                                         name="nationality"
                                         value={values.personalDetails?.nationality}
                                         onChange={handleChangeSelect}
@@ -137,7 +137,7 @@ const PersonalDetails = ({ values, setFieldValue }: PersonalDetailsProps) => {
                                                 {nationality.title}
                                             </MenuItem>
                                         ))}
-                                    </Select>
+                                    </CustomSelect>
                                 </FormControl>
                             </Box>
                             <Box my={2}>
@@ -147,7 +147,7 @@ const PersonalDetails = ({ values, setFieldValue }: PersonalDetailsProps) => {
                                     </Typography>
                                 </Box>
                                 <FormControl fullWidth variant="outlined" size="small">
-                                    <Select
+                                    <CustomSelect
                                         name="residence"
                                         value={values.personalDetails?.residence}
                                         onChange={handleChangeSelect}
@@ -157,7 +157,7 @@ const PersonalDetails = ({ values, setFieldValue }: PersonalDetailsProps) => {
                                                 {residence.title}
                                             </MenuItem>
                                         ))}
-                                    </Select>
+                                    </CustomSelect>
                                 </FormControl>
                             </Box>
                             <Box my={2}>

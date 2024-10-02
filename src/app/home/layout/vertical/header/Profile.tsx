@@ -127,7 +127,7 @@ const Profile = () => {
                                             }}
                                         />
                                     </Box>
-                                    <Box>
+                                    <Box display="flex" alignItems="center">
                                         <Typography
                                             variant="subtitle2"
                                             fontWeight={600}

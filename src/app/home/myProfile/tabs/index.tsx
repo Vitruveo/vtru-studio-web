@@ -8,7 +8,7 @@ import { AccountSettingsFormErros, AccountSettingsFormValues } from '../types';
 import { FormikDefaultProps } from '@/app/common/types';
 import DigitalPresence from './digitalPresence';
 import PersonalDetails from './personalDetails';
-import CareerAchievements from './careerAchievements';
+import ArtworkRecognition from './artworkRecognition';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -65,6 +65,7 @@ const ProfileTabs = ({
     setFieldError,
     setFieldValue,
     setErrors,
+    ...props
 }: ProfileTabsProps) => {
     const [value, setValue] = useState(0);
 
@@ -84,12 +85,6 @@ const ProfileTabs = ({
                         {...a11yProps(1)}
                     />
                     <Tab iconPosition="start" icon={<IconId size="22" />} label="Personal Details" {...a11yProps(2)} />
-                    <Tab
-                        iconPosition="start"
-                        icon={<IconBriefcase size="22" />}
-                        label="Career & Achievements"
-                        {...a11yProps(3)}
-                    />
                     <Tab
                         iconPosition="start"
                         icon={<IconAward size="22" />}
@@ -138,7 +133,7 @@ const ProfileTabs = ({
                     />
                 </TabPanel>
                 <TabPanel value={value} index={3}>
-                    <CareerAchievements
+                    <ArtworkRecognition
                         values={values}
                         texts={texts}
                         errors={errors}

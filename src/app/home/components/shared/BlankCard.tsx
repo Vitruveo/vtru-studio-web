@@ -19,13 +19,12 @@ const BlankCard = ({ children, className, sx }: Props) => {
         <Card
             sx={{
                 p: 0,
-                border: !customizer.isCardShadow ? `1px solid ${borderColor}` : 'none',
+                border: `1px solid ${borderColor}`,
                 position: 'relative',
                 sx,
             }}
             className={className}
-            elevation={customizer.isCardShadow ? 16 : 0}
-            variant={!customizer.isCardShadow ? 'outlined' : undefined}
+            variant="outlined"
         >
             {children}
         </Card>

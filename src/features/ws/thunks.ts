@@ -46,6 +46,16 @@ export function loginWebSocketThunk(): ReduxThunkAction {
                         })
                     );
                 }
+                if (data.origin === 'profileRequests') {
+                    dispatch(
+                        userActionsCreators.requestsUpload({
+                            url: data.preSignedURL,
+                            transactionId: data.transactionId,
+                            path: data.path,
+                            status: 'ready',
+                        })
+                    );
+                }
             }
             if (data.method === 'DELETE') {
                 if (data.origin === 'asset') deleteAssetStorage(data.preSignedURL);

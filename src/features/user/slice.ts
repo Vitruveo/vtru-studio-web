@@ -1,7 +1,7 @@
 'use client';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { UserSliceState, VaultProps } from './types';
+import { RequestUpload, UserSliceState, VaultProps } from './types';
 
 const initialState: UserSliceState = {
     _id: '',
@@ -15,7 +15,7 @@ const initialState: UserSliceState = {
         email: '',
     },
     personalDetails: undefined,
-    careerAchievements: undefined,
+    artworkRecognition: undefined,
     links: [],
     wallets: [],
     emails: [],
@@ -97,7 +97,7 @@ export const userSlice = createSlice({
             state.wallets = creator.wallets;
             state.links = creator.links;
             state.personalDetails = creator.personalDetails;
-            state.careerAchievements = creator.careerAchievements;
+            state.artworkRecognition = creator.artworkRecognition;
             state.profile = creator.profile;
             state.emailDefault = creator.emailDefault;
             state.walletDefault = creator.walletDefault;
@@ -143,6 +143,15 @@ export const userSlice = createSlice({
         },
         requestAvatarUpload: (state, action) => {
             state.requestAvatarUpload = action.payload;
+        },
+        requestsUpload: (state, action: PayloadAction<RequestUpload>) => {
+            state.requestsUpload = {
+                ...state.requestsUpload,
+                [action.payload.transactionId]: {
+                    ...state.requestsUpload?.[action.payload.transactionId],
+                    ...action.payload,
+                },
+            };
         },
         error: (state, action) => {
             state.status = `failed: ${action.type}`;

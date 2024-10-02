@@ -12,8 +12,16 @@ const CustomTextField = styled((props: TextFieldProps) => <TextField {...props} 
         color: theme.palette.text.secondary,
         opacity: '1',
     },
+    '&:hover .MuiOutlinedInput-notchedOutline': {
+        borderColor: theme.palette.primary.main,
+    },
+    '& .MuiOutlinedInput-notchedOutline': {
+        borderColor: theme.palette.divider,
+        borderWidth: '1px',
+    },
     '& .Mui-disabled .MuiOutlinedInput-notchedOutline': {
-        borderColor: theme.palette.grey[200],
+        borderColor: theme.palette.divider,
+        borderWidth: '1px',
     },
 }));
 
