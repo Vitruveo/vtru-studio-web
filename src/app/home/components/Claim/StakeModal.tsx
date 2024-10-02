@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Box, Button, Modal as MuiModal, Slider, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Modal as MuiModal, Slider, Typography } from '@mui/material';
 
 interface ModalProps {
     isOpen: boolean;
     handleClose: () => void;
     claimAllocate: (values: number[]) => void;
     available: number;
+    loading: boolean;
 }
 
 const labelMapper = {
@@ -16,7 +17,7 @@ const labelMapper = {
     4: 'Allocate to VIBE Creator Equity Pool',
 } as { [key: number]: string };
 
-export default function StakeModal({ isOpen, handleClose, available, claimAllocate }: ModalProps) {
+export default function StakeModal({ isOpen, available, loading, claimAllocate, handleClose }: ModalProps) {
     const [unassigned, setUnassigned] = useState(available);
     const [selectValues, setSelectValues] = useState([0, 0, 0, 0, 0]);
 
@@ -64,7 +65,7 @@ export default function StakeModal({ isOpen, handleClose, available, claimAlloca
                                     sx={{ width: 90 }}
                                     value={selectValues[index]}
                                     onChange={(_e, v) => handleSelectChange(index, v as number)}
-                                    disabled={totalAssigned === 100 && selectValues[index] === 0}
+                                    disabled={(totalAssigned === 100 && selectValues[index] === 0) || index === 4}
                                 />
                                 <Typography variant="caption">
                                     {selectValues[index].toFixed(0)}% {labelMapper[index]}
@@ -77,8 +78,8 @@ export default function StakeModal({ isOpen, handleClose, available, claimAlloca
                         <Typography variant="h5">
                             <a href="#">How-to Guide</a>
                         </Typography>
-                        <Button variant="contained" onClick={() => claimAllocate(selectValues)}>
-                            Go
+                        <Button disabled={loading} variant="contained" onClick={() => claimAllocate(selectValues)}>
+                            Go {loading && <CircularProgress size={16} style={{ marginLeft: 10 }} />}
                         </Button>
                     </Box>
                 </Box>
