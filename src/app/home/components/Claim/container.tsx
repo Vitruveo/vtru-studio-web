@@ -1,20 +1,24 @@
-import { useAccount, useDisconnect, useWalletClient, useConnect } from 'wagmi';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { ClaimComponent } from './components';
-import { createSignedMessage } from './actions';
-import { BASE_URL_BATCH } from '@/constants/api';
 import { useEffect, useState } from 'react';
-import { useSelector } from '@/store/hooks';
-import ClaimedModal from './ClaimedModal';
-import { useToastr } from '@/app/hooks/useToastr';
+import { useAccount, useDisconnect, useWalletClient } from 'wagmi';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useRouter } from 'next/navigation';
+
+import { BASE_URL_BATCH } from '@/constants/api';
+import { useSelector } from '@/store/hooks';
+import { useToastr } from '@/app/hooks/useToastr';
+
+import { createSignedMessage } from './actions';
+import { ClaimComponent } from './components';
+import StakeModal from './StakeModal';
+import ClaimedModal from './ClaimedModal';
 
 export const ClaimContainer = () => {
     const [balance, setBalance] = useState(0);
     const token = useSelector((state) => state.user.token);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpenStake, setIsModalOpenStake] = useState(false);
     const [loading, setLoading] = useState(false);
     const [isBlocked, setIsBlocked] = useState(false);
+    const [isClaimed, setIsClaimed] = useState(false);
 
     const { isConnected, address } = useAccount();
     const { data: client } = useWalletClient();
@@ -27,9 +31,8 @@ export const ClaimContainer = () => {
     const vaultTransactionHash = useSelector((state) => state?.user?.vault?.transactionHash);
     const wallets = useSelector((state) => state.user.wallets);
 
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
+    const closeModalStake = () => setIsModalOpenStake(false);
+    const closeModalClaimed = () => setIsClaimed(false);
 
     useEffect(() => {
         const getBalance = async () => {
@@ -64,32 +67,56 @@ export const ClaimContainer = () => {
         await disconnect();
     };
 
-    const onClaim = async () => {
+    const onClaimAllocate = async (values: number[]) => {
+        const total = values.reduce((acc, cur) => acc + cur, 0);
+        if (total !== 100) {
+            toast.display({ type: 'warning', message: 'The total percentage must be 100%' });
+            return;
+        }
         if (wallets.find((wallet) => !wallet.archived && wallet.address === address)) {
             setLoading(true);
             try {
+                const [walletBasisPoints, stake1BasisPoints, stake3BasisPoints, stake5BasisPoints, vibeBasisPoints] =
+                    values;
                 const { domain, signedMessage, signer, tx, types } = await createSignedMessage({
                     name: 'Creator Vault',
                     action: 'Claim $VTRU earnings from Vault',
-                    method: 'claimStudio',
+                    method: 'claimWithAllocateStudio',
                     client: client!,
                 });
                 // Send the signed message to backend
-                const response = await fetch(`${BASE_URL_BATCH}/claim`, {
+                const response = await fetch(`${BASE_URL_BATCH}/claim/allocate`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ signer: signer.address, domain, types, tx, signedMessage }),
+                    body: JSON.stringify({
+                        signer: signer.address,
+                        basisPoints: {
+                            walletBasisPoints,
+                            stake1BasisPoints,
+                            stake3BasisPoints,
+                            stake5BasisPoints,
+                            vibeBasisPoints,
+                        },
+                        domain,
+                        types,
+                        tx,
+                        signedMessage,
+                    }),
                 });
                 const responseData = await response.json();
                 if (response.ok) {
-                    setIsModalOpen(true);
+                    setIsClaimed(true);
                 } else {
-                    throw new Error(responseData.error);
+                    toast.display({ type: 'error', message: responseData.message });
                 }
             } catch (error) {
-                // do nothing
+                const message = error instanceof Error ? error.message : error;
+                console.error(message);
+
+                toast.display({ type: 'error', message: 'An error occurred' });
             } finally {
                 setLoading(false);
+                closeModalStake();
             }
         } else {
             toast.display({ type: 'warning', message: 'Add the wallet to your profile before' });
@@ -100,7 +127,16 @@ export const ClaimContainer = () => {
 
     return (
         <>
-            <ClaimedModal isOpen={isModalOpen} handleClose={closeModal} />
+            <StakeModal
+                isOpen={isModalOpenStake}
+                handleClose={closeModalStake}
+                available={balance}
+                claimAllocate={onClaimAllocate}
+                loading={loading}
+            />
+
+            <ClaimedModal isOpen={isClaimed} handleClose={closeModalClaimed} />
+
             <ClaimComponent
                 data={{
                     value: balance.toFixed(4),
@@ -113,9 +149,9 @@ export const ClaimContainer = () => {
                     isBlocked,
                 }}
                 actions={{
-                    onClaim,
                     onConnect,
                     onDisconnect,
+                    openStakModal: () => setIsModalOpenStake(true),
                 }}
             />
         </>

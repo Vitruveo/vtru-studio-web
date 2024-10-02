@@ -14,9 +14,9 @@ interface Props {
         isBlocked: boolean;
     };
     actions: {
-        onClaim: () => void;
         onConnect: () => void;
         onDisconnect: () => void;
+        openStakModal: () => void;
     };
 }
 
@@ -24,7 +24,7 @@ export const ClaimComponent = ({ data, actions }: Props) => {
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const smUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
     const { value, symbol, disabled, isConnected, address, vaultTransactionHash, loading, isBlocked } = data;
-    const { onClaim, onConnect, onDisconnect } = actions;
+    const { onConnect, onDisconnect, openStakModal } = actions;
     const open = Boolean(anchorEl);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget);
@@ -48,7 +48,7 @@ export const ClaimComponent = ({ data, actions }: Props) => {
                 </Typography>
             )}
             <Box display={'flex'} gap={2}>
-                <Button size="small" variant="contained" disabled={disabled} onClick={onClaim}>
+                <Button size="small" variant="contained" disabled={disabled} onClick={openStakModal}>
                     Claim {loading && <CircularProgress size={16} style={{ marginLeft: 10 }} />}
                 </Button>
                 {isConnected && address && (
