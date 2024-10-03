@@ -50,14 +50,14 @@ export default function StakeModal({ isOpen, available, loading, claimAllocate, 
                     <Box display="flex" justifyContent="space-between" mb={2}>
                         <Box>
                             <Typography variant="caption">Available</Typography>
-                            <Typography variant="h3">{available.toFixed(2)} VTRU</Typography>
+                            <Typography variant="h3">{Math.trunc(available)} VTRU</Typography>
                         </Box>
                         <Box>
                             <Typography variant="caption" color={'GrayText'}>
                                 Unassigned
                             </Typography>
                             <Typography variant="h3" color={'GrayText'}>
-                                {unassigned.toFixed(2)} VTRU
+                                {Math.trunc(unassigned)} VTRU
                             </Typography>
                         </Box>
                     </Box>
@@ -67,7 +67,7 @@ export default function StakeModal({ isOpen, available, loading, claimAllocate, 
                             <Box key={index} mb={1}>
                                 <Box display={'flex'} gap={1.5}>
                                     <Typography fontSize={16} color={index === 4 ? 'GrayText' : 'inherit'}>
-                                        {((available * selectValues[index]) / 100).toFixed(2)}
+                                        {Math.trunc((available * selectValues[index]) / 100)}
                                     </Typography>
                                     <Typography fontSize={16} color={index === 4 ? 'GrayText' : 'inherit'}>
                                         {labelMapper[index]}
@@ -87,7 +87,10 @@ export default function StakeModal({ isOpen, available, loading, claimAllocate, 
                         ))}
                     </Box>
 
-                    <Box display="flex" justifyContent={'flex-end'}>
+                    <Box display="flex" justifyContent={'space-between'}>
+                        <a href="https://scope.vitruveo.xyz/staking/vtru" target="_new">
+                            Current stakes
+                        </a>
                         <Button
                             disabled={loading || totalAssigned !== 100}
                             variant="contained"
