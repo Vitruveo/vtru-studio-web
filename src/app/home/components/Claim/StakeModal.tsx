@@ -89,7 +89,7 @@ export default function StakeModal({ isOpen, available, loading, claimAllocate, 
 
                     <Box display="flex" justifyContent={'flex-end'}>
                         <Button
-                            disabled={loading}
+                            disabled={loading || totalAssigned !== 100}
                             variant="contained"
                             onClick={() => claimAllocate(selectValues)}
                             sx={{ width: '120px' }}
