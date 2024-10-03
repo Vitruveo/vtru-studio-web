@@ -23,7 +23,8 @@ const Header = () => {
 
     // drawer
     const customizer = useSelector((state) => state.customizer);
-    const hasConsign = useSelector((state) => state.user.assets?.data.some((asset) => asset.contractExplorer?.tx));
+    const generalVault = useSelector((state) => state.user.generalVault?.transactionHash);
+    const vault = useSelector((state) => state.user.vault?.transactionHash);
 
     const AppBarStyled = styled(AppBar)(({ theme }) => ({
         boxShadow: 'none',
@@ -55,7 +56,7 @@ const Header = () => {
                 </IconButton>
                 <Box flexGrow={1} />
                 <Stack spacing={1} direction="row" alignItems="center">
-                    {hasConsign && (
+                    {(generalVault || vault) && (
                         <WalletProvider>
                             <ClaimContainer />
                         </WalletProvider>
