@@ -53,32 +53,47 @@ export default function StakeModal({ isOpen, available, loading, claimAllocate, 
                             <Typography variant="h3">{available.toFixed(2)} VTRU</Typography>
                         </Box>
                         <Box>
-                            <Typography variant="caption">Unassigned</Typography>
-                            <Typography variant="h3">{unassigned.toFixed(2)} VTRU</Typography>
+                            <Typography variant="caption" color={'GrayText'}>
+                                Unassigned
+                            </Typography>
+                            <Typography variant="h3" color={'GrayText'}>
+                                {unassigned.toFixed(2)} VTRU
+                            </Typography>
                         </Box>
                     </Box>
 
-                    <Box mb={2}>
+                    <Box mb={2} ml={2} width={'88%'}>
                         {Array.from({ length: 5 }).map((_, index) => (
-                            <Box display="flex" alignItems="center" gap={3} mb={1} key={index}>
-                                <Slider
-                                    sx={{ width: 90 }}
-                                    value={selectValues[index]}
-                                    onChange={(_e, v) => handleSelectChange(index, v as number)}
-                                    disabled={(totalAssigned === 100 && selectValues[index] === 0) || index === 4}
-                                />
-                                <Typography variant="caption">
-                                    {selectValues[index].toFixed(0)}% {labelMapper[index]}
-                                </Typography>
+                            <Box key={index} mb={1}>
+                                <Box display={'flex'} gap={1.5}>
+                                    <Typography fontSize={16} color={index === 4 ? 'GrayText' : 'inherit'}>
+                                        {((available * selectValues[index]) / 100).toFixed(2)}
+                                    </Typography>
+                                    <Typography fontSize={16} color={index === 4 ? 'GrayText' : 'inherit'}>
+                                        {labelMapper[index]}
+                                    </Typography>
+                                </Box>
+                                <Box display="flex" gap={3} mb={3} key={index}>
+                                    <Slider
+                                        value={selectValues[index]}
+                                        onChange={(_e, v) => handleSelectChange(index, v as number)}
+                                        disabled={(totalAssigned === 100 && selectValues[index] === 0) || index === 4}
+                                    />
+                                    <Typography fontSize={16} color={index === 4 ? 'GrayText' : 'inherit'}>
+                                        {selectValues[index].toFixed(0)}%
+                                    </Typography>
+                                </Box>
                             </Box>
                         ))}
                     </Box>
 
-                    <Box display="flex" justifyContent="space-between">
-                        <Typography variant="h5">
-                            <a href="#">How-to Guide</a>
-                        </Typography>
-                        <Button disabled={loading} variant="contained" onClick={() => claimAllocate(selectValues)}>
+                    <Box display="flex" justifyContent={'flex-end'}>
+                        <Button
+                            disabled={loading}
+                            variant="contained"
+                            onClick={() => claimAllocate(selectValues)}
+                            sx={{ width: '120px' }}
+                        >
                             Go {loading && <CircularProgress size={16} style={{ marginLeft: 10 }} />}
                         </Button>
                     </Box>
