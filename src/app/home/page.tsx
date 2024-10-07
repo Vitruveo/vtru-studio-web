@@ -230,25 +230,13 @@ export default function Home() {
                     <></>
                 )}
                 <Box pb={10} paddingInline={3} p={0}>
-                    <Box display="flex" flexWrap="wrap" rowGap={1} alignItems="center">
+                    <Box display="flex" flexWrap="wrap" alignItems="center">
                         <Typography marginRight={1} fontSize="1.7rem" alignSelf="center">
                             {texts.welcome}
                         </Typography>
-
-                        <Image
-                            src={'/images/logos/studiologo.png'}
-                            priority
-                            alt="bg"
-                            width={140}
-                            height={50}
-                            style={{
-                                paddingBlock: 1,
-                                maxWidth: '300px',
-                                maxHeight: '300px',
-                                alignSelf: 'baseline',
-                            }}
-                        />
+                        <Image src={'/images/logos/XIBIT-logo_light.png'} priority alt="bg" width={90} height={30} />
                     </Box>
+
                     <Box mt={2}>
                         <button
                             style={{

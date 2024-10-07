@@ -39,11 +39,11 @@ function LoginView({ values, errors, disabled, handleChange, handleSubmit }: Log
                     Welcome to{' '}
                 </Typography>
                 <Image
-                    src={'/images/logos/studiologo.png'}
+                    src={'/images/logos/XIBIT-logo_light.png'}
                     alt="bg"
                     priority
-                    width={lgUp ? 150 : 130}
-                    height={lgUp ? 60 : 50}
+                    width={lgUp ? 120 : 120}
+                    height={lgUp ? 40 : 40}
                     style={{
                         marginLeft: '10px',
                         maxWidth: '300px',

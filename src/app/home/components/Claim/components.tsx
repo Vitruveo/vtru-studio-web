@@ -47,7 +47,7 @@ export const ClaimComponent = ({ data, actions }: Props) => {
                     {value} <strong>{symbol}</strong>
                 </Typography>
             )}
-            <Box display={'flex'} gap={2}>
+            <Box display={'flex'} gap={1}>
                 <Button size="small" variant="contained" disabled={disabled} onClick={openStakModal}>
                     Claim {loading && <CircularProgress size={16} style={{ marginLeft: 10 }} />}
                 </Button>
@@ -77,7 +77,18 @@ export const ClaimComponent = ({ data, actions }: Props) => {
                 )}
 
                 {!isConnected && (
-                    <Button size="small" variant="contained" onClick={onConnect}>
+                    <Button
+                        sx={{
+                            background: 'linear-gradient(to right, #FF0066, #9966FF)',
+                            color: '#fff',
+                            '&:hover': {
+                                background: 'linear-gradient(to right, #cc0052, #7a52cc)',
+                            },
+                        }}
+                        size="small"
+                        variant="contained"
+                        onClick={onConnect}
+                    >
                         Connect
                     </Button>
                 )}

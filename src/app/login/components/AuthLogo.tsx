@@ -39,11 +39,11 @@ export default function AuthLogo() {
                     }}
                 >
                     <Image
-                        src={'/images/logos/VTRU_Studio.png'}
+                        src={'/images/logos/XIBIT-logo_light.png'}
                         alt="bg"
                         priority
-                        width={200}
-                        height={70}
+                        width={120}
+                        height={40}
                         style={{
                             maxWidth: '300px',
                             maxHeight: '300px',
@@ -65,12 +65,12 @@ export default function AuthLogo() {
                 >
                     <Box>
                         <Image
-                            src={'/images/logos/VTRU_Studio.png'}
+                            src={'/images/logos/XIBIT-logo_light.png'}
                             style={{ objectFit: 'contain' }}
                             priority
                             alt="bg"
-                            width={700}
-                            height={300}
+                            width={600}
+                            height={200}
                         />
                     </Box>
                 </Box>
