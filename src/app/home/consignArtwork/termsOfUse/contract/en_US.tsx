@@ -4,10 +4,10 @@ export default function Contract() {
     return (
         <>
             <p style={{ textAlign: 'center' }}>
-                <strong>CREATOR AGREEMENT</strong>
+                <strong>ARTIST AGREEMENT</strong>
             </p>
             <p style={{ textAlign: 'justify' }}>
-                Welcome to our Creator Agreement ("<strong>Agreement</strong>") by and between VTRU (BVI) PTE LTD (“
+                Welcome to our Artist Agreement ("<strong>Agreement</strong>") by and between VTRU (BVI) PTE LTD (“
                 <strong>Vitruveo</strong>”), incorporated at British Virgin Island under the BVI company number: 2134193
                 having its registered office address c/o Hermes Corporate Service (BVI) Ltd., 6th Floor, Waters Edge,
                 Building 1, Wickham’s Cay 2, Road Town, Tortola, British Virgin Islands (“
@@ -22,7 +22,7 @@ export default function Contract() {
             </p>
             <p style={{ textAlign: 'justify' }}>
                 Vitruveo is not a wallet provider, exchange, broker, dealer, financial institution, payments processor,
-                money services business, or creditor. Vitruveo provides a Web3 protocol that allows creators to upload
+                money services business, or creditor. Vitruveo provides a Web3 protocol that allows artists to upload
                 assets and licenses their work for fair compensation according to terms that they control. We do not
                 have custody or control over the assets.&nbsp; To use our Service, you must use a third-party wallet
                 which allows you to engage in transactions on our protocol.
@@ -31,10 +31,10 @@ export default function Contract() {
                 <strong>Background:</strong>
             </p>
             <p style={{ marginLeft: 48, textAlign: 'justify' }}>
-                1. The company is an ecosystem dedicated to empowering creators within Web3.
+                1. The company is an ecosystem dedicated to empowering artists within Web3.
             </p>
             <p style={{ marginLeft: 48, textAlign: 'justify' }}>
-                2. The Creator desires to utilize the company platform to showcase and promote their creative work to a
+                2. The Artist desires to utilize the company platform to showcase and promote their creative work to a
                 wider audience.
             </p>
             <p style={{ marginRight: '-3px', textAlign: 'justify' }}>
@@ -47,7 +47,7 @@ export default function Contract() {
             <p style={{ marginLeft: 76, textAlign: 'justify' }}>
                 1.1 For the purposes of the agreement, a "User" refers to any individual or entity accessing, browsing,
                 or using the services provided by the company, including but not limited to visitors, registered users,
-                creators, buyers, sellers, and any other person interacting with or utilizing the company's
+                artists, buyers, sellers, and any other person interacting with or utilizing the company's
                 platform.&nbsp; By accessing or using the company's services, each User agrees to abide by the terms and
                 any other policies or guidelines set forth by the company.
             </p>
@@ -60,38 +60,37 @@ export default function Contract() {
                 in conduct deemed detrimental to the platform or other Users.
             </p>
             <p style={{ marginLeft: 48, textAlign: 'justify' }}>
-                <strong>2. Grant of License:</strong> The Creator grants the company a non-exclusive, worldwide,
-                royalty-free license to use, reproduce, distribute, display, and perform the Creator's content
-                (including but not limited to artwork, media, and any associated metadata) on the company platform and
-                for promotional purposes related to the platform.
+                <strong>2. Grant of License:</strong> The Artist grants the company a non-exclusive, worldwide,
+                royalty-free license to use, reproduce, distribute, display, and perform the Artist's content (including
+                but not limited to artwork, media, and any associated metadata) on the company platform and for
+                promotional purposes related to the platform.
             </p>
             <p style={{ marginLeft: 48, textAlign: 'justify' }}>
                 <strong>3.&nbsp; Use of Creative Commons Licenses:</strong>
             </p>
             <p style={{ marginLeft: 48, textAlign: 'justify' }}>
-                a. The Creator acknowledges and agrees that they have the option to apply Creative Commons licenses to
+                a. The Artist acknowledges and agrees that they have the option to apply Creative Commons licenses to
                 their content uploaded on the company platform.
             </p>
             <p style={{ marginLeft: 48, textAlign: 'justify' }}>
-                b. By choosing to apply a Creative Commons license to their content, the Creator grants permission to
+                b. By choosing to apply a Creative Commons license to their content, the Artist grants permission to
                 other users to use the work under the terms of the selected Creative Commons license.
             </p>
             <p style={{ marginLeft: 48, textAlign: 'justify' }}>
-                <strong>4.</strong> <strong>Intellectual Property Rights:</strong> The Creator retains all rights,
-                title, and interest in and to their original content uploaded to the company platform. The company
-                acknowledges that no transfer of ownership of any intellectual property rights is made or implied by
-                this Agreement.
+                <strong>4.</strong> <strong>Intellectual Property Rights:</strong> The Artist retains all rights, title,
+                and interest in and to their original content uploaded to the company platform. The company acknowledges
+                that no transfer of ownership of any intellectual property rights is made or implied by this Agreement.
             </p>
             <p style={{ marginLeft: 48, textAlign: 'justify' }}>
-                <strong>5.</strong> <strong>Content Guidelines:</strong> The Creator agrees not to upload or promote any
+                <strong>5.</strong> <strong>Content Guidelines:</strong> The Artist agrees not to upload or promote any
                 content that violates copyright, trademark, privacy, or any other rights, or is illegal, defamatory, or
                 inappropriate. The company reserves the right to remove any content that violates these guidelines. The
-                Creator warrants that the content uploaded is original and authentic and solely owned by the Creator.
+                Artist warrants that the content uploaded is original and authentic and solely owned by the Artist.
             </p>
             <p style={{ marginLeft: 48, textAlign: 'justify' }}>
-                <strong>6. Compensation:</strong> Any compensation or revenue sharing for the Creator's content on the
+                <strong>6. Compensation:</strong> Any compensation or revenue sharing for the Artist's content on the
                 company platform shall be outlined in a separate agreement or as per the platform's policies
-                communicated to the Creator.
+                communicated to the Artist.
             </p>
             <p style={{ marginLeft: 48, textAlign: 'justify' }}>
                 <strong>7. </strong> <strong>Takedown Notice for Infringement Clause:</strong>
@@ -138,7 +137,7 @@ export default function Contract() {
             <p style={{ marginLeft: 72, textAlign: 'justify' }}>7.3&nbsp; Designated Agent:</p>
             <p style={{ marginLeft: 96, textAlign: 'justify' }}>
                 a. The Company shall designate an agent to receive and process Takedown Notices, whose contact
-                information will be made available to Creators upon request.
+                information will be made available to Artists upon request.
             </p>
             <p style={{ marginLeft: 72, textAlign: 'justify' }}>7.4&nbsp; Action upon Receipt of Takedown Notice:</p>
             <p style={{ marginLeft: 96, textAlign: 'justify' }}>
@@ -164,48 +163,48 @@ export default function Contract() {
             </p>
             <p style={{ marginLeft: 96, textAlign: 'justify' }}>8.1 &nbsp; Activation and Deactivation:</p>
             <p style={{ marginLeft: 96, textAlign: 'justify' }}>
-                a. The Creator retains full control over the use of their content (referred to as the "Asset") uploaded
-                to the platform for marketing purposes. The Creator reserves the right to activate or deactivate the use
+                a. The Artist retains full control over the use of their content (referred to as the "Asset") uploaded
+                to the platform for marketing purposes. The Artist reserves the right to activate or deactivate the use
                 of their Asset specifically for marketing purposes.
             </p>
             <p style={{ marginLeft: 96, textAlign: 'justify' }}>
                 b. By default, all Assets uploaded to the company platform for display or promotional purposes shall be
-                inactive for marketing use unless the Creator explicitly activates this permission.
+                inactive for marketing use unless the Artist explicitly activates this permission.
             </p>
             <p style={{ marginLeft: 96, textAlign: 'justify' }}>8.2 &nbsp; Permission for Marketing Use:</p>
             <p style={{ marginLeft: 96, textAlign: 'justify' }}>
-                a. The Creator hereby grants the company limited permission to use the Asset for marketing purposes only
-                when the Creator has activated such permission through the platform's designated activation/deactivation
+                a. The Artist hereby grants the company limited permission to use the Asset for marketing purposes only
+                when the Artist has activated such permission through the platform's designated activation/deactivation
                 feature.
             </p>
             <p style={{ marginLeft: 96, textAlign: 'justify' }}>
-                b. The Creator acknowledges and agrees that the activation of their Asset for marketing purposes does
-                not constitute a transfer of ownership or any other rights to the company beyond the specified limited
+                b. The Artist acknowledges and agrees that the activation of their Asset for marketing purposes does not
+                constitute a transfer of ownership or any other rights to the company beyond the specified limited
                 permission.
             </p>
             <p style={{ marginLeft: 96, textAlign: 'justify' }}>8.3 &nbsp; Revocation of Permission:</p>
             <p style={{ marginLeft: 96, textAlign: 'justify' }}>
-                a. The Creator reserves the right to deactivate the use of their Asset for marketing purposes at any
-                time through the platform's designated features or by providing written notice to the company.
+                a. The Artist reserves the right to deactivate the use of their Asset for marketing purposes at any time
+                through the platform's designated features or by providing written notice to the company.
             </p>
             <p style={{ marginLeft: 96, textAlign: 'justify' }}>
-                b. Upon deactivation by the Creator, the company shall promptly cease using the Asset for marketing
+                b. Upon deactivation by the Artist, the company shall promptly cease using the Asset for marketing
                 purposes, except where necessary for archival, legal, or administrative purposes.
             </p>
-            <p style={{ marginLeft: 96, textAlign: 'justify' }}>8.4 &nbsp; Creator's Responsibility:</p>
+            <p style={{ marginLeft: 96, textAlign: 'justify' }}>8.4 &nbsp; Artist's Responsibility:</p>
             <p style={{ marginLeft: 100, textAlign: 'justify' }}>
-                a. The Creator acknowledges and agrees that they are solely responsible for activating or deactivating
+                a. The Artist acknowledges and agrees that they are solely responsible for activating or deactivating
                 the permission for marketing use of their Asset on the company platform.
             </p>
             <p style={{ marginLeft: 100, textAlign: 'justify' }}>
-                b. The company shall not be held liable for any consequences arising from the Creator's activation or
+                b. The company shall not be held liable for any consequences arising from the Artist's activation or
                 deactivation choices for marketing purposes.
             </p>
             <p style={{ marginLeft: 100, textAlign: 'justify' }}>8.5 Representation:&nbsp;</p>
             <p style={{ marginLeft: 100, textAlign: 'justify' }}>
                 Both Parties represent that they understand the activation/deactivation mechanism and agree that the
                 activation of the Asset for marketing purposes will be construed as explicit permission granted by the
-                Creator to the company for such limited use.
+                Artist to the company for such limited use.
             </p>
             <p style={{ marginLeft: 100, textAlign: 'justify' }}>8.6 Effect on Other Terms:&nbsp;</p>
             <p style={{ marginLeft: 100, textAlign: 'justify' }}>
@@ -214,8 +213,8 @@ export default function Contract() {
             </p>
             <p style={{ marginLeft: 48, textAlign: 'justify' }}>
                 <strong>9.</strong> <strong>Termination:</strong> Either party may terminate this Agreement by providing
-                written notice to the other party. Upon termination, the company shall cease using the Creator's
-                content, except where necessary for archival, legal, or administrative purposes.
+                written notice to the other party. Upon termination, the company shall cease using the Artist's content,
+                except where necessary for archival, legal, or administrative purposes.
             </p>
             <p style={{ marginLeft: 48, textAlign: 'justify' }}>
                 <strong>10.</strong> <strong>Notice: </strong>Any notice or other communication given to the Company
@@ -230,9 +229,9 @@ export default function Contract() {
                 <li style={{ listStyleType: 'disc' }}>Email: nik@vitruveo.xyz</li>
             </ul>
             <p style={{ marginLeft: 48, textAlign: 'justify' }}>
-                <strong>11.</strong> <strong>Indemnity: </strong>The Creator agrees to indemnify and hold harmless the
+                <strong>11.</strong> <strong>Indemnity: </strong>The Artist agrees to indemnify and hold harmless the
                 company, its affiliates, directors, officers, employees, agents, and licensors from and against any
-                claims, liabilities, damages, losses, and expenses arising out of or related to the Creator's use of the
+                claims, liabilities, damages, losses, and expenses arising out of or related to the Artist's use of the
                 company platform or any breach of this Agreement.
             </p>
             <p style={{ marginLeft: 48, textAlign: 'justify' }}>
@@ -255,7 +254,7 @@ export default function Contract() {
                 Agreement must be made in writing and signed by both Parties.
             </p>
             <p style={{ marginLeft: 20, marginRight: 7, textAlign: 'justify' }}>
-                This Agreement is entered into by Vitruveo and the Creator by the electronic signature of your digital
+                This Agreement is entered into by Vitruveo and the Artist by the electronic signature of your digital
                 wallet.
             </p>
         </>

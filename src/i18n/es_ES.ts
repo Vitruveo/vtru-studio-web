@@ -22,7 +22,7 @@ const language: Translation = {
 
     /* User Account */
     'studio.userAccount.title': 'Cuenta de Usuario',
-    'studio.userAccount.creator': 'Creador',
+    'studio.userAccount.creator': 'Artista',
     'studio.userAccount.logout.button': 'Cerrar Sesión',
     'studio.userAccount.menu.title': 'Mi Perfil',
     'studio.userAccount.menu.subtitle': 'Configuraciones de Usuario',
@@ -162,7 +162,7 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.description': 'Todos los metadatos del activo son visibles para el público.',
     'studio.consignArtwork.assetMetadata.section.context': 'Contexto',
     'studio.consignArtwork.assetMetadata.section.taxonomy': 'Taxonomía',
-    'studio.consignArtwork.assetMetadata.section.creators': 'Creadores',
+    'studio.consignArtwork.assetMetadata.section.creators': 'Artistas',
     'studio.consignArtwork.assetMetadata.section.provenance': 'Procedencia',
     'studio.consignArtwork.assetMetadata.section.custom': 'Personalizado',
     'studio.consignArtwork.assetMetadata.section.assets': 'Activos',
@@ -674,22 +674,22 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.nudity.description': '¿Contiene esta obra desnudez?',
     'studio.consignArtwork.assetMetadata.field.nudity.enum.yes': 'Esta obra contiene desnudez',
     'studio.consignArtwork.assetMetadata.field.nudity.enum.no': 'Esta obra no contiene desnudez',
-    'studio.consignArtwork.assetMetadata.field.name': 'Nombre del creador',
-    'studio.consignArtwork.assetMetadata.field.name.description': 'Nombre del creador o seudónimo',
-    'studio.consignArtwork.assetMetadata.field.roles': 'Roles del creador',
-    'studio.consignArtwork.assetMetadata.field.roles.description': 'Roles del creador para esta obra o título general',
-    'studio.consignArtwork.assetMetadata.field.bio': 'Biografía del creador',
-    'studio.consignArtwork.assetMetadata.field.bio.description': 'Biografía del creador (breve, 3-4 oraciones)',
-    'studio.consignArtwork.assetMetadata.field.profileUrl': 'Enlace del Sitio del Creador',
-    'studio.consignArtwork.assetMetadata.field.profileUrl.description': 'Enlace del sitio del creador',
+    'studio.consignArtwork.assetMetadata.field.name': 'Nombre del artista',
+    'studio.consignArtwork.assetMetadata.field.name.description': 'Nombre del artista o seudónimo',
+    'studio.consignArtwork.assetMetadata.field.roles': 'Roles del artista',
+    'studio.consignArtwork.assetMetadata.field.roles.description': 'Roles del artista para esta obra o título general',
+    'studio.consignArtwork.assetMetadata.field.bio': 'Biografía del artista',
+    'studio.consignArtwork.assetMetadata.field.bio.description': 'Biografía del artista (breve, 3-4 oraciones)',
+    'studio.consignArtwork.assetMetadata.field.profileUrl': 'Enlace del Sitio del Artista',
+    'studio.consignArtwork.assetMetadata.field.profileUrl.description': 'Enlace del sitio del artista',
     'studio.consignArtwork.assetMetadata.field.nationality': 'Nacionalidad',
-    'studio.consignArtwork.assetMetadata.field.nationality.description': 'Nacionalidad del creador o país de origen',
+    'studio.consignArtwork.assetMetadata.field.nationality.description': 'Nacionalidad del artista o país de origen',
     'studio.consignArtwork.assetMetadata.field.residence': 'Residencia',
-    'studio.consignArtwork.assetMetadata.field.residence.description': 'País de residencia del creador',
+    'studio.consignArtwork.assetMetadata.field.residence.description': 'País de residencia del artista',
     'studio.consignArtwork.assetMetadata.field.ethnicity': 'Etnicidad',
-    'studio.consignArtwork.assetMetadata.field.ethnicity.description': 'Etnicidad del creador',
+    'studio.consignArtwork.assetMetadata.field.ethnicity.description': 'Etnicidad del artista',
     'studio.consignArtwork.assetMetadata.field.gender': 'Género',
-    'studio.consignArtwork.assetMetadata.field.gender.description': 'Género del creador',
+    'studio.consignArtwork.assetMetadata.field.gender.description': 'Género del artista',
     'studio.consignArtwork.assetMetadata.field.country': 'País',
     'studio.consignArtwork.assetMetadata.field.country.description': 'País de procedencia de esta obra',
     'studio.consignArtwork.assetMetadata.field.plusCode': 'PlusCode',
@@ -746,19 +746,19 @@ const language: Translation = {
     'studio.consignArtwork.licenses.license': 'Licencia',
 
     'studio.consignArtwork.licenses.nft.ccby':
-        'Esta licencia permite a los reutilizadores distribuir, remezclar, adaptar y construir sobre el material en cualquier medio o formato, siempre y cuando se atribuya la autoría al creador. La licencia permite el uso comercial.',
+        'Esta licencia permite a los reutilizadores distribuir, remezclar, adaptar y construir sobre el material en cualquier medio o formato, siempre y cuando se atribuya la autoría al artista. La licencia permite el uso comercial.',
     'studio.consignArtwork.licenses.nft.ccbysa':
-        'Esta licencia permite a los reutilizadores distribuir, remezclar, adaptar y construir sobre el material en cualquier medio o formato, siempre y cuando se atribuya la autoría al creador. La licencia permite el uso comercial. Si remezclas, adaptas o construyes sobre el material, debes licenciar el material modificado bajo los mismos términos.',
+        'Esta licencia permite a los reutilizadores distribuir, remezclar, adaptar y construir sobre el material en cualquier medio o formato, siempre y cuando se atribuya la autoría al artista. La licencia permite el uso comercial. Si remezclas, adaptas o construyes sobre el material, debes licenciar el material modificado bajo los mismos términos.',
     'studio.consignArtwork.licenses.nft.ccbync':
-        'Esta licencia permite a los reutilizadores distribuir, remezclar, adaptar y construir sobre el material en cualquier medio o formato solo para fines no comerciales, y solo siempre y cuando se atribuya la autoría al creador.',
+        'Esta licencia permite a los reutilizadores distribuir, remezclar, adaptar y construir sobre el material en cualquier medio o formato solo para fines no comerciales, y solo siempre y cuando se atribuya la autoría al artista.',
     'studio.consignArtwork.licenses.nft.ccbyncsa':
-        'Esta licencia permite a los reutilizadores distribuir, remezclar, adaptar y construir sobre el material en cualquier medio o formato solo para fines no comerciales, y solo siempre y cuando se atribuya la autoría al creador. Si remezclas, adaptas o construyes sobre el material, debes licenciar el material modificado bajo los mismos términos.',
+        'Esta licencia permite a los reutilizadores distribuir, remezclar, adaptar y construir sobre el material en cualquier medio o formato solo para fines no comerciales, y solo siempre y cuando se atribuya la autoría al artista. Si remezclas, adaptas o construyes sobre el material, debes licenciar el material modificado bajo los mismos términos.',
     'studio.consignArtwork.licenses.nft.ccbynd':
-        'Esta licencia permite a los reutilizadores copiar y distribuir el material en cualquier medio o formato solo en forma no adaptada, y solo siempre y cuando se atribuya la autoría al creador.',
+        'Esta licencia permite a los reutilizadores copiar y distribuir el material en cualquier medio o formato solo en forma no adaptada, y solo siempre y cuando se atribuya la autoría al artista.',
     'studio.consignArtwork.licenses.nft.ccbyncnd':
-        'Esta licencia permite a los reutilizadores copiar y distribuir el material en cualquier medio o formato solo en forma no adaptada, solo para fines no comerciales, y solo siempre y cuando se atribuya la autoría al creador.',
+        'Esta licencia permite a los reutilizadores copiar y distribuir el material en cualquier medio o formato solo en forma no adaptada, solo para fines no comerciales, y solo siempre y cuando se atribuya la autoría al artista.',
     'studio.consignArtwork.licenses.nft.cc0':
-        'CC0 (también conocida como CC Zero) es una herramienta de dedicación pública, que permite a los creadores renunciar a sus derechos de autor y poner sus obras en el dominio público mundial. CC0 permite a los reutilizadores distribuir, remezclar, adaptar y construir sobre el material en cualquier medio o formato, sin condiciones.',
+        'CC0 (también conocida como CC Zero) es una herramienta de dedicación pública, que permite a los artistas renunciar a sus derechos de autor y poner sus obras en el dominio público mundial. CC0 permite a los reutilizadores distribuir, remezclar, adaptar y construir sobre el material en cualquier medio o formato, sin condiciones.',
 
     'studio.consignArtwork.licenses.nft.description':
         'Esta licencia hace que la obra de arte esté disponible para la venta bajo uno de varios modelos de precios de edición. Cuando se vende, se acuña un NFT de la obra de arte y se entrega al comprador.',
@@ -830,7 +830,7 @@ const language: Translation = {
     'studio.consignArtwork.termsOfUse.accept.button': (data: { contract: boolean; scrolledToBottom: boolean }) =>
         data.contract ? 'Aceptado' : data.scrolledToBottom ? 'Aceptar Contrato' : 'Desplázate hasta el final',
     'studio.consignArtwork.termsOfUse.isOriginal':
-        'Por la presente, confirmo que los archivos del Activo y los Medios Auxiliares son obras originales y auténticas que han sido creadas por los creadores indicados en la presentación de metadatos y no copiadas, robadas o plagiadas de ninguna otra fuente.',
+        'Por la presente, confirmo que los archivos del Activo y los Medios Auxiliares son obras originales y auténticas que han sido creadas por los artistas indicados en la presentación de metadatos y no copiadas, robadas o plagiadas de ninguna otra fuente.',
     'studio.consignArtwork.termsOfUse.generatedArtworkAI':
         'Por la presente, confirmo que si alguna parte de los archivos del Activo y los Medios Auxiliares fueron creados utilizando Inteligencia Artificial, he respondido "Sí" en el campo de Metadatos para "Generación por IA".',
     'studio.consignArtwork.termsOfUse.notMintedOtherBlockchain':
@@ -868,12 +868,12 @@ const language: Translation = {
 
     'studio.consignArtwork.consignmentStatus.activation.title': 'Activación',
     'studio.consignArtwork.consignmentStatus.activation.description':
-        'La activación consigna tu obra de arte a la cadena de bloques y requiere un Crédito de Creador.',
-    'studio.consignArtwork.consignmentStatus.creatorCreditsRequired': 'Créditos de Creador Requeridos',
-    'studio.consignArtwork.consignmentStatus.creatorCreditsAvailable': 'Créditos de Creador Disponibles',
+        'La activación consigna tu obra de arte a la cadena de bloques y requiere un Crédito de Artista.',
+    'studio.consignArtwork.consignmentStatus.creatorCreditsRequired': 'Créditos de Artista Requeridos',
+    'studio.consignArtwork.consignmentStatus.creatorCreditsAvailable': 'Créditos de Artista Disponibles',
     'studio.consignArtwork.consignmentStatus.viewArtwork.button': 'Ver Obra de Arte',
     'studio.consignArtwork.consignmentStatus.warning':
-        '¡Los créditos del creador serán distribuidos pronto a todos los artistas! Te notificaremos nuevamente cuando estemos listos para este último paso.',
+        '¡Los créditos del artista serán distribuidos pronto a todos los artistas! Te notificaremos nuevamente cuando estemos listos para este último paso.',
 
     /* BackModalConfirm */
     'studio.consignArtwork.backModal.title': '¿Te gustaría guardar la información?',
