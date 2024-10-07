@@ -60,7 +60,7 @@ const Header = () => {
                     <Stack direction="row" alignItems="center">
                         {smUp && <AllProjectsMenu />}
                         {(generalVault || vault) && (
-                            <Box sx={{ marginInline: 0.5 }}>
+                            <Box sx={{ marginRight: 7 }}>
                                 <WalletProvider>
                                     <ClaimContainer />
                                 </WalletProvider>

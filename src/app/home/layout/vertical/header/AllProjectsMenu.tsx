@@ -17,7 +17,7 @@ const projects = [
 
 const AllProjectsMenu = () => {
     return (
-        <Box margin={0} padding={0} display="flex" alignItems="baseline">
+        <Box marginRight={7} padding={0} display="flex" alignItems="baseline">
             {projects.map((v, index) => (
                 <Box key={v.title} display="flex" alignItems="baseline">
                     <Typography
