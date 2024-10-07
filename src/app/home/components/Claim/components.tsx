@@ -47,7 +47,7 @@ export const ClaimComponent = ({ data, actions }: Props) => {
                     {value} <strong>{symbol}</strong>
                 </Typography>
             )}
-            <Box display={'flex'} gap={2}>
+            <Box display={'flex'} gap={1}>
                 <Button size="small" variant="contained" disabled={disabled} onClick={openStakModal}>
                     Claim {loading && <CircularProgress size={16} style={{ marginLeft: 10 }} />}
                 </Button>

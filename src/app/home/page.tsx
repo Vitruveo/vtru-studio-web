@@ -236,11 +236,11 @@ export default function Home() {
                         </Typography>
 
                         <Image
-                            src={'/images/logos/studiologo.png'}
+                            src={'/images/logos/XIBIT-logo_light.png'}
                             priority
                             alt="bg"
-                            width={140}
-                            height={50}
+                            width={120}
+                            height={40}
                             style={{
                                 paddingBlock: 1,
                                 maxWidth: '300px',

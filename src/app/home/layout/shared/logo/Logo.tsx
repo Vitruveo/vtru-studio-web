@@ -31,24 +31,24 @@ const Logo = () => {
             <LinkStyled style={{ textDecoration: 'none' }} href="/home">
                 {customizer.activeMode === 'dark' ? (
                     <Box display="flex" marginTop={2} alignItems="center">
-                        <Image src={'/images/logos/studiologo.png'} alt="logo" height={25} width={150} priority />
+                        <Image src={'/images/logos/XIBIT-logo_light.png'} alt="logo" height={40} width={120} priority />
                     </Box>
                 ) : (
                     <Box display="flex" marginTop={1} alignItems="center">
                         <Image
                             style={{ display: checkSidebar ? 'none' : '' }}
-                            src={'/images/logos/studiologo.png'}
+                            src={'/images/logos/XIBIT-logo_light.png'}
                             alt="logo"
-                            height={55}
-                            width={155}
+                            height={40}
+                            width={120}
                             priority
                         />
                         <Image
                             style={{ display: checkSidebar ? '' : 'none' }}
-                            src={'/images/logos/studioshortlogo.png'}
+                            src={'/images/logos/XIBIT-logo_light.png'}
                             alt="logo"
                             height={40}
-                            width={100}
+                            width={120}
                             priority
                         />
                     </Box>
