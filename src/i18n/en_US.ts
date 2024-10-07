@@ -21,7 +21,7 @@ const language: Translation = {
 
     /* User Account */
     'studio.userAccount.title': 'User Account',
-    'studio.userAccount.creator': 'Creator',
+    'studio.userAccount.creator': 'Artist',
     'studio.userAccount.logout.button': 'Logout',
     'studio.userAccount.menu.title': 'My Profile',
     'studio.userAccount.menu.subtitle': 'User Settings',
@@ -159,7 +159,7 @@ const language: Translation = {
 
     'studio.consignArtwork.assetMetadata.section.context': 'Context',
     'studio.consignArtwork.assetMetadata.section.taxonomy': 'Taxonomy',
-    'studio.consignArtwork.assetMetadata.section.creators': 'Creators',
+    'studio.consignArtwork.assetMetadata.section.creators': 'Artists',
     'studio.consignArtwork.assetMetadata.section.provenance': 'Provenance',
     'studio.consignArtwork.assetMetadata.section.custom': 'Custom',
     'studio.consignArtwork.assetMetadata.section.assets': 'Assets',
@@ -700,29 +700,29 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.nudity.enum.yes': 'This work contains nudity',
     'studio.consignArtwork.assetMetadata.field.nudity.enum.no': 'This work does not contain nudity',
 
-    'studio.consignArtwork.assetMetadata.field.name': 'Creator Name',
-    'studio.consignArtwork.assetMetadata.field.name.description': 'Creator name or pseudonym',
+    'studio.consignArtwork.assetMetadata.field.name': 'Artist Name',
+    'studio.consignArtwork.assetMetadata.field.name.description': 'Artist name or pseudonym',
 
-    'studio.consignArtwork.assetMetadata.field.roles': 'Creator Roles',
-    'studio.consignArtwork.assetMetadata.field.roles.description': 'Creator roles for this work or general title',
+    'studio.consignArtwork.assetMetadata.field.roles': 'Artist Roles',
+    'studio.consignArtwork.assetMetadata.field.roles.description': 'Artist roles for this work or general title',
 
-    'studio.consignArtwork.assetMetadata.field.bio': 'Creator Bio',
-    'studio.consignArtwork.assetMetadata.field.bio.description': 'Creator bio (short, 3-4 sentences)',
+    'studio.consignArtwork.assetMetadata.field.bio': 'Artist Bio',
+    'studio.consignArtwork.assetMetadata.field.bio.description': 'Artist bio (short, 3-4 sentences)',
 
-    'studio.consignArtwork.assetMetadata.field.profileUrl': 'Creator Website Link',
-    'studio.consignArtwork.assetMetadata.field.profileUrl.description': 'Creator website link',
+    'studio.consignArtwork.assetMetadata.field.profileUrl': 'Artist Website Link',
+    'studio.consignArtwork.assetMetadata.field.profileUrl.description': 'Artist website link',
 
     'studio.consignArtwork.assetMetadata.field.nationality': 'Nationality',
-    'studio.consignArtwork.assetMetadata.field.nationality.description': 'Creator nationality or origin country',
+    'studio.consignArtwork.assetMetadata.field.nationality.description': 'Artist nationality or origin country',
 
     'studio.consignArtwork.assetMetadata.field.residence': 'Residence',
-    'studio.consignArtwork.assetMetadata.field.residence.description': 'Creator residence country',
+    'studio.consignArtwork.assetMetadata.field.residence.description': 'Artist residence country',
 
     'studio.consignArtwork.assetMetadata.field.ethnicity': 'Ethnicity',
-    'studio.consignArtwork.assetMetadata.field.ethnicity.description': 'Creator ethnicity',
+    'studio.consignArtwork.assetMetadata.field.ethnicity.description': 'Artist ethnicity',
 
     'studio.consignArtwork.assetMetadata.field.gender': 'Gender',
-    'studio.consignArtwork.assetMetadata.field.gender.description': 'Creator gender',
+    'studio.consignArtwork.assetMetadata.field.gender.description': 'Artist gender',
 
     'studio.consignArtwork.assetMetadata.field.country': 'Country',
     'studio.consignArtwork.assetMetadata.field.country.description': 'Country of provenance for this work',
@@ -791,19 +791,19 @@ const language: Translation = {
     'studio.consignArtwork.licenses.license': 'License',
 
     'studio.consignArtwork.licenses.nft.ccby':
-        'This license enables reusers to distribute, remix, adapt, and build upon the material in any medium or format, so long as attribution is given to the creator. The license allows for commercial use.',
+        'This license enables reusers to distribute, remix, adapt, and build upon the material in any medium or format, so long as attribution is given to the artist. The license allows for commercial use.',
     'studio.consignArtwork.licenses.nft.ccbysa':
-        'This license enables reusers to distribute, remix, adapt, and build upon the material in any medium or format, so long as attribution is given to the creator. The license allows for commercial use. If you remix, adapt, or build upon the material, you must license the modified material under identical terms.',
+        'This license enables reusers to distribute, remix, adapt, and build upon the material in any medium or format, so long as attribution is given to the artist. The license allows for commercial use. If you remix, adapt, or build upon the material, you must license the modified material under identical terms.',
     'studio.consignArtwork.licenses.nft.ccbync':
-        'This license enables reusers to distribute, remix, adapt, and build upon the material in any medium or format for noncommercial purposes only, and only so long as attribution is given to the creator.',
+        'This license enables reusers to distribute, remix, adapt, and build upon the material in any medium or format for noncommercial purposes only, and only so long as attribution is given to the artist.',
     'studio.consignArtwork.licenses.nft.ccbyncsa':
-        'This license enables reusers to distribute, remix, adapt, and build upon the material in any medium or format for noncommercial purposes only, and only so long as attribution is given to the creator. If you remix, adapt, or build upon the material, you must license the modified material under identical terms.',
+        'This license enables reusers to distribute, remix, adapt, and build upon the material in any medium or format for noncommercial purposes only, and only so long as attribution is given to the artist. If you remix, adapt, or build upon the material, you must license the modified material under identical terms.',
     'studio.consignArtwork.licenses.nft.ccbynd':
-        'This license enables reusers to copy and distribute the material in any medium or format in unadapted form only, and only so long as attribution is given to the creator.',
+        'This license enables reusers to copy and distribute the material in any medium or format in unadapted form only, and only so long as attribution is given to the artist.',
     'studio.consignArtwork.licenses.nft.ccbyncnd':
-        'This license enables reusers to copy and distribute the material in any medium or format in unadapted form only, for noncommercial purposes only, and only so long as attribution is given to the creator.',
+        'This license enables reusers to copy and distribute the material in any medium or format in unadapted form only, for noncommercial purposes only, and only so long as attribution is given to the artist.',
     'studio.consignArtwork.licenses.nft.cc0':
-        'CC0 (aka CC Zero) is a public dedication tool, which enables creators to give up their copyright and put their works into the worldwide public domain. CC0 enables reusers to distribute, remix, adapt, and build upon the material in any medium or format, with no conditions.',
+        'CC0 (aka CC Zero) is a public dedication tool, which enables artists to give up their copyright and put their works into the worldwide public domain. CC0 enables reusers to distribute, remix, adapt, and build upon the material in any medium or format, with no conditions.',
 
     'studio.consignArtwork.licenses.nft.description':
         'This license makes the artwork available for sale under one of several edition pricing models. When sold, an NFT of the artwork is minted and delivered to the buyer.',
@@ -875,7 +875,7 @@ const language: Translation = {
     'studio.consignArtwork.termsOfUse.accept.button': (data: { contract: boolean; scrolledToBottom: boolean }) =>
         data.contract ? 'Accepted' : data.scrolledToBottom ? 'Accept Contract' : 'Scroll to the End',
     'studio.consignArtwork.termsOfUse.isOriginal':
-        'I hereby agree that the Asset and Auxiliary Media files are original, authentic works that have been created by the creators indicated in the metadata submission and not copied, stolen, or plagiarized from any other source.',
+        'I hereby agree that the Asset and Auxiliary Media files are original, authentic works that have been created by the artists indicated in the metadata submission and not copied, stolen, or plagiarized from any other source.',
     'studio.consignArtwork.termsOfUse.generatedArtworkAI':
         'I hereby agree that if any portion of the Asset and Auxiliary Media files were created using Artificial Intelligence, I have answered "Yes" to the Metadata field for "AI Generation."',
     'studio.consignArtwork.termsOfUse.notMintedOtherBlockchain':
@@ -911,12 +911,12 @@ const language: Translation = {
     'studio.consignArtwork.consignmentStatus.activate.title': 'Activate',
     'studio.consignArtwork.consignmentStatus.activation.title': 'Activation',
     'studio.consignArtwork.consignmentStatus.activation.description':
-        'Activation consigns your artwork to the blockchain and requires a Creator Credit.',
-    'studio.consignArtwork.consignmentStatus.creatorCreditsRequired': 'Creator Credits Required',
-    'studio.consignArtwork.consignmentStatus.creatorCreditsAvailable': 'Creator Credits Available',
+        'Activation consigns your artwork to the blockchain and requires a Artist Credit.',
+    'studio.consignArtwork.consignmentStatus.creatorCreditsRequired': 'Artist Credits Required',
+    'studio.consignArtwork.consignmentStatus.creatorCreditsAvailable': 'Artist Credits Available',
     'studio.consignArtwork.consignmentStatus.viewArtwork.button': 'View Artwork',
     'studio.consignArtwork.consignmentStatus.warning':
-        'Creator Credits will be airdropped to all artists soon! We will notify you again when we are ready for this final step.',
+        'Artist Credits will be airdropped to all artists soon! We will notify you again when we are ready for this final step.',
 
     /* BackModalConfirm */
     'studio.consignArtwork.backModal.title': 'Would you like to save the information?',

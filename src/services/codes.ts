@@ -11,7 +11,7 @@ export const codesVtruApi = {
         ],
     },
     errors: {
-        user: ['Creator add email failed: email already exist'],
+        user: ['Artist add email failed: email already exist'],
     },
     notfound: {
         user: [

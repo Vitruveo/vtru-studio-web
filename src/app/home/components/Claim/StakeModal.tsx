@@ -14,7 +14,7 @@ const labelMapper = {
     1: 'Stake for 1 year at 15% APR',
     2: 'Stake for 3 years at 30% APR',
     3: 'Stake for 5 years at 60% APR',
-    4: 'Allocate to VIBE Creator Equity Pool',
+    4: 'Allocate to VIBE Artist Equity Pool',
 } as { [key: number]: string };
 
 export default function StakeModal({ isOpen, available, loading, claimAllocate, handleClose }: ModalProps) {

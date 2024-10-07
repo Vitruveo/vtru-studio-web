@@ -24,7 +24,7 @@ const language: Translation = {
     'studio.userAccount.usernameNotFound': 'Имя пользователя не найдено',
     'studio.myProfile.pasteCode': 'Вставьте код из письма',
     'studio.userAccount.title': 'Учетная запись пользователя',
-    'studio.userAccount.creator': 'Создатель',
+    'studio.userAccount.creator': 'Художник',
     'studio.userAccount.logout.button': 'Выйти',
     'studio.userAccount.menu.title': 'Мой профиль',
     'studio.userAccount.menu.subtitle': 'Настройки пользователя',
@@ -159,7 +159,7 @@ const language: Translation = {
 
     'studio.consignArtwork.assetMetadata.section.context': 'Контекст',
     'studio.consignArtwork.assetMetadata.section.taxonomy': 'Таксономия',
-    'studio.consignArtwork.assetMetadata.section.creators': 'Авторы',
+    'studio.consignArtwork.assetMetadata.section.creators': 'Художник',
     'studio.consignArtwork.assetMetadata.section.provenance': 'Происхождение',
     'studio.consignArtwork.assetMetadata.section.custom': 'Дополнительно',
     'studio.consignArtwork.assetMetadata.section.assets': 'Медиафайлы',
@@ -696,27 +696,28 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.nudity.enum.yes': 'Данная работа содержит обнажённую натуру',
     'studio.consignArtwork.assetMetadata.field.nudity.enum.no': 'Данная работа не содержит обнажённой натуры',
 
-    'studio.consignArtwork.assetMetadata.field.name': 'Имя Автора',
-    'studio.consignArtwork.assetMetadata.field.name.description': 'Има Автора или псевдоним',
+    'studio.consignArtwork.assetMetadata.field.name': 'Имя исполнителя',
+    'studio.consignArtwork.assetMetadata.field.name.description': 'Имя художника или псевдоним',
 
-    'studio.consignArtwork.assetMetadata.field.roles': 'Роли Автора',
-    'studio.consignArtwork.assetMetadata.field.roles.description': 'Роли Автора в создании работы',
+    'studio.consignArtwork.assetMetadata.field.roles': 'Роли художника',
+    'studio.consignArtwork.assetMetadata.field.roles.description':
+        'Роли исполнителей для этого произведения или общего названия',
 
-    'studio.consignArtwork.assetMetadata.field.bio': 'Информация об Авторе',
-    'studio.consignArtwork.assetMetadata.field.bio.description': 'Информация об Авторе (коротко, 3-4 предложения)',
+    'studio.consignArtwork.assetMetadata.field.bio': 'Биография художника',
+    'studio.consignArtwork.assetMetadata.field.bio.description': 'Биография художника (короткая, 3-4 предложения)',
 
-    'studio.consignArtwork.assetMetadata.field.profileUrl': 'Ссылка на веб-сайт создателя',
-    'studio.consignArtwork.assetMetadata.field.profileUrl.description': 'Ссылка на веб-сайт создателя',
+    'studio.consignArtwork.assetMetadata.field.profileUrl': 'Ссылка на сайт художника',
+    'studio.consignArtwork.assetMetadata.field.profileUrl.description': 'Ссылка на сайт художника',
 
     'studio.consignArtwork.assetMetadata.field.nationality': 'Национальность',
     'studio.consignArtwork.assetMetadata.field.nationality.description':
-        'Национальность или Страна Происхождения Автора',
+        'Национальность или страна происхождения художника',
 
     'studio.consignArtwork.assetMetadata.field.residence': 'Резиденция',
-    'studio.consignArtwork.assetMetadata.field.residence.description': 'Страна проживания Автора',
+    'studio.consignArtwork.assetMetadata.field.residence.description': 'Пол художника',
 
     'studio.consignArtwork.assetMetadata.field.ethnicity': 'Этническая принадлежность',
-    'studio.consignArtwork.assetMetadata.field.ethnicity.description': 'Этническая принадлежность автора',
+    'studio.consignArtwork.assetMetadata.field.ethnicity.description': 'Этническая принадлежность художника',
 
     'studio.consignArtwork.assetMetadata.field.gender': 'Пол',
     'studio.consignArtwork.assetMetadata.field.gender.description': 'Пол Автора',
@@ -788,19 +789,19 @@ const language: Translation = {
     'studio.consignArtwork.licenses.license': 'Лицензия',
 
     'studio.consignArtwork.licenses.nft.ccby':
-        'Эта лицензия позволяет распространять, ремикшировать, адаптировать и создавать новый работы на базе текущей в любом виде или формате, при условии, что указано авторство. Лицензия допускает коммерческое использование.',
+        'Эта лицензия позволяет повторным пользователям распространять, ремикшировать, адаптировать и строить на основе материала в любом носителе или формате, при условии указания автора. Лицензия допускает коммерческое использование.',
     'studio.consignArtwork.licenses.nft.ccbysa':
-        'Эта лицензия позволяет распространять, ремикшировать, адаптировать и создавать производные работы на базе текуще в любом виде или формате, при условии, что указано авторство. Лицензия допускает коммерческое использование. Если вы ремикшируете, адаптируете или создаете производные работы на базе текущей, вы должны лицензировать новую работу той-же лицензией.',
+        'Эта лицензия позволяет повторным пользователям распространять, ремикшировать, адаптировать и дорабатывать материал на любом носителе или в любом формате, при условии указания автора. Лицензия допускает коммерческое использование. Если вы ремикшируете, адаптируете или дорабатываете материал, вы должны лицензировать измененный материал на идентичных условиях.',
     'studio.consignArtwork.licenses.nft.ccbync':
-        'Эта лицензия позволяет распространять, ремикшировать, адаптировать и создавать производные работы на базе текущей в любом виде или формате исключительно в некоммерческих целях, при условии, что указано авторство.',
+        'Данная лицензия позволяет повторным пользователям распространять, ремикшировать, адаптировать и дорабатывать материал на любом носителе или в любом формате исключительно в некоммерческих целях и только при условии указания автора.',
     'studio.consignArtwork.licenses.nft.ccbyncsa':
-        'Эта лицензия позволяет распространять, ремикшировать, адаптировать и создавать производные работы на базе текущей в любом виде или формате исключительно в некоммерческих целях, при условии, что указано авторство. Если вы ремикшируете, адаптируете или создаете производные работы на базе текущей, вы должны лицензировать новую работу той-же лицензией.',
+        'Эта лицензия позволяет повторным пользователям распространять, ремикшировать, адаптировать и дорабатывать материал в любом носителе или формате только в некоммерческих целях и только при условии указания автора. Если вы ремикшируете, адаптируете или дорабатываете материал, вы должны лицензировать измененный материал на идентичных условиях.',
     'studio.consignArtwork.licenses.nft.ccbynd':
-        'Эта лицензия позволяет пользователям копировать и распространять работу в любом виде или формате только в неизмененной форме, при условии, что указано авторство.',
+        'Данная лицензия позволяет повторным пользователям копировать и распространять материал на любом носителе или в любом формате только в неадаптированной форме и только при условии указания автора.',
     'studio.consignArtwork.licenses.nft.ccbyncnd':
-        'Эта лицензия позволяет пользователям копировать и распространять работу в любом виде или формате только в неизмененной форме и исключительно в некоммерческих целях, при условии, что указано авторство.',
+        'This license enables reusers to copy and distribute the material in any medium or format in unadapted form only, for noncommercial purposes only, and only so long as attribution is given to the artist.',
     'studio.consignArtwork.licenses.nft.cc0':
-        'CC0 (или также известная как CC Ноль) - это инструмент публичного отказа, который позволяет авторам отказаться от своих авторских прав и поместить свои работы в мировое общественное достояние. CC0 позволяет пользователям распространять, ремикшировать, адаптировать и создавать производные работы на материале в любом средстве или формате без каких-либо ограничений.',
+        'CC0 (aka CC Zero) is a public dedication tool, which enables artists to give up their copyright and put their works into the worldwide public domain. CC0 enables reusers to distribute, remix, adapt, and build upon the material in any medium or format, with no conditions.',
 
     'studio.consignArtwork.licenses.nft.description':
         'Эта лицензия обеспечивает возможность продажи произведения искусства по одной из нескольких моделей ценообразования. При продаже происходит чеканка (mint) работы в виде NFT и передача NFT покупателю.',
@@ -873,7 +874,7 @@ const language: Translation = {
     'studio.consignArtwork.termsOfUse.accept.button': (data: { contract: boolean; scrolledToBottom: boolean }) =>
         data.contract ? 'принят' : data.scrolledToBottom ? 'Принять договор' : 'Прокрутите до конца',
     'studio.consignArtwork.termsOfUse.isOriginal':
-        'Я подтверждаю, что основной и вспомогательные медиафайлы являются оригинальными, подлинными работами, созданными указанными в метаданных создателями, и не скопированы или украдены (не являются плагиатом) из какого-либо другого источника.',
+        'Настоящим я соглашаюсь с тем, что файлы активов и вспомогательных медиа являются оригинальными, аутентичными работами, созданными художниками, указанными в представленных метаданных, а не скопированными, украденными или плагиатом из какого-либо другого источника.',
     'studio.consignArtwork.termsOfUse.generatedArtworkAI':
         'Я подтверждаю, что если какая-либо часть основного и вспомогательных медиафайлов была создана с использованием искусственного интеллекта, я ответил "Да" в поле метаданных "Генерации ИИ".',
     'studio.consignArtwork.termsOfUse.notMintedOtherBlockchain':
@@ -910,12 +911,12 @@ const language: Translation = {
 
     'studio.consignArtwork.consignmentStatus.activation.title': 'Активация',
     'studio.consignArtwork.consignmentStatus.activation.description':
-        'Активация передает ваше произведение искусства на блокчейн и требует кредитов художника.',
-    'studio.consignArtwork.consignmentStatus.creatorCreditsRequired': 'Кредитов Художника необходимо',
-    'studio.consignArtwork.consignmentStatus.creatorCreditsAvailable': 'Кредитов Художника доступно',
+        'Активация передает ваши произведения искусства в блокчейн и требует наличия кредита художника.',
+    'studio.consignArtwork.consignmentStatus.creatorCreditsRequired': 'Требуются кредиты художника',
+    'studio.consignArtwork.consignmentStatus.creatorCreditsAvailable': 'Доступны кредиты художника',
     'studio.consignArtwork.consignmentStatus.viewArtwork.button': 'Просмотреть произведение искусства',
     'studio.consignArtwork.consignmentStatus.warning':
-        'Кредиты создателя будут скоро распределены всем художникам! Мы уведомим вас снова, когда будем готовы к этому последнему шагу.',
+        'Artist Credits будут разосланы всем артистам в ближайшее время! Мы сообщим вам еще раз, когда будем готовы к этому последнему шагу.',
 
     /* BackModalConfirm */
     'studio.consignArtwork.backModal.title': 'Хотите сохранить информацию?',
