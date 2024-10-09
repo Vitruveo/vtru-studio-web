@@ -1,5 +1,8 @@
 'use client';
 
+import { useEffect } from 'react';
+import cookie from 'cookiejs';
+import { useRouter } from 'next/navigation';
 import { NextAppDirEmotionCacheProvider } from '@/app/common/theme/EmotionCache';
 import { configTheme } from '@/app/common/theme/Theme';
 import '@/utils/i18n';
@@ -11,12 +14,29 @@ import 'toastr/build/toastr.min.css';
 import Providers from '@/store/Provider';
 import CustomizedSnackbar from './common/toastr';
 import { useToastr } from './hooks/useToastr';
+import { useDispatch } from '@/store/hooks';
+import { getMeThunk } from '@/features/user/thunks';
 
 const inter = Inter({ subsets: ['latin'] });
 
 const MyApp = ({ children }: { children: React.ReactNode }) => {
     const theme = configTheme();
     const toastr = useToastr();
+    const dispatch = useDispatch();
+    const router = useRouter();
+
+    useEffect(() => {
+        const checkToken = async () => {
+            const auth = cookie.get('auth');
+
+            if (auth) {
+                const response = await dispatch(getMeThunk());
+                if (response) router.push('/home');
+            }
+        };
+
+        checkToken();
+    }, []);
 
     return (
         <>
