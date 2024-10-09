@@ -165,3 +165,7 @@ export async function addWallets(payload: { walletsAddress: string[] }) {
 export async function deleteWallets(payload: { walletsAddress: string[] }) {
     return apiServiceBatch.delete(`/wallet/removeVaultWallets`, { data: payload });
 }
+
+export async function me() {
+    return apiService.get('/creators/me');
+}

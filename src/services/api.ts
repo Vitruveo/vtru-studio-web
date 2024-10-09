@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { store } from '@/store/index';
 import { APIResponse } from '@/features/common/types';
 import { BASE_URL_API } from '@/constants/api';
+import cookie from 'cookiejs';
 
 const api = axios.create({
     baseURL: BASE_URL_API,
@@ -15,9 +16,10 @@ api.interceptors.request.use(
     (config) => {
         const state = store.getState();
         const token = state.user.token;
+        const auth = cookie.get('auth');
 
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+        if (token || auth) {
+            config.headers.Authorization = `Bearer ${token || auth}`;
         }
 
         return config;
