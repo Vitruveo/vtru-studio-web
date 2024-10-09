@@ -4,7 +4,6 @@ import { WalletProvider } from '@/app/home/components/apps/wallet';
 import { AccountSettingsProps } from './types';
 import Wallet from './wallet';
 import AddEmails from './addEmails';
-import Socials from './Socials';
 
 const AccountSettings = ({
     values,

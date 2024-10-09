@@ -74,6 +74,7 @@ const initValues = ({
         case 'creators':
             return formData.value?.map((v: SectionsFormData['creators']['formData']) => ({
                 ...v,
+                profileUrl: creator?.myWebsite,
                 name: creator?.username,
                 bio: creator.personalDetails?.bio,
                 nationality: creator.personalDetails?.nationality,

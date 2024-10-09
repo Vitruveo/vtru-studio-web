@@ -91,7 +91,7 @@ export async function getMyAssets({
     limit,
 }: GetMyAssetsReq): Promise<GetAssetsApiRes> {
     const res = await apiService.get<AssetPaginated>(
-        `/assets?page=${page}&status=${status?.toLowerCase()}&collection=${collection}&sort=${sort}&limit=${limit}`
+        `/assets?page=${page}&status=${status?.toLowerCase()}&collection=${encodeURIComponent(collection)}&sort=${sort}`
     );
     return res;
 }

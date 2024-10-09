@@ -1,32 +1,38 @@
 import { useState } from 'react';
-import {
-    IconButton,
-    Theme,
-    Typography,
-    useMediaQuery,
-    Box,
-    CardContent,
-    Button,
-    Link,
-    Grid,
-    Stack,
-} from '@mui/material';
+import { ValidationError } from 'yup';
+import { FormikErrors } from 'formik';
+import { IconButton, Theme, Typography, useMediaQuery, Box, CardContent, Button, Link, Grid } from '@mui/material';
 import { IconTrash } from '@tabler/icons-react';
 import Socials from '../Socials';
 import { ProfileTabsGeneralProps } from '.';
 import BlankCard from '../../components/shared/BlankCard';
-import CustomTextField from '../../components/forms/theme-elements/CustomTextField';
+import CustomTextField, { CustomTextFieldDebounce } from '../../components/forms/theme-elements/CustomTextField';
+import { linkSchema } from './formschema';
 
 export interface DigitalPresenceProps extends ProfileTabsGeneralProps {}
 
-const DigitalPresence = ({ values, setFieldValue }: DigitalPresenceProps) => {
+const DigitalPresence = ({ values, errors, setFieldValue }: DigitalPresenceProps) => {
     const [link, setLink] = useState({ name: '', url: '' });
+    const [linkErrors, setLinkErrors] = useState<{ name?: string; url?: string }>({});
 
     const handleAddLink = async () => {
-        setFieldValue('links', [...(values?.links || []), link]);
-        setLink({ name: '', url: '' });
+        try {
+            await linkSchema.validate(link, { abortEarly: false });
+            setFieldValue('links', [...values.links, link]);
+            setLink({ name: '', url: '' });
+            setLinkErrors({});
+        } catch (err) {
+            if (err instanceof ValidationError) {
+                const validationErrors: FormikErrors<{ name: string; url: string }> = {};
+                err.inner.forEach((error) => {
+                    if (error.path) {
+                        validationErrors[error.path as 'name' | 'url'] = error.message;
+                    }
+                });
+                setLinkErrors(validationErrors);
+            }
+        }
     };
-
     const handleDeleteLink = async (index: number) => {
         setFieldValue(
             'links',
@@ -42,6 +48,10 @@ const DigitalPresence = ({ values, setFieldValue }: DigitalPresenceProps) => {
         setLink((cLink) => ({ ...cLink, url: e.target.value }));
     };
 
+    const handleMyWebsiteChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setFieldValue('myWebsite', e.target.value);
+    };
+
     const xl = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'));
 
     return (
@@ -52,7 +62,26 @@ const DigitalPresence = ({ values, setFieldValue }: DigitalPresenceProps) => {
                         sx={{ height: { xs: 'auto', lg: '500px' } }}
                         style={{ overflowY: 'auto', maxHeight: '535px' }}
                     >
-                        <Socials />
+                        <Box maxWidth={!xl ? 300 : 350}>
+                            <Socials />
+                            <Box>
+                                <Box mb={1}>
+                                    <Typography variant="subtitle1" fontWeight={600} component="label">
+                                        Website Link
+                                    </Typography>
+                                </Box>
+                                <CustomTextFieldDebounce
+                                    size="small"
+                                    name="myWebsite"
+                                    variant="outlined"
+                                    fullWidth
+                                    value={values.myWebsite}
+                                    handleChange={handleMyWebsiteChange}
+                                    error={!!errors.myWebsite}
+                                    helperText={errors.myWebsite}
+                                />
+                            </Box>
+                        </Box>
                     </CardContent>
                 </BlankCard>
             </Grid>
@@ -136,6 +165,8 @@ const DigitalPresence = ({ values, setFieldValue }: DigitalPresenceProps) => {
                                     onChange={handleChangeLinkName}
                                     size="small"
                                     fullWidth
+                                    error={!!linkErrors.name}
+                                    helperText={linkErrors.name}
                                     FormHelperTextProps={{
                                         style: {
                                             position: 'absolute',
@@ -153,6 +184,8 @@ const DigitalPresence = ({ values, setFieldValue }: DigitalPresenceProps) => {
                                     onChange={handleChangeLinkURL}
                                     size="small"
                                     fullWidth
+                                    error={!!linkErrors.url}
+                                    helperText={linkErrors.url}
                                     FormHelperTextProps={{
                                         style: {
                                             position: 'absolute',

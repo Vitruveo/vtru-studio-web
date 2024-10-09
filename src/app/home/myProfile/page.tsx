@@ -26,6 +26,7 @@ import { useAvatar } from './useAvatar';
 import { useToastr } from '@/app/hooks/useToastr';
 import { BASE_URL_SEARCH } from '@/constants/search';
 import ProfileTabs from './tabs/index';
+import { ProfileSchemaValidation } from './tabs/formschema';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -69,6 +70,7 @@ export default function ProfileSettings() {
         walletDefault,
         emails,
         wallets,
+        myWebsite,
         links,
         requestAvatarUpload,
     } = useSelector(
@@ -81,6 +83,7 @@ export default function ProfileSettings() {
             'walletDefault',
             'emails',
             'wallets',
+            'myWebsite',
             'links',
             'requestAvatarUpload',
         ])
@@ -147,6 +150,7 @@ export default function ProfileSettings() {
             username,
             personalDetails: personalDetails,
             artworkRecognition: artworkRecognition,
+            myWebsite,
             emails: emails.filter((email) => email.checkedAt),
             wallets,
             links,
@@ -184,6 +188,7 @@ export default function ProfileSettings() {
     const { handleSubmit, handleChange, setFieldValue, setFieldError, setErrors, values, errors } =
         useFormik<AccountSettingsFormValues>({
             initialValues,
+            validationSchema: ProfileSchemaValidation,
             onSubmit: onSubmit,
         });
 

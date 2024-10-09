@@ -34,14 +34,8 @@ export const Rss = () => {
     };
     return (
         <>
-            <IconButton aria-label="more" id="long-button" aria-haspopup="true" onClick={handleClick}>
-                <Image
-                    src="/images/icons/rss.png"
-                    width={39}
-                    height={39}
-                    alt=""
-                    style={{ borderRadius: '50%', cursor: 'pointer' }}
-                />
+            <IconButton size="small" aria-label="more" id="long-button" aria-haspopup="true" onClick={handleClick}>
+                <Image src="/images/icons/rss.png" width={35} height={35} alt="" style={{ cursor: 'pointer' }} />
             </IconButton>
             <Menu
                 id="long-menu"

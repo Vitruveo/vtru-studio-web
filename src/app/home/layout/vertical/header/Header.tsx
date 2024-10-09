@@ -15,6 +15,7 @@ import Profile from './Profile';
 import Language from './Language';
 import { ClaimContainer } from '@/app/home/components/Claim/container';
 import { WalletProvider } from '@/app/home/components/apps/wallet';
+import AllProjectsMenu from './AllProjectsMenu';
 
 const Header = () => {
     const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
@@ -23,7 +24,8 @@ const Header = () => {
 
     // drawer
     const customizer = useSelector((state) => state.customizer);
-    const hasConsign = useSelector((state) => state.user.assets?.data.some((asset) => asset.contractExplorer?.tx));
+    const generalVault = useSelector((state) => state.user.generalVault?.transactionHash);
+    const vault = useSelector((state) => state.user.vault?.transactionHash);
 
     const AppBarStyled = styled(AppBar)(({ theme }) => ({
         boxShadow: 'none',
@@ -53,20 +55,24 @@ const Header = () => {
                 >
                     <IconMenu2 size="20" />
                 </IconButton>
-                <Box flexGrow={1} />
-                <Stack spacing={1} direction="row" alignItems="center">
-                    {hasConsign && (
-                        <WalletProvider>
-                            <ClaimContainer />
-                        </WalletProvider>
-                    )}
-                    <Box display={'flex'} flexDirection={smUp ? 'row' : 'column'}>
+
+                <Box width="100%" display="flex" justifyContent="right">
+                    <Stack direction="row" alignItems="center">
+                        {smUp && <AllProjectsMenu />}
+                        {(generalVault || vault) && (
+                            <Box sx={{ marginRight: 7 }}>
+                                <WalletProvider>
+                                    <ClaimContainer />
+                                </WalletProvider>
+                            </Box>
+                        )}
+                    </Stack>
+                    <Stack direction={smUp ? 'row' : 'column-reverse'} alignItems="center">
                         <Rss />
                         <Language />
-                    </Box>
-
-                    <Profile />
-                </Stack>
+                        <Profile />
+                    </Stack>
+                </Box>
             </ToolbarStyled>
         </AppBarStyled>
     );

@@ -51,7 +51,7 @@ const Profile = () => {
     return (
         <Box>
             <IconButton
-                size="large"
+                size="small"
                 aria-label="show 11 new notifications"
                 color="inherit"
                 aria-controls="msgs-menu"

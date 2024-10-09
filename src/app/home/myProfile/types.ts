@@ -19,6 +19,7 @@ export interface AccountSettingsFormValues {
     emailDefault: string;
     wallets: Wallet[];
     links: Link[];
+    myWebsite?: string;
     walletDefault: string;
     personalDetails?: PersonalDetails;
     artworkRecognition?: ArtworkRecognition;

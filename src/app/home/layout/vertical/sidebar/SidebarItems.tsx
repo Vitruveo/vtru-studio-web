@@ -20,6 +20,14 @@ const SidebarItems = () => {
 
     const canConsignArtwork = useSelector((state) => state.user.canConsignArtwork);
 
+    const generalVault = useSelector((state) => state.user.generalVault);
+
+    const filterMenus = Menuitems.filter((v) => {
+        if (generalVault) {
+            return v.title !== 'studio.sidebar.consign';
+        }
+        return true;
+    });
     const customizer = useSelector((state) => state.customizer);
 
     const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
@@ -28,7 +36,7 @@ const SidebarItems = () => {
     return (
         <Box sx={{ px: 3 }}>
             <List sx={{ pt: 0 }} className="sidebarNav">
-                {Menuitems.map((item) => {
+                {filterMenus.map((item) => {
                     if (item?.required === 'canConsignArtwork' && !canConsignArtwork) {
                         item.href = '/home';
                     }

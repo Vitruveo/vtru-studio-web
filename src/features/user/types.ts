@@ -84,6 +84,7 @@ export interface User {
     personalDetails?: PersonalDetails;
     artworkRecognition?: ArtworkRecognition;
     links: Link[];
+    myWebsite?: string;
     profile: {
         avatar: string | null;
         phone: string | null;
@@ -94,6 +95,12 @@ export interface User {
     framework: Framework;
     canConsignArtwork: boolean;
     vault: {
+        isBlocked: boolean;
+        transactionHash: string | null;
+        createdAt: string | null;
+        isLoading: boolean;
+    };
+    generalVault?: {
         isBlocked: boolean;
         transactionHash: string | null;
         createdAt: string | null;
@@ -217,6 +224,7 @@ export interface CreatorSchemaType {
         checkedAt: Date | null;
     }>;
     links: Link[];
+    myWebsite: string;
     personalDetails: PersonalDetails;
     artworkRecognition: ArtworkRecognition;
     wallets: Array<{
