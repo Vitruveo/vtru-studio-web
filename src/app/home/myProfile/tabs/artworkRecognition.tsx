@@ -31,7 +31,6 @@ import AssetCard from './assetCard';
 import Artwork from './artwork';
 import { sendRequestUploadThunk } from '@/features/user/thunks';
 import { linkSchema } from './formschema';
-import { CustomAsyncSelectDebounce } from '../../components/forms/theme-elements/CustomAsyncSelect';
 
 export interface ArtworkRecognitionProps extends ProfileTabsGeneralProps {}
 
@@ -342,7 +341,7 @@ const ArtworkRecognition = ({ values, setFieldValue }: ArtworkRecognitionProps) 
                                 Artwork
                             </Typography>
                         </Box>
-                        <CustomAsyncSelectDebounce
+                        <AsyncSelect
                             isDisabled={load}
                             blurInputOnSelect={false}
                             loadOptions={loadArtworks}
