@@ -1,4 +1,5 @@
 import { useDispatch } from 'react-redux';
+import { IconArrowBarToLeft, IconArrowBarToRight } from '@tabler/icons-react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -6,7 +7,6 @@ import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { styled } from '@mui/material/styles';
-import { IconMenu2 } from '@tabler/icons-react';
 
 import { useSelector } from '@/store/hooks';
 import { toggleMobileSidebar, toggleSidebar } from '@/features/customizer/slice';
@@ -53,14 +53,26 @@ const Header = () => {
                     aria-label="menu"
                     onClick={lgUp ? () => dispatch(toggleSidebar()) : () => dispatch(toggleMobileSidebar())}
                 >
-                    <IconMenu2 size="20" />
+                    {!lgUp ? (
+                        <IconArrowBarToRight />
+                    ) : customizer.isCollapse ? (
+                        <IconArrowBarToRight />
+                    ) : (
+                        <IconArrowBarToLeft />
+                    )}
                 </IconButton>
+                {!lgUp && <AllProjectsMenu />}
 
-                <Box width="100%" display="flex" justifyContent="right">
-                    <Stack direction="row" alignItems="center">
-                        {smUp && <AllProjectsMenu />}
+                <Box width="100%" display="flex" justifyContent={lgUp || smUp ? 'right' : 'space-between'}>
+                    <Stack
+                        sx={lgUp || smUp ? {} : { flex: 2 }}
+                        direction="row"
+                        justifyContent="center"
+                        alignItems="center"
+                    >
+                        {lgUp && <AllProjectsMenu />}
                         {(generalVault || vault) && (
-                            <Box sx={{ marginRight: 7 }}>
+                            <Box sx={lgUp || smUp ? { marginRight: 7 } : {}}>
                                 <WalletProvider>
                                     <ClaimContainer />
                                 </WalletProvider>

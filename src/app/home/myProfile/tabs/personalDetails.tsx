@@ -47,6 +47,10 @@ const PersonalDetails = ({ values, setFieldValue }: PersonalDetailsProps) => {
 
     const xl = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'));
 
+    const texts = {
+        plusCode: language['studio.consignArtwork.assetMetadata.field.plusCode.description'],
+    } as { [key: string]: string };
+
     return (
         <Grid container spacing={2}>
             <Grid item xs={12} lg={6}>
@@ -165,7 +169,13 @@ const PersonalDetails = ({ values, setFieldValue }: PersonalDetailsProps) => {
                                     <Typography variant="subtitle1" fontWeight={600} component="label">
                                         Plus Code
                                     </Typography>
+                                    <Box>
+                                        <Typography color="GrayText" fontSize="0.8rem" className="description">
+                                            {texts.plusCode}
+                                        </Typography>
+                                    </Box>
                                 </Box>
+
                                 <CustomTextFieldDebounce
                                     size="small"
                                     name="personalDetails.plusCode"

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, memo } from 'react';
-import { Box, Typography, Link, IconButton } from '@mui/material';
+import { Box, Typography, Link, IconButton, CircularProgress } from '@mui/material';
 import { getAssetById } from '@/features/asset/requests';
 import { Asset } from '@/features/asset/types';
 import AssetCard from './assetCard';
@@ -26,6 +26,21 @@ const Artwork = memo(({ artwork, name, url, handleDelete }: ArtworkProps) => {
     useEffect(() => {
         handleGetAsset();
     }, [artwork]);
+
+    if (artwork.type === 'assetRef' && !asset)
+        return (
+            <Box
+                width="100%"
+                maxWidth="36%"
+                mb={2}
+                height={70}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+            >
+                <CircularProgress size={30} />
+            </Box>
+        );
 
     return (
         <Box width="100%" mb={2} display="flex" alignItems="center">

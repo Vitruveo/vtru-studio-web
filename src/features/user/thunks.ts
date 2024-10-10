@@ -1,4 +1,5 @@
 import { signMessage } from '@wagmi/core';
+import cookie from 'cookiejs';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { nanoid } from '@reduxjs/toolkit';
 import { StepsFormValues } from '@/app/home/consignArtwork/types';
@@ -26,6 +27,7 @@ import {
     addWallets,
     getWalletsVault,
     generalStorageAvatar,
+    me,
 } from './requests';
 import { userActionsCreators } from './slice';
 import {
@@ -67,6 +69,34 @@ import { getAssetById, getMyAssets } from '../asset/requests';
 import { ASSET_STORAGE_URL, NO_IMAGE_ASSET } from '@/constants/asset';
 import { config } from '@/app/home/components/apps/wallet';
 
+export function getMeThunk(): ReduxThunkAction<Promise<boolean>> {
+    return async function (dispatch) {
+        try {
+            const response = await me();
+            if (response) {
+                const auth = cookie.get('auth');
+
+                await dispatch(
+                    userActionsCreators.otpConfirm({
+                        data: {
+                            token: auth,
+                            creator: response.data,
+                        },
+                    })
+                );
+
+                return true;
+            }
+
+            cookie.remove('auth');
+            return false;
+        } catch (error) {
+            cookie.remove('auth');
+            return false;
+        }
+    };
+}
+
 export function userLoginThunk(payload: UserLoginReq): ReduxThunkAction<Promise<UserLoginApiRes>> {
     return async function (dispatch, getState) {
         const response = await userLoginReq({ email: payload.email });
@@ -80,9 +110,16 @@ export function userLoginThunk(payload: UserLoginReq): ReduxThunkAction<Promise<
 export function userOTPConfirmThunk(payload: UserOTPConfirmReq): ReduxThunkAction<Promise<UserOTPConfirmApiRes>> {
     return async function (dispatch, getState) {
         const response = await userOTPConfimReq({ email: payload.email, code: payload.code });
+
         if (response) {
             response.data?.creator;
             await dispatch(userActionsCreators.otpConfirm(response));
+
+            // save cookie
+            const host = window.location.hostname;
+            const domain = host.replace('studio.', '');
+
+            cookie.set('auth', response.data?.token, { path: '/', domain });
 
             if (response.data?.creator)
                 dispatch(consignArtworkActionsCreators.checkIsCompletedProfile(response.data?.creator));

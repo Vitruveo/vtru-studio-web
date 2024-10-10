@@ -94,7 +94,7 @@ const Card: React.FC<CardProps> = ({ asset, path, size, onUpload }) => {
                     padding="8px"
                 >
                     <Typography variant="body2" color="textSecondary">
-                        Click to upload image
+                        Click to upload artwork
                     </Typography>
                 </Box>
             ) : isVideoExtension(imageSrc) ? (

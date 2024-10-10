@@ -14,6 +14,8 @@ import {
     useMediaQuery,
     CircularProgress,
 } from '@mui/material';
+import { ValidationError } from 'yup';
+import { FormikErrors } from 'formik';
 import { nanoid } from '@reduxjs/toolkit';
 import AsyncSelect from 'react-select/async';
 
@@ -28,6 +30,8 @@ import { userSelector } from '@/features/user';
 import AssetCard from './assetCard';
 import Artwork from './artwork';
 import { sendRequestUploadThunk } from '@/features/user/thunks';
+import { linkSchema } from './formschema';
+import { CustomAsyncSelectDebounce } from '../../components/forms/theme-elements/CustomAsyncSelect';
 
 export interface ArtworkRecognitionProps extends ProfileTabsGeneralProps {}
 
@@ -45,10 +49,13 @@ const ArtworkRecognition = ({ values, setFieldValue }: ArtworkRecognitionProps) 
     const [open, setOpen] = useState(false);
     const [load, setLoad] = useState(false);
     const [modalTitle, setModalTitle] = useState('');
-    const [link, setLink] = useState('');
+    const [link, setLink] = useState({ name: '', url: '' });
     const [transactionId, setTransactionId] = useState('');
-    const [name, setName] = useState('');
+
     const [assetUpload, setAssetUpload] = useState<File | null>();
+    const [linkErrors, setLinkErrors] = useState<{ name?: string; url?: string }>({});
+    const [artworkError, setArtworkError] = useState('');
+    const [titleArtworkError, setTitleArtworkError] = useState('');
 
     const dispatch = useDispatch();
 
@@ -67,9 +74,11 @@ const ArtworkRecognition = ({ values, setFieldValue }: ArtworkRecognitionProps) 
             setAssetUpload(null);
             setOpen(false);
             setInputValue('');
-            setLink('');
-            setName('');
+            setLink({ name: '', url: '' });
             setTransactionId('');
+            setLinkErrors({});
+            setArtworkError('');
+            setTitleArtworkError('');
         }
     };
 
@@ -78,48 +87,78 @@ const ArtworkRecognition = ({ values, setFieldValue }: ArtworkRecognitionProps) 
         setSelectedArtwork(selected);
     };
 
-    const handleAddLink = () => {
-        if (assetUpload) {
-            setLoad(true);
-            const tranId = nanoid();
-            setTransactionId(tranId);
-            dispatch(
-                sendRequestUploadThunk({
-                    transactionId: tranId,
-                    requestsUpload: true,
-                    mimetype: assetUpload.type,
-                    originalName: assetUpload.name,
-                })
-            );
-        } else {
-            if (isAwards) {
-                setFieldValue('artworkRecognition.awards', [
-                    ...(values?.artworkRecognition?.awards || []),
-                    {
-                        name,
-                        url: link.trim(),
-                        artwork: {
-                            title: inputValue,
-                            value: selectedArtwork?.value?._id,
-                            type: 'assetRef',
-                        },
-                    },
-                ]);
+    const handleAddLink = async () => {
+        try {
+            let currentArtworkError = false;
+            let currentTitleArtworkError = false;
+            if (!assetUpload && !selectedArtwork?.value) {
+                currentArtworkError = true;
+                setArtworkError('Please select or upload an artwork');
             } else {
-                setFieldValue('artworkRecognition.exhibitions', [
-                    ...(values?.artworkRecognition?.exhibitions || []),
-                    {
-                        name,
-                        url: link.trim(),
-                        artwork: {
-                            title: inputValue,
-                            value: selectedArtwork?.value?._id,
-                            type: 'assetRef',
-                        },
-                    },
-                ]);
+                setArtworkError('');
             }
-            handleCloseModal();
+            if (!inputValue && !selectedArtwork?.value) {
+                currentTitleArtworkError = true;
+                setTitleArtworkError('Please enter a title or select an artwork');
+            } else {
+                setTitleArtworkError('');
+            }
+            await linkSchema.validate(link, { abortEarly: false });
+            setLinkErrors({});
+            if (currentArtworkError || currentTitleArtworkError) return;
+
+            if (assetUpload) {
+                setLoad(true);
+                const tranId = nanoid();
+                setTransactionId(tranId);
+                dispatch(
+                    sendRequestUploadThunk({
+                        transactionId: tranId,
+                        requestsUpload: true,
+                        mimetype: assetUpload.type,
+                        originalName: assetUpload.name,
+                    })
+                );
+            } else {
+                if (isAwards) {
+                    setFieldValue('artworkRecognition.awards', [
+                        ...(values?.artworkRecognition?.awards || []),
+                        {
+                            name: link.name,
+                            url: link.url.trim(),
+                            artwork: {
+                                title: inputValue,
+                                value: selectedArtwork?.value?._id,
+                                type: 'assetRef',
+                            },
+                        },
+                    ]);
+                } else {
+                    setFieldValue('artworkRecognition.exhibitions', [
+                        ...(values?.artworkRecognition?.exhibitions || []),
+                        {
+                            name: link.name,
+                            url: link.url.trim(),
+                            artwork: {
+                                title: inputValue,
+                                value: selectedArtwork?.value?._id,
+                                type: 'assetRef',
+                            },
+                        },
+                    ]);
+                }
+                handleCloseModal();
+            }
+        } catch (err) {
+            if (err instanceof ValidationError) {
+                const validationErrors: FormikErrors<{ name: string; url: string }> = {};
+                err.inner.forEach((error) => {
+                    if (error.path) {
+                        validationErrors[error.path as 'name' | 'url'] = error.message;
+                    }
+                });
+                setLinkErrors(validationErrors);
+            }
         }
     };
 
@@ -181,8 +220,8 @@ const ArtworkRecognition = ({ values, setFieldValue }: ArtworkRecognitionProps) 
                     setFieldValue('artworkRecognition.awards', [
                         ...(values?.artworkRecognition?.awards || []),
                         {
-                            name,
-                            url: link.trim(),
+                            name: link.name,
+                            url: link.url.trim(),
                             artwork: {
                                 title: inputValue,
                                 value: transaction.path,
@@ -194,8 +233,8 @@ const ArtworkRecognition = ({ values, setFieldValue }: ArtworkRecognitionProps) 
                     setFieldValue('artworkRecognition.exhibitions', [
                         ...(values?.artworkRecognition?.exhibitions || []),
                         {
-                            name,
-                            url: link.trim(),
+                            name: link.name,
+                            url: link.url.trim(),
                             artwork: {
                                 title: inputValue,
                                 value: transaction.path,
@@ -293,12 +332,17 @@ const ArtworkRecognition = ({ values, setFieldValue }: ArtworkRecognitionProps) 
                                 setAssetUpload(asset);
                             }}
                         />
+                        {artworkError && (
+                            <Typography variant="caption" color="error">
+                                {artworkError}
+                            </Typography>
+                        )}
                         <Box my={2} mb={1}>
                             <Typography variant="subtitle1" fontWeight={600} component="label">
                                 Artwork
                             </Typography>
                         </Box>
-                        <AsyncSelect
+                        <CustomAsyncSelectDebounce
                             isDisabled={load}
                             blurInputOnSelect={false}
                             loadOptions={loadArtworks}
@@ -319,6 +363,11 @@ const ArtworkRecognition = ({ values, setFieldValue }: ArtworkRecognitionProps) 
                                 }),
                             }}
                         />
+                        {titleArtworkError && (
+                            <Typography variant="caption" color="error">
+                                {titleArtworkError}
+                            </Typography>
+                        )}
                     </Box>
                     <Box my={2}>
                         <Box mb={1}>
@@ -331,11 +380,16 @@ const ArtworkRecognition = ({ values, setFieldValue }: ArtworkRecognitionProps) 
                             variant="outlined"
                             size="small"
                             fullWidth
-                            value={name}
+                            value={link.name}
                             handleChange={(e) => {
-                                setName(e.target.value);
+                                setLink({ ...link, name: e.target.value });
                             }}
                         />
+                        {linkErrors.name && (
+                            <Typography variant="caption" color="error">
+                                {linkErrors.name}
+                            </Typography>
+                        )}
                     </Box>
                     <Box my={2}>
                         <Box mb={1}>
@@ -349,11 +403,16 @@ const ArtworkRecognition = ({ values, setFieldValue }: ArtworkRecognitionProps) 
                             size="small"
                             type="url"
                             fullWidth
-                            value={link}
+                            value={link.url}
                             handleChange={(e) => {
-                                setLink(e.target.value);
+                                setLink({ ...link, url: e.target.value });
                             }}
                         />
+                        {linkErrors.url && (
+                            <Typography variant="caption" color="error">
+                                {linkErrors.url}
+                            </Typography>
+                        )}
                     </Box>
                 </DialogContent>
                 <DialogActions>

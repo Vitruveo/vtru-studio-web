@@ -17,8 +17,9 @@ const DigitalPresence = ({ values, errors, setFieldValue }: DigitalPresenceProps
 
     const handleAddLink = async () => {
         try {
-            await linkSchema.validate(link, { abortEarly: false });
-            setFieldValue('links', [...values.links, link]);
+            const formatLink = { ...link, url: link.url.trim() };
+            await linkSchema.validate(formatLink, { abortEarly: false });
+            setFieldValue('links', [...values.links, formatLink]);
             setLink({ name: '', url: '' });
             setLinkErrors({});
         } catch (err) {
