@@ -16,6 +16,7 @@ import Language from './Language';
 import { ClaimContainer } from '@/app/home/components/Claim/container';
 import { WalletProvider } from '@/app/home/components/apps/wallet';
 import AllProjectsMenu from './AllProjectsMenu';
+import Image from 'next/image';
 
 const Header = () => {
     const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
@@ -40,6 +41,10 @@ const Header = () => {
         width: '100%',
         color: theme.palette.text.secondary,
     }));
+
+    const handleClick = () => {
+        window.open('https://about.xibit.app', '_blank');
+    };
 
     return (
         <AppBarStyled position="sticky" color="default">
@@ -80,6 +85,21 @@ const Header = () => {
                         )}
                     </Stack>
                     <Stack direction={smUp ? 'row' : 'column-reverse'} alignItems="center">
+                        <IconButton
+                            size="small"
+                            aria-label="more"
+                            id="long-button"
+                            aria-haspopup="true"
+                            onClick={handleClick}
+                        >
+                            <Image
+                                src="/images/icons/xibit-icon-redondo-darkmode.png"
+                                width={35}
+                                height={35}
+                                alt=""
+                                style={{ cursor: 'pointer' }}
+                            />
+                        </IconButton>
                         <Rss />
                         <Language />
                         <Profile />
