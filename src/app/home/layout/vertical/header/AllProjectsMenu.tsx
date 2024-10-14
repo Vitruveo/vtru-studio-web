@@ -12,8 +12,8 @@ const projects = [
     { title: 'STREAMS', url: '' },
     { title: 'STUDIO', url: '' },
     { title: 'BUY VUSD', url: '' },
-    { title: 'ABOUT XIBIT', url: 'https://about.xibit.app' },
-    { title: 'ABOUT VITRUVEO', url: 'https://vitruveo.xyz' },
+    { title: 'ABOUT XIBIT', url: 'https://about.xibit.app', onlyMobile: true },
+    { title: 'ABOUT VITRUVEO', url: 'https://vitruveo.xyz', onlyMobile: true },
 ];
 
 const AllProjectsMenu = () => {
@@ -65,20 +65,24 @@ const AllProjectsMenu = () => {
         );
     }
 
+    const deskMenus = projects.filter((v) => !v.onlyMobile);
+
     return (
         <Box marginRight={7} padding={0} display="flex" alignItems="baseline">
-            {projects.map((v, index) => (
-                <Box key={v.title} display="flex" alignItems="baseline">
-                    <Typography onClick={() => v.url && window.open(v.url, '_blank')} sx={getStyle(v)}>
-                        {v.title}
-                    </Typography>
-                    {index !== projects.length - 1 && (
-                        <Typography color="black" sx={{ margin: '0 8px', padding: 0, lineHeight: '1' }}>
-                            |
+            {deskMenus
+                .filter((v) => !v.onlyMobile)
+                .map((v, index) => (
+                    <Box key={v.title} display="flex" alignItems="baseline">
+                        <Typography onClick={() => v.url && window.open(v.url, '_blank')} sx={getStyle(v)}>
+                            {v.title}
                         </Typography>
-                    )}
-                </Box>
-            ))}
+                        {index !== deskMenus.length - 1 && (
+                            <Typography color="black" sx={{ margin: '0 8px', padding: 0, lineHeight: '1' }}>
+                                |
+                            </Typography>
+                        )}
+                    </Box>
+                ))}
         </Box>
     );
 };
