@@ -883,6 +883,7 @@ const language: Translation = {
     /* Sidebar */
     'studio.sidebar.consign': 'Consignar Obra de Arte',
     'studio.sidebar.community': 'Apoyo Comunitario',
+    'studio.sidebar.store': 'Tienda',
 
     /* Footer */
     'studio.footer.thisStep': 'Este paso ha sido',
