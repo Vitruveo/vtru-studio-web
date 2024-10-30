@@ -3,6 +3,7 @@
 import { Box, Button, Grid, Slider, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { useTheme } from '@mui/material/styles';
 
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
@@ -12,6 +13,7 @@ import Image2 from '../../../../../../public/images/temp/logo.png';
 import Image3 from '../../../../../../public/images/temp/logo-horizontal.jpg';
 
 const Component = () => {
+    const theme = useTheme();
     const router = useRouter();
 
     return (
@@ -78,7 +80,7 @@ const Component = () => {
                             <Button
                                 variant="contained"
                                 sx={{
-                                    color: 'white',
+                                    color: theme.palette.secondary.contrastText,
                                 }}
                             >
                                 https://horizon.xibit.art
@@ -269,7 +271,7 @@ const Component = () => {
                         <Button
                             variant="contained"
                             sx={{
-                                color: '#fff',
+                                color: theme.palette.secondary.contrastText,
                             }}
                         >
                             Next

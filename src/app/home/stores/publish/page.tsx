@@ -3,6 +3,7 @@
 import { Box, Button, Grid, Typography } from '@mui/material';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useTheme } from '@mui/material/styles';
 
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 
@@ -48,6 +49,7 @@ const tasks = [
 ];
 
 const Component = () => {
+    const theme = useTheme();
     const router = useRouter();
 
     return (
@@ -98,7 +100,7 @@ const Component = () => {
                                                     sx={{
                                                         width: 100,
                                                         height: 30,
-                                                        color: '#fff',
+                                                        color: theme.palette.secondary.contrastText,
                                                     }}
                                                     variant="contained"
                                                     onClick={() => {
@@ -123,7 +125,6 @@ const Component = () => {
                             style={{
                                 width: '100%',
                                 height: '100%',
-
                                 maxWidth: '400px',
                                 maxHeight: '400px',
                             }}
@@ -148,7 +149,7 @@ const Component = () => {
                     <Button
                         variant="contained"
                         sx={{
-                            color: '#fff',
+                            color: theme.palette.secondary.contrastText,
                         }}
                     >
                         Review and Publish

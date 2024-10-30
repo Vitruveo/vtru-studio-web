@@ -1,0 +1,1 @@
+export { storesSlice } from './slice';

@@ -1,32 +1,26 @@
 'use client';
 
-import { Box, Button, IconButton, Theme, Typography, useMediaQuery } from '@mui/material';
+import { Box, Button, CircularProgress, IconButton, Theme, Typography, useMediaQuery } from '@mui/material';
 import { IconCopy, IconPlus, IconTrash } from '@tabler/icons-react';
 import Select from 'react-select';
 import Image from 'next/image';
 
-import Image1 from '../../../../public/images/temp/1729105555923.png';
-import Image2 from '../../../../public/images/temp/1729105587915.png';
-
 import Link from 'next/link';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from '@/store/hooks';
+import { getStoresThunk } from '@/features/stores/thunks';
+import { StoresItem } from '@/features/stores/types';
 
-const stores = [
-    {
-        id: '1',
-        name: 'Horizon Gallery',
-        status: 'Active',
-        image: Image1,
-    },
-    {
-        id: '2',
-        name: 'Red Gallery',
-        status: 'Draft',
-        image: Image2,
-    },
-];
+interface StoreProps {
+    data: {
+        stores: StoresItem[];
+        loading: boolean;
+    };
+}
 
-const Component = () => {
+const Component = ({ data }: StoreProps) => {
     const smUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
+    const { stores, loading } = data;
 
     return (
         <Box p={2}>
@@ -114,85 +108,98 @@ const Component = () => {
                 </Box>
             </Box>
             <Box display="flex" flexWrap="wrap" gap={4} paddingBlock={2}>
-                {stores.map((item) => {
-                    return (
-                        <Link
-                            key={item.id}
-                            href="/home/stores/publish"
-                            style={{
-                                textDecoration: 'none',
-                                color: 'black',
-                            }}
-                            onClick={() => {
-                                // dispatch to redux item
-                            }}
-                        >
-                            <Box position="relative" width={200}>
-                                <IconButton
-                                    style={{
-                                        position: 'absolute',
-                                        top: 10,
-                                        right: 10,
-                                        backgroundColor: 'white',
-                                        padding: 5,
-                                        borderRadius: 5,
-                                    }}
-                                >
-                                    <IconCopy color="red" />
-                                </IconButton>
-                                <IconButton
-                                    style={{
-                                        position: 'absolute',
-                                        top: 60,
-                                        right: 10,
-                                        backgroundColor: 'white',
-                                        padding: 5,
-                                        borderRadius: 5,
-                                    }}
-                                >
-                                    <IconTrash color="red" />
-                                </IconButton>
-
-                                <Image
-                                    src={item.image}
-                                    alt="Store Image"
-                                    width={200}
-                                    height={200}
-                                    style={{
-                                        borderTopLeftRadius: 5,
-                                        borderTopRightRadius: 5,
-                                    }}
-                                />
-
-                                <Box
-                                    bgcolor="#e5e7eb"
-                                    padding={1}
-                                    mt={-1}
-                                    sx={{
-                                        borderBottomLeftRadius: 5,
-                                        borderBottomRightRadius: 5,
-                                    }}
-                                >
-                                    <Typography variant="h5">{item.name}</Typography>
-                                    <Typography fontSize={16}>{item.status}</Typography>
-                                    <Typography
-                                        fontSize={16}
+                {loading ? (
+                    <Box display={'flex'} justifyContent={'center'} width={'100%'}>
+                        <CircularProgress size={100} />
+                    </Box>
+                ) : (
+                    stores.map((item) => {
+                        return (
+                            <Link
+                                key={item.id}
+                                href="/home/stores/publish"
+                                style={{
+                                    textDecoration: 'none',
+                                    color: 'black',
+                                }}
+                                onClick={() => {
+                                    // dispatch to redux item
+                                }}
+                            >
+                                <Box position="relative" width={200}>
+                                    <IconButton
                                         style={{
-                                            textDecoration: 'underline',
+                                            position: 'absolute',
+                                            top: 10,
+                                            right: 10,
+                                            backgroundColor: 'white',
+                                            padding: 5,
+                                            borderRadius: 5,
                                         }}
                                     >
-                                        Edit
-                                    </Typography>
+                                        <IconCopy color="red" />
+                                    </IconButton>
+                                    <IconButton
+                                        style={{
+                                            position: 'absolute',
+                                            top: 60,
+                                            right: 10,
+                                            backgroundColor: 'white',
+                                            padding: 5,
+                                            borderRadius: 5,
+                                        }}
+                                    >
+                                        <IconTrash color="red" />
+                                    </IconButton>
+
+                                    <Image
+                                        src={item.image}
+                                        alt="Store Image"
+                                        width={200}
+                                        height={200}
+                                        style={{
+                                            borderTopLeftRadius: 5,
+                                            borderTopRightRadius: 5,
+                                        }}
+                                    />
+
+                                    <Box
+                                        bgcolor="#e5e7eb"
+                                        padding={1}
+                                        mt={-1}
+                                        sx={{
+                                            borderBottomLeftRadius: 5,
+                                            borderBottomRightRadius: 5,
+                                        }}
+                                    >
+                                        <Typography variant="h5">{item.name}</Typography>
+                                        <Typography fontSize={16}>{item.status}</Typography>
+                                        <Typography
+                                            fontSize={16}
+                                            style={{
+                                                textDecoration: 'underline',
+                                            }}
+                                        >
+                                            Edit
+                                        </Typography>
+                                    </Box>
                                 </Box>
-                            </Box>
-                        </Link>
-                    );
-                })}
+                            </Link>
+                        );
+                    })
+                )}
             </Box>
         </Box>
     );
 };
 
 export default function Stores() {
-    return <Component />;
+    const dispatch = useDispatch();
+    const { data: storesData, loading } = useSelector((state) => state.stores);
+
+    useEffect(() => {
+        dispatch(getStoresThunk());
+    }, []);
+
+    return <Component data={{ stores: storesData, loading }} />;
 }
