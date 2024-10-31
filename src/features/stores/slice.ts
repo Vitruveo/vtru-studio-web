@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { StoresState } from './types';
+import { StoresItem, StoresState } from './types';
 
 export const initialState: StoresState = {
     loading: false,
     data: [],
+    selectedStore: '',
     error: null,
 };
 
@@ -19,6 +20,9 @@ export const storesSlice = createSlice({
         },
         setData: (state, action: PayloadAction<StoresState['data']>) => {
             state.data = action.payload;
+        },
+        setSelectedStore: (state, action: PayloadAction<StoresState['selectedStore']>) => {
+            state.selectedStore = action.payload;
         },
     },
 });

@@ -1,13 +1,16 @@
 'use client';
 
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useTheme } from '@mui/material/styles';
 
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 
-import Image1 from '../../../../../public/images/temp/1729105555923.png';
+import { useDispatch, useSelector } from '@/store/hooks';
+import { useEffect } from 'react';
+import { getStoreByIdThunk } from '@/features/stores/thunks';
+import { StoresItem } from '@/features/stores/types';
 
 const statusStyles = {
     Completed: {
@@ -48,15 +51,31 @@ const tasks = [
     },
 ];
 
-const Component = () => {
+interface ComponentProps {
+    data: {
+        store: StoresItem;
+        loading: boolean;
+    };
+}
+
+const Component = ({ data }: ComponentProps) => {
     const theme = useTheme();
     const router = useRouter();
+
+    const { store, loading } = data;
+
+    if (loading || !store)
+        return (
+            <Box display={'flex'} justifyContent={'center'} width={'100%'}>
+                <CircularProgress size={100} />
+            </Box>
+        );
 
     return (
         <Box position="relative" paddingInline={3} overflow="auto">
             <Breadcrumb
                 title="Publish Store"
-                assetTitle={'Horizon Gallery'}
+                assetTitle={store.name}
                 items={[{ title: 'Stores', to: '/home/stores' }, { title: 'Publish' }]}
             />
 
@@ -118,8 +137,8 @@ const Component = () => {
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <Image
-                            src={Image1}
-                            alt="Horizon Gallery"
+                            src={store.image}
+                            alt={store.name}
                             width={400}
                             height={400}
                             style={{
@@ -161,5 +180,13 @@ const Component = () => {
 };
 
 export default function Publish() {
-    return <Component />;
+    const dispatch = useDispatch();
+    const selectedStore = useSelector((state) => state.stores.selectedStore);
+    const { data, loading } = useSelector((state) => state.stores);
+
+    useEffect(() => {
+        dispatch(getStoreByIdThunk(selectedStore));
+    }, [selectedStore]);
+
+    return <Component data={{ store: data[0], loading }} />;
 }

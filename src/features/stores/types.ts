@@ -8,5 +8,6 @@ export interface StoresItem {
 export interface StoresState {
     loading: boolean;
     data: StoresItem[];
+    selectedStore: string;
     error: string | null;
 }

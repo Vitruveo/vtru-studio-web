@@ -8,8 +8,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
-import { getStoresThunk } from '@/features/stores/thunks';
+import { createNewStoreThunk, getStoresThunk } from '@/features/stores/thunks';
 import { StoresItem } from '@/features/stores/types';
+import { storesActions } from '@/features/stores/slice';
 
 interface StoreProps {
     data: {
@@ -19,6 +20,7 @@ interface StoreProps {
 }
 
 const Component = ({ data }: StoreProps) => {
+    const dispatch = useDispatch();
     const smUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
     const { stores, loading } = data;
 
@@ -41,12 +43,11 @@ const Component = ({ data }: StoreProps) => {
                         display: 'flex',
                         alignItems: 'center',
                         gap: 1,
-
                         textDecoration: 'none',
                         color: 'black',
                     }}
                     onClick={() => {
-                        // dispatch to redux new item
+                        dispatch(createNewStoreThunk());
                     }}
                 >
                     <Button>
@@ -123,7 +124,7 @@ const Component = ({ data }: StoreProps) => {
                                     color: 'black',
                                 }}
                                 onClick={() => {
-                                    // dispatch to redux item
+                                    dispatch(storesActions.setSelectedStore(item.id));
                                 }}
                             >
                                 <Box position="relative" width={200}>
