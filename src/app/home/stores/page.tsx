@@ -1,6 +1,19 @@
 'use client';
 
-import { Box, Button, CircularProgress, IconButton, Theme, Typography, useMediaQuery } from '@mui/material';
+import {
+    Box,
+    Button,
+    CircularProgress,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    IconButton,
+    Theme,
+    Typography,
+    useMediaQuery,
+} from '@mui/material';
 import { IconCopy, IconPlus, IconTrash } from '@tabler/icons-react';
 import Select from 'react-select';
 import Image from 'next/image';
@@ -8,7 +21,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
-import { createNewStoreThunk, getStoresThunk } from '@/features/stores/thunks';
+import { createNewStoreThunk, deleteStoreThunk, getStoresThunk } from '@/features/stores/thunks';
 import { StoresItem } from '@/features/stores/types';
 import { storesActions } from '@/features/stores/slice';
 
@@ -22,14 +35,15 @@ interface StoreProps {
         handleDelete: (id: string) => void;
         handleDeleteConfirm: () => void;
         handleDeleteCancel: () => void;
+        handleCreateNewStore: (id?: string) => void;
+        handleSelectStore: (id: string) => void;
     };
 }
 
 const Component = ({ data, actions }: StoreProps) => {
-    const dispatch = useDispatch();
     const smUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
     const { stores, loading, openDeleteDialog } = data;
-    const { handleDelete, handleDeleteConfirm, handleDeleteCancel } = actions;
+    const { handleDelete, handleDeleteConfirm, handleDeleteCancel, handleCreateNewStore, handleSelectStore } = actions;
 
     return (
         <Box p={2}>
@@ -53,9 +67,7 @@ const Component = ({ data, actions }: StoreProps) => {
                         textDecoration: 'none',
                         color: 'black',
                     }}
-                    onClick={() => {
-                        dispatch(createNewStoreThunk());
-                    }}
+                    onClick={() => handleCreateNewStore()}
                 >
                     <Button>
                         <IconPlus />
@@ -121,17 +133,17 @@ const Component = ({ data, actions }: StoreProps) => {
                         <CircularProgress size={100} />
                     </Box>
                 ) : (
-                    stores.map((item) => {
+                    stores.map((item, index) => {
                         return (
                             <Link
-                                key={item.id}
+                                key={index}
                                 href="/home/stores/publish"
                                 style={{
                                     textDecoration: 'none',
                                     color: 'black',
                                 }}
                                 onClick={() => {
-                                    dispatch(storesActions.setSelectedStore(item.id));
+                                    handleSelectStore(item.id);
                                 }}
                             >
                                 <Box position="relative" width={200}>
@@ -143,6 +155,11 @@ const Component = ({ data, actions }: StoreProps) => {
                                             backgroundColor: 'white',
                                             padding: 5,
                                             borderRadius: 5,
+                                        }}
+                                        onClick={(event) => {
+                                            event.preventDefault();
+                                            event.stopPropagation();
+                                            handleCreateNewStore(item.id);
                                         }}
                                     >
                                         <IconCopy color="red" />
@@ -156,12 +173,17 @@ const Component = ({ data, actions }: StoreProps) => {
                                             padding: 5,
                                             borderRadius: 5,
                                         }}
+                                        onClick={(event) => {
+                                            event.preventDefault();
+                                            event.stopPropagation();
+                                            handleDelete(item.id);
+                                        }}
                                     >
                                         <IconTrash color="red" />
                                     </IconButton>
 
                                     <Image
-                                        src={item.image}
+                                        src={item?.image}
                                         alt="Store Image"
                                         width={200}
                                         height={200}
@@ -180,8 +202,8 @@ const Component = ({ data, actions }: StoreProps) => {
                                             borderBottomRightRadius: 5,
                                         }}
                                     >
-                                        <Typography variant="h5">{item.name}</Typography>
-                                        <Typography fontSize={16}>{item.status}</Typography>
+                                        <Typography variant="h5">{item?.name}</Typography>
+                                        <Typography fontSize={16}>{item?.status}</Typography>
                                         <Typography
                                             fontSize={16}
                                             style={{
@@ -197,6 +219,28 @@ const Component = ({ data, actions }: StoreProps) => {
                     })
                 )}
             </Box>
+
+            <Dialog
+                open={openDeleteDialog}
+                onClose={handleDeleteCancel}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{'Delete Store'}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Do you really want to delete this store?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDeleteCancel} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleDeleteConfirm} color="error" variant="outlined">
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };
@@ -218,7 +262,7 @@ export default function Stores() {
 
     const handleDeleteConfirm = () => {
         if (storeToDelete) {
-            console.log('Deletado o store com id:', storeToDelete);
+            dispatch(deleteStoreThunk(storeToDelete));
         }
         setOpenDeleteDialog(false);
         setStoreToDelete(null);
@@ -229,6 +273,14 @@ export default function Stores() {
         setStoreToDelete(null);
     };
 
+    const handleCreateNewStore = (id?: string) => {
+        dispatch(createNewStoreThunk(id));
+    };
+
+    const handleSelectStore = (id: string) => {
+        dispatch(storesActions.setSelectedStore(id));
+    };
+
     return (
         <Component
             data={{ stores: storesData, loading, openDeleteDialog }}
@@ -236,6 +288,8 @@ export default function Stores() {
                 handleDelete,
                 handleDeleteConfirm,
                 handleDeleteCancel,
+                handleCreateNewStore,
+                handleSelectStore,
             }}
         />
     );

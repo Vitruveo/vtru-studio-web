@@ -24,6 +24,9 @@ export const storesSlice = createSlice({
         setSelectedStore: (state, action: PayloadAction<StoresState['selectedStore']>) => {
             state.selectedStore = action.payload;
         },
+        removeStore: (state, action: PayloadAction<string>) => {
+            state.data = state.data.filter((store: StoresItem) => store.id !== action.payload);
+        },
     },
 });
 
