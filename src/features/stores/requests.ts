@@ -46,7 +46,7 @@ export async function getStoreById(id: string): Promise<APIResponse<StoresItem>>
     });
 }
 
-export async function createNewStore(): Promise<APIResponse<string>> {
+export async function createNewStore(): Promise<APIResponse<{ insertedId: string }>> {
     return new Promise((resolve) => {
         setTimeout(() => {
             const newStore = {
@@ -60,7 +60,9 @@ export async function createNewStore(): Promise<APIResponse<string>> {
                 code: 'api',
                 message: 'Success',
                 transaction: '123',
-                data: newStore.id,
+                data: {
+                    insertedId: newStore.id,
+                },
             });
         }, 1000);
     });

@@ -26,7 +26,7 @@ export function createNewStoreThunk(): ReduxThunkAction<Promise<void>> {
     return async (dispatch: any) => {
         dispatch(storesActions.setStartLoading());
         const response = await createNewStore();
-        dispatch(storesActions.setSelectedStore(response.data!));
+        dispatch(storesActions.setSelectedStore(response.data!.insertedId));
         dispatch(storesActions.setFinishLoading());
     };
 }

@@ -6,7 +6,7 @@ import Select from 'react-select';
 import Image from 'next/image';
 
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { createNewStoreThunk, getStoresThunk } from '@/features/stores/thunks';
 import { StoresItem } from '@/features/stores/types';
@@ -16,13 +16,20 @@ interface StoreProps {
     data: {
         stores: StoresItem[];
         loading: boolean;
+        openDeleteDialog: boolean;
+    };
+    actions: {
+        handleDelete: (id: string) => void;
+        handleDeleteConfirm: () => void;
+        handleDeleteCancel: () => void;
     };
 }
 
-const Component = ({ data }: StoreProps) => {
+const Component = ({ data, actions }: StoreProps) => {
     const dispatch = useDispatch();
     const smUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
-    const { stores, loading } = data;
+    const { stores, loading, openDeleteDialog } = data;
+    const { handleDelete, handleDeleteConfirm, handleDeleteCancel } = actions;
 
     return (
         <Box p={2}>
@@ -197,10 +204,39 @@ const Component = ({ data }: StoreProps) => {
 export default function Stores() {
     const dispatch = useDispatch();
     const { data: storesData, loading } = useSelector((state) => state.stores);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [storeToDelete, setStoreToDelete] = useState<string | null>(null);
 
     useEffect(() => {
         dispatch(getStoresThunk());
     }, []);
 
-    return <Component data={{ stores: storesData, loading }} />;
+    const handleDelete = (id: string) => {
+        setStoreToDelete(id);
+        setOpenDeleteDialog(true);
+    };
+
+    const handleDeleteConfirm = () => {
+        if (storeToDelete) {
+            console.log('Deletado o store com id:', storeToDelete);
+        }
+        setOpenDeleteDialog(false);
+        setStoreToDelete(null);
+    };
+
+    const handleDeleteCancel = () => {
+        setOpenDeleteDialog(false);
+        setStoreToDelete(null);
+    };
+
+    return (
+        <Component
+            data={{ stores: storesData, loading, openDeleteDialog }}
+            actions={{
+                handleDelete,
+                handleDeleteConfirm,
+                handleDeleteCancel,
+            }}
+        />
+    );
 }
