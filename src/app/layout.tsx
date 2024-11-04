@@ -49,7 +49,7 @@ const MyApp = ({ children }: { children: React.ReactNode }) => {
                                 main: '#ff0066',
                                 light: '#FEFEFE',
                                 dark: '#9e0643',
-                                contrastText: '#333333',
+                                contrastText: '#FEFEFE',
                             },
                             secondary: {
                                 main: '#59D6A9',

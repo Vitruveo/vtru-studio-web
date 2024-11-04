@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Button, Grid, Slider, Typography } from '@mui/material';
+import { Box, Button, Grid, IconButton, Slider, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useTheme } from '@mui/material/styles';
@@ -8,13 +8,23 @@ import { useTheme } from '@mui/material/styles';
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
 
-import Image1 from '../../../../../../public/images/temp/banner.jpg';
-import Image2 from '../../../../../../public/images/temp/logo.png';
-import Image3 from '../../../../../../public/images/temp/logo-horizontal.jpg';
+import { Delete } from '@mui/icons-material';
+import { UploadMedia } from '@/app/home/components/stores/UploadMedia';
+import { useState } from 'react';
 
 const Component = () => {
     const theme = useTheme();
     const router = useRouter();
+
+    const [files, setFiles] = useState<(File | null)[]>([null, null, null]);
+
+    const handleChangeFile = (file: File | null, index: number) => {
+        setFiles((prev) => {
+            const newFiles = [...prev];
+            newFiles[index] = file;
+            return newFiles;
+        });
+    };
 
     return (
         <Box
@@ -65,6 +75,7 @@ const Component = () => {
                                 value="horizon"
                                 sx={{
                                     width: 200,
+                                    marginTop: 2,
                                 }}
                             />
                             <Typography variant="caption" color="GrayText">
@@ -77,13 +88,10 @@ const Component = () => {
                             <Typography variant="h6" fontWeight="normal">
                                 Store URL
                             </Typography>
-                            <Button
-                                variant="contained"
-                                sx={{
-                                    color: theme.palette.secondary.contrastText,
-                                }}
-                            >
-                                https://horizon.xibit.art
+                            <Button variant="contained">
+                                <Typography variant="h4" textTransform="lowercase">
+                                    https://horizon.xibit.art
+                                </Typography>
                             </Button>
                         </Box>
                     </Grid>
@@ -99,6 +107,7 @@ const Component = () => {
                         value="Horizon Gallery"
                         sx={{
                             width: 400,
+                            marginTop: 2,
                         }}
                     />
                 </Box>
@@ -114,10 +123,13 @@ const Component = () => {
                         multiline
                         rows={4}
                         fullWidth
+                        sx={{
+                            marginTop: 2,
+                        }}
                     />
                 </Box>
 
-                <Box>
+                <Box width={400}>
                     <Typography variant="h6" fontWeight="normal">
                         Markup
                     </Typography>
@@ -131,125 +143,50 @@ const Component = () => {
                         max={25}
                     />
                 </Box>
-                {/* <h1>Option 1</h1>
-                <Grid container>
-                    <Grid item md={6}>
-                        <Box>
-                            <Typography variant="h6" fontWeight="normal" mb={1}>
-                                Logo Horizontal
-                            </Typography>
-                            <Box width={500} height={250} borderRadius={1} bgcolor={'#e5e7eb'}>
-                                <Image
-                                    src={Image3}
-                                    alt="Horizon Gallery"
-                                    width={500}
-                                    height={120}
-                                    style={{
-                                        width: '100%',
-                                        height: '100%',
-                                        objectFit: 'cover',
-                                    }}
-                                />
-                            </Box>
-                        </Box>
-                        <Box>
-                            <Typography variant="h6" fontWeight="normal" mb={1} mt={1}>
-                                Logo Square
-                            </Typography>
-                            <Box width={200} height={200} borderRadius={1} bgcolor={'#e5e7eb'}>
-                                <Image
-                                    src={Image2}
-                                    alt="Horizon Gallery"
-                                    width={200}
-                                    height={200}
-                                    style={{
-                                        width: '100%',
-                                        height: '100%',
-                                        objectFit: 'cover',
-                                    }}
-                                />
-                            </Box>
-                        </Box>
-                    </Grid>
-                    <Grid item md={6}>
-                        {' '}
-                        <Box>
-                            <Typography variant="h6" fontWeight="normal" mb={1}>
-                                Banner
-                            </Typography>
-                            <Box width="100%" height={250} maxWidth={750} borderRadius={1} bgcolor={'#e5e7eb'}>
-                                <Image
-                                    src={Image1}
-                                    alt="Horizon Gallery"
-                                    width={750}
-                                    height={250}
-                                    style={{
-                                        width: '100%',
-                                        height: '100%',
-                                        objectFit: 'cover',
-                                    }}
-                                />
-                            </Box>
-                        </Box>
-                    </Grid>
-                </Grid> */}
 
-                {/* <h1>Option 2</h1> */}
-                <Box display="flex" gap={2}>
-                    <Box>
-                        <Typography variant="h6" fontWeight="normal" mb={1}>
-                            Logo Horizontal
-                        </Typography>
-                        <Box width={400} height={200} borderRadius={1} bgcolor={'#e5e7eb'}>
-                            <Image
-                                src={Image3}
-                                alt="Horizon Gallery"
-                                width={300}
-                                height={200}
-                                style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    objectFit: 'cover',
+                <Box display="flex" gap={4}>
+                    {[
+                        { name: 'Logo - Horizontal', dimensions: '500x120' },
+                        { name: 'Logo - Square', dimensions: '1000x1000' },
+                        { name: 'Banner', dimensions: '1500x500' },
+                    ].map((item, index) => (
+                        <Box key={item.name} width={160}>
+                            <Box display="flex" alignItems="center" justifyContent="space-between">
+                                <h4>{item.name}</h4>
+                                <IconButton onClick={() => handleChangeFile(null, index)}>
+                                    <Delete color="error" />
+                                </IconButton>
+                            </Box>
+
+                            <Box
+                                sx={{
+                                    border: '1px solid #e5e7eb',
+                                    borderRadius: 2,
+                                    overflow: 'hidden',
                                 }}
-                            />
+                            >
+                                <header
+                                    style={{
+                                        backgroundColor: theme.palette.grey[200],
+                                        padding: 16,
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        borderTopLeftRadius: 2,
+                                        borderTopRightRadius: 2,
+                                    }}
+                                >
+                                    <Typography>Image</Typography>
+                                    <Typography>{item.dimensions}</Typography>
+                                    <Typography>10 MB maximun</Typography>
+                                </header>
+                                <UploadMedia
+                                    file={files[index] || null}
+                                    onChange={(file) => handleChangeFile(file, index)}
+                                />
+                            </Box>
                         </Box>
-                    </Box>
-                    <Box>
-                        <Typography variant="h6" fontWeight="normal" mb={1}>
-                            Logo Square
-                        </Typography>
-                        <Box width={200} height={200} borderRadius={1} bgcolor={'#e5e7eb'}>
-                            <Image
-                                src={Image2}
-                                alt="Horizon Gallery"
-                                width={200}
-                                height={200}
-                                style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    objectFit: 'cover',
-                                }}
-                            />
-                        </Box>
-                    </Box>
-                    <Box>
-                        <Typography variant="h6" fontWeight="normal" mb={1}>
-                            Banner
-                        </Typography>
-                        <Box width={600} height={200} borderRadius={1} bgcolor={'#e5e7eb'}>
-                            <Image
-                                src={Image1}
-                                alt="Horizon Gallery"
-                                width={500}
-                                height={300}
-                                style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    objectFit: 'cover',
-                                }}
-                            />
-                        </Box>
-                    </Box>
+                    ))}
                 </Box>
             </form>
 
@@ -268,14 +205,7 @@ const Component = () => {
                         <Button variant="text" onClick={() => router.push('/home/stores/publish')}>
                             <Typography color="gray">Back</Typography>
                         </Button>
-                        <Button
-                            variant="contained"
-                            sx={{
-                                color: theme.palette.secondary.contrastText,
-                            }}
-                        >
-                            Next
-                        </Button>
+                        <Button variant="contained">Next</Button>
                     </Box>
                 </Box>
             </Box>

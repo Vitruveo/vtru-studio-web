@@ -119,7 +119,6 @@ const Component = ({ data }: ComponentProps) => {
                                                     sx={{
                                                         width: 100,
                                                         height: 30,
-                                                        color: theme.palette.secondary.contrastText,
                                                     }}
                                                     variant="contained"
                                                     onClick={() => {
@@ -165,14 +164,7 @@ const Component = ({ data }: ComponentProps) => {
                     <Button variant="text" onClick={() => router.push('/home/stores')}>
                         <Typography color="gray">Back</Typography>
                     </Button>
-                    <Button
-                        variant="contained"
-                        sx={{
-                            color: theme.palette.secondary.contrastText,
-                        }}
-                    >
-                        Review and Publish
-                    </Button>
+                    <Button variant="contained">Review and Publish</Button>
                 </Box>
             </Box>
         </Box>
