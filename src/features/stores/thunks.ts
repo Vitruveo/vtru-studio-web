@@ -1,5 +1,5 @@
 import { ReduxThunkAction } from '@/store';
-import { createNewStore, getStoreById, getStores } from './requests';
+import { createNewStore, deleteStore, getStoreById, getStores } from './requests';
 import { storesActions } from './slice';
 
 export function getStoresThunk(): ReduxThunkAction<Promise<void>> {
@@ -22,11 +22,18 @@ export function getStoreByIdThunk(id: string): ReduxThunkAction<Promise<void>> {
     };
 }
 
-export function createNewStoreThunk(): ReduxThunkAction<Promise<void>> {
+export function createNewStoreThunk(id?: string): ReduxThunkAction<Promise<void>> {
     return async (dispatch: any) => {
         dispatch(storesActions.setStartLoading());
-        const response = await createNewStore();
+        const response = await createNewStore(id);
         dispatch(storesActions.setSelectedStore(response.data!.insertedId));
         dispatch(storesActions.setFinishLoading());
+    };
+}
+
+export function deleteStoreThunk(id: string): ReduxThunkAction<Promise<void>> {
+    return async (dispatch: any) => {
+        await deleteStore(id);
+        dispatch(storesActions.removeStore(id));
     };
 }

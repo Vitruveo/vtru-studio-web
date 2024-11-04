@@ -46,14 +46,14 @@ export async function getStoreById(id: string): Promise<APIResponse<StoresItem>>
     });
 }
 
-export async function createNewStore(): Promise<APIResponse<{ insertedId: string }>> {
+export async function createNewStore(id?: string): Promise<APIResponse<{ insertedId: string }>> {
     return new Promise((resolve) => {
         setTimeout(() => {
             const newStore = {
                 id: String(data.length + 1),
-                name: 'Untitled',
+                name: data.find((item) => item.id === id)?.name || 'Untitled',
                 status: 'Draft',
-                image: NO_IMAGE_ASSET,
+                image: data.find((item) => item.id === id)?.image || NO_IMAGE_ASSET,
             };
             data = [...data, newStore];
             resolve({
@@ -63,6 +63,19 @@ export async function createNewStore(): Promise<APIResponse<{ insertedId: string
                 data: {
                     insertedId: newStore.id,
                 },
+            });
+        }, 1000);
+    });
+}
+
+export async function deleteStore(id: string): Promise<APIResponse<void>> {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            data = data.filter((item) => item.id !== id);
+            resolve({
+                code: 'api',
+                message: 'Success',
+                transaction: '123',
             });
         }, 1000);
     });
