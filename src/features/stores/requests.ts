@@ -1,5 +1,6 @@
 import { APIResponse } from '../common/types';
-import { CreateStoresParams, Stores, UpdateStepNameStoresParams } from './types';
+import { storesActionsCreators } from './slice';
+import { Stores, StoreStorageParams, UpdateStepNameStoresParams } from './types';
 
 import { apiService } from '@/services/api';
 
@@ -27,5 +28,42 @@ export async function updateStepNameStore({
     return apiService.patch(`/stores/${id}`, {
         stepName,
         data,
+    });
+}
+
+export async function storeStorage({ file, url, dispatch, transactionId }: StoreStorageParams): Promise<any> {
+    return new Promise((resolve, reject) => {
+        if (!file) reject('No file provided');
+
+        const xhr = new XMLHttpRequest();
+
+        xhr.open('PUT', url, true);
+
+        xhr.upload.onprogress = function (event) {
+            if (event.lengthComputable) {
+                const percentCompleted = Math.round((event.loaded * 100) / event.total);
+                dispatch(storesActionsCreators.requestStoreUpload({ transactionId, uploadProgress: percentCompleted }));
+            }
+        };
+
+        xhr.onload = function () {
+            if (this.status >= 200 && this.status < 300) {
+                resolve(xhr.response);
+            } else {
+                reject({
+                    status: this.status,
+                    statusText: xhr.statusText,
+                });
+            }
+        };
+
+        xhr.onerror = function () {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText,
+            });
+        };
+
+        xhr.send(file);
     });
 }

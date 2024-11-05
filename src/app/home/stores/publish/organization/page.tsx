@@ -1,18 +1,22 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import { nanoid } from 'nanoid';
 import { Box, Button, Grid, IconButton, Slider, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useTheme } from '@mui/material/styles';
+import { Delete } from '@mui/icons-material';
 
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
+import { MediaCard } from '@/app/home/stores/components/mediaCard';
 
-import { Delete } from '@mui/icons-material';
-import { UploadMedia } from '@/app/home/components/stores/UploadMedia';
 import { useDispatch, useSelector } from '@/store/hooks';
-import { updateOrganizationThunk } from '@/features/stores/thunks';
+import { storeStorageThunk, updateOrganizationThunk } from '@/features/stores/thunks';
+import { sendRequestUploadStoresThunk } from '@/features/asset/thunks';
+import { storesActionsCreators } from '@/features/stores/slice';
 
 interface Input {
     url: string;
@@ -24,6 +28,33 @@ interface Input {
     banner: File | null;
 }
 
+const mediaConfigs = {
+    logoHorizontal: {
+        width: 500,
+        height: 120,
+        ppi: 72,
+        sizeMB: 10,
+        required: true,
+        definition: 'landscape',
+    },
+    logoSquare: {
+        width: 1000,
+        height: 1000,
+        ppi: 72,
+        sizeMB: 10,
+        required: true,
+        definition: 'square',
+    },
+    banner: {
+        width: 1500,
+        height: 500,
+        ppi: 72,
+        sizeMB: 10,
+        required: true,
+        definition: 'landscape',
+    },
+};
+
 const Component = () => {
     const theme = useTheme();
     const dispatch = useDispatch();
@@ -31,6 +62,9 @@ const Component = () => {
 
     const selectedStore = useSelector((state) => state.stores.selectedStore);
     const store = useSelector((state) => state.stores.data.find((item) => item._id === selectedStore));
+    const requestUpload = useSelector((state) => state.stores.requestStoreUpload);
+
+    const [isSubmittingFiles, setIsSubmittingFiles] = useState(false);
 
     const formik = useFormik<Input>({
         initialValues: {
@@ -49,6 +83,48 @@ const Component = () => {
             markup: yup.number().required('Required'),
         }),
         onSubmit: (values) => {
+            let hasFile = false;
+
+            Object.entries(values).forEach(([key, value]) => {
+                if (value instanceof File) {
+                    hasFile = true;
+
+                    const transactionId = nanoid();
+
+                    dispatch(
+                        storesActionsCreators.requestStoreUpload({
+                            key,
+                            status: 'requested',
+                            transactionId,
+                        })
+                    );
+
+                    const image = new Image();
+                    image.src = URL.createObjectURL(value);
+                    image.onload = () => {
+                        const width = image.width.toString();
+                        const height = image.height.toString();
+
+                        dispatch(
+                            sendRequestUploadStoresThunk({
+                                mimetype: 'image/jpeg',
+                                metadata: {
+                                    width,
+                                    height,
+                                    formatUpload: key,
+                                    maxSize: mediaConfigs[key as keyof typeof mediaConfigs].sizeMB.toString(),
+                                },
+                                originalName: value.name,
+                                transactionId,
+                                id: selectedStore,
+                            })
+                        );
+                    };
+                }
+            });
+
+            if (hasFile) return;
+
             dispatch(
                 updateOrganizationThunk({
                     id: selectedStore,
@@ -57,7 +133,7 @@ const Component = () => {
                         name: values.name,
                         description: values.description,
                         markup: values.markup,
-                        formats: null,
+                        // formats: {}
                     },
                 })
             );
@@ -65,6 +141,45 @@ const Component = () => {
             router.push('/home/stores/publish');
         },
     });
+
+    useEffect(() => {
+        if (Object.keys(requestUpload).length === 0) return;
+
+        const hasReady = Object.values(requestUpload).some((item) => item.status === 'ready');
+        const hasUploading = Object.values(requestUpload).some((item) => item.status === 'uploading');
+        const allDone = Object.values(requestUpload).every((item) => item.status === 'done');
+
+        if (allDone) {
+            formik.handleSubmit();
+            setIsSubmittingFiles(false);
+            dispatch(storesActionsCreators.clearRequestStoreUpload());
+            return;
+        }
+
+        if (hasUploading) {
+            setIsSubmittingFiles(true);
+        }
+
+        if (hasReady) {
+            setIsSubmittingFiles(true);
+
+            Object.entries(requestUpload)
+                .filter(([key, value]) => value.status === 'ready')
+                .forEach(([key, value]) => {
+                    const file = formik.values[value.key as keyof typeof mediaConfigs]!;
+
+                    dispatch(
+                        storeStorageThunk({
+                            file,
+                            url: value.url,
+                            transactionId: value.transactionId,
+                        })
+                    );
+
+                    formik.setFieldValue(value.key as keyof typeof mediaConfigs, null);
+                });
+        }
+    }, [requestUpload]);
 
     const handleChangeFile = (field: string, file: File | null) => {
         formik.setFieldValue(field, file);
@@ -205,45 +320,51 @@ const Component = () => {
                         { field: 'logoHorizontal', name: 'Logo - Horizontal', dimensions: '500x120' },
                         { field: 'logoSquare', name: 'Logo - Square', dimensions: '1000x1000' },
                         { field: 'banner', name: 'Banner', dimensions: '1500x500' },
-                    ].map((item, index) => (
-                        <Box key={item.name} width={160}>
-                            <Box display="flex" alignItems="center" justifyContent="space-between">
-                                <h4>{item.name}</h4>
-                                <IconButton onClick={() => handleChangeFile(item.field, null)}>
-                                    <Delete color="error" />
-                                </IconButton>
-                            </Box>
+                    ].map((item, index) => {
+                        const mediaConfig = mediaConfigs[item.field as keyof typeof mediaConfigs];
 
-                            <Box
-                                sx={{
-                                    border: '1px solid #e5e7eb',
-                                    borderRadius: 2,
-                                    overflow: 'hidden',
-                                }}
-                            >
-                                <header
-                                    style={{
-                                        backgroundColor: theme.palette.grey[200],
-                                        padding: 16,
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: 'center',
-                                        borderTopLeftRadius: 2,
-                                        borderTopRightRadius: 2,
+                        return (
+                            <Box key={item.name} width={160}>
+                                <Box display="flex" alignItems="center" justifyContent="space-between">
+                                    <h4>{item.name}</h4>
+                                    <IconButton onClick={() => handleChangeFile(item.field, null)}>
+                                        <Delete color="error" />
+                                    </IconButton>
+                                </Box>
+
+                                <Box
+                                    sx={{
+                                        border: '1px solid #e5e7eb',
+                                        borderRadius: 2,
+                                        overflow: 'hidden',
                                     }}
                                 >
-                                    <Typography>Image</Typography>
-                                    <Typography>{item.dimensions}</Typography>
-                                    <Typography>10 MB maximun</Typography>
-                                </header>
-                                <UploadMedia
-                                    file={formik.values[item.field]}
-                                    onChange={(file) => handleChangeFile(item.field, file)}
-                                />
+                                    <header
+                                        style={{
+                                            backgroundColor: theme.palette.grey[200],
+                                            padding: 16,
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            alignItems: 'center',
+                                            borderTopLeftRadius: 2,
+                                            borderTopRightRadius: 2,
+                                        }}
+                                    >
+                                        <Typography>Image</Typography>
+                                        <Typography>{item.dimensions}</Typography>
+                                        <Typography>10 MB maximun</Typography>
+                                    </header>
+                                    <MediaCard
+                                        file={formik.values[item.field as keyof typeof mediaConfigs]}
+                                        mediaConfig={mediaConfig}
+                                        handleChangeFile={(file) => handleChangeFile(item.field, file)}
+                                    />
+                                </Box>
                             </Box>
-                        </Box>
-                    ))}
+                        );
+                    })}
                 </Box>
+                {isSubmittingFiles && <Typography variant="h4">Uploading files...</Typography>}
                 <Box
                     bgcolor="#e5e7eb"
                     sx={{

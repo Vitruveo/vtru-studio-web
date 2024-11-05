@@ -3,6 +3,7 @@ import { userActionsCreators } from '../user/slice';
 import webSocketService from '@/services/websocket';
 import { TOKEN_CREATORS } from '@/constants/ws';
 import { assetActionsCreators } from '../asset/slice';
+import { storesActionsCreators } from '../stores/slice';
 import { PreSignedURLPayload, NotifyEnvelope, AvatarEnvelop } from './types';
 import { deleteAssetStorage } from '../asset/requests';
 import { deleteAvatar } from '../user/requests';
@@ -39,6 +40,16 @@ export function loginWebSocketThunk(): ReduxThunkAction {
                 if (data.origin === 'profile') {
                     dispatch(
                         userActionsCreators.requestAvatarUpload({
+                            url: data.preSignedURL,
+                            transactionId: data.transactionId,
+                            path: data.path,
+                            status: 'ready',
+                        })
+                    );
+                }
+                if (data.origin === 'stores') {
+                    dispatch(
+                        storesActionsCreators.requestStoreUpload({
                             url: data.preSignedURL,
                             transactionId: data.transactionId,
                             path: data.path,

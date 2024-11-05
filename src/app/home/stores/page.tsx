@@ -22,9 +22,9 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { createNewStoreThunk, deleteStoreThunk, getStoresThunk } from '@/features/stores/thunks';
-import { Stores } from '@/features/stores/types';
-import { storesActions } from '@/features/stores/slice';
-import { GENERAL_STORAGE_URL } from '@/constants/asset';
+import type { Stores } from '@/features/stores/types';
+import { storesActionsCreators } from '@/features/stores/slice';
+import { STORE_STORAGE_URL } from '@/constants/asset';
 
 // assets
 import tempImage from '../../../../public/images/temp/400.svg';
@@ -188,8 +188,8 @@ const Component = ({ data, actions }: StoreProps) => {
 
                                     <Image
                                         src={
-                                            item.organization.formats?.logo.vertical.path
-                                                ? `${GENERAL_STORAGE_URL}${item.organization.formats?.logo.vertical.path}`
+                                            item.organization.formats?.logo?.square?.path
+                                                ? `${STORE_STORAGE_URL}/${item.organization.formats?.logo.square.path}`
                                                 : tempImage
                                         }
                                         alt="Store Image"
@@ -286,7 +286,7 @@ export default function Stores() {
     };
 
     const handleSelectStore = (id: string) => {
-        dispatch(storesActions.setSelectedStore(id));
+        dispatch(storesActionsCreators.setSelectedStore(id));
     };
 
     return (

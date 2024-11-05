@@ -1,4 +1,5 @@
 import { Button, Typography } from '@mui/material';
+import Image from 'next/image';
 import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 
@@ -30,7 +31,7 @@ export const UploadMedia = ({ file, onChange }: Props) => {
                 {isDragActive ? (
                     <Typography align="center">Drop the files here ...</Typography>
                 ) : file instanceof File ? (
-                    <img
+                    <Image
                         src={URL.createObjectURL(file)}
                         alt=""
                         style={{

@@ -1,34 +1,34 @@
 import { ReduxThunkAction } from '@/store';
-import { createNewStore, deleteStore, getStoreById, getStores, updateStepNameStore } from './requests';
-import { storesActions } from './slice';
-import { UpdateOrganizationParams, UpdateStepNameStoresParams } from './types';
+import { createNewStore, deleteStore, getStoreById, getStores, storeStorage, updateStepNameStore } from './requests';
+import { storesActionsCreators } from './slice';
+import { StoreStorageParams, UpdateOrganizationParams } from './types';
 
 export function getStoresThunk(): ReduxThunkAction<Promise<void>> {
     return async (dispatch: any) => {
-        dispatch(storesActions.setStartLoading());
-        dispatch(storesActions.setSelectedStore(''));
+        dispatch(storesActionsCreators.setStartLoading());
+        dispatch(storesActionsCreators.setSelectedStore(''));
 
         const response = await getStores();
-        dispatch(storesActions.setData(response.data!));
-        dispatch(storesActions.setFinishLoading());
+        dispatch(storesActionsCreators.setData(response.data!));
+        dispatch(storesActionsCreators.setFinishLoading());
     };
 }
 
 export function getStoreByIdThunk(id: string): ReduxThunkAction<Promise<void>> {
     return async (dispatch: any) => {
-        dispatch(storesActions.setStartLoading());
+        dispatch(storesActionsCreators.setStartLoading());
         const response = await getStoreById(id);
-        dispatch(storesActions.setData([response.data!]));
-        dispatch(storesActions.setFinishLoading());
+        dispatch(storesActionsCreators.setData([response.data!]));
+        dispatch(storesActionsCreators.setFinishLoading());
     };
 }
 
 export function createNewStoreThunk(): ReduxThunkAction<Promise<void>> {
     return async (dispatch: any) => {
-        dispatch(storesActions.setStartLoading());
+        dispatch(storesActionsCreators.setStartLoading());
         const response = await createNewStore();
-        dispatch(storesActions.setSelectedStore(response.data!.insertedId));
-        dispatch(storesActions.setFinishLoading());
+        dispatch(storesActionsCreators.setSelectedStore(response.data!.insertedId));
+        dispatch(storesActionsCreators.setFinishLoading());
     };
 }
 
@@ -46,6 +46,35 @@ export function updateOrganizationThunk(data: UpdateOrganizationParams): ReduxTh
 export function deleteStoreThunk(id: string): ReduxThunkAction<Promise<void>> {
     return async (dispatch: any) => {
         await deleteStore(id);
-        dispatch(storesActions.removeStore(id));
+        dispatch(storesActionsCreators.removeStore(id));
+    };
+}
+
+export function storeStorageThunk({
+    file,
+    url,
+    transactionId,
+}: Omit<StoreStorageParams, 'dispatch'>): ReduxThunkAction<Promise<void>> {
+    return async (dispatch: any) => {
+        dispatch(
+            storesActionsCreators.requestStoreUpload({
+                transactionId,
+                status: 'uploading',
+            })
+        );
+
+        await storeStorage({
+            file,
+            url,
+            dispatch,
+            transactionId,
+        });
+
+        dispatch(
+            storesActionsCreators.requestStoreUpload({
+                transactionId,
+                status: 'done',
+            })
+        );
     };
 }

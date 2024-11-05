@@ -6,6 +6,8 @@ export const initialState: StoresState = {
     data: [],
     selectedStore: '',
     error: null,
+
+    requestStoreUpload: {},
 };
 
 export const storesSlice = createSlice({
@@ -27,7 +29,17 @@ export const storesSlice = createSlice({
         removeStore: (state, action: PayloadAction<string>) => {
             state.data = state.data.filter((store: Stores) => store._id !== action.payload);
         },
+
+        requestStoreUpload: (state, action) => {
+            state.requestStoreUpload[action.payload.transactionId] = {
+                ...state.requestStoreUpload[action.payload.transactionId],
+                ...action.payload,
+            };
+        },
+        clearRequestStoreUpload: (state) => {
+            state.requestStoreUpload = {};
+        },
     },
 });
 
-export const storesActions = storesSlice.actions;
+export const storesActionsCreators = storesSlice.actions;

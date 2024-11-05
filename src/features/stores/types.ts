@@ -6,7 +6,7 @@ interface Media {
 interface Formats {
     logo: {
         horizontal: Media;
-        vertical: Media;
+        square: Media;
     };
     banner: Media;
 }
@@ -32,11 +32,23 @@ export interface Stores {
     framework: Framework;
 }
 
+export interface RequestStoreUpload {
+    transactionId: string;
+    url: string;
+    key: string;
+    path: string;
+    status: string;
+    uploadProgress: number;
+    format: string;
+}
+
 export interface StoresState {
     loading: boolean;
     data: Stores[];
     selectedStore: string;
     error: string | null;
+
+    requestStoreUpload: { [key: string]: RequestStoreUpload };
 }
 
 export type CreateStoresParams = Pick<Stores, 'organization'>;
@@ -49,5 +61,12 @@ export interface UpdateStepNameStoresParams {
 
 export interface UpdateOrganizationParams {
     id: string;
-    data: Organization;
+    data: Omit<Organization, 'formats'>;
+}
+
+export interface StoreStorageParams {
+    url: string;
+    file: File;
+    dispatch: any;
+    transactionId: string;
 }

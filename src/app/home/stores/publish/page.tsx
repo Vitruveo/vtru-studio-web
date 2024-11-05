@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { useEffect } from 'react';
 import { getStoreByIdThunk } from '@/features/stores/thunks';
 import { Stores } from '@/features/stores/types';
-import { GENERAL_STORAGE_URL } from '@/constants/asset';
+import { STORE_STORAGE_URL } from '@/constants/asset';
 
 const statusStyles = {
     Completed: {
@@ -138,8 +138,8 @@ const Component = ({ data }: ComponentProps) => {
                     <Grid item xs={12} md={6}>
                         <Image
                             src={
-                                store?.organization.formats?.logo.vertical.path
-                                    ? `${GENERAL_STORAGE_URL}/${store?.organization.formats?.logo.vertical.path}`
+                                store?.organization.formats?.logo?.square?.path
+                                    ? `${STORE_STORAGE_URL}/${store?.organization.formats?.logo.square.path}`
                                     : 'https://placehold.co/400'
                             }
                             alt={store.organization.name}
