@@ -1,8 +1,9 @@
 'use client';
 
+import { useFormik } from 'formik';
+import * as yup from 'yup';
 import { Box, Button, Grid, IconButton, Slider, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { useTheme } from '@mui/material/styles';
 
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
@@ -10,20 +11,63 @@ import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTe
 
 import { Delete } from '@mui/icons-material';
 import { UploadMedia } from '@/app/home/components/stores/UploadMedia';
-import { useState } from 'react';
+import { useDispatch, useSelector } from '@/store/hooks';
+import { updateOrganizationThunk } from '@/features/stores/thunks';
+
+interface Input {
+    url: string;
+    name: string;
+    description: string;
+    markup: number;
+    logoHorizontal: File | null;
+    logoSquare: File | null;
+    banner: File | null;
+}
 
 const Component = () => {
     const theme = useTheme();
+    const dispatch = useDispatch();
     const router = useRouter();
 
-    const [files, setFiles] = useState<(File | null)[]>([null, null, null]);
+    const selectedStore = useSelector((state) => state.stores.selectedStore);
+    const store = useSelector((state) => state.stores.data.find((item) => item._id === selectedStore));
 
-    const handleChangeFile = (file: File | null, index: number) => {
-        setFiles((prev) => {
-            const newFiles = [...prev];
-            newFiles[index] = file;
-            return newFiles;
-        });
+    const formik = useFormik<Input>({
+        initialValues: {
+            url: store?.organization.url || '',
+            name: store?.organization.name || '',
+            description: store?.organization.description || '',
+            markup: store?.organization.markup || 10,
+            logoHorizontal: null,
+            logoSquare: null,
+            banner: null,
+        },
+        validationSchema: yup.object().shape({
+            url: yup.string().test('url', 'Invalid ID', (value) => /^[a-z0-9-]{4,}$/.test(value!)),
+            name: yup.string().required('Required'),
+            description: yup.string(),
+            markup: yup.number().required('Required'),
+        }),
+        onSubmit: (values) => {
+            dispatch(
+                updateOrganizationThunk({
+                    id: selectedStore,
+                    data: {
+                        url: values.url,
+                        name: values.name,
+                        description: values.description,
+                        markup: values.markup,
+                        formats: null,
+                    },
+                })
+            );
+
+            router.push('/home/stores/publish');
+        },
+    });
+
+    const handleChangeFile = (field: string, file: File | null) => {
+        formik.setFieldValue(field, file);
     };
 
     return (
@@ -55,6 +99,7 @@ const Component = () => {
             </Box>
 
             <form
+                onSubmit={formik.handleSubmit}
                 style={{
                     padding: 16,
                     display: 'flex',
@@ -72,7 +117,9 @@ const Component = () => {
                                 id="id"
                                 label=""
                                 size="small"
-                                value="horizon"
+                                name="url"
+                                value={formik.values.url}
+                                onChange={formik.handleChange}
                                 sx={{
                                     width: 200,
                                     marginTop: 2,
@@ -80,6 +127,9 @@ const Component = () => {
                             />
                             <Typography variant="caption" color="GrayText">
                                 Lowercase a-z, numbers 0-9 <br /> and hyphens. Minimum length 4 characters.
+                            </Typography>
+                            <Typography variant="caption" color="error">
+                                {formik.errors.url}
                             </Typography>
                         </Box>
                     </Grid>
@@ -90,7 +140,7 @@ const Component = () => {
                             </Typography>
                             <Button variant="contained">
                                 <Typography variant="h4" textTransform="lowercase">
-                                    https://horizon.xibit.art
+                                    {formik.values.url && `https://${formik.values.url}.xibit.art`}
                                 </Typography>
                             </Button>
                         </Box>
@@ -104,7 +154,9 @@ const Component = () => {
                         id="name"
                         label=""
                         size="small"
-                        value="Horizon Gallery"
+                        name="name"
+                        value={formik.values.name}
+                        onChange={formik.handleChange}
                         sx={{
                             width: 400,
                             marginTop: 2,
@@ -118,7 +170,9 @@ const Component = () => {
                     <CustomTextField
                         id="description"
                         label=""
-                        value="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab sapiente commodi tenetur nostrum minima quas repudiandae earum, sunt obcaecati ipsum porro totam, iste voluptatum fuga quae magni consequatur consectetur perferendis. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab sapiente commodi tenetur nostrum minima quas repudiandae earum, sunt obcaecati ipsum porro totam, iste voluptatum fuga quae magni consequatur consectetur perferendis. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab sapiente commodi tenetur nostrum minima quas repudiandae earum, sunt obcaecati ipsum porro totam, iste voluptatum fuga quae magni consequatur consectetur perferendis."
+                        name="description"
+                        value={formik.values.description}
+                        onChange={formik.handleChange}
                         size="small"
                         multiline
                         rows={4}
@@ -134,26 +188,28 @@ const Component = () => {
                         Markup
                     </Typography>
                     <Slider
-                        defaultValue={10}
                         aria-labelledby="discrete-slider"
                         valueLabelDisplay="auto"
                         step={1}
                         marks
                         min={0}
                         max={25}
+                        name="markup"
+                        value={formik.values.markup}
+                        onChange={(event, value) => formik.setFieldValue('markup', value)}
                     />
                 </Box>
 
                 <Box display="flex" gap={4}>
                     {[
-                        { name: 'Logo - Horizontal', dimensions: '500x120' },
-                        { name: 'Logo - Square', dimensions: '1000x1000' },
-                        { name: 'Banner', dimensions: '1500x500' },
+                        { field: 'logoHorizontal', name: 'Logo - Horizontal', dimensions: '500x120' },
+                        { field: 'logoSquare', name: 'Logo - Square', dimensions: '1000x1000' },
+                        { field: 'banner', name: 'Banner', dimensions: '1500x500' },
                     ].map((item, index) => (
                         <Box key={item.name} width={160}>
                             <Box display="flex" alignItems="center" justifyContent="space-between">
                                 <h4>{item.name}</h4>
-                                <IconButton onClick={() => handleChangeFile(null, index)}>
+                                <IconButton onClick={() => handleChangeFile(item.field, null)}>
                                     <Delete color="error" />
                                 </IconButton>
                             </Box>
@@ -181,34 +237,35 @@ const Component = () => {
                                     <Typography>10 MB maximun</Typography>
                                 </header>
                                 <UploadMedia
-                                    file={files[index] || null}
-                                    onChange={(file) => handleChangeFile(file, index)}
+                                    file={formik.values[item.field]}
+                                    onChange={(file) => handleChangeFile(item.field, file)}
                                 />
                             </Box>
                         </Box>
                     ))}
                 </Box>
-            </form>
-
-            <Box
-                bgcolor="#e5e7eb"
-                sx={{
-                    position: 'fixed',
-                    bottom: 0,
-                    left: 0,
-                    width: '100%',
-                }}
-            >
-                <Box display="flex" alignItems="center" justifyContent="space-between" p={2}>
-                    <Typography color="GrayText">Step 1 of 3</Typography>
-                    <Box display="flex" gap={2}>
-                        <Button variant="text" onClick={() => router.push('/home/stores/publish')}>
-                            <Typography color="gray">Back</Typography>
-                        </Button>
-                        <Button variant="contained">Next</Button>
+                <Box
+                    bgcolor="#e5e7eb"
+                    sx={{
+                        position: 'fixed',
+                        bottom: 0,
+                        left: 0,
+                        width: '100%',
+                    }}
+                >
+                    <Box display="flex" alignItems="center" justifyContent="space-between" p={2}>
+                        <Typography color="GrayText">Step 1 of 3</Typography>
+                        <Box display="flex" gap={2}>
+                            <Button type="button" variant="text" onClick={() => router.push('/home/stores/publish')}>
+                                <Typography color="gray">Back</Typography>
+                            </Button>
+                            <Button type="submit" variant="contained">
+                                Next
+                            </Button>
+                        </Box>
                     </Box>
                 </Box>
-            </Box>
+            </form>
         </Box>
     );
 };

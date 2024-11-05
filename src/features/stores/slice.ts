@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { StoresItem, StoresState } from './types';
+import { Stores, StoresState } from './types';
 
 export const initialState: StoresState = {
     loading: false,
@@ -25,7 +25,7 @@ export const storesSlice = createSlice({
             state.selectedStore = action.payload;
         },
         removeStore: (state, action: PayloadAction<string>) => {
-            state.data = state.data.filter((store: StoresItem) => store.id !== action.payload);
+            state.data = state.data.filter((store: Stores) => store._id !== action.payload);
         },
     },
 });

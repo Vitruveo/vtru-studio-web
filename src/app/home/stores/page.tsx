@@ -22,12 +22,16 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { createNewStoreThunk, deleteStoreThunk, getStoresThunk } from '@/features/stores/thunks';
-import { StoresItem } from '@/features/stores/types';
+import { Stores } from '@/features/stores/types';
 import { storesActions } from '@/features/stores/slice';
+import { GENERAL_STORAGE_URL } from '@/constants/asset';
+
+// assets
+import tempImage from '../../../../public/images/temp/400.svg';
 
 interface StoreProps {
     data: {
-        stores: StoresItem[];
+        stores: Stores[];
         loading: boolean;
         openDeleteDialog: boolean;
     };
@@ -143,7 +147,7 @@ const Component = ({ data, actions }: StoreProps) => {
                                     color: 'black',
                                 }}
                                 onClick={() => {
-                                    handleSelectStore(item.id);
+                                    handleSelectStore(item._id);
                                 }}
                             >
                                 <Box position="relative" width={200}>
@@ -159,7 +163,7 @@ const Component = ({ data, actions }: StoreProps) => {
                                         onClick={(event) => {
                                             event.preventDefault();
                                             event.stopPropagation();
-                                            handleCreateNewStore(item.id);
+                                            handleCreateNewStore();
                                         }}
                                     >
                                         <IconCopy color="red" />
@@ -176,14 +180,18 @@ const Component = ({ data, actions }: StoreProps) => {
                                         onClick={(event) => {
                                             event.preventDefault();
                                             event.stopPropagation();
-                                            handleDelete(item.id);
+                                            handleDelete(item._id);
                                         }}
                                     >
                                         <IconTrash color="red" />
                                     </IconButton>
 
                                     <Image
-                                        src={item?.image}
+                                        src={
+                                            item.organization.formats?.logo.vertical.path
+                                                ? `${GENERAL_STORAGE_URL}${item.organization.formats?.logo.vertical.path}`
+                                                : tempImage
+                                        }
                                         alt="Store Image"
                                         width={200}
                                         height={200}
@@ -202,8 +210,8 @@ const Component = ({ data, actions }: StoreProps) => {
                                             borderBottomRightRadius: 5,
                                         }}
                                     >
-                                        <Typography variant="h5">{item?.name}</Typography>
-                                        <Typography fontSize={16}>{item?.status}</Typography>
+                                        <Typography fontSize={16}>{item?.organization.url}</Typography>
+                                        <Typography variant="h5">{item?.organization.name}</Typography>
                                         <Typography
                                             fontSize={16}
                                             style={{
@@ -247,7 +255,7 @@ const Component = ({ data, actions }: StoreProps) => {
 
 export default function Stores() {
     const dispatch = useDispatch();
-    const { data: storesData, loading } = useSelector((state) => state.stores);
+    const { data, loading } = useSelector((state) => state.stores);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [storeToDelete, setStoreToDelete] = useState<string | null>(null);
 
@@ -273,8 +281,8 @@ export default function Stores() {
         setStoreToDelete(null);
     };
 
-    const handleCreateNewStore = (id?: string) => {
-        dispatch(createNewStoreThunk(id));
+    const handleCreateNewStore = () => {
+        dispatch(createNewStoreThunk());
     };
 
     const handleSelectStore = (id: string) => {
@@ -283,7 +291,7 @@ export default function Stores() {
 
     return (
         <Component
-            data={{ stores: storesData, loading, openDeleteDialog }}
+            data={{ stores: data, loading, openDeleteDialog }}
             actions={{
                 handleDelete,
                 handleDeleteConfirm,

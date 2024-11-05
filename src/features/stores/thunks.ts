@@ -1,6 +1,7 @@
 import { ReduxThunkAction } from '@/store';
-import { createNewStore, deleteStore, getStoreById, getStores } from './requests';
+import { createNewStore, deleteStore, getStoreById, getStores, updateStepNameStore } from './requests';
 import { storesActions } from './slice';
+import { UpdateOrganizationParams, UpdateStepNameStoresParams } from './types';
 
 export function getStoresThunk(): ReduxThunkAction<Promise<void>> {
     return async (dispatch: any) => {
@@ -22,12 +23,23 @@ export function getStoreByIdThunk(id: string): ReduxThunkAction<Promise<void>> {
     };
 }
 
-export function createNewStoreThunk(id?: string): ReduxThunkAction<Promise<void>> {
+export function createNewStoreThunk(): ReduxThunkAction<Promise<void>> {
     return async (dispatch: any) => {
         dispatch(storesActions.setStartLoading());
-        const response = await createNewStore(id);
+        const response = await createNewStore();
         dispatch(storesActions.setSelectedStore(response.data!.insertedId));
         dispatch(storesActions.setFinishLoading());
+    };
+}
+
+export function updateOrganizationThunk(data: UpdateOrganizationParams): ReduxThunkAction<Promise<void>> {
+    return async (dispatch: any) => {
+        await updateStepNameStore({
+            stepName: 'organization',
+            id: data.id,
+            data: data.data,
+        });
+        // dispatch(storesActions.updateStore({ id: data.id, data }));
     };
 }
 

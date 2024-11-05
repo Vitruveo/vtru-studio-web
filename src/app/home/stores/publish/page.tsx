@@ -10,7 +10,8 @@ import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useEffect } from 'react';
 import { getStoreByIdThunk } from '@/features/stores/thunks';
-import { StoresItem } from '@/features/stores/types';
+import { Stores } from '@/features/stores/types';
+import { GENERAL_STORAGE_URL } from '@/constants/asset';
 
 const statusStyles = {
     Completed: {
@@ -53,7 +54,7 @@ const tasks = [
 
 interface ComponentProps {
     data: {
-        store: StoresItem;
+        store: Stores;
         loading: boolean;
     };
 }
@@ -75,7 +76,7 @@ const Component = ({ data }: ComponentProps) => {
         <Box position="relative" paddingInline={3} overflow="auto">
             <Breadcrumb
                 title="Publish Store"
-                assetTitle={store.name}
+                assetTitle={store.organization.name}
                 items={[{ title: 'Stores', to: '/home/stores' }, { title: 'Publish' }]}
             />
 
@@ -136,8 +137,12 @@ const Component = ({ data }: ComponentProps) => {
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <Image
-                            src={store.image}
-                            alt={store.name}
+                            src={
+                                store?.organization.formats?.logo.vertical.path
+                                    ? `${GENERAL_STORAGE_URL}/${store?.organization.formats?.logo.vertical.path}`
+                                    : 'https://placehold.co/400'
+                            }
+                            alt={store.organization.name}
                             width={400}
                             height={400}
                             style={{
