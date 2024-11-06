@@ -104,24 +104,6 @@ const Identity = ({
                     </CardContent>
                 </BlankCard>
             </Grid>
-            <Grid item xs={12} lg={6} width="50%">
-                <BlankCard>
-                    <CardContent
-                        sx={{ height: { xs: 'auto', lg: '500px' } }}
-                        style={{ overflowY: 'auto', maxHeight: '535px' }}
-                    >
-                        <AccountSettings
-                            values={values}
-                            errors={errors}
-                            handleChange={handleChange}
-                            handleSubmit={handleSubmit}
-                            setErrors={setErrors}
-                            setFieldError={setFieldError}
-                            setFieldValue={setFieldValue}
-                        />
-                    </CardContent>
-                </BlankCard>
-            </Grid>
         </Grid>
     );
 };

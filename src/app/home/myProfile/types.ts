@@ -31,6 +31,7 @@ export type AccountSettingsFormErros = FormikErrors<AccountSettingsFormValues>;
 
 export interface AccountSettingsProps extends FormikDefaultProps<AccountSettingsFormValues> {
     values: AccountSettingsFormValues;
+    type?: 'emails' | 'wallets';
     errors: AccountSettingsFormErros;
     setErrors: (errors: AccountSettingsFormErros) => void;
 }
