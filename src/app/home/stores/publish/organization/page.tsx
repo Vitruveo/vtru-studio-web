@@ -17,15 +17,16 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { storeStorageThunk, updateOrganizationThunk } from '@/features/stores/thunks';
 import { sendRequestUploadStoresThunk } from '@/features/asset/thunks';
 import { storesActionsCreators } from '@/features/stores/slice';
+import { STORE_STORAGE_URL } from '@/constants/asset';
 
 interface Input {
     url: string;
     name: string;
     description: string;
     markup: number;
-    logoHorizontal: File | null;
-    logoSquare: File | null;
-    banner: File | null;
+    logoHorizontal: File | string | null;
+    logoSquare: File | string | null;
+    banner: File | string | null;
 }
 
 const mediaConfigs = {
@@ -72,9 +73,15 @@ const Component = () => {
             name: store?.organization.name || '',
             description: store?.organization.description || '',
             markup: store?.organization.markup || 10,
-            logoHorizontal: null,
-            logoSquare: null,
-            banner: null,
+            logoHorizontal: store?.organization.formats?.logo.horizontal.path
+                ? `${STORE_STORAGE_URL}/${store.organization.formats.logo.horizontal.path}`
+                : null,
+            logoSquare: store?.organization.formats?.logo.square.path
+                ? `${STORE_STORAGE_URL}/${store.organization.formats.logo.square.path}`
+                : null,
+            banner: store?.organization.formats?.banner.path
+                ? `${STORE_STORAGE_URL}/${store.organization.formats.banner.path}`
+                : null,
         },
         validationSchema: yup.object().shape({
             url: yup.string().test('url', 'Invalid ID', (value) => /^[a-z0-9-]{4,}$/.test(value!)),
@@ -170,7 +177,7 @@ const Component = () => {
 
                     dispatch(
                         storeStorageThunk({
-                            file,
+                            file: file as File,
                             url: value.url,
                             transactionId: value.transactionId,
                         })

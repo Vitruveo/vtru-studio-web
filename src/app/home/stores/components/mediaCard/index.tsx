@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { Pintura } from '@/app/home/components/Pintura';
 
 interface Props {
-    file: File | null;
+    file: File | string | null;
     mediaConfig: {
         width: number;
         height: number;
@@ -56,9 +56,20 @@ export const MediaCard = ({ ...rest }: Props) => {
                 >
                     {isDragActive ? (
                         <Typography align="center">Drop the files here ...</Typography>
-                    ) : rest.file ? (
+                    ) : rest.file instanceof File ? (
                         <Image
                             src={URL.createObjectURL(rest.file)}
+                            alt="media"
+                            width={definition === 'landscape' ? 120 : definition === 'portrait' ? 100 : 50}
+                            height={definition === 'landscape' ? 100 : definition === 'portrait' ? 120 : 100}
+                            style={{
+                                objectFit: 'contain',
+                                width: '100%',
+                            }}
+                        />
+                    ) : typeof rest.file === 'string' ? (
+                        <Image
+                            src={rest.file}
                             alt="media"
                             width={definition === 'landscape' ? 120 : definition === 'portrait' ? 100 : 50}
                             height={definition === 'landscape' ? 100 : definition === 'portrait' ? 120 : 100}

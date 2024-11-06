@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { useEffect } from 'react';
 import { getStoreByIdThunk } from '@/features/stores/thunks';
 import { Stores } from '@/features/stores/types';
-import { STORE_STORAGE_URL } from '@/constants/asset';
+import { NO_IMAGE_ASSET, STORE_STORAGE_URL } from '@/constants/asset';
 
 const statusStyles = {
     Completed: {
@@ -140,7 +140,7 @@ const Component = ({ data }: ComponentProps) => {
                             src={
                                 store?.organization.formats?.logo?.square?.path
                                     ? `${STORE_STORAGE_URL}/${store?.organization.formats?.logo.square.path}`
-                                    : 'https://placehold.co/400'
+                                    : NO_IMAGE_ASSET
                             }
                             alt={store.organization.name}
                             width={400}
