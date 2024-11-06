@@ -101,6 +101,11 @@ export default function MediaCard({
             accept = {
                 'image/jpeg': [],
                 'image/png': [],
+                'image/webp': [],
+                'image/gif': [],
+                'image/svg+xml': [],
+                'video/mp4': [],
+                'video/webm': [],
             };
         } else if (mediaConfig.type === 'Image') {
             accept = {

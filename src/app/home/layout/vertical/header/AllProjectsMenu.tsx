@@ -1,19 +1,18 @@
 import { Box, Drawer, IconButton, List, ListItem, ListItemText, Typography, useMediaQuery } from '@mui/material';
-import { BASE_URL_API } from '@/constants/api';
 import { useState } from 'react';
 import { IconMenu2 } from '@tabler/icons-react';
-
-const isDev = BASE_URL_API.includes('dev');
+import { BASE_URL_SEARCH } from '@/constants/search';
+import { BASE_URL_STUDIO } from '@/constants/studio';
 
 const projects = [
-    { title: 'STACKS', url: '' },
-    { title: 'SEARCH', url: isDev ? 'https://search.vtru.dev/' : 'https://search.vitruveo.xyz/' },
+    { title: 'SEARCH', url: `${BASE_URL_SEARCH}` },
+    { title: 'STACKS', url: `${BASE_URL_SEARCH}/stacks` },
     { title: 'STORES', url: '' },
     { title: 'STREAMS', url: '' },
-    { title: 'STUDIO', url: '' },
+    { title: 'STUDIO', url: `${BASE_URL_STUDIO}/login` },
+    { title: 'ABOUT XIBIT', url: 'https://about.xibit.app', onlyMobile: true },
+    { title: 'ABOUT VITRUVEO', url: 'https://vitruveo.xyz', onlyMobile: true },
     { title: 'BUY VUSD', url: '' },
-    { title: 'ABOUT XIBIT', url: 'https://about.xibit.app' },
-    { title: 'ABOUT VITRUVEO', url: 'https://vitruveo.xyz' },
 ];
 
 const AllProjectsMenu = () => {
@@ -25,12 +24,20 @@ const AllProjectsMenu = () => {
         setDrawerOpen(open);
     };
 
+    const getActualProject = () => {
+        const actualUrl = window.location.href;
+        if (actualUrl.includes('stacks')) return projects[1];
+        if (actualUrl.includes('search')) return projects[0];
+        if (actualUrl.includes('studio')) return projects[4];
+        return projects[0];
+    };
+
     const getStyle = (v: { url: string; title: string }) => ({
         lineHeight: '1',
         padding: 0,
         cursor: v.url ? 'pointer' : 'default',
         letterSpacing: '3px',
-        color: v.title === 'STUDIO' ? '#D7DF23' : v.url ? 'black' : '#5A5A5A',
+        color: v.title === getActualProject().title ? '#D7DF23' : v.url ? 'black' : '#5A5A5A',
         '&:hover': {
             color: v.url && '#333',
         },
@@ -65,20 +72,24 @@ const AllProjectsMenu = () => {
         );
     }
 
+    const deskMenus = projects.filter((v) => !v.onlyMobile);
+
     return (
         <Box marginRight={7} padding={0} display="flex" alignItems="baseline">
-            {projects.map((v, index) => (
-                <Box key={v.title} display="flex" alignItems="baseline">
-                    <Typography onClick={() => v.url && window.open(v.url, '_blank')} sx={getStyle(v)}>
-                        {v.title}
-                    </Typography>
-                    {index !== projects.length - 1 && (
-                        <Typography color="black" sx={{ margin: '0 8px', padding: 0, lineHeight: '1' }}>
-                            |
+            {deskMenus
+                .filter((v) => !v.onlyMobile)
+                .map((v, index) => (
+                    <Box key={v.title} display="flex" alignItems="baseline">
+                        <Typography onClick={() => v.url && window.open(v.url, '_blank')} sx={getStyle(v)}>
+                            {v.title}
                         </Typography>
-                    )}
-                </Box>
-            ))}
+                        {index !== deskMenus.length - 1 && (
+                            <Typography color="black" sx={{ margin: '0 8px', padding: 0, lineHeight: '1' }}>
+                                |
+                            </Typography>
+                        )}
+                    </Box>
+                ))}
         </Box>
     );
 };

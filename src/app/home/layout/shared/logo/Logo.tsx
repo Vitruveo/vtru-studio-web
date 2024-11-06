@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { styled } from '@mui/material/styles';
 
 import Image from 'next/image';
-import { Box, useTheme } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import VtruTitle from '@/app/home/components/vtruTItle';
 import { useSelector } from '@/store/hooks';
 
@@ -15,10 +15,10 @@ const Logo = () => {
     const LinkStyled = styled(Link)(() => ({
         height: customizer.TopbarHeight,
         width: customizer.isMobileSidebar
-            ? '190px'
+            ? '220px'
             : customizer.isCollapse && !customizer.isSidebarHover
               ? '40px'
-              : '190px',
+              : '210px',
         overflow: 'hidden',
         display: 'block',
         color: theme.palette.text.primary,
@@ -34,7 +34,7 @@ const Logo = () => {
                         <Image src={'/images/logos/XIBIT-logo_light.png'} alt="logo" height={40} width={120} priority />
                     </Box>
                 ) : (
-                    <Box display="flex" marginTop={1} alignItems="center">
+                    <Box display="flex" marginTop={1} alignItems="end">
                         <Image
                             style={{ display: checkSidebar ? 'none' : '' }}
                             src={'/images/logos/XIBIT-logo_light.png'}
@@ -51,6 +51,23 @@ const Logo = () => {
                             width={120}
                             priority
                         />
+                        <Typography
+                            sx={{
+                                fontSize: 9,
+                                marginLeft: 1,
+                                textDecoration: 'none',
+                                cursor: 'pointer',
+                                letterSpacing: '2px',
+                                color: 'black',
+                                fontWeight: 500,
+                                '&:hover': {
+                                    color: '#333',
+                                },
+                            }}
+                            onClick={() => window.open('https://vitruveo.xyz', '_blank', 'noopener,noreferrer')}
+                        >
+                            BY VITRUVEO
+                        </Typography>
                     </Box>
                 )}
             </LinkStyled>
