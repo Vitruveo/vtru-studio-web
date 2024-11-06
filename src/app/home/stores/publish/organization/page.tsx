@@ -1,5 +1,4 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -65,6 +64,12 @@ const Component = () => {
     const store = useSelector((state) => state.stores.data.find((item) => item._id === selectedStore));
     const requestUpload = useSelector((state) => state.stores.requestStoreUpload);
 
+    const formatsMapper = {
+        logoHorizontal: store?.organization.formats?.logo.horizontal.path,
+        logoSquare: store?.organization.formats?.logo.square.path,
+        banner: store?.organization.formats?.banner.path,
+    };
+
     const [isSubmittingFiles, setIsSubmittingFiles] = useState(false);
 
     const formik = useFormik<Input>({
@@ -73,15 +78,11 @@ const Component = () => {
             name: store?.organization.name || '',
             description: store?.organization.description || '',
             markup: store?.organization.markup || 10,
-            logoHorizontal: store?.organization.formats?.logo.horizontal.path
-                ? `${STORE_STORAGE_URL}/${store.organization.formats.logo.horizontal.path}`
+            logoHorizontal: formatsMapper.logoHorizontal
+                ? `${STORE_STORAGE_URL}/${formatsMapper.logoHorizontal}`
                 : null,
-            logoSquare: store?.organization.formats?.logo.square.path
-                ? `${STORE_STORAGE_URL}/${store.organization.formats.logo.square.path}`
-                : null,
-            banner: store?.organization.formats?.banner.path
-                ? `${STORE_STORAGE_URL}/${store.organization.formats.banner.path}`
-                : null,
+            logoSquare: formatsMapper.logoSquare ? `${STORE_STORAGE_URL}/${formatsMapper.logoSquare}` : null,
+            banner: formatsMapper.banner ? `${STORE_STORAGE_URL}/${formatsMapper.banner}` : null,
         },
         validationSchema: yup.object().shape({
             url: yup.string().test('url', 'Invalid ID', (value) => /^[a-z0-9-]{4,}$/.test(value!)),
@@ -119,6 +120,7 @@ const Component = () => {
                                     width,
                                     height,
                                     formatUpload: key,
+                                    path: formatsMapper[key as keyof typeof formatsMapper],
                                     maxSize: mediaConfigs[key as keyof typeof mediaConfigs].sizeMB.toString(),
                                 },
                                 originalName: value.name,

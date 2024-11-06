@@ -3,7 +3,7 @@ interface Media {
     path: string;
 }
 
-interface Formats {
+export interface Formats {
     logo: {
         horizontal: Media;
         square: Media;
