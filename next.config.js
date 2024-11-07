@@ -10,7 +10,6 @@ const nextConfig = {
             'vitruveo-studio-production-assets.s3.amazonaws.com',
             'vitruveo-studio-production-general.s3.amazonaws.com',
             'cdn.vectorstock.com',
-            'placehold.co',
         ],
     },
     reactStrictMode: false,

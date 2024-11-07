@@ -24,10 +24,7 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { createNewStoreThunk, deleteStoreThunk, getStoresThunk } from '@/features/stores/thunks';
 import type { Stores } from '@/features/stores/types';
 import { storesActionsCreators } from '@/features/stores/slice';
-import { STORE_STORAGE_URL } from '@/constants/asset';
-
-// assets
-import tempImage from '../../../../public/images/temp/400.svg';
+import { NO_IMAGE_ASSET, STORE_STORAGE_URL } from '@/constants/asset';
 
 interface StoreProps {
     data: {
@@ -190,7 +187,7 @@ const Component = ({ data, actions }: StoreProps) => {
                                         src={
                                             item.organization.formats?.logo?.square?.path
                                                 ? `${STORE_STORAGE_URL}/${item.organization.formats?.logo.square.path}`
-                                                : tempImage
+                                                : NO_IMAGE_ASSET
                                         }
                                         alt="Store Image"
                                         width={200}
@@ -198,6 +195,7 @@ const Component = ({ data, actions }: StoreProps) => {
                                         style={{
                                             borderTopLeftRadius: 5,
                                             borderTopRightRadius: 5,
+                                            objectFit: 'cover',
                                         }}
                                     />
 

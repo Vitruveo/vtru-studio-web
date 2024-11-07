@@ -47,6 +47,7 @@ export interface StoresState {
     data: Stores[];
     selectedStore: string;
     error: string | null;
+    isSubmittingFiles: boolean;
 
     requestStoreUpload: { [key: string]: RequestStoreUpload };
 }

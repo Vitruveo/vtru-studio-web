@@ -17,6 +17,7 @@ import { storeStorageThunk, updateOrganizationThunk } from '@/features/stores/th
 import { sendRequestUploadStoresThunk } from '@/features/asset/thunks';
 import { storesActionsCreators } from '@/features/stores/slice';
 import { STORE_STORAGE_URL } from '@/constants/asset';
+import LoadingOverlay from '@/app/home/components/loadingOverlay';
 
 interface Input {
     url: string;
@@ -63,14 +64,13 @@ const Component = () => {
     const selectedStore = useSelector((state) => state.stores.selectedStore);
     const store = useSelector((state) => state.stores.data.find((item) => item._id === selectedStore));
     const requestUpload = useSelector((state) => state.stores.requestStoreUpload);
+    const isSubmittingFiles = useSelector((state) => state.stores.isSubmittingFiles);
 
     const formatsMapper = {
-        logoHorizontal: store?.organization.formats?.logo.horizontal.path,
-        logoSquare: store?.organization.formats?.logo.square.path,
-        banner: store?.organization.formats?.banner.path,
+        logoHorizontal: store?.organization.formats?.logo.horizontal?.path,
+        logoSquare: store?.organization.formats?.logo.square?.path,
+        banner: store?.organization.formats?.banner?.path,
     };
-
-    const [isSubmittingFiles, setIsSubmittingFiles] = useState(false);
 
     const formik = useFormik<Input>({
         initialValues: {
@@ -160,17 +160,17 @@ const Component = () => {
 
         if (allDone) {
             formik.handleSubmit();
-            setIsSubmittingFiles(false);
+            dispatch(storesActionsCreators.setIsSubmittingFiles(false));
             dispatch(storesActionsCreators.clearRequestStoreUpload());
             return;
         }
 
         if (hasUploading) {
-            setIsSubmittingFiles(true);
+            dispatch(storesActionsCreators.setIsSubmittingFiles(true));
         }
 
         if (hasReady) {
-            setIsSubmittingFiles(true);
+            dispatch(storesActionsCreators.setIsSubmittingFiles(true));
 
             Object.entries(requestUpload)
                 .filter(([key, value]) => value.status === 'ready')
@@ -262,9 +262,9 @@ const Component = () => {
                             <Typography variant="h6" fontWeight="normal">
                                 Store URL
                             </Typography>
-                            <Button variant="contained">
+                            <Button variant="contained" disabled={!formik.values.url || !!formik.errors.url}>
                                 <Typography variant="h4" textTransform="lowercase">
-                                    {formik.values.url && `https://${formik.values.url}.xibit.art`}
+                                    {`https://${formik.values.url}.xibit.art`}
                                 </Typography>
                             </Button>
                         </Box>
@@ -361,7 +361,7 @@ const Component = () => {
                                     >
                                         <Typography>Image</Typography>
                                         <Typography>{item.dimensions}</Typography>
-                                        <Typography>10 MB maximun</Typography>
+                                        <Typography>10 MB maximun</Typography>\{' '}
                                     </header>
                                     <MediaCard
                                         file={formik.values[item.field as keyof typeof mediaConfigs]}
@@ -373,7 +373,7 @@ const Component = () => {
                         );
                     })}
                 </Box>
-                {isSubmittingFiles && <Typography variant="h4">Uploading files...</Typography>}
+                {isSubmittingFiles && <LoadingOverlay message="Uploading files..." />}
                 <Box
                     bgcolor="#e5e7eb"
                     sx={{
