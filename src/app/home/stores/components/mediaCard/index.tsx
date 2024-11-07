@@ -7,6 +7,7 @@ import { Pintura } from '@/app/home/components/Pintura';
 
 interface Props {
     file: File | string | null;
+    isRequired: boolean;
     mediaConfig: {
         width: number;
         height: number;
@@ -93,7 +94,7 @@ export const MediaCard = ({ ...rest }: Props) => {
                             <Button variant="contained">Upload</Button>
 
                             <Typography align="center">
-                                This media is <b>Required</b>
+                                This media is {rest.isRequired ? <b>Required</b> : 'Optional'}
                             </Typography>
                         </div>
                     )}

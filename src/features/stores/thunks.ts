@@ -1,7 +1,15 @@
 import { ReduxThunkAction } from '@/store';
-import { createNewStore, deleteStore, getStoreById, getStores, storeStorage, updateStepNameStore } from './requests';
+import {
+    createNewStore,
+    deleteStore,
+    getStoreById,
+    getStores,
+    storeStorage,
+    updateStepNameStore,
+    validateUrl,
+} from './requests';
 import { storesActionsCreators } from './slice';
-import { StoreStorageParams, UpdateOrganizationParams } from './types';
+import { StoreStorageParams, UpdateOrganizationParams, ValidateUrlParams } from './types';
 
 export function getStoresThunk(): ReduxThunkAction<Promise<void>> {
     return async (dispatch: any) => {
@@ -47,6 +55,13 @@ export function deleteStoreThunk(id: string): ReduxThunkAction<Promise<void>> {
     return async (dispatch: any) => {
         await deleteStore(id);
         dispatch(storesActionsCreators.removeStore(id));
+    };
+}
+
+export function validateUrlThunk(data: ValidateUrlParams): ReduxThunkAction<Promise<void>> {
+    return async (dispatch: any) => {
+        const response = await validateUrl(data);
+        dispatch(storesActionsCreators.setSelectStoreValidateUrl(response.data || false));
     };
 }
 

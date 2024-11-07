@@ -182,7 +182,7 @@ export default function Publish() {
     const { data, loading } = useSelector((state) => state.stores);
 
     useEffect(() => {
-        dispatch(getStoreByIdThunk(selectedStore));
+        dispatch(getStoreByIdThunk(selectedStore.id));
     }, [selectedStore]);
 
     return <Component data={{ store: data[0], loading }} />;

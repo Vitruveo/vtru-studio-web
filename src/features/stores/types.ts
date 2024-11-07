@@ -1,3 +1,5 @@
+import { APIResponse } from '../common/types';
+
 interface Media {
     name: string;
     path: string;
@@ -45,7 +47,10 @@ export interface RequestStoreUpload {
 export interface StoresState {
     loading: boolean;
     data: Stores[];
-    selectedStore: string;
+    selectedStore: {
+        id: string;
+        validateUrl: null | boolean;
+    };
     error: string | null;
     isSubmittingFiles: boolean;
 
@@ -63,6 +68,11 @@ export interface UpdateStepNameStoresParams {
 export interface UpdateOrganizationParams {
     id: string;
     data: Omit<Organization, 'formats'>;
+}
+
+export interface ValidateUrlParams {
+    storeId: string;
+    url: string;
 }
 
 export interface StoreStorageParams {

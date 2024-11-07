@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { nanoid } from 'nanoid';
@@ -13,7 +13,7 @@ import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTe
 import { MediaCard } from '@/app/home/stores/components/mediaCard';
 
 import { useDispatch, useSelector } from '@/store/hooks';
-import { storeStorageThunk, updateOrganizationThunk } from '@/features/stores/thunks';
+import { storeStorageThunk, updateOrganizationThunk, validateUrlThunk } from '@/features/stores/thunks';
 import { sendRequestUploadStoresThunk } from '@/features/asset/thunks';
 import { storesActionsCreators } from '@/features/stores/slice';
 import { STORE_STORAGE_URL } from '@/constants/asset';
@@ -56,13 +56,19 @@ const mediaConfigs = {
     },
 };
 
+const cardsToUploadMedias = [
+    { field: 'logoHorizontal', name: 'Logo - Horizontal', dimensions: '500x120', required: false },
+    { field: 'logoSquare', name: 'Logo - Square', dimensions: '1000x1000', required: true },
+    { field: 'banner', name: 'Banner', dimensions: '1500x500', required: false },
+];
+
 const Component = () => {
     const theme = useTheme();
     const dispatch = useDispatch();
     const router = useRouter();
 
     const selectedStore = useSelector((state) => state.stores.selectedStore);
-    const store = useSelector((state) => state.stores.data.find((item) => item._id === selectedStore));
+    const store = useSelector((state) => state.stores.data.find((item) => item._id === selectedStore.id));
     const requestUpload = useSelector((state) => state.stores.requestStoreUpload);
     const isSubmittingFiles = useSelector((state) => state.stores.isSubmittingFiles);
 
@@ -70,6 +76,19 @@ const Component = () => {
         logoHorizontal: store?.organization.formats?.logo.horizontal?.path,
         logoSquare: store?.organization.formats?.logo.square?.path,
         banner: store?.organization.formats?.banner?.path,
+    };
+
+    const handleValidateUrl = () => {
+        if (selectedStore.id && formik.values.url)
+            dispatch(validateUrlThunk({ storeId: selectedStore.id, url: formik.values.url }));
+    };
+
+    const handleValidateMediaField = (field: string, value: any) => {
+        const card = cardsToUploadMedias.find((item) => item.field === field);
+        if (card?.required && value === null) {
+            return 'This media is required';
+        }
+        return undefined;
     };
 
     const formik = useFormik<Input>({
@@ -85,11 +104,25 @@ const Component = () => {
             banner: formatsMapper.banner ? `${STORE_STORAGE_URL}/${formatsMapper.banner}` : null,
         },
         validationSchema: yup.object().shape({
-            url: yup.string().test('url', 'Invalid ID', (value) => /^[a-z0-9-]{4,}$/.test(value!)),
-            name: yup.string().required('Required'),
+            url: yup
+                .string()
+                .required()
+                .test('url', 'Invalid ID', (value) => /^[a-z0-9-]{4,}$/.test(value!)),
+            name: yup.string().required(),
             description: yup.string(),
-            markup: yup.number().required('Required'),
+            markup: yup.number().required(),
         }),
+        validateOnBlur: true,
+        validate: (values) => {
+            const errors: Partial<Input> = {};
+            cardsToUploadMedias.forEach((item) => {
+                const error = handleValidateMediaField(item.field, values[item.field as keyof typeof mediaConfigs]);
+                if (error) {
+                    errors[item.field as keyof typeof mediaConfigs] = error;
+                }
+            });
+            return errors;
+        },
         onSubmit: (values) => {
             let hasFile = false;
 
@@ -125,7 +158,7 @@ const Component = () => {
                                 },
                                 originalName: value.name,
                                 transactionId,
-                                id: selectedStore,
+                                id: selectedStore.id,
                             })
                         );
                     };
@@ -136,7 +169,7 @@ const Component = () => {
 
             dispatch(
                 updateOrganizationThunk({
-                    id: selectedStore,
+                    id: selectedStore.id,
                     data: {
                         url: values.url,
                         name: values.name,
@@ -150,6 +183,10 @@ const Component = () => {
             router.push('/home/stores/publish');
         },
     });
+
+    useEffect(() => {
+        if (!selectedStore.validateUrl) formik.setFieldError('url', 'ID is already in use');
+    }, [selectedStore.validateUrl]);
 
     useEffect(() => {
         if (Object.keys(requestUpload).length === 0) return;
@@ -235,7 +272,7 @@ const Component = () => {
                     <Grid item xs={12} md={6}>
                         <Box display="flex" flexDirection="column">
                             <Typography variant="h6" fontWeight="normal">
-                                ID
+                                ID <span style={{ color: 'red' }}>*</span>
                             </Typography>
                             <CustomTextField
                                 id="id"
@@ -244,16 +281,17 @@ const Component = () => {
                                 name="url"
                                 value={formik.values.url}
                                 onChange={formik.handleChange}
+                                onBlur={handleValidateUrl}
                                 sx={{
                                     width: 200,
                                     marginTop: 2,
                                 }}
                             />
-                            <Typography variant="caption" color="GrayText">
-                                Lowercase a-z, numbers 0-9 <br /> and hyphens. Minimum length 4 characters.
-                            </Typography>
                             <Typography variant="caption" color="error">
                                 {formik.errors.url}
+                            </Typography>
+                            <Typography variant="caption" color="GrayText">
+                                Lowercase a-z, numbers 0-9 <br /> and hyphens. Minimum length 4 characters.
                             </Typography>
                         </Box>
                     </Grid>
@@ -270,9 +308,9 @@ const Component = () => {
                         </Box>
                     </Grid>
                 </Grid>
-                <Box>
+                <Box display={'flex'} flexDirection={'column'}>
                     <Typography variant="h6" fontWeight="normal">
-                        Name
+                        Name <span style={{ color: 'red' }}>*</span>
                     </Typography>
                     <CustomTextField
                         id="name"
@@ -286,6 +324,9 @@ const Component = () => {
                             marginTop: 2,
                         }}
                     />
+                    <Typography variant="caption" color="error">
+                        {formik.errors.name}
+                    </Typography>
                 </Box>
                 <Box>
                     <Typography variant="h6" fontWeight="normal">
@@ -325,17 +366,15 @@ const Component = () => {
                 </Box>
 
                 <Box display="flex" gap={4}>
-                    {[
-                        { field: 'logoHorizontal', name: 'Logo - Horizontal', dimensions: '500x120' },
-                        { field: 'logoSquare', name: 'Logo - Square', dimensions: '1000x1000' },
-                        { field: 'banner', name: 'Banner', dimensions: '1500x500' },
-                    ].map((item, index) => {
+                    {cardsToUploadMedias.map((item) => {
                         const mediaConfig = mediaConfigs[item.field as keyof typeof mediaConfigs];
 
                         return (
                             <Box key={item.name} width={160}>
                                 <Box display="flex" alignItems="center" justifyContent="space-between">
-                                    <h4>{item.name}</h4>
+                                    <h4>
+                                        {item.name} {item.required && <span style={{ color: 'red' }}>*</span>}
+                                    </h4>
                                     <IconButton onClick={() => handleChangeFile(item.field, null)}>
                                         <Delete color="error" />
                                     </IconButton>
@@ -361,14 +400,18 @@ const Component = () => {
                                     >
                                         <Typography>Image</Typography>
                                         <Typography>{item.dimensions}</Typography>
-                                        <Typography>10 MB maximun</Typography>\{' '}
+                                        <Typography>10 MB maximun</Typography>
                                     </header>
                                     <MediaCard
                                         file={formik.values[item.field as keyof typeof mediaConfigs]}
                                         mediaConfig={mediaConfig}
+                                        isRequired={item.required}
                                         handleChangeFile={(file) => handleChangeFile(item.field, file)}
                                     />
                                 </Box>
+                                <Typography variant="caption" color="error">
+                                    {formik.errors[item.field as keyof typeof mediaConfigs]}
+                                </Typography>
                             </Box>
                         );
                     })}
@@ -389,7 +432,11 @@ const Component = () => {
                             <Button type="button" variant="text" onClick={() => router.push('/home/stores/publish')}>
                                 <Typography color="gray">Back</Typography>
                             </Button>
-                            <Button type="submit" variant="contained">
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                disabled={Object.values(formik.errors).length > 0}
+                            >
                                 Next
                             </Button>
                         </Box>

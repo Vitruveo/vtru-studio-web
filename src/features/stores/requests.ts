@@ -1,6 +1,6 @@
 import { APIResponse } from '../common/types';
 import { storesActionsCreators } from './slice';
-import { Stores, StoreStorageParams, UpdateStepNameStoresParams } from './types';
+import { Stores, StoreStorageParams, UpdateStepNameStoresParams, ValidateUrlParams } from './types';
 
 import { apiService } from '@/services/api';
 
@@ -29,6 +29,10 @@ export async function updateStepNameStore({
         stepName,
         data,
     });
+}
+
+export async function validateUrl({ storeId, url }: ValidateUrlParams): Promise<APIResponse<boolean>> {
+    return apiService.post(`/stores/validateUrl/${storeId}`, { url });
 }
 
 export async function storeStorage({ file, url, dispatch, transactionId }: StoreStorageParams): Promise<any> {

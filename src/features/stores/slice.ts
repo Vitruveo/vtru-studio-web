@@ -4,7 +4,10 @@ import { Stores, StoresState } from './types';
 export const initialState: StoresState = {
     loading: false,
     data: [],
-    selectedStore: '',
+    selectedStore: {
+        id: '',
+        validateUrl: null,
+    },
     error: null,
     isSubmittingFiles: false,
     requestStoreUpload: {},
@@ -26,8 +29,11 @@ export const storesSlice = createSlice({
         setData: (state, action: PayloadAction<StoresState['data']>) => {
             state.data = action.payload;
         },
-        setSelectedStore: (state, action: PayloadAction<StoresState['selectedStore']>) => {
-            state.selectedStore = action.payload;
+        setSelectedStore: (state, action: PayloadAction<StoresState['selectedStore']['id']>) => {
+            state.selectedStore.id = action.payload;
+        },
+        setSelectStoreValidateUrl: (state, action: PayloadAction<StoresState['selectedStore']['validateUrl']>) => {
+            state.selectedStore.validateUrl = action.payload;
         },
         removeStore: (state, action: PayloadAction<string>) => {
             state.data = state.data.filter((store: Stores) => store._id !== action.payload);
