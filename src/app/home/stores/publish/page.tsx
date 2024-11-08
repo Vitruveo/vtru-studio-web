@@ -3,14 +3,13 @@
 import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useTheme } from '@mui/material/styles';
 
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useEffect } from 'react';
 import { getStoreByIdThunk } from '@/features/stores/thunks';
-import { Stores } from '@/features/stores/types';
+import { Stores, Task } from '@/features/stores/types';
 import { NO_IMAGE_ASSET, STORE_STORAGE_URL } from '@/constants/asset';
 import { storesActionsCreators } from '@/features/stores/slice';
 
@@ -29,32 +28,9 @@ const statusStyles = {
     },
 };
 
-const tasks = [
-    {
-        id: '1',
-        name: 'Organization',
-        status: 'Completed',
-        to: '/home/stores/publish/organization',
-    },
-    {
-        id: '2',
-        name: 'Artworks',
-        status: 'In Progress',
-    },
-    {
-        id: '3',
-        name: 'Appearance & Content',
-        status: 'Not Started',
-    },
-    {
-        id: '4',
-        name: 'Review and Publish',
-        status: 'Not Started',
-    },
-];
-
 interface ComponentProps {
     data: {
+        tasks?: Task[];
         store: Stores;
         loading: boolean;
     };
@@ -63,7 +39,7 @@ interface ComponentProps {
 const Component = ({ data }: ComponentProps) => {
     const router = useRouter();
 
-    const { store, loading } = data;
+    const { store, loading, tasks } = data;
 
     if (loading || !store)
         return (
@@ -89,7 +65,7 @@ const Component = ({ data }: ComponentProps) => {
             <Box p={2}>
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={6}>
-                        {tasks.map((task, index) => {
+                        {tasks?.map((task, index) => {
                             const isLast = index === tasks.length - 1;
 
                             return (
@@ -179,12 +155,12 @@ const Component = ({ data }: ComponentProps) => {
 export default function Publish() {
     const dispatch = useDispatch();
     const selectedStore = useSelector((state) => state.stores.selectedStore);
-    const { data, loading } = useSelector((state) => state.stores);
+    const { data, loading, tasks } = useSelector((state) => state.stores);
 
     useEffect(() => {
         dispatch(getStoreByIdThunk(selectedStore.id));
         dispatch(storesActionsCreators.setIsSubmittingFiles(false));
     }, [selectedStore]);
 
-    return <Component data={{ store: data[0], loading }} />;
+    return <Component data={{ store: data[0], loading, tasks }} />;
 }

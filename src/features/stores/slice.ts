@@ -11,6 +11,29 @@ export const initialState: StoresState = {
     error: null,
     isSubmittingFiles: false,
     requestStoreUpload: {},
+    tasks: [
+        {
+            id: 'organization',
+            name: 'Organization',
+            status: 'Not Started',
+            to: '/home/stores/publish/organization',
+        },
+        {
+            id: 'artworks',
+            name: 'Artworks',
+            status: 'Not Started',
+        },
+        {
+            id: 'appearanceContent',
+            name: 'Appearance & Content',
+            status: 'Not Started',
+        },
+        {
+            id: 'reviewPublish',
+            name: 'Review and Publish',
+            status: 'Not Started',
+        },
+    ],
 };
 
 export const storesSlice = createSlice({
@@ -46,6 +69,10 @@ export const storesSlice = createSlice({
         },
         clearRequestStoreUpload: (state) => {
             state.requestStoreUpload = {};
+        },
+        setTask: (state, action: PayloadAction<{ id: string; status: StoresState['tasks'][0]['status'] }>) => {
+            const taskIndex = state.tasks.findIndex((task) => task.id === action.payload.id);
+            state.tasks[taskIndex].status = action.payload.status;
         },
     },
 });

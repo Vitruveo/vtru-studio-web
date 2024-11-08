@@ -44,6 +44,12 @@ export interface RequestStoreUpload {
     format: string;
 }
 
+export interface Task {
+    id: string;
+    name: string;
+    status: 'Not Started' | 'In Progress' | 'Completed';
+    to?: string;
+}
 export interface StoresState {
     loading: boolean;
     data: Stores[];
@@ -53,8 +59,8 @@ export interface StoresState {
     };
     error: string | null;
     isSubmittingFiles: boolean;
-
     requestStoreUpload: { [key: string]: RequestStoreUpload };
+    tasks: Task[];
 }
 
 export type CreateStoresParams = Pick<Stores, 'organization'>;

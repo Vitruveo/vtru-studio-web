@@ -173,9 +173,20 @@ const Component = () => {
                     },
                 })
             );
+
+            if (Object.values(formik.errors).length === 0) {
+                dispatch(storesActionsCreators.setTask({ id: 'organization', status: 'Completed' }));
+            }
             router.push('/home/stores/publish');
         },
     });
+
+    const handleBack = () => {
+        if (Object.values(formik.errors).length === 0)
+            dispatch(storesActionsCreators.setTask({ id: 'organization', status: 'Completed' }));
+        else dispatch(storesActionsCreators.setTask({ id: 'organization', status: 'In Progress' }));
+        router.push('/home/stores/publish');
+    };
 
     useEffect(() => {
         if (!selectedStore.validateUrl) formik.setFieldError('url', 'ID is already in use');
@@ -415,7 +426,7 @@ const Component = () => {
                     <Box display="flex" alignItems="center" justifyContent="space-between" p={2}>
                         <Typography color="GrayText">Step 1 of 3</Typography>
                         <Box display="flex" gap={2}>
-                            <Button type="button" variant="text" onClick={() => router.push('/home/stores/publish')}>
+                            <Button type="button" variant="text" onClick={handleBack}>
                                 <Typography color="gray">Back</Typography>
                             </Button>
                             <Button
