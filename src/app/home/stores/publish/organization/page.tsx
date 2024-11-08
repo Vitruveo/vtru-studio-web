@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { nanoid } from 'nanoid';
-import { Box, Button, Grid, IconButton, Slider, Typography } from '@mui/material';
+import { Box, Button, Grid, IconButton, Slider, TextField, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useTheme } from '@mui/material/styles';
 import { Delete } from '@mui/icons-material';
@@ -18,6 +18,7 @@ import { sendRequestUploadStoresThunk } from '@/features/asset/thunks';
 import { storesActionsCreators } from '@/features/stores/slice';
 import { STORE_STORAGE_URL } from '@/constants/asset';
 import LoadingOverlay from '@/app/home/components/loadingOverlay';
+import CustomField from '@/app/home/consignArtwork/components/customForm/customField';
 
 interface Input {
     url: string;
@@ -263,7 +264,7 @@ const Component = () => {
         >
             <Breadcrumb
                 title="Publish Store"
-                assetTitle={'Horizon Gallery'}
+                assetTitle={store?.organization.url}
                 items={[
                     { title: 'Stores', to: '/home/stores' },
                     { title: 'Publish', to: '/home/stores/publish' },
@@ -286,46 +287,58 @@ const Component = () => {
                     gap: 16,
                 }}
             >
-                <Grid container>
-                    <Grid item xs={12} md={6}>
-                        <Box display="flex" flexDirection="column">
-                            <Typography variant="h6" fontWeight="normal">
-                                ID <span style={{ color: 'red' }}>*</span>
-                            </Typography>
-                            <CustomTextField
-                                id="id"
-                                label=""
-                                size="small"
-                                name="url"
-                                value={formik.values.url}
-                                onChange={formik.handleChange}
-                                onBlur={handleValidateUrl}
-                                sx={{
-                                    width: 200,
-                                    marginTop: 2,
-                                }}
-                            />
-                            <Typography variant="caption" color="error">
-                                {formik.errors.url}
-                            </Typography>
-                            <Typography variant="caption" color="GrayText">
-                                Lowercase a-z, numbers 0-9 <br /> and hyphens. Minimum length 4 characters.
-                            </Typography>
-                        </Box>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <Box display="flex" flexDirection="column" gap={0.5}>
-                            <Typography variant="h6" fontWeight="normal">
-                                Store URL
-                            </Typography>
-                            <Button variant="contained" disabled={!formik.values.url || !!formik.errors.url}>
-                                <Typography variant="h4" textTransform="lowercase">
-                                    {`https://${formik.values.url}.xibit.art`}
-                                </Typography>
-                            </Button>
-                        </Box>
-                    </Grid>
-                </Grid>
+                <Box display="flex" flexDirection="column" gap={0.5}>
+                    <Typography variant="h6" fontWeight="normal" textAlign={'center'}>
+                        Build your own Store URL
+                    </Typography>
+                    <Box
+                        display={'flex'}
+                        alignItems={'center'}
+                        justifyContent={'center'}
+                        bgcolor={theme.palette.primary.main}
+                    >
+                        <Typography color={theme.palette.primary.contrastText} fontSize={'1.5rem'}>
+                            https://
+                        </Typography>
+                        <CustomTextField
+                            placeholder="Your store url here"
+                            size="small"
+                            name="url"
+                            value={formik.values.url}
+                            onChange={formik.handleChange}
+                            onBlur={handleValidateUrl}
+                            sx={{
+                                marginBlock: 1.5,
+                                '& .MuiOutlinedInput-root': {
+                                    '& fieldset': {
+                                        border: 'none',
+                                    },
+                                },
+                                '& .MuiInputBase-input': {
+                                    textAlign: 'center',
+                                    fontSize: '1.5rem',
+                                },
+                            }}
+                            InputProps={{
+                                style: {
+                                    color: theme.palette.primary.contrastText,
+                                },
+                                inputProps: {
+                                    size: formik.values.url.length || 16,
+                                },
+                            }}
+                        />
+                        <Typography color={theme.palette.primary.contrastText} fontSize={'1.5rem'}>
+                            .xibit.art
+                        </Typography>
+                    </Box>
+                    <Typography variant="caption" color="error">
+                        {formik.errors.url}
+                    </Typography>
+                    <Typography variant="caption" color="GrayText">
+                        Lowercase a-z, numbers 0-9 <br /> and hyphens. Minimum length 4 characters.
+                    </Typography>
+                </Box>
                 <Box display={'flex'} flexDirection={'column'}>
                     <Typography variant="h6" fontWeight="normal">
                         Name <span style={{ color: 'red' }}>*</span>

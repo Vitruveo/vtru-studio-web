@@ -40,7 +40,8 @@ export const MediaCard = ({ ...rest }: Props) => {
 
     const definition = rest.mediaConfig.definition;
 
-    const imageUrl = rest.file instanceof File ? URL.createObjectURL(rest.file) : rest.file;
+    const imageUrl =
+        rest.file instanceof File ? URL.createObjectURL(rest.file) : `${rest.file}?timestamp=${new Date().getTime()}`;
 
     return (
         <>

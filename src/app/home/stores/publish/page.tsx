@@ -37,7 +37,6 @@ interface ComponentProps {
 
 const Component = ({ data }: ComponentProps) => {
     const router = useRouter();
-
     const { store, loading, tasks } = data;
 
     if (loading || !store)
@@ -114,7 +113,7 @@ const Component = ({ data }: ComponentProps) => {
                         <Image
                             src={
                                 store?.organization.formats?.logo?.square?.path
-                                    ? `${STORE_STORAGE_URL}/${store?.organization.formats?.logo.square.path}`
+                                    ? `${STORE_STORAGE_URL}/${store?.organization.formats?.logo.square.path}?timestamp=${new Date().getTime()}`
                                     : NO_IMAGE_ASSET
                             }
                             alt={store.organization.name}
