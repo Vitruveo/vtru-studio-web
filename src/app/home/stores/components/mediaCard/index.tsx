@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Button, Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
 import Image from 'next/image';
@@ -40,6 +40,8 @@ export const MediaCard = ({ ...rest }: Props) => {
 
     const definition = rest.mediaConfig.definition;
 
+    const imageUrl = rest.file instanceof File ? URL.createObjectURL(rest.file) : rest.file;
+
     return (
         <>
             <div {...getRootProps()}>
@@ -57,20 +59,9 @@ export const MediaCard = ({ ...rest }: Props) => {
                 >
                     {isDragActive ? (
                         <Typography align="center">Drop the files here ...</Typography>
-                    ) : rest.file instanceof File ? (
+                    ) : rest.file ? (
                         <Image
-                            src={URL.createObjectURL(rest.file)}
-                            alt="media"
-                            width={definition === 'landscape' ? 120 : definition === 'portrait' ? 100 : 50}
-                            height={definition === 'landscape' ? 100 : definition === 'portrait' ? 120 : 100}
-                            style={{
-                                objectFit: 'contain',
-                                width: '100%',
-                            }}
-                        />
-                    ) : typeof rest.file === 'string' ? (
-                        <Image
-                            src={rest.file}
+                            src={imageUrl!}
                             alt="media"
                             width={definition === 'landscape' ? 120 : definition === 'portrait' ? 100 : 50}
                             height={definition === 'landscape' ? 100 : definition === 'portrait' ? 120 : 100}

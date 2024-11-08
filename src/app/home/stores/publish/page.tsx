@@ -7,11 +7,10 @@ import { useRouter } from 'next/navigation';
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 
 import { useDispatch, useSelector } from '@/store/hooks';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getStoreByIdThunk } from '@/features/stores/thunks';
 import { Stores, Task } from '@/features/stores/types';
 import { NO_IMAGE_ASSET, STORE_STORAGE_URL } from '@/constants/asset';
-import { storesActionsCreators } from '@/features/stores/slice';
 
 const statusStyles = {
     Completed: {
@@ -159,7 +158,6 @@ export default function Publish() {
 
     useEffect(() => {
         dispatch(getStoreByIdThunk(selectedStore.id));
-        dispatch(storesActionsCreators.setIsSubmittingFiles(false));
     }, [selectedStore]);
 
     return <Component data={{ store: data[0], loading, tasks }} />;

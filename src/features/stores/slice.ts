@@ -46,7 +46,7 @@ export const storesSlice = createSlice({
         setFinishLoading: (state) => {
             state.loading = false;
         },
-        setIsSubmittingFiles: (state, action: PayloadAction<boolean>) => {
+        setIsSubmittingFiles: (state, action: PayloadAction<StoresState['isSubmittingFiles']>) => {
             state.isSubmittingFiles = action.payload;
         },
         setData: (state, action: PayloadAction<StoresState['data']>) => {

@@ -1,5 +1,3 @@
-import { APIResponse } from '../common/types';
-
 interface Media {
     name: string;
     path: string;

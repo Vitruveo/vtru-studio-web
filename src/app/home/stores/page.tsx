@@ -160,7 +160,6 @@ const Component = ({ data, actions }: StoreProps) => {
                                         onClick={(event) => {
                                             event.preventDefault();
                                             event.stopPropagation();
-                                            handleCreateNewStore();
                                         }}
                                     >
                                         <IconCopy color="red" />

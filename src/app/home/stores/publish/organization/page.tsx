@@ -27,6 +27,10 @@ interface Input {
     logoHorizontal: File | string | null;
     logoSquare: File | string | null;
     banner: File | string | null;
+
+    logoHorizontalTemp: File | null;
+    logoSquareTemp: File | null;
+    bannerTemp: File | null;
 }
 
 const mediaConfigs = {
@@ -57,8 +61,8 @@ const mediaConfigs = {
 };
 
 const cardsToUploadMedias = [
-    { field: 'logoHorizontal', name: 'Logo - Horizontal', dimensions: '500x120', required: false },
     { field: 'logoSquare', name: 'Logo - Square', dimensions: '1000x1000', required: true },
+    { field: 'logoHorizontal', name: 'Logo - Horizontal', dimensions: '500x120', required: false },
     { field: 'banner', name: 'Banner', dimensions: '1500x500', required: false },
 ];
 
@@ -83,9 +87,9 @@ const Component = () => {
             dispatch(validateUrlThunk({ storeId: selectedStore.id, url: formik.values.url }));
     };
 
-    const handleValidateMediaField = (field: string, value: any) => {
+    const handleValidateMedia = (field: string, value: any, tempValue: any) => {
         const card = cardsToUploadMedias.find((item) => item.field === field);
-        if (card?.required && value === null) {
+        if (card?.required && value === null && tempValue === null) {
             return 'This media is required';
         }
         return undefined;
@@ -102,6 +106,9 @@ const Component = () => {
                 : null,
             logoSquare: formatsMapper.logoSquare ? `${STORE_STORAGE_URL}/${formatsMapper.logoSquare}` : null,
             banner: formatsMapper.banner ? `${STORE_STORAGE_URL}/${formatsMapper.banner}` : null,
+            logoHorizontalTemp: null,
+            logoSquareTemp: null,
+            bannerTemp: null,
         },
         validationSchema: yup.object().shape({
             url: yup
@@ -112,11 +119,14 @@ const Component = () => {
             description: yup.string(),
             markup: yup.number().required(),
         }),
-        validateOnBlur: true,
         validate: (values) => {
             const errors: Partial<Input> = {};
             cardsToUploadMedias.forEach((item) => {
-                const error = handleValidateMediaField(item.field, values[item.field as keyof typeof mediaConfigs]);
+                const error = handleValidateMedia(
+                    item.field,
+                    values[item.field as keyof typeof mediaConfigs],
+                    values[`${item.field}Temp` as keyof typeof mediaConfigs]
+                );
                 if (error) {
                     errors[item.field as keyof typeof mediaConfigs] = error;
                 }
@@ -124,42 +134,48 @@ const Component = () => {
             return errors;
         },
         onSubmit: (values) => {
-            Object.entries(values).forEach(([key, value]) => {
-                if (value instanceof File) {
-                    const transactionId = nanoid();
-
-                    dispatch(
-                        storesActionsCreators.requestStoreUpload({
-                            key,
-                            status: 'requested',
-                            transactionId,
-                        })
-                    );
-
-                    const image = new Image();
-                    image.src = URL.createObjectURL(value);
-                    image.onload = () => {
-                        const width = image.width.toString();
-                        const height = image.height.toString();
+            let hasFile = false;
+            Object.entries(values)
+                .filter(([key, value]) => value && !key.endsWith('Temp'))
+                .forEach(([key, value]) => {
+                    if (value instanceof File) {
+                        hasFile = true;
+                        const transactionId = nanoid();
 
                         dispatch(
-                            sendRequestUploadStoresThunk({
-                                mimetype: 'image/jpeg',
-                                metadata: {
-                                    width,
-                                    height,
-                                    formatUpload: key,
-                                    path: formatsMapper[key as keyof typeof formatsMapper],
-                                    maxSize: mediaConfigs[key as keyof typeof mediaConfigs].sizeMB.toString(),
-                                },
-                                originalName: value.name,
+                            storesActionsCreators.requestStoreUpload({
+                                key,
+                                status: 'requested',
                                 transactionId,
-                                id: selectedStore.id,
                             })
                         );
-                    };
-                }
-            });
+
+                        const image = new Image();
+                        image.src = URL.createObjectURL(value);
+                        image.onload = () => {
+                            const width = image.width.toString();
+                            const height = image.height.toString();
+
+                            dispatch(
+                                sendRequestUploadStoresThunk({
+                                    mimetype: 'image/jpeg',
+                                    metadata: {
+                                        width,
+                                        height,
+                                        formatUpload: key,
+                                        path: formatsMapper[key as keyof typeof formatsMapper],
+                                        maxSize: mediaConfigs[key as keyof typeof mediaConfigs].sizeMB.toString(),
+                                    },
+                                    originalName: value.name,
+                                    transactionId,
+                                    id: selectedStore.id,
+                                })
+                            );
+                        };
+                    }
+                });
+
+            if (hasFile) return;
 
             dispatch(
                 updateOrganizationThunk({
@@ -189,7 +205,7 @@ const Component = () => {
     };
 
     useEffect(() => {
-        if (!selectedStore.validateUrl) formik.setFieldError('url', 'ID is already in use');
+        if (selectedStore.validateUrl === false) formik.setFieldError('url', 'ID is already in use');
     }, [selectedStore.validateUrl]);
 
     useEffect(() => {
@@ -199,7 +215,9 @@ const Component = () => {
         const allDone = Object.values(requestUpload).every((item) => item.status === 'done');
 
         if (allDone) {
+            formik.handleSubmit();
             dispatch(storesActionsCreators.setIsSubmittingFiles(false));
+            dispatch(storesActionsCreators.clearRequestStoreUpload());
             return;
         }
 
@@ -220,12 +238,17 @@ const Component = () => {
                             transactionId: value.transactionId,
                         })
                     );
+                    formik.setFieldValue(value.key as keyof typeof mediaConfigs, null);
                 });
         }
     }, [requestUpload]);
 
     const handleChangeFile = (field: string, file: File | null) => {
-        formik.setFieldValue(field, file);
+        formik.setValues({
+            ...formik.values,
+            [field]: file,
+            [`${field}Temp`]: file,
+        });
     };
 
     return (
@@ -244,9 +267,7 @@ const Component = () => {
                 items={[
                     { title: 'Stores', to: '/home/stores' },
                     { title: 'Publish', to: '/home/stores/publish' },
-                    {
-                        title: 'Organization',
-                    },
+                    { title: 'Organization' },
                 ]}
             />
             <Box p={2} pt={0}>
@@ -355,7 +376,7 @@ const Component = () => {
                         step={1}
                         marks
                         min={0}
-                        max={25}
+                        max={50}
                         name="markup"
                         value={formik.values.markup}
                         onChange={(event, value) => formik.setFieldValue('markup', value)}
@@ -400,7 +421,10 @@ const Component = () => {
                                         <Typography>10 MB maximun</Typography>
                                     </header>
                                     <MediaCard
-                                        file={formik.values[item.field as keyof typeof mediaConfigs]}
+                                        file={
+                                            formik.values[item.field as keyof typeof mediaConfigs] ||
+                                            formik.values[`${item.field}Temp` as keyof typeof mediaConfigs]
+                                        }
                                         mediaConfig={mediaConfig}
                                         isRequired={item.required}
                                         handleChangeFile={(file) => handleChangeFile(item.field, file)}
