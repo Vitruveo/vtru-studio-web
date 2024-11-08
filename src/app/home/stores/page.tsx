@@ -208,8 +208,8 @@ const Component = ({ data, actions }: StoreProps) => {
                                             borderBottomRightRadius: 5,
                                         }}
                                     >
-                                        <Typography fontSize={16}>{item?.organization.url}</Typography>
-                                        <Typography variant="h5">{item?.organization.name}</Typography>
+                                        <Typography fontSize={16}>{item?.organization.url || 'Untitled'}</Typography>
+                                        <Typography variant="h5">{item?.organization.name || 'N/A Name'}</Typography>
                                         <Typography
                                             fontSize={16}
                                             style={{

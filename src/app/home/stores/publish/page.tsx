@@ -12,6 +12,7 @@ import { useEffect } from 'react';
 import { getStoreByIdThunk } from '@/features/stores/thunks';
 import { Stores } from '@/features/stores/types';
 import { NO_IMAGE_ASSET, STORE_STORAGE_URL } from '@/constants/asset';
+import { storesActionsCreators } from '@/features/stores/slice';
 
 const statusStyles = {
     Completed: {
@@ -60,7 +61,6 @@ interface ComponentProps {
 }
 
 const Component = ({ data }: ComponentProps) => {
-    const theme = useTheme();
     const router = useRouter();
 
     const { store, loading } = data;
@@ -76,7 +76,7 @@ const Component = ({ data }: ComponentProps) => {
         <Box position="relative" paddingInline={3} overflow="auto">
             <Breadcrumb
                 title="Publish Store"
-                assetTitle={store.organization.name}
+                assetTitle={store.organization.url}
                 items={[{ title: 'Stores', to: '/home/stores' }, { title: 'Publish' }]}
             />
 
@@ -183,6 +183,7 @@ export default function Publish() {
 
     useEffect(() => {
         dispatch(getStoreByIdThunk(selectedStore.id));
+        dispatch(storesActionsCreators.setIsSubmittingFiles(false));
     }, [selectedStore]);
 
     return <Component data={{ store: data[0], loading }} />;

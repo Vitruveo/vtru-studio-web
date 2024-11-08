@@ -124,12 +124,8 @@ const Component = () => {
             return errors;
         },
         onSubmit: (values) => {
-            let hasFile = false;
-
             Object.entries(values).forEach(([key, value]) => {
                 if (value instanceof File) {
-                    hasFile = true;
-
                     const transactionId = nanoid();
 
                     dispatch(
@@ -165,8 +161,6 @@ const Component = () => {
                 }
             });
 
-            if (hasFile) return;
-
             dispatch(
                 updateOrganizationThunk({
                     id: selectedStore.id,
@@ -179,7 +173,6 @@ const Component = () => {
                     },
                 })
             );
-
             router.push('/home/stores/publish');
         },
     });
@@ -190,15 +183,12 @@ const Component = () => {
 
     useEffect(() => {
         if (Object.keys(requestUpload).length === 0) return;
-
-        const hasReady = Object.values(requestUpload).some((item) => item.status === 'ready');
         const hasUploading = Object.values(requestUpload).some((item) => item.status === 'uploading');
+        const hasReady = Object.values(requestUpload).some((item) => item.status === 'ready');
         const allDone = Object.values(requestUpload).every((item) => item.status === 'done');
 
         if (allDone) {
-            formik.handleSubmit();
             dispatch(storesActionsCreators.setIsSubmittingFiles(false));
-            dispatch(storesActionsCreators.clearRequestStoreUpload());
             return;
         }
 
@@ -207,11 +197,9 @@ const Component = () => {
         }
 
         if (hasReady) {
-            dispatch(storesActionsCreators.setIsSubmittingFiles(true));
-
             Object.entries(requestUpload)
-                .filter(([key, value]) => value.status === 'ready')
-                .forEach(([key, value]) => {
+                .filter(([_, value]) => value.status === 'ready')
+                .forEach(([_, value]) => {
                     const file = formik.values[value.key as keyof typeof mediaConfigs]!;
 
                     dispatch(
@@ -221,8 +209,6 @@ const Component = () => {
                             transactionId: value.transactionId,
                         })
                     );
-
-                    formik.setFieldValue(value.key as keyof typeof mediaConfigs, null);
                 });
         }
     }, [requestUpload]);
