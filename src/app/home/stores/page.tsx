@@ -185,7 +185,7 @@ const Component = ({ data, actions }: StoreProps) => {
                                     <Image
                                         src={
                                             item.organization.formats?.logo?.square?.path
-                                                ? `${STORE_STORAGE_URL}/${item.organization.formats?.logo.square.path}?timestamp=${new Date().getTime()}`
+                                                ? `${STORE_STORAGE_URL}/${item.organization.formats?.logo.square.path}`
                                                 : NO_IMAGE_ASSET
                                         }
                                         alt="Store Image"

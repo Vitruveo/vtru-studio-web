@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Button, Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
 import Image from 'next/image';
@@ -17,7 +17,13 @@ interface Props {
     handleChangeFile: (file: File) => void;
 }
 
-export const MediaCard = ({ ...rest }: Props) => {
+export interface MediaCardRef {
+    handleClearMedia: () => void;
+}
+
+const MediaCardRef = (props: Props, ref: any) => {
+    const { ...rest } = props;
+
     const [showCrop, setShowCrop] = useState(false);
     const [mediaCrop, setMediaCrop] = useState<File | null>(null);
 
@@ -40,8 +46,15 @@ export const MediaCard = ({ ...rest }: Props) => {
 
     const definition = rest.mediaConfig.definition;
 
-    const imageUrl =
-        rest.file instanceof File ? URL.createObjectURL(rest.file) : `${rest.file}?timestamp=${new Date().getTime()}`;
+    const imageUrl = rest.file instanceof File ? URL.createObjectURL(rest.file) : rest.file;
+
+    const handleClearMedia = () => {
+        setMediaCrop(null);
+    };
+
+    useImperativeHandle(ref, () => ({
+        handleClearMedia,
+    }));
 
     return (
         <>
@@ -130,3 +143,5 @@ export const MediaCard = ({ ...rest }: Props) => {
         </>
     );
 };
+
+export const MediaCard = forwardRef<MediaCardRef, Props>(MediaCardRef);
