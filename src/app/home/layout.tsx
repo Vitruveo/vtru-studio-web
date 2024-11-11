@@ -14,6 +14,7 @@ import { userActionsCreators } from '@/features/user/slice';
 import { useToastr } from '../hooks/useToastr';
 import { AxiosError } from 'axios';
 import { userSelector } from '@/features/user';
+import LoadingOverlay from './components/loadingOverlay';
 
 const MainWrapper = styled('div')(() => ({
     display: 'flex',
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     const dispatch = useDispatch();
     const token = useSelector((state) => state.user.token);
     const isLoading = useSelector((state) => state.asset.isLoading);
+    const isSubmittingFiles = useSelector((state) => state.stores.isSubmittingFiles);
     const customizer = useSelector((state) => state.customizer);
     const email = useSelector((state) => state.user.login.email);
 
@@ -86,27 +88,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
     const theme = useTheme();
 
-    const LoadingOverlay = () => (
-        <Box
-            position="fixed"
-            top={0}
-            left={0}
-            width="100vw"
-            height="100vh"
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            bgcolor="rgba(0, 0, 0, 0.5)"
-            zIndex={9999}
-        />
-    );
-
     if (!isValidToken(token)) return <div />;
 
     return (
         <MainWrapper>
-            {isLoading && <LoadingOverlay />}
+            {(isLoading || isSubmittingFiles) && <LoadingOverlay hasprogress={false} />}
             <title>Dashboard</title>
 
             {customizer.isHorizontal ? '' : <Sidebar />}

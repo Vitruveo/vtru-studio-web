@@ -46,10 +46,10 @@ const MyApp = ({ children }: { children: React.ReactNode }) => {
                         direction: theme.defaultTheme.direction as Direction,
                         palette: {
                             primary: {
-                                main: '#13DFAA',
+                                main: '#ff0066',
                                 light: '#FEFEFE',
-                                dark: '#2AA077',
-                                contrastText: '#333333',
+                                dark: '#9e0643',
+                                contrastText: '#FEFEFE',
                             },
                             secondary: {
                                 main: '#59D6A9',

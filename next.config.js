@@ -2,6 +2,7 @@
 const nextConfig = {
     images: {
         domains: [
+            'vitruveo-studio-dev-stores.s3.amazonaws.com',
             'vitruveo-studio-dev-general.s3.amazonaws.com',
             'vitruveo-studio-qa-assets.s3.amazonaws.com',
             'vitruveo-studio-dev-assets.s3.amazonaws.com',

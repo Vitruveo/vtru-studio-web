@@ -922,6 +922,7 @@ const language: Translation = {
     /* Sidebar */
     'studio.sidebar.consign': 'قرارداد آثار هنری',
     'studio.sidebar.community': 'پشتیبانی جامعه',
+    'studio.sidebar.store': 'فروشگاه',
 
     /* Footer */
     'studio.footer.thisStep': 'این مرحله انجام شده است',
