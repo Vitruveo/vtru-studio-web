@@ -1,16 +1,16 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { nanoid } from 'nanoid';
-import { Box, Button, Grid, IconButton, Slider, TextField, Typography } from '@mui/material';
+import { Box, Button, IconButton, Slider, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useTheme } from '@mui/material/styles';
 import { Delete } from '@mui/icons-material';
 
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
-import { MediaCard } from '@/app/home/stores/components/mediaCard';
+import { MediaCard, MediaCardRef } from '@/app/home/stores/components/mediaCard';
 
 import { useDispatch, useSelector } from '@/store/hooks';
 import { storeStorageThunk, updateOrganizationThunk, validateUrlThunk } from '@/features/stores/thunks';
@@ -18,7 +18,6 @@ import { sendRequestUploadStoresThunk } from '@/features/asset/thunks';
 import { storesActionsCreators } from '@/features/stores/slice';
 import { STORE_STORAGE_URL } from '@/constants/asset';
 import LoadingOverlay from '@/app/home/components/loadingOverlay';
-import CustomField from '@/app/home/consignArtwork/components/customForm/customField';
 
 interface Input {
     url: string;
@@ -67,6 +66,7 @@ const Component = () => {
     const theme = useTheme();
     const dispatch = useDispatch();
     const router = useRouter();
+    const mediaRefs = useRef<Array<MediaCardRef>>([]);
 
     const selectedStore = useSelector((state) => state.stores.selectedStore);
     const store = useSelector((state) => state.stores.data.data.find((item) => item._id === selectedStore.id));
@@ -77,6 +77,10 @@ const Component = () => {
         logoHorizontal: store?.organization.formats?.logo.horizontal?.path,
         logoSquare: store?.organization.formats?.logo.square?.path,
         banner: store?.organization.formats?.banner?.path,
+    };
+
+    const handleSetMediaRef = (ref: any, index: number) => {
+        mediaRefs.current[index] = ref;
     };
 
     const handleValidateUrl = () => {
@@ -298,7 +302,6 @@ const Component = () => {
                             onBlur={handleValidateUrl}
                             sx={{
                                 marginBlock: 1.5,
-
                                 '& .MuiOutlinedInput-root': {
                                     '& fieldset': {
                                         border: 'none',
@@ -385,7 +388,7 @@ const Component = () => {
                 </Box>
 
                 <Box display="flex" gap={4}>
-                    {cardsToUploadMedias.map((item) => {
+                    {cardsToUploadMedias.map((item, index) => {
                         const mediaConfig = mediaConfigs[item.field as keyof typeof mediaConfigs];
 
                         return (
@@ -394,7 +397,12 @@ const Component = () => {
                                     <h4>
                                         {item.name} {item.required && <span style={{ color: 'red' }}>*</span>}
                                     </h4>
-                                    <IconButton onClick={() => handleChangeFile(item.field, null)}>
+                                    <IconButton
+                                        onClick={() => {
+                                            handleChangeFile(item.field, null);
+                                            mediaRefs.current[index].handleClearMedia();
+                                        }}
+                                    >
                                         <Delete color="error" />
                                     </IconButton>
                                 </Box>
@@ -426,6 +434,7 @@ const Component = () => {
                                         mediaConfig={mediaConfig}
                                         isRequired={item.required}
                                         handleChangeFile={(file) => handleChangeFile(item.field, file)}
+                                        ref={(ref) => handleSetMediaRef(ref, index)}
                                     />
                                 </Box>
                                 <Typography variant="caption" color="error">

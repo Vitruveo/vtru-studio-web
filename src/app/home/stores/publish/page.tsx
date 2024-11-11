@@ -113,7 +113,7 @@ const Component = ({ data }: ComponentProps) => {
                         <Image
                             src={
                                 store?.organization.formats?.logo?.square?.path
-                                    ? `${STORE_STORAGE_URL}/${store?.organization.formats?.logo.square.path}?timestamp=${new Date().getTime()}`
+                                    ? `${STORE_STORAGE_URL}/${store?.organization.formats?.logo.square.path}`
                                     : NO_IMAGE_ASSET
                             }
                             alt={store.organization.name}
