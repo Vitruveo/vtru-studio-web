@@ -1,3 +1,5 @@
+import { APIResponse } from '../common/types';
+
 interface Media {
     name: string;
     path: string;
@@ -50,7 +52,7 @@ export interface Task {
 }
 export interface StoresState {
     loading: boolean;
-    data: Stores[];
+    data: StorePaginated;
     selectedStore: {
         id: string;
         validateUrl: null | boolean;
@@ -84,4 +86,12 @@ export interface StoreStorageParams {
     file: File;
     dispatch: any;
     transactionId: string;
+}
+
+export interface StorePaginated {
+    data: Stores[];
+    page: number;
+    totalPage: number;
+    total: number;
+    limit: number;
 }

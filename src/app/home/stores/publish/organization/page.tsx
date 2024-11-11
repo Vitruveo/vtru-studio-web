@@ -73,7 +73,7 @@ const Component = () => {
     const router = useRouter();
 
     const selectedStore = useSelector((state) => state.stores.selectedStore);
-    const store = useSelector((state) => state.stores.data.find((item) => item._id === selectedStore.id));
+    const store = useSelector((state) => state.stores.data.data.find((item) => item._id === selectedStore.id));
     const requestUpload = useSelector((state) => state.stores.requestStoreUpload);
     const isSubmittingFiles = useSelector((state) => state.stores.isSubmittingFiles);
 

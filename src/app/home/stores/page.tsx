@@ -22,13 +22,13 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { createNewStoreThunk, deleteStoreThunk, getStoresThunk } from '@/features/stores/thunks';
-import type { Stores } from '@/features/stores/types';
+import type { StorePaginated, Stores } from '@/features/stores/types';
 import { storesActionsCreators } from '@/features/stores/slice';
 import { NO_IMAGE_ASSET, STORE_STORAGE_URL } from '@/constants/asset';
 
 interface StoreProps {
     data: {
-        stores: Stores[];
+        store: StorePaginated;
         loading: boolean;
         openDeleteDialog: boolean;
     };
@@ -43,7 +43,7 @@ interface StoreProps {
 
 const Component = ({ data, actions }: StoreProps) => {
     const smUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
-    const { stores, loading, openDeleteDialog } = data;
+    const { store, loading, openDeleteDialog } = data;
     const { handleDelete, handleDeleteConfirm, handleDeleteCancel, handleCreateNewStore, handleSelectStore } = actions;
 
     return (
@@ -134,7 +134,7 @@ const Component = ({ data, actions }: StoreProps) => {
                         <CircularProgress size={100} />
                     </Box>
                 ) : (
-                    stores.map((item, index) => {
+                    store.data?.map((item, index) => {
                         return (
                             <Link
                                 key={index}
@@ -288,7 +288,7 @@ export default function Stores() {
 
     return (
         <Component
-            data={{ stores: data, loading, openDeleteDialog }}
+            data={{ store: data, loading, openDeleteDialog }}
             actions={{
                 handleDelete,
                 handleDeleteConfirm,

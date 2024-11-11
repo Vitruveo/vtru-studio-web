@@ -159,5 +159,5 @@ export default function Publish() {
         dispatch(getStoreByIdThunk(selectedStore.id));
     }, [selectedStore]);
 
-    return <Component data={{ store: data[0], loading, tasks }} />;
+    return <Component data={{ store: data.data[0], loading, tasks }} />;
 }

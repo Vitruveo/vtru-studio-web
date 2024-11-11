@@ -1,10 +1,10 @@
 import { APIResponse } from '../common/types';
 import { storesActionsCreators } from './slice';
-import { Stores, StoreStorageParams, UpdateStepNameStoresParams, ValidateUrlParams } from './types';
+import { StorePaginated, Stores, StoreStorageParams, UpdateStepNameStoresParams, ValidateUrlParams } from './types';
 
 import { apiService } from '@/services/api';
 
-export function getStores(): Promise<APIResponse<Stores[]>> {
+export function getStores(): Promise<APIResponse<StorePaginated>> {
     return apiService.get('/stores/me');
 }
 

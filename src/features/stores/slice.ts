@@ -3,7 +3,13 @@ import { Stores, StoresState } from './types';
 
 export const initialState: StoresState = {
     loading: false,
-    data: [],
+    data: {
+        data: [],
+        page: 1,
+        totalPage: 0,
+        total: 0,
+        limit: 24,
+    },
     selectedStore: {
         id: '',
         validateUrl: null,
@@ -59,7 +65,7 @@ export const storesSlice = createSlice({
             state.selectedStore.validateUrl = action.payload;
         },
         removeStore: (state, action: PayloadAction<string>) => {
-            state.data = state.data.filter((store: Stores) => store._id !== action.payload);
+            state.data.data = state.data.data.filter((store: Stores) => store._id !== action.payload);
         },
         requestStoreUpload: (state, action) => {
             state.requestStoreUpload[action.payload.transactionId] = {
