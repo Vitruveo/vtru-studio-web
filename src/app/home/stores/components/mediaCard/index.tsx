@@ -60,6 +60,17 @@ export const MediaCard = ({ ...rest }: Props) => {
                 >
                     {isDragActive ? (
                         <Typography align="center">Drop the files here ...</Typography>
+                    ) : mediaCrop ? (
+                        <Image
+                            src={URL.createObjectURL(mediaCrop)}
+                            alt="media"
+                            width={definition === 'landscape' ? 120 : definition === 'portrait' ? 100 : 50}
+                            height={definition === 'landscape' ? 100 : definition === 'portrait' ? 120 : 100}
+                            style={{
+                                objectFit: 'contain',
+                                width: '100%',
+                            }}
+                        />
                     ) : rest.file ? (
                         <Image
                             src={imageUrl!}

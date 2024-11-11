@@ -28,10 +28,6 @@ interface Input {
     logoHorizontal: File | string | null;
     logoSquare: File | string | null;
     banner: File | string | null;
-
-    logoHorizontalTemp: File | null;
-    logoSquareTemp: File | null;
-    bannerTemp: File | null;
 }
 
 const mediaConfigs = {
@@ -88,9 +84,9 @@ const Component = () => {
             dispatch(validateUrlThunk({ storeId: selectedStore.id, url: formik.values.url }));
     };
 
-    const handleValidateMedia = (field: string, value: any, tempValue: any) => {
+    const handleValidateMedia = (field: string, value: any) => {
         const card = cardsToUploadMedias.find((item) => item.field === field);
-        if (card?.required && value === null && tempValue === null) {
+        if (card?.required && value === null) {
             return 'This media is required';
         }
         return undefined;
@@ -107,15 +103,12 @@ const Component = () => {
                 : null,
             logoSquare: formatsMapper.logoSquare ? `${STORE_STORAGE_URL}/${formatsMapper.logoSquare}` : null,
             banner: formatsMapper.banner ? `${STORE_STORAGE_URL}/${formatsMapper.banner}` : null,
-            logoHorizontalTemp: null,
-            logoSquareTemp: null,
-            bannerTemp: null,
         },
         validationSchema: yup.object().shape({
             url: yup
                 .string()
                 .required()
-                .test('url', 'Invalid ID', (value) => /^[a-z0-9-]{4,}$/.test(value!)),
+                .test('url', 'Invalid URL', (value) => /^[a-z0-9-]{4,}$/.test(value!)),
             name: yup.string().required(),
             description: yup.string(),
             markup: yup.number().required(),
@@ -123,11 +116,7 @@ const Component = () => {
         validate: (values) => {
             const errors: Partial<Input> = {};
             cardsToUploadMedias.forEach((item) => {
-                const error = handleValidateMedia(
-                    item.field,
-                    values[item.field as keyof typeof mediaConfigs],
-                    values[`${item.field}Temp` as keyof typeof mediaConfigs]
-                );
+                const error = handleValidateMedia(item.field, values[item.field as keyof typeof mediaConfigs]);
                 if (error) {
                     errors[item.field as keyof typeof mediaConfigs] = error;
                 }
@@ -136,45 +125,43 @@ const Component = () => {
         },
         onSubmit: (values) => {
             let hasFile = false;
-            Object.entries(values)
-                .filter(([key, value]) => value && !key.endsWith('Temp'))
-                .forEach(([key, value]) => {
-                    if (value instanceof File) {
-                        hasFile = true;
-                        const transactionId = nanoid();
+            Object.entries(values).forEach(([key, value]) => {
+                if (value instanceof File) {
+                    hasFile = true;
+                    const transactionId = nanoid();
+
+                    dispatch(
+                        storesActionsCreators.requestStoreUpload({
+                            key,
+                            status: 'requested',
+                            transactionId,
+                        })
+                    );
+
+                    const image = new Image();
+                    image.src = URL.createObjectURL(value);
+                    image.onload = () => {
+                        const width = image.width.toString();
+                        const height = image.height.toString();
 
                         dispatch(
-                            storesActionsCreators.requestStoreUpload({
-                                key,
-                                status: 'requested',
+                            sendRequestUploadStoresThunk({
+                                mimetype: 'image/jpeg',
+                                metadata: {
+                                    width,
+                                    height,
+                                    formatUpload: key,
+                                    path: formatsMapper[key as keyof typeof formatsMapper],
+                                    maxSize: mediaConfigs[key as keyof typeof mediaConfigs].sizeMB.toString(),
+                                },
+                                originalName: value.name,
                                 transactionId,
+                                id: selectedStore.id,
                             })
                         );
-
-                        const image = new Image();
-                        image.src = URL.createObjectURL(value);
-                        image.onload = () => {
-                            const width = image.width.toString();
-                            const height = image.height.toString();
-
-                            dispatch(
-                                sendRequestUploadStoresThunk({
-                                    mimetype: 'image/jpeg',
-                                    metadata: {
-                                        width,
-                                        height,
-                                        formatUpload: key,
-                                        path: formatsMapper[key as keyof typeof formatsMapper],
-                                        maxSize: mediaConfigs[key as keyof typeof mediaConfigs].sizeMB.toString(),
-                                    },
-                                    originalName: value.name,
-                                    transactionId,
-                                    id: selectedStore.id,
-                                })
-                            );
-                        };
-                    }
-                });
+                    };
+                }
+            });
 
             if (hasFile) return;
 
@@ -206,7 +193,7 @@ const Component = () => {
     };
 
     useEffect(() => {
-        if (selectedStore.validateUrl === false) formik.setFieldError('url', 'ID is already in use');
+        if (selectedStore.validateUrl === false) formik.setFieldError('url', 'URL is already in use');
     }, [selectedStore.validateUrl]);
 
     useEffect(() => {
@@ -239,7 +226,7 @@ const Component = () => {
                             transactionId: value.transactionId,
                         })
                     );
-                    formik.setFieldValue(value.key as keyof typeof mediaConfigs, null);
+                    formik.setFieldValue(value.key as keyof typeof mediaConfigs, '');
                 });
         }
     }, [requestUpload]);
@@ -248,7 +235,6 @@ const Component = () => {
         formik.setValues({
             ...formik.values,
             [field]: file,
-            [`${field}Temp`]: file,
         });
     };
 
@@ -295,13 +281,16 @@ const Component = () => {
                         display={'flex'}
                         alignItems={'center'}
                         justifyContent={'center'}
-                        bgcolor={theme.palette.primary.main}
+                        sx={{
+                            border: `1px solid ${theme.palette.primary.main}`,
+                            borderRadius: 1,
+                        }}
                     >
-                        <Typography color={theme.palette.primary.contrastText} fontSize={'1.5rem'}>
+                        <Typography color={theme.palette.primary.main} fontSize={'1.5rem'}>
                             https://
                         </Typography>
                         <CustomTextField
-                            placeholder="Your store url here"
+                            placeholder="type your store url here..."
                             size="small"
                             name="url"
                             value={formik.values.url}
@@ -309,6 +298,7 @@ const Component = () => {
                             onBlur={handleValidateUrl}
                             sx={{
                                 marginBlock: 1.5,
+
                                 '& .MuiOutlinedInput-root': {
                                     '& fieldset': {
                                         border: 'none',
@@ -317,18 +307,16 @@ const Component = () => {
                                 '& .MuiInputBase-input': {
                                     textAlign: 'center',
                                     fontSize: '1.5rem',
+                                    paddingInline: 0,
                                 },
                             }}
                             InputProps={{
-                                style: {
-                                    color: theme.palette.primary.contrastText,
-                                },
                                 inputProps: {
-                                    size: formik.values.url.length || 16,
+                                    size: formik.values.url.length || 20,
                                 },
                             }}
                         />
-                        <Typography color={theme.palette.primary.contrastText} fontSize={'1.5rem'}>
+                        <Typography color={theme.palette.primary.main} fontSize={'1.5rem'}>
                             .xibit.art
                         </Typography>
                     </Box>
@@ -434,10 +422,7 @@ const Component = () => {
                                         <Typography>10 MB maximun</Typography>
                                     </header>
                                     <MediaCard
-                                        file={
-                                            formik.values[item.field as keyof typeof mediaConfigs] ||
-                                            formik.values[`${item.field}Temp` as keyof typeof mediaConfigs]
-                                        }
+                                        file={formik.values[item.field as keyof typeof mediaConfigs]}
                                         mediaConfig={mediaConfig}
                                         isRequired={item.required}
                                         handleChangeFile={(file) => handleChangeFile(item.field, file)}
