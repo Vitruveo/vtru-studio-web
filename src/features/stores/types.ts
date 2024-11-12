@@ -57,6 +57,9 @@ export interface StoresState {
         id: string;
         validateUrl: null | boolean;
     };
+    filters: {
+        status: string;
+    };
     error: string | null;
     isSubmittingFiles: boolean;
     requestStoreUpload: { [key: string]: RequestStoreUpload };
@@ -69,6 +72,13 @@ export interface UpdateStepNameStoresParams {
     id: string;
     stepName: string;
     data: any;
+}
+
+export interface GetStoresParams {
+    status?: string;
+    page?: number;
+    limit?: number;
+    sort?: string;
 }
 
 export interface UpdateOrganizationParams {
