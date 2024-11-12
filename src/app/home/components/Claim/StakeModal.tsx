@@ -10,11 +10,10 @@ interface ModalProps {
 }
 
 const labelMapper = {
-    0: 'Claim to wallet',
+    0: 'Claim to wallet (Limit 5%)',
     1: 'Stake for 1 year at 15% APR',
     2: 'Stake for 3 years at 30% APR',
     3: 'Stake for 5 years at 60% APR',
-    4: 'Allocate to VIBE Creator Equity Pool',
 } as { [key: number]: string };
 
 export default function StakeModal({ isOpen, available, loading, claimAllocate, handleClose }: ModalProps) {
@@ -63,25 +62,22 @@ export default function StakeModal({ isOpen, available, loading, claimAllocate, 
                     </Box>
 
                     <Box mb={2} ml={2} width={'88%'}>
-                        {Array.from({ length: 5 }).map((_, index) => (
+                        {Array.from({ length: 4 }).map((_, index) => (
                             <Box key={index} mb={1}>
                                 <Box display={'flex'} gap={1.5}>
-                                    <Typography fontSize={16} color={index === 4 ? 'GrayText' : 'inherit'}>
+                                    <Typography fontSize={16}>
                                         {Math.trunc((available * selectValues[index]) / 100)}
                                     </Typography>
-                                    <Typography fontSize={16} color={index === 4 ? 'GrayText' : 'inherit'}>
-                                        {labelMapper[index]}
-                                    </Typography>
+                                    <Typography fontSize={16}>{labelMapper[index]}</Typography>
                                 </Box>
                                 <Box display="flex" gap={3} mb={3} key={index}>
                                     <Slider
                                         value={selectValues[index]}
                                         onChange={(_e, v) => handleSelectChange(index, v as number)}
-                                        disabled={(totalAssigned === 100 && selectValues[index] === 0) || index === 4}
+                                        disabled={totalAssigned === 100 && selectValues[index] === 0}
+                                        max={index === 0 ? 5 : 100}
                                     />
-                                    <Typography fontSize={16} color={index === 4 ? 'GrayText' : 'inherit'}>
-                                        {selectValues[index].toFixed(0)}%
-                                    </Typography>
+                                    <Typography fontSize={16}>{selectValues[index].toFixed(0)}%</Typography>
                                 </Box>
                             </Box>
                         ))}
