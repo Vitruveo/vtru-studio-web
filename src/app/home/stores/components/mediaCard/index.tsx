@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from 'react';
+import { forwardRef, useCallback, useImperativeHandle, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Button, Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
 import Image from 'next/image';
@@ -136,6 +136,7 @@ const MediaCardRef = (props: Props, ref: any) => {
                         onChange={(finalFile) => {
                             rest.handleChangeFile(finalFile);
                             setShowCrop(false);
+                            setMediaCrop(finalFile);
                         }}
                     />
                 </DialogContent>
