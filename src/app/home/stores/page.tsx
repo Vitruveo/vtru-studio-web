@@ -10,6 +10,7 @@ import {
     DialogContentText,
     DialogTitle,
     IconButton,
+    Pagination,
     Theme,
     Typography,
     useMediaQuery,
@@ -22,7 +23,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { createNewStoreThunk, deleteStoreThunk, getStoresThunk } from '@/features/stores/thunks';
-import type { StorePaginated, Stores } from '@/features/stores/types';
+import type { GetStoresParams, StorePaginated, Stores } from '@/features/stores/types';
 import { storesActionsCreators } from '@/features/stores/slice';
 import { NO_IMAGE_ASSET, STORE_STORAGE_URL } from '@/constants/asset';
 
@@ -38,13 +39,23 @@ interface StoreProps {
         handleDeleteCancel: () => void;
         handleCreateNewStore: (id?: string) => void;
         handleSelectStore: (id: string) => void;
+        handleSelectFilter: (selectedFilter: string) => void;
+        handleChangePage: (event: React.ChangeEvent<unknown>, value: number) => void;
     };
 }
 
 const Component = ({ data, actions }: StoreProps) => {
     const smUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
     const { store, loading, openDeleteDialog } = data;
-    const { handleDelete, handleDeleteConfirm, handleDeleteCancel, handleCreateNewStore, handleSelectStore } = actions;
+    const {
+        handleDelete,
+        handleDeleteConfirm,
+        handleDeleteCancel,
+        handleCreateNewStore,
+        handleSelectStore,
+        handleSelectFilter,
+        handleChangePage,
+    } = actions;
 
     return (
         <Box p={2}>
@@ -77,11 +88,10 @@ const Component = ({ data, actions }: StoreProps) => {
                 </Link>
                 <Select
                     placeholder="Duplicate Store"
-                    options={[
-                        { value: 'store 1', label: 'Store 1' },
-                        { value: 'store 2', label: 'Store 2' },
-                        { value: 'store 3', label: 'Store 3' },
-                    ]}
+                    options={store.data.map((item) => ({
+                        value: item._id,
+                        label: item.organization.name || 'N/A name',
+                    }))}
                     styles={{
                         container: (provided) => ({
                             ...provided,
@@ -121,6 +131,7 @@ const Component = ({ data, actions }: StoreProps) => {
                                     textDecoration: 'underline',
                                     cursor: 'pointer',
                                 }}
+                                onClick={() => handleSelectFilter(item)}
                             >
                                 {item}
                             </Typography>
@@ -224,6 +235,9 @@ const Component = ({ data, actions }: StoreProps) => {
                     })
                 )}
             </Box>
+            <Box display="flex" justifyContent="center" paddingBlock={2}>
+                <Pagination count={store.totalPage} page={store.page} color="primary" onChange={handleChangePage} />
+            </Box>
 
             <Dialog
                 open={openDeleteDialog}
@@ -255,6 +269,12 @@ export default function Stores() {
     const { data, loading } = useSelector((state) => state.stores);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [storeToDelete, setStoreToDelete] = useState<string | null>(null);
+    const [getStoresParams, setGetStoresParams] = useState<GetStoresParams>({
+        status: 'all',
+        page: 1,
+        limit: 24,
+        sort: 'createdNew',
+    });
 
     useEffect(() => {
         dispatch(getStoresThunk());
@@ -286,6 +306,24 @@ export default function Stores() {
         dispatch(storesActionsCreators.setSelectedStore(id));
     };
 
+    const handleSelectFilter = (selectedFilter: string) => {
+        const value = selectedFilter.toLowerCase();
+        setGetStoresParams((prev) => ({
+            ...prev,
+            status: value,
+        }));
+        dispatch(getStoresThunk({ ...getStoresParams, status: value }));
+    };
+
+    const handleChangePage = (_event: React.ChangeEvent<unknown>, value: number) => {
+        dispatch(storesActionsCreators.setCurrentPage(value));
+        setGetStoresParams((prev) => ({
+            ...prev,
+            page: value,
+        }));
+        dispatch(getStoresThunk({ ...getStoresParams, page: value }));
+    };
+
     return (
         <Component
             data={{ store: data, loading, openDeleteDialog }}
@@ -295,6 +333,8 @@ export default function Stores() {
                 handleDeleteCancel,
                 handleCreateNewStore,
                 handleSelectStore,
+                handleSelectFilter,
+                handleChangePage,
             }}
         />
     );

@@ -14,6 +14,9 @@ export const initialState: StoresState = {
         id: '',
         validateUrl: null,
     },
+    filters: {
+        status: 'all',
+    },
     error: null,
     isSubmittingFiles: false,
     requestStoreUpload: {},
@@ -58,11 +61,17 @@ export const storesSlice = createSlice({
         setData: (state, action: PayloadAction<StoresState['data']>) => {
             state.data = action.payload;
         },
+        setCurrentPage: (state, action: PayloadAction<StoresState['data']['page']>) => {
+            state.data.page = action.payload;
+        },
         setSelectedStore: (state, action: PayloadAction<StoresState['selectedStore']['id']>) => {
             state.selectedStore.id = action.payload;
         },
         setSelectStoreValidateUrl: (state, action: PayloadAction<StoresState['selectedStore']['validateUrl']>) => {
             state.selectedStore.validateUrl = action.payload;
+        },
+        setFilters: (state, action: PayloadAction<StoresState['filters']>) => {
+            state.filters = action.payload;
         },
         removeStore: (state, action: PayloadAction<string>) => {
             state.data.data = state.data.data.filter((store: Stores) => store._id !== action.payload);

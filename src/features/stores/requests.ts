@@ -1,11 +1,25 @@
 import { APIResponse } from '../common/types';
 import { storesActionsCreators } from './slice';
-import { StorePaginated, Stores, StoreStorageParams, UpdateStepNameStoresParams, ValidateUrlParams } from './types';
+import {
+    GetStoresParams,
+    StorePaginated,
+    Stores,
+    StoreStorageParams,
+    UpdateStepNameStoresParams,
+    ValidateUrlParams,
+} from './types';
 
 import { apiService } from '@/services/api';
 
-export function getStores(): Promise<APIResponse<StorePaginated>> {
-    return apiService.get('/stores/me');
+export function getStores(data?: GetStoresParams): Promise<APIResponse<StorePaginated>> {
+    return apiService.get('/stores/me', {
+        params: {
+            status: data?.status,
+            page: data?.page,
+            limit: data?.limit,
+            sort: data?.sort,
+        },
+    });
 }
 
 export async function getStoreById(id: string): Promise<APIResponse<Stores>> {

@@ -9,14 +9,14 @@ import {
     validateUrl,
 } from './requests';
 import { storesActionsCreators } from './slice';
-import { StoreStorageParams, UpdateOrganizationParams, ValidateUrlParams } from './types';
+import { GetStoresParams, StoreStorageParams, UpdateOrganizationParams, ValidateUrlParams } from './types';
 
-export function getStoresThunk(): ReduxThunkAction<Promise<void>> {
+export function getStoresThunk(data?: GetStoresParams): ReduxThunkAction<Promise<void>> {
     return async (dispatch: any) => {
         dispatch(storesActionsCreators.setStartLoading());
         dispatch(storesActionsCreators.setSelectedStore(''));
 
-        const response = await getStores();
+        const response = await getStores(data);
         dispatch(storesActionsCreators.setData(response.data!));
         dispatch(storesActionsCreators.setFinishLoading());
     };

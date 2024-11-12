@@ -30,8 +30,8 @@ api.interceptors.request.use(
 );
 
 export const apiService = {
-    get: async <T = unknown, E = any>(url: string): Promise<APIResponse<T, E>> => {
-        const response: AxiosResponse = await api.get(url);
+    get: async <T = unknown, E = any>(url: string, data?: any): Promise<APIResponse<T, E>> => {
+        const response: AxiosResponse = await api.get(url, data);
         return response.data;
     },
     post: async <T = unknown, E = any>(url: string, data: any): Promise<APIResponse<T, E>> => {
