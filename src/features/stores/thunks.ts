@@ -57,9 +57,17 @@ export function getStoreByIdThunk(id: string): ReduxThunkAction<Promise<void>> {
 export function createNewStoreThunk(id?: string): ReduxThunkAction<Promise<void>> {
     return async (dispatch: any) => {
         dispatch(storesActionsCreators.setStartLoading());
-        const response = await createNewStore(id);
-        dispatch(storesActionsCreators.setSelectedStore(response.data!.insertedId));
-        dispatch(storesActionsCreators.setFinishLoading());
+        createNewStore(id)
+            .then((response) => {
+                if (id) {
+                    dispatch(getStoresThunk());
+                    return;
+                }
+                dispatch(storesActionsCreators.setSelectedStore(response.data!.insertedId));
+            })
+            .finally(() => {
+                dispatch(storesActionsCreators.setFinishLoading());
+            });
     };
 }
 

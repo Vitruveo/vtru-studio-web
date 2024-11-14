@@ -27,7 +27,8 @@ export async function getStoreById(id: string): Promise<APIResponse<Stores>> {
 }
 
 export async function createNewStore(id?: string): Promise<APIResponse<{ insertedId: string }>> {
-    return apiService.post('/stores', { cloneId: id });
+    const data = id ? { cloneId: id } : {};
+    return apiService.post('/stores', data);
 }
 
 export async function deleteStore(id: string): Promise<APIResponse<void>> {
