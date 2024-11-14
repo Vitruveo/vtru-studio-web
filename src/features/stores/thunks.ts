@@ -10,6 +10,7 @@ import {
 } from './requests';
 import { storesActionsCreators } from './slice';
 import { GetStoresParams, StoreStorageParams, UpdateOrganizationParams, ValidateUrlParams } from './types';
+import { hasTruthyObject } from '@/utils/truthyObject';
 
 export function getStoresThunk(data?: GetStoresParams): ReduxThunkAction<Promise<void>> {
     return async (dispatch: any) => {
@@ -26,23 +27,37 @@ export function getStoreByIdThunk(id: string): ReduxThunkAction<Promise<void>> {
     return async (dispatch: any) => {
         dispatch(storesActionsCreators.setStartLoading());
         const response = await getStoreById(id);
+        const { data } = response;
         dispatch(
             storesActionsCreators.setData({
-                data: [response.data!],
+                data: [data!],
                 total: 1,
                 page: 1,
                 totalPage: 1,
                 limit: 1,
             })
         );
+
+        const isCompleted =
+            data?.organization?.url && data?.organization?.name && data?.organization?.formats?.logo?.square?.path;
+        const isInProgress = hasTruthyObject(data?.organization);
+
+        if (isCompleted) {
+            dispatch(storesActionsCreators.setPublishStoreStatusStep({ step: 'organization', status: 'Completed' }));
+        } else if (isInProgress) {
+            dispatch(storesActionsCreators.setPublishStoreStatusStep({ step: 'organization', status: 'In Progress' }));
+        } else {
+            dispatch(storesActionsCreators.setPublishStoreStatusStep({ step: 'organization', status: 'Not Started' }));
+        }
+
         dispatch(storesActionsCreators.setFinishLoading());
     };
 }
 
-export function createNewStoreThunk(): ReduxThunkAction<Promise<void>> {
+export function createNewStoreThunk(id?: string): ReduxThunkAction<Promise<void>> {
     return async (dispatch: any) => {
         dispatch(storesActionsCreators.setStartLoading());
-        const response = await createNewStore();
+        const response = await createNewStore(id);
         dispatch(storesActionsCreators.setSelectedStore(response.data!.insertedId));
         dispatch(storesActionsCreators.setFinishLoading());
     };

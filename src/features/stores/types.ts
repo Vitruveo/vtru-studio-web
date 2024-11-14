@@ -14,7 +14,7 @@ export interface Formats {
 }
 
 interface Organization {
-    url: string;
+    url: string | null;
     name: string;
     description: string | null;
     markup: number;
@@ -44,12 +44,21 @@ export interface RequestStoreUpload {
     format: string;
 }
 
-export interface Task {
-    id: string;
-    name: string;
-    status: 'Not Started' | 'In Progress' | 'Completed';
-    to?: string;
+export type StepStatus = 'Not Started' | 'Completed' | 'In Progress';
+export type StoreStatus = 'draft' | 'active' | 'inactive';
+
+export interface CompletedSteps {
+    status: StepStatus;
+    label: string;
+    optional?: boolean;
 }
+export interface PublishStore {
+    organization: CompletedSteps;
+    artworks: CompletedSteps;
+    appearanceContent: CompletedSteps;
+    reviewPublish: CompletedSteps;
+}
+
 export interface StoresState {
     loading: boolean;
     data: StorePaginated;
@@ -63,7 +72,8 @@ export interface StoresState {
     error: string | null;
     isSubmittingFiles: boolean;
     requestStoreUpload: { [key: string]: RequestStoreUpload };
-    tasks: Task[];
+    publishStore: PublishStore;
+    status: StoreStatus;
 }
 
 export type CreateStoresParams = Pick<Stores, 'organization'>;

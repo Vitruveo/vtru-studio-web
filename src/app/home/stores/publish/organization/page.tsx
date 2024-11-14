@@ -1,9 +1,20 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { nanoid } from 'nanoid';
-import { Box, Button, IconButton, Slider, Typography } from '@mui/material';
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    IconButton,
+    Slider,
+    Typography,
+} from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useTheme } from '@mui/material/styles';
 import { Delete } from '@mui/icons-material';
@@ -20,7 +31,7 @@ import { STORE_STORAGE_URL } from '@/constants/asset';
 import LoadingOverlay from '@/app/home/components/loadingOverlay';
 
 interface Input {
-    url: string;
+    url: string | null;
     name: string;
     description: string;
     markup: number;
@@ -73,6 +84,8 @@ const Component = () => {
     const requestUpload = useSelector((state) => state.stores.requestStoreUpload);
     const isSubmittingFiles = useSelector((state) => state.stores.isSubmittingFiles);
 
+    const [openDialogSave, setOpenDialogSave] = useState(false);
+
     const formatsMapper = {
         logoHorizontal: store?.organization.formats?.logo.horizontal?.path,
         logoSquare: store?.organization.formats?.logo.square?.path,
@@ -96,9 +109,67 @@ const Component = () => {
         return undefined;
     };
 
+    const handleSubmit = (values: Input) => {
+        let hasFile = false;
+        Object.entries(values).forEach(([key, value]) => {
+            if (value instanceof File) {
+                hasFile = true;
+                const transactionId = nanoid();
+
+                dispatch(
+                    storesActionsCreators.requestStoreUpload({
+                        key,
+                        status: 'requested',
+                        transactionId,
+                    })
+                );
+
+                const image = new Image();
+                image.src = URL.createObjectURL(value);
+                image.onload = () => {
+                    const width = image.width.toString();
+                    const height = image.height.toString();
+
+                    dispatch(
+                        sendRequestUploadStoresThunk({
+                            mimetype: 'image/jpeg',
+                            metadata: {
+                                width,
+                                height,
+                                formatUpload: key,
+                                path: formatsMapper[key as keyof typeof formatsMapper],
+                                maxSize: mediaConfigs[key as keyof typeof mediaConfigs].sizeMB.toString(),
+                            },
+                            originalName: value.name,
+                            transactionId,
+                            id: selectedStore.id,
+                        })
+                    );
+                };
+            }
+        });
+
+        if (hasFile) return;
+
+        dispatch(
+            updateOrganizationThunk({
+                id: selectedStore.id,
+                data: {
+                    url: values.url,
+                    name: values.name,
+                    description: values.description,
+                    markup: values.markup,
+                    // formats: {}
+                },
+            })
+        );
+
+        router.push('/home/stores/publish');
+    };
+
     const formik = useFormik<Input>({
         initialValues: {
-            url: store?.organization.url || '',
+            url: store?.organization.url || null,
             name: store?.organization.name || '',
             description: store?.organization.description || '',
             markup: store?.organization.markup || 10,
@@ -127,72 +198,22 @@ const Component = () => {
             });
             return errors;
         },
-        onSubmit: (values) => {
-            let hasFile = false;
-            Object.entries(values).forEach(([key, value]) => {
-                if (value instanceof File) {
-                    hasFile = true;
-                    const transactionId = nanoid();
-
-                    dispatch(
-                        storesActionsCreators.requestStoreUpload({
-                            key,
-                            status: 'requested',
-                            transactionId,
-                        })
-                    );
-
-                    const image = new Image();
-                    image.src = URL.createObjectURL(value);
-                    image.onload = () => {
-                        const width = image.width.toString();
-                        const height = image.height.toString();
-
-                        dispatch(
-                            sendRequestUploadStoresThunk({
-                                mimetype: 'image/jpeg',
-                                metadata: {
-                                    width,
-                                    height,
-                                    formatUpload: key,
-                                    path: formatsMapper[key as keyof typeof formatsMapper],
-                                    maxSize: mediaConfigs[key as keyof typeof mediaConfigs].sizeMB.toString(),
-                                },
-                                originalName: value.name,
-                                transactionId,
-                                id: selectedStore.id,
-                            })
-                        );
-                    };
-                }
-            });
-
-            if (hasFile) return;
-
-            dispatch(
-                updateOrganizationThunk({
-                    id: selectedStore.id,
-                    data: {
-                        url: values.url,
-                        name: values.name,
-                        description: values.description,
-                        markup: values.markup,
-                        // formats: {}
-                    },
-                })
-            );
-
-            if (Object.values(formik.errors).length === 0) {
-                dispatch(storesActionsCreators.setTask({ id: 'organization', status: 'Completed' }));
-            }
-            router.push('/home/stores/publish');
-        },
+        onSubmit: handleSubmit,
     });
 
     const handleBack = () => {
-        if (Object.values(formik.errors).length === 0)
-            dispatch(storesActionsCreators.setTask({ id: 'organization', status: 'Completed' }));
-        else dispatch(storesActionsCreators.setTask({ id: 'organization', status: 'In Progress' }));
+        if (JSON.stringify(formik.values) !== JSON.stringify(formik.initialValues)) {
+            setOpenDialogSave(true);
+            return;
+        }
+        router.push('/home/stores/publish');
+    };
+    const handleBackSave = () => {
+        handleSubmit(formik.values);
+        setOpenDialogSave(false);
+    };
+    const handleBackCancel = () => {
+        setOpenDialogSave(false);
         router.push('/home/stores/publish');
     };
 
@@ -254,7 +275,7 @@ const Component = () => {
         >
             <Breadcrumb
                 title="Publish Store"
-                assetTitle={store?.organization.url}
+                assetTitle={store?.organization.url || ''}
                 items={[
                     { title: 'Stores', to: '/home/stores' },
                     { title: 'Publish', to: '/home/stores/publish' },
@@ -315,7 +336,7 @@ const Component = () => {
                             }}
                             InputProps={{
                                 inputProps: {
-                                    size: formik.values.url.length || 20,
+                                    size: formik.values.url?.length || 20,
                                 },
                             }}
                         />
@@ -471,6 +492,28 @@ const Component = () => {
                     </Box>
                 </Box>
             </form>
+
+            <Dialog
+                open={openDialogSave}
+                onClose={() => setOpenDialogSave(false)}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{'Back to publish page'}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Do you want to save the changes before leaving?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleBackCancel} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleBackSave} color="success" variant="outlined">
+                        Save
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };
