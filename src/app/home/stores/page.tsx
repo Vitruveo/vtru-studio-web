@@ -43,6 +43,7 @@ interface StoreProps {
         handleSelectStore: (id: string) => void;
         handleSelectFilter: (selectedFilter: string) => void;
         handleChangePage: (event: React.ChangeEvent<unknown>, value: number) => void;
+        handleSelectSort: (selectedSort: string) => void;
     };
 }
 
@@ -58,6 +59,7 @@ const Component = ({ data, actions }: StoreProps) => {
         handleSelectStore,
         handleSelectFilter,
         handleChangePage,
+        handleSelectSort,
     } = actions;
 
     return (
@@ -113,10 +115,10 @@ const Component = ({ data, actions }: StoreProps) => {
                     <Select
                         placeholder="Sort by"
                         options={[
-                            { value: 'created - new', label: 'Created - New to Old' },
-                            { value: 'created - old', label: 'Created - Old to New' },
-                            { value: 'name - a-z', label: 'Name - a-z' },
-                            { value: 'name - z-a', label: 'Name - z-a' },
+                            { value: 'createdNew', label: 'Created - New to Old' },
+                            { value: 'createdOld', label: 'Created - Old to New' },
+                            { value: 'nameAZ', label: 'Name - a-z' },
+                            { value: 'nameZA', label: 'Name - z-a' },
                         ]}
                         styles={{
                             container: (provided) => ({
@@ -124,6 +126,9 @@ const Component = ({ data, actions }: StoreProps) => {
                                 minWidth: 200,
                                 width: 'auto',
                             }),
+                        }}
+                        onChange={(selectedOption) => {
+                            handleSelectSort(selectedOption!.value);
                         }}
                     />
                 </Box>
@@ -333,6 +338,14 @@ export default function Stores() {
         dispatch(getStoresThunk({ ...getStoresParams, status: value }));
     };
 
+    const handleSelectSort = (selectedSort: string) => {
+        setGetStoresParams((prev) => ({
+            ...prev,
+            sort: selectedSort,
+        }));
+        dispatch(getStoresThunk({ ...getStoresParams, sort: selectedSort }));
+    };
+
     const handleChangePage = (_event: React.ChangeEvent<unknown>, value: number) => {
         dispatch(storesActionsCreators.setCurrentPage(value));
         setGetStoresParams((prev) => ({
@@ -353,6 +366,7 @@ export default function Stores() {
                 handleSelectStore,
                 handleSelectFilter,
                 handleChangePage,
+                handleSelectSort,
             }}
         />
     );
