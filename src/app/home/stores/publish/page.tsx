@@ -100,6 +100,7 @@ const Component = ({ data }: ComponentProps) => {
                                                     onClick={() => {
                                                         router.push('/home/stores/publish/organization');
                                                     }}
+                                                    disabled={index !== 0}
                                                 >
                                                     {value.status !== 'Not Started' ? 'Edit' : 'Start'}
                                                 </Button>

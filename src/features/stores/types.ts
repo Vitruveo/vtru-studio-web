@@ -32,6 +32,7 @@ export interface Stores {
     _id: string;
     organization: Organization;
     framework: Framework;
+    status: StoreStatus;
 }
 
 export interface RequestStoreUpload {
