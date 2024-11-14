@@ -7,9 +7,9 @@ import { useRouter } from 'next/navigation';
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 
 import { useDispatch, useSelector } from '@/store/hooks';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { getStoreByIdThunk } from '@/features/stores/thunks';
-import { Stores, Task } from '@/features/stores/types';
+import { Stores, PublishStore } from '@/features/stores/types';
 import { NO_IMAGE_ASSET, STORE_STORAGE_URL } from '@/constants/asset';
 
 const statusStyles = {
@@ -29,7 +29,7 @@ const statusStyles = {
 
 interface ComponentProps {
     data: {
-        tasks?: Task[];
+        publishStore: PublishStore;
         store: Stores;
         loading: boolean;
     };
@@ -37,7 +37,7 @@ interface ComponentProps {
 
 const Component = ({ data }: ComponentProps) => {
     const router = useRouter();
-    const { store, loading, tasks } = data;
+    const { store, loading, publishStore } = data;
 
     if (loading || !store)
         return (
@@ -50,7 +50,7 @@ const Component = ({ data }: ComponentProps) => {
         <Box position="relative" paddingInline={3} overflow="auto">
             <Breadcrumb
                 title="Publish Store"
-                assetTitle={store.organization.url}
+                assetTitle={store.organization.url || ''}
                 items={[{ title: 'Stores', to: '/home/stores' }, { title: 'Publish' }]}
             />
 
@@ -63,14 +63,15 @@ const Component = ({ data }: ComponentProps) => {
             <Box p={2}>
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={6}>
-                        {tasks?.map((task, index) => {
-                            const isLast = index === tasks.length - 1;
+                        {Object.entries(publishStore)?.map((step, index) => {
+                            const [key, value] = step;
+                            const isLast = index === Object.keys(publishStore).length - 1;
 
                             return (
-                                <Grid key={task.id} container mb={3}>
+                                <Grid key={key} container mb={3}>
                                     <Grid item xs={3}>
                                         <Typography variant="h6" fontWeight="normal" color="GrayText">
-                                            {task.name}
+                                            {value.label}
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={9}>
@@ -78,16 +79,16 @@ const Component = ({ data }: ComponentProps) => {
                                             <Typography
                                                 width={110}
                                                 height={30}
-                                                color={statusStyles[task.status as keyof typeof statusStyles].text}
+                                                color={statusStyles[value.status as keyof typeof statusStyles].text}
                                                 bgcolor={
-                                                    statusStyles[task.status as keyof typeof statusStyles].background
+                                                    statusStyles[value.status as keyof typeof statusStyles].background
                                                 }
                                                 borderRadius={0}
                                                 paddingBlock={0.5}
                                                 textTransform="none"
                                                 textAlign="center"
                                             >
-                                                {task.status}
+                                                {value.status}
                                             </Typography>
                                             {!isLast && (
                                                 <Button
@@ -97,10 +98,11 @@ const Component = ({ data }: ComponentProps) => {
                                                     }}
                                                     variant="contained"
                                                     onClick={() => {
-                                                        if (task.to) router.push(task.to);
+                                                        router.push('/home/stores/publish/organization');
                                                     }}
+                                                    disabled={index !== 0}
                                                 >
-                                                    {task.status !== 'Not Started' ? 'Edit' : 'Start'}
+                                                    {value.status !== 'Not Started' ? 'Edit' : 'Start'}
                                                 </Button>
                                             )}
                                         </Box>
@@ -143,7 +145,9 @@ const Component = ({ data }: ComponentProps) => {
                     <Button variant="text" onClick={() => router.push('/home/stores')}>
                         <Typography color="gray">Back</Typography>
                     </Button>
-                    <Button variant="contained">Review and Publish</Button>
+                    <Button variant="contained" disabled>
+                        Review and Publish (Comming Soon)
+                    </Button>
                 </Box>
             </Box>
         </Box>
@@ -153,11 +157,11 @@ const Component = ({ data }: ComponentProps) => {
 export default function Publish() {
     const dispatch = useDispatch();
     const selectedStore = useSelector((state) => state.stores.selectedStore);
-    const { data, loading, tasks } = useSelector((state) => state.stores);
+    const { data, loading, publishStore } = useSelector((state) => state.stores);
 
     useEffect(() => {
         dispatch(getStoreByIdThunk(selectedStore.id));
     }, [selectedStore]);
 
-    return <Component data={{ store: data.data[0], loading, tasks }} />;
+    return <Component data={{ store: data.data[0], loading, publishStore }} />;
 }

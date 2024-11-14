@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Stores, StoresState } from './types';
+import { PublishStore, StepStatus, Stores, StoresState } from './types';
 
 export const initialState: StoresState = {
     loading: false,
@@ -20,29 +20,29 @@ export const initialState: StoresState = {
     error: null,
     isSubmittingFiles: false,
     requestStoreUpload: {},
-    tasks: [
-        {
-            id: 'organization',
-            name: 'Organization',
+    publishStore: {
+        organization: {
+            label: 'Organization',
             status: 'Not Started',
-            to: '/home/stores/publish/organization',
+            optional: false,
         },
-        {
-            id: 'artworks',
-            name: 'Artworks',
+        artworks: {
+            label: 'Artworks (Comming Soon)',
             status: 'Not Started',
+            optional: false,
         },
-        {
-            id: 'appearanceContent',
-            name: 'Appearance & Content',
+        appearanceContent: {
+            label: 'Appearance & Content (Comming Soon)',
             status: 'Not Started',
+            optional: false,
         },
-        {
-            id: 'reviewPublish',
-            name: 'Review and Publish',
+        reviewPublish: {
+            label: 'Review and Publish (Comming Soon)',
             status: 'Not Started',
+            optional: false,
         },
-    ],
+    },
+    status: 'draft',
 };
 
 export const storesSlice = createSlice({
@@ -85,9 +85,11 @@ export const storesSlice = createSlice({
         clearRequestStoreUpload: (state) => {
             state.requestStoreUpload = {};
         },
-        setTask: (state, action: PayloadAction<{ id: string; status: StoresState['tasks'][0]['status'] }>) => {
-            const taskIndex = state.tasks.findIndex((task) => task.id === action.payload.id);
-            state.tasks[taskIndex].status = action.payload.status;
+        setPublishStoreStatusStep: (state, action: PayloadAction<{ step: keyof PublishStore; status: StepStatus }>) => {
+            state.publishStore[action.payload.step].status = action.payload.status;
+        },
+        setPublishStoreStatus: (state, action: PayloadAction<StoresState['status']>) => {
+            state.status = action.payload;
         },
     },
 });

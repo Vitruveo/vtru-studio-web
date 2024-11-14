@@ -12,10 +12,11 @@ import {
     IconButton,
     Pagination,
     Theme,
+    Tooltip,
     Typography,
     useMediaQuery,
 } from '@mui/material';
-import { IconCopy, IconPlus, IconTrash } from '@tabler/icons-react';
+import { IconCopyPlus, IconPlus, IconTrash } from '@tabler/icons-react';
 import Select from 'react-select';
 import Image from 'next/image';
 
@@ -26,12 +27,13 @@ import { createNewStoreThunk, deleteStoreThunk, getStoresThunk } from '@/feature
 import type { GetStoresParams, StorePaginated, Stores } from '@/features/stores/types';
 import { storesActionsCreators } from '@/features/stores/slice';
 import { NO_IMAGE_ASSET, STORE_STORAGE_URL } from '@/constants/asset';
-
+import { useTheme } from '@mui/material/styles';
 interface StoreProps {
     data: {
         store: StorePaginated;
         loading: boolean;
         openDeleteDialog: boolean;
+        storeParams: GetStoresParams;
     };
     actions: {
         handleDelete: (id: string) => void;
@@ -45,8 +47,9 @@ interface StoreProps {
 }
 
 const Component = ({ data, actions }: StoreProps) => {
-    const smUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
-    const { store, loading, openDeleteDialog } = data;
+    const theme = useTheme();
+    const smUp = useMediaQuery((t: Theme) => t.breakpoints.up('sm'));
+    const { store, loading, openDeleteDialog, storeParams } = data;
     const {
         handleDelete,
         handleDeleteConfirm,
@@ -90,7 +93,7 @@ const Component = ({ data, actions }: StoreProps) => {
                     placeholder="Duplicate Store"
                     options={store.data.map((item) => ({
                         value: item._id,
-                        label: item.organization.name || 'N/A name',
+                        label: item.organization.url || 'Untitled',
                     }))}
                     styles={{
                         container: (provided) => ({
@@ -98,6 +101,9 @@ const Component = ({ data, actions }: StoreProps) => {
                             minWidth: 200,
                             width: 'auto',
                         }),
+                    }}
+                    onChange={(selectedOption) => {
+                        handleCreateNewStore(selectedOption?.value);
                     }}
                 />
             </Box>
@@ -127,6 +133,7 @@ const Component = ({ data, actions }: StoreProps) => {
                             <Typography
                                 key={item}
                                 fontSize={18}
+                                color={storeParams.status === item.toLowerCase() ? 'primary' : 'black'}
                                 style={{
                                     textDecoration: 'underline',
                                     cursor: 'pointer',
@@ -139,7 +146,14 @@ const Component = ({ data, actions }: StoreProps) => {
                     })}
                 </Box>
             </Box>
-            <Box display="flex" flexWrap="wrap" gap={4} paddingBlock={2}>
+            <Box
+                display="flex"
+                flexWrap="wrap"
+                gap={4}
+                paddingBlock={2}
+                overflow={'auto'}
+                maxHeight={'calc(100vh - 280px)'}
+            >
                 {loading ? (
                     <Box display={'flex'} justifyContent={'center'} width={'100%'}>
                         <CircularProgress size={100} />
@@ -159,40 +173,44 @@ const Component = ({ data, actions }: StoreProps) => {
                                 }}
                             >
                                 <Box position="relative" width={200}>
-                                    <IconButton
-                                        style={{
-                                            position: 'absolute',
-                                            top: 10,
-                                            right: 10,
-                                            backgroundColor: 'white',
-                                            padding: 5,
-                                            borderRadius: 5,
-                                        }}
-                                        onClick={(event) => {
-                                            event.preventDefault();
-                                            event.stopPropagation();
-                                        }}
-                                    >
-                                        <IconCopy color="red" />
-                                    </IconButton>
-                                    <IconButton
-                                        style={{
-                                            position: 'absolute',
-                                            top: 60,
-                                            right: 10,
-                                            backgroundColor: 'white',
-                                            padding: 5,
-                                            borderRadius: 5,
-                                        }}
-                                        onClick={(event) => {
-                                            event.preventDefault();
-                                            event.stopPropagation();
-                                            handleDelete(item._id);
-                                        }}
-                                    >
-                                        <IconTrash color="red" />
-                                    </IconButton>
-
+                                    <Tooltip title="Duplicate Store" placement="top">
+                                        <IconButton
+                                            style={{
+                                                position: 'absolute',
+                                                top: 10,
+                                                right: 10,
+                                                backgroundColor: 'white',
+                                                padding: 5,
+                                                borderRadius: 5,
+                                            }}
+                                            onClick={(event) => {
+                                                event.preventDefault();
+                                                event.stopPropagation();
+                                                handleCreateNewStore(item._id);
+                                            }}
+                                        >
+                                            <IconCopyPlus color={theme.palette.primary.main} />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title="Delete Store" placement="top">
+                                        <IconButton
+                                            style={{
+                                                position: 'absolute',
+                                                top: 60,
+                                                right: 10,
+                                                backgroundColor: 'white',
+                                                padding: 5,
+                                                borderRadius: 5,
+                                            }}
+                                            onClick={(event) => {
+                                                event.preventDefault();
+                                                event.stopPropagation();
+                                                handleDelete(item._id);
+                                            }}
+                                        >
+                                            <IconTrash color="red" />
+                                        </IconButton>
+                                    </Tooltip>
                                     <Image
                                         src={
                                             item.organization.formats?.logo?.square?.path
@@ -298,8 +316,8 @@ export default function Stores() {
         setStoreToDelete(null);
     };
 
-    const handleCreateNewStore = () => {
-        dispatch(createNewStoreThunk());
+    const handleCreateNewStore = (id?: string) => {
+        dispatch(createNewStoreThunk(id));
     };
 
     const handleSelectStore = (id: string) => {
@@ -326,7 +344,7 @@ export default function Stores() {
 
     return (
         <Component
-            data={{ store: data, loading, openDeleteDialog }}
+            data={{ store: data, loading, openDeleteDialog, storeParams: getStoresParams }}
             actions={{
                 handleDelete,
                 handleDeleteConfirm,
