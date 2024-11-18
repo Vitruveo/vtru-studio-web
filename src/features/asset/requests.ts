@@ -13,6 +13,8 @@ import {
     GetMyAssetsReq,
     RequestDeleteFilesReq,
     SigningMediaC2PAReq,
+    StoresSendRequestUploadApiRes,
+    StoresSendRequestUploadReq,
     UpdateAssetStepApiRes,
     UpdateAssetStepReq,
     UpdatePriceReq,
@@ -117,6 +119,13 @@ export async function deleteAsset(id: string): Promise<any> {
 
 export async function sendRequestUpload(data: AssetSendRequestUploadReq): Promise<AssetSendRequestUploadApiRes> {
     const res = await apiService.post<string>(`/assets/request/upload/${data.id}`, data);
+    return res;
+}
+
+export async function sendRequestUploadStores(
+    data: StoresSendRequestUploadReq
+): Promise<StoresSendRequestUploadApiRes> {
+    const res = await apiService.post<string>(`/stores/upload/request/${data.id}`, data);
     return res;
 }
 

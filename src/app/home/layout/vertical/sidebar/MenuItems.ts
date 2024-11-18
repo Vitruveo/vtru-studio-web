@@ -24,7 +24,13 @@ const Menuitems: MenuitemsType[] = [
         required: 'canConsignArtwork',
         href: '/home/consignArtwork',
     },
-
+    {
+        id: uniqueId(),
+        title: 'studio.sidebar.store',
+        icon: IconBrandWechat,
+        // required: 'canConsignArtwork',
+        href: '/home/stores',
+    },
     {
         id: uniqueId(),
         title: 'studio.sidebar.community',

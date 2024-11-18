@@ -167,6 +167,15 @@ export interface AssetSendRequestUploadReq {
     };
 }
 
+export interface StoresSendRequestUploadReq {
+    id: string;
+    mimetype: string;
+    originalName: string;
+    transactionId: string;
+    metadata: {
+        [key: string]: string | undefined;
+    };
+}
 export interface Consign {
     transaction: string;
     status: string;
@@ -278,4 +287,5 @@ export type CreateAssetApiRes = APIResponse<{
 }>;
 export type GetAssetsApiRes = APIResponse<AssetPaginated>;
 export type AssetSendRequestUploadApiRes = APIResponse<string>;
+export type StoresSendRequestUploadApiRes = APIResponse<string>;
 export type CheckLicenseEditableRes = APIResponse<boolean>;

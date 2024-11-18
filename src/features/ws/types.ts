@@ -6,7 +6,7 @@ export interface PreSignedURLPayload {
     preSignedURL: string;
     transactionId: string;
     path: string;
-    origin: 'asset' | 'profile' | 'profileRequests';
+    origin: 'asset' | 'profile' | 'stores' | 'profileRequests';
     method: 'PUT' | 'DELETE';
 }
 
