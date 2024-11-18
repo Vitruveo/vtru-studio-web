@@ -36,6 +36,7 @@ import {
     SocialsFacebookApiRes,
     RemoveSocialApiRes,
     RemoveSocialReq,
+    SynapsSessionInitApiRes,
 } from './types';
 import { Framework } from '../common/types';
 import { BASE_URL_BATCH } from '@/constants/api';
@@ -168,4 +169,8 @@ export async function deleteWallets(payload: { walletsAddress: string[] }) {
 
 export async function me() {
     return apiService.get('/creators/me');
+}
+
+export async function synapsSessionInit(): Promise<SynapsSessionInitApiRes> {
+    return apiService.post('/session/init', {});
 }

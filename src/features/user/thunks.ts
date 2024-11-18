@@ -27,6 +27,7 @@ import {
     addWallets,
     getWalletsVault,
     me,
+    synapsSessionInit,
 } from './requests';
 import { userActionsCreators } from './slice';
 import {
@@ -471,5 +472,14 @@ export function removeSocialThunk(data: RemoveSocialReq): ReduxThunkAction<Promi
                 dispatch(userActionsCreators.changeSocialsGoogle({ avatar: '', name: '' }));
             }
         });
+    };
+}
+
+export function synapsSessionInitThunk(): ReduxThunkAction<Promise<void>> {
+    return async function (dispatch, getState) {
+        const res = await synapsSessionInit();
+        if (res.data?.session_id) {
+            dispatch(userActionsCreators.setSynapsSessionId(res.data.session_id));
+        }
     };
 }

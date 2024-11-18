@@ -27,6 +27,12 @@ export interface Assets {
     countComments: number;
 }
 
+export interface SynapsStep {
+    id: string;
+    name: string;
+    status: string;
+}
+
 export interface User {
     _id: string;
     name: string;
@@ -34,6 +40,10 @@ export interface User {
     username: string;
     login: {
         email: string;
+    };
+    synaps?: {
+        sessionId: string;
+        steps: SynapsStep[];
     };
     walletDefault: string;
     emailDefault: string;
@@ -238,6 +248,10 @@ export interface RequestConnectWalletRes {
     signature: string;
 }
 
+export interface SessionInitRes {
+    session_id: string;
+}
+
 export type RemoveSocialApiRes = APIResponse;
 export type SocialsXApiRes = APIResponse<string>;
 export type SocialsFacebookApiRes = APIResponse<string>;
@@ -254,6 +268,7 @@ export type VerifyCodeApiRes = APIResponse<User>;
 export type ChangeAvatarApiRes = APIResponse<ChangeAvatarRes>;
 export type RequestConnectWalletApiRes = APIResponse<ResquestConnectWalletRes>;
 export type VerifyConnectWalletApiRes = APIResponse;
+export type SynapsSessionInitApiRes = APIResponse<SessionInitRes>;
 
 export interface MintExplorer {
     transactionHash: string;

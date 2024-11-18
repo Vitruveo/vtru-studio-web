@@ -101,6 +101,7 @@ export const userSlice = createSlice({
             state.vault.createdAt = creator?.vault?.createdAt || null;
             state.vault.isBlocked = creator?.vault?.isBlocked || false;
             state.framework = creator.framework;
+            state.synaps = creator.synaps;
             state.socials = {
                 x: {
                     name: creator?.socials?.x?.name ?? '',
@@ -176,6 +177,16 @@ export const userSlice = createSlice({
             state.assets = {
                 ...state.assets,
                 data: state.assets.data.filter((asset) => asset._id !== action.payload),
+            };
+        },
+        setSynapsSessionId: (state, action: PayloadAction<string>) => {
+            return {
+                ...state,
+                synaps: {
+                    ...(state.synaps || {}),
+                    sessionId: action.payload,
+                    steps: [],
+                },
             };
         },
     },
