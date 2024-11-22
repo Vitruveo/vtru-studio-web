@@ -28,7 +28,8 @@ export default function StakeModal({ isOpen, available, loading, claimAllocate, 
             newSelectValues[index] = value;
             setSelectValues(newSelectValues);
             const totalAssignedPercentage = totalAssigned / 100;
-            const remainder = available * (1 - totalAssignedPercentage);
+            const remainder = Math.trunc(available * (1 - totalAssignedPercentage));
+
             setUnassigned(remainder);
         }
     };
@@ -49,14 +50,14 @@ export default function StakeModal({ isOpen, available, loading, claimAllocate, 
                     <Box display="flex" justifyContent="space-between" mb={2}>
                         <Box>
                             <Typography variant="caption">Available</Typography>
-                            <Typography variant="h3">{Math.trunc(available)} VTRU</Typography>
+                            <Typography variant="h3">{available} VTRU</Typography>
                         </Box>
                         <Box>
                             <Typography variant="caption" color={'GrayText'}>
                                 Unassigned
                             </Typography>
                             <Typography variant="h3" color={'GrayText'}>
-                                {Math.trunc(unassigned)} VTRU
+                                {unassigned} VTRU
                             </Typography>
                         </Box>
                     </Box>

@@ -130,7 +130,7 @@ export const ClaimContainer = () => {
             <StakeModal
                 isOpen={isModalOpenStake}
                 handleClose={closeModalStake}
-                available={balance}
+                available={Math.trunc(balance)}
                 claimAllocate={onClaimAllocate}
                 loading={loading}
             />
