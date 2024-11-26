@@ -21,7 +21,7 @@ import { Delete } from '@mui/icons-material';
 
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
-import { MediaCard, MediaCardRef } from '@/app/home/stores/components/mediaCard';
+import { MediaCard, MediaCardRef } from '@/app/home/components/stores/mediaCard';
 
 import { useDispatch, useSelector } from '@/store/hooks';
 import { storeStorageThunk, updateOrganizationThunk, validateUrlThunk } from '@/features/stores/thunks';

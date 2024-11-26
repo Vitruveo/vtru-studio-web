@@ -27,6 +27,10 @@ const statusStyles = {
     },
 };
 
+const paths = {
+    organization: '/home/stores/publish/organization',
+    artworks: '/home/stores/publish/artworks',
+};
 interface ComponentProps {
     data: {
         publishStore: PublishStore;
@@ -98,9 +102,9 @@ const Component = ({ data }: ComponentProps) => {
                                                     }}
                                                     variant="contained"
                                                     onClick={() => {
-                                                        router.push('/home/stores/publish/organization');
+                                                        router.push(paths[key as keyof typeof paths]);
                                                     }}
-                                                    disabled={index !== 0}
+                                                    disabled={index > 1}
                                                 >
                                                     {value.status !== 'Not Started' ? 'Edit' : 'Start'}
                                                 </Button>
@@ -146,7 +150,7 @@ const Component = ({ data }: ComponentProps) => {
                         <Typography color="gray">Back</Typography>
                     </Button>
                     <Button variant="contained" disabled>
-                        Review and Publish (Comming Soon)
+                        Review and Publish (Coming Soon)
                     </Button>
                 </Box>
             </Box>
