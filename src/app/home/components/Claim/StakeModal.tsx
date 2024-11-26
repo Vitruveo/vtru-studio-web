@@ -66,9 +66,7 @@ export default function StakeModal({ isOpen, available, loading, claimAllocate, 
                         {Array.from({ length: 4 }).map((_, index) => (
                             <Box key={index} mb={1}>
                                 <Box display={'flex'} gap={1.5}>
-                                    <Typography fontSize={16}>
-                                        {Math.trunc((available * selectValues[index]) / 100)}
-                                    </Typography>
+                                    <Typography fontSize={16}>{(available * selectValues[index]) / 100}</Typography>
                                     <Typography fontSize={16}>{labelMapper[index]}</Typography>
                                 </Box>
                                 <Box display="flex" gap={3} mb={3} key={index}>
