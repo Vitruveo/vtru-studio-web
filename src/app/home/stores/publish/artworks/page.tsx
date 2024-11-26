@@ -1,7 +1,8 @@
 'use client';
+import TabSliders from '@/app/home/components/stores/sliders/tabSliders';
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 import { useSelector } from '@/store/hooks';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 
 const Component = () => {
     const selectedStore = useSelector((state) => state.stores.selectedStore);
@@ -26,6 +27,7 @@ const Component = () => {
                     { title: 'Artworks' },
                 ]}
             />
+            <TabSliders />
         </Box>
     );
 };
