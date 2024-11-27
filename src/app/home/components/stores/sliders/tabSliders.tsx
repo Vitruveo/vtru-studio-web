@@ -1,26 +1,26 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Box, Tab } from '@mui/material';
 import { useState } from 'react';
-import Licenses from '../filters/licenseItem';
 import ContextItem from '../filters/contextItem';
 import TaxonomyItem from '../filters/taxonomyItem';
 import ArtistItem from '../filters/ArtistItem';
+import GeneralItem from '../filters/generalItem';
 
 const TabSliders = () => {
-    const [tabvalue, setTabValue] = useState('licenses');
+    const [tabvalue, setTabValue] = useState('general');
 
     return (
         <TabContext value={tabvalue}>
             <Box sx={{ borderBottom: 1, borderColor: 'gray' }}>
                 <TabList onChange={(_e, value) => setTabValue(value)} variant="scrollable" scrollButtons="auto">
-                    <Tab label="Licenses" value={'licenses'} />
+                    <Tab label="Licenses" value={'general'} />
                     <Tab label="Context" value={'context'} />
                     <Tab label="Taxonomy" value={'taxonomy'} />
                     <Tab label="Artists" value={'artists'} />
                 </TabList>
             </Box>
-            <TabPanel value={'licenses'}>
-                <Licenses />
+            <TabPanel value={'general'}>
+                <GeneralItem />
             </TabPanel>
             <TabPanel value={'context'}>
                 <ContextItem />
