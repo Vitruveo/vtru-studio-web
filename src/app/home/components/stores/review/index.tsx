@@ -8,7 +8,7 @@ export const Review = () => {
             {/* <Typography variant="h6"></Typography> */}
             <TabContext value={'general2'}>
                 <TabList variant="scrollable" scrollButtons="auto">
-                    <Tab label="Review Artworks" value={'general'} color="inherit" />
+                    <Tab label="Selected Artworks" value={'general'} color="inherit" />
                 </TabList>
             </TabContext>
 
