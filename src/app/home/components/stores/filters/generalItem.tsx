@@ -4,7 +4,7 @@ import ShortcutItem from './shortcutItem';
 
 const GeneralItem = () => {
     return (
-        <Box>
+        <Box display="flex" flexDirection="column" gap={4}>
             <ShortcutItem />
             <Licenses />
         </Box>

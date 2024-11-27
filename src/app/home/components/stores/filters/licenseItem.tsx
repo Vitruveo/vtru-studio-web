@@ -25,6 +25,7 @@ const Licenses = () => {
 
     return (
         <Box>
+            <Typography variant="h6">Artwork Price</Typography>
             <Slider
                 key={reseted}
                 defaultValue={[minPrice, minPrice]}

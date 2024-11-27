@@ -13,7 +13,7 @@ const TabSliders = () => {
         <TabContext value={tabvalue}>
             <Box sx={{ borderBottom: 1, borderColor: 'gray' }}>
                 <TabList onChange={(_e, value) => setTabValue(value)} variant="scrollable" scrollButtons="auto">
-                    <Tab label="Licenses" value={'general'} />
+                    <Tab label="General" value={'general'} />
                     <Tab label="Context" value={'context'} />
                     <Tab label="Taxonomy" value={'taxonomy'} />
                     <Tab label="Artists" value={'artists'} />

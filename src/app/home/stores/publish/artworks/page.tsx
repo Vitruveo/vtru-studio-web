@@ -1,12 +1,21 @@
 'use client';
-import TabSliders from '@/app/home/components/stores/sliders/tabSliders';
-import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
+import { Box, Button, Grid, Typography } from '@mui/material';
 import { useSelector } from '@/store/hooks';
-import { Box } from '@mui/material';
+import { useRouter } from 'next/navigation';
+
+import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
+import TabSliders from '@/app/home/components/stores/sliders/tabSliders';
+import { Review } from '@/app/home/components/stores/review';
 
 const Component = () => {
+    const router = useRouter();
+
     const selectedStore = useSelector((state) => state.stores.selectedStore);
     const store = useSelector((state) => state.stores.data.data.find((item) => item._id === selectedStore.id));
+
+    const handleBack = () => {
+        router.push('/home/stores/publish');
+    };
 
     return (
         <Box
@@ -27,7 +36,36 @@ const Component = () => {
                     { title: 'Artworks' },
                 ]}
             />
-            <TabSliders />
+            <Grid container spacing={4}>
+                <Grid item xs={6}>
+                    <TabSliders />
+                </Grid>
+                <Grid item xs={6}>
+                    <Review />
+                </Grid>
+            </Grid>
+
+            <Box
+                bgcolor="#e5e7eb"
+                sx={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    width: '100%',
+                }}
+            >
+                <Box display="flex" alignItems="center" justifyContent="space-between" p={2}>
+                    <Typography color="GrayText">Step 2 of 3</Typography>
+                    <Box display="flex" gap={2}>
+                        <Button type="button" variant="text" onClick={handleBack}>
+                            <Typography color="gray">Back</Typography>
+                        </Button>
+                        <Button type="submit" variant="contained">
+                            Next
+                        </Button>
+                    </Box>
+                </Box>
+            </Box>
         </Box>
     );
 };

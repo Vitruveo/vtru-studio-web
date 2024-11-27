@@ -67,7 +67,7 @@ export function InputColor({ name, onClick, afterPrecisionChange }: Props) {
                         color: theme.palette.primary.contrastText,
                     }}
                 >
-                    {language['search.assetFilter.context.title.colors.addColor'] as string}
+                    Add
                 </Button>
             </Box>
         </Stack>
