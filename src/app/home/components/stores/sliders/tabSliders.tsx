@@ -5,7 +5,6 @@ import Licenses from '../filters/licenseItem';
 import ContextItem from '../filters/contextItem';
 import TaxonomyItem from '../filters/taxonomyItem';
 import ArtistItem from '../filters/ArtistItem';
-import PortfolioItem from '../filters/PortfolioItem';
 
 const TabSliders = () => {
     const [tabvalue, setTabValue] = useState('licenses');
@@ -18,7 +17,6 @@ const TabSliders = () => {
                     <Tab label="Context" value={'context'} />
                     <Tab label="Taxonomy" value={'taxonomy'} />
                     <Tab label="Artists" value={'artists'} />
-                    <Tab label="Portfolio" value={'portfolio'} />
                 </TabList>
             </Box>
             <TabPanel value={'licenses'}>
@@ -32,9 +30,6 @@ const TabSliders = () => {
             </TabPanel>
             <TabPanel value={'artists'}>
                 <ArtistItem />
-            </TabPanel>
-            <TabPanel value={'portfolio'}>
-                <PortfolioItem />
             </TabPanel>
         </TabContext>
     );
