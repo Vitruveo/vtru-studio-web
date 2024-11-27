@@ -48,13 +48,13 @@ const Component = () => {
             <Box
                 bgcolor="#e5e7eb"
                 sx={{
-                    position: 'absolute',
+                    position: 'fixed',
                     bottom: 0,
                     left: 0,
                     width: '100%',
                 }}
             >
-                <Box display="flex" alignItems="center" justifyContent="space-between" p={2}>
+                <Box display="flex" alignItems="center" justifyContent="end" gap={170} p={2}>
                     <Typography color="GrayText">Step 2 of 3</Typography>
                     <Box display="flex" gap={2}>
                         <Button type="button" variant="text" onClick={handleBack}>

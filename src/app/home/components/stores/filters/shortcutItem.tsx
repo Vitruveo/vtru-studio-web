@@ -15,7 +15,7 @@ const ShortcutItem = () => {
     return (
         <Box>
             <Typography variant="h6">Shortcuts</Typography>
-            <Grid container xs={6}>
+            <Grid container item xs={6}>
                 {items.map((item, index) => (
                     <Grid item xs={6} key={index}>
                         <Checkbox /> {item}
