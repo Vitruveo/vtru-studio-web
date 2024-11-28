@@ -1,5 +1,5 @@
 import { Delete } from '@mui/icons-material';
-import { Box, Typography } from '@mui/material';
+import { Box, Paper, Typography } from '@mui/material';
 import { useFormikContext } from 'formik';
 
 interface ShortcutFilterProps {
@@ -15,9 +15,9 @@ export const ShortcutFilter = ({ content }: ShortcutFilterProps) => {
     return (
         <Box display={'flex'} gap={1} flexWrap={'wrap'}>
             {Object.entries(content)
-                .filter(([key, value]) => !!value)
-                .map(([key, value]) => (
-                    <Box key={key} display={'flex'} gap={1}>
+                .filter(([_key, value]) => !!value)
+                .map(([key, _value]) => (
+                    <Paper key={key} sx={{ padding: 1, display: 'flex' }}>
                         <Typography variant="body1">{key}</Typography>
                         <Delete
                             fontSize="small"
@@ -25,7 +25,7 @@ export const ShortcutFilter = ({ content }: ShortcutFilterProps) => {
                             onClick={() => handleDeleteITem(key)}
                             cursor={'pointer'}
                         />
-                    </Box>
+                    </Paper>
                 ))}
         </Box>
     );

@@ -16,7 +16,7 @@ export const SelectedFilter = ({ title, content }: SelectedFilterProps) => {
             <Typography variant="overline" fontWeight="bold">
                 {hasTruthyObject(content) ? title : ''}
             </Typography>
-            <Box mb={2} ml={4}>
+            <Box ml={4}>
                 {Object.entries(content).map((element) => {
                     const [key, value] = element;
                     const isShortcut = key === 'shortcuts';
@@ -28,20 +28,18 @@ export const SelectedFilter = ({ title, content }: SelectedFilterProps) => {
                             key={key}
                             display={'flex'}
                             flexDirection={isColorPrecision || isColors ? 'row' : 'column'}
-                            gap={1}
+                            marginBlock={1}
                         >
                             <Typography variant="subtitle2" fontWeight="bold">
                                 {hasTruthyObject(value) || isColorPrecision ? key : ''}
                             </Typography>
-                            <Box display="flex" alignItems="center">
-                                {isShortcut && <ShortcutFilter content={value as { [key: string]: boolean }} />}
-                                {isLicense && <LicensesFilter content={value as { [key: string]: string }} />}
-                                {isColorPrecision && <Typography variant="body1">{Number(value) * 100}%</Typography>}
-                                {isColors && <ColorFilter content={value as string[]} />}
-                                {!isShortcut && !isLicense && !isColorPrecision && !isColors && (
-                                    <MultiSelectFilter content={{ title, key, value: value as [string, string][] }} />
-                                )}
-                            </Box>
+                            {isShortcut && <ShortcutFilter content={value as { [key: string]: boolean }} />}
+                            {isLicense && <LicensesFilter content={value as { [key: string]: string }} />}
+                            {isColorPrecision && <Typography variant="body1">{Number(value) * 100}%</Typography>}
+                            {isColors && <ColorFilter content={value as string[]} />}
+                            {!isShortcut && !isLicense && !isColorPrecision && !isColors && (
+                                <MultiSelectFilter content={{ title, key, value: value as [string, string][] }} />
+                            )}
                         </Box>
                     );
                 })}
