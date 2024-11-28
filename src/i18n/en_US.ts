@@ -927,6 +927,8 @@ const language: Translation = {
     'studio.sidebar.consign': 'Consign Artwork',
     'studio.sidebar.community': 'Community Support',
     'studio.sidebar.store': 'Stores',
+    'studio.sidebar.truLevel': 'truLevel',
+    'studio.sidebar.profile': 'Profile',
 
     /* Footer */
     'studio.footer.thisStep': 'This step is',

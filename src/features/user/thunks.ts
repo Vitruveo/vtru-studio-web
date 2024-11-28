@@ -2,7 +2,6 @@ import { signMessage } from '@wagmi/core';
 import cookie from 'cookiejs';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { nanoid } from '@reduxjs/toolkit';
-import { StepsFormValues } from '@/app/home/consignArtwork/types';
 import {
     userLoginReq,
     userAddReq,
@@ -16,7 +15,7 @@ import {
     verifyCode,
     changeAvatar,
     generalStorage,
-    requestDeleteAvatar,
+    requestDeleteFile,
     requestConnectWallet,
     verifyConnectWallet,
     requestSocialX,
@@ -26,7 +25,10 @@ import {
     deleteWallets,
     addWallets,
     getWalletsVault,
+    generalStorageAvatar,
     me,
+    synapsSessionInit,
+    synapsIndividualSession,
 } from './requests';
 import { userActionsCreators } from './slice';
 import {
@@ -58,6 +60,8 @@ import {
     RequestConnectWalletRes,
     RemoveSocialReq,
     RequestMyAssetThunkReq,
+    GeneralStorageReq,
+    User,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { AccountSettingsFormValues } from '@/app/home/myProfile/types';
@@ -66,6 +70,17 @@ import { BASE_URL_API } from '@/constants/api';
 import { getAssetById, getMyAssets } from '../asset/requests';
 import { ASSET_STORAGE_URL, NO_IMAGE_ASSET } from '@/constants/asset';
 import { config } from '@/app/home/components/apps/wallet';
+
+export function getTruLevelThunk(): ReduxThunkAction<Promise<void>> {
+    return async function (dispatch) {
+        const response = await me();
+        await dispatch(
+            userActionsCreators.change({
+                truLevel: (response.data as User)?.truLevel,
+            })
+        );
+    };
+}
 
 export function getMeThunk(): ReduxThunkAction<Promise<boolean>> {
     return async function (dispatch) {
@@ -183,26 +198,36 @@ export function sendRequestUploadThunk(
     payload: CreatorSendRequestUploadReq
 ): ReduxThunkAction<Promise<CreatorSendRequestUploadApiRes>> {
     return async function (dispatch, getState) {
-        const transactionId = nanoid();
+        const transactionId = payload.transactionId || nanoid();
 
-        await dispatch(
-            userActionsCreators.requestAvatarUpload({
-                status: 'requested',
-                transactionId,
-            })
-        );
+        if (payload.requestsUpload) {
+            dispatch(
+                userActionsCreators.requestsUpload({
+                    status: 'requested',
+                    transactionId,
+                })
+            );
+        } else {
+            await dispatch(
+                userActionsCreators.requestAvatarUpload({
+                    status: 'requested',
+                    transactionId,
+                })
+            );
+        }
 
         const response = await sendRequestUpload({
             mimetype: payload.mimetype,
             originalName: payload.originalName,
             transactionId: transactionId,
+            origin: payload.requestsUpload ? 'profileRequests' : 'profile',
         });
 
         return response;
     };
 }
 
-export function creatorAccountThunk(payload: StepsFormValues | AccountSettingsFormValues): ReduxThunkAction<void> {
+export function creatorAccountThunk(payload: AccountSettingsFormValues): ReduxThunkAction<void> {
     return async function (dispatch, getState) {
         const user = getState().user;
 
@@ -216,6 +241,10 @@ export function creatorAccountThunk(payload: StepsFormValues | AccountSettingsFo
                 username: payload.username,
                 emails: payload.emails as any,
                 wallets: payload.wallets,
+                links: payload.links,
+                myWebsite: payload.myWebsite,
+                artworkRecognition: payload.artworkRecognition,
+                personalDetails: payload.personalDetails,
                 framework: user.framework,
             },
         });
@@ -225,6 +254,10 @@ export function creatorAccountThunk(payload: StepsFormValues | AccountSettingsFo
                 emailDefault: payload.emailDefault,
                 walletDefault: payload.walletDefault,
                 username: payload.username,
+                links: payload.links,
+                myWebsite: payload.myWebsite,
+                artworkRecognition: payload.artworkRecognition,
+                personalDetails: payload.personalDetails,
                 wallets: payload.wallets,
                 emails: payload.emails,
             })
@@ -266,6 +299,13 @@ export function creatorAccountThunk(payload: StepsFormValues | AccountSettingsFo
 export function saveStepWizardThunk(payload: SaveStepWizardReq): ReduxThunkAction<void> {
     return async function (dispatch, getState) {
         if (payload.step === 0) {
+            if (payload.values.deleteKeys?.length) {
+                requestDeleteFile({
+                    deleteKeys: payload.values.deleteKeys,
+                    transactionId: nanoid(),
+                    origin: 'profileRequests',
+                });
+            }
             dispatch(creatorAccountThunk(payload.values));
             return;
         }
@@ -276,7 +316,7 @@ export function changeAvatarThunk(payload: ChangeAvatarReq): ReduxThunkAction<Pr
     return async function (dispatch, getState) {
         const avatar = getState().user?.profile?.avatar;
         if (avatar && (payload.fileId === '' || payload.fileId !== avatar)) {
-            requestDeleteAvatar({ deleteKeys: [avatar], transactionId: nanoid() });
+            requestDeleteFile({ deleteKeys: [avatar], transactionId: nanoid() });
         }
 
         const response = await changeAvatar({
@@ -306,9 +346,24 @@ export function generalStorageAvatarThunk(payload: GeneralStorageAvatarReq): Red
             })
         );
 
-        const res = await generalStorage(payload);
+        const res = await generalStorageAvatar(payload);
 
         await dispatch(changeAvatarThunk({ fileId: payload.path, transactionId: payload.transactionId }));
+
+        return res;
+    };
+}
+
+export function generalStorageThunk(payload: GeneralStorageReq): ReduxThunkAction<Promise<any>> {
+    return async function (dispatch, getState) {
+        const res = await generalStorage({ ...payload, dispatch });
+
+        dispatch(
+            userActionsCreators.requestsUpload({
+                transactionId: payload.transactionId,
+                status: 'finished',
+            })
+        );
 
         return res;
     };
@@ -415,12 +470,13 @@ export function requestSocialFacebookThunk(): ReduxThunkAction<Promise<void>> {
 
 export function requestMyAssetsThunk({
     page,
+    limit,
     status,
     collection,
     sort,
 }: RequestMyAssetThunkReq): ReduxThunkAction<Promise<void>> {
     return function (dispatch) {
-        return getMyAssets({ page, status, collection, sort }).then((response) => {
+        return getMyAssets({ page, status, collection, sort, limit }).then((response) => {
             if (response.data) {
                 dispatch(
                     userActionsCreators.setMyAssets({
@@ -471,5 +527,24 @@ export function removeSocialThunk(data: RemoveSocialReq): ReduxThunkAction<Promi
                 dispatch(userActionsCreators.changeSocialsGoogle({ avatar: '', name: '' }));
             }
         });
+    };
+}
+
+export function synapsSessionInitThunk(): ReduxThunkAction<Promise<void>> {
+    return async function (dispatch, getState) {
+        const res = await synapsSessionInit();
+        if (res.data?.session_id) {
+            dispatch(userActionsCreators.setSynapsSessionId(res.data.session_id));
+        }
+    };
+}
+
+export function synapsIndividualSessionThunk(): ReduxThunkAction<Promise<void>> {
+    return async function (dispatch, getState) {
+        const res = await synapsIndividualSession();
+        if (res.data?.session) {
+            const steps = res.data.session.steps.map((v) => ({ ...v, name: v.type }));
+            dispatch(userActionsCreators.setSynapsSteps(steps));
+        }
     };
 }

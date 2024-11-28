@@ -30,6 +30,7 @@ import { sendRequestUploadStoresThunk } from '@/features/asset/thunks';
 import { storesActionsCreators } from '@/features/stores/slice';
 import { STORE_STORAGE_URL } from '@/constants/asset';
 import LoadingOverlay from '@/app/home/components/loadingOverlay';
+import { Preview } from '@/app/home/components/stores/Preview';
 
 interface Input {
     url: string | null;
@@ -78,7 +79,7 @@ const Component = () => {
     const theme = useTheme();
     const dispatch = useDispatch();
     const router = useRouter();
-    const mediaRefs = useRef<Array<MediaCardRef>>([]);
+    const mediaRefs = useRef<any[]>([]);
 
     const selectedStore = useSelector((state) => state.stores.selectedStore);
     const store = useSelector((state) => state.stores.data.data.find((item) => item._id === selectedStore.id));
@@ -190,7 +191,7 @@ const Component = () => {
             markup: yup.number().required(),
         }),
         validate: (values) => {
-            const errors: Partial<Input> = {};
+            const errors: any = {};
             cardsToUploadMedias.forEach((item) => {
                 const error = handleValidateMedia(item.field, values[item.field as keyof typeof mediaConfigs]);
                 if (error) {
@@ -527,7 +528,21 @@ const Component = () => {
                     </form>
                 </Grid>
                 <Grid item xs={6}>
-                    <h1>Preview</h1>
+                    <Preview
+                        domain={
+                            formik.values.url ? `https://${formik.values.url}.xibit.app` : 'https://example.xibit.app'
+                        }
+                        banner={
+                            formik.values.banner instanceof File
+                                ? URL.createObjectURL(formik.values.banner)
+                                : formik.values.banner
+                        }
+                        logo={
+                            formik.values.logoSquare instanceof File
+                                ? URL.createObjectURL(formik.values.logoSquare)
+                                : formik.values.logoSquare
+                        }
+                    />
                 </Grid>
             </Grid>
 

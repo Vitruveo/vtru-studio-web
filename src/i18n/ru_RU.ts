@@ -926,6 +926,8 @@ const language: Translation = {
     'studio.sidebar.consign': 'Подать Работу',
     'studio.sidebar.community': 'Поддержка Сообщества',
     'studio.sidebar.store': 'Магазин',
+    'studio.sidebar.truLevel': 'Уровни создателя',
+    'studio.sidebar.profile': 'Профиль',
 
     /* Footer */
     'studio.footer.thisStep': 'Текущий шаг',

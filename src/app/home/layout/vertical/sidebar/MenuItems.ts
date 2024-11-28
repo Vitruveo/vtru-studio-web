@@ -1,5 +1,5 @@
 import { uniqueId } from 'lodash';
-import { IconPhotoUp, IconBrandWechat } from '@tabler/icons-react';
+import { IconPhotoUp, IconBrandWechat, IconTrendingUp, IconUser } from '@tabler/icons-react';
 
 interface MenuitemsType {
     [x: string]: any;
@@ -27,9 +27,20 @@ const Menuitems: MenuitemsType[] = [
     {
         id: uniqueId(),
         title: 'studio.sidebar.store',
-        icon: IconBrandWechat,
-        // required: 'canConsignArtwork',
+        icon: IconPhotoUp,
         href: '/home/stores',
+    },
+    {
+        id: uniqueId(),
+        title: 'studio.sidebar.truLevel',
+        icon: IconTrendingUp,
+        href: '/home/truLevel',
+    },
+    {
+        id: uniqueId(),
+        title: 'studio.sidebar.profile',
+        icon: IconUser,
+        href: '/home/myProfile',
     },
     {
         id: uniqueId(),
