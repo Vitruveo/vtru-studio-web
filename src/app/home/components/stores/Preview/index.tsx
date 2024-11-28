@@ -42,7 +42,7 @@ export const Preview = (rest: Props) => {
                         <img
                             style={{
                                 width: '100%',
-                                height: '100px',
+                                height: '220px',
                                 objectFit: 'cover',
                                 borderRadius: '8px 8px 0 0',
                             }}
