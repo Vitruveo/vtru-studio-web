@@ -38,12 +38,13 @@ const ContextItem = () => {
             <Box>
                 <Typography variant="h6">Culture</Typography>
                 <MultiSelect
-                    onChange={(value) =>
-                        onChange(
-                            [...values.context.culture, [value[value.length - 1].value, value[value.length - 1].label]],
-                            'context.culture'
-                        )
-                    }
+                    onChange={(selectedOptions) => {
+                        const newValues = selectedOptions.map((option: { value: string; label: string }) => [
+                            option.value,
+                            option.label,
+                        ]);
+                        onChange(newValues, 'context.culture');
+                    }}
                     options={cultureOptions}
                     value={values.context.culture.map((item) => ({ value: item[0], label: item[1] }))}
                 />
@@ -51,12 +52,13 @@ const ContextItem = () => {
             <Box>
                 <Typography variant="h6">Mood</Typography>
                 <MultiSelect
-                    onChange={(value) =>
-                        onChange(
-                            [...values.context.mood, [value[value.length - 1].value, value[value.length - 1].label]],
-                            'context.mood'
-                        )
-                    }
+                    onChange={(selectedOptions) => {
+                        const newValues = selectedOptions.map((option: { value: string; label: string }) => [
+                            option.value,
+                            option.label,
+                        ]);
+                        onChange(newValues, 'context.mood');
+                    }}
                     options={moodOptions}
                     value={values.context.mood.map((item) => ({ value: item[0], label: item[1] }))}
                 />
@@ -64,15 +66,13 @@ const ContextItem = () => {
             <Box>
                 <Typography variant="h6">Orientation</Typography>
                 <MultiSelect
-                    onChange={(value) =>
-                        onChange(
-                            [
-                                ...values.context.orientation,
-                                [value[value.length - 1].value, value[value.length - 1].label],
-                            ],
-                            'context.orientation'
-                        )
-                    }
+                    onChange={(selectedOptions) => {
+                        const newValues = selectedOptions.map((option: { value: string; label: string }) => [
+                            option.value,
+                            option.label,
+                        ]);
+                        onChange(newValues, 'context.orientation');
+                    }}
                     options={orientationOptions}
                     value={values.context.orientation.map((item) => ({ value: item[0], label: item[1] }))}
                 />
@@ -96,4 +96,3 @@ const ContextItem = () => {
 };
 
 export default ContextItem;
-//onChange([...values.context.culture, value.label], 'context.culture')

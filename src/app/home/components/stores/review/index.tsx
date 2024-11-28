@@ -5,6 +5,7 @@ import { useFormikContext } from 'formik';
 
 export const Review = () => {
     const { values } = useFormikContext<{ [key: string]: any }>();
+    console.log(values);
     return (
         <Box>
             <TabContext value={'general2'}>
@@ -63,7 +64,7 @@ const SelectedFilter = ({ title, content }: SelectedFilterProps) => {
                                 {isColorPrecision && <Typography variant="body1">{Number(value) * 100}%</Typography>}
                                 {isColors && <ColorFilter content={value as string[]} />}
                                 {!isShortcut && !isLicense && !isColorPrecision && !isColors && (
-                                    <MultiSelectFilter content={value as string[]} />
+                                    <MultiSelectFilter content={{ title, key, value: value as [string, string][] }} />
                                 )}
                             </Box>
                         </Box>
@@ -136,6 +137,7 @@ const ColorFilter = ({ content }: ColorFilterProps) => {
         <Box display={'flex'} gap={1}>
             {content.map((item) => (
                 <Paper
+                    key={item}
                     sx={{
                         width: 20,
                         height: 20,
@@ -149,14 +151,30 @@ const ColorFilter = ({ content }: ColorFilterProps) => {
 };
 
 interface MultiSelectFilterProps {
-    content: string[];
+    content: { title: string; key: string; value: [string, string][] };
 }
 
 const MultiSelectFilter = ({ content }: MultiSelectFilterProps) => {
+    const { setFieldValue } = useFormikContext();
+    const handleDeleteITem = (title: string, key: string, value: [string, string]) => {
+        setFieldValue(
+            `${title}.${key}`,
+            content.value.filter((item) => item !== value)
+        );
+    };
+
     return (
         <Box display={'flex'} gap={1}>
-            {content.map((item) => (
-                <Typography variant="body1">{item}</Typography>
+            {content.value.map((item) => (
+                <Paper key={item[0]} sx={{ padding: 1, display: 'flex' }}>
+                    <Typography variant="body1">{item[1]}</Typography>
+                    <Delete
+                        fontSize="small"
+                        color="error"
+                        onClick={() => handleDeleteITem(content.title, content.key, item)}
+                        cursor={'pointer'}
+                    />
+                </Paper>
             ))}
         </Box>
     );
