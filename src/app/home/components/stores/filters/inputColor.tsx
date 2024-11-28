@@ -1,7 +1,7 @@
 import { useI18n } from '@/app/hooks/useI18n';
-import { useSelector } from '@/store/hooks';
 import { Box, Button, Slider, Stack, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { useFormikContext } from 'formik';
 import { useRef } from 'react';
 
 interface Props {
@@ -10,16 +10,20 @@ interface Props {
     afterPrecisionChange?: (value: number) => void;
 }
 
+interface FormValues {
+    context: {
+        precision: number;
+    };
+}
+
 export const minPrecision = 0;
 export const maxPrecision = 100;
-
 export function InputColor({ name, onClick, afterPrecisionChange }: Props) {
+    const { values } = useFormikContext<FormValues>();
     const theme = useTheme();
     const { language } = useI18n();
     const inputRef = useRef<HTMLInputElement>(null);
-    // TODO: change to dinamic values
     const defaultPrecisionValue = 0.7;
-    const reseted = 1;
 
     const handleAddColor = () => {
         if (inputRef.current) {
@@ -37,8 +41,8 @@ export function InputColor({ name, onClick, afterPrecisionChange }: Props) {
                 <Typography>{language['search.assetFilter.context.title.colors.precision'] as string}</Typography>
                 <Box px={1}>
                     <Slider
-                        key={reseted}
                         defaultValue={defaultPrecisionValue * 100}
+                        value={values.context.precision * 100}
                         onChange={onChange}
                         min={minPrecision}
                         max={maxPrecision}

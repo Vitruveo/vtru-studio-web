@@ -2,42 +2,41 @@ import { formatCurrency } from '@/utils/formatCurrency';
 import { Box, Slider, Stack, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useFormikContext } from 'formik';
-import { useState } from 'react';
+
+interface FormValues {
+    general: {
+        licenses: {
+            minPrice: number;
+            maxPrice: number;
+        };
+    };
+}
 
 export const minPrice = 0;
 export const maxPrice = 10000;
 const Licenses = () => {
     const theme = useTheme();
-    const { setFieldValue } = useFormikContext();
+    const { setFieldValue, values } = useFormikContext<FormValues>();
     const fieldNames = {
         minPrice: 'general.licenses.minPrice',
         maxPrice: 'general.licenses.maxPrice',
     };
-    // TODO: add redux to datas dinamically
-    const [price, setPrice] = useState({ min: 0, max: 10000 });
-    const max = 100000;
-    const reseted = 1;
 
     const onChange = (_event: Event | null, newValue: number | number[]) => {
         if (!Array.isArray(newValue)) return;
 
         const [start, end] = newValue;
 
-        setPrice({
-            min: start,
-            max: end === max ? max : end,
-        });
         setFieldValue(fieldNames.minPrice, start);
-        setFieldValue(fieldNames.maxPrice, end === max ? max : end);
+        setFieldValue(fieldNames.maxPrice, end);
     };
 
     return (
         <Box>
             <Typography variant="h6">Artwork Price</Typography>
             <Slider
-                key={reseted}
                 defaultValue={[minPrice, minPrice]}
-                value={[price.min, price.max === max ? minPrice : price.max]}
+                value={[values.general.licenses.minPrice, values.general.licenses.maxPrice]}
                 step={10}
                 onChange={onChange}
                 valueLabelDisplay="auto"
