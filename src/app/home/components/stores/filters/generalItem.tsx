@@ -1,6 +1,6 @@
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import Licenses from './licenseItem';
-import ShortcutItem from './shortcutItem';
+import { ShortcutItem } from './shortcutItem';
 
 const GeneralItem = () => {
     return (

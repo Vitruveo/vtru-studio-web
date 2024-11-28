@@ -1,12 +1,18 @@
 import { formatCurrency } from '@/utils/formatCurrency';
 import { Box, Slider, Stack, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { useFormikContext } from 'formik';
 import { useState } from 'react';
 
 export const minPrice = 0;
 export const maxPrice = 10000;
 const Licenses = () => {
     const theme = useTheme();
+    const { setFieldValue } = useFormikContext();
+    const fieldNames = {
+        minPrice: 'general.licenses.minPrice',
+        maxPrice: 'general.licenses.maxPrice',
+    };
     // TODO: add redux to datas dinamically
     const [price, setPrice] = useState({ min: 0, max: 10000 });
     const max = 100000;
@@ -21,6 +27,8 @@ const Licenses = () => {
             min: start,
             max: end === max ? max : end,
         });
+        setFieldValue(fieldNames.minPrice, start);
+        setFieldValue(fieldNames.maxPrice, end === max ? max : end);
     };
 
     return (
