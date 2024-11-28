@@ -11,13 +11,13 @@ import {
 } from './options';
 import { useFormikContext } from 'formik';
 import { useSelector } from '@/store/hooks';
-import { Tags } from '@/features/storesArtwork/types';
+import { Collections, Tags } from '@/features/storesArtwork/types';
 
 interface FormValues {
     taxonomy: {
         objectType: [string, string][];
         tags: Tags[];
-        collections: [string, string][];
+        collections: Collections[];
         aiGeneration: [string, string][];
         arEnabled: [string, string][];
         nudity: [string, string][];
@@ -30,7 +30,7 @@ interface FormValues {
 
 const TaxonomyItem = () => {
     const { setFieldValue, values } = useFormikContext<FormValues>();
-    const { tags } = useSelector((state) => state.storeArtwork);
+    const { tags, collections, subject } = useSelector((state) => state.storeArtwork);
 
     const onChange = (value: [string, string][], fieldName: string) => {
         setFieldValue(fieldName, value);
@@ -68,7 +68,23 @@ const TaxonomyItem = () => {
             </Box>
             <Box>
                 <Typography variant="h6">Collections</Typography>
-                <MultiSelect onChange={() => {}} options={[{}]} value={[]} />
+                <MultiSelect
+                    onChange={(selectedOptions) => {
+                        const newValues = selectedOptions.map((option: { value: string; label: string }) => [
+                            option.value,
+                            option.label,
+                        ]);
+                        onChange(newValues, 'taxonomy.collections');
+                    }}
+                    options={collections.map((collection) => ({
+                        value: collection.collection,
+                        label: collection.collection,
+                    }))}
+                    value={values.taxonomy.collections.map((item) => ({
+                        value: item.collection,
+                        label: item.collection,
+                    }))}
+                />
             </Box>
             <Box>
                 <Typography variant="h6">AI generation</Typography>
@@ -156,10 +172,24 @@ const TaxonomyItem = () => {
             </Box>
             <Box>
                 <Typography variant="h6">Subject</Typography>
-                <MultiSelect onChange={() => {}} options={[{}]} value={[]} />
+                <MultiSelect
+                    onChange={(selectedOptions) => {
+                        const newValues = selectedOptions.map((option: { value: string; label: string }) => [
+                            option.value,
+                            option.label,
+                        ]);
+                        onChange(newValues, 'taxonomy.subject');
+                    }}
+                    options={subject.map((sub) => ({ value: sub.subject, label: sub.subject }))}
+                    value={values.taxonomy.subject.map((item) => ({ value: item[0], label: item[1] }))}
+                />
             </Box>
         </Box>
     );
 };
 
 export default TaxonomyItem;
+
+// dispatch(getArtworkCollectionsThunk('col'));
+// dispatch(getArtworkSubjectThunk('fen'));
+// dispatch(getArtworkCreatorNameThunk('dra'));

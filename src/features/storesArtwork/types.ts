@@ -20,6 +20,11 @@ export interface Subject {
     subject: string;
 }
 
+export interface Names {
+    count: number;
+    collection: string;
+}
+
 export interface ResponseAssets {
     data: any[];
     tags: Tags[];

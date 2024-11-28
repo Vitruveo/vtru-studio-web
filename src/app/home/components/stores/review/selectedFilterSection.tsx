@@ -14,7 +14,7 @@ export const SelectedFilter = ({ title, content }: SelectedFilterProps) => {
     return (
         <Grid item xs={6}>
             <Typography variant="overline" fontWeight="bold">
-                {hasTruthyObject(content) ? title : ''}
+                {hasTruthyObject(content) || title === 'context' ? title : ''}
             </Typography>
             <Box ml={4}>
                 {Object.entries(content).map((element) => {
