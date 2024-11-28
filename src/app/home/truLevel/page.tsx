@@ -81,7 +81,7 @@ export default function TruLevel() {
     ];
 
     useEffect(() => {
-        dispatch(getTruLevelThunk());
+        // dispatch(getTruLevelThunk());
     }, []);
 
     return (
