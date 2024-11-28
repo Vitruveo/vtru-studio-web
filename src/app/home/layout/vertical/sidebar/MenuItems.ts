@@ -26,6 +26,12 @@ const Menuitems: MenuitemsType[] = [
     },
     {
         id: uniqueId(),
+        title: 'studio.sidebar.store',
+        icon: IconPhotoUp,
+        href: '/home/stores',
+    },
+    {
+        id: uniqueId(),
         title: 'studio.sidebar.truLevel',
         icon: IconTrendingUp,
         href: '/home/truLevel',
