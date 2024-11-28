@@ -50,7 +50,7 @@ const DigitalPresence = ({ values, errors, setFieldValue }: DigitalPresenceProps
     };
 
     const handleMyWebsiteChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setFieldValue('myWebsite', e.target.value);
+        setFieldValue('myWebsite', !e.target.value.length ? null : e.target.value);
     };
 
     const xl = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'));

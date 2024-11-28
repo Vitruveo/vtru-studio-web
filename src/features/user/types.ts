@@ -68,6 +68,29 @@ export interface RequestUpload {
     uploadProgress?: number;
 }
 
+export type SynapsStatus = 'SUBMISSION_REQUIRED' | 'APPROVED' | 'REJECTED' | 'PENDING_VERIFICATION';
+export interface SynapsStep {
+    id: string;
+    name: string;
+    status: SynapsStatus;
+}
+
+export interface LevelStep {
+    name: string;
+    completed: boolean;
+    points?: number;
+}
+
+export interface LevelsType {
+    name: string;
+    steps: LevelStep[];
+}
+
+export interface TruLevel {
+    currentLevel: number;
+    levels: LevelsType[];
+}
+
 export interface User {
     _id: string;
     name: string;
@@ -75,6 +98,10 @@ export interface User {
     username: string;
     login: {
         email: string;
+    };
+    synaps?: {
+        sessionId: string;
+        steps: SynapsStep[];
     };
     walletDefault: string;
     emailDefault: string;
@@ -91,6 +118,7 @@ export interface User {
         language: string | null;
         location: string | null;
     };
+    truLevel?: TruLevel;
     roles: Array<string>;
     framework: Framework;
     canConsignArtwork: boolean;
@@ -297,6 +325,29 @@ export interface GeneralStorageReq {
     file: File;
     dispatch?: any;
 }
+export interface SessionInitRes {
+    session_id: string;
+}
+
+export interface StepRes {
+    id: string;
+    type: 'LIVENESS' | 'ID_DOCUMENT' | 'PROOF_OF_ADDRESS' | 'PHONE';
+    status: SynapsStatus;
+}
+
+export interface SynapsIndividualSessionRes {
+    app: {
+        name: string;
+        id: string;
+    };
+    session: {
+        id: string;
+        alias: string;
+        status: SynapsStatus;
+        sandbox: boolean;
+        steps: StepRes[];
+    };
+}
 
 export type RemoveSocialApiRes = APIResponse;
 export type SocialsXApiRes = APIResponse<string>;
@@ -314,6 +365,8 @@ export type VerifyCodeApiRes = APIResponse<User>;
 export type ChangeAvatarApiRes = APIResponse<ChangeAvatarRes>;
 export type RequestConnectWalletApiRes = APIResponse<ResquestConnectWalletRes>;
 export type VerifyConnectWalletApiRes = APIResponse;
+export type SynapsSessionInitApiRes = APIResponse<SessionInitRes>;
+export type SynapsIndividualSessionApiRes = APIResponse<SynapsIndividualSessionRes>;
 
 export interface MintExplorer {
     transactionHash: string;

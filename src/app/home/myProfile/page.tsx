@@ -27,6 +27,7 @@ import { useToastr } from '@/app/hooks/useToastr';
 import { BASE_URL_SEARCH } from '@/constants/search';
 import ProfileTabs from './tabs/index';
 import { ProfileSchemaValidation } from './tabs/formschema';
+import ConfirmModal from './confirmModal';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -59,8 +60,10 @@ export default function ProfileSettings() {
     const [resetAvatar, setResetAvatar] = useState(false);
     const [usernameError, setUsernameError] = useState('');
     const [changeAvatarFile, setChangeAvatarFile] = useState<File>();
+    const [show, setShow] = useState(false);
 
     const { isCompletedProfile, goToConsignArtwork } = useSelector((state) => state.consignArtwork);
+
     const {
         _id,
         username,
@@ -72,11 +75,15 @@ export default function ProfileSettings() {
         wallets,
         myWebsite,
         links,
+        truLevel,
+        socials,
         requestAvatarUpload,
     } = useSelector(
         userSelector([
             '_id',
             'username',
+            'truLevel',
+            'socials',
             'personalDetails',
             'artworkRecognition',
             'emailDefault',
@@ -129,19 +136,25 @@ export default function ProfileSettings() {
             const invalidFields = Object.entries(fields).filter(([key, value]) => !value.isValid);
 
             dispatch(consignArtworkActionsCreators.changeGoToConsignArtwork(false));
-            toast.display({
-                type: 'warning',
-                message: (
-                    <Box>
-                        {`${texts.accessConsignMessage}`}
+
+            if (invalidFields.length) {
+                toast.display({
+                    type: 'warning',
+                    message: (
                         <Box>
-                            Fill in the fields: {`${invalidFields.map(([key, value]) => value.translation).join(', ')}`}
+                            {`${texts.accessConsignMessage}`}
+                            <Box>
+                                Fill in the fields:{' '}
+                                {`${invalidFields.map(([key, value]) => value.translation).join(', ')}`}
+                            </Box>
                         </Box>
-                    </Box>
-                ),
-            });
+                    ),
+                });
+            }
         }
     }, [isCompletedProfile, goToConsignArtwork]);
+
+    const initSocials = useMemo(() => socials, []);
 
     const initialValues = useMemo(
         () => ({
@@ -193,6 +206,18 @@ export default function ProfileSettings() {
         });
 
     async function onSubmit(formValues: AccountSettingsFormValues) {
+        if (!show && truLevel && truLevel.currentLevel > 0) {
+            if (
+                resetAvatar ||
+                Object.entries(initSocials || {}).filter(
+                    ([key, value]) => socials[key as keyof typeof socials].avatar !== value.avatar
+                ).length ||
+                initialValues.myWebsite !== formValues.myWebsite
+            ) {
+                setShow(true);
+                return;
+            }
+        }
         if (!formValues.username || formValues.username?.length === 0) {
             setUsernameError(texts.usernameRequiredError);
             return;
@@ -261,6 +286,18 @@ export default function ProfileSettings() {
         setResetAvatar(true);
     };
 
+    const handleClose = () => {
+        setShow(false);
+    };
+
+    const handleYesClick = () => {
+        handleSubmit();
+    };
+
+    const handleNoClick = () => {
+        setShow(false);
+    };
+
     const isNewAvatar = resetAvatar
         ? '/images/profile/profileDefault.png'
         : changeAvatarFile instanceof File
@@ -297,92 +334,12 @@ export default function ProfileSettings() {
                                 handleUsernameChange,
                             }}
                         />
-
-                        {/* <Grid item xs={12} lg={6}>
-                            <BlankCard>
-                                <CardContent sx={{ height: { xs: 'auto', lg: '500px' } }}>
-                                    <Box my={2} maxWidth={250}>
-                                        <Box mb={2}>
-                                            <Typography variant="subtitle1" fontWeight={600} component="label">
-                                                {texts.usernameTitle}
-                                            </Typography>
-                                        </Box>
-                                        <CustomTextField
-                                            placeholder={texts.usernamePlaceholder}
-                                            size="small"
-                                            id="username"
-                                            variant="outlined"
-                                            fullWidth
-                                            value={values.username}
-                                            onChange={handleUsernameChange}
-                                            error={!!errors.username || !!usernameError}
-                                            helperText={errors.username || usernameError}
-                                        />
-                                    </Box>
-                                    <Box my={3}>
-                                        <Typography variant="subtitle1" fontWeight={600} component="label" mb={3}>
-                                            {texts.profileTitle}
-                                        </Typography>
-                                        <Box textAlign="center" display="flex" justifyContent="center">
-                                            <Box>
-                                                <Avatar
-                                                    src={isNewAvatar}
-                                                    alt={'user1'}
-                                                    sx={{
-                                                        backgroundColor: '#ffffcc',
-                                                        width: 120,
-                                                        height: 120,
-                                                        margin: '0 auto',
-                                                    }}
-                                                />
-                                                <Stack direction="row" justifyContent="center" spacing={2} my={3}>
-                                                    <Button
-                                                        onClick={handleOnClickReset}
-                                                        variant="outlined"
-                                                        color="error"
-                                                    >
-                                                        {texts.profileResetButton}
-                                                    </Button>
-                                                    <Button variant="contained" color="primary" component="label">
-                                                        {texts.profileUploadButton}
-                                                        <input
-                                                            onChange={handleFileChange}
-                                                            hidden
-                                                            accept="image/*"
-                                                            type="file"
-                                                        />
-                                                    </Button>
-                                                </Stack>
-                                                <Typography variant="subtitle1" color="textSecondary" mb={4}>
-                                                    {texts.profileDescription}
-                                                </Typography>
-                                            </Box>
-                                        </Box>
-                                        <Button variant="contained" onClick={handleCopySearchUrl}>
-                                            {copySearchMessage}
-                                        </Button>
-                                    </Box>
-                                </CardContent>
-                            </BlankCard>
-                        </Grid>
-                        <Grid item xs={12} lg={6} width="50%">
-                            <BlankCard>
-                                <CardContent
-                                    sx={{ height: { xs: 'auto', lg: '500px' } }}
-                                    style={{ overflowY: 'auto', maxHeight: '535px' }}
-                                >
-                                    <AccountSettings
-                                        values={values}
-                                        errors={errors}
-                                        handleChange={handleChange}
-                                        handleSubmit={handleSubmit}
-                                        setErrors={setErrors}
-                                        setFieldError={setFieldError}
-                                        setFieldValue={setFieldValue}
-                                    />
-                                </CardContent>
-                            </BlankCard>
-                        </Grid> */}
+                        <ConfirmModal
+                            show={show}
+                            handleClose={handleClose}
+                            yesClick={handleYesClick}
+                            noClick={handleNoClick}
+                        />
                     </Grid>
                 </Box>
             </PageContainerFooter>

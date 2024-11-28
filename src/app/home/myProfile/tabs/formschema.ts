@@ -33,6 +33,7 @@ export const linkSchema = yup.object().shape({
 export const ProfileSchemaValidation = yup.object({
     myWebsite: yup
         .string()
+        .nullable()
         .url('Please enter a valid URL')
         .test('debounced-validation', 'Please enter a valid URL', validateWithDelay(yup.string().url())),
 });

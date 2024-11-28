@@ -2,7 +2,6 @@ import { signMessage } from '@wagmi/core';
 import cookie from 'cookiejs';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { nanoid } from '@reduxjs/toolkit';
-import { StepsFormValues } from '@/app/home/consignArtwork/types';
 import {
     userLoginReq,
     userAddReq,
@@ -28,6 +27,8 @@ import {
     getWalletsVault,
     generalStorageAvatar,
     me,
+    synapsSessionInit,
+    synapsIndividualSession,
 } from './requests';
 import { userActionsCreators } from './slice';
 import {
@@ -60,6 +61,7 @@ import {
     RemoveSocialReq,
     RequestMyAssetThunkReq,
     GeneralStorageReq,
+    User,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { AccountSettingsFormValues } from '@/app/home/myProfile/types';
@@ -68,6 +70,17 @@ import { BASE_URL_API } from '@/constants/api';
 import { getAssetById, getMyAssets } from '../asset/requests';
 import { ASSET_STORAGE_URL, NO_IMAGE_ASSET } from '@/constants/asset';
 import { config } from '@/app/home/components/apps/wallet';
+
+export function getTruLevelThunk(): ReduxThunkAction<Promise<void>> {
+    return async function (dispatch) {
+        const response = await me();
+        await dispatch(
+            userActionsCreators.change({
+                truLevel: (response.data as User)?.truLevel,
+            })
+        );
+    };
+}
 
 export function getMeThunk(): ReduxThunkAction<Promise<boolean>> {
     return async function (dispatch) {
@@ -514,5 +527,24 @@ export function removeSocialThunk(data: RemoveSocialReq): ReduxThunkAction<Promi
                 dispatch(userActionsCreators.changeSocialsGoogle({ avatar: '', name: '' }));
             }
         });
+    };
+}
+
+export function synapsSessionInitThunk(): ReduxThunkAction<Promise<void>> {
+    return async function (dispatch, getState) {
+        const res = await synapsSessionInit();
+        if (res.data?.session_id) {
+            dispatch(userActionsCreators.setSynapsSessionId(res.data.session_id));
+        }
+    };
+}
+
+export function synapsIndividualSessionThunk(): ReduxThunkAction<Promise<void>> {
+    return async function (dispatch, getState) {
+        const res = await synapsIndividualSession();
+        if (res.data?.session) {
+            const steps = res.data.session.steps.map((v) => ({ ...v, name: v.type }));
+            dispatch(userActionsCreators.setSynapsSteps(steps));
+        }
     };
 }
