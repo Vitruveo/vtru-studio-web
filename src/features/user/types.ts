@@ -15,6 +15,39 @@ export interface Wallet {
     archived: boolean;
 }
 
+export interface Link {
+    name: string;
+    url: string;
+}
+
+export interface PersonalDetails {
+    bio: string;
+    ethnicity: string;
+    gender: string;
+    nationality: string;
+    residence: string;
+    plusCode: string;
+}
+
+export interface ArtworkType {
+    type: 'assetRef' | 'upload';
+    value: string;
+    title: string;
+}
+
+export interface ArtworkRecognition {
+    exhibitions: {
+        name: string;
+        url: string;
+        artwork: ArtworkType;
+    }[];
+    awards: {
+        name: string;
+        url: string;
+        artwork: ArtworkType;
+    }[];
+}
+
 export interface Assets {
     _id: string;
     title: string;
@@ -27,6 +60,37 @@ export interface Assets {
     countComments: number;
 }
 
+export interface RequestUpload {
+    transactionId: string;
+    url?: string;
+    path?: string;
+    status: string;
+    uploadProgress?: number;
+}
+
+export type SynapsStatus = 'SUBMISSION_REQUIRED' | 'APPROVED' | 'REJECTED' | 'PENDING_VERIFICATION';
+export interface SynapsStep {
+    id: string;
+    name: string;
+    status: SynapsStatus;
+}
+
+export interface LevelStep {
+    name: string;
+    completed: boolean;
+    points?: number;
+}
+
+export interface LevelsType {
+    name: string;
+    steps: LevelStep[];
+}
+
+export interface TruLevel {
+    currentLevel: number;
+    levels: LevelsType[];
+}
+
 export interface User {
     _id: string;
     name: string;
@@ -35,16 +99,26 @@ export interface User {
     login: {
         email: string;
     };
+    synaps?: {
+        sessionId: string;
+        steps: SynapsStep[];
+    };
     walletDefault: string;
     emailDefault: string;
     wallets: Wallet[];
     emails: Email[];
+    requestsUpload?: { [key: string]: RequestUpload };
+    personalDetails?: PersonalDetails;
+    artworkRecognition?: ArtworkRecognition;
+    links: Link[];
+    myWebsite?: string;
     profile: {
         avatar: string | null;
         phone: string | null;
         language: string | null;
         location: string | null;
     };
+    truLevel?: TruLevel;
     roles: Array<string>;
     framework: Framework;
     canConsignArtwork: boolean;
@@ -93,15 +167,8 @@ export interface VaultProps {
     createdAt: string;
 }
 
-interface RequestAvatarUpload {
-    transactionId: string;
-    url: string;
-    path: string;
-    status: string;
-}
-
 export interface UserSliceState extends User {
-    requestAvatarUpload: RequestAvatarUpload;
+    requestAvatarUpload: RequestUpload;
     token: string;
     status: string;
     error: string;
@@ -134,14 +201,22 @@ export interface AddCreatorEmailReq {
 
 export interface CreatorSendRequestUploadReq {
     mimetype: string;
+    requestsUpload?: boolean;
     originalName: string;
     transactionId?: string;
+    origin?: string;
 }
 
 export interface GeneralStorageAvatarReq {
     transactionId?: string;
     url: string;
     file: File;
+    path: string;
+}
+
+export interface GeneralStorageReq {
+    transactionId: string;
+    url: string;
     path: string;
 }
 
@@ -157,7 +232,7 @@ export interface UserOTPConfirmRes {
 
 export interface SaveStepWizardReq {
     step: number;
-    values: StepsFormValues | AccountSettingsFormValues;
+    values: AccountSettingsFormValues;
 }
 
 export interface CreatorSchemaType {
@@ -176,6 +251,10 @@ export interface CreatorSchemaType {
         codeHash: string | null;
         checkedAt: Date | null;
     }>;
+    links: Link[];
+    myWebsite: string;
+    personalDetails: PersonalDetails;
+    artworkRecognition: ArtworkRecognition;
     wallets: Array<{
         address: string;
     }>;
@@ -206,6 +285,7 @@ export interface ChangeAvatarReq {
 export interface RequestDeleteAvatarReq {
     deleteKeys: string[];
     transactionId: string;
+    origin?: string;
 }
 
 export type ChangeAvatarRes = string;
@@ -219,6 +299,7 @@ export interface RemoveSocialReq {
 }
 
 export interface RequestMyAssetThunkReq {
+    limit?: number;
     page: number;
     status: string;
     collection: string;
@@ -238,6 +319,36 @@ export interface RequestConnectWalletRes {
     signature: string;
 }
 
+export interface GeneralStorageReq {
+    transactionId: string;
+    url: string;
+    file: File;
+    dispatch?: any;
+}
+export interface SessionInitRes {
+    session_id: string;
+}
+
+export interface StepRes {
+    id: string;
+    type: 'LIVENESS' | 'ID_DOCUMENT' | 'PROOF_OF_ADDRESS' | 'PHONE';
+    status: SynapsStatus;
+}
+
+export interface SynapsIndividualSessionRes {
+    app: {
+        name: string;
+        id: string;
+    };
+    session: {
+        id: string;
+        alias: string;
+        status: SynapsStatus;
+        sandbox: boolean;
+        steps: StepRes[];
+    };
+}
+
 export type RemoveSocialApiRes = APIResponse;
 export type SocialsXApiRes = APIResponse<string>;
 export type SocialsFacebookApiRes = APIResponse<string>;
@@ -254,6 +365,8 @@ export type VerifyCodeApiRes = APIResponse<User>;
 export type ChangeAvatarApiRes = APIResponse<ChangeAvatarRes>;
 export type RequestConnectWalletApiRes = APIResponse<ResquestConnectWalletRes>;
 export type VerifyConnectWalletApiRes = APIResponse;
+export type SynapsSessionInitApiRes = APIResponse<SessionInitRes>;
+export type SynapsIndividualSessionApiRes = APIResponse<SynapsIndividualSessionRes>;
 
 export interface MintExplorer {
     transactionHash: string;

@@ -18,9 +18,9 @@ const Socials = () => {
     const xl = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'));
 
     return (
-        <Box maxWidth={!xl ? 300 : 400}>
-            <Typography variant="subtitle1" fontWeight={600} style={{ width: '70%' }}>
-                Socials
+        <Box my={2} maxWidth={!xl ? 300 : 400}>
+            <Typography marginBottom={3} fontSize="1.2rem" fontWeight="500">
+                Socials & My Website
             </Typography>
             <Box display="grid" gridTemplateColumns="50px 50px 50px">
                 <Box>

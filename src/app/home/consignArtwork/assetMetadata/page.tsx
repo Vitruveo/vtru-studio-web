@@ -25,6 +25,7 @@ import AssetMediaPreview from '../components/assetMediaPreview';
 
 import { useToastr } from '@/app/hooks/useToastr';
 import { assetActionsCreators } from '@/features/asset/slice';
+import { UserSliceState } from '@/features/user/types';
 
 export type SectionName = 'context' | 'taxonomy' | 'creators' | 'provenance' | 'custom' | 'assets';
 type SectionsJSONType = typeof sectionsJSON;
@@ -62,6 +63,41 @@ const removeEmptyProperties = (obj: Record<string, any> | any[] | null): Record<
     }
 };
 
+const initValues = ({
+    formData,
+    creator,
+}: {
+    formData: { key: string; value: Record<string, any> | any[] | null };
+    creator: UserSliceState;
+}) => {
+    switch (formData.key) {
+        case 'creators':
+            return formData.value?.map((v: SectionsFormData['creators']['formData']) => ({
+                ...v,
+                profileUrl: creator?.myWebsite,
+                name: creator?.username,
+                bio: creator.personalDetails?.bio,
+                nationality: creator.personalDetails?.nationality,
+                residence: creator.personalDetails?.residence,
+                ethnicity: creator.personalDetails?.ethnicity,
+                gender: creator.personalDetails?.gender,
+            }));
+        case 'provenance':
+            return {
+                ...formData.value,
+                country: creator.personalDetails?.residence,
+                plusCode: creator.personalDetails?.plusCode,
+                exhibitions: creator.artworkRecognition?.exhibitions?.map((v) => ({
+                    exhibitionName: v.name,
+                    exhibitionUrl: v.url,
+                })),
+                awards: creator.artworkRecognition?.awards?.map((v) => ({ awardName: v.name, awardUrl: v.url })),
+            };
+        default:
+            return formData.value;
+    }
+};
+
 const convertHexToRGB = (hex: string) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : [0, 0, 0];
@@ -70,6 +106,7 @@ const convertHexToRGB = (hex: string) => {
 export default function AssetMetadata() {
     const [sectionsStatus, setSectionsStatus] = useState<{ [key: string]: string }>({});
     const toast = useToastr();
+    const creator = useSelector((state) => state.user);
     const tempColors = useSelector((state) => state.asset.tempColors);
 
     const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
@@ -85,7 +122,7 @@ export default function AssetMetadata() {
                 formData: removeEmptyProperties(
                     assetMetadata && assetMetadata[key as keyof typeof sectionsJSON]
                         ? assetMetadata[key as keyof typeof sectionsJSON].formData
-                        : value.formData
+                        : initValues({ formData: { key, value: value.formData }, creator })
                 ),
                 errors: {},
             },
@@ -294,10 +331,10 @@ export default function AssetMetadata() {
         taxonomyKeys.forEach((key) => filterArray(formDataTaxonomy, key));
 
         const formDataCreators = sections.creators.formData as any[];
-        formDataCreators.forEach((creator) => filterArray(creator, 'roles'));
+        formDataCreators.forEach((creat) => filterArray(creat, 'roles'));
 
-        sections.creators.formData = formDataCreators.filter((creator) => {
-            const objKeys = Object.keys(creator);
+        sections.creators.formData = formDataCreators.filter((creat) => {
+            const objKeys = Object.keys(creat);
             return !(
                 objKeys.length === 1 &&
                 objKeys[0] === 'roles' &&

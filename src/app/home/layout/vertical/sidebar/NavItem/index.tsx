@@ -123,7 +123,19 @@ export default function NavItem({ item, level, pathDirect, hideMenu, onClick }: 
                         {itemIcon}
                     </ListItemIcon>
                     <ListItemText>
-                        {hideMenu ? '' : <>{language[item?.title || ''] as string}</>}
+                        {hideMenu ? (
+                            ''
+                        ) : (
+                            <>
+                                {item?.title === 'studio.sidebar.truLevel' ? (
+                                    <>
+                                        <span style={{ color: '#FF0066' }}>tru</span>Level
+                                    </>
+                                ) : (
+                                    (language[item?.title || ''] as string)
+                                )}
+                            </>
+                        )}
                         <br />
                         {item?.subtitle ? (
                             <Typography variant="caption">

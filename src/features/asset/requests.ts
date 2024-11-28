@@ -85,7 +85,13 @@ export async function getAsset(): Promise<GetAssetApiRes> {
     return res;
 }
 
-export async function getMyAssets({ page, status, collection = '', sort }: GetMyAssetsReq): Promise<GetAssetsApiRes> {
+export async function getMyAssets({
+    page,
+    status,
+    collection = '',
+    sort,
+    limit,
+}: GetMyAssetsReq): Promise<GetAssetsApiRes> {
     const res = await apiService.get<AssetPaginated>(
         `/assets?page=${page}&status=${status?.toLowerCase()}&collection=${encodeURIComponent(collection)}&sort=${sort}`
     );
