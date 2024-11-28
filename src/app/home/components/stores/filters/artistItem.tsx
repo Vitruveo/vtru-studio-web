@@ -1,31 +1,53 @@
+import { useRef } from 'react';
 import { Box, Typography } from '@mui/material';
 import MultiSelect from '../../ui-components/select/MultiSelect';
 import { countryData } from '@/utils/countryData';
 import { useFormikContext } from 'formik';
-import { useSelector } from '@/store/hooks';
-import { Names } from '@/features/storesArtwork/types';
+import { useDispatch, useSelector } from '@/store/hooks';
+import { AsyncSelect } from '../../ui-components/select/AsyncSelect';
+import { getArtworkCreatorNameThunk } from '@/features/storesArtwork/thunks';
 
 interface FormValues {
     artists: {
-        name: Names[];
+        name: [string, string][];
         nationality: [string, string][];
         residence: [string, string][];
     };
 }
 
+const debounceDelay = 1000;
 const ArtistItem = () => {
+    const dispatch = useDispatch();
     const { setFieldValue, values } = useFormikContext<FormValues>();
     const { name } = useSelector((state) => state.storeArtwork);
+    const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
     const onChange = (value: [string, string][], fieldName: string) => {
         setFieldValue(fieldName, value);
+    };
+
+    const getArtworkCreatorName = (inputValue: string) => {
+        dispatch(getArtworkCreatorNameThunk(inputValue));
+        return name.map((item) => ({
+            value: item.collection,
+            label: item.collection,
+        }));
+    };
+
+    const loadOptions = (inputValue: string, callback: (options: any) => void) => {
+        if (debounceTimeout.current) {
+            clearTimeout(debounceTimeout.current);
+        }
+        debounceTimeout.current = setTimeout(() => {
+            callback(getArtworkCreatorName(inputValue));
+        }, debounceDelay);
     };
 
     return (
         <Box display={'flex'} flexDirection={'column'} gap={2}>
             <Box>
                 <Typography variant="h6">Name</Typography>
-                <MultiSelect
+                <AsyncSelect
                     onChange={(selectedOptions) => {
                         const newValues = selectedOptions.map((option: { value: string; label: string }) => [
                             option.value,
@@ -33,11 +55,12 @@ const ArtistItem = () => {
                         ]);
                         onChange(newValues, 'artists.name');
                     }}
+                    loadOptions={loadOptions}
                     options={name.map((item) => ({
                         value: item.collection,
                         label: item.collection,
                     }))}
-                    value={values.artists.name.map((item) => ({ value: item.collection, label: item.collection }))}
+                    value={values.artists.name.map((item) => ({ value: item[0], label: item[1] }))}
                 />
             </Box>
             <Box>

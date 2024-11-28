@@ -1,18 +1,24 @@
+import Select from 'react-select/async';
 import { useTheme } from '@mui/material/styles';
-import Select from 'react-select';
 
 interface Props {
     value: { value: string; label: string }[];
+    loadOptions: (inputValue: string, callback: (options: any) => void) => void;
     options: { value: string; label: string }[];
     onChange(option: any): void;
 }
 
-const MultiSelect = ({ value, options, onChange }: Props) => {
+export const AsyncSelect = ({ loadOptions, value, onChange, options }: Props) => {
     const theme = useTheme();
 
     return (
         <Select
             isMulti
+            cacheOptions
+            loadOptions={loadOptions}
+            onChange={onChange}
+            value={value}
+            options={options}
             styles={{
                 control: (base, state) => ({
                     ...base,
@@ -47,11 +53,6 @@ const MultiSelect = ({ value, options, onChange }: Props) => {
                     color: theme.palette.text.primary,
                 }),
             }}
-            value={value}
-            options={options}
-            onChange={onChange}
         />
     );
 };
-
-export default MultiSelect;

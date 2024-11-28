@@ -10,14 +10,16 @@ import {
     styleOptions,
 } from './options';
 import { useFormikContext } from 'formik';
-import { useSelector } from '@/store/hooks';
-import { Collections, Tags } from '@/features/storesArtwork/types';
+import { useDispatch, useSelector } from '@/store/hooks';
+import { AsyncSelect } from '../../ui-components/select/AsyncSelect';
+import { useRef } from 'react';
+import { getArtworkCollectionsThunk, getArtworkSubjectThunk } from '@/features/storesArtwork/thunks';
 
 interface FormValues {
     taxonomy: {
         objectType: [string, string][];
-        tags: Tags[];
-        collections: Collections[];
+        tags: [string, string][];
+        collections: [string, string][];
         aiGeneration: [string, string][];
         arEnabled: [string, string][];
         nudity: [string, string][];
@@ -28,12 +30,47 @@ interface FormValues {
     };
 }
 
+const debounceDelay = 1000;
 const TaxonomyItem = () => {
+    const dispatch = useDispatch();
     const { setFieldValue, values } = useFormikContext<FormValues>();
     const { tags, collections, subject } = useSelector((state) => state.storeArtwork);
+    const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
     const onChange = (value: [string, string][], fieldName: string) => {
         setFieldValue(fieldName, value);
+    };
+
+    const getArtworkCollections = (inputValue: string) => {
+        dispatch(getArtworkCollectionsThunk(inputValue));
+        return collections.map((item) => ({
+            value: item.collection,
+            label: item.collection,
+        }));
+    };
+    const loadOptionsCollections = (inputValue: string, callback: (options: any) => void) => {
+        if (debounceTimeout.current) {
+            clearTimeout(debounceTimeout.current);
+        }
+        debounceTimeout.current = setTimeout(() => {
+            callback(getArtworkCollections(inputValue));
+        }, debounceDelay);
+    };
+
+    const getArtworkSubject = (inputValue: string) => {
+        dispatch(getArtworkSubjectThunk(inputValue));
+        return subject.map((item) => ({
+            value: item.subject,
+            label: item.subject,
+        }));
+    };
+    const loadOptionsSubject = (inputValue: string, callback: (options: any) => void) => {
+        if (debounceTimeout.current) {
+            clearTimeout(debounceTimeout.current);
+        }
+        debounceTimeout.current = setTimeout(() => {
+            callback(getArtworkSubject(inputValue));
+        }, debounceDelay);
     };
 
     return (
@@ -63,12 +100,12 @@ const TaxonomyItem = () => {
                         onChange(newValues, 'taxonomy.tags');
                     }}
                     options={tags.map((tag) => ({ value: tag.tag, label: tag.tag }))}
-                    value={values.taxonomy.tags.map((item) => ({ value: item.tag, label: item.tag }))}
+                    value={values.taxonomy.tags.map((item) => ({ value: item[0], label: item[1] }))}
                 />
             </Box>
             <Box>
                 <Typography variant="h6">Collections</Typography>
-                <MultiSelect
+                <AsyncSelect
                     onChange={(selectedOptions) => {
                         const newValues = selectedOptions.map((option: { value: string; label: string }) => [
                             option.value,
@@ -80,9 +117,10 @@ const TaxonomyItem = () => {
                         value: collection.collection,
                         label: collection.collection,
                     }))}
+                    loadOptions={loadOptionsCollections}
                     value={values.taxonomy.collections.map((item) => ({
-                        value: item.collection,
-                        label: item.collection,
+                        value: item[0],
+                        label: item[1],
                     }))}
                 />
             </Box>
@@ -172,7 +210,7 @@ const TaxonomyItem = () => {
             </Box>
             <Box>
                 <Typography variant="h6">Subject</Typography>
-                <MultiSelect
+                <AsyncSelect
                     onChange={(selectedOptions) => {
                         const newValues = selectedOptions.map((option: { value: string; label: string }) => [
                             option.value,
@@ -180,6 +218,7 @@ const TaxonomyItem = () => {
                         ]);
                         onChange(newValues, 'taxonomy.subject');
                     }}
+                    loadOptions={loadOptionsSubject}
                     options={subject.map((sub) => ({ value: sub.subject, label: sub.subject }))}
                     value={values.taxonomy.subject.map((item) => ({ value: item[0], label: item[1] }))}
                 />
@@ -189,7 +228,3 @@ const TaxonomyItem = () => {
 };
 
 export default TaxonomyItem;
-
-// dispatch(getArtworkCollectionsThunk('col'));
-// dispatch(getArtworkSubjectThunk('fen'));
-// dispatch(getArtworkCreatorNameThunk('dra'));

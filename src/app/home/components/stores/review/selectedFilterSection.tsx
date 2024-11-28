@@ -35,7 +35,11 @@ export const SelectedFilter = ({ title, content }: SelectedFilterProps) => {
                             </Typography>
                             {isShortcut && <ShortcutFilter content={value as { [key: string]: boolean }} />}
                             {isLicense && <LicensesFilter content={value as { [key: string]: string }} />}
-                            {isColorPrecision && <Typography variant="body1">{Number(value) * 100}%</Typography>}
+                            {isColorPrecision && (
+                                <Typography variant="body1" ml={1}>
+                                    {Number(value) * 100}%
+                                </Typography>
+                            )}
                             {isColors && <ColorFilter content={value as string[]} />}
                             {!isShortcut && !isLicense && !isColorPrecision && !isColors && (
                                 <MultiSelectFilter content={{ title, key, value: value as [string, string][] }} />
