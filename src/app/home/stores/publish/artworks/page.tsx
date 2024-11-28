@@ -41,7 +41,7 @@ const Component = () => {
                     culture: [],
                     mood: [],
                     orientation: [],
-                    precision: 0.0,
+                    precision: 0.7,
                     colors: [],
                 },
                 taxonomy: {

@@ -18,7 +18,7 @@ export function InputColor({ name, onClick, afterPrecisionChange }: Props) {
     const { language } = useI18n();
     const inputRef = useRef<HTMLInputElement>(null);
     // TODO: change to dinamic values
-    const defaultPrecisionValue = 7;
+    const defaultPrecisionValue = 0.7;
     const reseted = 1;
 
     const handleAddColor = () => {

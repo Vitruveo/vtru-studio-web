@@ -3,7 +3,7 @@ import { Box, Tab } from '@mui/material';
 import { useState } from 'react';
 import ContextItem from '../filters/contextItem';
 import TaxonomyItem from '../filters/taxonomyItem';
-import ArtistItem from '../filters/ArtistItem';
+import ArtistItem from '../filters/artistItem';
 import GeneralItem from '../filters/generalItem';
 
 const TabSliders = () => {
