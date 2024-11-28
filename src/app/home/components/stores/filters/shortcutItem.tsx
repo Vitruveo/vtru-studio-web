@@ -1,5 +1,5 @@
 import { Box, Checkbox, FormControlLabel, Grid, Typography } from '@mui/material';
-import { useField } from 'formik';
+import { useField, useFormikContext } from 'formik';
 
 const items = [
     { name: 'hideNudity', label: 'Hide Nudity' },
@@ -11,6 +11,21 @@ const items = [
     { name: 'includeSold', label: 'Include Sold' },
     { name: 'hasBTS', label: 'Has BTS' },
 ];
+
+interface FormValues {
+    general: {
+        shortcuts: {
+            hideNudity: boolean;
+            hideAI: boolean;
+            photography: boolean;
+            animation: boolean;
+            physicalArt: boolean;
+            digitalArt: boolean;
+            includeSold: boolean;
+            hasBTS: boolean;
+        };
+    };
+}
 
 export const ShortcutItem = () => {
     return (
@@ -36,6 +51,9 @@ interface Props {
 }
 
 const ShortcutCheckbox = ({ fieldName, label }: Props) => {
+    const { values } = useFormikContext<FormValues>();
     const [field] = useField(fieldName);
-    return <FormControlLabel control={<Checkbox {...field} />} label={label} />;
+    const isChecked = values.general.shortcuts[fieldName.split('.').pop() as keyof FormValues['general']['shortcuts']];
+
+    return <FormControlLabel control={<Checkbox {...field} checked={isChecked} />} label={label} />;
 };
