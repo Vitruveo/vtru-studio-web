@@ -10,11 +10,13 @@ import {
     styleOptions,
 } from './options';
 import { useFormikContext } from 'formik';
+import { useSelector } from '@/store/hooks';
+import { Tags } from '@/features/storesArtwork/types';
 
 interface FormValues {
     taxonomy: {
         objectType: [string, string][];
-        tags: [string, string][];
+        tags: Tags[];
         collections: [string, string][];
         aiGeneration: [string, string][];
         arEnabled: [string, string][];
@@ -28,6 +30,7 @@ interface FormValues {
 
 const TaxonomyItem = () => {
     const { setFieldValue, values } = useFormikContext<FormValues>();
+    const { tags } = useSelector((state) => state.storeArtwork);
 
     const onChange = (value: [string, string][], fieldName: string) => {
         setFieldValue(fieldName, value);
@@ -51,7 +54,17 @@ const TaxonomyItem = () => {
             </Box>
             <Box>
                 <Typography variant="h6">Tags</Typography>
-                <MultiSelect onChange={() => {}} options={[{}]} value={[]} />
+                <MultiSelect
+                    onChange={(selectedOptions) => {
+                        const newValues = selectedOptions.map((option: { value: string; label: string }) => [
+                            option.value,
+                            option.label,
+                        ]);
+                        onChange(newValues, 'taxonomy.tags');
+                    }}
+                    options={tags.map((tag) => ({ value: tag.tag, label: tag.tag }))}
+                    value={values.taxonomy.tags.map((item) => ({ value: item.tag, label: item.tag }))}
+                />
             </Box>
             <Box>
                 <Typography variant="h6">Collections</Typography>

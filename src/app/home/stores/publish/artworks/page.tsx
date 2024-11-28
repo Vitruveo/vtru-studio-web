@@ -1,15 +1,18 @@
 'use client';
 import { Formik, Form } from 'formik';
 import { Box, Button, Grid, Typography } from '@mui/material';
-import { useSelector } from '@/store/hooks';
+import { useDispatch, useSelector } from '@/store/hooks';
 import { useRouter } from 'next/navigation';
 
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 import TabSliders from '@/app/home/components/stores/sliders/tabSliders';
 import { Review } from '@/app/home/components/stores/review';
+import { useEffect } from 'react';
+import { getArtworkTagsThunk } from '@/features/storesArtwork/thunks';
 
 const Component = () => {
     const router = useRouter();
+    const dispatch = useDispatch();
 
     const selectedStore = useSelector((state) => state.stores.selectedStore);
     const store = useSelector((state) => state.stores.data.data.find((item) => item._id === selectedStore.id));
@@ -17,6 +20,10 @@ const Component = () => {
     const handleBack = () => {
         router.push('/home/stores/publish');
     };
+
+    useEffect(() => {
+        dispatch(getArtworkTagsThunk());
+    }, []);
 
     return (
         <Formik
