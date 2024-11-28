@@ -14,21 +14,19 @@ export const ShortcutFilter = ({ content }: ShortcutFilterProps) => {
 
     return (
         <Box display={'flex'} gap={1} flexWrap={'wrap'}>
-            {Object.entries(content).map(([key, value]) => (
-                <Box key={key} display={'flex'} gap={1}>
-                    {!!value && (
-                        <>
-                            <Typography variant="body1">{key}</Typography>
-                            <Delete
-                                fontSize="small"
-                                color="error"
-                                onClick={() => handleDeleteITem(key)}
-                                cursor={'pointer'}
-                            />
-                        </>
-                    )}
-                </Box>
-            ))}
+            {Object.entries(content)
+                .filter(([key, value]) => !!value)
+                .map(([key, value]) => (
+                    <Box key={key} display={'flex'} gap={1}>
+                        <Typography variant="body1">{key}</Typography>
+                        <Delete
+                            fontSize="small"
+                            color="error"
+                            onClick={() => handleDeleteITem(key)}
+                            cursor={'pointer'}
+                        />
+                    </Box>
+                ))}
         </Box>
     );
 };
