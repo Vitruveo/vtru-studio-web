@@ -20,40 +20,45 @@ export const SelectedFilter = ({ title, content }: SelectedFilterProps) => {
         }
     }, [content.colors]);
 
+    const contentWithoutPrecision = { ...content };
+    delete contentWithoutPrecision.precision;
+
     return (
         <Grid item xs={6}>
             <Typography variant="overline" fontWeight="bold">
-                {hasTruthyObject(content) ? title : ''}
+                {hasTruthyObject(contentWithoutPrecision) ? title : ''}
             </Typography>
             <Box ml={4}>
-                {Object.entries(content).map((element) => {
-                    const [key, value] = element;
-                    const isShortcut = key === 'shortcuts';
-                    const isLicense = key === 'licenses';
-                    const isColorPrecision = key === 'precision';
-                    const isColors = key === 'colors';
-                    return (
-                        <Box
-                            key={key}
-                            display={'flex'}
-                            flexDirection={isColorPrecision || isColors ? 'row' : 'column'}
-                            marginBlock={1}
-                        >
-                            <Typography variant="subtitle2" fontWeight="bold">
-                                {hasTruthyObject(value) || (isColorPrecision && hasColors) ? key : ''}
-                            </Typography>
-                            {isShortcut && <ShortcutFilter content={value as { [key: string]: boolean }} />}
-                            {isLicense && <LicensesFilter content={value as { [key: string]: string }} />}
-                            {isColorPrecision && hasColors && (
-                                <ColorPrecisionFilter content={{ value: value as number }} />
-                            )}
-                            {isColors && <ColorFilter content={value as string[]} />}
-                            {!isShortcut && !isLicense && !isColorPrecision && !isColors && (
-                                <MultiSelectFilter content={{ title, key, value: value as [string, string][] }} />
-                            )}
-                        </Box>
-                    );
-                })}
+                {Object.entries(content)
+                    .filter(([_key, value]) => (Array.isArray(value) ? value.length : !!value))
+                    .map((element) => {
+                        const [key, value] = element;
+                        const isShortcut = key === 'shortcuts';
+                        const isLicense = key === 'licenses';
+                        const isColorPrecision = key === 'precision';
+                        const isColors = key === 'colors';
+                        return (
+                            <Box
+                                key={key}
+                                display={'flex'}
+                                flexDirection={isColorPrecision || isColors ? 'row' : 'column'}
+                                marginBlock={1}
+                            >
+                                <Typography variant="subtitle2" fontWeight="bold">
+                                    {hasTruthyObject(value) || (isColorPrecision && hasColors) ? key : ''}
+                                </Typography>
+                                {isShortcut && <ShortcutFilter content={value as { [key: string]: boolean }} />}
+                                {isLicense && <LicensesFilter content={value as { [key: string]: string }} />}
+                                {isColorPrecision && hasColors && (
+                                    <ColorPrecisionFilter content={{ value: value as number }} />
+                                )}
+                                {isColors && <ColorFilter content={value as string[]} />}
+                                {!isShortcut && !isLicense && !isColorPrecision && !isColors && (
+                                    <MultiSelectFilter content={{ title, key, value: value as [string, string][] }} />
+                                )}
+                            </Box>
+                        );
+                    })}
             </Box>
         </Grid>
     );

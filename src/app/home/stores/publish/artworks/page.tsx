@@ -65,7 +65,17 @@ const Component = () => {
                 },
             }}
             onSubmit={(values) => {
-                const teste = filterFalsyValues(values);
+                const filteredValues = filterFalsyValues({
+                    input: values,
+                    keysToPreserve: ['general', 'context', 'taxonomy', 'artists'],
+                });
+                if (filteredValues.context && !filteredValues.context.colors) {
+                    delete filteredValues.context.precision;
+                }
+                if (filteredValues.general && !filteredValues.general.licenses.enabled) {
+                    delete filteredValues.general.licenses;
+                }
+                console.log(filteredValues);
             }}
         >
             <Box

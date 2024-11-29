@@ -1,7 +1,6 @@
 import { Delete } from '@mui/icons-material';
 import { Box, Paper, Typography } from '@mui/material';
 import { useFormikContext } from 'formik';
-import { useEffect } from 'react';
 
 interface ColorFilterProps {
     content: string[];
@@ -15,14 +14,6 @@ export const ColorFilter = ({ content }: ColorFilterProps) => {
             content.filter((color) => color !== item)
         );
     };
-
-    useEffect(() => {
-        if (!content.length) {
-            setFieldValue('context.precision', 0.0);
-        } else if (content.length === 1) {
-            setFieldValue('context.precision', 0.7);
-        }
-    }, [content]);
 
     return (
         <Box ml={1} display={'flex'} gap={1}>
