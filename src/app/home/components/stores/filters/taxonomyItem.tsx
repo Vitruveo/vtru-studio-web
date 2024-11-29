@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import MultiSelect from '../../ui-components/select/MultiSelect';
 import {
@@ -10,10 +11,13 @@ import {
     styleOptions,
 } from './options';
 import { useFormikContext } from 'formik';
-import { useDispatch, useSelector } from '@/store/hooks';
+import { useDispatch } from '@/store/hooks';
 import { AsyncSelect } from '../../ui-components/select/AsyncSelect';
-import { useRef } from 'react';
-import { getArtworkCollectionsThunk, getArtworkSubjectThunk } from '@/features/storesArtwork/thunks';
+import {
+    getArtworkCollectionsThunk,
+    getArtworkSubjectThunk,
+    getArtworkTagsThunk,
+} from '@/features/storesArtwork/thunks';
 
 interface FormValues {
     taxonomy: {
@@ -34,42 +38,61 @@ const debounceDelay = 1000;
 const TaxonomyItem = () => {
     const dispatch = useDispatch();
     const { setFieldValue, values } = useFormikContext<FormValues>();
-    const { tags, collections, subject } = useSelector((state) => state.storeArtwork);
+    const [tags, setTags] = useState<{ tag: string }[]>([]);
     const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
     const onChange = (value: [string, string][], fieldName: string) => {
         setFieldValue(fieldName, value);
     };
 
-    const getArtworkCollections = (inputValue: string) => {
-        dispatch(getArtworkCollectionsThunk(inputValue));
+    const getArtworkTags = async () => {
+        const responseTags = await dispatch(getArtworkTagsThunk());
+        setTags(responseTags);
+    };
+
+    useEffect(() => {
+        getArtworkTags();
+    }, []);
+
+    const getArtworkCollections = async (inputValue: string) => {
+        const collections = await dispatch(getArtworkCollectionsThunk(inputValue));
         return collections.map((item) => ({
             value: item.collection,
             label: item.collection,
         }));
     };
     const loadOptionsCollections = (inputValue: string, callback: (options: any) => void) => {
+        if (!inputValue.trim() || inputValue.length < 3) {
+            callback([]);
+            return;
+        }
         if (debounceTimeout.current) {
             clearTimeout(debounceTimeout.current);
         }
-        debounceTimeout.current = setTimeout(() => {
-            callback(getArtworkCollections(inputValue));
+        debounceTimeout.current = setTimeout(async () => {
+            const options = await getArtworkCollections(inputValue.trim());
+            callback(options);
         }, debounceDelay);
     };
 
-    const getArtworkSubject = (inputValue: string) => {
-        dispatch(getArtworkSubjectThunk(inputValue));
-        return subject.map((item) => ({
+    const getArtworkSubject = async (inputValue: string) => {
+        const subjects = await dispatch(getArtworkSubjectThunk(inputValue));
+        return subjects.map((item) => ({
             value: item.subject,
             label: item.subject,
         }));
     };
     const loadOptionsSubject = (inputValue: string, callback: (options: any) => void) => {
+        if (!inputValue.trim() || inputValue.length < 3) {
+            callback([]);
+            return;
+        }
         if (debounceTimeout.current) {
             clearTimeout(debounceTimeout.current);
         }
-        debounceTimeout.current = setTimeout(() => {
-            callback(getArtworkSubject(inputValue));
+        debounceTimeout.current = setTimeout(async () => {
+            const options = await getArtworkSubject(inputValue.trim());
+            callback(options);
         }, debounceDelay);
     };
 
@@ -113,10 +136,6 @@ const TaxonomyItem = () => {
                         ]);
                         onChange(newValues, 'taxonomy.collections');
                     }}
-                    options={collections.map((collection) => ({
-                        value: collection.collection,
-                        label: collection.collection,
-                    }))}
                     loadOptions={loadOptionsCollections}
                     value={values.taxonomy.collections.map((item) => ({
                         value: item[0],
@@ -219,7 +238,6 @@ const TaxonomyItem = () => {
                         onChange(newValues, 'taxonomy.subject');
                     }}
                     loadOptions={loadOptionsSubject}
-                    options={subject.map((sub) => ({ value: sub.subject, label: sub.subject }))}
                     value={values.taxonomy.subject.map((item) => ({ value: item[0], label: item[1] }))}
                 />
             </Box>

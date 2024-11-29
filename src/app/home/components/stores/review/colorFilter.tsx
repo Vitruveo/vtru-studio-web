@@ -15,7 +15,7 @@ export const ColorFilter = ({ content }: ColorFilterProps) => {
         );
     };
     return (
-        <Box display={'flex'} gap={1}>
+        <Box ml={1} display={'flex'} gap={1}>
             {content.map((item) => (
                 <Box key={item} display={'flex'}>
                     <Paper

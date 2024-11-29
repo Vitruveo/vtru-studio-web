@@ -8,13 +8,11 @@ import { customizerSlice } from '../features/customizer';
 import { assetSlice } from '@/features/asset';
 import { toastrSlice } from '@/features/toastr/slice';
 import { storesSlice } from '@/features/stores/slice';
-import { storeArtworkSlice } from '@/features/storesArtwork/slice';
 import filtersSlice from '@/features/filters/filtersSlice'; // Importe o filtersSlice
 
 interface RootState {
     user: ReturnType<typeof userSlice.reducer>;
     consignArtwork: ReturnType<typeof consignArtworkSlice.reducer>;
-    storeArtwork: ReturnType<typeof storeArtworkSlice.reducer>;
     customizer: ReturnType<typeof customizerSlice.reducer>;
     websocket: ReturnType<typeof websocketSlice.reducer>;
     asset: ReturnType<typeof assetSlice.reducer>;
@@ -26,7 +24,6 @@ interface RootState {
 const appReducer = combineReducers<RootState>({
     user: userSlice.reducer,
     consignArtwork: consignArtworkSlice.reducer,
-    storeArtwork: storeArtworkSlice.reducer,
     customizer: customizerSlice.reducer,
     websocket: websocketSlice.reducer,
     asset: assetSlice.reducer,

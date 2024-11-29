@@ -4,11 +4,10 @@ import { useTheme } from '@mui/material/styles';
 interface Props {
     value: { value: string; label: string }[];
     loadOptions: (inputValue: string, callback: (options: any) => void) => void;
-    options: { value: string; label: string }[];
     onChange(option: any): void;
 }
 
-export const AsyncSelect = ({ loadOptions, value, onChange, options }: Props) => {
+export const AsyncSelect = ({ loadOptions, value, onChange }: Props) => {
     const theme = useTheme();
 
     return (
@@ -18,7 +17,6 @@ export const AsyncSelect = ({ loadOptions, value, onChange, options }: Props) =>
             loadOptions={loadOptions}
             onChange={onChange}
             value={value}
-            options={options}
             styles={{
                 control: (base, state) => ({
                     ...base,
