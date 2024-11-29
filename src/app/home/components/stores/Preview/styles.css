@@ -48,6 +48,10 @@
     font-weight: bold;
     color: #555;
     border-bottom: 1px solid #ccc;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .url-text {

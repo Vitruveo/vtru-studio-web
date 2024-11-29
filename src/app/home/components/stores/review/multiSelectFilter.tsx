@@ -15,6 +15,8 @@ export const MultiSelectFilter = ({ content }: MultiSelectFilterProps) => {
         );
     };
 
+    if (!content.value.length) return null;
+
     return (
         <Box display={'flex'} gap={1} flexWrap={'wrap'}>
             {content.value.map((item) => (

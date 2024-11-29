@@ -13,11 +13,7 @@ export const Review = () => {
                 </TabList>
             </TabContext>
 
-            <Card
-                sx={{
-                    padding: 2,
-                }}
-            >
+            <Card sx={{ padding: 2 }}>
                 <Grid container spacing={4}>
                     {Object.entries(values).map((element) => {
                         const [key, value] = element;
