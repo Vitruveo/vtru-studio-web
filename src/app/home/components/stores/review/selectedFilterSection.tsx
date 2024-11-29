@@ -2,8 +2,9 @@ import { hasTruthyObject } from '@/utils/truthyObject';
 import { Box, Grid, Typography } from '@mui/material';
 import { ShortcutFilter } from './shortcutFilter';
 import { LicensesFilter } from './licensesFilter';
-import { ColorFilter } from './colorFilter';
+import { ColorFilter, ColorPrecisionFilter } from './colorFilter';
 import { MultiSelectFilter } from './multiSelectFilter';
+import { useEffect, useState } from 'react';
 
 interface SelectedFilterProps {
     title: string;
@@ -11,10 +12,18 @@ interface SelectedFilterProps {
 }
 
 export const SelectedFilter = ({ title, content }: SelectedFilterProps) => {
+    const [hasColors, setHasColors] = useState(false);
+
+    useEffect(() => {
+        if (content.colors && Array.isArray(content.colors)) {
+            setHasColors(content.colors.length > 0);
+        }
+    }, [content.colors]);
+
     return (
         <Grid item xs={6}>
             <Typography variant="overline" fontWeight="bold">
-                {hasTruthyObject(content) || title === 'context' ? title : ''}
+                {hasTruthyObject(content) ? title : ''}
             </Typography>
             <Box ml={4}>
                 {Object.entries(content).map((element) => {
@@ -31,14 +40,12 @@ export const SelectedFilter = ({ title, content }: SelectedFilterProps) => {
                             marginBlock={1}
                         >
                             <Typography variant="subtitle2" fontWeight="bold">
-                                {hasTruthyObject(value) || isColorPrecision ? key : ''}
+                                {hasTruthyObject(value) || (isColorPrecision && hasColors) ? key : ''}
                             </Typography>
                             {isShortcut && <ShortcutFilter content={value as { [key: string]: boolean }} />}
                             {isLicense && <LicensesFilter content={value as { [key: string]: string }} />}
-                            {isColorPrecision && (
-                                <Typography variant="body1" ml={1}>
-                                    {Number(value) * 100}%
-                                </Typography>
+                            {isColorPrecision && hasColors && (
+                                <ColorPrecisionFilter content={{ value: value as number }} />
                             )}
                             {isColors && <ColorFilter content={value as string[]} />}
                             {!isShortcut && !isLicense && !isColorPrecision && !isColors && (

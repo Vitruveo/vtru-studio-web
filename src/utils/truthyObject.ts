@@ -6,3 +6,5 @@ export const hasTruthyObject = (obj: any): boolean => {
         return Boolean(value);
     });
 };
+
+export const filterFalsyValues = (obj: any): any => {};

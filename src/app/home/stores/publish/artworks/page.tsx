@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 import TabSliders from '@/app/home/components/stores/sliders/tabSliders';
 import { Review } from '@/app/home/components/stores/review';
+import { filterFalsyValues } from '@/utils/truthyObject';
 
 const Component = () => {
     const router = useRouter();
@@ -35,6 +36,7 @@ const Component = () => {
                     licenses: {
                         minPrice: 0,
                         maxPrice: 10_000,
+                        enabled: false,
                     },
                 },
                 context: {
@@ -62,7 +64,9 @@ const Component = () => {
                     residence: [],
                 },
             }}
-            onSubmit={() => {}}
+            onSubmit={(values) => {
+                const teste = filterFalsyValues(values);
+            }}
         >
             <Box
                 position="relative"
@@ -91,28 +95,28 @@ const Component = () => {
                             <Review />
                         </Grid>
                     </Grid>
-                </Form>
-                <Box
-                    bgcolor="#e5e7eb"
-                    sx={{
-                        position: 'fixed',
-                        bottom: 0,
-                        left: 0,
-                        width: '100%',
-                    }}
-                >
-                    <Box display="flex" alignItems="center" justifyContent="end" gap={170} p={2}>
-                        <Typography color="GrayText">Step 2 of 3</Typography>
-                        <Box display="flex" gap={2}>
-                            <Button type="button" variant="text" onClick={handleBack}>
-                                <Typography color="gray">Back</Typography>
-                            </Button>
-                            <Button type="submit" variant="contained">
-                                Next
-                            </Button>
+                    <Box
+                        bgcolor="#e5e7eb"
+                        sx={{
+                            position: 'fixed',
+                            bottom: 0,
+                            left: 0,
+                            width: '100%',
+                        }}
+                    >
+                        <Box display="flex" alignItems="center" justifyContent="end" gap={170} p={2}>
+                            <Typography color="GrayText">Step 2 of 3</Typography>
+                            <Box display="flex" gap={2}>
+                                <Button type="button" variant="text" onClick={handleBack}>
+                                    <Typography color="gray">Back</Typography>
+                                </Button>
+                                <Button type="submit" variant="contained">
+                                    Next
+                                </Button>
+                            </Box>
                         </Box>
                     </Box>
-                </Box>
+                </Form>
             </Box>
         </Formik>
     );
