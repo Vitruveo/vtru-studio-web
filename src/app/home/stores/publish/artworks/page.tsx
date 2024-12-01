@@ -1,6 +1,17 @@
 'use client';
-import { Formik, Form } from 'formik';
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { useRef, useState } from 'react';
+import { Formik, Form, FormikProps } from 'formik';
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Grid,
+    Typography,
+} from '@mui/material';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useRouter } from 'next/navigation';
 
@@ -9,15 +20,50 @@ import TabSliders from '@/app/home/components/stores/sliders/tabSliders';
 import { Review } from '@/app/home/components/stores/review';
 import { filterFalsyValues } from '@/utils/truthyObject';
 import { createStoreArtworkThunk } from '@/features/storesArtwork/thunks';
+import { type Artworks } from '@/features/stores/types';
 
 const Component = () => {
     const dispatch = useDispatch();
     const router = useRouter();
-
+    const [openDialogSave, setOpenDialogSave] = useState(false);
+    const formikRef = useRef<FormikProps<Artworks>>(null);
     const selectedStore = useSelector((state) => state.stores.selectedStore);
     const store = useSelector((state) => state.stores.data.data.find((item) => item._id === selectedStore.id));
 
-    const handleBack = () => {
+    const handleSubmit = (values: Artworks) => {
+        const filteredValues = filterFalsyValues({
+            input: values,
+            keysToPreserve: ['general', 'context', 'taxonomy', 'artists'],
+        });
+        if (filteredValues.context && !filteredValues.context.colors) {
+            delete filteredValues.context.precision;
+        }
+        if (filteredValues.general && !filteredValues.general.licenses.enabled) {
+            delete filteredValues.general.licenses;
+        }
+        dispatch(createStoreArtworkThunk({ id: selectedStore.id, stepName: 'artworks', data: filteredValues }));
+    };
+
+    const handleBack = async () => {
+        if (formikRef.current) {
+            const values = formikRef.current.values;
+            const initialValues = formikRef.current.initialValues;
+            if (JSON.stringify(values) !== JSON.stringify(initialValues)) {
+                setOpenDialogSave(true);
+                return;
+            }
+        }
+        router.push('/home/stores/publish');
+    };
+    const handleBackSave = () => {
+        if (formikRef.current) {
+            handleSubmit(formikRef.current?.values);
+            setOpenDialogSave(false);
+            router.push('/home/stores/publish');
+        }
+    };
+    const handleBackCancel = () => {
+        setOpenDialogSave(false);
         router.push('/home/stores/publish');
     };
 
@@ -29,6 +75,7 @@ const Component = () => {
 
     return (
         <Formik
+            innerRef={formikRef}
             initialValues={{
                 general: {
                     shortcuts: {
@@ -72,19 +119,7 @@ const Component = () => {
                     residence: artists.residence || [],
                 },
             }}
-            onSubmit={(values) => {
-                const filteredValues = filterFalsyValues({
-                    input: values,
-                    keysToPreserve: ['general', 'context', 'taxonomy', 'artists'],
-                });
-                if (filteredValues.context && !filteredValues.context.colors) {
-                    delete filteredValues.context.precision;
-                }
-                if (filteredValues.general && !filteredValues.general.licenses.enabled) {
-                    delete filteredValues.general.licenses;
-                }
-                dispatch(createStoreArtworkThunk({ id: selectedStore.id, stepName: 'artworks', data: filteredValues }));
-            }}
+            onSubmit={handleSubmit}
         >
             <Box
                 position="relative"
@@ -134,6 +169,27 @@ const Component = () => {
                             </Box>
                         </Box>
                     </Box>
+                    <Dialog
+                        open={openDialogSave}
+                        onClose={() => setOpenDialogSave(false)}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">{'Back to publish page'}</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                                Do you want to save the changes before leaving?
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleBackCancel} color="primary">
+                                Cancel
+                            </Button>
+                            <Button onClick={handleBackSave} color="success" variant="outlined">
+                                Save
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
                 </Form>
             </Box>
         </Formik>
