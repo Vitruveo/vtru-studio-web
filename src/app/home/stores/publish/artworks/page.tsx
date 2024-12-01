@@ -1,15 +1,17 @@
 'use client';
 import { Formik, Form } from 'formik';
 import { Box, Button, Grid, Typography } from '@mui/material';
-import { useSelector } from '@/store/hooks';
+import { useDispatch, useSelector } from '@/store/hooks';
 import { useRouter } from 'next/navigation';
 
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 import TabSliders from '@/app/home/components/stores/sliders/tabSliders';
 import { Review } from '@/app/home/components/stores/review';
 import { filterFalsyValues } from '@/utils/truthyObject';
+import { createStoreArtworkThunk } from '@/features/storesArtwork/thunks';
 
 const Component = () => {
+    const dispatch = useDispatch();
     const router = useRouter();
 
     const selectedStore = useSelector((state) => state.stores.selectedStore);
@@ -75,7 +77,7 @@ const Component = () => {
                 if (filteredValues.general && !filteredValues.general.licenses.enabled) {
                     delete filteredValues.general.licenses;
                 }
-                console.log(filteredValues);
+                dispatch(createStoreArtworkThunk({ id: selectedStore.id, stepName: 'artworks', data: filteredValues }));
             }}
         >
             <Box
