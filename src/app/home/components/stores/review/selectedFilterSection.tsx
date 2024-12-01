@@ -20,13 +20,26 @@ export const SelectedFilter = ({ title, content }: SelectedFilterProps) => {
         }
     }, [content.colors]);
 
-    const contentWithoutPrecision = { ...content };
-    delete contentWithoutPrecision.precision;
+    const contentCopy = { ...content };
+    delete contentCopy.precision;
+
+    const renderTitle = (): string => {
+        if (
+            title === 'general' &&
+            contentCopy.licenses &&
+            !contentCopy.licenses.enabled &&
+            !hasTruthyObject(contentCopy.shortcuts)
+        ) {
+            return '';
+        }
+
+        return title;
+    };
 
     return (
         <Grid item xs={6}>
             <Typography variant="overline" fontWeight="bold">
-                {hasTruthyObject(contentWithoutPrecision) ? title : ''}
+                {hasTruthyObject(contentCopy) ? renderTitle() : ''}
             </Typography>
             <Box ml={4}>
                 {Object.entries(content)
@@ -37,6 +50,12 @@ export const SelectedFilter = ({ title, content }: SelectedFilterProps) => {
                         const isLicense = key === 'licenses';
                         const isColorPrecision = key === 'precision';
                         const isColors = key === 'colors';
+
+                        const valueCopy = typeof value === 'object' ? { ...value } : value;
+                        if (typeof valueCopy === 'object' && 'enabled' in valueCopy) {
+                            delete (valueCopy as any).minPrice;
+                            delete (valueCopy as any).maxPrice;
+                        }
                         return (
                             <Box
                                 key={key}
@@ -45,7 +64,7 @@ export const SelectedFilter = ({ title, content }: SelectedFilterProps) => {
                                 marginBlock={1}
                             >
                                 <Typography variant="subtitle2" fontWeight="bold">
-                                    {hasTruthyObject(value) || (isColorPrecision && hasColors) ? key : ''}
+                                    {hasTruthyObject(valueCopy) || (isColorPrecision && hasColors) ? key : ''}
                                 </Typography>
                                 {isShortcut && <ShortcutFilter content={value as { [key: string]: boolean }} />}
                                 {isLicense && <LicensesFilter content={value as { [key: string]: string }} />}

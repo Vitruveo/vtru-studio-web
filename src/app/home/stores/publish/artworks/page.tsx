@@ -21,49 +21,55 @@ const Component = () => {
         router.push('/home/stores/publish');
     };
 
+    const shortcuts = store?.artworks?.general?.shortcuts || {};
+    const licenses = store?.artworks?.general?.licenses || {};
+    const context = store?.artworks?.context || {};
+    const taxonomy = store?.artworks?.taxonomy || {};
+    const artists = store?.artworks?.artists || {};
+
     return (
         <Formik
             initialValues={{
                 general: {
                     shortcuts: {
-                        hideNudity: false,
-                        hideAI: false,
-                        photography: false,
-                        animation: false,
-                        physicalArt: false,
-                        digitalArt: false,
-                        includeSold: false,
-                        hasBTS: false,
+                        hideNudity: shortcuts.hideNudity || false,
+                        hideAI: shortcuts.hideAI || false,
+                        photography: shortcuts.photography || false,
+                        animation: shortcuts.animation || false,
+                        physicalArt: shortcuts.physicalArt || false,
+                        digitalArt: shortcuts.digitalArt || false,
+                        includeSold: shortcuts.includeSold || false,
+                        hasBTS: shortcuts.hasBTS || false,
                     },
                     licenses: {
-                        minPrice: 0,
-                        maxPrice: 10_000,
-                        enabled: false,
+                        minPrice: licenses.minPrice || 0,
+                        maxPrice: licenses.maxPrice || 10_000,
+                        enabled: licenses.enabled || false,
                     },
                 },
                 context: {
-                    culture: [],
-                    mood: [],
-                    orientation: [],
-                    precision: 0.7,
-                    colors: [],
+                    culture: context.culture || [],
+                    mood: context.mood || [],
+                    orientation: context.orientation || [],
+                    precision: context.precision || 0.7,
+                    colors: context.colors || [],
                 },
                 taxonomy: {
-                    objectType: [],
-                    tags: [],
-                    collections: [],
-                    aiGeneration: [],
-                    arEnabled: [],
-                    nudity: [],
-                    category: [],
-                    medium: [],
-                    style: [],
-                    subject: [],
+                    objectType: taxonomy.objectType || [],
+                    tags: taxonomy.tags || [],
+                    collections: taxonomy.collections || [],
+                    aiGeneration: taxonomy.aiGeneration || [],
+                    arEnabled: taxonomy.arEnabled || [],
+                    nudity: taxonomy.nudity || [],
+                    category: taxonomy.category || [],
+                    medium: taxonomy.medium || [],
+                    style: taxonomy.style || [],
+                    subject: taxonomy.subject || [],
                 },
                 artists: {
-                    name: [],
-                    nationality: [],
-                    residence: [],
+                    name: artists.name || [],
+                    nationality: artists.nationality || [],
+                    residence: artists.residence || [],
                 },
             }}
             onSubmit={(values) => {

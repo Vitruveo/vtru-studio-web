@@ -38,16 +38,23 @@ export function getStoreByIdThunk(id: string): ReduxThunkAction<Promise<void>> {
             })
         );
 
-        const isCompleted =
+        const isOrganizationCompleted =
             data?.organization?.url && data?.organization?.name && data?.organization?.formats?.logo?.square?.path;
-        const isInProgress = hasTruthyObject(data?.organization);
+        const isOrganizationInProgress = hasTruthyObject(data?.organization);
+        const isArtworksCompleted = !!data?.artworks;
 
-        if (isCompleted) {
+        if (isOrganizationCompleted) {
             dispatch(storesActionsCreators.setPublishStoreStatusStep({ step: 'organization', status: 'Completed' }));
-        } else if (isInProgress) {
+        } else if (isOrganizationInProgress) {
             dispatch(storesActionsCreators.setPublishStoreStatusStep({ step: 'organization', status: 'In Progress' }));
         } else {
             dispatch(storesActionsCreators.setPublishStoreStatusStep({ step: 'organization', status: 'Not Started' }));
+        }
+
+        if (isArtworksCompleted) {
+            dispatch(storesActionsCreators.setPublishStoreStatusStep({ step: 'artworks', status: 'Completed' }));
+        } else {
+            dispatch(storesActionsCreators.setPublishStoreStatusStep({ step: 'artworks', status: 'Not Started' }));
         }
 
         dispatch(storesActionsCreators.setFinishLoading());
@@ -72,13 +79,12 @@ export function createNewStoreThunk(id?: string): ReduxThunkAction<Promise<void>
 }
 
 export function updateOrganizationThunk(data: UpdateOrganizationParams): ReduxThunkAction<Promise<void>> {
-    return async (dispatch: any) => {
+    return async (_dispatch: any) => {
         await updateStepNameStore({
             stepName: 'organization',
             id: data.id,
             data: data.data,
         });
-        // dispatch(storesActions.updateStore({ id: data.id, data }));
     };
 }
 
