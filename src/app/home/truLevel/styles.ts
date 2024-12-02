@@ -1,6 +1,7 @@
 type keys = 'totalCard' | 'totalCardLevel' | 'totalCardPoints';
 
 type LevelCardParams = {
+    xlUp?: boolean;
     isCurrentLevel?: boolean;
     isNextLevel?: boolean;
     completed?: boolean;
@@ -40,14 +41,14 @@ const staticStyles: Record<keys, React.CSSProperties> = {
 };
 
 const dynamicStyles = {
-    levelCard: ({ completed, isCurrentLevel, isNextLevel }: LevelCardParams = {}) => ({
+    levelCard: ({ completed, isCurrentLevel, isNextLevel, xlUp }: LevelCardParams = {}) => ({
         padding: '15px',
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
         borderRadius: '7px',
-        width: '100%',
+        width: xlUp ? '215px' : '100%',
         color: 'secondary',
         backgroundColor: completed ? '#6AA84F' : isCurrentLevel ? '#3D85C6' : isNextLevel ? '#999999' : 'lightgray',
     }),

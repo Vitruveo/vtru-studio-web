@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Theme, Typography, useMediaQuery } from '@mui/material';
 import { dynamicStyles } from './styles';
 import { LevelStep } from './page';
 import Square from './square';
@@ -32,6 +32,8 @@ const Level = ({ steps, name, levelNumber, levelsCompleted }: LevelProps) => {
         setIsFlipped(!isFlipped);
     };
 
+    const xlUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'));
+
     const isCurrentLevel = Object.keys(levelsCompleted).length - 1 + 1 === levelNumber;
     const isNextLevel = Object.keys(levelsCompleted).length - 1 + 2 === levelNumber;
 
@@ -62,10 +64,21 @@ const Level = ({ steps, name, levelNumber, levelsCompleted }: LevelProps) => {
                     }}
                 >
                     <Box
-                        sx={dynamicStyles.levelCard({ completed: levelsCompleted[name], isCurrentLevel, isNextLevel })}
+                        sx={dynamicStyles.levelCard({
+                            completed: levelsCompleted[name],
+                            isCurrentLevel,
+                            isNextLevel,
+                            xlUp,
+                        })}
                     >
                         <Box>
-                            <Typography marginTop={1} textAlign="center" fontSize={40} fontWeight="bold" color="white">
+                            <Typography
+                                marginTop={1}
+                                textAlign="center"
+                                fontSize="2.5em"
+                                fontWeight="bold"
+                                color="white"
+                            >
                                 {name}
                             </Typography>
                             <Box marginTop={3} width="100%" display="flex" justifyContent="center">
@@ -105,7 +118,12 @@ const Level = ({ steps, name, levelNumber, levelsCompleted }: LevelProps) => {
                 </Box>
                 <Box
                     sx={{
-                        ...dynamicStyles.levelCard({ completed: levelsCompleted[name], isCurrentLevel, isNextLevel }),
+                        ...dynamicStyles.levelCard({
+                            completed: levelsCompleted[name],
+                            isCurrentLevel,
+                            isNextLevel,
+                            xlUp,
+                        }),
                         backfaceVisibility: 'hidden',
                         transform: 'rotateY(180deg)',
                     }}

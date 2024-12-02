@@ -211,7 +211,7 @@ const Component = () => {
         router.push('/home/stores/publish');
     };
     const handleBackSave = () => {
-        handleSubmit(formik.values);
+        formik.handleSubmit();
         setOpenDialogSave(false);
     };
     const handleBackCancel = () => {
@@ -547,7 +547,12 @@ const Component = () => {
                         <Button type="button" variant="text" onClick={handleBack}>
                             <Typography color="gray">Back</Typography>
                         </Button>
-                        <Button type="submit" variant="contained" disabled={Object.values(formik.errors).length > 0}>
+                        <Button
+                            type="button"
+                            onClick={handleBackSave}
+                            variant="contained"
+                            disabled={Object.values(formik.errors).length > 0}
+                        >
                             Next
                         </Button>
                     </Box>
