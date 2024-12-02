@@ -25,22 +25,22 @@ const Total = ({ levels }: TotalProps) => {
                         fontFamily={novaSquare.style.fontFamily}
                         fontWeight="600"
                         color="primary"
-                        fontSize="12vh"
+                        fontSize={112}
                     >
                         {currentLevel}
                     </Typography>
                 </Box>
-                <Typography fontWeight="600" marginTop={2.5} fontSize="3.3vh" color="white" textAlign="center">
+                <Typography fontWeight="600" marginTop={2.5} fontSize={31} color="white" textAlign="center">
                     Level
                 </Typography>
             </Box>
             <Box flex={2}>
                 <Box sx={staticStyles.totalCardPoints}>
-                    <Typography fontFamily={novaSquare.style.fontFamily} fontWeight="600" color="white" fontSize="12vh">
+                    <Typography fontFamily={novaSquare.style.fontFamily} fontWeight="600" color="white" fontSize={112}>
                         {totalPoints}
                     </Typography>
                 </Box>
-                <Typography fontWeight="600" marginTop={2.5} fontSize="3.3vh" color="white" textAlign="center">
+                <Typography fontWeight="600" marginTop={2.5} fontSize={31} color="white" textAlign="center">
                     Points
                 </Typography>
             </Box>

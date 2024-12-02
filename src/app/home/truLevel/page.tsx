@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect } from 'react';
 
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Theme, Typography, useMediaQuery } from '@mui/material';
 
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 import { useI18n } from '@/app/hooks/useI18n';
@@ -63,6 +63,11 @@ export default function TruLevel() {
     const dispatch = useDispatch();
     const truLevel = useSelector((state) => state.user.truLevel);
 
+    const xlUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'));
+    const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
+    const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
+    const smUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
+
     const { language } = useI18n();
 
     const texts = {
@@ -89,7 +94,8 @@ export default function TruLevel() {
             <Box margin="auto 0" marginBottom={10} display="relative">
                 <Breadcrumb title={texts.title} items={BCrumb} />
                 <Box
-                    width="75%"
+                    width={xlUp ? '75%' : '100%'}
+                    maxWidth={xlUp ? 800 : '100%'}
                     gap={4}
                     display="grid"
                     gridTemplateColumns="repeat(5, 1fr)"
