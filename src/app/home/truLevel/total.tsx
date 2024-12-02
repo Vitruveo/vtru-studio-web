@@ -23,7 +23,7 @@ const Total = ({ levels }: TotalProps) => {
                 <Box sx={staticStyles.totalCardLevel}>
                     <Typography
                         fontFamily={novaSquare.style.fontFamily}
-                        fontWeight="600"
+                        fontWeight="500"
                         color="primary"
                         fontSize={112}
                     >
@@ -36,7 +36,7 @@ const Total = ({ levels }: TotalProps) => {
             </Box>
             <Box flex={2}>
                 <Box sx={staticStyles.totalCardPoints}>
-                    <Typography fontFamily={novaSquare.style.fontFamily} fontWeight="600" color="white" fontSize={112}>
+                    <Typography fontFamily={novaSquare.style.fontFamily} fontWeight="500" color="white" fontSize={112}>
                         {totalPoints}
                     </Typography>
                 </Box>

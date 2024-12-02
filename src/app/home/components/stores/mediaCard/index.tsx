@@ -68,7 +68,7 @@ const MediaCardRef = (props: Props, ref: any) => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         gap: 16,
-                        height: 200,
+                        // height: 200,
                     }}
                 >
                     {isDragActive ? (
@@ -104,7 +104,7 @@ const MediaCardRef = (props: Props, ref: any) => {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 gap: 16,
-                                height: 200,
+                                // height: 200,
                             }}
                         >
                             <Button variant="contained">Upload</Button>

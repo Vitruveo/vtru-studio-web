@@ -11,6 +11,7 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    Grid,
     IconButton,
     Slider,
     Typography,
@@ -21,7 +22,7 @@ import { Delete } from '@mui/icons-material';
 
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
-import { MediaCard, MediaCardRef } from '@/app/home/stores/components/mediaCard';
+import { MediaCard, MediaCardRef } from '@/app/home/components/stores/mediaCard';
 
 import { useDispatch, useSelector } from '@/store/hooks';
 import { storeStorageThunk, updateOrganizationThunk, validateUrlThunk } from '@/features/stores/thunks';
@@ -29,6 +30,7 @@ import { sendRequestUploadStoresThunk } from '@/features/asset/thunks';
 import { storesActionsCreators } from '@/features/stores/slice';
 import { STORE_STORAGE_URL } from '@/constants/asset';
 import LoadingOverlay from '@/app/home/components/loadingOverlay';
+import { Preview } from '@/app/home/components/stores/Preview';
 
 interface Input {
     url: string | null;
@@ -69,7 +71,7 @@ const mediaConfigs = {
 
 const cardsToUploadMedias = [
     { field: 'logoSquare', name: 'Logo - Square', dimensions: '1000x1000', required: true },
-    { field: 'logoHorizontal', name: 'Logo - Horizontal', dimensions: '500x120', required: false },
+    { field: 'logoHorizontal', name: 'Logo - Horizontal', dimensions: '500x120', required: true },
     { field: 'banner', name: 'Banner', dimensions: '1500x500', required: false },
 ];
 
@@ -77,7 +79,7 @@ const Component = () => {
     const theme = useTheme();
     const dispatch = useDispatch();
     const router = useRouter();
-    const mediaRefs = useRef<Array<MediaCardRef>>([]);
+    const mediaRefs = useRef<any[]>([]);
 
     const selectedStore = useSelector((state) => state.stores.selectedStore);
     const store = useSelector((state) => state.stores.data.data.find((item) => item._id === selectedStore.id));
@@ -185,11 +187,11 @@ const Component = () => {
                 .required()
                 .test('url', 'Invalid URL', (value) => /^[a-z0-9-]{4,}$/.test(value!)),
             name: yup.string().required(),
-            description: yup.string(),
+            description: yup.string().max(250),
             markup: yup.number().required(),
         }),
         validate: (values) => {
-            const errors: Partial<Input> = {};
+            const errors: any = {};
             cardsToUploadMedias.forEach((item) => {
                 const error = handleValidateMedia(item.field, values[item.field as keyof typeof mediaConfigs]);
                 if (error) {
@@ -209,7 +211,7 @@ const Component = () => {
         router.push('/home/stores/publish');
     };
     const handleBackSave = () => {
-        handleSubmit(formik.values);
+        formik.handleSubmit();
         setOpenDialogSave(false);
     };
     const handleBackCancel = () => {
@@ -264,256 +266,298 @@ const Component = () => {
     };
 
     return (
-        <Box
-            position="relative"
-            paddingInline={3}
-            sx={{
-                overflowY: 'auto',
-                height: 'calc(100vh - 64px)',
-                paddingBottom: 30,
-            }}
-        >
-            <Breadcrumb
-                title="Publish Store"
-                assetTitle={store?.organization.url || ''}
-                items={[
-                    { title: 'Stores', to: '/home/stores' },
-                    { title: 'Publish', to: '/home/stores/publish' },
-                    { title: 'Organization' },
-                ]}
-            />
-            <Box p={2} pt={0}>
-                <Typography variant="h4">Organization</Typography>
-                <Typography variant="h6" fontWeight="normal" color="GrayText">
-                    Complete all required tasks to publish your Store.
-                </Typography>
-            </Box>
-
-            <form
-                onSubmit={formik.handleSubmit}
-                style={{
-                    padding: 16,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 16,
-                }}
-            >
-                <Box display="flex" flexDirection="column" gap={0.5}>
-                    <Typography variant="h6" fontWeight="normal" textAlign={'center'}>
-                        Build your own Store URL
+        <Box display="grid" gridTemplateRows="1fr auto" height="calc(100vh - 64px)">
+            <Box paddingInline={3} overflow="auto" paddingBottom={20}>
+                <Breadcrumb
+                    title="Publish Store"
+                    assetTitle={store?.organization.url || ''}
+                    items={[
+                        { title: 'Stores', to: '/home/stores' },
+                        { title: 'Publish', to: '/home/stores/publish' },
+                        { title: 'Organization' },
+                    ]}
+                />
+                <Box p={2} pt={0}>
+                    <Typography variant="h4">Organization</Typography>
+                    <Typography variant="h6" fontWeight="normal" color="GrayText">
+                        Complete all required tasks to publish your Store.
                     </Typography>
-                    <Box
-                        display={'flex'}
-                        alignItems={'center'}
-                        justifyContent={'center'}
-                        sx={{
-                            border: `1px solid ${theme.palette.primary.main}`,
-                            borderRadius: 1,
-                        }}
-                    >
-                        <Typography color={theme.palette.primary.main} fontSize={'1.5rem'}>
-                            https://
-                        </Typography>
-                        <CustomTextField
-                            placeholder="type your store url here..."
-                            size="small"
-                            name="url"
-                            value={formik.values.url}
-                            onChange={formik.handleChange}
-                            onBlur={handleValidateUrl}
-                            sx={{
-                                marginBlock: 1.5,
-                                '& .MuiOutlinedInput-root': {
-                                    '& fieldset': {
-                                        border: 'none',
-                                    },
-                                },
-                                '& .MuiInputBase-input': {
-                                    textAlign: 'center',
-                                    fontSize: '1.5rem',
-                                    paddingInline: 0,
-                                },
+                </Box>
+
+                <Grid container spacing={4}>
+                    <Grid item xs={6}>
+                        <form
+                            onSubmit={formik.handleSubmit}
+                            style={{
+                                padding: 16,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 16,
                             }}
-                            InputProps={{
-                                inputProps: {
-                                    size: formik.values.url?.length || 20,
-                                },
-                            }}
-                        />
-                        <Typography color={theme.palette.primary.main} fontSize={'1.5rem'}>
-                            .xibit.art
-                        </Typography>
-                    </Box>
-                    <Typography variant="caption" color="error">
-                        {formik.errors.url}
-                    </Typography>
-                    <Typography variant="caption" color="GrayText">
-                        Lowercase a-z, numbers 0-9 <br /> and hyphens. Minimum length 4 characters.
-                    </Typography>
-                </Box>
-                <Box display={'flex'} flexDirection={'column'}>
-                    <Typography variant="h6" fontWeight="normal">
-                        Name <span style={{ color: 'red' }}>*</span>
-                    </Typography>
-                    <CustomTextField
-                        id="name"
-                        label=""
-                        size="small"
-                        name="name"
-                        value={formik.values.name}
-                        onChange={formik.handleChange}
-                        sx={{
-                            width: 400,
-                            marginTop: 2,
-                        }}
-                    />
-                    <Typography variant="caption" color="error">
-                        {formik.errors.name}
-                    </Typography>
-                </Box>
-                <Box>
-                    <Typography variant="h6" fontWeight="normal">
-                        Description
-                    </Typography>
-                    <CustomTextField
-                        id="description"
-                        label=""
-                        name="description"
-                        value={formik.values.description}
-                        onChange={formik.handleChange}
-                        size="small"
-                        multiline
-                        rows={4}
-                        fullWidth
-                        sx={{
-                            marginTop: 2,
-                        }}
-                    />
-                </Box>
-
-                <Box width={400}>
-                    <Typography variant="h6" fontWeight="normal">
-                        Markup
-                    </Typography>
-                    <Slider
-                        aria-labelledby="discrete-slider"
-                        valueLabelDisplay="auto"
-                        step={1}
-                        marks
-                        min={0}
-                        max={50}
-                        name="markup"
-                        value={formik.values.markup}
-                        onChange={(event, value) => formik.setFieldValue('markup', value)}
-                    />
-                </Box>
-
-                <Box display="flex" gap={4}>
-                    {cardsToUploadMedias.map((item, index) => {
-                        const mediaConfig = mediaConfigs[item.field as keyof typeof mediaConfigs];
-
-                        return (
-                            <Box key={item.name} width={160}>
-                                <Box display="flex" alignItems="center" justifyContent="space-between">
-                                    <h4>
-                                        {item.name} {item.required && <span style={{ color: 'red' }}>*</span>}
-                                    </h4>
-                                    <IconButton
-                                        onClick={() => {
-                                            handleChangeFile(item.field, null);
-                                            mediaRefs.current[index].handleClearMedia();
+                        >
+                            <Box display="flex" flexDirection="column" gap={0.5}>
+                                <Typography variant="h6" fontWeight="normal">
+                                    Store URL <span style={{ color: 'red' }}>*</span>
+                                </Typography>
+                                <Box display={'flex'} alignItems={'center'}>
+                                    <Typography color={theme.palette.primary.main} fontSize={'1.5rem'}>
+                                        https://
+                                    </Typography>
+                                    <CustomTextField
+                                        placeholder="type your store url here"
+                                        size="small"
+                                        name="url"
+                                        value={formik.values.url}
+                                        onChange={formik.handleChange}
+                                        onBlur={handleValidateUrl}
+                                        variant="outlined"
+                                        sx={{
+                                            marginInline: 1,
                                         }}
-                                    >
-                                        <Delete color="error" />
-                                    </IconButton>
-                                </Box>
-
-                                <Box
-                                    sx={{
-                                        border: '1px solid #e5e7eb',
-                                        borderRadius: 2,
-                                        overflow: 'hidden',
-                                    }}
-                                >
-                                    <header
-                                        style={{
-                                            backgroundColor: theme.palette.grey[200],
-                                            padding: 16,
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            alignItems: 'center',
-                                            borderTopLeftRadius: 2,
-                                            borderTopRightRadius: 2,
+                                        InputProps={{
+                                            inputProps: {
+                                                size: formik.values.url?.length || 20,
+                                            },
                                         }}
-                                    >
-                                        <Typography>Image</Typography>
-                                        <Typography>{item.dimensions}</Typography>
-                                        <Typography>10 MB maximun</Typography>
-                                    </header>
-                                    <MediaCard
-                                        file={formik.values[item.field as keyof typeof mediaConfigs]}
-                                        mediaConfig={mediaConfig}
-                                        isRequired={item.required}
-                                        handleChangeFile={(file) => handleChangeFile(item.field, file)}
-                                        ref={(ref) => handleSetMediaRef(ref, index)}
                                     />
+                                    <Typography color={theme.palette.primary.main} fontSize={'1.5rem'}>
+                                        .xibit.app
+                                    </Typography>
                                 </Box>
                                 <Typography variant="caption" color="error">
-                                    {formik.errors[item.field as keyof typeof mediaConfigs]}
+                                    {formik.errors.url}
+                                </Typography>
+                                <Typography variant="caption" color="GrayText">
+                                    Lowercase a-z, numbers 0-9 and hyphens. Minimum length 4 characters.
                                 </Typography>
                             </Box>
-                        );
-                    })}
-                </Box>
-                {isSubmittingFiles && <LoadingOverlay message="Uploading files..." />}
-                <Box
-                    bgcolor="#e5e7eb"
-                    sx={{
-                        position: 'fixed',
-                        bottom: 0,
-                        left: 0,
-                        width: '100%',
-                    }}
+                            <Box display={'flex'} flexDirection={'column'}>
+                                <Typography variant="h6" fontWeight="normal">
+                                    Name <span style={{ color: 'red' }}>*</span>
+                                </Typography>
+                                <CustomTextField
+                                    id="name"
+                                    label=""
+                                    size="small"
+                                    name="name"
+                                    value={formik.values.name}
+                                    onChange={formik.handleChange}
+                                    sx={{
+                                        width: 400,
+                                        marginTop: 2,
+                                    }}
+                                />
+                                <Typography variant="caption" color="error">
+                                    {formik.errors.name}
+                                </Typography>
+                            </Box>
+                            <Box>
+                                <Typography variant="h6" fontWeight="normal">
+                                    Description
+                                </Typography>
+                                <CustomTextField
+                                    id="description"
+                                    label=""
+                                    name="description"
+                                    value={formik.values.description}
+                                    onChange={formik.handleChange}
+                                    size="small"
+                                    multiline
+                                    rows={4}
+                                    fullWidth
+                                    sx={{
+                                        marginTop: 2,
+                                    }}
+                                />
+                                <Typography variant="caption" color="error">
+                                    {formik.errors.description}
+                                </Typography>
+                            </Box>
+
+                            <Box width={400}>
+                                <Typography variant="h6" fontWeight="normal">
+                                    Markup
+                                </Typography>
+                                <CustomTextField
+                                    id="markup"
+                                    label=""
+                                    size="small"
+                                    name="markup"
+                                    value={formik.values.markup}
+                                    onChange={formik.handleChange}
+                                    onBlur={() => {
+                                        if (formik.values.markup < 0) {
+                                            formik.setFieldValue('markup', 0);
+                                        }
+                                        if (formik.values.markup > 50) {
+                                            formik.setFieldValue('markup', 50);
+                                        }
+                                    }}
+                                    sx={{
+                                        width: 400,
+                                        marginTop: 2,
+                                    }}
+                                />
+                                <Slider
+                                    aria-labelledby="discrete-slider"
+                                    valueLabelDisplay="auto"
+                                    step={1}
+                                    marks
+                                    min={0}
+                                    max={50}
+                                    name="markup"
+                                    value={formik.values.markup}
+                                    onChange={(event, value) => formik.setFieldValue('markup', value)}
+                                />
+                            </Box>
+                            <Box>
+                                <Typography variant="h6" fontWeight="normal">
+                                    Store Branding
+                                </Typography>
+                                <Box display="flex" gap={4}>
+                                    {cardsToUploadMedias.map((item, index) => {
+                                        const mediaConfig = mediaConfigs[item.field as keyof typeof mediaConfigs];
+
+                                        return (
+                                            <Box key={item.name} width={170} height={240}>
+                                                <Box display="flex" alignItems="center" justifyContent="space-between">
+                                                    <h4>
+                                                        {item.name}{' '}
+                                                        {item.required && <span style={{ color: 'red' }}>*</span>}
+                                                    </h4>
+                                                    <IconButton
+                                                        onClick={() => {
+                                                            handleChangeFile(item.field, null);
+                                                            mediaRefs.current[index].handleClearMedia();
+                                                        }}
+                                                    >
+                                                        <Delete color="error" />
+                                                    </IconButton>
+                                                </Box>
+
+                                                <Box
+                                                    sx={{
+                                                        border: '2px solid #D5D5D5',
+                                                        borderRadius: 2,
+                                                        overflow: 'hidden',
+                                                        minWidth: 160,
+                                                        maxWidth: 160,
+                                                        minHeight: 240,
+                                                        maxHeight: 240,
+                                                    }}
+                                                >
+                                                    <header
+                                                        style={{
+                                                            backgroundColor: '#EFEFEF',
+                                                            paddingInline: 8,
+                                                            paddingBlock: 4,
+
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            alignItems: 'center',
+                                                            borderTopLeftRadius: 2,
+                                                            borderTopRightRadius: 2,
+                                                            height: 70,
+                                                        }}
+                                                    >
+                                                        <Typography color="GrayText" fontSize="0.8rem">
+                                                            Image
+                                                        </Typography>
+                                                        <Typography color="GrayText" fontSize="0.8rem">
+                                                            {item.dimensions}
+                                                        </Typography>
+                                                        <Typography color="GrayText" fontSize="0.8rem">
+                                                            10 MB maximun
+                                                        </Typography>
+                                                    </header>
+                                                    <MediaCard
+                                                        file={formik.values[item.field as keyof typeof mediaConfigs]}
+                                                        mediaConfig={mediaConfig}
+                                                        isRequired={item.required}
+                                                        handleChangeFile={(file) => handleChangeFile(item.field, file)}
+                                                        ref={(ref) => handleSetMediaRef(ref, index)}
+                                                    />
+                                                </Box>
+                                                <Typography variant="caption" color="error">
+                                                    {formik.errors[item.field as keyof typeof mediaConfigs]}
+                                                </Typography>
+                                            </Box>
+                                        );
+                                    })}
+                                </Box>
+                            </Box>
+                            {isSubmittingFiles && <LoadingOverlay message="Uploading files..." />}
+                        </form>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Preview
+                            title={formik.values.name || 'Store Name'}
+                            description={
+                                formik.values.description || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+                            }
+                            domain={
+                                formik.values.url
+                                    ? `https://${formik.values.url}.xibit.app`
+                                    : 'https://example.xibit.app'
+                            }
+                            banner={
+                                formik.values.banner instanceof File
+                                    ? URL.createObjectURL(formik.values.banner)
+                                    : formik.values.banner
+                            }
+                            logo={
+                                formik.values.logoSquare instanceof File
+                                    ? URL.createObjectURL(formik.values.logoSquare)
+                                    : formik.values.logoSquare
+                            }
+                            logoHorizontal={
+                                formik.values.logoHorizontal instanceof File
+                                    ? URL.createObjectURL(formik.values.logoHorizontal)
+                                    : formik.values.logoHorizontal
+                            }
+                        />
+                    </Grid>
+                </Grid>
+                <Dialog
+                    open={openDialogSave}
+                    onClose={() => setOpenDialogSave(false)}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
                 >
-                    <Box display="flex" alignItems="center" justifyContent="space-between" p={2}>
-                        <Typography color="GrayText">Step 1 of 3</Typography>
-                        <Box display="flex" gap={2}>
-                            <Button type="button" variant="text" onClick={handleBack}>
-                                <Typography color="gray">Back</Typography>
-                            </Button>
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                disabled={Object.values(formik.errors).length > 0}
-                            >
-                                Next
-                            </Button>
-                        </Box>
+                    <DialogTitle id="alert-dialog-title">{'Back to publish page'}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Do you want to save the changes before leaving?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleBackCancel} color="primary">
+                            Cancel
+                        </Button>
+                        <Button onClick={handleBackSave} color="success" variant="outlined">
+                            Save
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </Box>
+            <Box bgcolor="#e5e7eb">
+                <Box display="flex" alignItems="center" justifyContent="space-between" p={2}>
+                    <Typography color="GrayText">Step 1 of 3</Typography>
+                    <Box display="flex" gap={2}>
+                        <Button type="button" variant="text" onClick={handleBack}>
+                            <Typography color="gray">Back</Typography>
+                        </Button>
+                        <Button
+                            type="button"
+                            onClick={handleBackSave}
+                            variant="contained"
+                            disabled={Object.values(formik.errors).length > 0}
+                        >
+                            Next
+                        </Button>
                     </Box>
                 </Box>
-            </form>
-
-            <Dialog
-                open={openDialogSave}
-                onClose={() => setOpenDialogSave(false)}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">{'Back to publish page'}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Do you want to save the changes before leaving?
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleBackCancel} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={handleBackSave} color="success" variant="outlined">
-                        Save
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            </Box>
         </Box>
     );
 };

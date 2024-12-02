@@ -27,17 +27,17 @@ export const initialState: StoresState = {
             optional: false,
         },
         artworks: {
-            label: 'Artworks (Comming Soon)',
+            label: 'Artworks',
             status: 'Not Started',
             optional: false,
         },
         appearanceContent: {
-            label: 'Appearance & Content (Comming Soon)',
+            label: 'Appearance & Content (Coming Soon)',
             status: 'Not Started',
             optional: false,
         },
         reviewPublish: {
-            label: 'Review and Publish (Comming Soon)',
+            label: 'Review and Publish (Coming Soon)',
             status: 'Not Started',
             optional: false,
         },
