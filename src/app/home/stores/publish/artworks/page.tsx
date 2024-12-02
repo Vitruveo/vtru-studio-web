@@ -66,6 +66,12 @@ const Component = () => {
         setOpenDialogSave(false);
         router.push('/home/stores/publish');
     };
+    const handleNext = () => {
+        if (formikRef.current) {
+            handleSubmit(formikRef.current?.values);
+        }
+        router.push('/home/stores/publish');
+    };
 
     const shortcuts = store?.artworks?.general?.shortcuts || {};
     const licenses = store?.artworks?.general?.licenses || {};
@@ -163,7 +169,7 @@ const Component = () => {
                                 <Button type="button" variant="text" onClick={handleBack}>
                                     <Typography color="gray">Back</Typography>
                                 </Button>
-                                <Button type="submit" variant="contained">
+                                <Button type="button" onClick={handleNext} variant="contained">
                                     Next
                                 </Button>
                             </Box>

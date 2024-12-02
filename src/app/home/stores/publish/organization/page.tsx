@@ -165,8 +165,6 @@ const Component = () => {
                 },
             })
         );
-
-        router.push('/home/stores/publish');
     };
 
     const formik = useFormik<Input>({
@@ -213,10 +211,17 @@ const Component = () => {
     const handleBackSave = () => {
         formik.handleSubmit();
         setOpenDialogSave(false);
+        router.push('/home/stores/publish');
     };
     const handleBackCancel = () => {
         setOpenDialogSave(false);
         router.push('/home/stores/publish');
+    };
+    const handleNext = async () => {
+        const errors = await formik.validateForm();
+        if (Object.keys(errors).length > 0) return;
+        formik.handleSubmit();
+        router.push('/home/stores/publish/artworks');
     };
 
     useEffect(() => {
@@ -425,14 +430,16 @@ const Component = () => {
                                                         {item.name}{' '}
                                                         {item.required && <span style={{ color: 'red' }}>*</span>}
                                                     </h4>
-                                                    <IconButton
-                                                        onClick={() => {
-                                                            handleChangeFile(item.field, null);
-                                                            mediaRefs.current[index].handleClearMedia();
-                                                        }}
-                                                    >
-                                                        <Delete color="error" />
-                                                    </IconButton>
+                                                    {formik.values[item.field as keyof typeof mediaConfigs] && (
+                                                        <IconButton
+                                                            onClick={() => {
+                                                                handleChangeFile(item.field, null);
+                                                                mediaRefs.current[index].handleClearMedia();
+                                                            }}
+                                                        >
+                                                            <Delete color="error" />
+                                                        </IconButton>
+                                                    )}
                                                 </Box>
 
                                                 <Box
@@ -549,7 +556,7 @@ const Component = () => {
                         </Button>
                         <Button
                             type="button"
-                            onClick={handleBackSave}
+                            onClick={handleNext}
                             variant="contained"
                             disabled={Object.values(formik.errors).length > 0}
                         >
