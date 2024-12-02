@@ -1,10 +1,15 @@
 import { useTheme } from '@mui/material/styles';
-import Select from 'react-select';
+import Select, { ActionMeta, MultiValue } from 'react-select';
+
+interface Option {
+    value: string;
+    label: string;
+}
 
 interface Props {
-    value: { value: string; label: string }[];
-    options: { value: string; label: string }[];
-    onChange(option: any): void;
+    value: Option[];
+    options: Option[];
+    onChange: (selectedOptions: MultiValue<Option>, actionMeta: ActionMeta<Option>) => void;
 }
 
 const MultiSelect = ({ value, options, onChange }: Props) => {

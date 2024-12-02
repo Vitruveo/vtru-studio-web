@@ -3,11 +3,11 @@ import MultiSelect from '../../ui-components/select/MultiSelect';
 import { InputColor } from './inputColor';
 import { IconTrash } from '@tabler/icons-react';
 import { cultureOptions, moodOptions, orientationOptions } from './options';
-import { useFormikContext } from 'formik';
+import { FieldArray, useFormikContext } from 'formik';
 
 interface FormValues {
     context: {
-        culture: [string, string][];
+        culture: string[];
         mood: [string, string][];
         orientation: [string, string][];
         precision: number;
@@ -37,16 +37,26 @@ const ContextItem = () => {
         <Box display="flex" flexDirection="column" gap={2}>
             <Box>
                 <Typography variant="h6">Culture</Typography>
-                <MultiSelect
-                    onChange={(selectedOptions) => {
-                        const newValues = selectedOptions.map((option: { value: string; label: string }) => [
-                            option.value,
-                            option.label,
-                        ]);
-                        onChange(newValues, 'context.culture');
-                    }}
-                    options={cultureOptions}
-                    value={values.context.culture.map((item) => ({ value: item[0], label: item[1] }))}
+
+                <FieldArray
+                    name="context.culture"
+                    render={(arrayHelpers) => (
+                        <MultiSelect
+                            onChange={(_, actionMeta) => {
+                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
+                                    arrayHelpers.remove(values.context.culture.indexOf(actionMeta.removedValue.value));
+                                }
+
+                                if (actionMeta.action === 'select-option' && actionMeta.option) {
+                                    arrayHelpers.push(actionMeta.option.value);
+                                }
+                            }}
+                            options={cultureOptions}
+                            value={values.context.culture.map(
+                                (item) => cultureOptions.find((option) => option.value === item)!
+                            )}
+                        />
+                    )}
                 />
             </Box>
             <Box>

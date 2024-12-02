@@ -1,10 +1,16 @@
 import Select from 'react-select/async';
 import { useTheme } from '@mui/material/styles';
+import { ActionMeta, MultiValue } from 'react-select';
+
+interface Option {
+    value: string;
+    label: string;
+}
 
 interface Props {
-    value: { value: string; label: string }[];
+    value: Option[];
     loadOptions: (inputValue: string, callback: (options: any) => void) => void;
-    onChange(option: any): void;
+    onChange: (selectedOptions: MultiValue<Option>, actionMeta: ActionMeta<Option>) => void;
 }
 
 export const AsyncSelect = ({ loadOptions, value, onChange }: Props) => {

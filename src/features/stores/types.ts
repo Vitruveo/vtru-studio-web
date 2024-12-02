@@ -38,7 +38,7 @@ export interface Artworks {
         };
     };
     context: {
-        culture?: [string, string][];
+        culture?: string[];
         mood?: [string, string][];
         orientation?: [string, string][];
         precision?: number;

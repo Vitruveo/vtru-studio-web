@@ -10,7 +10,7 @@ import {
     objectTypeOptions,
     styleOptions,
 } from './options';
-import { useFormikContext } from 'formik';
+import { FieldArray, useFormikContext } from 'formik';
 import { useDispatch } from '@/store/hooks';
 import { AsyncSelect } from '../../ui-components/select/AsyncSelect';
 import {
@@ -23,7 +23,7 @@ interface FormValues {
     taxonomy: {
         objectType: [string, string][];
         tags: [string, string][];
-        collections: [string, string][];
+        collections: string[];
         aiGeneration: [string, string][];
         arEnabled: [string, string][];
         nudity: [string, string][];
@@ -128,19 +128,25 @@ const TaxonomyItem = () => {
             </Box>
             <Box>
                 <Typography variant="h6">Collections</Typography>
-                <AsyncSelect
-                    onChange={(selectedOptions) => {
-                        const newValues = selectedOptions.map((option: { value: string; label: string }) => [
-                            option.value,
-                            option.label,
-                        ]);
-                        onChange(newValues, 'taxonomy.collections');
-                    }}
-                    loadOptions={loadOptionsCollections}
-                    value={values.taxonomy.collections.map((item) => ({
-                        value: item[0],
-                        label: item[1],
-                    }))}
+                <FieldArray
+                    name="taxonomy.collections"
+                    render={(arrayHelpers) => (
+                        <AsyncSelect
+                            onChange={(_, actionMeta) => {
+                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
+                                    arrayHelpers.remove(
+                                        values.taxonomy.collections.indexOf(actionMeta.removedValue.value)
+                                    );
+                                }
+
+                                if (actionMeta.action === 'select-option' && actionMeta.option) {
+                                    arrayHelpers.push(actionMeta.option.value);
+                                }
+                            }}
+                            loadOptions={loadOptionsCollections}
+                            value={values.taxonomy.collections.map((item) => ({ value: item, label: item }))}
+                        />
+                    )}
                 />
             </Box>
             <Box>

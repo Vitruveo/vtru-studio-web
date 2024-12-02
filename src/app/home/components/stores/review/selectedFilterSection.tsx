@@ -73,7 +73,7 @@ export const SelectedFilter = ({ title, content }: SelectedFilterProps) => {
                                 )}
                                 {isColors && <ColorFilter content={value as string[]} />}
                                 {!isShortcut && !isLicense && !isColorPrecision && !isColors && (
-                                    <MultiSelectFilter content={{ title, key, value: value as [string, string][] }} />
+                                    <MultiSelectFilter content={{ title, key, value: value as string[] }} />
                                 )}
                             </Box>
                         );
