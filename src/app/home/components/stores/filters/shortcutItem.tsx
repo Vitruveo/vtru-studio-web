@@ -1,16 +1,6 @@
 import { Box, Checkbox, FormControlLabel, Grid, Typography } from '@mui/material';
 import { useField, useFormikContext } from 'formik';
-
-export const shortcutsOptions = [
-    { name: 'hideNudity', label: 'Hide Nudity' },
-    { name: 'hideAI', label: 'Hide AI' },
-    { name: 'photography', label: 'Photography' },
-    { name: 'animation', label: 'Animation' },
-    { name: 'physicalArt', label: 'Physical Art' },
-    { name: 'digitalArt', label: 'Digital Art' },
-    { name: 'includeSold', label: 'Include Sold' },
-    { name: 'hasBTS', label: 'Has BTS' },
-];
+import { shortcutsOptions } from './options';
 
 interface FormValues {
     general: {

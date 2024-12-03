@@ -388,3 +388,14 @@ export const orientationOptions = [
     { value: 'vertical', label: 'Vertical' },
     { value: 'square', label: 'Square' },
 ];
+
+export const shortcutsOptions = [
+    { name: 'hideNudity', label: 'Hide Nudity' },
+    { name: 'hideAI', label: 'Hide AI' },
+    { name: 'photography', label: 'Photography' },
+    { name: 'animation', label: 'Animation' },
+    { name: 'physicalArt', label: 'Physical Art' },
+    { name: 'digitalArt', label: 'Digital Art' },
+    { name: 'includeSold', label: 'Include Sold' },
+    { name: 'hasBTS', label: 'Has BTS' },
+];

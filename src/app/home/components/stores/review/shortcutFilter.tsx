@@ -1,7 +1,7 @@
 import { Delete } from '@mui/icons-material';
 import { Box, Paper, Typography } from '@mui/material';
 import { useFormikContext } from 'formik';
-import { shortcutsOptions } from '../filters/shortcutItem';
+import { shortcutsOptions } from '../filters/options';
 interface ShortcutFilterProps {
     content: { [key: string]: boolean };
 }
