@@ -79,65 +79,65 @@ const Component = () => {
     const artists = store?.artworks?.artists || {};
 
     return (
-        <Formik
-            innerRef={formikRef}
-            initialValues={{
-                general: {
-                    shortcuts: {
-                        hideNudity: shortcuts.hideNudity || false,
-                        hideAI: shortcuts.hideAI || false,
-                        photography: shortcuts.photography || false,
-                        animation: shortcuts.animation || false,
-                        physicalArt: shortcuts.physicalArt || false,
-                        digitalArt: shortcuts.digitalArt || false,
-                        includeSold: shortcuts.includeSold || false,
-                        hasBTS: shortcuts.hasBTS || false,
-                    },
-                    licenses: {
-                        minPrice: licenses.minPrice || 0,
-                        maxPrice: licenses.maxPrice || 10_000,
-                        enabled: licenses.enabled || false,
-                    },
-                },
-                context: {
-                    culture: context.culture || [],
-                    mood: context.mood || [],
-                    orientation: context.orientation || [],
-                    precision: context.precision || 0.7,
-                    colors: context.colors || [],
-                },
-                taxonomy: {
-                    objectType: taxonomy.objectType || [],
-                    tags: taxonomy.tags || [],
-                    collections: taxonomy.collections || [],
-                    aiGeneration: taxonomy.aiGeneration || [],
-                    arEnabled: taxonomy.arEnabled || [],
-                    nudity: taxonomy.nudity || [],
-                    category: taxonomy.category || [],
-                    medium: taxonomy.medium || [],
-                    style: taxonomy.style || [],
-                    subject: taxonomy.subject || [],
-                },
-                artists: {
-                    name: artists.name || [],
-                    nationality: artists.nationality || [],
-                    residence: artists.residence || [],
-                },
-                redirectPath: '/home/stores/publish',
-            }}
-            onSubmit={handleSubmit}
-        >
-            <Box display={'grid'} gridTemplateRows={'1fr auto'} height="calc(100vh - 64px)">
-                <Box paddingInline={3} overflow={'auto'} paddingBottom={20}>
-                    <Breadcrumb
-                        title="Publish Store"
-                        assetTitle={store?.organization.url || ''}
-                        items={[
-                            { title: 'Stores', to: '/home/stores' },
-                            { title: 'Publish', to: '/home/stores/publish' },
-                            { title: 'Artworks' },
-                        ]}
-                    />
+        <Box display={'grid'} gridTemplateRows={'1fr auto'} height="calc(100vh - 64px)">
+            <Box paddingInline={3} overflow={'auto'} paddingBottom={20}>
+                <Breadcrumb
+                    title="Publish Store"
+                    assetTitle={store?.organization.url || ''}
+                    items={[
+                        { title: 'Stores', to: '/home/stores' },
+                        { title: 'Publish', to: '/home/stores/publish' },
+                        { title: 'Artworks' },
+                    ]}
+                />
+                <Formik
+                    innerRef={formikRef}
+                    initialValues={{
+                        general: {
+                            shortcuts: {
+                                hideNudity: shortcuts.hideNudity || false,
+                                hideAI: shortcuts.hideAI || false,
+                                photography: shortcuts.photography || false,
+                                animation: shortcuts.animation || false,
+                                physicalArt: shortcuts.physicalArt || false,
+                                digitalArt: shortcuts.digitalArt || false,
+                                includeSold: shortcuts.includeSold || false,
+                                hasBTS: shortcuts.hasBTS || false,
+                            },
+                            licenses: {
+                                minPrice: licenses.minPrice || 0,
+                                maxPrice: licenses.maxPrice || 10_000,
+                                enabled: licenses.enabled || false,
+                            },
+                        },
+                        context: {
+                            culture: context.culture || [],
+                            mood: context.mood || [],
+                            orientation: context.orientation || [],
+                            precision: context.precision || 0.7,
+                            colors: context.colors || [],
+                        },
+                        taxonomy: {
+                            objectType: taxonomy.objectType || [],
+                            tags: taxonomy.tags || [],
+                            collections: taxonomy.collections || [],
+                            aiGeneration: taxonomy.aiGeneration || [],
+                            arEnabled: taxonomy.arEnabled || [],
+                            nudity: taxonomy.nudity || [],
+                            category: taxonomy.category || [],
+                            medium: taxonomy.medium || [],
+                            style: taxonomy.style || [],
+                            subject: taxonomy.subject || [],
+                        },
+                        artists: {
+                            name: artists.name || [],
+                            nationality: artists.nationality || [],
+                            residence: artists.residence || [],
+                        },
+                        redirectPath: '/home/stores/publish',
+                    }}
+                    onSubmit={handleSubmit}
+                >
                     <Form>
                         <Grid container spacing={4}>
                             <Grid item xs={6}>
@@ -169,22 +169,22 @@ const Component = () => {
                             </DialogActions>
                         </Dialog>
                     </Form>
-                </Box>
-                <Box bgcolor="#e5e7eb">
-                    <Box display="flex" alignItems="center" justifyContent="end" gap={170} p={2}>
-                        <Typography color="GrayText">Step 2 of 3</Typography>
-                        <Box display="flex" gap={2}>
-                            <Button type="button" variant="text" onClick={handleBack}>
-                                <Typography color="gray">Back</Typography>
-                            </Button>
-                            <Button type="button" onClick={handleNext} variant="contained">
-                                Next
-                            </Button>
-                        </Box>
+                </Formik>
+            </Box>
+            <Box bgcolor="#e5e7eb">
+                <Box display="flex" alignItems="center" justifyContent="space-between" p={2}>
+                    <Typography color="GrayText">Step 2 of 3</Typography>
+                    <Box display="flex" gap={2}>
+                        <Button type="button" variant="text" onClick={handleBack}>
+                            <Typography color="gray">Back</Typography>
+                        </Button>
+                        <Button type="button" onClick={handleNext} variant="contained">
+                            Next
+                        </Button>
                     </Box>
                 </Box>
             </Box>
-        </Formik>
+        </Box>
     );
 };
 
