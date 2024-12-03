@@ -22,7 +22,7 @@ import { Delete } from '@mui/icons-material';
 
 import Breadcrumb from '@/app/home/layout/shared/breadcrumb/Breadcrumb';
 import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
-import { MediaCard, MediaCardRef } from '@/app/home/components/stores/mediaCard';
+import { MediaCard } from '@/app/home/components/stores/mediaCard';
 
 import { useDispatch, useSelector } from '@/store/hooks';
 import { storeStorageThunk, updateOrganizationThunk, validateUrlThunk } from '@/features/stores/thunks';
@@ -111,7 +111,7 @@ const Component = () => {
         return undefined;
     };
 
-    const handleSubmit = (values: Input) => {
+    const handleSubmit = (values: Input & { redirectPath: string }) => {
         let hasFile = false;
         Object.entries(values).forEach(([key, value]) => {
             if (value instanceof File) {
@@ -166,10 +166,10 @@ const Component = () => {
             })
         );
 
-        router.push('/home/stores/publish');
+        router.push(values.redirectPath);
     };
 
-    const formik = useFormik<Input>({
+    const formik = useFormik<Input & { redirectPath: string }>({
         initialValues: {
             url: store?.organization.url || null,
             name: store?.organization.name || '',
@@ -180,6 +180,8 @@ const Component = () => {
                 : null,
             logoSquare: formatsMapper.logoSquare ? `${STORE_STORAGE_URL}/${formatsMapper.logoSquare}` : null,
             banner: formatsMapper.banner ? `${STORE_STORAGE_URL}/${formatsMapper.banner}` : null,
+
+            redirectPath: '/home/stores/publish/artworks',
         },
         validationSchema: yup.object().shape({
             url: yup
@@ -204,19 +206,23 @@ const Component = () => {
     });
 
     const handleBack = () => {
-        if (JSON.stringify(formik.values) !== JSON.stringify(formik.initialValues)) {
+        if (formik.dirty) {
             setOpenDialogSave(true);
             return;
         }
         router.push('/home/stores/publish');
     };
     const handleBackSave = () => {
+        formik.setFieldValue('redirectPath', '/home/stores/publish');
         formik.handleSubmit();
         setOpenDialogSave(false);
     };
     const handleBackCancel = () => {
         setOpenDialogSave(false);
         router.push('/home/stores/publish');
+    };
+    const handleNext = async () => {
+        formik.handleSubmit();
     };
 
     useEffect(() => {
@@ -425,14 +431,16 @@ const Component = () => {
                                                         {item.name}{' '}
                                                         {item.required && <span style={{ color: 'red' }}>*</span>}
                                                     </h4>
-                                                    <IconButton
-                                                        onClick={() => {
-                                                            handleChangeFile(item.field, null);
-                                                            mediaRefs.current[index].handleClearMedia();
-                                                        }}
-                                                    >
-                                                        <Delete color="error" />
-                                                    </IconButton>
+                                                    {formik.values[item.field as keyof typeof mediaConfigs] && (
+                                                        <IconButton
+                                                            onClick={() => {
+                                                                handleChangeFile(item.field, null);
+                                                                mediaRefs.current[index].handleClearMedia();
+                                                            }}
+                                                        >
+                                                            <Delete color="error" />
+                                                        </IconButton>
+                                                    )}
                                                 </Box>
 
                                                 <Box
@@ -549,7 +557,7 @@ const Component = () => {
                         </Button>
                         <Button
                             type="button"
-                            onClick={handleBackSave}
+                            onClick={handleNext}
                             variant="contained"
                             disabled={Object.values(formik.errors).length > 0}
                         >

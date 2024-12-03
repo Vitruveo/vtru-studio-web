@@ -1,5 +1,5 @@
 import { Delete } from '@mui/icons-material';
-import { Box, Paper } from '@mui/material';
+import { Box, Paper, Typography } from '@mui/material';
 import { useFormikContext } from 'formik';
 
 interface ColorFilterProps {
@@ -14,6 +14,7 @@ export const ColorFilter = ({ content }: ColorFilterProps) => {
             content.filter((color) => color !== item)
         );
     };
+
     return (
         <Box ml={1} display={'flex'} gap={1}>
             {content.map((item) => (
@@ -31,5 +32,17 @@ export const ColorFilter = ({ content }: ColorFilterProps) => {
                 </Box>
             ))}
         </Box>
+    );
+};
+
+interface ColorPrecisionFilterProps {
+    content: { value: number };
+}
+
+export const ColorPrecisionFilter = ({ content }: ColorPrecisionFilterProps) => {
+    return (
+        <Typography variant="body1" ml={1}>
+            {Number(content.value) * 100}%
+        </Typography>
     );
 };

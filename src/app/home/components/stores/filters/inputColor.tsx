@@ -13,6 +13,7 @@ interface Props {
 interface FormValues {
     context: {
         precision: number;
+        colors: string[];
     };
 }
 
@@ -46,6 +47,7 @@ export function InputColor({ name, onClick, afterPrecisionChange }: Props) {
                         onChange={onChange}
                         min={minPrecision}
                         max={maxPrecision}
+                        disabled={values.context.colors.length === 0}
                         step={10}
                         valueLabelDisplay="auto"
                         sx={{
@@ -69,6 +71,9 @@ export function InputColor({ name, onClick, afterPrecisionChange }: Props) {
                     sx={{
                         backgroundColor: theme.palette.primary.main,
                         color: theme.palette.primary.contrastText,
+                        '&:hover': {
+                            backgroundColor: theme.palette.primary.dark,
+                        },
                     }}
                 >
                     Add

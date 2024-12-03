@@ -1,21 +1,36 @@
 import Select from 'react-select/async';
 import { useTheme } from '@mui/material/styles';
+import { ActionMeta, MultiValue } from 'react-select';
+import { FieldArrayRenderProps } from 'formik';
 
-interface Props {
-    value: { value: string; label: string }[];
-    loadOptions: (inputValue: string, callback: (options: any) => void) => void;
-    onChange(option: any): void;
+interface Option {
+    value: string;
+    label: string;
 }
 
-export const AsyncSelect = ({ loadOptions, value, onChange }: Props) => {
+interface Props {
+    value: Option[];
+    loadOptions: (inputValue: string, callback: (options: any) => void) => void;
+    arrayHelpers: FieldArrayRenderProps;
+}
+
+export const AsyncSelect = ({ loadOptions, value, arrayHelpers }: Props) => {
     const theme = useTheme();
+
+    const handleMultiSelectChange = (_selectedOptions: MultiValue<Option>, actionMeta: ActionMeta<Option>) => {
+        if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
+            arrayHelpers.remove(value.findIndex((item) => item.value === actionMeta.removedValue.value));
+        } else if (actionMeta.action === 'select-option' && actionMeta.option) {
+            arrayHelpers.push(actionMeta.option.value);
+        }
+    };
 
     return (
         <Select
             isMulti
             cacheOptions
             loadOptions={loadOptions}
-            onChange={onChange}
+            onChange={handleMultiSelectChange}
             value={value}
             styles={{
                 control: (base, state) => ({

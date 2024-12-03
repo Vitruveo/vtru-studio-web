@@ -5,6 +5,7 @@ import { SelectedFilter } from './selectedFilterSection';
 
 export const Review = () => {
     const { values } = useFormikContext<{ [key: string]: any }>();
+
     return (
         <Box>
             <TabContext value={'general2'}>
@@ -15,10 +16,12 @@ export const Review = () => {
 
             <Card sx={{ padding: 2 }}>
                 <Grid container spacing={4}>
-                    {Object.entries(values).map((element) => {
-                        const [key, value] = element;
-                        return <SelectedFilter key={key} title={key} content={value} />;
-                    })}
+                    {Object.entries(values)
+                        .filter(([key, _value]) => key !== 'redirectPath')
+                        .map((element) => {
+                            const [key, value] = element;
+                            return <SelectedFilter key={key} title={key} content={value} />;
+                        })}
                 </Grid>
             </Card>
         </Box>
