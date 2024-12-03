@@ -24,6 +24,9 @@ export const SelectedFilter = ({ title, content }: SelectedFilterProps) => {
     delete contentCopy.precision;
 
     const renderTitle = (): string => {
+        if (!hasTruthyObject(contentCopy)) {
+            return '';
+        }
         if (
             title === 'general' &&
             contentCopy.licenses &&
@@ -39,7 +42,7 @@ export const SelectedFilter = ({ title, content }: SelectedFilterProps) => {
     return (
         <Grid item xs={6}>
             <Typography variant="overline" fontWeight="bold">
-                {hasTruthyObject(contentCopy) ? renderTitle() : ''}
+                {renderTitle()}
             </Typography>
             <Box ml={4}>
                 {Object.entries(content)
