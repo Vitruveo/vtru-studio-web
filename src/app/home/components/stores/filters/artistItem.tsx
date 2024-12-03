@@ -51,15 +51,7 @@ const ArtistItem = () => {
                     name="artists.name"
                     render={(arrayHelpers) => (
                         <AsyncSelect
-                            onChange={(_, actionMeta) => {
-                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
-                                    arrayHelpers.remove(values.artists.name.indexOf(actionMeta.removedValue.value));
-                                }
-
-                                if (actionMeta.action === 'select-option' && actionMeta.option) {
-                                    arrayHelpers.push(actionMeta.option.value);
-                                }
-                            }}
+                            arrayHelpers={arrayHelpers}
                             loadOptions={loadOptions}
                             value={values.artists.name.map((item) => ({ value: item, label: item }))}
                         />
@@ -72,17 +64,7 @@ const ArtistItem = () => {
                     name="artists.nationality"
                     render={(arrayHelpers) => (
                         <MultiSelect
-                            onChange={(_, actionMeta) => {
-                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
-                                    arrayHelpers.remove(
-                                        values.artists.nationality.indexOf(actionMeta.removedValue.value)
-                                    );
-                                }
-
-                                if (actionMeta.action === 'select-option' && actionMeta.option) {
-                                    arrayHelpers.push(actionMeta.option.value);
-                                }
-                            }}
+                            arrayHelpers={arrayHelpers}
                             options={countryData.map((item) => ({
                                 value: item.code,
                                 label: item.label,
@@ -101,17 +83,7 @@ const ArtistItem = () => {
                     name="artists.residence"
                     render={(arrayHelpers) => (
                         <MultiSelect
-                            onChange={(_, actionMeta) => {
-                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
-                                    arrayHelpers.remove(
-                                        values.artists.residence.indexOf(actionMeta.removedValue.value)
-                                    );
-                                }
-
-                                if (actionMeta.action === 'select-option' && actionMeta.option) {
-                                    arrayHelpers.push(actionMeta.option.value);
-                                }
-                            }}
+                            arrayHelpers={arrayHelpers}
                             options={countryData.map((item) => ({
                                 value: item.code,
                                 label: item.label,

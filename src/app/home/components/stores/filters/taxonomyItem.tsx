@@ -97,17 +97,7 @@ const TaxonomyItem = () => {
                     name="taxonomy.objectType"
                     render={(arrayHelpers) => (
                         <MultiSelect
-                            onChange={(_, actionMeta) => {
-                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
-                                    arrayHelpers.remove(
-                                        values.taxonomy.objectType.indexOf(actionMeta.removedValue.value)
-                                    );
-                                }
-
-                                if (actionMeta.action === 'select-option' && actionMeta.option) {
-                                    arrayHelpers.push(actionMeta.option.value);
-                                }
-                            }}
+                            arrayHelpers={arrayHelpers}
                             options={objectTypeOptions}
                             value={values.taxonomy.objectType.map(
                                 (item) => objectTypeOptions.find((option) => option.value === item)!
@@ -122,15 +112,7 @@ const TaxonomyItem = () => {
                     name="taxonomy.tags"
                     render={(arrayHelpers) => (
                         <AsyncSelect
-                            onChange={(_, actionMeta) => {
-                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
-                                    arrayHelpers.remove(values.taxonomy.tags.indexOf(actionMeta.removedValue.value));
-                                }
-
-                                if (actionMeta.action === 'select-option' && actionMeta.option) {
-                                    arrayHelpers.push(actionMeta.option.value);
-                                }
-                            }}
+                            arrayHelpers={arrayHelpers}
                             loadOptions={loadOptionsTags}
                             value={values.taxonomy.tags.map((item) => ({ value: item, label: item }))}
                         />
@@ -143,17 +125,7 @@ const TaxonomyItem = () => {
                     name="taxonomy.collections"
                     render={(arrayHelpers) => (
                         <AsyncSelect
-                            onChange={(_, actionMeta) => {
-                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
-                                    arrayHelpers.remove(
-                                        values.taxonomy.collections.indexOf(actionMeta.removedValue.value)
-                                    );
-                                }
-
-                                if (actionMeta.action === 'select-option' && actionMeta.option) {
-                                    arrayHelpers.push(actionMeta.option.value);
-                                }
-                            }}
+                            arrayHelpers={arrayHelpers}
                             loadOptions={loadOptionsCollections}
                             value={values.taxonomy.collections.map((item) => ({ value: item, label: item }))}
                         />
@@ -166,17 +138,7 @@ const TaxonomyItem = () => {
                     name="taxonomy.aiGeneration"
                     render={(arrayHelpers) => (
                         <MultiSelect
-                            onChange={(_, actionMeta) => {
-                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
-                                    arrayHelpers.remove(
-                                        values.taxonomy.aiGeneration.indexOf(actionMeta.removedValue.value)
-                                    );
-                                }
-
-                                if (actionMeta.action === 'select-option' && actionMeta.option) {
-                                    arrayHelpers.push(actionMeta.option.value);
-                                }
-                            }}
+                            arrayHelpers={arrayHelpers}
                             options={aiGenerationOptions}
                             value={values.taxonomy.aiGeneration.map(
                                 (item) => aiGenerationOptions.find((option) => option.value === item)!
@@ -191,17 +153,7 @@ const TaxonomyItem = () => {
                     name="taxonomy.arEnabled"
                     render={(arrayHelpers) => (
                         <MultiSelect
-                            onChange={(_, actionMeta) => {
-                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
-                                    arrayHelpers.remove(
-                                        values.taxonomy.arEnabled.indexOf(actionMeta.removedValue.value)
-                                    );
-                                }
-
-                                if (actionMeta.action === 'select-option' && actionMeta.option) {
-                                    arrayHelpers.push(actionMeta.option.value);
-                                }
-                            }}
+                            arrayHelpers={arrayHelpers}
                             options={arEnabledOptions}
                             value={values.taxonomy.arEnabled.map(
                                 (item) => arEnabledOptions.find((option) => option.value === item)!
@@ -216,15 +168,7 @@ const TaxonomyItem = () => {
                     name="taxonomy.nudity"
                     render={(arrayHelpers) => (
                         <MultiSelect
-                            onChange={(_, actionMeta) => {
-                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
-                                    arrayHelpers.remove(values.taxonomy.nudity.indexOf(actionMeta.removedValue.value));
-                                }
-
-                                if (actionMeta.action === 'select-option' && actionMeta.option) {
-                                    arrayHelpers.push(actionMeta.option.value);
-                                }
-                            }}
+                            arrayHelpers={arrayHelpers}
                             options={nudityOptions}
                             value={values.taxonomy.nudity.map(
                                 (item) => nudityOptions.find((option) => option.value === item)!
@@ -239,17 +183,7 @@ const TaxonomyItem = () => {
                     name="taxonomy.category"
                     render={(arrayHelpers) => (
                         <MultiSelect
-                            onChange={(_, actionMeta) => {
-                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
-                                    arrayHelpers.remove(
-                                        values.taxonomy.category.indexOf(actionMeta.removedValue.value)
-                                    );
-                                }
-
-                                if (actionMeta.action === 'select-option' && actionMeta.option) {
-                                    arrayHelpers.push(actionMeta.option.value);
-                                }
-                            }}
+                            arrayHelpers={arrayHelpers}
                             options={categoryOptions}
                             value={values.taxonomy.category.map(
                                 (item) => categoryOptions.find((option) => option.value === item)!
@@ -264,15 +198,7 @@ const TaxonomyItem = () => {
                     name="taxonomy.medium"
                     render={(arrayHelpers) => (
                         <MultiSelect
-                            onChange={(_, actionMeta) => {
-                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
-                                    arrayHelpers.remove(values.taxonomy.medium.indexOf(actionMeta.removedValue.value));
-                                }
-
-                                if (actionMeta.action === 'select-option' && actionMeta.option) {
-                                    arrayHelpers.push(actionMeta.option.value);
-                                }
-                            }}
+                            arrayHelpers={arrayHelpers}
                             options={mediumOptions}
                             value={values.taxonomy.medium.map(
                                 (item) => mediumOptions.find((option) => option.value === item)!
@@ -287,15 +213,7 @@ const TaxonomyItem = () => {
                     name="taxonomy.style"
                     render={(arrayHelpers) => (
                         <MultiSelect
-                            onChange={(_, actionMeta) => {
-                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
-                                    arrayHelpers.remove(values.taxonomy.style.indexOf(actionMeta.removedValue.value));
-                                }
-
-                                if (actionMeta.action === 'select-option' && actionMeta.option) {
-                                    arrayHelpers.push(actionMeta.option.value);
-                                }
-                            }}
+                            arrayHelpers={arrayHelpers}
                             options={styleOptions}
                             value={values.taxonomy.style.map(
                                 (item) => styleOptions.find((option) => option.value === item)!
@@ -310,15 +228,7 @@ const TaxonomyItem = () => {
                     name="taxonomy.subject"
                     render={(arrayHelpers) => (
                         <AsyncSelect
-                            onChange={(_, actionMeta) => {
-                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
-                                    arrayHelpers.remove(values.taxonomy.subject.indexOf(actionMeta.removedValue.value));
-                                }
-
-                                if (actionMeta.action === 'select-option' && actionMeta.option) {
-                                    arrayHelpers.push(actionMeta.option.value);
-                                }
-                            }}
+                            arrayHelpers={arrayHelpers}
                             loadOptions={loadOptionsSubject}
                             value={values.taxonomy.subject.map((item) => ({ value: item, label: item }))}
                         />

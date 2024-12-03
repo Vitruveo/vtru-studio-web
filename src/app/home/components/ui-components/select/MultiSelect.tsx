@@ -1,4 +1,5 @@
 import { useTheme } from '@mui/material/styles';
+import { FieldArrayRenderProps } from 'formik';
 import Select, { ActionMeta, MultiValue } from 'react-select';
 
 interface Option {
@@ -9,11 +10,19 @@ interface Option {
 interface Props {
     value: Option[];
     options: Option[];
-    onChange: (selectedOptions: MultiValue<Option>, actionMeta: ActionMeta<Option>) => void;
+    arrayHelpers: FieldArrayRenderProps;
 }
 
-const MultiSelect = ({ value, options, onChange }: Props) => {
+const MultiSelect = ({ value, options, arrayHelpers }: Props) => {
     const theme = useTheme();
+
+    const handleMultiSelectChange = (_selectedOptions: MultiValue<Option>, actionMeta: ActionMeta<Option>) => {
+        if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
+            arrayHelpers.remove(value.findIndex((item) => item.value === actionMeta.removedValue.value));
+        } else if (actionMeta.action === 'select-option' && actionMeta.option) {
+            arrayHelpers.push(actionMeta.option.value);
+        }
+    };
 
     return (
         <Select
@@ -54,7 +63,7 @@ const MultiSelect = ({ value, options, onChange }: Props) => {
             }}
             value={value}
             options={options}
-            onChange={onChange}
+            onChange={handleMultiSelectChange}
         />
     );
 };

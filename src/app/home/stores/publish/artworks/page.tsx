@@ -26,11 +26,11 @@ const Component = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const [openDialogSave, setOpenDialogSave] = useState(false);
-    const formikRef = useRef<FormikProps<Artworks>>(null);
+    const formikRef = useRef<FormikProps<Artworks & { redirectPath: string }>>(null);
     const selectedStore = useSelector((state) => state.stores.selectedStore);
     const store = useSelector((state) => state.stores.data.data.find((item) => item._id === selectedStore.id));
 
-    const handleSubmit = (values: Artworks) => {
+    const handleSubmit = (values: Artworks & { redirectPath: string }) => {
         const filteredValues = filterFalsyValues({
             input: values,
             keysToPreserve: ['general', 'context', 'taxonomy', 'artists'],
@@ -42,13 +42,12 @@ const Component = () => {
             delete filteredValues.general.licenses;
         }
         dispatch(createStoreArtworkThunk({ id: selectedStore.id, stepName: 'artworks', data: filteredValues }));
+        router.push(values.redirectPath);
     };
 
     const handleBack = async () => {
         if (formikRef.current) {
-            const values = formikRef.current.values;
-            const initialValues = formikRef.current.initialValues;
-            if (JSON.stringify(values) !== JSON.stringify(initialValues)) {
+            if (formikRef.current.dirty) {
                 setOpenDialogSave(true);
                 return;
             }
@@ -57,9 +56,9 @@ const Component = () => {
     };
     const handleBackSave = () => {
         if (formikRef.current) {
+            formikRef.current.setFieldValue('redirectPath', '/home/stores/publish');
             handleSubmit(formikRef.current?.values);
             setOpenDialogSave(false);
-            router.push('/home/stores/publish');
         }
     };
     const handleBackCancel = () => {
@@ -68,9 +67,9 @@ const Component = () => {
     };
     const handleNext = () => {
         if (formikRef.current) {
+            formikRef.current.setFieldValue('redirectPath', '/home/stores/publish/artworks');
             handleSubmit(formikRef.current?.values);
         }
-        router.push('/home/stores/publish');
     };
 
     const shortcuts = store?.artworks?.general?.shortcuts || {};
@@ -124,79 +123,66 @@ const Component = () => {
                     nationality: artists.nationality || [],
                     residence: artists.residence || [],
                 },
+                redirectPath: '/home/stores/publish',
             }}
             onSubmit={handleSubmit}
         >
-            <Box
-                position="relative"
-                paddingInline={3}
-                sx={{
-                    overflowY: 'auto',
-                    height: 'calc(100vh - 64px)',
-                    paddingBottom: 30,
-                }}
-            >
-                <Breadcrumb
-                    title="Publish Store"
-                    assetTitle={store?.organization.url || ''}
-                    items={[
-                        { title: 'Stores', to: '/home/stores' },
-                        { title: 'Publish', to: '/home/stores/publish' },
-                        { title: 'Artworks' },
-                    ]}
-                />
-                <Form>
-                    <Grid container spacing={4}>
-                        <Grid item xs={6}>
-                            <TabSliders />
+            <Box display={'grid'} gridTemplateRows={'1fr auto'} height="calc(100vh - 64px)">
+                <Box paddingInline={3} overflow={'auto'} paddingBottom={20}>
+                    <Breadcrumb
+                        title="Publish Store"
+                        assetTitle={store?.organization.url || ''}
+                        items={[
+                            { title: 'Stores', to: '/home/stores' },
+                            { title: 'Publish', to: '/home/stores/publish' },
+                            { title: 'Artworks' },
+                        ]}
+                    />
+                    <Form>
+                        <Grid container spacing={4}>
+                            <Grid item xs={6}>
+                                <TabSliders />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Review />
+                            </Grid>
                         </Grid>
-                        <Grid item xs={6}>
-                            <Review />
-                        </Grid>
-                    </Grid>
-                    <Box
-                        bgcolor="#e5e7eb"
-                        sx={{
-                            position: 'fixed',
-                            bottom: 0,
-                            left: 0,
-                            width: '100%',
-                        }}
-                    >
-                        <Box display="flex" alignItems="center" justifyContent="end" gap={170} p={2}>
-                            <Typography color="GrayText">Step 2 of 3</Typography>
-                            <Box display="flex" gap={2}>
-                                <Button type="button" variant="text" onClick={handleBack}>
-                                    <Typography color="gray">Back</Typography>
+                        <Dialog
+                            open={openDialogSave}
+                            onClose={() => setOpenDialogSave(false)}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                        >
+                            <DialogTitle id="alert-dialog-title">{'Back to publish page'}</DialogTitle>
+                            <DialogContent>
+                                <DialogContentText id="alert-dialog-description">
+                                    Do you want to save the changes before leaving?
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={handleBackCancel} color="primary">
+                                    Cancel
                                 </Button>
-                                <Button type="button" onClick={handleNext} variant="contained">
-                                    Next
+                                <Button onClick={handleBackSave} color="success" variant="outlined">
+                                    Save
                                 </Button>
-                            </Box>
+                            </DialogActions>
+                        </Dialog>
+                    </Form>
+                </Box>
+                <Box bgcolor="#e5e7eb">
+                    <Box display="flex" alignItems="center" justifyContent="end" gap={170} p={2}>
+                        <Typography color="GrayText">Step 2 of 3</Typography>
+                        <Box display="flex" gap={2}>
+                            <Button type="button" variant="text" onClick={handleBack}>
+                                <Typography color="gray">Back</Typography>
+                            </Button>
+                            <Button type="button" onClick={handleNext} variant="contained">
+                                Next
+                            </Button>
                         </Box>
                     </Box>
-                    <Dialog
-                        open={openDialogSave}
-                        onClose={() => setOpenDialogSave(false)}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                    >
-                        <DialogTitle id="alert-dialog-title">{'Back to publish page'}</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                                Do you want to save the changes before leaving?
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleBackCancel} color="primary">
-                                Cancel
-                            </Button>
-                            <Button onClick={handleBackSave} color="success" variant="outlined">
-                                Save
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-                </Form>
+                </Box>
             </Box>
         </Formik>
     );

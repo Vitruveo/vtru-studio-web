@@ -111,7 +111,7 @@ const Component = () => {
         return undefined;
     };
 
-    const handleSubmit = (values: Input) => {
+    const handleSubmit = (values: Input & { redirectPath: string }) => {
         let hasFile = false;
         Object.entries(values).forEach(([key, value]) => {
             if (value instanceof File) {
@@ -165,9 +165,11 @@ const Component = () => {
                 },
             })
         );
+
+        router.push(values.redirectPath);
     };
 
-    const formik = useFormik<Input>({
+    const formik = useFormik<Input & { redirectPath: string }>({
         initialValues: {
             url: store?.organization.url || null,
             name: store?.organization.name || '',
@@ -178,6 +180,8 @@ const Component = () => {
                 : null,
             logoSquare: formatsMapper.logoSquare ? `${STORE_STORAGE_URL}/${formatsMapper.logoSquare}` : null,
             banner: formatsMapper.banner ? `${STORE_STORAGE_URL}/${formatsMapper.banner}` : null,
+
+            redirectPath: '/home/stores/publish/artworks',
         },
         validationSchema: yup.object().shape({
             url: yup
@@ -202,26 +206,23 @@ const Component = () => {
     });
 
     const handleBack = () => {
-        if (JSON.stringify(formik.values) !== JSON.stringify(formik.initialValues)) {
+        if (formik.dirty) {
             setOpenDialogSave(true);
             return;
         }
         router.push('/home/stores/publish');
     };
     const handleBackSave = () => {
+        formik.setFieldValue('redirectPath', '/home/stores/publish');
         formik.handleSubmit();
         setOpenDialogSave(false);
-        router.push('/home/stores/publish');
     };
     const handleBackCancel = () => {
         setOpenDialogSave(false);
         router.push('/home/stores/publish');
     };
     const handleNext = async () => {
-        const errors = await formik.validateForm();
-        if (Object.keys(errors).length > 0) return;
         formik.handleSubmit();
-        router.push('/home/stores/publish/artworks');
     };
 
     useEffect(() => {
