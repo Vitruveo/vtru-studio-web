@@ -1,21 +1,48 @@
 import { Delete } from '@mui/icons-material';
 import { Box, Paper, Typography } from '@mui/material';
 import { useFormikContext } from 'formik';
-import { cultureOptions } from '../filters/options';
+import {
+    cultureOptions,
+    moodOptions,
+    orientationOptions,
+    objectTypeOptions,
+    aiGenerationOptions,
+    arEnabledOptions,
+    nudityOptions,
+    categoryOptions,
+    mediumOptions,
+    styleOptions,
+} from '../filters/options';
+import { countryData } from '@/utils/countryData';
 
 interface MultiSelectFilterProps {
     content: { title: string; key: string; value: string[] };
 }
 
 const options: Record<string, { [key: string]: { label: string; value: string }[] }> = {
+    general: {},
     context: {
         culture: cultureOptions,
+        mood: moodOptions,
+        orientation: orientationOptions,
     },
     taxonomy: {
+        objectType: objectTypeOptions,
+        tags: [],
         collections: [],
+        aiGeneration: aiGenerationOptions,
+        arEnabled: arEnabledOptions,
+        nudity: nudityOptions,
+        category: categoryOptions,
+        medium: mediumOptions,
+        style: styleOptions,
+        subject: [],
     },
-    artists: {},
-    general: {},
+    artists: {
+        name: [],
+        nationality: countryData.map((country) => ({ value: country.code, label: country.label })),
+        residence: countryData.map((country) => ({ value: country.code, label: country.label })),
+    },
 };
 
 export const MultiSelectFilter = ({ content }: MultiSelectFilterProps) => {

@@ -8,8 +8,8 @@ import { FieldArray, useFormikContext } from 'formik';
 interface FormValues {
     context: {
         culture: string[];
-        mood: [string, string][];
-        orientation: [string, string][];
+        mood: string[];
+        orientation: string[];
         precision: number;
         colors: string[];
     };
@@ -61,30 +61,51 @@ const ContextItem = () => {
             </Box>
             <Box>
                 <Typography variant="h6">Mood</Typography>
-                <MultiSelect
-                    onChange={(selectedOptions) => {
-                        const newValues = selectedOptions.map((option: { value: string; label: string }) => [
-                            option.value,
-                            option.label,
-                        ]);
-                        onChange(newValues, 'context.mood');
-                    }}
-                    options={moodOptions}
-                    value={values.context.mood.map((item) => ({ value: item[0], label: item[1] }))}
+
+                <FieldArray
+                    name="context.mood"
+                    render={(arrayHelpers) => (
+                        <MultiSelect
+                            onChange={(_, actionMeta) => {
+                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
+                                    arrayHelpers.remove(values.context.mood.indexOf(actionMeta.removedValue.value));
+                                }
+
+                                if (actionMeta.action === 'select-option' && actionMeta.option) {
+                                    arrayHelpers.push(actionMeta.option.value);
+                                }
+                            }}
+                            options={moodOptions}
+                            value={values.context.mood.map(
+                                (item) => moodOptions.find((option) => option.value === item)!
+                            )}
+                        />
+                    )}
                 />
             </Box>
             <Box>
                 <Typography variant="h6">Orientation</Typography>
-                <MultiSelect
-                    onChange={(selectedOptions) => {
-                        const newValues = selectedOptions.map((option: { value: string; label: string }) => [
-                            option.value,
-                            option.label,
-                        ]);
-                        onChange(newValues, 'context.orientation');
-                    }}
-                    options={orientationOptions}
-                    value={values.context.orientation.map((item) => ({ value: item[0], label: item[1] }))}
+                <FieldArray
+                    name="context.orientation"
+                    render={(arrayHelpers) => (
+                        <MultiSelect
+                            onChange={(_, actionMeta) => {
+                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
+                                    arrayHelpers.remove(
+                                        values.context.orientation.indexOf(actionMeta.removedValue.value)
+                                    );
+                                }
+
+                                if (actionMeta.action === 'select-option' && actionMeta.option) {
+                                    arrayHelpers.push(actionMeta.option.value);
+                                }
+                            }}
+                            options={orientationOptions}
+                            value={values.context.orientation.map(
+                                (item) => orientationOptions.find((option) => option.value === item)!
+                            )}
+                        />
+                    )}
                 />
             </Box>
             <Box>

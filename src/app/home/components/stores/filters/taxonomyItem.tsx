@@ -21,39 +21,32 @@ import {
 
 interface FormValues {
     taxonomy: {
-        objectType: [string, string][];
-        tags: [string, string][];
+        objectType: string[];
+        tags: string[];
         collections: string[];
-        aiGeneration: [string, string][];
-        arEnabled: [string, string][];
-        nudity: [string, string][];
-        category: [string, string][];
-        medium: [string, string][];
-        style: [string, string][];
-        subject: [string, string][];
+        aiGeneration: string[];
+        arEnabled: string[];
+        nudity: string[];
+        category: string[];
+        medium: string[];
+        style: string[];
+        subject: string[];
     };
 }
 
 const debounceDelay = 1000;
 const TaxonomyItem = () => {
     const dispatch = useDispatch();
-    const { setFieldValue, values } = useFormikContext<FormValues>();
-    const [tags, setTags] = useState<{ tag: string }[]>([]);
+    const { values } = useFormikContext<FormValues>();
     const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
-    const onChange = (value: [string, string][], fieldName: string) => {
-        setFieldValue(fieldName, value);
+    const loadOptionsTags = async (_inputValue: string, _callback: (options: any) => void) => {
+        const tags = await dispatch(getArtworkTagsThunk());
+        return tags.map((item) => ({
+            value: item.tag,
+            label: item.tag,
+        }));
     };
-
-    const getArtworkTags = async () => {
-        const responseTags = await dispatch(getArtworkTagsThunk());
-        setTags(responseTags);
-    };
-
-    useEffect(() => {
-        getArtworkTags();
-    }, []);
-
     const getArtworkCollections = async (inputValue: string) => {
         const collections = await dispatch(getArtworkCollectionsThunk(inputValue));
         return collections.map((item) => ({
@@ -100,30 +93,48 @@ const TaxonomyItem = () => {
         <Box display={'flex'} flexDirection={'column'} gap={2}>
             <Box>
                 <Typography variant="h6">Object type</Typography>
-                <MultiSelect
-                    onChange={(selectedOptions) => {
-                        const newValues = selectedOptions.map((option: { value: string; label: string }) => [
-                            option.value,
-                            option.label,
-                        ]);
-                        onChange(newValues, 'taxonomy.objectType');
-                    }}
-                    options={objectTypeOptions}
-                    value={values.taxonomy.objectType.map((item) => ({ value: item[0], label: item[1] }))}
+                <FieldArray
+                    name="taxonomy.objectType"
+                    render={(arrayHelpers) => (
+                        <MultiSelect
+                            onChange={(_, actionMeta) => {
+                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
+                                    arrayHelpers.remove(
+                                        values.taxonomy.objectType.indexOf(actionMeta.removedValue.value)
+                                    );
+                                }
+
+                                if (actionMeta.action === 'select-option' && actionMeta.option) {
+                                    arrayHelpers.push(actionMeta.option.value);
+                                }
+                            }}
+                            options={objectTypeOptions}
+                            value={values.taxonomy.objectType.map(
+                                (item) => objectTypeOptions.find((option) => option.value === item)!
+                            )}
+                        />
+                    )}
                 />
             </Box>
             <Box>
                 <Typography variant="h6">Tags</Typography>
-                <MultiSelect
-                    onChange={(selectedOptions) => {
-                        const newValues = selectedOptions.map((option: { value: string; label: string }) => [
-                            option.value,
-                            option.label,
-                        ]);
-                        onChange(newValues, 'taxonomy.tags');
-                    }}
-                    options={tags.map((tag) => ({ value: tag.tag, label: tag.tag }))}
-                    value={values.taxonomy.tags.map((item) => ({ value: item[0], label: item[1] }))}
+                <FieldArray
+                    name="taxonomy.tags"
+                    render={(arrayHelpers) => (
+                        <AsyncSelect
+                            onChange={(_, actionMeta) => {
+                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
+                                    arrayHelpers.remove(values.taxonomy.tags.indexOf(actionMeta.removedValue.value));
+                                }
+
+                                if (actionMeta.action === 'select-option' && actionMeta.option) {
+                                    arrayHelpers.push(actionMeta.option.value);
+                                }
+                            }}
+                            loadOptions={loadOptionsTags}
+                            value={values.taxonomy.tags.map((item) => ({ value: item, label: item }))}
+                        />
+                    )}
                 />
             </Box>
             <Box>
@@ -151,100 +162,167 @@ const TaxonomyItem = () => {
             </Box>
             <Box>
                 <Typography variant="h6">AI generation</Typography>
-                <MultiSelect
-                    onChange={(selectedOptions) => {
-                        const newValues = selectedOptions.map((option: { value: string; label: string }) => [
-                            option.value,
-                            option.label,
-                        ]);
-                        onChange(newValues, 'taxonomy.aiGeneration');
-                    }}
-                    options={aiGenerationOptions}
-                    value={values.taxonomy.aiGeneration.map((item) => ({ value: item[0], label: item[1] }))}
+                <FieldArray
+                    name="taxonomy.aiGeneration"
+                    render={(arrayHelpers) => (
+                        <MultiSelect
+                            onChange={(_, actionMeta) => {
+                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
+                                    arrayHelpers.remove(
+                                        values.taxonomy.aiGeneration.indexOf(actionMeta.removedValue.value)
+                                    );
+                                }
+
+                                if (actionMeta.action === 'select-option' && actionMeta.option) {
+                                    arrayHelpers.push(actionMeta.option.value);
+                                }
+                            }}
+                            options={aiGenerationOptions}
+                            value={values.taxonomy.aiGeneration.map(
+                                (item) => aiGenerationOptions.find((option) => option.value === item)!
+                            )}
+                        />
+                    )}
                 />
             </Box>
             <Box>
                 <Typography variant="h6">AR enabled</Typography>
-                <MultiSelect
-                    onChange={(selectedOptions) => {
-                        const newValues = selectedOptions.map((option: { value: string; label: string }) => [
-                            option.value,
-                            option.label,
-                        ]);
-                        onChange(newValues, 'taxonomy.arEnabled');
-                    }}
-                    options={arEnabledOptions}
-                    value={values.taxonomy.arEnabled.map((item) => ({ value: item[0], label: item[1] }))}
+                <FieldArray
+                    name="taxonomy.arEnabled"
+                    render={(arrayHelpers) => (
+                        <MultiSelect
+                            onChange={(_, actionMeta) => {
+                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
+                                    arrayHelpers.remove(
+                                        values.taxonomy.arEnabled.indexOf(actionMeta.removedValue.value)
+                                    );
+                                }
+
+                                if (actionMeta.action === 'select-option' && actionMeta.option) {
+                                    arrayHelpers.push(actionMeta.option.value);
+                                }
+                            }}
+                            options={arEnabledOptions}
+                            value={values.taxonomy.arEnabled.map(
+                                (item) => arEnabledOptions.find((option) => option.value === item)!
+                            )}
+                        />
+                    )}
                 />
             </Box>
             <Box>
                 <Typography variant="h6">Nudity</Typography>
-                <MultiSelect
-                    onChange={(selectedOptions) => {
-                        const newValues = selectedOptions.map((option: { value: string; label: string }) => [
-                            option.value,
-                            option.label,
-                        ]);
-                        onChange(newValues, 'taxonomy.nudity');
-                    }}
-                    options={nudityOptions}
-                    value={values.taxonomy.nudity.map((item) => ({ value: item[0], label: item[1] }))}
+                <FieldArray
+                    name="taxonomy.nudity"
+                    render={(arrayHelpers) => (
+                        <MultiSelect
+                            onChange={(_, actionMeta) => {
+                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
+                                    arrayHelpers.remove(values.taxonomy.nudity.indexOf(actionMeta.removedValue.value));
+                                }
+
+                                if (actionMeta.action === 'select-option' && actionMeta.option) {
+                                    arrayHelpers.push(actionMeta.option.value);
+                                }
+                            }}
+                            options={nudityOptions}
+                            value={values.taxonomy.nudity.map(
+                                (item) => nudityOptions.find((option) => option.value === item)!
+                            )}
+                        />
+                    )}
                 />
             </Box>
             <Box>
                 <Typography variant="h6">Category</Typography>
-                <MultiSelect
-                    onChange={(selectedOptions) => {
-                        const newValues = selectedOptions.map((option: { value: string; label: string }) => [
-                            option.value,
-                            option.label,
-                        ]);
-                        onChange(newValues, 'taxonomy.category');
-                    }}
-                    options={categoryOptions}
-                    value={values.taxonomy.category.map((item) => ({ value: item[0], label: item[1] }))}
+                <FieldArray
+                    name="taxonomy.category"
+                    render={(arrayHelpers) => (
+                        <MultiSelect
+                            onChange={(_, actionMeta) => {
+                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
+                                    arrayHelpers.remove(
+                                        values.taxonomy.category.indexOf(actionMeta.removedValue.value)
+                                    );
+                                }
+
+                                if (actionMeta.action === 'select-option' && actionMeta.option) {
+                                    arrayHelpers.push(actionMeta.option.value);
+                                }
+                            }}
+                            options={categoryOptions}
+                            value={values.taxonomy.category.map(
+                                (item) => categoryOptions.find((option) => option.value === item)!
+                            )}
+                        />
+                    )}
                 />
             </Box>
             <Box>
                 <Typography variant="h6">Medium</Typography>
-                <MultiSelect
-                    onChange={(selectedOptions) => {
-                        const newValues = selectedOptions.map((option: { value: string; label: string }) => [
-                            option.value,
-                            option.label,
-                        ]);
-                        onChange(newValues, 'taxonomy.medium');
-                    }}
-                    options={mediumOptions}
-                    value={values.taxonomy.medium.map((item) => ({ value: item[0], label: item[1] }))}
+                <FieldArray
+                    name="taxonomy.medium"
+                    render={(arrayHelpers) => (
+                        <MultiSelect
+                            onChange={(_, actionMeta) => {
+                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
+                                    arrayHelpers.remove(values.taxonomy.medium.indexOf(actionMeta.removedValue.value));
+                                }
+
+                                if (actionMeta.action === 'select-option' && actionMeta.option) {
+                                    arrayHelpers.push(actionMeta.option.value);
+                                }
+                            }}
+                            options={mediumOptions}
+                            value={values.taxonomy.medium.map(
+                                (item) => mediumOptions.find((option) => option.value === item)!
+                            )}
+                        />
+                    )}
                 />
             </Box>
             <Box>
                 <Typography variant="h6">Style</Typography>
-                <MultiSelect
-                    onChange={(selectedOptions) => {
-                        const newValues = selectedOptions.map((option: { value: string; label: string }) => [
-                            option.value,
-                            option.label,
-                        ]);
-                        onChange(newValues, 'taxonomy.style');
-                    }}
-                    options={styleOptions}
-                    value={values.taxonomy.style.map((item) => ({ value: item[0], label: item[1] }))}
+                <FieldArray
+                    name="taxonomy.style"
+                    render={(arrayHelpers) => (
+                        <MultiSelect
+                            onChange={(_, actionMeta) => {
+                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
+                                    arrayHelpers.remove(values.taxonomy.style.indexOf(actionMeta.removedValue.value));
+                                }
+
+                                if (actionMeta.action === 'select-option' && actionMeta.option) {
+                                    arrayHelpers.push(actionMeta.option.value);
+                                }
+                            }}
+                            options={styleOptions}
+                            value={values.taxonomy.style.map(
+                                (item) => styleOptions.find((option) => option.value === item)!
+                            )}
+                        />
+                    )}
                 />
             </Box>
             <Box>
                 <Typography variant="h6">Subject</Typography>
-                <AsyncSelect
-                    onChange={(selectedOptions) => {
-                        const newValues = selectedOptions.map((option: { value: string; label: string }) => [
-                            option.value,
-                            option.label,
-                        ]);
-                        onChange(newValues, 'taxonomy.subject');
-                    }}
-                    loadOptions={loadOptionsSubject}
-                    value={values.taxonomy.subject.map((item) => ({ value: item[0], label: item[1] }))}
+                <FieldArray
+                    name="taxonomy.subject"
+                    render={(arrayHelpers) => (
+                        <AsyncSelect
+                            onChange={(_, actionMeta) => {
+                                if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
+                                    arrayHelpers.remove(values.taxonomy.subject.indexOf(actionMeta.removedValue.value));
+                                }
+
+                                if (actionMeta.action === 'select-option' && actionMeta.option) {
+                                    arrayHelpers.push(actionMeta.option.value);
+                                }
+                            }}
+                            loadOptions={loadOptionsSubject}
+                            value={values.taxonomy.subject.map((item) => ({ value: item, label: item }))}
+                        />
+                    )}
                 />
             </Box>
         </Box>
