@@ -1,7 +1,7 @@
 import { Delete } from '@mui/icons-material';
 import { Box, Paper, Typography } from '@mui/material';
 import { useFormikContext } from 'formik';
-
+import { shortcutsOptions } from '../filters/shortcutItem';
 interface ShortcutFilterProps {
     content: { [key: string]: boolean };
 }
@@ -18,7 +18,7 @@ export const ShortcutFilter = ({ content }: ShortcutFilterProps) => {
                 .filter(([_key, value]) => !!value)
                 .map(([key, _value]) => (
                     <Paper key={key} sx={{ padding: 1, display: 'flex' }}>
-                        <Typography variant="body1">{key}</Typography>
+                        <Typography>{shortcutsOptions.find((item) => item.name === key)?.label}</Typography>
                         <Delete
                             fontSize="small"
                             color="error"
