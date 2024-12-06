@@ -17,6 +17,7 @@ import Nft, { checkStepProgress } from './nft';
 import Print from './print';
 import Stream from './stream';
 import Remix from './remix';
+import ArtCards from './artCard';
 import { useToastr } from '@/app/hooks/useToastr';
 import { WalletProvider } from '../../components/apps/wallet';
 
@@ -25,6 +26,7 @@ const allLicenses = {
     Stream: Stream,
     Print: Print,
     Remix: Remix,
+    ArtCards: ArtCards,
 };
 
 export default function Licenses() {
@@ -111,6 +113,10 @@ export default function Licenses() {
                   added: false,
                   unitPrice: 1,
                   availableLicenses: 1,
+              },
+              artCards: {
+                  version: '1',
+                  added: false,
               },
           };
 
