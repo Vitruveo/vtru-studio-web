@@ -10,7 +10,8 @@ export type ConsignArtworkAssetStatus =
     | 'blocked'
     | 'pending'
     | 'rejected'
-    | 'running';
+    | 'running'
+    | 'canceled';
 
 export interface CompletedStep {
     stepId: StepId;

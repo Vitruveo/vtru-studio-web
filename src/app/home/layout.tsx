@@ -66,23 +66,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         }
     }, [generalVault]);
 
-    useEffect(() => {
-        if (token && email) {
-            (async () => {
-                try {
-                    // await findEmailInAllowList(email); // remove temporary
-                    dispatch(userActionsCreators.setCanConsignArtwork(true));
-                } catch (e) {
-                    const error = e as AxiosError;
-                    if (error.response?.status === 404) {
-                        dispatch(userActionsCreators.setCanConsignArtwork(false));
-                    } else {
-                        toast.display({ type: 'error', message: 'Something went wrong! Try again later.' });
-                    }
-                }
-            })();
-        }
-    }, [email]);
+    // useEffect(() => {
+    //     if (token && email) {
+    //         (async () => {
+    //             try {
+    //                 // await findEmailInAllowList(email); // remove temporary
+    //                 dispatch(userActionsCreators.setCanConsignArtwork(true));
+    //             } catch (e) {
+    //                 const error = e as AxiosError;
+    //                 if (error.response?.status === 404) {
+    //                     dispatch(userActionsCreators.setCanConsignArtwork(false));
+    //                 } else {
+    //                     toast.display({ type: 'error', message: 'Something went wrong! Try again later.' });
+    //                 }
+    //             }
+    //         })();
+    //     }
+    // }, [email]);
 
     const theme = useTheme();
 

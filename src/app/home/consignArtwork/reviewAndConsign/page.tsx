@@ -75,6 +75,10 @@ const ConsignArtwork = () => {
             message:
                 'Nice work! Your artwork is ready for request consignment. Once you submit it our team will review it and approve accordingly',
         },
+        canceled: {
+            buttontitle: 'Request Consign Again',
+            message: 'Your request has been canceled, please resubmit your artwork',
+        },
     } as { [key: string]: { buttontitle: string | undefined; message: string } };
 
     const getConsignArtworkStatus = (status: ConsignArtworkAssetStatus | undefined) =>
@@ -100,8 +104,14 @@ const ConsignArtwork = () => {
     ];
 
     useEffect(() => {
-        dispatch(validationConsignThunk());
-    }, []);
+        if (!consignArtwork?.status) return;
+
+        const statusToCheck = ['draft', 'canceled'];
+
+        if (statusToCheck.includes(consignArtwork.status || '')) {
+            dispatch(validationConsignThunk());
+        }
+    }, [consignArtwork]);
 
     const handlePreview = () => {
         dispatch(consignArtworkThunks.checkPreview());
@@ -243,7 +253,7 @@ const ConsignArtwork = () => {
                             validateConsign={validateConsign}
                             message={consignArtworkStatus?.message || textsForConsignArtWorkStatus['draft'].message}
                         />
-                        {consignArtwork?.status !== 'rejected' && (
+                        {consignArtwork?.status !== 'rejected' && consignArtwork?.status !== 'canceled' && (
                             <Box ml={2}>
                                 <Comments assetId={_id} />
                                 <Box display="flex" justifyContent={'space-between'}>

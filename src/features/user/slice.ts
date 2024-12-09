@@ -37,7 +37,7 @@ const initialState: UserSliceState = {
     },
     status: '',
     error: '',
-    canConsignArtwork: false,
+    canConsignArtwork: true,
     generalVault: undefined,
     vault: {
         isBlocked: false,
