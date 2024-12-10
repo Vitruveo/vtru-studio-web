@@ -23,10 +23,10 @@ import { WalletProvider } from '../../components/apps/wallet';
 
 const allLicenses = {
     NFT: Nft,
+    ArtCards: ArtCards,
     Stream: Stream,
     Print: Print,
     Remix: Remix,
-    ArtCards: ArtCards,
 };
 
 export default function Licenses() {
@@ -98,6 +98,10 @@ export default function Licenses() {
                   editionOption: 'single',
                   availableLicenses: 1,
               },
+              artCards: {
+                  version: '1',
+                  added: false,
+              },
               stream: {
                   version: '1',
                   added: true,
@@ -113,10 +117,6 @@ export default function Licenses() {
                   added: false,
                   unitPrice: 1,
                   availableLicenses: 1,
-              },
-              artCards: {
-                  version: '1',
-                  added: false,
               },
           };
 

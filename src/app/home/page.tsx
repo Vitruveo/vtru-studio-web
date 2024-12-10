@@ -1,6 +1,7 @@
 'use client';
 
 import { CSSProperties, useEffect, useMemo, useRef, useState } from 'react';
+import { Fab, Action } from 'react-tiny-fab';
 import { useRouter } from 'next/navigation';
 import {
     Button,
@@ -36,6 +37,7 @@ import {
     IconScanEye,
     IconTag,
     IconTrash,
+    IconSettings,
 } from '@tabler/icons-react';
 import RSelect from 'react-select';
 import Image from 'next/image';
@@ -623,17 +625,34 @@ export default function Home() {
                                                         color: '#ff0000',
                                                         position: 'absolute',
                                                         bottom: 10,
-                                                        right: 10,
+                                                        right: 70,
                                                     }}
                                                 />
                                             )}
+                                            <Fab
+                                                mainButtonStyles={{
+                                                    backgroundColor: 'transparent',
+                                                    color: '#000',
+                                                    border: '1px solid #000',
+                                                    width: '40px',
+                                                    height: '40px',
+                                                }}
+                                                // actionButtonStyles={actionButtonStyles}
+                                                style={{
+                                                    position: 'absolute',
+                                                    bottom: -10,
+                                                    right: 0,
+                                                }}
+                                                icon={<IconSettings />}
+                                                // event={event}
+                                                alwaysShowTitle={true}
+                                            >
+                                                <Action text="Edit" />
+                                                <Action text="View" />
+                                                <Action text="List of Licenses" />
+                                                <Action text="List of users who licensed" />
+                                            </Fab>
 
-                                            {getStatus(asset.status, asset.mintExplorer) === 'Draft' && (
-                                                <IconEdit size={30} style={iconStyle} />
-                                            )}
-                                            {getStatus(asset.status, asset.mintExplorer) === 'Rejected' && (
-                                                <IconEdit size={30} style={iconStyle} />
-                                            )}
                                             {getStatus(asset.status, asset.mintExplorer) !== 'Sold' &&
                                                 getStatus(asset.status, asset.mintExplorer) !== 'Listed' &&
                                                 asset.countComments > 0 && (
@@ -643,12 +662,6 @@ export default function Home() {
                                                         </Badge>
                                                     </div>
                                                 )}
-                                            {getStatus(asset.status, asset.mintExplorer) === 'Pending' && (
-                                                <IconScanEye size={30} style={iconStyle} />
-                                            )}
-                                            {getStatus(asset.status, asset.mintExplorer) === 'Listed' && (
-                                                <IconTag size={30} style={iconStyle} />
-                                            )}
                                         </Box>
                                     </button>
                                 </Grid>
