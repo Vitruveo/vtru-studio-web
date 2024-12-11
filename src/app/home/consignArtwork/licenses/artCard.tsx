@@ -18,6 +18,10 @@ function ArtCards({ allValues, handleChange, setFieldValue }: LicenseProps) {
     } as { [key: string]: string };
 
     const handleAdded = (added: boolean) => {
+        if (licenseArtCards >= 3 && added) {
+            return;
+        }
+
         setFieldValue('artCards.added', added);
         setFieldValue('artCards.version', '1');
     };
