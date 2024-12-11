@@ -41,7 +41,7 @@ const initialState: UserSliceState = {
     },
     status: '',
     error: '',
-    canConsignArtwork: false,
+    canConsignArtwork: true,
     generalVault: undefined,
     vault: {
         isBlocked: false,
@@ -70,6 +70,7 @@ const initialState: UserSliceState = {
         total: 0,
         totalPage: 0,
         collection: '',
+        licenseArtCards: 0,
     },
     collections: [],
     currentPage: 1,

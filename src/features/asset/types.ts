@@ -133,6 +133,7 @@ export interface AssetPaginated {
     total: number;
     totalPage: number;
     collection: string;
+    licenseArtCards: number;
     collections: { collection: string }[];
 }
 

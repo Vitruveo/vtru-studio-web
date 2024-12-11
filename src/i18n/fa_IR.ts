@@ -844,6 +844,15 @@ const language: Translation = {
     'studio.consignArtwork.licenses.stream.unlimitedStreaming.description':
         'این اثر ممکن است برای استریم در سناریوهای نامحدود استفاده شود.',
 
+    'studio.consignArtwork.licenses.artCards.description':
+        'این مجوز اثر هنری را برای کاربران نهایی برای استفاده در برنامه‌های ArtCard فراهم می‌کند.',
+    'studio.consignArtwork.licenses.artCards.enable':
+        'این مجوز را فعال کنید اگر می‌خواهید کاربران نهایی از آثار هنری شما برای برنامه‌های ArtCard استفاده کنند.',
+    'studio.consignArtwork.licenses.artCards.enable.description':
+        'ArtCard یک برنامه برای ارائه آثار هنری به صورت دیجیتال است.',
+    'studio.consignArtwork.licenses.artCards.enable.amount': (data: { amount: number; from: string }) =>
+        `مبلغ ${data.amount} ${data.from}`,
+
     'studio.consignArtwork.licenses.print.description':
         'این مجوز اثر هنری را برای کاربران نهایی برای چاپ روی یک مورد فیزیکی تکی با استفاده از فناوری چاپ درخواستی (POD) فراهم می‌کند. این مجوز تا لحظه چاپ قابل انتقال است، پس از آن فقط به مالک مورد فیزیکی قابل انتقال است.',
     'studio.consignArtwork.licenses.print.enable':

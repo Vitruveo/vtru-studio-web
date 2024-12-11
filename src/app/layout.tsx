@@ -11,6 +11,8 @@ import { Direction, Shadows, ThemeProvider, createTheme } from '@mui/material/st
 import { TypographyOptions } from '@mui/material/styles/createTypography';
 import { Inter } from 'next/font/google';
 import 'toastr/build/toastr.min.css';
+import 'react-tiny-fab/dist/styles.css';
+
 import Providers from '@/store/Provider';
 import CustomizedSnackbar from './common/toastr';
 import { useToastr } from './hooks/useToastr';
