@@ -229,7 +229,18 @@ export default function Home() {
                 ) : (
                     <></>
                 )}
-                <Box pb={10} paddingInline={3} p={0}>
+                <Box
+                    pr={1}
+                    sx={{
+                        maxHeight: lgUp
+                            ? 'calc(100vh - 100px)'
+                            : mdUp || smUp
+                              ? 'calc(100vh - 400px)'
+                              : 'calc(100vh - 500px)',
+                        overflowY: 'scroll',
+                        overflowX: 'hidden',
+                    }}
+                >
                     <Box display="flex" flexWrap="wrap" alignItems="center">
                         <Typography marginRight={1} fontSize="1.7rem" alignSelf="center">
                             {texts.welcome}
@@ -444,19 +455,7 @@ export default function Home() {
                             </Box>
                         )}
                     </Box>
-                    <Box
-                        mt={2}
-                        style={{
-                            maxHeight: lgUp
-                                ? 'calc(100vh - 330px)'
-                                : mdUp || smUp
-                                  ? 'calc(100vh - 400px)'
-                                  : 'calc(100vh - 500px)',
-                            overflowY: 'scroll',
-                            overflowX: 'hidden',
-                        }}
-                        ref={topRef}
-                    >
+                    <Box mt={2} ref={topRef}>
                         <Grid container spacing={2} padding={1} width={'100%'} justifyContent={'center'}>
                             {assets.data.map((asset, index) => (
                                 <Grid item key={index} sm={6} md={6} lg={4}>
