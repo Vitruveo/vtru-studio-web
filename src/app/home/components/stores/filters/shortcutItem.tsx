@@ -1,16 +1,6 @@
 import { Box, Checkbox, FormControlLabel, Grid, Typography } from '@mui/material';
 import { useField, useFormikContext } from 'formik';
-
-const items = [
-    { name: 'hideNudity', label: 'Hide Nudity' },
-    { name: 'hideAI', label: 'Hide AI' },
-    { name: 'photography', label: 'Photography' },
-    { name: 'animation', label: 'Animation' },
-    { name: 'physicalArt', label: 'Physical Art' },
-    { name: 'digitalArt', label: 'Digital Art' },
-    { name: 'includeSold', label: 'Include Sold' },
-    { name: 'hasBTS', label: 'Has BTS' },
-];
+import { shortcutsOptions } from './options';
 
 interface FormValues {
     general: {
@@ -32,7 +22,7 @@ export const ShortcutItem = () => {
         <Box>
             <Typography variant="h6">Shortcuts</Typography>
             <Grid container item xs={6}>
-                {items.map((item, index) => {
+                {shortcutsOptions.map((item, index) => {
                     const fieldName = `general.shortcuts.${item.name}`;
                     return (
                         <Grid item xs={6} key={index}>
