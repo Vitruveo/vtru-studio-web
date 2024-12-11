@@ -2,11 +2,14 @@ import { Box, Typography } from '@mui/material';
 import Card from './common/card';
 import { LicenseProps } from './types';
 import { useI18n } from '@/app/hooks/useI18n';
+import { useSelector } from '@/store/hooks';
 
 function ArtCards({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const values = allValues.artCards || {};
 
     const { language } = useI18n();
+
+    const licenseArtCards = useSelector((state) => state.user.assets.licenseArtCards);
 
     const texts = {
         artCardsDescription: language['studio.consignArtwork.licenses.artCards.description'],
@@ -16,6 +19,7 @@ function ArtCards({ allValues, handleChange, setFieldValue }: LicenseProps) {
 
     const handleAdded = (added: boolean) => {
         setFieldValue('artCards.added', added);
+        setFieldValue('artCards.version', '1');
     };
 
     return (
@@ -34,7 +38,7 @@ function ArtCards({ allValues, handleChange, setFieldValue }: LicenseProps) {
                         {values?.added ? texts.artCardsEnableDescription : texts.artCardsDescription}
                     </Typography>
                     <Typography mt={2} fontWeight="bold">
-                        2 of 3 Licenses Enabled
+                        {licenseArtCards} of 3 Licenses Enabled
                     </Typography>
                 </Box>
             </Card>

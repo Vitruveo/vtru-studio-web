@@ -70,6 +70,7 @@ const initialState: UserSliceState = {
         total: 0,
         totalPage: 0,
         collection: '',
+        licenseArtCards: 0,
     },
     collections: [],
     currentPage: 1,
