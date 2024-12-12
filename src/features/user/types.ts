@@ -163,6 +163,9 @@ export interface User {
     currentPage: number;
     sort: string;
     selectedAsset: string;
+    licenses?: {
+        artCards: number;
+    };
 }
 
 export interface VaultProps {

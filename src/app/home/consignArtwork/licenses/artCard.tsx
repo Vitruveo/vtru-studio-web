@@ -10,6 +10,7 @@ function ArtCards({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const { language } = useI18n();
 
     const licenseArtCards = useSelector((state) => state.user.assets.licenseArtCards);
+    const licenseArtCardsEnabled = useSelector((state) => state.user?.licenses?.artCards || 3);
 
     const texts = {
         artCardsDescription: language['studio.consignArtwork.licenses.artCards.description'],
@@ -18,7 +19,7 @@ function ArtCards({ allValues, handleChange, setFieldValue }: LicenseProps) {
     } as { [key: string]: string };
 
     const handleAdded = (added: boolean) => {
-        if (licenseArtCards >= 3 && added) {
+        if (licenseArtCards >= licenseArtCardsEnabled && added) {
             return;
         }
 
@@ -42,7 +43,7 @@ function ArtCards({ allValues, handleChange, setFieldValue }: LicenseProps) {
                         {values?.added ? texts.artCardsEnableDescription : texts.artCardsDescription}
                     </Typography>
                     <Typography mt={2} fontWeight="bold">
-                        {licenseArtCards} of 3 Licenses Enabled
+                        {licenseArtCards} of {licenseArtCardsEnabled} Licenses Enabled
                     </Typography>
                 </Box>
             </Card>
