@@ -1,5 +1,5 @@
 import { uniqueId } from 'lodash';
-import { IconPhotoUp, IconBrandWechat, IconTrendingUp, IconUser } from '@tabler/icons-react';
+import { IconPhotoUp, IconBrandWechat, IconTrendingUp, IconUser, IconLogout } from '@tabler/icons-react';
 
 interface MenuitemsType {
     [x: string]: any;
@@ -50,5 +50,12 @@ const Menuitems: MenuitemsType[] = [
         href: '//dreamverse.vitruveo.xyz/',
     },
 ];
+
+export const logoutItem: MenuitemsType = {
+    id: uniqueId(),
+    title: 'studio.sidebar.logout',
+    icon: IconLogout,
+    href: '/login',
+};
 
 export default Menuitems;

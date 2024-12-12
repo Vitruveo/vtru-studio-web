@@ -9,6 +9,8 @@ import {
     IconAward,
     IconMail,
     IconWallet,
+    IconBrandInstagram,
+    IconUsers,
 } from '@tabler/icons-react';
 import BlankCard from '../../components/shared/BlankCard';
 import Identity, { IdentityProps } from './identity';
@@ -90,12 +92,7 @@ const ProfileTabs = ({
                     <Tab iconPosition="start" icon={<IconUserCircle size="22" />} label="Identity" {...a11yProps(0)} />
                     <Tab iconPosition="start" icon={<IconMail size="22" />} label="Emails" {...a11yProps(1)} />
                     <Tab iconPosition="start" icon={<IconWallet size="22" />} label="Wallets" {...a11yProps(2)} />
-                    <Tab
-                        iconPosition="start"
-                        icon={<IconBroadcast size="22" />}
-                        label="Digital Presence"
-                        {...a11yProps(1)}
-                    />
+                    <Tab iconPosition="start" icon={<IconUsers size="22" />} label="Socials" {...a11yProps(1)} />
                     <Tab iconPosition="start" icon={<IconId size="22" />} label="Personal Details" {...a11yProps(3)} />
                     <Tab
                         iconPosition="start"

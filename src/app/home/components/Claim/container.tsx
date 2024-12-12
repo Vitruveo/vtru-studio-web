@@ -56,7 +56,6 @@ export const ClaimContainer = memo(() => {
                 setLoading(false);
             }
         };
-        console.log('entrei aqui');
         getBalance();
     }, []);
 

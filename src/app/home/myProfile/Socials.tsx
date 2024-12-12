@@ -20,7 +20,7 @@ const Socials = () => {
     return (
         <Box my={2} maxWidth={!xl ? 300 : 400}>
             <Typography marginBottom={3} fontSize="1.2rem" fontWeight="500">
-                Socials & My Website
+                Socials
             </Typography>
             <Box display="grid" gridTemplateColumns="50px 50px 50px">
                 <Box>
