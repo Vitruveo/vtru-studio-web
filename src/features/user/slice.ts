@@ -112,6 +112,7 @@ export const userSlice = createSlice({
             state.framework = creator.framework;
             state.synaps = creator.synaps;
             state.truLevel = creator.truLevel;
+            state.licenses = creator.licenses;
             state.socials = {
                 x: {
                     name: creator?.socials?.x?.name ?? '',
