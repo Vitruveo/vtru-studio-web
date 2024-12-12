@@ -230,7 +230,7 @@ export function sendRequestUploadThunk(
     };
 }
 
-export function creatorAccountThunk(payload: AccountSettingsFormValues): ReduxThunkAction<void> {
+export function creatorAccountThunk(payload: AccountSettingsFormValues, resetAvatar?: boolean): ReduxThunkAction<void> {
     return async function (dispatch, getState) {
         const user = getState().user;
 
@@ -238,7 +238,10 @@ export function creatorAccountThunk(payload: AccountSettingsFormValues): ReduxTh
             userId: user._id,
             data: {
                 name: user.name,
-                profile: user.profile,
+                profile: {
+                    ...user.profile,
+                    avatar: resetAvatar ? null : user.profile.avatar,
+                },
                 emailDefault: payload.emailDefault,
                 walletDefault: payload.walletDefault,
                 username: payload.username,
@@ -309,7 +312,7 @@ export function saveStepWizardThunk(payload: SaveStepWizardReq): ReduxThunkActio
                     origin: 'profileRequests',
                 });
             }
-            dispatch(creatorAccountThunk(payload.values));
+            dispatch(creatorAccountThunk(payload.values, payload.resetAvatar));
             return;
         }
     };

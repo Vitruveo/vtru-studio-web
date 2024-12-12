@@ -235,6 +235,7 @@ export interface UserOTPConfirmRes {
 
 export interface SaveStepWizardReq {
     step: number;
+    resetAvatar?: boolean;
     values: AccountSettingsFormValues;
 }
 

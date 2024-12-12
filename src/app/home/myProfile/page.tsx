@@ -212,7 +212,7 @@ export default function ProfileSettings() {
                 Object.entries(initSocials || {}).filter(
                     ([key, value]) => socials[key as keyof typeof socials].avatar !== value.avatar
                 ).length ||
-                initialValues.myWebsite !== formValues.myWebsite
+                !formValues.myWebsite
             ) {
                 setShow(true);
                 return;
@@ -225,7 +225,7 @@ export default function ProfileSettings() {
 
         if (errors.username || usernameError) return;
 
-        dispatch(saveStepWizardThunk({ step: 0, values }));
+        dispatch(saveStepWizardThunk({ step: 0, values, resetAvatar }));
         dispatch(
             consignArtworkActionsCreators.checkIsCompletedProfile({
                 username: values.username,
