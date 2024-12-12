@@ -49,10 +49,6 @@ const DigitalPresence = ({ values, errors, setFieldValue }: DigitalPresenceProps
         setLink((cLink) => ({ ...cLink, url: e.target.value }));
     };
 
-    const handleMyWebsiteChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setFieldValue('myWebsite', !e.target.value.length ? null : e.target.value);
-    };
-
     const xl = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'));
 
     return (
@@ -65,23 +61,6 @@ const DigitalPresence = ({ values, errors, setFieldValue }: DigitalPresenceProps
                     >
                         <Box maxWidth={!xl ? 300 : 350}>
                             <Socials />
-                            <Box>
-                                <Box mb={1}>
-                                    <Typography variant="subtitle1" fontWeight={600} component="label">
-                                        Website Link
-                                    </Typography>
-                                </Box>
-                                <CustomTextFieldDebounce
-                                    size="small"
-                                    name="myWebsite"
-                                    variant="outlined"
-                                    fullWidth
-                                    value={values.myWebsite}
-                                    handleChange={handleMyWebsiteChange}
-                                    error={!!errors.myWebsite}
-                                    helperText={errors.myWebsite}
-                                />
-                            </Box>
                         </Box>
                     </CardContent>
                 </BlankCard>

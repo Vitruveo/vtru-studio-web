@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useState } from 'react';
 import { Avatar, Box, Button, CardContent, Grid, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
-import CustomTextField from '../../components/forms/theme-elements/CustomTextField';
+import CustomTextField, { CustomTextFieldDebounce } from '../../components/forms/theme-elements/CustomTextField';
 import { BASE_URL_SEARCH } from '@/constants/search';
 import { useSelector } from '@/store/hooks';
 import { userSelector } from '@/features/user';
@@ -44,6 +44,10 @@ const Identity = ({
         }, 2_000);
     };
 
+    const handleMyWebsiteChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setFieldValue('myWebsite', !e.target.value.length ? null : e.target.value);
+    };
+
     return (
         <Grid container spacing={2}>
             <Grid item xs={12} lg={6}>
@@ -65,6 +69,23 @@ const Identity = ({
                                 onChange={handleUsernameChange}
                                 error={!!errors.username || !!usernameError}
                                 helperText={errors.username || usernameError}
+                            />
+                        </Box>
+                        <Box maxWidth={250}>
+                            <Box mb={1}>
+                                <Typography variant="subtitle1" fontWeight={600} component="label">
+                                    Profile Link
+                                </Typography>
+                            </Box>
+                            <CustomTextFieldDebounce
+                                size="small"
+                                name="myWebsite"
+                                variant="outlined"
+                                fullWidth
+                                value={values.myWebsite}
+                                handleChange={handleMyWebsiteChange}
+                                error={!!errors.myWebsite}
+                                helperText={errors.myWebsite}
                             />
                         </Box>
                         <Box my={3}>

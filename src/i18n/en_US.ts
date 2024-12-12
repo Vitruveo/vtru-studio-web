@@ -937,6 +937,7 @@ const language: Translation = {
     'studio.sidebar.community': 'Community Support',
     'studio.sidebar.store': 'Stores',
     'studio.sidebar.truLevel': 'truLevel',
+    'studio.sidebar.logout': 'Logout',
     'studio.sidebar.profile': 'Profile',
 
     /* Footer */
