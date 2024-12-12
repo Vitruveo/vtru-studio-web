@@ -501,6 +501,7 @@ export function requestMyAssetsThunk({
                         total: response.data.total,
                         totalPage: response.data.totalPage,
                         collection: response.data.collection,
+                        licenseArtCards: response.data.licenseArtCards,
                     })
                 );
                 dispatch(userActionsCreators.setCollections(response.data.collections));

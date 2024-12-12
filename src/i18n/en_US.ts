@@ -849,6 +849,15 @@ const language: Translation = {
     'studio.consignArtwork.licenses.stream.unlimitedStreaming.description':
         'The artwork may be used for streaming in unlimited scenarios.',
 
+    'studio.consignArtwork.licenses.artCards.description':
+        'This license makes the artwork available for use on ArtCards for free.',
+    'studio.consignArtwork.licenses.artCards.enable':
+        'Enable this license if you want it available in the ArtCards application for promotion of your art and your profile. You can enable the license for a maximum of three artworks.',
+    'studio.consignArtwork.licenses.artCards.enable.description':
+        'Enable this license if you want it available in the ArtCards application for promotion of your art and your profile. You can enable the license for a maximum of three artworks.',
+    'studio.consignArtwork.licenses.artCards.enable.amount': (data: { amount: number; from: string }) =>
+        `(${data.amount} of ${data.from}) Licenses enabled`,
+
     'studio.consignArtwork.licenses.print.description':
         'This license makes the artwork available to end-users for printing to a single physical item using Print-on-Demand (POD) technology. The license is freely transferable until the point of printing, after which it is transferable solely to the owner of the physical item.',
     'studio.consignArtwork.licenses.print.enable':

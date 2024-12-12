@@ -157,6 +157,7 @@ export interface User {
         total: number;
         totalPage: number;
         collection: string;
+        licenseArtCards: number;
     };
     collections: { collection: string }[];
     currentPage: number;

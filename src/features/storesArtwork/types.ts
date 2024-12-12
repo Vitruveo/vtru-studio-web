@@ -1,3 +1,5 @@
+import { Artworks } from '../stores/types';
+
 export interface StoreArtworkState {
     tags: Tags[];
     collections: Collections[];
@@ -33,4 +35,10 @@ export interface ResponseAssets {
     total: number;
     limit: number;
     maxPrice: number;
+}
+
+export interface CreateStoreArtworkParams {
+    id: string;
+    stepName: string;
+    data: Artworks;
 }
