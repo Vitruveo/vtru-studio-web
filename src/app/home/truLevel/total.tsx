@@ -1,21 +1,17 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { staticStyles } from './styles';
-import { LevelsType } from './page';
 import { getCurrentLevel, novaSquare } from './utils';
+import { TruLevel } from '@/features/user/types';
 
 interface TotalProps {
-    levels?: LevelsType[];
+    truLevel?: TruLevel;
 }
 
-const Total = ({ levels }: TotalProps) => {
-    const totalPoints = levels?.reduce((acc, level) => {
-        if (level)
-            return acc + level.steps.reduce((accSteps, step) => accSteps + (step.completed ? step.points || 0 : 0), 0);
-        return acc;
-    }, 0);
+const Total = ({ truLevel }: TotalProps) => {
+    const totalPoints = (truLevel?.totalPoints || 0) + (truLevel?.extraPoints || 0);
 
-    const currentLevel = getCurrentLevel({ levels });
+    const currentLevel = truLevel?.currentLevel || 0;
 
     return (
         <Box sx={staticStyles.totalCard}>

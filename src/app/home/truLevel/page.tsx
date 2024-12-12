@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, memo } from 'react';
 
 import { Box, Button, Theme, Typography, useMediaQuery } from '@mui/material';
 
@@ -11,6 +11,7 @@ import PageContainer from '../components/container/PageContainer';
 import Levels from './levels';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { getTruLevelThunk } from '@/features/user/thunks';
+import { TruLevel as TruLevelType } from '@/features/user/types';
 
 export interface LevelStep {
     name: string;
@@ -23,45 +24,113 @@ export interface LevelsType {
     steps: LevelStep[];
 }
 
-const levels: LevelsType[] = [
-    {
-        name: 'Level 0',
-        steps: [{ name: 'Email', completed: true }],
-    },
-    {
-        name: 'Level 1',
-        steps: [
-            { name: 'Avatar', completed: true, points: 100 },
-            { name: 'Social', completed: true, points: 100 },
-            { name: 'Profile Link', completed: true, points: 100 },
-            { name: 'Vault', completed: true, points: 200 },
-        ],
-    },
-    {
-        name: 'Level 2',
-        steps: [
-            { name: 'Liveness', completed: true, points: 1000 },
-            { name: 'ID+AML', completed: false, points: 1500 },
-            { name: '0 Facts', completed: false, points: 1500 },
-        ],
-    },
-    {
-        name: 'Level 3',
-        steps: [
-            { name: 'Address', completed: false, points: 1000 },
-            { name: 'Phone', completed: false, points: 500 },
-            { name: '0 Facts', completed: false, points: 1500 },
-        ],
-    },
-    {
-        name: 'Level 4',
-        steps: [{ name: '0 Facts', completed: false, points: 2500 }],
-    },
-];
-
-export default function TruLevel() {
+const TruLevel = () => {
     const dispatch = useDispatch();
-    const truLevel = useSelector((state) => state.user.truLevel);
+
+    const { emails, myWebsite, profile, socials } = useSelector((state) => state.user);
+
+    const initLevels = [
+        {
+            id: '0',
+            items: [
+                {
+                    label: 'email',
+                    points: 0,
+                    completed: !!emails.length,
+                },
+            ],
+        },
+        {
+            id: '1',
+            items: [
+                {
+                    label: 'avatar',
+                    points: 100,
+                    completed: !!profile.avatar,
+                },
+                {
+                    label: 'social',
+                    points: 100,
+                    completed: !!socials?.x?.avatar,
+                },
+                {
+                    label: 'profile',
+                    points: 100,
+                    completed: !!myWebsite,
+                },
+                {
+                    label: 'vault',
+                    points: 200,
+                    completed: false,
+                },
+            ],
+        },
+        {
+            id: '2',
+            items: [
+                {
+                    label: 'liveness',
+                    points: 1000,
+                    completed: false,
+                },
+                {
+                    label: 'idaml',
+                    points: 1500,
+                    completed: false,
+                },
+                {
+                    label: 'facts2',
+                    points: 1500,
+                    completed: false,
+                },
+            ],
+        },
+        {
+            id: '3',
+            items: [
+                {
+                    label: 'address',
+                    points: 1000,
+                    completed: false,
+                },
+                {
+                    label: 'phone',
+                    points: 500,
+                    completed: false,
+                },
+                {
+                    label: 'facts3',
+                    points: 1500,
+                    completed: false,
+                },
+            ],
+        },
+        {
+            id: '4',
+            items: [
+                {
+                    label: 'facts4',
+                    points: 2500,
+                    completed: false,
+                },
+            ],
+        },
+    ];
+
+    const initTruLevel: TruLevelType = {
+        currentLevel: 0,
+        totalPoints: 0,
+        extraPoints: initLevels.reduce((acc, cur) => {
+            cur.items.forEach((v) => {
+                if (v.completed) acc += v.points;
+            });
+            return acc;
+        }, 0),
+        levels: initLevels,
+    };
+
+    const truLevelState = useSelector((state) => state.user.truLevel);
+    const truLevel = truLevelState || initTruLevel;
 
     const xlUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'));
     const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
@@ -86,7 +155,13 @@ export default function TruLevel() {
     ];
 
     useEffect(() => {
-        // dispatch(getTruLevelThunk());
+        const getTrulevelInterval = setInterval(() => {
+            dispatch(getTruLevelThunk());
+        }, 5000);
+        dispatch(getTruLevelThunk());
+        return () => {
+            clearInterval(getTrulevelInterval);
+        };
     }, []);
 
     return (
@@ -102,7 +177,7 @@ export default function TruLevel() {
                     gridTemplateRows="repeat(5, 1fr)"
                     my={2}
                 >
-                    <Total levels={levels} />
+                    <Total truLevel={truLevel} />
                     <Box
                         sx={{
                             gridColumn: 'span 2 / span 2',
@@ -149,7 +224,7 @@ export default function TruLevel() {
                             </Box>
                         </Box>
                     </Box>
-                    <Levels levels={levels} />
+                    <Levels truLevel={truLevel} />
                 </Box>
                 <Box marginLeft={2}>
                     <Typography color="GrayText" lineHeight={1.3} fontSize={20}>
@@ -159,4 +234,6 @@ export default function TruLevel() {
             </Box>
         </PageContainer>
     );
-}
+};
+
+export default memo(TruLevel);

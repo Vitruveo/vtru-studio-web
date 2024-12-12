@@ -1,18 +1,33 @@
 import React, { useState } from 'react';
 import { Box, Theme, Typography, useMediaQuery } from '@mui/material';
 import { dynamicStyles } from './styles';
-import { LevelStep } from './page';
 import Square from './square';
 import Dot from './dot';
 import ProgressBar from './progressBar';
 import { novaSquare } from './utils';
+import { LevelItem } from '@/features/user/types';
 
 interface LevelProps {
-    name: string;
-    steps: LevelStep[];
+    id: string;
+    items: LevelItem[];
     levelNumber: number;
     levelsCompleted: { [key: string]: boolean };
 }
+
+const labels = {
+    email: 'Email',
+    avatar: 'Avatar',
+    social: 'Social',
+    profile: 'Profile Link',
+    vault: 'Vault',
+    liveness: 'Liveness',
+    idaml: 'ID+AML',
+    facts2: '0 Facts',
+    address: 'Address',
+    phone: 'Phone',
+    facts3: '0 Facts',
+    facts4: '0 Facts',
+};
 
 const levelsDescriptions = [
     { name: '', description: 'All users start at this level.' },
@@ -25,7 +40,7 @@ const levelsDescriptions = [
     { name: 'MAESTROS', description: 'These artists represent the pinnacle of their craft.' },
 ];
 
-const Level = ({ steps, name, levelNumber, levelsCompleted }: LevelProps) => {
+const Level = ({ id, items, levelNumber, levelsCompleted }: LevelProps) => {
     const [isFlipped, setIsFlipped] = useState(false);
 
     const handleFlip = () => {
@@ -37,8 +52,8 @@ const Level = ({ steps, name, levelNumber, levelsCompleted }: LevelProps) => {
     const isCurrentLevel = Object.keys(levelsCompleted).length - 1 + 1 === levelNumber;
     const isNextLevel = Object.keys(levelsCompleted).length - 1 + 2 === levelNumber;
 
-    const stepPoints = steps.reduce((acc, cur) => (cur.completed ? acc + (cur.points || 0) : acc), 0);
-    const stepTotalPoints = steps.reduce((acc, cur) => acc + (cur.points || 0), 0);
+    const stepPoints = items.reduce((acc, cur) => (cur.completed ? acc + (cur.points || 0) : acc), 0);
+    const stepTotalPoints = items.reduce((acc, cur) => acc + (cur.points || 0), 0);
 
     return (
         <Box
@@ -65,7 +80,7 @@ const Level = ({ steps, name, levelNumber, levelsCompleted }: LevelProps) => {
                 >
                     <Box
                         sx={dynamicStyles.levelCard({
-                            completed: levelsCompleted[name],
+                            completed: levelsCompleted[id],
                             isCurrentLevel,
                             isNextLevel,
                             xlUp,
@@ -79,19 +94,19 @@ const Level = ({ steps, name, levelNumber, levelsCompleted }: LevelProps) => {
                                 fontWeight="bold"
                                 color="white"
                             >
-                                {name}
+                                {`Level ${id}`}
                             </Typography>
                             <Box marginTop={3} width="100%" display="flex" justifyContent="center">
                                 <Square count={levelNumber} />
                             </Box>
                             <Box marginTop={5}>
-                                {steps.map((step, index) => {
+                                {items.map((item, index) => {
                                     return (
-                                        <Box key={step.name}>
+                                        <Box key={item.label}>
                                             <Box marginBottom={2} gap={1} display="flex" alignItems="center">
-                                                <Dot isCompleted={step.completed} />
+                                                <Dot isCompleted={item.completed} />
                                                 <Typography fontSize={20} color="white" fontWeight="bold">
-                                                    {step.name}
+                                                    {labels[item.label as keyof typeof labels]}
                                                 </Typography>
                                             </Box>
                                         </Box>
@@ -119,7 +134,7 @@ const Level = ({ steps, name, levelNumber, levelsCompleted }: LevelProps) => {
                 <Box
                     sx={{
                         ...dynamicStyles.levelCard({
-                            completed: levelsCompleted[name],
+                            completed: levelsCompleted[id],
                             isCurrentLevel,
                             isNextLevel,
                             xlUp,
@@ -130,7 +145,7 @@ const Level = ({ steps, name, levelNumber, levelsCompleted }: LevelProps) => {
                 >
                     <Box>
                         <Typography marginTop={1} textAlign="center" fontSize={40} fontWeight="bold" color="white">
-                            {name}
+                            {`Level ${id}`}
                         </Typography>
                         <Box marginTop={3} width="100%" display="flex" justifyContent="center">
                             <Square count={levelNumber} />

@@ -2,32 +2,25 @@ import { useEffect } from 'react';
 import { Synaps } from '@synaps-io/verify-sdk';
 import { synapsSessionInitThunk, synapsIndividualSessionThunk } from '@/features/user/thunks';
 import { useDispatch, useSelector } from '@/store/hooks';
-import { Box, Button, Typography } from '@mui/material';
-
-const stepsNames = {
-    LIVENESS: '1. Face Scan',
-    ID_DOCUMENT: '2. ID Document',
-    PROOF_OF_ADDRESS: '3. Proof of Address',
-    PHONE: '4. Phone number',
-};
+import { Button } from '@mui/material';
 
 const SynapsModal = () => {
     const dispatch = useDispatch();
     const synaps = useSelector((state) => state.user.synaps);
 
-    const completedlevel = synaps?.steps?.filter((step) => step.status === 'APPROVED');
-    const pendingVerifylevel = synaps?.steps?.filter((step) => step.status === 'PENDING_VERIFICATION');
-    const stepsRequiringSubmission = synaps?.steps?.filter((step) => step.status === 'SUBMISSION_REQUIRED');
+    const handleUpdateSynaps = () => {
+        dispatch(synapsIndividualSessionThunk());
+    };
 
     const handleOpen = () => {
         if (synaps?.sessionId) {
             Synaps.init({
                 sessionId: synaps.sessionId,
                 onClose: () => {
-                    dispatch(synapsIndividualSessionThunk());
+                    handleUpdateSynaps();
                 },
                 onFinish: () => {
-                    dispatch(synapsIndividualSessionThunk());
+                    handleUpdateSynaps();
                 },
                 mode: 'modal',
             });
@@ -40,9 +33,8 @@ const SynapsModal = () => {
     useEffect(() => {
         if (!synaps?.sessionId) {
             dispatch(synapsSessionInitThunk());
-        } else {
-            dispatch(synapsIndividualSessionThunk());
         }
+        handleUpdateSynaps();
     }, []);
 
     return (

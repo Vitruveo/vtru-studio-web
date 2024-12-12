@@ -29,6 +29,7 @@ import {
     me,
     synapsSessionInit,
     synapsIndividualSession,
+    getTruLevel,
 } from './requests';
 import { userActionsCreators } from './slice';
 import {
@@ -72,13 +73,15 @@ import { ASSET_STORAGE_URL, NO_IMAGE_ASSET } from '@/constants/asset';
 import { config } from '@/app/home/components/apps/wallet';
 
 export function getTruLevelThunk(): ReduxThunkAction<Promise<void>> {
-    return async function (dispatch) {
-        const response = await me();
-        await dispatch(
-            userActionsCreators.change({
-                truLevel: (response.data as User)?.truLevel,
-            })
-        );
+    return async function (dispatch, getState) {
+        const response = await getTruLevel();
+        const currentTrulevel = getState().user.truLevel;
+        if (JSON.stringify(currentTrulevel) !== JSON.stringify(response.data))
+            dispatch(
+                userActionsCreators.change({
+                    truLevel: response.data,
+                })
+            );
     };
 }
 

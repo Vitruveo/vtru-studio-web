@@ -1,29 +1,29 @@
 import React from 'react';
 import Level from './level';
-import { LevelsType } from './page';
+import { TruLevel } from '@/features/user/types';
 
 interface LevelsProps {
-    levels?: LevelsType[];
+    truLevel?: TruLevel;
 }
 
-const Levels = ({ levels }: LevelsProps) => {
+const Levels = ({ truLevel }: LevelsProps) => {
     const levelsCompleted =
-        levels?.reduce((acc, cur, i) => {
+        truLevel?.levels.reduce((acc, cur, i) => {
             const checkLevels = Object.keys(acc).length;
             if (i === 0 || checkLevels === i) {
-                const completed = !cur.steps.filter((step) => !step.completed).length;
-                if (completed) return { ...acc, [cur.name]: completed };
+                const completed = !cur.items.filter((step) => !step.completed).length;
+                if (completed) return { ...acc, [cur.id]: completed };
             }
             return acc;
         }, {}) || {};
 
     return (
         <>
-            {levels?.map((level, i) => (
+            {truLevel?.levels.map((level, i) => (
                 <Level
-                    key={level.name}
-                    name={level.name}
-                    steps={level.steps}
+                    key={level.id}
+                    id={level.id}
+                    items={level.items}
                     levelNumber={i}
                     levelsCompleted={levelsCompleted}
                 />

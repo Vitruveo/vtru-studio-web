@@ -75,20 +75,22 @@ export interface SynapsStep {
     status: SynapsStatus;
 }
 
-export interface LevelStep {
-    name: string;
+export interface LevelItem {
+    label: string;
+    points: number;
     completed: boolean;
-    points?: number;
 }
 
-export interface LevelsType {
-    name: string;
-    steps: LevelStep[];
+export interface LevelType {
+    id: string;
+    items: LevelItem[];
 }
 
 export interface TruLevel {
     currentLevel: number;
-    levels: LevelsType[];
+    totalPoints: number;
+    extraPoints: number;
+    levels: LevelType[];
 }
 
 export interface User {
@@ -367,6 +369,7 @@ export type RequestConnectWalletApiRes = APIResponse<ResquestConnectWalletRes>;
 export type VerifyConnectWalletApiRes = APIResponse;
 export type SynapsSessionInitApiRes = APIResponse<SessionInitRes>;
 export type SynapsIndividualSessionApiRes = APIResponse<SynapsIndividualSessionRes>;
+export type GetTruLevelApiRes = APIResponse<TruLevel>;
 
 export interface MintExplorer {
     transactionHash: string;

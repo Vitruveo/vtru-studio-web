@@ -38,6 +38,7 @@ import {
     GeneralStorageReq,
     SynapsSessionInitApiRes,
     SynapsIndividualSessionApiRes,
+    GetTruLevelApiRes,
 } from './types';
 import { Framework } from '../common/types';
 import { BASE_URL_BATCH } from '@/constants/api';
@@ -219,5 +220,9 @@ export async function synapsSessionInit(): Promise<SynapsSessionInitApiRes> {
 }
 
 export async function synapsIndividualSession(): Promise<SynapsIndividualSessionApiRes> {
-    return apiService.get(`/creators/synaps/individual/session`);
+    return apiService.post(`/creators/synaps/individual/session`, {});
+}
+
+export async function getTruLevel(): Promise<GetTruLevelApiRes> {
+    return apiService.get('/creators/truLevel');
 }
