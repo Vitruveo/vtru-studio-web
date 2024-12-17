@@ -40,6 +40,7 @@ export interface LicensesFormValues {
     artCards: {
         version: string;
         added: boolean;
+        status?: string;
     };
 }
 

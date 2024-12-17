@@ -92,10 +92,6 @@ const ConsignArtwork = () => {
         if (!status?.length) dispatch(publishThunk({ status: 'draft' }));
     }, [status]);
 
-    if (hasMinted) {
-        return <CompletedConsignPage />;
-    }
-
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter

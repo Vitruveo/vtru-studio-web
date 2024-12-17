@@ -27,6 +27,7 @@ import {
     Badge,
     Pagination,
     Theme,
+    useTheme,
 } from '@mui/material';
 import { Menu as MenuIcon } from '@mui/icons-material';
 import {
@@ -34,10 +35,11 @@ import {
     IconCopyPlus,
     IconMessage,
     IconPlus,
-    IconScanEye,
-    IconTag,
+    IconLicense,
     IconTrash,
     IconSettings,
+    IconEdit,
+    IconEye,
 } from '@tabler/icons-react';
 import RSelect from 'react-select';
 import Image from 'next/image';
@@ -52,9 +54,8 @@ import { assetActionsCreators } from '@/features/asset/slice';
 import { setFilter } from '@/features/filters/filtersSlice';
 import PageContainer from '@/app/home/components/container/PageContainer';
 import { MintExplorer } from '@/features/user/types';
-import { LicensesFormValues } from './consignArtwork/licenses/types';
-import { IconEdit } from '@tabler/icons-react';
 import isVideoExtension from '@/utils/isVideo';
+import { ModalListOfLicenses } from './components/licenses/ModalListOfLicenses';
 
 const iconStyle: CSSProperties = {
     position: 'absolute',
@@ -69,7 +70,7 @@ const iconStyleComment: CSSProperties = {
     right: 50,
     color: '#595959',
 };
-const filters = ['Draft', 'Pending', 'Listed', 'Sold', 'All'];
+const filters = ['Draft', 'Pending', 'Listed', 'Sold', 'ArtCards', 'All'];
 
 const getButtonText = (status: string, mintExplorer?: MintExplorer) => {
     if (status.toUpperCase() === 'DRAFT') return 'Edit';
@@ -95,21 +96,18 @@ const getStatus = (status: string, mintExplorer?: MintExplorer) => {
     return status;
 };
 
-const getPriceText = (licenses: LicensesFormValues) => {
-    return licenses?.nft.elastic.editionPrice ? `Price: ${licenses.nft.elastic.editionPrice}` : '';
-};
-
 export default function Home() {
     const { language } = useI18n();
     const dispatch = useDispatch();
     const router = useRouter();
+    const theme = useTheme();
     const isMobile = useMediaQuery('(max-width: 600px)');
     const isTablet = useMediaQuery('(max-width: 900px)');
     const { assets, currentPage, collections, sort } = useSelector((state) => state.user);
     const customizer = useSelector((state) => state.customizer);
-    const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
-    const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
-    const smUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
+    const lgUp = useMediaQuery((item: Theme) => item.breakpoints.up('lg'));
+    const mdUp = useMediaQuery((item: Theme) => item.breakpoints.up('md'));
+    const smUp = useMediaQuery((item: Theme) => item.breakpoints.up('sm'));
     const selectedFilter = useSelector((state) => state.filters.selectedFilter);
 
     const topRef = useRef<HTMLDivElement>(null);
@@ -118,6 +116,7 @@ export default function Home() {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [assetToDelete, setAssetToDelete] = useState<string | null>(null);
+    const [showListOfLicenses, setShowListOfLicenses] = useState(false);
 
     const generalVault = useSelector((state) => state.user.generalVault);
 
@@ -461,7 +460,6 @@ export default function Home() {
                                         }}
                                         onClick={() => {
                                             dispatch(userActionsCreators.setSelectedAsset(asset._id));
-                                            router.push('/home/consignArtwork');
                                         }}
                                     >
                                         <Tooltip title="Duplicate asset" placement="top">
@@ -633,24 +631,41 @@ export default function Home() {
                                                 mainButtonStyles={{
                                                     backgroundColor: 'transparent',
                                                     color: '#000',
-                                                    border: '1px solid #000',
                                                     width: '40px',
                                                     height: '40px',
                                                 }}
-                                                // actionButtonStyles={actionButtonStyles}
                                                 style={{
                                                     position: 'absolute',
                                                     bottom: -10,
                                                     right: 0,
                                                 }}
                                                 icon={<IconSettings />}
-                                                // event={event}
                                                 alwaysShowTitle={true}
                                             >
-                                                <Action text="Edit" />
-                                                <Action text="View" />
-                                                <Action text="List of Licenses" />
-                                                <Action text="List of users who licensed" />
+                                                {!asset.mintExplorer && (
+                                                    <Action
+                                                        text="Edit"
+                                                        onClick={() => router.push('/home/consignArtwork')}
+                                                    >
+                                                        <IconEdit color={theme.palette.primary.main} size={30} />
+                                                    </Action>
+                                                )}
+                                                {(asset.mintExplorer || asset.contractExplorer) && (
+                                                    <Action
+                                                        text="View"
+                                                        onClick={() =>
+                                                            router.push('/home/consignArtwork/completedConsign')
+                                                        }
+                                                    >
+                                                        <IconEye color={theme.palette.primary.main} size={30} />
+                                                    </Action>
+                                                )}
+                                                <Action
+                                                    text="List of Licenses"
+                                                    onClick={() => setShowListOfLicenses(true)}
+                                                >
+                                                    <IconLicense color={theme.palette.primary.main} size={30} />
+                                                </Action>
                                             </Fab>
 
                                             {getStatus(asset.status, asset.mintExplorer) !== 'Sold' &&
@@ -713,6 +728,8 @@ export default function Home() {
                     </Button>
                 </DialogActions>
             </Dialog>
+
+            <ModalListOfLicenses open={showListOfLicenses} onClose={() => setShowListOfLicenses(false)} />
         </Container>
     );
 }
