@@ -729,7 +729,21 @@ export default function Home() {
                 </DialogActions>
             </Dialog>
 
-            <ModalListOfLicenses open={showListOfLicenses} onClose={() => setShowListOfLicenses(false)} />
+            <ModalListOfLicenses
+                open={showListOfLicenses}
+                onClose={() => {
+                    setShowListOfLicenses(false);
+                    // load assets again
+                    dispatch(
+                        requestMyAssetsThunk({
+                            page: currentPage,
+                            status: selectedFilter,
+                            collection: assets.collection,
+                            sort,
+                        })
+                    );
+                }}
+            />
         </Container>
     );
 }

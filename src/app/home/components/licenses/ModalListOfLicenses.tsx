@@ -9,7 +9,7 @@ interface ModalListOfLicensesProps {
 }
 
 interface Licenses {
-    [key: string]: { added: boolean; version: string };
+    [key: string]: { added: boolean; version: string; status?: string };
 }
 
 export const ModalListOfLicenses = ({ ...rest }: ModalListOfLicensesProps) => {
@@ -17,6 +17,8 @@ export const ModalListOfLicenses = ({ ...rest }: ModalListOfLicensesProps) => {
 
     const assetSelected = useSelector((state) => state.user.selectedAsset);
     const asset = useSelector((state) => state.user.assets.data.find((item) => item._id === assetSelected));
+    const currentLicensesAmount = useSelector((state) => state.user.assets.licenseArtCards);
+    const limitLicenses = useSelector((state) => state.user.licenses?.artCards ?? 3);
 
     const [licenseArtCards, setLicenseArtCards] = useState(asset?.licenses?.artCards?.added ?? false);
 
@@ -43,6 +45,8 @@ export const ModalListOfLicenses = ({ ...rest }: ModalListOfLicensesProps) => {
     }, [asset]);
 
     const handleSave = () => {
+        if (currentLicensesAmount >= limitLicenses && licenseArtCards) return;
+
         dispatch(
             licenseThunk({
                 ...asset!.licenses,
@@ -52,6 +56,8 @@ export const ModalListOfLicenses = ({ ...rest }: ModalListOfLicensesProps) => {
                 },
             })
         );
+
+        rest.onClose();
     };
 
     return (
@@ -69,31 +75,45 @@ export const ModalListOfLicenses = ({ ...rest }: ModalListOfLicensesProps) => {
                 }}
             >
                 <Typography variant="h3" textAlign="center">
-                    List of Licenses
+                    List of Licenses ({currentLicensesAmount}/{limitLicenses})
                 </Typography>
+                {currentLicensesAmount >= limitLicenses && licenseArtCards && (
+                    <Box display="flex" alignItems="center" justifyContent="center">
+                        <Typography variant="caption" color="error" textAlign="center">
+                            You have reached the limit of licenses
+                        </Typography>
+                    </Box>
+                )}
                 <Box mt={4}>
                     {!Object.entries(licenses).length ? (
                         <Typography variant="h4">No licenses found for this asset</Typography>
                     ) : (
                         Object.entries(licenses).map(([key, value]) => (
-                            <Box display="flex" alignItems="center" key={key}>
-                                <Switch
-                                    disabled={key !== 'artCards'}
-                                    checked={key !== 'artCards' ? value.added : licenseArtCards}
-                                    onChange={(e) => {
-                                        if (key === 'artCards') {
-                                            setLicenseArtCards(e.target.checked);
-                                        }
-                                    }}
-                                />
-                                <Typography variant="h4">{key}</Typography>
+                            <Box key={key} display="flex" justifyContent="space-between">
+                                <Box display="flex" alignItems="center">
+                                    <Switch
+                                        disabled={key !== 'artCards'}
+                                        checked={key !== 'artCards' ? value.added : licenseArtCards}
+                                        onChange={(e) => {
+                                            if (key === 'artCards') {
+                                                setLicenseArtCards(e.target.checked);
+                                            }
+                                        }}
+                                    />
+                                    <Typography variant="h4">{key}</Typography>
+                                </Box>
+                                {key === 'artCards' && licenseArtCards && value?.status}
                             </Box>
                         ))
                     )}
                 </Box>
 
                 <Box display="flex" justifyContent="flex-end">
-                    <Button variant="contained" onClick={handleSave}>
+                    <Button
+                        variant="contained"
+                        onClick={handleSave}
+                        disabled={currentLicensesAmount >= limitLicenses && licenseArtCards}
+                    >
                         Save
                     </Button>
                 </Box>
