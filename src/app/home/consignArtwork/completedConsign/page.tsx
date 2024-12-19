@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useEffect } from 'react';
 import { useFormik } from 'formik';
 import { Box, Button, Grid, Theme, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useDispatch, useSelector } from '@/store/hooks';
@@ -14,6 +14,7 @@ import { consignArtworkThunks } from '@/features/consignArtwork/thunks';
 import { EXPLORER_URL } from '@/constants/explorer';
 import { CompletedConsignTableStatus } from '../components/completedConsignPage/CompletedConsignTableStatus';
 import AssetMediaPreview from '../components/assetMediaPreview';
+import { getAssetThunk } from '@/features/asset/thunks';
 
 // TODO: ADICIONAR TRADUÇÃO
 
@@ -33,8 +34,13 @@ export default function CompletedConsignPage() {
     const status = useSelector((state) => state.consignArtwork.status);
     const userIsBlocked = useSelector((state) => state.user?.vault?.isBlocked);
     const transactionHash = useSelector((state) => state.asset.contractExplorer?.tx);
+    const selectedAsset = useSelector((state) => state.user.selectedAsset);
 
     const grayColor = theme.palette.text.disabled;
+
+    useEffect(() => {
+        dispatch(getAssetThunk(selectedAsset));
+    }, []);
 
     const formik = useFormik<FormType>({
         initialValues: {

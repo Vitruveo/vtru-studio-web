@@ -21,6 +21,7 @@ export const ModalListOfLicenses = ({ ...rest }: ModalListOfLicensesProps) => {
     const limitLicenses = useSelector((state) => state.user.licenses?.artCards ?? 3);
 
     const [licenseArtCards, setLicenseArtCards] = useState(asset?.licenses?.artCards?.added ?? false);
+    const [loading, setLoading] = useState(false);
 
     const licenses: Licenses = useMemo(() => {
         if (!asset?.licenses) {
@@ -41,10 +42,13 @@ export const ModalListOfLicenses = ({ ...rest }: ModalListOfLicensesProps) => {
     }, [asset]);
 
     useEffect(() => {
+        setLoading(false);
         setLicenseArtCards(asset?.licenses?.artCards?.added ?? false);
     }, [asset]);
 
     const handleSave = () => {
+        setLoading(true);
+
         if (currentLicensesAmount >= limitLicenses && licenseArtCards) return;
 
         dispatch(
@@ -55,9 +59,9 @@ export const ModalListOfLicenses = ({ ...rest }: ModalListOfLicensesProps) => {
                     added: licenseArtCards,
                 },
             })
-        );
-
-        rest.onClose();
+        ).finally(() => {
+            rest.onClose();
+        });
     };
 
     return (
@@ -75,7 +79,7 @@ export const ModalListOfLicenses = ({ ...rest }: ModalListOfLicensesProps) => {
                 }}
             >
                 <Typography variant="h3" textAlign="center">
-                    List of Licenses ({currentLicensesAmount}/{limitLicenses})
+                    List of Licenses
                 </Typography>
                 {currentLicensesAmount >= limitLicenses && licenseArtCards && (
                     <Box display="flex" alignItems="center" justifyContent="center">
@@ -100,7 +104,10 @@ export const ModalListOfLicenses = ({ ...rest }: ModalListOfLicensesProps) => {
                                             }
                                         }}
                                     />
-                                    <Typography variant="h4">{key}</Typography>
+                                    <Typography variant="h4">
+                                        {key.toUpperCase()}{' '}
+                                        {key === 'artCards' ? `(${currentLicensesAmount}/${limitLicenses})` : ''}
+                                    </Typography>
                                 </Box>
                                 {key === 'artCards' && licenseArtCards && value?.status}
                             </Box>
@@ -112,9 +119,9 @@ export const ModalListOfLicenses = ({ ...rest }: ModalListOfLicensesProps) => {
                     <Button
                         variant="contained"
                         onClick={handleSave}
-                        disabled={currentLicensesAmount >= limitLicenses && licenseArtCards}
+                        disabled={(currentLicensesAmount >= limitLicenses && licenseArtCards) || loading}
                     >
-                        Save
+                        {loading ? 'Loading...' : 'Save'}
                     </Button>
                 </Box>
             </Box>

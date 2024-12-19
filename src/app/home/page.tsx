@@ -631,15 +631,14 @@ export default function Home() {
                                                 mainButtonStyles={{
                                                     backgroundColor: 'transparent',
                                                     color: '#000',
-                                                    width: '40px',
-                                                    height: '40px',
+                                                    boxShadow: 'none',
                                                 }}
                                                 style={{
                                                     position: 'absolute',
-                                                    bottom: -10,
-                                                    right: 0,
+                                                    bottom: -22,
+                                                    right: -20,
                                                 }}
-                                                icon={<IconSettings />}
+                                                icon={<IconSettings size={40} />}
                                                 alwaysShowTitle={true}
                                             >
                                                 {!asset.mintExplorer && (
@@ -732,7 +731,6 @@ export default function Home() {
             <ModalListOfLicenses
                 open={showListOfLicenses}
                 onClose={() => {
-                    setShowListOfLicenses(false);
                     // load assets again
                     dispatch(
                         requestMyAssetsThunk({
@@ -741,7 +739,9 @@ export default function Home() {
                             collection: assets.collection,
                             sort,
                         })
-                    );
+                    ).finally(() => {
+                        setShowListOfLicenses(false);
+                    });
                 }}
             />
         </Container>
