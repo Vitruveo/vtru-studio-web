@@ -24,18 +24,18 @@ const Menuitems: MenuitemsType[] = [
         required: 'canConsignArtwork',
         href: '/home/consignArtwork',
     },
-    {
-        id: uniqueId(),
-        title: 'studio.sidebar.store',
-        icon: IconPhotoUp,
-        href: '/home/stores',
-    },
-    {
-        id: uniqueId(),
-        title: 'studio.sidebar.truLevel',
-        icon: IconTrendingUp,
-        href: '/home/truLevel',
-    },
+    // {
+    //     id: uniqueId(),
+    //     title: 'studio.sidebar.store',
+    //     icon: IconPhotoUp,
+    //     href: '/home/stores',
+    // },
+    // {
+    //     id: uniqueId(),
+    //     title: 'studio.sidebar.truLevel',
+    //     icon: IconTrendingUp,
+    //     href: '/home/truLevel',
+    // },
     {
         id: uniqueId(),
         title: 'studio.sidebar.profile',
@@ -47,7 +47,7 @@ const Menuitems: MenuitemsType[] = [
         title: 'studio.sidebar.community',
         icon: IconBrandWechat,
         external: true,
-        href: '//dreamverse.vitruveo.xyz/',
+        href: 'https://dreamverse.vitruveo.xyz/',
     },
 ];
 
