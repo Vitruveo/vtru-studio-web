@@ -630,7 +630,7 @@ export default function Home() {
                                             <Fab
                                                 mainButtonStyles={{
                                                     backgroundColor: 'transparent',
-                                                    color: '#000',
+                                                    color: 'GrayText',
                                                     boxShadow: 'none',
                                                 }}
                                                 style={{
@@ -643,6 +643,7 @@ export default function Home() {
                                             >
                                                 {!asset.mintExplorer && (
                                                     <Action
+                                                        style={{ backgroundColor: '#fff' }}
                                                         text="Edit"
                                                         onClick={() => router.push('/home/consignArtwork')}
                                                     >
@@ -651,6 +652,7 @@ export default function Home() {
                                                 )}
                                                 {(asset.mintExplorer || asset.contractExplorer) && (
                                                     <Action
+                                                        style={{ backgroundColor: '#fff' }}
                                                         text="View"
                                                         onClick={() =>
                                                             router.push('/home/consignArtwork/completedConsign')
@@ -660,6 +662,7 @@ export default function Home() {
                                                     </Action>
                                                 )}
                                                 <Action
+                                                    style={{ backgroundColor: '#fff' }}
                                                     text="List of Licenses"
                                                     onClick={() => setShowListOfLicenses(true)}
                                                 >
