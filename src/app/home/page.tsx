@@ -230,12 +230,45 @@ export default function Home() {
                 ) : (
                     <></>
                 )}
-                <Box pb={10} paddingInline={3} p={0}>
+                <Box
+                    pr={1}
+                    sx={{
+                        maxHeight: lgUp
+                            ? 'calc(100vh - 100px)'
+                            : mdUp || smUp
+                              ? 'calc(100vh - 400px)'
+                              : 'calc(100vh - 500px)',
+                        overflowY: 'scroll',
+                        overflowX: 'hidden',
+                    }}
+                >
                     <Box display="flex" flexWrap="wrap" alignItems="center">
                         <Typography marginRight={1} fontSize="1.7rem" alignSelf="center">
                             {texts.welcome}
                         </Typography>
                         <Image src={'/images/logos/XIBIT-logo_light.png'} priority alt="bg" width={90} height={30} />
+                    </Box>
+
+                    <Box bgcolor="#ff0066" color="#fff" p={2} borderRadius={2} mt={2}>
+                        <Typography fontSize="1.1rem" alignSelf="center" lineHeight={1.5}>
+                            Xibit is beta software. Funds from platform sales are subject to the following restrictions:
+                        </Typography>
+                        <br />
+                        <Typography fontSize="1.1rem" alignSelf="center" lineHeight={1.5}>
+                            1) For the first 30 days after your initial consignment, no funds may be withdrawn.
+                        </Typography>
+                        <Typography fontSize="1.1rem" alignSelf="center" lineHeight={1.5}>
+                            2) After 30 days you have two choices for the funds in your Vault:
+                        </Typography>
+
+                        <Box ml={8}>
+                            <Typography fontSize="1.1rem" alignSelf="center" lineHeight={1.5}>
+                                a) Claim 5% and Stake 95%, OR
+                            </Typography>
+                            <Typography fontSize="1.1rem" alignSelf="center" lineHeight={1.5}>
+                                b) Claim 100% <b>after</b> VTRU is listed on a Centralized Exchange in January 2025
+                            </Typography>
+                        </Box>
                     </Box>
 
                     <Box mt={2}>
@@ -423,19 +456,7 @@ export default function Home() {
                             </Box>
                         )}
                     </Box>
-                    <Box
-                        mt={2}
-                        style={{
-                            maxHeight: lgUp
-                                ? 'calc(100vh - 330px)'
-                                : mdUp || smUp
-                                  ? 'calc(100vh - 400px)'
-                                  : 'calc(100vh - 500px)',
-                            overflowY: 'scroll',
-                            overflowX: 'hidden',
-                        }}
-                        ref={topRef}
-                    >
+                    <Box mt={2} ref={topRef}>
                         <Grid container spacing={2} padding={1} width={'100%'} justifyContent={'center'}>
                             {assets.data.map((asset, index) => (
                                 <Grid item key={index} sm={6} md={6} lg={4}>
