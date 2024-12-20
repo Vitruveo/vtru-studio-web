@@ -1,5 +1,6 @@
 import { FormikErrors } from 'formik';
 import { FormikDefaultProps } from '@/app/common/types';
+import { ArtworkRecognition, Link, PersonalDetails, RequestUpload } from '@/features/user/types';
 
 interface Wallet {
     address: string;
@@ -17,25 +18,20 @@ export interface AccountSettingsFormValues {
     emails: EmailFormValues[];
     emailDefault: string;
     wallets: Wallet[];
+    links: Link[];
+    myWebsite?: string;
     walletDefault: string;
-    creators: Creator[];
+    personalDetails?: PersonalDetails;
+    artworkRecognition?: ArtworkRecognition;
+    requestsUpload?: { [key: string]: RequestUpload };
+    deleteKeys?: string[];
 }
 
-export interface Creator {
-    name: string;
-    roles: string[];
-    bio: string;
-    profileUrl: string;
-    nationality: string;
-    residence: string;
-    ethnicity: string;
-    gender: string;
-}
-
-type AccountSettingsFormErros = FormikErrors<AccountSettingsFormValues>;
+export type AccountSettingsFormErros = FormikErrors<AccountSettingsFormValues>;
 
 export interface AccountSettingsProps extends FormikDefaultProps<AccountSettingsFormValues> {
     values: AccountSettingsFormValues;
+    type?: 'emails' | 'wallets';
     errors: AccountSettingsFormErros;
     setErrors: (errors: AccountSettingsFormErros) => void;
 }

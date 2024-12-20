@@ -1,7 +1,8 @@
 'use client';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { UserSliceState, VaultProps } from './types';
+import { RequestUpload, SynapsStep, UserSliceState, VaultProps } from './types';
+import { SynapsChangeNotify } from '../ws/types';
 
 const initialState: UserSliceState = {
     _id: '',
@@ -14,6 +15,9 @@ const initialState: UserSliceState = {
     login: {
         email: '',
     },
+    personalDetails: undefined,
+    artworkRecognition: undefined,
+    links: [],
     wallets: [],
     emails: [],
     profile: {
@@ -37,7 +41,7 @@ const initialState: UserSliceState = {
     },
     status: '',
     error: '',
-    canConsignArtwork: false,
+    canConsignArtwork: true,
     generalVault: undefined,
     vault: {
         isBlocked: false,
@@ -66,6 +70,7 @@ const initialState: UserSliceState = {
         total: 0,
         totalPage: 0,
         collection: '',
+        licenseArtCards: 0,
     },
     collections: [],
     currentPage: 1,
@@ -93,6 +98,10 @@ export const userSlice = createSlice({
             state.emails = creator.emails;
             state.username = creator.username;
             state.wallets = creator.wallets;
+            state.links = creator.links;
+            state.myWebsite = creator.myWebsite;
+            state.personalDetails = creator.personalDetails;
+            state.artworkRecognition = creator.artworkRecognition;
             state.profile = creator.profile;
             state.emailDefault = creator.emailDefault;
             state.walletDefault = creator.walletDefault;
@@ -101,6 +110,9 @@ export const userSlice = createSlice({
             state.vault.createdAt = creator?.vault?.createdAt || null;
             state.vault.isBlocked = creator?.vault?.isBlocked || false;
             state.framework = creator.framework;
+            state.synaps = creator.synaps;
+            state.truLevel = creator.truLevel;
+            state.licenses = creator.licenses;
             state.socials = {
                 x: {
                     name: creator?.socials?.x?.name ?? '',
@@ -140,6 +152,15 @@ export const userSlice = createSlice({
         requestAvatarUpload: (state, action) => {
             state.requestAvatarUpload = action.payload;
         },
+        requestsUpload: (state, action: PayloadAction<RequestUpload>) => {
+            state.requestsUpload = {
+                ...state.requestsUpload,
+                [action.payload.transactionId]: {
+                    ...state.requestsUpload?.[action.payload.transactionId],
+                    ...action.payload,
+                },
+            };
+        },
         error: (state, action) => {
             state.status = `failed: ${action.type}`;
             state.error = action.payload;
@@ -177,6 +198,28 @@ export const userSlice = createSlice({
                 ...state.assets,
                 data: state.assets.data.filter((asset) => asset._id !== action.payload),
             };
+        },
+        setSynapsSessionId: (state, action: PayloadAction<string>) => {
+            return {
+                ...state,
+                synaps: {
+                    ...(state.synaps || {}),
+                    sessionId: action.payload,
+                    steps: [],
+                },
+            };
+        },
+        setSynapsSteps: (state, action: PayloadAction<SynapsStep[]>) => {
+            if (state.synaps) {
+                state.synaps.steps = action.payload;
+            }
+        },
+        changeSynapsStep: (state, action: PayloadAction<SynapsChangeNotify>) => {
+            if (state.synaps) {
+                state.synaps.steps = state.synaps.steps.map((step) =>
+                    step.id === action.payload.stepId ? { ...step, status: action.payload.status } : step
+                );
+            }
         },
     },
 });

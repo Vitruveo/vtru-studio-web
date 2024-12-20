@@ -197,7 +197,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
             return;
         }
 
-        if (!wallets.some(wallet => wallet.address === address)) {
+        if (!wallets.some((wallet) => wallet.address === address)) {
             // wallet not found
 
             setLoading(false);
@@ -244,15 +244,15 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                             <Box alignItems="center" justifyContent="space-between" display="flex" width={300}>
                                 <CustomSelect
                                     sx={{ backgroundColor: '#fff' }}
-                                    InputProps={{
+                                    inputProps={{
                                         sx: {
                                             backgroundColor: '#fff',
                                         },
                                     }}
                                     name="nft.license"
                                     value={values.license}
-                                    onChange={(v: SelectChangeEvent<string>) =>
-                                        handleCustomChange('nft.license', v.target.value)
+                                    onChange={(v: SelectChangeEvent<unknown>) =>
+                                        handleCustomChange('nft.license', v.target.value as string)
                                     }
                                     size="small"
                                     fullWidth

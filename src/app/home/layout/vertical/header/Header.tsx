@@ -11,7 +11,6 @@ import { styled } from '@mui/material/styles';
 import { useSelector } from '@/store/hooks';
 import { toggleMobileSidebar, toggleSidebar } from '@/features/customizer/slice';
 import { Rss } from './Rss';
-import Profile from './Profile';
 import Language from './Language';
 import { ClaimContainer } from '@/app/home/components/Claim/container';
 import { WalletProvider } from '@/app/home/components/apps/wallet';
@@ -102,7 +101,6 @@ const Header = () => {
                         </IconButton>
                         <Rss />
                         <Language />
-                        <Profile />
                     </Stack>
                 </Box>
             </ToolbarStyled>

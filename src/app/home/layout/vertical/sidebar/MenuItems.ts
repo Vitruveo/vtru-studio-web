@@ -1,5 +1,5 @@
 import { uniqueId } from 'lodash';
-import { IconPhotoUp, IconBrandWechat } from '@tabler/icons-react';
+import { IconPhotoUp, IconBrandWechat, IconTrendingUp, IconUser, IconLogout } from '@tabler/icons-react';
 
 interface MenuitemsType {
     [x: string]: any;
@@ -24,14 +24,38 @@ const Menuitems: MenuitemsType[] = [
         required: 'canConsignArtwork',
         href: '/home/consignArtwork',
     },
-
+    // {
+    //     id: uniqueId(),
+    //     title: 'studio.sidebar.store',
+    //     icon: IconPhotoUp,
+    //     href: '/home/stores',
+    // },
+    // {
+    //     id: uniqueId(),
+    //     title: 'studio.sidebar.truLevel',
+    //     icon: IconTrendingUp,
+    //     href: '/home/truLevel',
+    // },
+    {
+        id: uniqueId(),
+        title: 'studio.sidebar.profile',
+        icon: IconUser,
+        href: '/home/myProfile',
+    },
     {
         id: uniqueId(),
         title: 'studio.sidebar.community',
         icon: IconBrandWechat,
         external: true,
-        href: '//dreamverse.vitruveo.xyz/',
+        href: 'https://dreamverse.vitruveo.xyz/',
     },
 ];
+
+export const logoutItem: MenuitemsType = {
+    id: uniqueId(),
+    title: 'studio.sidebar.logout',
+    icon: IconLogout,
+    href: '/login',
+};
 
 export default Menuitems;

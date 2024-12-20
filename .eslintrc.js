@@ -31,6 +31,7 @@ module.exports = {
         'no-shadow': 'off',
         'class-methods-use-this': 'off',
         'no-console': 'warn',
+        'react/display-name': 'off',
         '@typescript-eslint/no-shadow': ['error'],
         'import/prefer-default-export': 0,
         'import/no-cycle': 0,

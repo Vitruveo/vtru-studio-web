@@ -20,6 +20,7 @@ import {
     updatePrice,
     checkLicenseEditable,
     signMessage,
+    sendRequestUploadStores,
 } from './requests';
 import {
     AssetSendRequestUploadApiRes,
@@ -32,7 +33,9 @@ import {
     CreateContractByAssetIdReq,
     HistoryItems,
     RequestDeleteFilesReq,
+    StoresSendRequestUploadReq,
     SigningMediaC2PAReq,
+    StoresSendRequestUploadApiRes,
     UpdatePriceReq,
     UploadIPFSByAssetIdApiRes,
     UploadIPFSByAssetIdReq,
@@ -556,6 +559,22 @@ export function sendRequestUploadThunk(
         const assetSelected = getState().user.selectedAsset;
         const response = await sendRequestUpload({
             id: assetSelected,
+            mimetype: payload.mimetype,
+            originalName: payload.originalName,
+            transactionId: payload.transactionId,
+            metadata: payload.metadata,
+        });
+
+        return response;
+    };
+}
+
+export function sendRequestUploadStoresThunk(
+    payload: StoresSendRequestUploadReq
+): ReduxThunkAction<Promise<StoresSendRequestUploadApiRes>> {
+    return async function (dispatch, getState) {
+        const response = await sendRequestUploadStores({
+            id: payload.id,
             mimetype: payload.mimetype,
             originalName: payload.originalName,
             transactionId: payload.transactionId,

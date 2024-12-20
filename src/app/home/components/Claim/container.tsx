@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useAccount, useDisconnect, useWalletClient } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useRouter } from 'next/navigation';
@@ -12,7 +12,7 @@ import { ClaimComponent } from './components';
 import StakeModal from './StakeModal';
 import ClaimedModal from './ClaimedModal';
 
-export const ClaimContainer = () => {
+export const ClaimContainer = memo(() => {
     const [balance, setBalance] = useState(0);
     const token = useSelector((state) => state.user.token);
     const [isModalOpenStake, setIsModalOpenStake] = useState(false);
@@ -156,4 +156,4 @@ export const ClaimContainer = () => {
             />
         </>
     );
-};
+});

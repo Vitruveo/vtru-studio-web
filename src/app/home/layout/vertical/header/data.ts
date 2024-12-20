@@ -62,7 +62,7 @@ const profile: ProfileType[] = [
     {
         href: '/home/myProfile',
         title: 'studio.userAccount.menu.title',
-        subtitle: 'studio.userAccount.menu.subtitle',
+        subtitle: '',
         icon: '/images/svgs/icon-account.svg',
     },
 ];
