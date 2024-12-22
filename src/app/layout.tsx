@@ -11,6 +11,8 @@ import { Direction, Shadows, ThemeProvider, createTheme } from '@mui/material/st
 import { TypographyOptions } from '@mui/material/styles/createTypography';
 import { Inter } from 'next/font/google';
 import 'toastr/build/toastr.min.css';
+import 'react-tiny-fab/dist/styles.css';
+
 import Providers from '@/store/Provider';
 import CustomizedSnackbar from './common/toastr';
 import { useToastr } from './hooks/useToastr';
@@ -46,10 +48,10 @@ const MyApp = ({ children }: { children: React.ReactNode }) => {
                         direction: theme.defaultTheme.direction as Direction,
                         palette: {
                             primary: {
-                                main: '#13DFAA',
+                                main: '#ff0066',
                                 light: '#FEFEFE',
-                                dark: '#2AA077',
-                                contrastText: '#333333',
+                                dark: '#9e0643',
+                                contrastText: '#FEFEFE',
                             },
                             secondary: {
                                 main: '#59D6A9',

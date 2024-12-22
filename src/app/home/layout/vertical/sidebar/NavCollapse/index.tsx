@@ -63,7 +63,7 @@ export default function NavCollapse({
         setOpen(!open);
     };
 
-    // menu collapse for sub-levels
+    // menu collapse for sub-level
     React.useEffect(() => {
         setOpen(false);
         menu?.children?.forEach((item: any) => {

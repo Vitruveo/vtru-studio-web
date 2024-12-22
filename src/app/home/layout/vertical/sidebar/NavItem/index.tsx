@@ -34,13 +34,14 @@ type NavGroup = {
 
 interface ItemType {
     item: NavGroup;
+    forceClick?: boolean;
     onClick: (event: React.MouseEvent<HTMLElement>) => void;
     hideMenu?: any;
     level?: number | any;
     pathDirect: string;
 }
 
-export default function NavItem({ item, level, pathDirect, hideMenu, onClick }: ItemType) {
+export default function NavItem({ item, level, pathDirect, hideMenu, forceClick, onClick }: ItemType) {
     const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
     const customizer = useSelector((state) => state.customizer);
 
@@ -107,7 +108,9 @@ export default function NavItem({ item, level, pathDirect, hideMenu, onClick }: 
                     disabled={item?.disabled}
                     selected={pathDirect === item?.href}
                     onClick={
-                        lgDown ? onClick : () => dispatch(consignArtworkActionsCreators.changeGoToConsignArtwork(true))
+                        lgDown || forceClick
+                            ? onClick
+                            : () => dispatch(consignArtworkActionsCreators.changeGoToConsignArtwork(true))
                     }
                 >
                     <ListItemIcon
@@ -123,7 +126,19 @@ export default function NavItem({ item, level, pathDirect, hideMenu, onClick }: 
                         {itemIcon}
                     </ListItemIcon>
                     <ListItemText>
-                        {hideMenu ? '' : <>{language[item?.title || ''] as string}</>}
+                        {hideMenu ? (
+                            ''
+                        ) : (
+                            <>
+                                {item?.title === 'studio.sidebar.truLevel' ? (
+                                    <>
+                                        <span style={{ color: '#FF0066' }}>tru</span>Level
+                                    </>
+                                ) : (
+                                    (language[item?.title || ''] as string)
+                                )}
+                            </>
+                        )}
                         <br />
                         {item?.subtitle ? (
                             <Typography variant="caption">

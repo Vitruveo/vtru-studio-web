@@ -846,6 +846,15 @@ const language: Translation = {
     'studio.consignArtwork.licenses.stream.unlimitedStreaming.description':
         'Произведение может использоваться для потокового воспроизведения в неограниченных сценариях.',
 
+    'studio.consignArtwork.licenses.artCards.description':
+        'Эта лицензия позволяет конечным пользователям создавать и печатать карточки и открытки с вашим произведением искусства.',
+    'studio.consignArtwork.licenses.artCards.enable':
+        'Включите эту лицензию, если хотите, чтобы конечные пользователи использовали ваше искусство для создания карточек и открыток.',
+    'studio.consignArtwork.licenses.artCards.enable.description':
+        'Конечные пользователи могут создавать и печатать карточки и открытки с вашим произведением искусства. Цена за единицу определяется вами.',
+    'studio.consignArtwork.licenses.artCards.enable.amount': (data: { amount: number; from: number }) =>
+        `${data.amount} из ${data.from} активных лицензий`,
+
     'studio.consignArtwork.licenses.print.description':
         'Эта лицензия предоставляет произведение конечным пользователям для печати на один физический объект с использованием технологии печати по требованию (POD). Лицензия свободно передается до момента первой печати, после чего она передается исключительно владельцу физического объекта.',
     'studio.consignArtwork.licenses.print.enable':
@@ -925,6 +934,9 @@ const language: Translation = {
     /* Sidebar */
     'studio.sidebar.consign': 'Подать Работу',
     'studio.sidebar.community': 'Поддержка Сообщества',
+    'studio.sidebar.store': 'Магазин',
+    'studio.sidebar.truLevel': 'Уровни создателя',
+    'studio.sidebar.profile': 'Профиль',
 
     /* Footer */
     'studio.footer.thisStep': 'Текущий шаг',

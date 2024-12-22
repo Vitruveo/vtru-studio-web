@@ -804,6 +804,15 @@ const language: Translation = {
     'studio.consignArtwork.licenses.stream.unlimitedStreaming.description':
         'La obra de arte puede ser utilizada para transmisión en escenarios ilimitados.',
 
+    'studio.consignArtwork.licenses.artCards.description':
+        'Esta licencia hace que la obra de arte esté disponible para los usuarios finales para imprimir en tarjetas de arte.',
+    'studio.consignArtwork.licenses.artCards.enable':
+        'Habilite esta licencia si desea que los usuarios finales utilicen su arte para aplicaciones de tarjetas de arte.',
+    'studio.consignArtwork.licenses.artCards.enable.description':
+        'Esta licencia es para impresión individual; no se permite la impresión en masa.',
+    'studio.consignArtwork.licenses.artCards.enable.amount': (data: { amount: number; from: string }) =>
+        `${data.amount} de ${data.from} Licencias habilitadas`,
+
     'studio.consignArtwork.licenses.print.description':
         'Esta licencia hace que la obra de arte esté disponible para los usuarios finales para imprimir en un solo artículo físico utilizando la tecnología de impresión bajo demanda (POD). La licencia es libremente transferible hasta el punto de impresión, después de lo cual es transferible únicamente al propietario del artículo físico.',
     'studio.consignArtwork.licenses.print.enable':
@@ -883,6 +892,9 @@ const language: Translation = {
     /* Sidebar */
     'studio.sidebar.consign': 'Consignar Obra de Arte',
     'studio.sidebar.community': 'Apoyo Comunitario',
+    'studio.sidebar.store': 'Tienda',
+    'studio.sidebar.truLevel': 'Niveles de Creador',
+    'studio.sidebar.profile': 'Perfil',
 
     /* Footer */
     'studio.footer.thisStep': 'Este paso ha sido',

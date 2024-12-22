@@ -31,14 +31,12 @@ const ConsignArtwork = () => {
     const theme = useTheme();
     const dispatch = useDispatch();
 
-    const { status, consignArtwork } = useSelector((state) => state.asset);
+    const { status } = useSelector((state) => state.asset);
     const formData = useSelector((state) => state.asset.assetMetadata?.context.formData);
     const selectedAsset = useSelector((state) => state.user.selectedAsset);
-    const { previewAndConsign } = useSelector((state) => state.consignArtwork);
     const { completedSteps } = useSelector((state) => state.consignArtwork);
     const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
     const hasMinted = useSelector((state) => !!state.asset?.mintExplorer);
-    const consignArtworkStatus = useSelector((state) => state.consignArtwork?.status);
 
     const checkAllCompletedSteps = Object.values(completedSteps)
         .filter((v) => !v.optional && v.stepId !== 'reviewAndConsign')
@@ -93,10 +91,6 @@ const ConsignArtwork = () => {
         });
         if (!status?.length) dispatch(publishThunk({ status: 'draft' }));
     }, [status]);
-
-    if (hasMinted) {
-        return <CompletedConsignPage />;
-    }
 
     return (
         <form onSubmit={handleSubmit}>

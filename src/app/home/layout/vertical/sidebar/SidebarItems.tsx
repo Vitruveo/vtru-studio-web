@@ -1,18 +1,18 @@
-import Menuitems from './MenuItems';
-import { usePathname } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import Menuitems, { logoutItem } from './MenuItems';
 import NavItem from './NavItem';
 import NavCollapse from './NavCollapse';
 import NavGroup from './NavGroup/NavGroup';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { toggleMobileSidebar } from '@/features/customizer/slice';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
-import Image from 'next/image';
-import WhatHappensBanner from 'public/images/breadcrumb/what-happens-banner.png';
+import { userActionsCreators } from '@/features/user/slice';
 
 const SidebarItems = () => {
+    const router = useRouter();
     const dispatch = useDispatch();
     const pathname = usePathname();
     const pathDirect = pathname;
@@ -32,6 +32,13 @@ const SidebarItems = () => {
 
     const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
     const hideMenu: any = lgUp ? customizer.isCollapse && !customizer.isSidebarHover : '';
+
+    const handleLogout = () => {
+        setTimeout(() => {
+            router.push('/login');
+        }, 1000);
+        dispatch(userActionsCreators.logout());
+    };
 
     return (
         <Box sx={{ px: 3 }}>
@@ -76,6 +83,16 @@ const SidebarItems = () => {
                         );
                     }
                 })}
+                {
+                    <NavItem
+                        item={logoutItem}
+                        key={logoutItem.id}
+                        pathDirect={pathDirect}
+                        hideMenu={hideMenu}
+                        forceClick
+                        onClick={handleLogout}
+                    />
+                }
             </List>
         </Box>
     );

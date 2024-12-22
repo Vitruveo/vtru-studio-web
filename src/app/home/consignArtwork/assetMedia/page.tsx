@@ -24,6 +24,7 @@ import { useI18n } from '@/app/hooks/useI18n';
 import { assetActionsCreators } from '@/features/asset/slice';
 import { requestDeleteFiles } from '@/features/asset/requests';
 import { useToastr } from '@/app/hooks/useToastr';
+import LoadingOverlay from '../../components/loadingOverlay';
 
 export default function AssetMedia() {
     const toast = useToastr();
@@ -367,30 +368,9 @@ export default function AssetMedia() {
         return file && file instanceof File ? URL.createObjectURL(file) : file ? (file as string) : '';
     }, [file]);
 
-    const LoadingOverlay = () => (
-        <Box
-            position="fixed"
-            top={0}
-            left={0}
-            width="100vw"
-            height="100vh"
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            bgcolor="rgba(0, 0, 0, 0.5)"
-            zIndex={9999}
-        >
-            <Typography variant="h2" color="white">
-                Validating medias...
-            </Typography>
-            <CircularProgress color="primary" size={150} />
-        </Box>
-    );
-
     return (
         <form onSubmit={handleSubmit}>
-            {asset.isLoading && <LoadingOverlay />}
+            {asset.isLoading && <LoadingOverlay message="Validating medias..." />}
             <PageContainerFooter
                 submitDisabled={isUploading}
                 backOnclick={handleOpenBackModal}

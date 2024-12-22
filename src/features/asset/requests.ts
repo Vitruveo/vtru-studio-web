@@ -13,6 +13,8 @@ import {
     GetMyAssetsReq,
     RequestDeleteFilesReq,
     SigningMediaC2PAReq,
+    StoresSendRequestUploadApiRes,
+    StoresSendRequestUploadReq,
     UpdateAssetStepApiRes,
     UpdateAssetStepReq,
     UpdatePriceReq,
@@ -83,7 +85,13 @@ export async function getAsset(): Promise<GetAssetApiRes> {
     return res;
 }
 
-export async function getMyAssets({ page, status, collection = '', sort }: GetMyAssetsReq): Promise<GetAssetsApiRes> {
+export async function getMyAssets({
+    page,
+    status,
+    collection = '',
+    sort,
+    limit,
+}: GetMyAssetsReq): Promise<GetAssetsApiRes> {
     const res = await apiService.get<AssetPaginated>(
         `/assets?page=${page}&status=${status?.toLowerCase()}&collection=${encodeURIComponent(collection)}&sort=${sort}`
     );
@@ -111,6 +119,13 @@ export async function deleteAsset(id: string): Promise<any> {
 
 export async function sendRequestUpload(data: AssetSendRequestUploadReq): Promise<AssetSendRequestUploadApiRes> {
     const res = await apiService.post<string>(`/assets/request/upload/${data.id}`, data);
+    return res;
+}
+
+export async function sendRequestUploadStores(
+    data: StoresSendRequestUploadReq
+): Promise<StoresSendRequestUploadApiRes> {
+    const res = await apiService.post<string>(`/stores/upload/request/${data.id}`, data);
     return res;
 }
 

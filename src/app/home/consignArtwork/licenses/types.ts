@@ -37,6 +37,11 @@ export interface LicensesFormValues {
         unitPrice: number;
         availableLicenses: number;
     };
+    artCards: {
+        version: string;
+        added: boolean;
+        status?: string;
+    };
 }
 
 export interface LicenseProps extends FormikDefaultProps<LicensesFormValues> {
