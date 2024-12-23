@@ -312,7 +312,7 @@ export default function Home() {
                                         transition: '0.3s',
                                     }}
                                     onMouseEnter={(event) => {
-                                        // rotate on hover
+                                        // rotate on hover.
                                         event.currentTarget.style.transform = 'rotate(180deg)';
                                     }}
                                     onMouseLeave={(event) => {
