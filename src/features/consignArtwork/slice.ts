@@ -132,7 +132,7 @@ export const consignArtworkSlice = createSlice({
             state.previewAndConsign.creatorWallet = { checked: false, value: '' };
         },
         resetConsignArtwork: (state) => {
-            return initialState;
+            return { ...initialState, isCompletedProfile: state.isCompletedProfile };
         },
     },
 });

@@ -56,6 +56,7 @@ import PageContainer from '@/app/home/components/container/PageContainer';
 import { MintExplorer } from '@/features/user/types';
 import isVideoExtension from '@/utils/isVideo';
 import { ModalListOfLicenses } from './components/licenses/ModalListOfLicenses';
+import { userSelector } from '@/features/user';
 
 const iconStyle: CSSProperties = {
     position: 'absolute',
@@ -118,6 +119,9 @@ export default function Home() {
     const [assetToDelete, setAssetToDelete] = useState<string | null>(null);
     const [showListOfLicenses, setShowListOfLicenses] = useState(false);
 
+    const { emails, username, wallets } = useSelector(userSelector(['emails', 'wallets', 'username']));
+    const isCompletedProfile = emails.length && wallets.length && username.length;
+
     const generalVault = useSelector((state) => state.user.generalVault);
 
     const texts = {
@@ -158,12 +162,17 @@ export default function Home() {
     }, [dispatch]);
 
     const handleCreateNewAsset = async (assetClonedId?: string) => {
-        setLoading(true);
-        dispatch(createNewAssetThunk(assetClonedId || cloneId))
-            .then(() => {
-                router.push('/home/consignArtwork');
-            })
-            .finally(() => setLoading(false));
+        if (isCompletedProfile) {
+            setLoading(true);
+            dispatch(createNewAssetThunk(assetClonedId || cloneId))
+                .then(() => {
+                    router.push('/home/consignArtwork');
+                })
+                .finally(() => setLoading(false));
+        } else {
+            dispatch(consignArtworkActionsCreators.changeGoToConsignArtwork(true));
+            router.push('/home/myProfile');
+        }
     };
 
     const handleDrawerToggle = () => {

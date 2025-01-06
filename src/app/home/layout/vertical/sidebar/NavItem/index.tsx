@@ -14,6 +14,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { useI18n } from '@/app/hooks/useI18n';
+import { userSelector } from '@/features/user';
 
 type NavGroup = {
     [x: string]: any;
@@ -52,7 +53,9 @@ export default function NavItem({ item, level, pathDirect, hideMenu, forceClick,
     const { language } = useI18n();
 
     const status = useSelector((state) => state.asset.status);
-    const isCompletedProfile = useSelector((state) => state.consignArtwork.isCompletedProfile);
+    const { emails, username, wallets } = useSelector(userSelector(['emails', 'wallets', 'username']));
+    const isCompletedProfile = emails.length && wallets.length && username.length;
+    const isConsign = item.href === '/home/consignArtwork';
     const itemIcon = level > 1 ? <Icon stroke={1.5} size="1rem" /> : <Icon stroke={1.5} size="1.3rem" />;
 
     const isPublished = status === 'preview';
@@ -96,7 +99,7 @@ export default function NavItem({ item, level, pathDirect, hideMenu, forceClick,
             <Link
                 {...listItemProps}
                 href={
-                    item.href === '/home/consignArtwork' && !isCompletedProfile
+                    isConsign && !isCompletedProfile
                         ? '/home/myProfile'
                         : isPublished
                           ? '/home/consignArtwork'
@@ -110,7 +113,10 @@ export default function NavItem({ item, level, pathDirect, hideMenu, forceClick,
                     onClick={
                         lgDown || forceClick
                             ? onClick
-                            : () => dispatch(consignArtworkActionsCreators.changeGoToConsignArtwork(true))
+                            : () =>
+                                  isConsign
+                                      ? dispatch(consignArtworkActionsCreators.changeGoToConsignArtwork(true))
+                                      : {}
                     }
                 >
                     <ListItemIcon
