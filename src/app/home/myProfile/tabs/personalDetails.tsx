@@ -55,7 +55,7 @@ const PersonalDetails = ({ values, setFieldValue }: PersonalDetailsProps) => {
         <Grid container spacing={2}>
             <Grid item xs={12} lg={6}>
                 <BlankCard>
-                    <CardContent sx={{ height: { xs: 'auto', lg: '500px' }, overflowY: 'auto', maxHeight: '535px' }}>
+                    <CardContent sx={{ height: { xs: 'auto', lg: '470px' }, overflowY: 'auto', maxHeight: '535px' }}>
                         <Box maxWidth={!xl ? 300 : 350} my={2}>
                             <Typography marginBottom={3} fontSize="1.2rem" fontWeight="500">
                                 About Me
@@ -68,7 +68,7 @@ const PersonalDetails = ({ values, setFieldValue }: PersonalDetailsProps) => {
                                 </Box>
                                 <CustomTextarea
                                     value={values.personalDetails?.bio}
-                                    minRows={8}
+                                    minRows={7}
                                     handleChange={handleTextAreaChange}
                                 />
                             </Box>
@@ -119,7 +119,7 @@ const PersonalDetails = ({ values, setFieldValue }: PersonalDetailsProps) => {
             </Grid>
             <Grid item xs={12} lg={6}>
                 <BlankCard>
-                    <CardContent sx={{ height: { xs: 'auto', lg: '500px' }, overflowY: 'auto', maxHeight: '535px' }}>
+                    <CardContent sx={{ height: { xs: 'auto', lg: '470px' }, overflowY: 'auto', maxHeight: '535px' }}>
                         <Box maxWidth={!xl ? 300 : 350} my={2}>
                             <Typography marginBottom={3} fontSize="1.2rem" fontWeight="500">
                                 Location

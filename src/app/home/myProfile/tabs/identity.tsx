@@ -48,51 +48,85 @@ const Identity = ({
         setFieldValue('myWebsite', !e.target.value.length ? null : e.target.value);
     };
 
+    const handleDisplayNameChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setFieldValue('displayName', !e.target.value.length ? null : e.target.value);
+    };
+
     return (
         <Grid container spacing={2}>
             <Grid item xs={12} lg={6}>
                 <BlankCard>
-                    <CardContent sx={{ height: { xs: 'auto', lg: '500px' } }}>
-                        <Box my={2} maxWidth={250}>
-                            <Box mb={2}>
-                                <Typography variant="subtitle1" fontWeight={600} component="label">
-                                    {texts.usernameTitle}
-                                </Typography>
+                    <CardContent sx={{ height: { xs: 'auto', lg: '470px' } }}>
+                        <Box>
+                            <Box my={2} maxWidth={300}>
+                                <Box mb={1}>
+                                    <Typography variant="subtitle1" fontWeight={600} component="label">
+                                        {texts.usernameTitle}
+                                    </Typography>
+                                </Box>
+                                <CustomTextField
+                                    placeholder={texts.usernamePlaceholder}
+                                    size="small"
+                                    id="username"
+                                    variant="outlined"
+                                    fullWidth
+                                    value={values.username}
+                                    onChange={handleUsernameChange}
+                                    error={!!errors.username || !!usernameError}
+                                    helperText={errors.username || usernameError}
+                                />
                             </Box>
-                            <CustomTextField
-                                placeholder={texts.usernamePlaceholder}
-                                size="small"
-                                id="username"
-                                variant="outlined"
-                                fullWidth
-                                value={values.username}
-                                onChange={handleUsernameChange}
-                                error={!!errors.username || !!usernameError}
-                                helperText={errors.username || usernameError}
-                            />
-                        </Box>
-                        <Box maxWidth={250}>
-                            <Box mb={1}>
-                                <Typography variant="subtitle1" fontWeight={600} component="label">
-                                    Profile Link
-                                </Typography>
+                            <Box my={2} maxWidth={300}>
+                                <Box mb={1}>
+                                    <Typography variant="subtitle1" fontWeight={600} component="label">
+                                        Display Name
+                                    </Typography>
+                                </Box>
+                                <CustomTextFieldDebounce
+                                    size="small"
+                                    name="displayName"
+                                    variant="outlined"
+                                    fullWidth
+                                    value={values.displayName}
+                                    handleChange={handleDisplayNameChange}
+                                />
                             </Box>
-                            <CustomTextFieldDebounce
-                                size="small"
-                                name="myWebsite"
-                                variant="outlined"
-                                fullWidth
-                                value={values.myWebsite}
-                                handleChange={handleMyWebsiteChange}
-                                error={!!errors.myWebsite}
-                                helperText={errors.myWebsite}
-                            />
+                            <Box my={2} maxWidth={300}>
+                                <Box mb={1}>
+                                    <Typography variant="subtitle1" fontWeight={600} component="label">
+                                        Profile Link
+                                    </Typography>
+                                </Box>
+                                <CustomTextFieldDebounce
+                                    size="small"
+                                    name="myWebsite"
+                                    variant="outlined"
+                                    fullWidth
+                                    value={values.myWebsite}
+                                    handleChange={handleMyWebsiteChange}
+                                    error={!!errors.myWebsite}
+                                    helperText={errors.myWebsite}
+                                />
+                            </Box>
+                            <Box my={3} maxWidth={300}>
+                                <Box mb={1}>
+                                    <Button variant="contained" onClick={handleCopySearchUrl}>
+                                        {copySearchMessage}
+                                    </Button>
+                                </Box>
+                            </Box>
                         </Box>
-                        <Box my={3}>
+                    </CardContent>
+                </BlankCard>
+            </Grid>
+            <Grid item xs={12} lg={6}>
+                <BlankCard>
+                    <CardContent sx={{ height: { xs: 'auto', lg: '470px' } }}>
+                        <Box my={2}>
                             <Typography variant="subtitle1" fontWeight={600} component="label" mb={3}>
                                 {texts.profileTitle}
                             </Typography>
-                            <Box textAlign="center" display="flex" justifyContent="center">
+                            <Box my={3} textAlign="center" display="flex" justifyContent="center">
                                 <Box>
                                     <Avatar
                                         src={isNewAvatar}
@@ -118,9 +152,6 @@ const Identity = ({
                                     </Typography>
                                 </Box>
                             </Box>
-                            <Button variant="contained" onClick={handleCopySearchUrl}>
-                                {copySearchMessage}
-                            </Button>
                         </Box>
                     </CardContent>
                 </BlankCard>

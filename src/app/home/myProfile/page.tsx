@@ -67,6 +67,7 @@ export default function ProfileSettings() {
     const {
         _id,
         username,
+        displayName,
         personalDetails,
         artworkRecognition,
         emailDefault,
@@ -82,6 +83,7 @@ export default function ProfileSettings() {
         userSelector([
             '_id',
             'username',
+            'displayName',
             'truLevel',
             'socials',
             'personalDetails',
@@ -161,6 +163,7 @@ export default function ProfileSettings() {
             emailDefault: !emailDefault || !emailDefault.length ? emails[0]?.email : emailDefault,
             walletDefault: !walletDefault || !walletDefault.length ? wallets[0]?.address || '' : walletDefault,
             username,
+            displayName,
             personalDetails: personalDetails,
             artworkRecognition: artworkRecognition,
             myWebsite,
@@ -316,7 +319,7 @@ export default function ProfileSettings() {
                         </Typography>
                     </Box>
 
-                    <Grid item xs={12} lg={12}>
+                    <Grid maxHeight={470} item xs={12} lg={12}>
                         <ProfileTabs
                             values={values}
                             errors={errors}

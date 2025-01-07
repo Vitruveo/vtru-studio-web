@@ -167,7 +167,7 @@ const AddEmails = ({ emails, emailDefault, setFieldValue }: AddEmailsProps) => {
                 <Typography variant="subtitle1" fontWeight={600} style={{ width: '20%', textAlign: 'center' }}>
                     Default
                 </Typography>
-                <Box width="10%" /> {/* Espaço reservado para a coluna da lixeira */}
+                <Box width="10%" />
             </Box>
             <RadioGroup
                 defaultValue={checkDefaultEmail}

@@ -35,5 +35,17 @@ export const ProfileSchemaValidation = yup.object({
         .string()
         .nullable()
         .url('Please enter a valid URL')
+        .test('not-root-domain', 'Root domains are not allowed. Please provide a more specific link.', (value) => {
+            if (!value) return true;
+            try {
+                const url = new URL(value);
+                const domainParts = url.hostname.split('.');
+                const hasSubdomain = domainParts.length > 2;
+                const hasPath = url.pathname && url.pathname !== '/';
+                return !!hasSubdomain || !!hasPath;
+            } catch (err) {
+                return false;
+            }
+        })
         .test('debounced-validation', 'Please enter a valid URL', validateWithDelay(yup.string().url())),
 });

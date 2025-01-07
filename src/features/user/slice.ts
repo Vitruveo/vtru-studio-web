@@ -97,6 +97,7 @@ export const userSlice = createSlice({
             state._id = creator._id;
             state.emails = creator.emails;
             state.username = creator.username;
+            state.displayName = creator.displayName;
             state.wallets = creator.wallets;
             state.links = creator.links;
             state.myWebsite = creator.myWebsite;
