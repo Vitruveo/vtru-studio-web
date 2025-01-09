@@ -18,6 +18,7 @@ import CustomizedSnackbar from './common/toastr';
 import { useToastr } from './hooks/useToastr';
 import { useDispatch } from '@/store/hooks';
 import { getMeThunk } from '@/features/user/thunks';
+import { getFeaturesThunk } from '@/features/features/thunks';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -38,6 +39,17 @@ const MyApp = ({ children }: { children: React.ReactNode }) => {
         };
 
         checkToken();
+    }, []);
+
+    useEffect(() => {
+        dispatch(getFeaturesThunk());
+        const featuresInterval = setInterval(() => {
+            dispatch(getFeaturesThunk());
+        }, 60000);
+
+        return () => {
+            clearInterval(featuresInterval);
+        };
     }, []);
 
     return (

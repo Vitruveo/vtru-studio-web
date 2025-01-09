@@ -8,7 +8,8 @@ import { customizerSlice } from '../features/customizer';
 import { assetSlice } from '@/features/asset';
 import { toastrSlice } from '@/features/toastr/slice';
 import { storesSlice } from '@/features/stores/slice';
-import filtersSlice from '@/features/filters/filtersSlice'; // Importe o filtersSlice
+import filtersSlice from '@/features/filters/filtersSlice';
+import { featuresSlice } from '@/features/features';
 
 interface RootState {
     user: ReturnType<typeof userSlice.reducer>;
@@ -19,6 +20,7 @@ interface RootState {
     toastr: ReturnType<typeof toastrSlice.reducer>;
     filters: ReturnType<typeof filtersSlice>;
     stores: ReturnType<typeof storesSlice.reducer>;
+    features: ReturnType<typeof featuresSlice.reducer>;
 }
 
 const appReducer = combineReducers<RootState>({
@@ -30,6 +32,7 @@ const appReducer = combineReducers<RootState>({
     toastr: toastrSlice.reducer,
     filters: filtersSlice,
     stores: storesSlice.reducer,
+    features: featuresSlice.reducer,
 });
 
 export const reducer: Reducer<RootState, AnyAction> = (state: RootState | undefined, action: AnyAction) => {
