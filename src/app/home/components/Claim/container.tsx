@@ -11,6 +11,7 @@ import { createSignedMessage } from './actions';
 import { ClaimComponent } from './components';
 import StakeModal from './StakeModal';
 import ClaimedModal from './ClaimedModal';
+import { CLAIM_VERSE_ENABLE } from '@/constants/claim';
 
 export const ClaimContainer = memo(() => {
     const [balance, setBalance] = useState(0);
@@ -76,7 +77,7 @@ export const ClaimContainer = memo(() => {
         if (wallets.find((wallet) => !wallet.archived && wallet.address === address)) {
             setLoading(true);
             try {
-                const [walletBasisPoints, stake1BasisPoints, stake3BasisPoints, stake5BasisPoints, vibeBasisPoints] =
+                const [walletBasisPoints, stake1BasisPoints, stake3BasisPoints, stake5BasisPoints, verseBasisPoints] =
                     values;
                 const { domain, signedMessage, signer, tx, types } = await createSignedMessage({
                     name: 'Creator Vault',
@@ -95,7 +96,7 @@ export const ClaimContainer = memo(() => {
                             stake1BasisPoints,
                             stake3BasisPoints,
                             stake5BasisPoints,
-                            vibeBasisPoints,
+                            verseBasisPoints: CLAIM_VERSE_ENABLE ? verseBasisPoints : 0,
                         },
                         domain,
                         types,
