@@ -98,6 +98,7 @@ export interface User {
     name: string;
     notify: string;
     username: string;
+    displayName?: string;
     login: {
         email: string;
     };
@@ -245,6 +246,7 @@ export interface SaveStepWizardReq {
 export interface CreatorSchemaType {
     name: string;
     username?: string | undefined;
+    displayName?: string | undefined;
     emailDefault: string;
     walletDefault: string;
     login: {

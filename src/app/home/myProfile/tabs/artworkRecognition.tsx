@@ -257,7 +257,7 @@ const ArtworkRecognition = ({ values, setFieldValue }: ArtworkRecognitionProps) 
         <Grid container spacing={2}>
             <Grid item xs={12} lg={6}>
                 <BlankCard>
-                    <CardContent sx={{ height: { xs: 'auto', lg: '503px' }, overflowY: 'auto', maxHeight: '538px' }}>
+                    <CardContent sx={{ height: { xs: 'auto', lg: '470px' }, overflowY: 'auto', maxHeight: '538px' }}>
                         <Box style={{ width: !xl ? 300 : 350 }}>
                             <Typography my={2} marginBottom={3} fontSize="1.2rem" fontWeight="500">
                                 Exhibitions
@@ -288,7 +288,7 @@ const ArtworkRecognition = ({ values, setFieldValue }: ArtworkRecognitionProps) 
 
             <Grid item xs={12} lg={6}>
                 <BlankCard>
-                    <CardContent sx={{ height: { xs: 'auto', lg: '503px' }, overflowY: 'auto', maxHeight: '535px' }}>
+                    <CardContent sx={{ height: { xs: 'auto', lg: '470px' }, overflowY: 'auto', maxHeight: '535px' }}>
                         <Box style={{ width: !xl ? 300 : 350 }}>
                             <Typography my={2} marginBottom={3} fontSize="1.2rem" fontWeight="500">
                                 Awards

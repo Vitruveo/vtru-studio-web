@@ -21,7 +21,7 @@ const Wallets = ({
             <Grid item xs={12} lg={6} width="100%">
                 <BlankCard>
                     <CardContent
-                        sx={{ height: { xs: 'auto', lg: '500px' } }}
+                        sx={{ height: { xs: 'auto', lg: '470px' } }}
                         style={{ overflowY: 'auto', maxHeight: '535px' }}
                     >
                         <AccountSettings

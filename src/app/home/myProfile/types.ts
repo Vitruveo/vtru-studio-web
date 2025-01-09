@@ -15,6 +15,7 @@ export interface EmailFormValues {
 
 export interface AccountSettingsFormValues {
     username: string;
+    displayName?: string;
     emails: EmailFormValues[];
     emailDefault: string;
     wallets: Wallet[];
