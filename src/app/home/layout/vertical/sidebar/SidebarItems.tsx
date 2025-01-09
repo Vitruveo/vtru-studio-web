@@ -30,8 +30,8 @@ const SidebarItems = () => {
             return v.title !== 'studio.sidebar.consign';
         }
 
-        if (v.title === 'studio.sidebar.truLevel' && trulevelFeature) {
-            if (trulevelFeature.released) {
+        if (v.title === 'studio.sidebar.truLevel') {
+            if (trulevelFeature && trulevelFeature.released) {
                 if (trulevelFeature.onlyForAllowList) {
                     if (isEmailAllowed) return true;
                     return false;
