@@ -52,7 +52,7 @@ import { ASSET_STORAGE_URL } from '@/constants/asset';
 import { SectionsFormData } from '@/app/home/consignArtwork/assetMetadata/page';
 import { FormatsAuxiliayMedia } from '@/app/home/consignArtwork/auxiliaryMedia/types';
 
-import { BASE_URL_API } from '@/constants/api';
+import { API_BASE_URL } from '@/constants/api';
 import { userActionsCreators } from '../user/slice';
 import { checkStepProgress } from '@/app/home/consignArtwork/licenses/nft';
 import { clientToSigner, network, provider } from '@/services/web3';
@@ -600,7 +600,7 @@ export function uploadIPFSByAssetIdThunk(
 
         const ctrl = new AbortController();
 
-        const url = `${BASE_URL_API}/assets/ipfs/${data.id}`;
+        const url = `${API_BASE_URL}/assets/ipfs/${data.id}`;
         const headers = {
             Accept: 'text/event-stream',
             Authorization: `Bearer ${token}`,
@@ -638,7 +638,7 @@ export function createContractThunk(data: CreateContractByAssetIdReq): ReduxThun
 
         const ctrl = new AbortController();
 
-        const url = `${BASE_URL_API}/assets/consign`;
+        const url = `${API_BASE_URL}/assets/consign`;
         const headers = {
             Accept: 'text/event-stream',
             Authorization: `Bearer ${token}`,
@@ -697,7 +697,7 @@ export function extractAssetColorsThunk({ id }: { id: string }): ReduxThunkActio
 
         const ctrl = new AbortController();
 
-        const url = `${BASE_URL_API}/assets/${id}/colors`;
+        const url = `${API_BASE_URL}/assets/${id}/colors`;
         const headers = {
             Accept: 'text/event-stream',
             Authorization: `Bearer ${token}`,
