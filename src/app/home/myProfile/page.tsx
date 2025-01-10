@@ -310,40 +310,38 @@ export default function ProfileSettings() {
     return (
         <form onSubmit={handleSubmit}>
             <PageContainerFooter submitDisabled={false} backPathRouter="/home" title={texts.title}>
-                <Box margin="auto 0" marginBottom={10} display="relative">
+                <Box margin="auto 0" display="relative">
                     <Breadcrumb title={texts.title} items={BCrumb} />
 
-                    <Box my={3}>
+                    <Box my={1}>
                         <Typography variant="h5" fontWeight="normal" color="GrayText">
                             {texts.subtitle}
                         </Typography>
                     </Box>
 
-                    <Grid maxHeight={470} item xs={12} lg={12}>
-                        <ProfileTabs
-                            values={values}
-                            errors={errors}
-                            texts={texts}
-                            setFieldValue={setFieldValue}
-                            setFieldError={setFieldError}
-                            setErrors={setErrors}
-                            handleChange={handleChange}
-                            handleSubmit={handleSubmit}
-                            identity={{
-                                isNewAvatar,
-                                usernameError,
-                                handleFileChange,
-                                handleOnClickReset,
-                                handleUsernameChange,
-                            }}
-                        />
-                        <ConfirmModal
-                            show={show}
-                            handleClose={handleClose}
-                            yesClick={handleYesClick}
-                            noClick={handleNoClick}
-                        />
-                    </Grid>
+                    <ProfileTabs
+                        values={values}
+                        errors={errors}
+                        texts={texts}
+                        setFieldValue={setFieldValue}
+                        setFieldError={setFieldError}
+                        setErrors={setErrors}
+                        handleChange={handleChange}
+                        handleSubmit={handleSubmit}
+                        identity={{
+                            isNewAvatar,
+                            usernameError,
+                            handleFileChange,
+                            handleOnClickReset,
+                            handleUsernameChange,
+                        }}
+                    />
+                    <ConfirmModal
+                        show={show}
+                        handleClose={handleClose}
+                        yesClick={handleYesClick}
+                        noClick={handleNoClick}
+                    />
                 </Box>
             </PageContainerFooter>
         </form>

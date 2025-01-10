@@ -11,6 +11,7 @@ import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr
 import ConfirmView from './view';
 import { otpSchemaValidation } from './formSchema';
 import { codesVtruApi } from '@/services/codes';
+import { getFeaturesThunk } from '@/features/features/thunks';
 
 export default function ConfirmContainer() {
     const [toastr, setToastr] = useState<CustomizedSnackbarState>({ type: 'success', open: false, message: '' });
@@ -41,6 +42,7 @@ export default function ConfirmContainer() {
                     if (codesVtruApi.success.login.includes(resOTPConfirm.code)) {
                         await dispatch(connectWebSocketThunk());
                         await dispatch(loginWebSocketThunk());
+                        dispatch(getFeaturesThunk());
                         setToastr({ open: true, type: 'success', message: 'OTP confirmed!' });
 
                         if (!generalVault && resOTPConfirm.data?.creator.username) {

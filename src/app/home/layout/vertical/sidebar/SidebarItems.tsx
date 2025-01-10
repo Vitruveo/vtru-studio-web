@@ -19,13 +19,29 @@ const SidebarItems = () => {
     const pathWithoutLastPart = pathname.slice(0, pathname.lastIndexOf('/'));
 
     const canConsignArtwork = useSelector((state) => state.user.canConsignArtwork);
+    const features = useSelector((state) => state.features.list);
+    const isEmailAllowed = useSelector((state) => state.features.isEmailAllowed);
 
     const generalVault = useSelector((state) => state.user.generalVault);
 
     const filterMenus = Menuitems.filter((v) => {
+        const trulevelFeature = features.find((feature) => feature.name?.includes('trulevel'));
         if (generalVault) {
             return v.title !== 'studio.sidebar.consign';
         }
+
+        if (v.title === 'studio.sidebar.truLevel') {
+            if (trulevelFeature && trulevelFeature.released) {
+                if (trulevelFeature.onlyForAllowList) {
+                    if (isEmailAllowed) return true;
+                    return false;
+                }
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         return true;
     });
     const customizer = useSelector((state) => state.customizer);
