@@ -30,6 +30,8 @@ export const linkSchema = yup.object().shape({
     url: yup.string().url('Please enter a valid URL').required('URL is required'),
 });
 
+const forbiddenDomains = ['x.com', 'google.com', 'instagram.com', 'vitruveo.xyz', 'xibit.app'];
+
 export const ProfileSchemaValidation = yup.object({
     myWebsite: yup
         .string()
@@ -43,6 +45,15 @@ export const ProfileSchemaValidation = yup.object({
                 const hasSubdomain = domainParts.length > 2;
                 const hasPath = url.pathname && url.pathname !== '/';
                 return !!hasSubdomain || !!hasPath;
+            } catch (err) {
+                return false;
+            }
+        })
+        .test('not-forbidden-domain', 'This domain is not allowed.', (value) => {
+            if (!value) return true;
+            try {
+                const url = new URL(value);
+                return !forbiddenDomains.includes(url.hostname);
             } catch (err) {
                 return false;
             }

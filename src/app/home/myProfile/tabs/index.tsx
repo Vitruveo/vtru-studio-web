@@ -1,17 +1,7 @@
 import { useState } from 'react';
 import { FormikErrors } from 'formik';
-import { Tabs, Tab, Box, CardContent, Divider } from '@mui/material';
-import {
-    IconUserCircle,
-    IconBroadcast,
-    IconBriefcase,
-    IconId,
-    IconAward,
-    IconMail,
-    IconWallet,
-    IconBrandInstagram,
-    IconUsers,
-} from '@tabler/icons-react';
+import { Tabs, Tab, Box, CardContent, Divider, useMediaQuery, Theme } from '@mui/material';
+import { IconUserCircle, IconId, IconAward, IconMail, IconWallet, IconUsers } from '@tabler/icons-react';
 import BlankCard from '../../components/shared/BlankCard';
 import Identity, { IdentityProps } from './identity';
 import { AccountSettingsFormErros, AccountSettingsFormValues } from '../types';
@@ -81,6 +71,8 @@ const ProfileTabs = ({
 }: ProfileTabsProps) => {
     const [value, setValue] = useState(0);
 
+    const sm = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+
     const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
@@ -88,7 +80,14 @@ const ProfileTabs = ({
     return (
         <BlankCard>
             <Box sx={{ maxWidth: { xs: 400, sm: 900 } }}>
-                <Tabs value={value} onChange={handleChangeTab} scrollButtons="auto" aria-label="basic tabs example">
+                <Tabs
+                    value={value}
+                    onChange={handleChangeTab}
+                    variant="scrollable"
+                    scrollButtons="auto"
+                    allowScrollButtonsMobile
+                    aria-label="basic tabs example"
+                >
                     <Tab iconPosition="start" icon={<IconUserCircle size="22" />} label="Identity" {...a11yProps(0)} />
                     <Tab iconPosition="start" icon={<IconMail size="22" />} label="Emails" {...a11yProps(1)} />
                     <Tab iconPosition="start" icon={<IconWallet size="22" />} label="Wallets" {...a11yProps(2)} />
@@ -103,7 +102,7 @@ const ProfileTabs = ({
                 </Tabs>
             </Box>
             <Divider />
-            <CardContent>
+            <CardContent sx={{ maxHeight: sm ? 380 : 550, overflowY: 'auto' }}>
                 <TabPanel value={value} index={0}>
                     <Identity
                         values={values}
