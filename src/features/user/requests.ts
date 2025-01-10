@@ -41,8 +41,7 @@ import {
     GetTruLevelApiRes,
 } from './types';
 import { Framework } from '../common/types';
-import { BASE_URL_BATCH } from '@/constants/api';
-import { apiServiceBatch } from '@/services/apiBatch';
+import { api3Service } from '@/services/api3';
 import { userActionsCreators } from './slice';
 
 export async function userLoginReq(data: UserLoginReq): Promise<UserLoginApiRes> {
@@ -200,15 +199,15 @@ export function removeSocial({ social }: RemoveSocialReq): Promise<RemoveSocialA
 }
 
 export async function getWalletsVault() {
-    return apiServiceBatch.get<string[]>(`/wallet/vaultWallets`);
+    return api3Service.get<string[]>(`/wallet/vaultWallets`);
 }
 
 export async function addWallets(payload: { walletsAddress: string[] }) {
-    return apiServiceBatch.post(`/wallet/addVaultWallets`, payload);
+    return api3Service.post(`/wallet/addVaultWallets`, payload);
 }
 
 export async function deleteWallets(payload: { walletsAddress: string[] }) {
-    return apiServiceBatch.delete(`/wallet/removeVaultWallets`, { data: payload });
+    return api3Service.delete(`/wallet/removeVaultWallets`, { data: payload });
 }
 
 export async function me() {

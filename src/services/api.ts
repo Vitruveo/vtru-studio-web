@@ -1,11 +1,11 @@
 import axios, { AxiosResponse } from 'axios';
 import { store } from '@/store/index';
 import { APIResponse } from '@/features/common/types';
-import { BASE_URL_API } from '@/constants/api';
+import { API_BASE_URL } from '@/constants/api';
 import cookie from 'cookiejs';
 
 const api = axios.create({
-    baseURL: BASE_URL_API,
+    baseURL: API_BASE_URL,
     timeout: 1_000 * 60 * 5, // 5 minutes
     headers: {
         'Content-Type': 'application/json',
