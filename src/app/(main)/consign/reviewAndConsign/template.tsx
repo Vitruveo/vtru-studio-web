@@ -13,7 +13,7 @@ export default function ReviewAndConsignTemplate({ children }: { children: React
         steps.assetMedia.status === 'completed' &&
         steps.assetMetadata.status === 'completed' &&
         steps.licenses.status === 'completed' &&
-        steps.termsOfUse.status === 'completed';
+        steps.terms.status === 'completed';
 
     useEffect(() => {
         if (!isCompleted) {
