@@ -1,7 +1,7 @@
 import { Box, Typography, Button, Stack, Grid } from '@mui/material';
 
-import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
-import CustomFormLabel from '@/app/home/components/forms/theme-elements/CustomFormLabel';
+import CustomTextField from '@/app/(main)/components/forms/theme-elements/CustomTextField';
+import CustomFormLabel from '@/app/(main)/components/forms/theme-elements/CustomFormLabel';
 
 import { OTPConfirmViewProps } from './types';
 

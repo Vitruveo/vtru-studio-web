@@ -1,7 +1,7 @@
 'use client';
 import { Grid, Box } from '@mui/material';
 
-import PageContainer from '../../home/components/container/PageContainer';
+import PageContainer from '../../(main)/components/container/PageContainer';
 import AuthLogo from '../components/AuthLogo';
 import Confirm from './confirm/container';
 

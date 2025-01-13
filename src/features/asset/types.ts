@@ -1,8 +1,8 @@
-import { LicensesFormValues } from '@/app/home/consignArtwork/licenses/types';
+import { LicensesFormValues } from '@/app/(main)/consign/licenses/types';
 import { APIResponse } from '../common/types';
-import { SectionsFormData } from '@/app/home/consignArtwork/assetMetadata/page';
-import { OriginalFormatMedia } from '@/app/home/consignArtwork/assetMedia/types';
-import { ConsignArtworkAssetStatus } from '../consignArtwork/types';
+import { SectionsFormData } from '@/app/(main)/consign/assetMetadata/page';
+import { OriginalFormatMedia } from '@/app/(main)/consign/assetMedia/types';
+import { ConsignArtworkAssetStatus } from '../consign/types';
 import { Account, Chain, Client, Transport } from 'viem';
 
 export type AssetStatus = 'draft' | 'published' | 'archived' | 'preview' | '';

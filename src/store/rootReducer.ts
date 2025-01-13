@@ -3,7 +3,7 @@ import { combineReducers, Reducer, AnyAction } from '@reduxjs/toolkit';
 import webSocketService from '@/services/websocket';
 import { websocketSlice } from '@/features/ws';
 import { userSlice } from '../features/user';
-import { consignArtworkSlice } from '../features/consignArtwork';
+import { consignArtworkSlice } from '../features/consign';
 import { customizerSlice } from '../features/customizer';
 import { assetSlice } from '@/features/asset';
 import { toastrSlice } from '@/features/toastr/slice';

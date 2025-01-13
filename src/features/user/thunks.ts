@@ -65,12 +65,12 @@ import {
     User,
 } from './types';
 import { ReduxThunkAction } from '@/store';
-import { AccountSettingsFormValues } from '@/app/home/myProfile/types';
-import { consignArtworkActionsCreators } from '../consignArtwork/slice';
+import { AccountSettingsFormValues } from '@/app/(main)/profile/types';
+import { consignArtworkActionsCreators } from '../consign/slice';
 import { API_BASE_URL } from '@/constants/api';
 import { getAssetById, getMyAssets } from '../asset/requests';
 import { ASSET_STORAGE_URL, NO_IMAGE_ASSET } from '@/constants/asset';
-import { config } from '@/app/home/components/apps/wallet';
+import { config } from '@/app/(main)/components/apps/wallet';
 
 export function getTruLevelThunk(): ReduxThunkAction<Promise<void>> {
     return async function (dispatch, getState) {
