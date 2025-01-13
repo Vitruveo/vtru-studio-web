@@ -80,23 +80,31 @@ export default function StakeModal({ isOpen, available, loading, claimAllocate, 
                     </Box>
 
                     <Box mb={2} ml={2} width={'88%'}>
-                        {options.map((item, index) => (
-                            <Box key={index} mb={1}>
-                                <Box display={'flex'} gap={1.5}>
-                                    <Typography fontSize={16}>{(available * selectValues[index]) / 100}</Typography>
-                                    <Typography fontSize={16}>{item.label}</Typography>
+                        {options.map((item, index) => {
+                            const valueStaked =
+                                index === 4
+                                    ? Math.floor((available * selectValues[index]) / 100)
+                                    : (available * selectValues[index]) / 100;
+                            return (
+                                <Box key={index} mb={1}>
+                                    <Box display={'flex'} gap={1.5}>
+                                        <Typography fontSize={16}>{valueStaked}</Typography>
+                                        <Typography fontSize={16}>{item.label}</Typography>
+                                    </Box>
+                                    <Box display="flex" gap={3} mb={3} key={index}>
+                                        <Slider
+                                            value={selectValues[index]}
+                                            onChange={(_e, v) => handleSelectChange(index, v as number)}
+                                            disabled={
+                                                !item.enable || (totalAssigned === 100 && selectValues[index] === 0)
+                                            }
+                                            max={index === 0 ? 5 : 100}
+                                        />
+                                        <Typography fontSize={16}>{selectValues[index].toFixed(0)}%</Typography>
+                                    </Box>
                                 </Box>
-                                <Box display="flex" gap={3} mb={3} key={index}>
-                                    <Slider
-                                        value={selectValues[index]}
-                                        onChange={(_e, v) => handleSelectChange(index, v as number)}
-                                        disabled={!item.enable || (totalAssigned === 100 && selectValues[index] === 0)}
-                                        max={index === 0 ? 5 : 100}
-                                    />
-                                    <Typography fontSize={16}>{selectValues[index].toFixed(0)}%</Typography>
-                                </Box>
-                            </Box>
-                        ))}
+                            );
+                        })}
                     </Box>
 
                     <Box display="flex" justifyContent={'space-between'}>
