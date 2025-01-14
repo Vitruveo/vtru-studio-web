@@ -22,7 +22,7 @@ const Menuitems: MenuitemsType[] = [
         title: 'studio.sidebar.consign',
         icon: IconPhotoUp,
         required: 'canConsignArtwork',
-        href: '/consign',
+        href: '/home',
     },
     // {
     //     id: uniqueId(),
