@@ -327,7 +327,7 @@ const Component = () => {
                                         }}
                                     />
                                     <Typography color={theme.palette.primary.main} fontSize={'1.5rem'}>
-                                        .xibit.app
+                                        .xibit.live
                                     </Typography>
                                 </Box>
                                 <Typography variant="caption" color="error">
@@ -413,7 +413,7 @@ const Component = () => {
                                     max={50}
                                     name="markup"
                                     value={formik.values.markup}
-                                    onChange={(event, value) => formik.setFieldValue('markup', value)}
+                                    onChange={(_event, value) => formik.setFieldValue('markup', value)}
                                 />
                             </Box>
                             <Box>
@@ -505,8 +505,8 @@ const Component = () => {
                             }
                             domain={
                                 formik.values.url
-                                    ? `https://${formik.values.url}.xibit.app`
-                                    : 'https://example.xibit.app'
+                                    ? `https://${formik.values.url}.xibit.live`
+                                    : 'https://example.xibit.live'
                             }
                             banner={
                                 formik.values.banner instanceof File
