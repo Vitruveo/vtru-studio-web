@@ -22,8 +22,11 @@ export function getFeaturesThunk(): ReduxThunkAction<Promise<void>> {
 
         if (response.data) {
             const formatedList = response.data.map((v) => ({
-                ...v,
                 name: v.name.trim().toLowerCase().replace(/\s/g, ''),
+                released: v.released,
+                isOnlyFor: v.isOnlyFor,
+                onlyFor: v.onlyFor,
+                isEmailInList: v.emails?.includes(email),
             }));
             if (JSON.stringify(formatedList) !== JSON.stringify(list)) {
                 dispatch(featuresActionCreators.setFeatures(formatedList));

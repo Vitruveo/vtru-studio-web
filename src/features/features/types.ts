@@ -2,8 +2,10 @@ import { APIResponse } from '../common/types';
 
 export interface FeatureType {
     name: string;
-    released: boolean;
-    onlyForAllowList: boolean;
+    released?: boolean;
+    isOnlyFor?: boolean;
+    isEmailInList?: boolean;
+    onlyFor?: 'allowList' | 'specificUsers';
 }
 
 export interface FeaturesState {
@@ -11,4 +13,8 @@ export interface FeaturesState {
     list: FeatureType[];
 }
 
-export type GetFeaturesApiRes = APIResponse<FeatureType[]>;
+export interface GetFeatures extends FeatureType {
+    emails?: string[];
+}
+
+export type GetFeaturesApiRes = APIResponse<GetFeatures[]>;
