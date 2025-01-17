@@ -11,6 +11,7 @@ import {
 import { storesActionsCreators } from './slice';
 import { GetStoresParams, StoreStorageParams, UpdateOrganizationParams, ValidateUrlParams } from './types';
 import { hasTruthyObject } from '@/utils/truthyObject';
+import { AxiosError } from 'axios';
 
 export function getStoresThunk(data?: GetStoresParams): ReduxThunkAction<Promise<void>> {
     return async (dispatch: any) => {

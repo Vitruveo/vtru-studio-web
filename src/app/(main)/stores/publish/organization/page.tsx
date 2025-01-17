@@ -26,11 +26,13 @@ import { MediaCard } from '@/app/(main)/components/stores/mediaCard';
 
 import { useDispatch, useSelector } from '@/store/hooks';
 import { storeStorageThunk, updateOrganizationThunk, validateUrlThunk } from '@/features/stores/thunks';
+import { useToastr } from '@/app/hooks/useToastr';
 import { sendRequestUploadStoresThunk } from '@/features/asset/thunks';
 import { storesActionsCreators } from '@/features/stores/slice';
 import { STORE_STORAGE_URL } from '@/constants/asset';
 import LoadingOverlay from '@/app/(main)/components/loadingOverlay';
 import { Preview } from '@/app/(main)/components/stores/Preview';
+import { AxiosError } from 'axios';
 
 interface Input {
     url: string | null;
@@ -80,6 +82,7 @@ const Component = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const mediaRefs = useRef<any[]>([]);
+    const toastr = useToastr();
 
     const selectedStore = useSelector((state) => state.stores.selectedStore);
     const store = useSelector((state) => state.stores.data.data.find((item) => item._id === selectedStore.id));
@@ -111,7 +114,7 @@ const Component = () => {
         return undefined;
     };
 
-    const handleSubmit = (values: Input & { redirectPath: string }) => {
+    const handleSubmit = async (values: Input & { redirectPath: string }) => {
         let hasFile = false;
         Object.entries(values).forEach(([key, value]) => {
             if (value instanceof File) {
@@ -153,18 +156,25 @@ const Component = () => {
 
         if (hasFile) return;
 
-        dispatch(
-            updateOrganizationThunk({
-                id: selectedStore.id,
-                data: {
-                    url: values.url,
-                    name: values.name,
-                    description: values.description,
-                    markup: values.markup,
-                    // formats: {}
-                },
-            })
-        );
+        try {
+            await dispatch(
+                updateOrganizationThunk({
+                    id: selectedStore.id,
+                    data: {
+                        url: values.url,
+                        name: values.name,
+                        description: values.description,
+                        markup: values.markup,
+                        // formats: {}
+                    },
+                })
+            );
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                toastr.display({ message: error?.response?.data?.message || '', type: 'error' });
+            }
+            return;
+        }
 
         router.push(values.redirectPath);
     };

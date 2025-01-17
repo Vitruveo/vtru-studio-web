@@ -13,7 +13,6 @@ import { getAssetThunk, publishThunk } from '@/features/asset/thunks';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 import { useI18n } from '@/app/hooks/useI18n';
 import { TranslateFunction } from '@/i18n/types';
-import { CompletedConsignPage } from '@/app/(main)/consign/components/completedConsignPage/CompletedConsignPage';
 import Comments from './components/comments';
 
 const ConsignArtwork = () => {
@@ -132,9 +131,8 @@ const ConsignArtwork = () => {
                                         >
                                             <Grid item lg={5} xl={4}>
                                                 <Typography
-                                                    title={`${language[v.stepName] as string} ${
-                                                        v.optional ? ` (${texts.optional})` : ''
-                                                    } `}
+                                                    title={`${language[v.stepName] as string} ${v.optional ? ` (${texts.optional})` : ''
+                                                        } `}
                                                     sx={{
                                                         whiteSpace: 'nowrap',
                                                         textOverflow: 'ellipsis',
@@ -182,12 +180,12 @@ const ConsignArtwork = () => {
                                                                 ? 'View/Edit'
                                                                 : 'View'
                                                             : (
-                                                                  language[
-                                                                      'studio.consignArtwork.stepButton'
-                                                                  ] as TranslateFunction
-                                                              )({
-                                                                  status: v.status,
-                                                              })}
+                                                                language[
+                                                                'studio.consignArtwork.stepButton'
+                                                                ] as TranslateFunction
+                                                            )({
+                                                                status: v.status,
+                                                            })}
                                                     </Button>
                                                 </Box>
                                             </Grid>
