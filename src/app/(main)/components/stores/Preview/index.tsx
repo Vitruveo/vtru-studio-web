@@ -40,7 +40,8 @@ export const Preview = (rest: Props) => {
                         {rest.logoHorizontal ? (
                             <img
                                 style={{
-                                    width: '150px',
+                                    width: '100%',
+                                    maxWidth: '150px',
                                     height: '40px',
                                     objectFit: 'cover',
                                 }}
@@ -48,10 +49,10 @@ export const Preview = (rest: Props) => {
                                 alt="logo"
                             />
                         ) : (
-                            <Box width="150px" height="40px" bgcolor="#eeeeee" />
+                            <Box maxWidth="150px" height="40px" bgcolor="#eeeeee" />
                         )}
                     </Grid>
-                    <Grid xs={9} display="flex" alignItems="center" justifyContent="flex-end" gap={2}>
+                    <Grid xs={9} display="flex" alignItems="center" justifyContent="flex-end" gap={2} paddingInline={2}>
                         <Typography
                             variant="h4"
                             gutterBottom
@@ -73,9 +74,9 @@ export const Preview = (rest: Props) => {
                 </Grid>
                 <Grid container>
                     <Grid xs={3}>
-                        <Box width="150px" height="100%" bgcolor="#eeeeee" />
+                        <Box maxWidth="150px" height="100%" bgcolor="#eeeeee" />
                     </Grid>
-                    <Grid xs={9}>
+                    <Grid xs={9} paddingInline={2}>
                         <Typography variant="h4" gutterBottom>
                             {rest.title}
                         </Typography>
