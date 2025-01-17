@@ -18,3 +18,4 @@ export interface GetFeatures extends FeatureType {
 }
 
 export type GetFeaturesApiRes = APIResponse<GetFeatures[]>;
+export type CheckFeaturesEmailApiRes = APIResponse<string[]>;
