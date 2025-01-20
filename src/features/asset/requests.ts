@@ -24,8 +24,7 @@ import {
 import { apiService } from '@/services/api';
 import { assetActionsCreators } from './slice';
 import { ASSET_STORAGE_BUCKET } from '@/constants/asset';
-import { API3_BASE_URL } from '@/constants/api';
-import { api3Service } from '@/services/api3';
+import { BASE_URL_BATCH } from '@/constants/api';
 
 export async function requestDeleteFiles(data: RequestDeleteFilesReq): Promise<any> {
     if (!data.deleteKeys.length) return;
@@ -150,11 +149,11 @@ export async function validationConsign(id: string) {
 }
 
 export async function consign(id: string) {
-    return axios.post(`${API3_BASE_URL}/consign/${id}`);
+    return axios.post(`${BASE_URL_BATCH}/consign/${id}`);
 }
 
 export async function eventsByTransaction(transaction: string) {
-    return axios.get(`${API3_BASE_URL}/events/${transaction}`);
+    return axios.get(`${BASE_URL_BATCH}/events/${transaction}`);
 }
 
 export async function requestConsign(id: string) {
@@ -170,11 +169,11 @@ export async function getRequestConsignComments(id: string) {
 }
 
 export async function validateUploadedMedia(data: ValidateUploadedMediaReq) {
-    return axios.post(`${API3_BASE_URL}/assets/validate/${data.assetId}`);
+    return axios.post(`${BASE_URL_BATCH}/assets/validate/${data.assetId}`);
 }
 
 export async function updatePrice({ assetId, price }: UpdatePriceReq) {
-    return apiService.patch(`/assets/licenses/updatePrice/${assetId}`, { price });
+    return apiService.patch(`/assets/${assetId}/price`, { price });
 }
 
 // export async function checkLicenseEditable({ assetId }: CheckLicenseEditableReq): Promise<CheckLicenseEditableRes> {
@@ -186,7 +185,7 @@ export async function checkLicenseEditable({ assetId }: CheckLicenseEditableReq)
 }
 
 export async function signMessage({ signer, domain, types, tx, signedMessage }: signMessageReq) {
-    return axios.post(`${API3_BASE_URL}/assets/licenses/verify`, {
+    return axios.post(`${BASE_URL_BATCH}/assets/verify`, {
         signer,
         domain,
         types,

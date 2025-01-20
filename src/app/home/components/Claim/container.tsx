@@ -3,7 +3,7 @@ import { useAccount, useDisconnect, useWalletClient } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useRouter } from 'next/navigation';
 
-import { API3_BASE_URL } from '@/constants/api';
+import { BASE_URL_BATCH } from '@/constants/api';
 import { useSelector } from '@/store/hooks';
 import { useToastr } from '@/app/hooks/useToastr';
 
@@ -39,13 +39,13 @@ export const ClaimContainer = memo(() => {
         const getBalance = async () => {
             setLoading(true);
             try {
-                const response = await fetch(`${API3_BASE_URL}/wallet/balance`, {
+                const response = await fetch(`${BASE_URL_BATCH}/wallet/balance`, {
                     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 });
 
                 const data = await response.json();
 
-                if (response.status === 403 && data.code === 'vitruveo.studio.api3.balance.disabled') {
+                if (response.status === 403 && data.code === 'vitruveo.batch.api.balance.disabled') {
                     setIsBlocked(true);
                     return;
                 }
@@ -86,7 +86,7 @@ export const ClaimContainer = memo(() => {
                     client: client!,
                 });
                 // Send the signed message to backend
-                const response = await fetch(`${API3_BASE_URL}/claim/allocate`, {
+                const response = await fetch(`${BASE_URL_BATCH}/claim/allocate`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
