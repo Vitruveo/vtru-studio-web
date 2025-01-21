@@ -137,7 +137,7 @@ export interface GetStoresParams {
 
 export interface UpdateOrganizationParams {
     id: string;
-    data: Omit<Organization, 'formats'>;
+    data: Omit<Organization, 'formats'> & { hasBanner: boolean };
 }
 
 export interface ValidateUrlParams {

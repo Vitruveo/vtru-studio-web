@@ -161,6 +161,7 @@ const Component = () => {
                     name: values.name,
                     description: values.description,
                     markup: values.markup,
+                    hasBanner: Boolean(values.banner),
                     // formats: {}
                 },
             })
@@ -408,7 +409,6 @@ const Component = () => {
                                     aria-labelledby="discrete-slider"
                                     valueLabelDisplay="auto"
                                     step={1}
-                                    marks
                                     min={0}
                                     max={50}
                                     name="markup"
@@ -427,7 +427,7 @@ const Component = () => {
                                         return (
                                             <Box key={item.name} width={170} height={240}>
                                                 <Box display="flex" alignItems="center" justifyContent="space-between">
-                                                    <h4>
+                                                    <h4 style={{ whiteSpace: 'nowrap' }}>
                                                         {item.name}{' '}
                                                         {item.required && <span style={{ color: 'red' }}>*</span>}
                                                     </h4>
