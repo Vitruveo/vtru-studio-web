@@ -5,7 +5,6 @@ interface Props {
     title: string;
     description: string;
     domain: string;
-
     banner: string | null;
     logo: string | null;
     logoHorizontal: string | null;
@@ -27,6 +26,8 @@ export const Preview = (rest: Props) => {
                         style={{
                             width: '20px',
                             height: '20px',
+                            objectFit: 'contain',
+                            flexShrink: 0,
                         }}
                         src={rest.logo}
                         alt="logo"
@@ -36,47 +37,49 @@ export const Preview = (rest: Props) => {
             </div>
             <div className="browser-content">
                 <Grid container mb={1}>
-                    <Grid xs={3}>
+                    <Grid item xs={12} sm={3}>
                         {rest.logoHorizontal ? (
                             <img
                                 style={{
                                     width: '100%',
-                                    maxWidth: '150px',
                                     height: '40px',
-                                    objectFit: 'cover',
+                                    objectFit: 'contain',
+                                    flexShrink: 0,
                                 }}
                                 src={rest.logoHorizontal}
-                                alt="logo"
+                                alt="logo-horizontal"
                             />
                         ) : (
-                            <Box maxWidth="150px" height="40px" bgcolor="#eeeeee" />
+                            <Box width="100%" height="40px" bgcolor="#eeeeee" />
                         )}
                     </Grid>
-                    <Grid xs={9} display="flex" alignItems="center" justifyContent="flex-end" gap={2} paddingInline={2}>
-                        <Typography
-                            variant="h4"
-                            gutterBottom
-                            color="GrayText"
-                            fontWeight={1}
-                            fontSize={14}
-                            letterSpacing={1.5}
-                        >
+                    <Grid
+                        item
+                        xs={12}
+                        sm={9}
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="flex-end"
+                        gap={2}
+                        px={2}
+                    >
+                        <Typography variant="h6" color="GrayText" fontWeight={1} fontSize={14} letterSpacing={1.5}>
                             SEARCH | STACKS | STUDIO | BUY VUSD
                         </Typography>
                         <img
                             src="/images/icons/xibit-icon-redondo-darkmode.png"
                             width={35}
                             height={35}
-                            alt=""
-                            style={{ cursor: 'pointer' }}
+                            alt="icon"
+                            style={{ cursor: 'pointer', objectFit: 'contain' }}
                         />
                     </Grid>
                 </Grid>
                 <Grid container>
-                    <Grid xs={3}>
-                        <Box maxWidth="150px" height="100%" bgcolor="#eeeeee" />
+                    <Grid item xs={12} sm={3}>
+                        <Box width="100%" height="100%" bgcolor="#eeeeee" />
                     </Grid>
-                    <Grid xs={9} paddingInline={2}>
+                    <Grid item xs={12} sm={9} px={2}>
                         <Typography variant="h4" gutterBottom>
                             {rest.title}
                         </Typography>
@@ -84,7 +87,10 @@ export const Preview = (rest: Props) => {
                             <img
                                 style={{
                                     width: '100%',
-                                    height: '200px',
+                                    height: 'auto',
+                                    maxHeight: '200px',
+                                    objectFit: 'cover',
+                                    borderRadius: '4px',
                                 }}
                                 src={rest.banner}
                                 alt="banner"
@@ -98,7 +104,7 @@ export const Preview = (rest: Props) => {
 
                         <Box display="flex" gap={1} mt={5} mb={2}>
                             {['Artworks Spotlight', 'Artists Spotlight', 'Recently Sold'].map((tab, index) => (
-                                <Box key={tab} display={'flex'} gap={1.5} alignItems={'center'}>
+                                <Box key={tab} display="flex" gap={1.5} alignItems="center">
                                     <Typography variant="h6" fontWeight={index > 0 ? 1 : 'bold'}>
                                         {tab}
                                     </Typography>
@@ -106,9 +112,9 @@ export const Preview = (rest: Props) => {
                             ))}
                         </Box>
 
-                        <Box display="flex" justifyContent="space-between" gap={1}>
+                        <Box display="flex" justifyContent="space-between" flexWrap="wrap" gap={1}>
                             {Array.from({ length: 4 }).map((_, index) => (
-                                <Box key={index} width="150px" height="100px" bgcolor="#eeeeee" />
+                                <Box key={index} width="calc(25% - 8px)" height="100px" bgcolor="#eeeeee" />
                             ))}
                         </Box>
                     </Grid>

@@ -1,6 +1,5 @@
 .browser-mockup {
-    width: 100%;
-    max-width: 800px;
+    width: 45%;
     border: 2px solid #ccc;
     border-radius: 8px;
     overflow: hidden;
@@ -9,8 +8,8 @@
     font-family: Arial, sans-serif;
 
     /* scale 16:9 */
-    scale: 0.8;
-    height: 520px;
+
+    height: 450px;
 }
 
 .browser-title-bar {
