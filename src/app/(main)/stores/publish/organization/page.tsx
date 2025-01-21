@@ -160,6 +160,7 @@ const Component = () => {
                     name: values.name,
                     description: values.description,
                     markup: values.markup,
+                    hasBanner: Boolean(values.banner),
                     // formats: {}
                 },
             })

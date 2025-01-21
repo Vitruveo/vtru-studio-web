@@ -96,7 +96,7 @@ export const Preview = (rest: Props) => {
                                 alt="banner"
                             />
                         ) : (
-                            <Box height="200px" bgcolor="#eeeeee" />
+                            <Box height="170px" bgcolor="#eeeeee" />
                         )}
                         <Typography variant="body1" gutterBottom>
                             {rest.description}
