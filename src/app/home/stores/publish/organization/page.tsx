@@ -11,7 +11,6 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    Grid,
     IconButton,
     Slider,
     Typography,
@@ -291,103 +290,116 @@ const Component = () => {
                     </Typography>
                 </Box>
 
-                <Grid container spacing={4}>
-                    <Grid item xs={6}>
-                        <form
-                            onSubmit={formik.handleSubmit}
-                            style={{
-                                padding: 16,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: 16,
-                            }}
-                        >
-                            <Box display="flex" flexDirection="column" gap={0.5}>
-                                <Typography variant="h6" fontWeight="normal">
-                                    Store URL <span style={{ color: 'red' }}>*</span>
-                                </Typography>
-                                <Box display={'flex'} alignItems={'center'}>
-                                    <Typography color={theme.palette.primary.main} fontSize={'1.5rem'}>
-                                        https://
-                                    </Typography>
-                                    <CustomTextField
-                                        placeholder="type your store url here"
-                                        size="small"
-                                        name="url"
-                                        value={formik.values.url}
-                                        onChange={formik.handleChange}
-                                        onBlur={handleValidateUrl}
-                                        variant="outlined"
-                                        sx={{
-                                            marginInline: 1,
-                                        }}
-                                        InputProps={{
-                                            inputProps: {
-                                                size: formik.values.url?.length || 20,
-                                            },
-                                        }}
-                                    />
-                                    <Typography color={theme.palette.primary.main} fontSize={'1.5rem'}>
-                                        .xibit.live
-                                    </Typography>
-                                </Box>
-                                <Typography variant="caption" color="error">
-                                    {formik.errors.url}
-                                </Typography>
-                                <Typography variant="caption" color="GrayText">
-                                    Lowercase a-z, numbers 0-9 and hyphens. Minimum length 4 characters.
-                                </Typography>
-                            </Box>
-                            <Box display={'flex'} flexDirection={'column'}>
-                                <Typography variant="h6" fontWeight="normal">
-                                    Name <span style={{ color: 'red' }}>*</span>
+                <Box display="flex">
+                    <form
+                        onSubmit={formik.handleSubmit}
+                        style={{
+                            width: '45%',
+                            padding: 16,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 16,
+                        }}
+                    >
+                        <Box display="flex" flexDirection="column" gap={0.5}>
+                            <Typography variant="h6" fontWeight="normal">
+                                Store URL <span style={{ color: 'red' }}>*</span>
+                            </Typography>
+                            <Box display={'flex'} alignItems={'center'}>
+                                <Typography color={theme.palette.primary.main} fontSize={'1.5rem'}>
+                                    https://
                                 </Typography>
                                 <CustomTextField
-                                    id="name"
-                                    label=""
+                                    placeholder="type your store url here"
                                     size="small"
-                                    name="name"
-                                    value={formik.values.name}
+                                    name="url"
+                                    value={formik.values.url}
                                     onChange={formik.handleChange}
+                                    onBlur={handleValidateUrl}
+                                    variant="outlined"
                                     sx={{
-                                        width: 400,
-                                        marginTop: 2,
+                                        marginInline: 1,
+                                    }}
+                                    InputProps={{
+                                        inputProps: {
+                                            size: formik.values.url?.length || 20,
+                                        },
                                     }}
                                 />
-                                <Typography variant="caption" color="error">
-                                    {formik.errors.name}
+                                <Typography color={theme.palette.primary.main} fontSize={'1.5rem'}>
+                                    .xibit.live
                                 </Typography>
                             </Box>
-                            <Box>
-                                <Typography variant="h6" fontWeight="normal">
-                                    Description
-                                </Typography>
-                                <CustomTextField
-                                    id="description"
-                                    label=""
-                                    name="description"
-                                    value={formik.values.description}
-                                    onChange={formik.handleChange}
-                                    size="small"
-                                    multiline
-                                    rows={4}
-                                    fullWidth
-                                    sx={{
-                                        marginTop: 2,
-                                    }}
-                                />
-                                <Typography variant="caption" color="error">
-                                    {formik.errors.description}
-                                </Typography>
-                            </Box>
+                            <Typography variant="caption" color="error">
+                                {formik.errors.url}
+                            </Typography>
+                            <Typography variant="caption" color="GrayText">
+                                Lowercase a-z, numbers 0-9 and hyphens. Minimum length 4 characters.
+                            </Typography>
+                        </Box>
+                        <Box display={'flex'} flexDirection={'column'}>
+                            <Typography variant="h6" fontWeight="normal">
+                                Name <span style={{ color: 'red' }}>*</span>
+                            </Typography>
+                            <CustomTextField
+                                id="name"
+                                label=""
+                                size="small"
+                                name="name"
+                                value={formik.values.name}
+                                onChange={formik.handleChange}
+                                sx={{
+                                    width: 400,
+                                    marginTop: 2,
+                                }}
+                            />
+                            <Typography variant="caption" color="error">
+                                {formik.errors.name}
+                            </Typography>
+                        </Box>
+                        <Box>
+                            <Typography variant="h6" fontWeight="normal">
+                                Description
+                            </Typography>
+                            <CustomTextField
+                                id="description"
+                                label=""
+                                name="description"
+                                value={formik.values.description}
+                                onChange={formik.handleChange}
+                                size="small"
+                                multiline
+                                rows={4}
+                                fullWidth
+                                sx={{
+                                    marginTop: 2,
+                                }}
+                            />
+                            <Typography variant="caption" color="error">
+                                {formik.errors.description}
+                            </Typography>
+                        </Box>
 
-                            <Box width={400}>
-                                <Typography variant="h6" fontWeight="normal">
-                                    Markup
-                                </Typography>
+                        <Box width={400}>
+                            <Typography marginBottom={2} variant="h6" fontWeight="normal">
+                                Price Markup (%)
+                            </Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                <Slider
+                                    aria-labelledby="discrete-slider"
+                                    valueLabelDisplay="auto"
+                                    step={1}
+                                    min={0}
+                                    max={50}
+                                    name="markup"
+                                    value={formik.values.markup}
+                                    onChange={(_event, value) => formik.setFieldValue('markup', value)}
+                                />
+
                                 <CustomTextField
                                     id="markup"
                                     label=""
+                                    sx={{ width: 70, marginLeft: 2 }}
                                     size="small"
                                     name="markup"
                                     value={formik.values.markup}
@@ -400,132 +412,128 @@ const Component = () => {
                                             formik.setFieldValue('markup', 50);
                                         }
                                     }}
-                                    sx={{
-                                        width: 400,
-                                        marginTop: 2,
-                                    }}
-                                />
-                                <Slider
-                                    aria-labelledby="discrete-slider"
-                                    valueLabelDisplay="auto"
-                                    step={1}
-                                    min={0}
-                                    max={50}
-                                    name="markup"
-                                    value={formik.values.markup}
-                                    onChange={(_event, value) => formik.setFieldValue('markup', value)}
                                 />
                             </Box>
-                            <Box>
-                                <Typography variant="h6" fontWeight="normal">
-                                    Store Branding
-                                </Typography>
-                                <Box display="flex" gap={4}>
-                                    {cardsToUploadMedias.map((item, index) => {
-                                        const mediaConfig = mediaConfigs[item.field as keyof typeof mediaConfigs];
+                        </Box>
+                        <Box>
+                            <Typography variant="h6" fontWeight="normal">
+                                Store Branding
+                            </Typography>
+                            <Box display="flex" gap={4}>
+                                {cardsToUploadMedias.map((item, index) => {
+                                    const mediaConfig = mediaConfigs[item.field as keyof typeof mediaConfigs];
 
-                                        return (
-                                            <Box key={item.name} width={170} height={240}>
-                                                <Box display="flex" alignItems="center" justifyContent="space-between">
-                                                    <h4 style={{ whiteSpace: 'nowrap' }}>
-                                                        {item.name}{' '}
-                                                        {item.required && <span style={{ color: 'red' }}>*</span>}
-                                                    </h4>
-                                                    {formik.values[item.field as keyof typeof mediaConfigs] && (
-                                                        <IconButton
-                                                            onClick={() => {
-                                                                handleChangeFile(item.field, null);
-                                                                mediaRefs.current[index].handleClearMedia();
-                                                            }}
-                                                        >
-                                                            <Delete color="error" />
-                                                        </IconButton>
-                                                    )}
-                                                </Box>
-
-                                                <Box
-                                                    sx={{
-                                                        border: '2px solid #D5D5D5',
-                                                        borderRadius: 2,
+                                    return (
+                                        <Box key={item.name} width={170} height={240}>
+                                            <Box
+                                                display="flex"
+                                                alignItems="center"
+                                                justifyContent="space-between"
+                                                sx={{ flexWrap: 'nowrap', width: '100%', height: 50 }}
+                                            >
+                                                <h4
+                                                    style={{
+                                                        margin: 0,
+                                                        whiteSpace: 'nowrap',
                                                         overflow: 'hidden',
-                                                        minWidth: 160,
-                                                        maxWidth: 160,
-                                                        minHeight: 240,
-                                                        maxHeight: 240,
+                                                        textOverflow: 'ellipsis',
                                                     }}
                                                 >
-                                                    <header
-                                                        style={{
-                                                            backgroundColor: '#EFEFEF',
-                                                            paddingInline: 8,
-                                                            paddingBlock: 4,
+                                                    {item.name}{' '}
+                                                    {item.required && <span style={{ color: 'red' }}>*</span>}
+                                                </h4>
 
-                                                            display: 'flex',
-                                                            flexDirection: 'column',
-                                                            alignItems: 'center',
-                                                            borderTopLeftRadius: 2,
-                                                            borderTopRightRadius: 2,
-                                                            height: 70,
+                                                {formik.values[item.field as keyof typeof mediaConfigs] && (
+                                                    <IconButton
+                                                        onClick={() => {
+                                                            handleChangeFile(item.field, null);
+                                                            mediaRefs.current[index].handleClearMedia();
                                                         }}
                                                     >
-                                                        <Typography color="GrayText" fontSize="0.8rem">
-                                                            Image
-                                                        </Typography>
-                                                        <Typography color="GrayText" fontSize="0.8rem">
-                                                            {item.dimensions}
-                                                        </Typography>
-                                                        <Typography color="GrayText" fontSize="0.8rem">
-                                                            10 MB maximun
-                                                        </Typography>
-                                                    </header>
-                                                    <MediaCard
-                                                        file={formik.values[item.field as keyof typeof mediaConfigs]}
-                                                        mediaConfig={mediaConfig}
-                                                        isRequired={item.required}
-                                                        handleChangeFile={(file) => handleChangeFile(item.field, file)}
-                                                        ref={(ref) => handleSetMediaRef(ref, index)}
-                                                    />
-                                                </Box>
-                                                <Typography variant="caption" color="error">
-                                                    {formik.errors[item.field as keyof typeof mediaConfigs]}
-                                                </Typography>
+                                                        <Delete color="error" />
+                                                    </IconButton>
+                                                )}
                                             </Box>
-                                        );
-                                    })}
-                                </Box>
+
+                                            <Box
+                                                sx={{
+                                                    border: '2px solid #D5D5D5',
+                                                    borderRadius: 2,
+                                                    overflow: 'hidden',
+                                                    minWidth: 160,
+                                                    maxWidth: 160,
+                                                    minHeight: 240,
+                                                    maxHeight: 240,
+                                                }}
+                                            >
+                                                <header
+                                                    style={{
+                                                        backgroundColor: '#EFEFEF',
+                                                        paddingInline: 8,
+                                                        paddingBlock: 4,
+
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        alignItems: 'center',
+                                                        borderTopLeftRadius: 2,
+                                                        borderTopRightRadius: 2,
+                                                        height: 70,
+                                                    }}
+                                                >
+                                                    <Typography color="GrayText" fontSize="0.8rem">
+                                                        Image
+                                                    </Typography>
+                                                    <Typography color="GrayText" fontSize="0.8rem">
+                                                        {item.dimensions}
+                                                    </Typography>
+                                                    <Typography color="GrayText" fontSize="0.8rem">
+                                                        10 MB maximun
+                                                    </Typography>
+                                                </header>
+                                                <MediaCard
+                                                    file={formik.values[item.field as keyof typeof mediaConfigs]}
+                                                    mediaConfig={mediaConfig}
+                                                    isRequired={item.required}
+                                                    handleChangeFile={(file) => handleChangeFile(item.field, file)}
+                                                    ref={(ref) => handleSetMediaRef(ref, index)}
+                                                />
+                                            </Box>
+                                            <Typography variant="caption" color="error">
+                                                {formik.errors[item.field as keyof typeof mediaConfigs]}
+                                            </Typography>
+                                        </Box>
+                                    );
+                                })}
                             </Box>
-                            {isSubmittingFiles && <LoadingOverlay message="Uploading files..." />}
-                        </form>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Preview
-                            title={formik.values.name || 'Store Name'}
-                            description={
-                                formik.values.description || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-                            }
-                            domain={
-                                formik.values.url
-                                    ? `https://${formik.values.url}.xibit.live`
-                                    : 'https://example.xibit.live'
-                            }
-                            banner={
-                                formik.values.banner instanceof File
-                                    ? URL.createObjectURL(formik.values.banner)
-                                    : formik.values.banner
-                            }
-                            logo={
-                                formik.values.logoSquare instanceof File
-                                    ? URL.createObjectURL(formik.values.logoSquare)
-                                    : formik.values.logoSquare
-                            }
-                            logoHorizontal={
-                                formik.values.logoHorizontal instanceof File
-                                    ? URL.createObjectURL(formik.values.logoHorizontal)
-                                    : formik.values.logoHorizontal
-                            }
-                        />
-                    </Grid>
-                </Grid>
+                        </Box>
+                        {isSubmittingFiles && <LoadingOverlay message="Uploading files..." />}
+                    </form>
+
+                    <Preview
+                        title={formik.values.name || 'Store Name'}
+                        description={
+                            formik.values.description || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+                        }
+                        domain={
+                            formik.values.url ? `https://${formik.values.url}.xibit.live` : 'https://example.xibit.live'
+                        }
+                        banner={
+                            formik.values.banner instanceof File
+                                ? URL.createObjectURL(formik.values.banner)
+                                : formik.values.banner
+                        }
+                        logo={
+                            formik.values.logoSquare instanceof File
+                                ? URL.createObjectURL(formik.values.logoSquare)
+                                : formik.values.logoSquare
+                        }
+                        logoHorizontal={
+                            formik.values.logoHorizontal instanceof File
+                                ? URL.createObjectURL(formik.values.logoHorizontal)
+                                : formik.values.logoHorizontal
+                        }
+                    />
+                </Box>
                 <Dialog
                     open={openDialogSave}
                     onClose={() => setOpenDialogSave(false)}
