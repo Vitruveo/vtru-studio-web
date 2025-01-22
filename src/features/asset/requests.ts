@@ -189,3 +189,7 @@ export async function signMessage({ signer, domain, types, tx, signedMessage }: 
         signedMessage,
     });
 }
+
+export async function changeAutoStakeInAllAssets(autoStake: boolean) {
+    return apiService.put(`/assets/changeAutoStakeInAllAssets`, { autoStake });
+}

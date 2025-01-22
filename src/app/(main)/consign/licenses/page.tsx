@@ -76,12 +76,13 @@ export default function Licenses() {
         },
     ];
 
-    const initialValues: LicensesFormValues = licensesState
+    const initialValues: LicensesFormValues = licensesState?.nft?.version
         ? licensesState
         : {
               nft: {
                   version: '1',
                   added: true,
+                  autoStake: licensesState?.nft.autoStake || false,
                   license: 'CC BY-NC-ND',
                   elastic: {
                       editionPrice: 0,
@@ -155,6 +156,11 @@ export default function Licenses() {
 
     const handleSaveData = async (event?: React.FormEvent) => {
         if (event) event.preventDefault();
+
+        if (values.nft.autoStake !== initialValues.nft.autoStake) {
+            handleSubmit();
+        }
+
         if (hasContract) {
             router.push('/consign/terms');
             return;

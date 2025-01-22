@@ -163,6 +163,7 @@ export interface User {
     collections: { collection: string }[];
     currentPage: number;
     sort: string;
+    autoStake: boolean;
     selectedAsset: string;
     licenses?: {
         artCards: number;
