@@ -3,6 +3,7 @@ import { FormikErrors } from 'formik';
 
 export interface LicensesFormValues {
     nft: {
+        autoStake: boolean;
         version: string;
         added: boolean;
         license: string;

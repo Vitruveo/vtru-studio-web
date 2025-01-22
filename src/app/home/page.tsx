@@ -28,6 +28,8 @@ import {
     Pagination,
     Theme,
     useTheme,
+    ToggleButton,
+    Switch,
 } from '@mui/material';
 import { Menu as MenuIcon } from '@mui/icons-material';
 import {
@@ -46,7 +48,7 @@ import Image from 'next/image';
 
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useI18n } from '../hooks/useI18n';
-import { requestMyAssetsThunk } from '@/features/user/thunks';
+import { putAutoStakeThunk, requestMyAssetsThunk } from '@/features/user/thunks';
 import { userActionsCreators } from '@/features/user/slice';
 import { createNewAssetThunk, deleteAssetThunk } from '@/features/asset/thunks';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
@@ -104,7 +106,7 @@ export default function Home() {
     const theme = useTheme();
     const isMobile = useMediaQuery('(max-width: 600px)');
     const isTablet = useMediaQuery('(max-width: 900px)');
-    const { assets, currentPage, collections, sort } = useSelector((state) => state.user);
+    const { assets, currentPage, autoStake, collections, sort } = useSelector((state) => state.user);
     const customizer = useSelector((state) => state.customizer);
     const lgUp = useMediaQuery((item: Theme) => item.breakpoints.up('lg'));
     const mdUp = useMediaQuery((item: Theme) => item.breakpoints.up('md'));
@@ -210,6 +212,10 @@ export default function Home() {
         );
     };
 
+    const handleChangeAutoStake = () => {
+        dispatch(putAutoStakeThunk());
+    };
+
     if (generalVault) return <></>;
 
     return (
@@ -279,85 +285,120 @@ export default function Home() {
                             </Typography>
                         </Box>
                     </Box>
-
-                    <Box mt={2}>
-                        <button
-                            style={{
-                                backgroundColor: '#D8C2D9',
-                                borderRadius: '10px',
-                                padding: '20px',
-                                display: 'flex',
-                                flexDirection: 'row',
-                                gap: '20px',
-                                alignItems: 'center',
-                                width: '100%',
-                                border: 'none',
-                                cursor: 'pointer',
-                                transition: '0.3s',
-                            }}
-                        >
-                            <div
-                                onClick={() => handleCreateNewAsset()}
-                                onMouseEnter={(event) => {
-                                    event.currentTarget.style.color = '#fff';
-                                }}
-                                onMouseLeave={(event) => {
-                                    event.currentTarget.style.color = '#000';
-                                }}
+                    <Box gap={2} display="flex">
+                        <Box flex={3} mt={2}>
+                            <button
                                 style={{
+                                    height: 80,
+                                    backgroundColor: '#D8C2D9',
+                                    borderRadius: '10px',
+                                    padding: '20px',
                                     display: 'flex',
                                     flexDirection: 'row',
-                                    gap: 10,
+                                    gap: '20px',
                                     alignItems: 'center',
+                                    width: '100%',
+                                    border: 'none',
+                                    cursor: 'pointer',
                                     transition: '0.3s',
                                 }}
                             >
-                                <IconPlus
-                                    size={40}
-                                    style={{
-                                        backgroundColor: '#fff',
-                                        borderRadius: '5px',
-                                        padding: '5px',
-                                        transition: '0.3s',
-                                    }}
+                                <div
+                                    onClick={() => handleCreateNewAsset()}
                                     onMouseEnter={(event) => {
-                                        // rotate on hover.
-                                        event.currentTarget.style.transform = 'rotate(180deg)';
+                                        event.currentTarget.style.color = '#fff';
                                     }}
                                     onMouseLeave={(event) => {
-                                        event.currentTarget.style.transform = 'rotate(0deg)';
+                                        event.currentTarget.style.color = '#000';
                                     }}
-                                    color="#000"
-                                />
-                            </div>
-                            <Box
-                                display={'flex'}
-                                flexDirection={smUp ? 'row' : 'column'}
-                                gap={2}
-                                alignItems={'center'}
-                                justifyContent={'space-between'}
-                                width={'100%'}
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        gap: 10,
+                                        alignItems: 'center',
+                                        transition: '0.3s',
+                                    }}
+                                >
+                                    <IconPlus
+                                        size={40}
+                                        style={{
+                                            backgroundColor: '#fff',
+                                            borderRadius: '5px',
+                                            padding: '5px',
+                                            transition: '0.3s',
+                                        }}
+                                        onMouseEnter={(event) => {
+                                            // rotate on hover.
+                                            event.currentTarget.style.transform = 'rotate(180deg)';
+                                        }}
+                                        onMouseLeave={(event) => {
+                                            event.currentTarget.style.transform = 'rotate(0deg)';
+                                        }}
+                                        color="#000"
+                                    />
+                                </div>
+                                <Box
+                                    display={'flex'}
+                                    flexDirection={smUp ? 'row' : 'column'}
+                                    gap={2}
+                                    alignItems={'center'}
+                                    justifyContent={'space-between'}
+                                    width={'100%'}
+                                >
+                                    <Typography sx={{ fontSize: 22 }}>Consign a new asset</Typography>
+                                    <RSelect
+                                        placeholder="Duplicate asset and consign from..."
+                                        options={assets.data.map((asset) => ({
+                                            value: asset._id,
+                                            label: asset.title,
+                                        }))}
+                                        onChange={(event) => setCloneId(event?.value)}
+                                        isClearable
+                                        styles={{
+                                            container: (provided) => ({
+                                                ...provided,
+                                                minWidth: 163,
+                                                width: 'auto',
+                                            }),
+                                        }}
+                                    ></RSelect>
+                                </Box>
+                            </button>
+                        </Box>
+                        <Box flex={1} mt={2}>
+                            <button
+                                style={{
+                                    height: 80,
+                                    backgroundColor: '#D8C2D9',
+                                    borderRadius: '10px',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    width: '100%',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    transition: '0.3s',
+                                }}
                             >
-                                <Typography sx={{ fontSize: 22 }}>Consign a new asset</Typography>
-                                <RSelect
-                                    placeholder="Duplicate asset and consign from..."
-                                    options={assets.data.map((asset) => ({
-                                        value: asset._id,
-                                        label: asset.title,
-                                    }))}
-                                    onChange={(event) => setCloneId(event?.value)}
-                                    isClearable
-                                    styles={{
-                                        container: (provided) => ({
-                                            ...provided,
-                                            minWidth: 163,
-                                            width: 'auto',
-                                        }),
-                                    }}
-                                ></RSelect>
-                            </Box>
-                        </button>
+                                <Box marginLeft={2}>
+                                    <Box display={'flex'} gap={1} alignItems={'center'} width={'100%'}>
+                                        <Switch
+                                            name={`autoStake`}
+                                            checked={autoStake}
+                                            onChange={handleChangeAutoStake}
+                                        />
+                                        <Typography sx={{ fontSize: 18, whiteSpace: 'nowrap' }}>
+                                            Auto-stake for Buying Blitz
+                                        </Typography>
+                                    </Box>
+                                    <Typography sx={{ fontSize: 14, whiteSpace: 'nowrap' }}>
+                                        Sales for all artworks will be auto-staked 100%
+                                    </Typography>
+                                </Box>
+                            </button>
+                        </Box>
                     </Box>
+
                     <Box display="flex" alignItems="center" justifyContent="space-between" mt={2}>
                         <Box
                             display="flex"

@@ -30,6 +30,7 @@ import {
     synapsSessionInit,
     synapsIndividualSession,
     getTruLevel,
+    putAutoStake,
 } from './requests';
 import { userActionsCreators } from './slice';
 import {
@@ -68,7 +69,7 @@ import { ReduxThunkAction } from '@/store';
 import { AccountSettingsFormValues } from '@/app/home/myProfile/types';
 import { consignArtworkActionsCreators } from '../consignArtwork/slice';
 import { BASE_URL_API } from '@/constants/api';
-import { getAssetById, getMyAssets } from '../asset/requests';
+import { changeAutoStakeInAllAssets, getAssetById, getMyAssets } from '../asset/requests';
 import { ASSET_STORAGE_URL, NO_IMAGE_ASSET } from '@/constants/asset';
 import { config } from '@/app/home/components/apps/wallet';
 
@@ -555,5 +556,14 @@ export function synapsIndividualSessionThunk(): ReduxThunkAction<Promise<void>> 
             const steps = res.data.session.steps.map((v) => ({ ...v, name: v.type }));
             dispatch(userActionsCreators.setSynapsSteps(steps));
         }
+    };
+}
+
+export function putAutoStakeThunk(): ReduxThunkAction<Promise<void>> {
+    return async function (dispatch, getState) {
+        const currentValue = getState().user.autoStake;
+        dispatch(userActionsCreators.changeAutoStake(!currentValue));
+        changeAutoStakeInAllAssets(!currentValue);
+        putAutoStake(!currentValue);
     };
 }

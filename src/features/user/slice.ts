@@ -41,6 +41,7 @@ const initialState: UserSliceState = {
     },
     status: '',
     error: '',
+    autoStake: false,
     canConsignArtwork: true,
     generalVault: undefined,
     vault: {
@@ -114,6 +115,7 @@ export const userSlice = createSlice({
             state.synaps = creator.synaps;
             state.truLevel = creator.truLevel;
             state.licenses = creator.licenses;
+            state.autoStake = creator.autoStake;
             state.socials = {
                 x: {
                     name: creator?.socials?.x?.name ?? '',
@@ -221,6 +223,9 @@ export const userSlice = createSlice({
                     step.id === action.payload.stepId ? { ...step, status: action.payload.status } : step
                 );
             }
+        },
+        changeAutoStake: (state, action: PayloadAction<boolean>) => {
+            state.autoStake = action.payload;
         },
     },
 });

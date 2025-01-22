@@ -213,6 +213,10 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
         } else toastr.display({ type: 'error', message: 'Error updating price' });
     };
 
+    const handleChangeAutoStake = () => {
+        setFieldValue('nft.autoStake', !values.autoStake);
+    };
+
     const renderMessage = () => {
         if (!address) return 'Connect Wallet to Edit';
 
@@ -501,6 +505,25 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                 </Box>
                             )}
                         </RadioGroup>
+                        <Box marginTop={1} marginBottom={1} display="flex" gap={1}>
+                            <CustomCheckbox
+                                sx={{ padding: 0 }}
+                                name="nft.autoStake"
+                                checked={values.autoStake}
+                                onChange={handleChangeAutoStake}
+                            />
+                            <Typography
+                                fontSize="0.8rem"
+                                sx={{
+                                    whiteSpace: 'nowrap',
+                                    textOverflow: 'ellipsis',
+                                    overflow: 'hidden',
+                                    width: 170,
+                                }}
+                            >
+                                Auto-stake for VERSE (95%)
+                            </Typography>
+                        </Box>
                     </Box>
                 )}
                 <Box>

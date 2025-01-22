@@ -226,3 +226,7 @@ export async function synapsIndividualSession(): Promise<SynapsIndividualSession
 export async function getTruLevel(): Promise<GetTruLevelApiRes> {
     return apiService.get('/creators/truLevel');
 }
+
+export async function putAutoStake(autoStake: boolean) {
+    return apiService.put('/creators/autoStake', { autoStake });
+}
