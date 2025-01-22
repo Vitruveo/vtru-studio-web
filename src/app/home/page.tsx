@@ -392,7 +392,7 @@ export default function Home() {
                                         </Typography>
                                     </Box>
                                     <Typography sx={{ fontSize: 14, whiteSpace: 'nowrap' }}>
-                                        Sales for all artworks will be auto-staked 100%
+                                        Sales for all artworks will be auto-staked 95%
                                     </Typography>
                                 </Box>
                             </button>
