@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useMemo, useState } from 'react';
-import { FileRejection, useDropzone } from 'react-dropzone';
+import { useDropzone } from 'react-dropzone';
 import { IconTrash } from '@tabler/icons-react';
 import {
     Box,
@@ -41,7 +41,6 @@ import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr
 import { ASSET_STORAGE_URL } from '@/constants/asset';
 import { useDispatch } from '@/store/hooks';
 import { assetActionsCreators } from '@/features/asset/slice';
-import { validateUploadedMediaThunk } from '@/features/asset/thunks';
 import { IconCircleX } from '@tabler/icons-react';
 
 interface MediaCardProps {
@@ -52,6 +51,7 @@ interface MediaCardProps {
     formats: AssetMediaFormValues['formats'];
     urlAssetFile: string;
     definition?: Definition;
+    disabled?: boolean;
     handleUploadFile: ({
         formatUpload,
         file,
@@ -84,19 +84,13 @@ export interface MediaConfig {
     required: boolean;
 }
 
-interface Dimensions {
-    imageHeight: number;
-    imageWidth: number;
-    configHeight: number;
-    configWidth: number;
-}
-
 export default function MediaCard({
     formatType,
     formats,
     formatValue,
     definition,
     deleteKeys,
+    disabled = false,
     setFieldValue,
     handleUploadFile,
 }: MediaCardProps) {
@@ -135,12 +129,7 @@ export default function MediaCard({
     const mediaWidth = formats.original.width;
     const mediaHeight = formats.original.height;
 
-    const {
-        requestAssetUpload: upload,
-        formats: assetFormats,
-        _id,
-        isLoadingMediaData,
-    } = useSelector((state) => state.asset);
+    const { requestAssetUpload: upload, formats: assetFormats } = useSelector((state) => state.asset);
     const format = assetFormats[formatType as keyof FormatsMedia];
     const originalMediaInfo = handleGetFileType(formats.original.file!);
     const isVideo = originalMediaInfo.mediaType === 'video' && formatType !== 'print';
@@ -163,18 +152,7 @@ export default function MediaCard({
         uploadButton: language['studio.consignArtwork.assetMedia.upload.button'],
     } as { [key: string]: string };
 
-    function compareDimensions(dimensions: Dimensions): boolean {
-        const minimumConfigHeight = dimensions.configHeight * 0.8;
-        const minimumConfigWidth = dimensions.configWidth * 0.8;
-
-        if (dimensions.imageHeight < minimumConfigHeight || dimensions.imageWidth < minimumConfigWidth) {
-            return false;
-        }
-
-        return true;
-    }
-
-    const onDrop = async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
+    const onDrop = async (acceptedFiles: File[]) => {
         // fileRejections.forEach(({ file, errors }) => {
         //     if (errors[0].code === 'file-too-large') {
         //         setSizeError(true);
@@ -244,10 +222,6 @@ export default function MediaCard({
         }
         return accept;
     };
-
-    function convertMBToBytes(sizeInMB: number): number {
-        return sizeInMB * 1000000;
-    }
 
     const { getRootProps, getInputProps } = useDropzone({
         onDrop,
@@ -417,8 +391,9 @@ export default function MediaCard({
                             e.stopPropagation();
                             handleDeleteFile();
                         }}
+                        disabled={disabled}
                     >
-                        <IconTrash color="red" size="16" stroke={1.5} />
+                        <IconTrash color={disabled ? 'gray' : 'red'} size="16" stroke={1.5} />
                     </IconButton>
                 )}
             </Box>

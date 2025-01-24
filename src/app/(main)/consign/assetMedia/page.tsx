@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import CloseIcon from '@mui/icons-material/Close';
 import { Stack } from '@mui/system';
-import { Box, CircularProgress, IconButton, Typography } from '@mui/material';
+import { Box, IconButton, Typography } from '@mui/material';
 
 import { useDispatch, useSelector } from '@/store/hooks';
 import { AssetMediaFormValues, FormatMediaSave, FormatsMedia } from './types';
@@ -40,6 +40,7 @@ export default function AssetMedia() {
     const selectedAsset = useSelector((state) => state.user.selectedAsset);
     const formats = useSelector((state) => state.asset.formats);
     const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
+    const isMinted = useSelector((state) => !!state.asset?.mintExplorer);
 
     const originalMediaInfo = handleGetFileType(formats.original.file!);
 
@@ -154,11 +155,6 @@ export default function AssetMedia() {
         rangeTimeStart?: string;
         rangeTimeEnd?: string;
     }) => {
-        if (hasContract) {
-            toast.display({ type: 'warning', message: 'You cannot upload new files after signing the contract' });
-            return;
-        }
-
         const transactionId = nanoid();
 
         const isVideo = originalMediaInfo.mediaType === 'video';
@@ -227,7 +223,7 @@ export default function AssetMedia() {
         );
 
         const deleteFormats = Object.entries(values.formats)
-            .filter(([key, value]) => !initialValues.formats[key as keyof FormatsMedia]?.file)
+            .filter(([key, _value]) => !initialValues.formats[key as keyof FormatsMedia]?.file)
             .map(([key, _]) => key);
 
         if (deleteFormats.length) await dispatch(assetMediaThunk({ deleteFormats }));
@@ -263,7 +259,7 @@ export default function AssetMedia() {
 
                     if (!formatByTransaction) return;
 
-                    const [key, value] = formatByTransaction;
+                    const [_key, value] = formatByTransaction;
 
                     dispatch(
                         assetStorageThunk({
@@ -447,22 +443,19 @@ export default function AssetMedia() {
                             <Box marginTop={1} display="flex" flexWrap="wrap">
                                 {Object.entries(values.formats).map(([formatType, value], index) => (
                                     <Box style={{ marginRight: '10px' }} key={index}>
-                                        {formatType !== 'print' ? (
-                                            <MediaCard
-                                                key={index}
-                                                errors={errors}
-                                                formats={values.formats}
-                                                formatType={formatType}
-                                                formatValue={value}
-                                                deleteKeys={values.deleteKeys}
-                                                urlAssetFile={urlAssetFile}
-                                                definition={values.formats?.original?.definition}
-                                                setFieldValue={setFieldValue}
-                                                handleUploadFile={handleUploadFile}
-                                            />
-                                        ) : (
-                                            <></>
-                                        )}
+                                        <MediaCard
+                                            key={index}
+                                            errors={errors}
+                                            formats={values.formats}
+                                            formatType={formatType}
+                                            formatValue={value}
+                                            deleteKeys={values.deleteKeys}
+                                            urlAssetFile={urlAssetFile}
+                                            definition={values.formats?.original?.definition}
+                                            setFieldValue={setFieldValue}
+                                            handleUploadFile={handleUploadFile}
+                                            disabled={isMinted && formatType !== 'print'}
+                                        />
                                     </Box>
                                 ))}
                             </Box>

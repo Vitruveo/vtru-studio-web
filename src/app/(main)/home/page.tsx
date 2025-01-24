@@ -1,6 +1,6 @@
 'use client';
 
-import { CSSProperties, useEffect, useMemo, useRef, useState } from 'react';
+import { CSSProperties, useEffect, useRef, useState } from 'react';
 import { Fab, Action } from 'react-tiny-fab';
 import { useRouter } from 'next/navigation';
 import {
@@ -28,7 +28,6 @@ import {
     Pagination,
     Theme,
     useTheme,
-    ToggleButton,
     Switch,
 } from '@mui/material';
 import { Menu as MenuIcon } from '@mui/icons-material';
@@ -59,13 +58,6 @@ import { MintExplorer } from '@/features/user/types';
 import isVideoExtension from '@/utils/isVideo';
 import { ModalListOfLicenses } from '../components/licenses/ModalListOfLicenses';
 import { userSelector } from '@/features/user';
-
-const iconStyle: CSSProperties = {
-    position: 'absolute',
-    bottom: 15,
-    right: 10,
-    color: '#595959',
-};
 
 const iconStyleComment: CSSProperties = {
     position: 'absolute',
@@ -472,7 +464,7 @@ export default function Home() {
                                     <List>
                                         {filters.map((filter, index) => (
                                             <ListItem
-                                                button
+                                                role="button"
                                                 key={index}
                                                 onClick={() => {
                                                     handleFilterChange(filter);
@@ -712,15 +704,13 @@ export default function Home() {
                                                 icon={<IconSettings size={40} />}
                                                 alwaysShowTitle={true}
                                             >
-                                                {!asset.mintExplorer && (
-                                                    <Action
-                                                        style={{ backgroundColor: '#fff' }}
-                                                        text="Edit"
-                                                        onClick={() => router.push('/consign')}
-                                                    >
-                                                        <IconEdit color={theme.palette.primary.main} size={30} />
-                                                    </Action>
-                                                )}
+                                                <Action
+                                                    style={{ backgroundColor: '#fff' }}
+                                                    text="Edit"
+                                                    onClick={() => router.push('/consign')}
+                                                >
+                                                    <IconEdit color={theme.palette.primary.main} size={30} />
+                                                </Action>
                                                 {(asset.mintExplorer || asset.contractExplorer) && (
                                                     <Action
                                                         style={{ backgroundColor: '#fff' }}
