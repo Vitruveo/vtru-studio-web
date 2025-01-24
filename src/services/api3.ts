@@ -40,6 +40,10 @@ export const api3Service = {
         const response: AxiosResponse = await api3.put(url, data);
         return response.data;
     },
+    patch: async <T = unknown, E = any>(url: string, data: any): Promise<APIResponse<T, E>> => {
+        const response: AxiosResponse = await api3.patch(url, data);
+        return response.data;
+    },
     delete: async <T = unknown, E = any>(url: string, data?: any): Promise<APIResponse<T, E>> => {
         const response: AxiosResponse = await api3.delete(url, { data });
         return response.data;

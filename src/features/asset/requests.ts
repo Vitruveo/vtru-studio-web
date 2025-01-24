@@ -25,6 +25,7 @@ import { apiService } from '@/services/api';
 import { assetActionsCreators } from './slice';
 import { ASSET_STORAGE_BUCKET } from '@/constants/asset';
 import { API3_BASE_URL } from '@/constants/api';
+import { api3Service } from '@/services/api3';
 
 export async function requestDeleteFiles(data: RequestDeleteFilesReq): Promise<any> {
     if (!data.deleteKeys.length) return;
@@ -173,11 +174,11 @@ export async function validateUploadedMedia(data: ValidateUploadedMediaReq) {
 }
 
 export async function updatePrice({ assetId, price }: UpdatePriceReq) {
-    return apiService.patch(`/assets/licenses/updatePrice/${assetId}`, { price });
+    return api3Service.patch(`/assets/licenses/updatePrice/${assetId}`, { editionPrice: price });
 }
 
 export async function checkLicenseEditable({ assetId }: CheckLicenseEditableReq): Promise<CheckLicenseEditableRes> {
-    return apiService.get(`/assets/licenses/checkEditable/${assetId}`);
+    return api3Service.get(`/assets/licenses/checkEditable/${assetId}`);
 }
 
 export async function signMessage({ signer, domain, types, tx, signedMessage }: signMessageReq) {
