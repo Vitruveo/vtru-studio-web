@@ -1,6 +1,5 @@
-// import { Helmet } from 'react-helmet';
 import { useSelector } from '@/store/hooks';
-import { Box, Container, Theme, useMediaQuery } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 type Props = {
@@ -11,8 +10,7 @@ type Props = {
     title?: string;
 };
 
-const PageContainer = ({ margin, title, description, children, maxHeight }: Props) => {
-    const lgUp = useMediaQuery((th: Theme) => th.breakpoints.up('lg'));
+const PageContainer = ({ margin, title, description, children }: Props) => {
     const customizer = useSelector((state) => state.customizer);
 
     return (

@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { IconArrowBarToLeft, IconArrowBarToRight } from '@tabler/icons-react';
+import { IconArrowBarToLeft, IconArrowBarToRight, IconMenu2 } from '@tabler/icons-react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
+import { Menu, MenuItem } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -18,9 +20,11 @@ import AllProjectsMenu from './AllProjectsMenu';
 import Image from 'next/image';
 
 const Header = () => {
+    const dispatch = useDispatch();
     const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
     const smUp = useMediaQuery((theme: any) => theme.breakpoints.up('sm'));
-    const dispatch = useDispatch();
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
 
     // drawer
     const customizer = useSelector((state) => state.customizer);
@@ -40,6 +44,13 @@ const Header = () => {
         width: '100%',
         color: theme.palette.text.secondary,
     }));
+
+    const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     const handleClick = () => {
         window.open('https://about.xibit.app', '_blank');
@@ -83,25 +94,24 @@ const Header = () => {
                             </Box>
                         )}
                     </Stack>
-                    <Stack direction={smUp ? 'row' : 'column-reverse'} alignItems="center">
-                        <IconButton
-                            size="small"
-                            aria-label="more"
-                            id="long-button"
-                            aria-haspopup="true"
-                            onClick={handleClick}
-                        >
-                            <Image
-                                src="/images/icons/xibit-icon-redondo-darkmode.png"
-                                width={35}
-                                height={35}
-                                alt=""
-                                style={{ cursor: 'pointer' }}
-                            />
-                        </IconButton>
-                        <Rss />
-                        <Language />
-                    </Stack>
+                    <IconButton onClick={handleOpen} sx={{ position: 'relative' }}>
+                        <IconMenu2 width={35} height={35} />
+                    </IconButton>
+                    <Menu
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        sx={{ position: 'absolute', left: '91%', top: '4%' }}
+                    >
+                        <MenuItem onClick={handleClick}>About Xibit</MenuItem>
+                        <MenuItem disabled>Buy VUSD</MenuItem>
+                        <MenuItem>
+                            <Rss />
+                        </MenuItem>
+                        <MenuItem>
+                            <Language />
+                        </MenuItem>
+                    </Menu>
                 </Box>
             </ToolbarStyled>
         </AppBarStyled>
