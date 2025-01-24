@@ -12,7 +12,6 @@ const projects = [
     { title: 'STUDIO', url: `${BASE_URL_STUDIO}/login` },
     { title: 'ABOUT XIBIT', url: 'https://about.xibit.app', onlyMobile: true },
     { title: 'ABOUT VITRUVEO', url: 'https://vitruveo.xyz', onlyMobile: true },
-    { title: 'BUY VUSD', url: '' },
 ];
 
 const AllProjectsMenu = () => {
