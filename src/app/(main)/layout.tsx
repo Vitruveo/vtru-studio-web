@@ -10,9 +10,6 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { useRouter } from 'next/navigation';
 import webSocketService from '@/services/websocket';
 import { connectWebSocketThunk, loginWebSocketThunk } from '@/features/ws/thunks';
-import { userActionsCreators } from '@/features/user/slice';
-import { useToastr } from '../hooks/useToastr';
-import { AxiosError } from 'axios';
 import { userSelector } from '@/features/user';
 import LoadingOverlay from './components/loadingOverlay';
 
@@ -36,14 +33,12 @@ const isValidToken = (token: string) => {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-    const toast = useToastr();
     const router = useRouter();
     const dispatch = useDispatch();
     const token = useSelector((state) => state.user.token);
     const isLoading = useSelector((state) => state.asset.isLoading);
     const isSubmittingFiles = useSelector((state) => state.stores.isSubmittingFiles);
     const customizer = useSelector((state) => state.customizer);
-    const email = useSelector((state) => state.user.login.email);
 
     const { generalVault } = useSelector(userSelector(['generalVault']));
 
