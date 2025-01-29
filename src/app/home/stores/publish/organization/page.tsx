@@ -86,6 +86,7 @@ const Component = () => {
     const isSubmittingFiles = useSelector((state) => state.stores.isSubmittingFiles);
 
     const [openDialogSave, setOpenDialogSave] = useState(false);
+    const [hasBanner, setHasbanner] = useState(!!store?.organization.formats?.banner?.path);
 
     const formatsMapper = {
         logoHorizontal: store?.organization.formats?.logo.horizontal?.path,
@@ -160,7 +161,7 @@ const Component = () => {
                     name: values.name,
                     description: values.description,
                     markup: values.markup,
-                    hasBanner: Boolean(values.banner),
+                    hasBanner,
                     // formats: {}
                 },
             })
@@ -180,7 +181,6 @@ const Component = () => {
                 : null,
             logoSquare: formatsMapper.logoSquare ? `${STORE_STORAGE_URL}/${formatsMapper.logoSquare}` : null,
             banner: formatsMapper.banner ? `${STORE_STORAGE_URL}/${formatsMapper.banner}` : null,
-
             redirectPath: '/home/stores/publish/artworks',
         },
         validationSchema: yup.object().shape({
@@ -265,6 +265,8 @@ const Component = () => {
     }, [requestUpload]);
 
     const handleChangeFile = (field: string, file: File | null) => {
+        if (field === 'banner') setHasbanner(!!file);
+
         formik.setValues({
             ...formik.values,
             [field]: file,
