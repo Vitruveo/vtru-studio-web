@@ -4,18 +4,46 @@ import { Preview } from '@/app/(main)/components/stores/Preview';
 import Breadcrumb from '@/app/(main)/layout/shared/breadcrumb/Breadcrumb';
 import { STORE_STORAGE_URL } from '@/constants/asset';
 import { Stores } from '@/features/stores/types';
-import { useSelector } from '@/store/hooks';
+import { useDispatch, useSelector } from '@/store/hooks';
 import { useRouter } from 'next/navigation';
+import PublishStoreMessage from './publishMessage';
+import { updateStatusThunk } from '@/features/stores/thunks';
 
 interface Props {
     data: {
         store: Stores;
+        loading: boolean;
     };
 }
 const Component = ({ data }: Props) => {
+    const dispatch = useDispatch();
     const router = useRouter();
-    const { store } = data;
+    const { store, loading } = data;
     const isFile = (path: any): path is File => path instanceof File;
+
+    const textsForPublishStoreStatus = {
+        draft: {
+            buttontitle: 'Request Publishment',
+            message:
+                'Nice work! Your store is ready for request publishment. Once you submit it our team will review it and approve accordingly',
+        },
+        pending: {
+            buttontitle: 'Request Publishment Pending',
+            message: 'Your store is being reviewed by our team and you will be notified when it is made available',
+        },
+        active: {
+            buttontitle: undefined,
+            message: 'Your store is active',
+        },
+        inactive: {
+            buttontitle: undefined,
+            message: 'Your store did not pass our moderation review.',
+        },
+    } as { [key: string]: { buttontitle: string | undefined; message: string } };
+
+    const handleRequestPublishment = () => {
+        dispatch(updateStatusThunk({ id: store._id, status: 'pending' }));
+    };
 
     return (
         <Box paddingInline={3}>
@@ -28,6 +56,7 @@ const Component = ({ data }: Props) => {
                 ]}
                 assetTitle={store.organization.url || ''}
             />
+            <PublishStoreMessage message={textsForPublishStoreStatus[store.status].message} loading={loading} />
             <Preview
                 title={store.organization.url || 'Store Name'}
                 description={store.organization.description || 'Store Description'}
@@ -37,9 +66,11 @@ const Component = ({ data }: Props) => {
                         : 'https://example.xibit.live'
                 }
                 banner={
-                    isFile(store.organization.formats?.banner.path)
-                        ? URL.createObjectURL(store.organization.formats?.banner.path)
-                        : `${STORE_STORAGE_URL}/${store.organization.formats?.banner.path}` || ''
+                    store.organization.formats?.banner?.path
+                        ? isFile(store.organization.formats?.banner.path)
+                            ? URL.createObjectURL(store.organization.formats?.banner.path)
+                            : `${STORE_STORAGE_URL}/${store.organization.formats?.banner.path}`
+                        : null
                 }
                 logo={
                     isFile(store.organization.formats?.logo.square.path)
@@ -65,7 +96,9 @@ const Component = ({ data }: Props) => {
                     <Button variant="text" onClick={() => router.push('/stores/publish')}>
                         <Typography color="gray">Back</Typography>
                     </Button>
-                    <Button variant="contained">Request Publishment</Button>
+                    <Button variant="contained" onClick={handleRequestPublishment} disabled={store.status !== 'draft'}>
+                        {textsForPublishStoreStatus[store.status].buttontitle}
+                    </Button>
                 </Box>
             </Box>
         </Box>
@@ -73,6 +106,6 @@ const Component = ({ data }: Props) => {
 };
 
 export default function ReviewAndPublish() {
-    const { data } = useSelector((state) => state.stores);
-    return <Component data={{ store: data.data[0] }} />;
+    const { data, loading } = useSelector((state) => state.stores);
+    return <Component data={{ store: data.data[0], loading }} />;
 }

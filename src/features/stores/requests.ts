@@ -5,6 +5,7 @@ import {
     StorePaginated,
     Stores,
     StoreStorageParams,
+    UpdateStatusParams,
     UpdateStepNameStoresParams,
     ValidateUrlParams,
 } from './types';
@@ -46,6 +47,10 @@ export async function updateStepNameStore({
     });
 }
 
+export async function updateStatusStore({ id, status }: UpdateStatusParams): Promise<APIResponse<void>> {
+    return apiService.patch(`/stores/status/${id}`, { status });
+}
+
 export async function validateUrl({ storeId, url }: ValidateUrlParams): Promise<APIResponse<boolean>> {
     return apiService.post(`/stores/validateUrl/${storeId}`, { url });
 }
@@ -58,14 +63,14 @@ export async function storeStorage({ file, url, dispatch, transactionId }: Store
 
         xhr.open('PUT', url, true);
 
-        xhr.upload.onprogress = function (event) {
+        xhr.upload.onprogress = function(event) {
             if (event.lengthComputable) {
                 const percentCompleted = Math.round((event.loaded * 100) / event.total);
                 dispatch(storesActionsCreators.requestStoreUpload({ transactionId, uploadProgress: percentCompleted }));
             }
         };
 
-        xhr.onload = function () {
+        xhr.onload = function() {
             if (this.status >= 200 && this.status < 300) {
                 resolve(xhr.response);
             } else {
@@ -76,7 +81,7 @@ export async function storeStorage({ file, url, dispatch, transactionId }: Store
             }
         };
 
-        xhr.onerror = function () {
+        xhr.onerror = function() {
             reject({
                 status: this.status,
                 statusText: xhr.statusText,

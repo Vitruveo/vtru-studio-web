@@ -249,7 +249,7 @@ const Component = ({ data, actions }: StoreProps) => {
                                                 textDecoration: 'underline',
                                             }}
                                         >
-                                            Edit
+                                            {item.status}
                                         </Typography>
                                     </Box>
                                 </Box>

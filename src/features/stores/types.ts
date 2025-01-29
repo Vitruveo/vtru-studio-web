@@ -89,7 +89,7 @@ export interface RequestStoreUpload {
 }
 
 export type StepStatus = 'Not Started' | 'Completed' | 'In Progress';
-export type StoreStatus = 'draft' | 'active' | 'inactive';
+export type StoreStatus = 'draft' | 'pending' | 'active' | 'inactive';
 
 export interface CompletedSteps {
     status: StepStatus;
@@ -138,6 +138,11 @@ export interface GetStoresParams {
 export interface UpdateOrganizationParams {
     id: string;
     data: Omit<Organization, 'formats'> & { hasBanner: boolean };
+}
+
+export interface UpdateStatusParams {
+    id: string;
+    status: StoreStatus;
 }
 
 export interface ValidateUrlParams {

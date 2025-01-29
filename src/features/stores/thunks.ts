@@ -5,11 +5,18 @@ import {
     getStoreById,
     getStores,
     storeStorage,
+    updateStatusStore,
     updateStepNameStore,
     validateUrl,
 } from './requests';
 import { storesActionsCreators } from './slice';
-import { GetStoresParams, StoreStorageParams, UpdateOrganizationParams, ValidateUrlParams } from './types';
+import {
+    GetStoresParams,
+    StoreStorageParams,
+    UpdateOrganizationParams,
+    UpdateStatusParams,
+    ValidateUrlParams,
+} from './types';
 import { hasTruthyObject } from '@/utils/truthyObject';
 
 export function getStoresThunk(data?: GetStoresParams): ReduxThunkAction<Promise<void>> {
@@ -129,5 +136,14 @@ export function storeStorageThunk({
                 status: 'done',
             })
         );
+    };
+}
+
+export function updateStatusThunk(data: UpdateStatusParams): ReduxThunkAction<Promise<void>> {
+    return async (_dispatch: any) => {
+        await updateStatusStore({
+            id: data.id,
+            status: data.status,
+        });
     };
 }
