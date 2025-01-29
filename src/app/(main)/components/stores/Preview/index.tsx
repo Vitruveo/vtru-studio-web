@@ -64,7 +64,7 @@ export const Preview = (rest: Props) => {
                         px={2}
                     >
                         <Typography variant="h6" color="GrayText" fontWeight={1} fontSize={14} letterSpacing={1.5}>
-                            SEARCH | STACKS | STUDIO | BUY VUSD
+                            SEARCH | STACKS | STUDIO
                         </Typography>
                         <img
                             src="/images/icons/xibit-icon-redondo-darkmode.png"
