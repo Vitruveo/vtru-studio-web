@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
 import { ReduxThunkAction } from '@/store';
-import { getFeatures } from './requests';
+import { checkFeaturesEmail, getFeatures } from './requests';
 import { featuresActionCreators } from './slice';
 import { findEmailInAllowList } from '../allowList/requests';
 
@@ -21,9 +21,13 @@ export function getFeaturesThunk(): ReduxThunkAction<Promise<void>> {
         }
 
         if (response.data) {
+            const myFeatures = await checkFeaturesEmail({ email });
             const formatedList = response.data.map((v) => ({
-                ...v,
                 name: v.name.trim().toLowerCase().replace(/\s/g, ''),
+                released: v.released,
+                isOnlyFor: v.isOnlyFor,
+                onlyFor: v.onlyFor,
+                isEmailInList: myFeatures.data?.includes(v.name),
             }));
             if (JSON.stringify(formatedList) !== JSON.stringify(list)) {
                 dispatch(featuresActionCreators.setFeatures(formatedList));

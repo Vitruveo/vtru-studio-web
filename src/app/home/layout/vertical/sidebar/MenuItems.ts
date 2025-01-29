@@ -24,12 +24,12 @@ const Menuitems: MenuitemsType[] = [
         required: 'canConsignArtwork',
         href: '/home/consignArtwork',
     },
-    // {
-    //     id: uniqueId(),
-    //     title: 'studio.sidebar.store',
-    //     icon: IconPhotoUp,
-    //     href: '/home/stores',
-    // },
+    {
+        id: uniqueId(),
+        title: 'studio.sidebar.store',
+        icon: IconPhotoUp,
+        href: '/home/stores',
+    },
     {
         id: uniqueId(),
         title: 'studio.sidebar.truLevel',

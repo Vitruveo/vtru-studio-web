@@ -10,6 +10,19 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { toggleMobileSidebar } from '@/features/customizer/slice';
 import { consignArtworkActionsCreators } from '@/features/consignArtwork/slice';
 import { userActionsCreators } from '@/features/user/slice';
+import { FeatureType } from '@/features/features/types';
+
+const checkReleased = ({ feature, isEmailAllowed }: { feature?: FeatureType; isEmailAllowed: boolean }) => {
+    if (feature && feature.released) {
+        if (feature.isOnlyFor) {
+            if (feature.onlyFor === 'allowList' && isEmailAllowed) return true;
+            if (feature.onlyFor === 'specificUsers' && feature.isEmailInList) return true;
+            return false;
+        }
+        return true;
+    }
+    return false;
+};
 
 const SidebarItems = () => {
     const router = useRouter();
@@ -26,20 +39,18 @@ const SidebarItems = () => {
 
     const filterMenus = Menuitems.filter((v) => {
         const trulevelFeature = features.find((feature) => feature.name?.includes('trulevel'));
+        const storesFeature = features.find((feature) => feature.name?.includes('stores'));
+
         if (generalVault) {
             return v.title !== 'studio.sidebar.consign';
         }
 
         if (v.title === 'studio.sidebar.truLevel') {
-            if (trulevelFeature && trulevelFeature.released) {
-                if (trulevelFeature.onlyForAllowList) {
-                    if (isEmailAllowed) return true;
-                    return false;
-                }
-                return true;
-            } else {
-                return false;
-            }
+            return checkReleased({ feature: trulevelFeature, isEmailAllowed });
+        }
+
+        if (v.title === 'studio.sidebar.store') {
+            return checkReleased({ feature: storesFeature, isEmailAllowed });
         }
 
         return true;
