@@ -121,11 +121,11 @@ const Component = ({ data }: ComponentProps) => {
                     <Grid item xs={12} md={6}>
                         <Image
                             src={
-                                store?.organization.formats?.logo?.square?.path
-                                    ? `${STORE_STORAGE_URL}/${store?.organization.formats?.logo.square.path}`
+                                store?.organization?.formats?.logo?.square?.path
+                                    ? `${STORE_STORAGE_URL}/${store?.organization?.formats?.logo.square.path}`
                                     : NO_IMAGE_ASSET
                             }
-                            alt={store.organization.name}
+                            alt={store?.organization?.name}
                             width={400}
                             height={400}
                             style={{

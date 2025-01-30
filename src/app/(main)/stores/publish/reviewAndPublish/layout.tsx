@@ -16,7 +16,7 @@ export default function ReviewAndPublishLayout({ children }: { children: React.R
     }, [selectedStore]);
 
     useEffect(() => {
-        const reviewAndPublishAvailable = Object.values(publishStore)
+        const reviewAndPublishAvailable = Object.values(publishStore || {})
             .filter((value) => !value.optional)
             .every((value) => value.status === 'Completed');
 

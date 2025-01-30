@@ -113,7 +113,7 @@ const Component = () => {
 
     const handleSubmit = (values: Input & { redirectPath: string }) => {
         let hasFile = false;
-        Object.entries(values).forEach(([key, value]) => {
+        Object.entries(values || {}).forEach(([key, value]) => {
             if (value instanceof File) {
                 hasFile = true;
                 const transactionId = nanoid();
@@ -230,10 +230,10 @@ const Component = () => {
     }, [selectedStore.validateUrl]);
 
     useEffect(() => {
-        if (Object.keys(requestUpload).length === 0) return;
-        const hasUploading = Object.values(requestUpload).some((item) => item.status === 'uploading');
-        const hasReady = Object.values(requestUpload).some((item) => item.status === 'ready');
-        const allDone = Object.values(requestUpload).every((item) => item.status === 'done');
+        if (Object.keys(requestUpload || {}).length === 0) return;
+        const hasUploading = Object.values(requestUpload || {}).some((item) => item.status === 'uploading');
+        const hasReady = Object.values(requestUpload || {}).some((item) => item.status === 'ready');
+        const allDone = Object.values(requestUpload || {}).every((item) => item.status === 'done');
 
         if (allDone) {
             formik.handleSubmit();
@@ -569,7 +569,7 @@ const Component = () => {
                             type="button"
                             onClick={handleNext}
                             variant="contained"
-                            disabled={Object.values(formik.errors).length > 0}
+                            disabled={Object.values(formik.errors || {}).length > 0}
                         >
                             Next
                         </Button>
