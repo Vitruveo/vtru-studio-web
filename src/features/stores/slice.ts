@@ -34,12 +34,12 @@ export const initialState: StoresState = {
         appearanceContent: {
             label: 'Appearance & Content (Coming Soon)',
             status: 'Not Started',
-            optional: false,
+            optional: true,
         },
         reviewPublish: {
-            label: 'Review and Publish (Coming Soon)',
+            label: 'Review and Publish',
             status: 'Not Started',
-            optional: false,
+            optional: true,
         },
     },
     status: 'draft',

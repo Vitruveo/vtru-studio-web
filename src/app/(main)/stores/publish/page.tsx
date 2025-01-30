@@ -30,18 +30,21 @@ const statusStyles = {
 const paths = {
     organization: '/stores/publish/organization',
     artworks: '/stores/publish/artworks',
+    reviewAndPublish: '/stores/publish/reviewAndPublish',
 };
+
 interface ComponentProps {
     data: {
         publishStore: PublishStore;
         store: Stores;
         loading: boolean;
+        reviewAndPublishAvailable: boolean;
     };
 }
 
 const Component = ({ data }: ComponentProps) => {
     const router = useRouter();
-    const { store, loading, publishStore } = data;
+    const { store, loading, publishStore, reviewAndPublishAvailable } = data;
 
     if (loading || !store)
         return (
@@ -149,8 +152,12 @@ const Component = ({ data }: ComponentProps) => {
                     <Button variant="text" onClick={() => router.push('/stores')}>
                         <Typography color="gray">Back</Typography>
                     </Button>
-                    <Button variant="contained" disabled>
-                        Review and Publish (Coming Soon)
+                    <Button
+                        variant="contained"
+                        disabled={!reviewAndPublishAvailable}
+                        onClick={() => router.push(paths.reviewAndPublish)}
+                    >
+                        Review and Publish
                     </Button>
                 </Box>
             </Box>
@@ -162,10 +169,13 @@ export default function Publish() {
     const dispatch = useDispatch();
     const selectedStore = useSelector((state) => state.stores.selectedStore);
     const { data, loading, publishStore } = useSelector((state) => state.stores);
+    const reviewAndPublishAvailable = Object.values(publishStore)
+        .filter((value) => !value.optional)
+        .every((value) => value.status === 'Completed');
 
     useEffect(() => {
         dispatch(getStoreByIdThunk(selectedStore.id));
     }, [selectedStore]);
 
-    return <Component data={{ store: data.data[0], loading, publishStore }} />;
+    return <Component data={{ store: data.data[0], loading, publishStore, reviewAndPublishAvailable }} />;
 }

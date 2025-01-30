@@ -64,7 +64,7 @@ export const Preview = (rest: Props) => {
                         px={2}
                     >
                         <Typography variant="h6" color="GrayText" fontWeight={1} fontSize={14} letterSpacing={1.5}>
-                            SEARCH | STACKS | STUDIO | BUY VUSD
+                            SEARCH | STACKS | STUDIO
                         </Typography>
                         <img
                             src="/images/icons/xibit-icon-redondo-darkmode.png"
@@ -83,7 +83,7 @@ export const Preview = (rest: Props) => {
                         <Typography variant="h4" gutterBottom>
                             {rest.title}
                         </Typography>
-                        {rest.banner ? (
+                        {rest.banner && (
                             <img
                                 style={{
                                     width: '100%',
@@ -95,8 +95,6 @@ export const Preview = (rest: Props) => {
                                 src={rest.banner}
                                 alt="banner"
                             />
-                        ) : (
-                            <Box height="170px" bgcolor="#eeeeee" />
                         )}
                         <Typography variant="body1" gutterBottom>
                             {rest.description}
