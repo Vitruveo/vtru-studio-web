@@ -7,7 +7,7 @@ import { Stores } from '@/features/stores/types';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useRouter } from 'next/navigation';
 import PublishStoreMessage from './publishMessage';
-import { updateStatusThunk } from '@/features/stores/thunks';
+import { getStoreByIdThunk, updateStatusThunk } from '@/features/stores/thunks';
 
 interface Props {
     data: {
@@ -41,8 +41,9 @@ const Component = ({ data }: Props) => {
         },
     } as { [key: string]: { buttontitle: string | undefined; message: string } };
 
-    const handleRequestPublishment = () => {
-        dispatch(updateStatusThunk({ id: store._id, status: 'pending' }));
+    const handleRequestPublishment = async () => {
+        await dispatch(updateStatusThunk({ id: store._id, status: 'pending' }));
+        dispatch(getStoreByIdThunk(store._id));
     };
 
     return (
