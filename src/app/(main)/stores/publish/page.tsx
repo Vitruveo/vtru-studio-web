@@ -57,7 +57,7 @@ const Component = ({ data }: ComponentProps) => {
         <Box position="relative" paddingInline={3} overflow="auto">
             <Breadcrumb
                 title="Publish Store"
-                assetTitle={store.organization.url || ''}
+                assetTitle={store.organization?.url || ''}
                 items={[{ title: 'Stores', to: '/stores' }, { title: 'Publish' }]}
             />
 
@@ -169,7 +169,7 @@ export default function Publish() {
     const dispatch = useDispatch();
     const selectedStore = useSelector((state) => state.stores.selectedStore);
     const { data, loading, publishStore } = useSelector((state) => state.stores);
-    const reviewAndPublishAvailable = Object.values(publishStore)
+    const reviewAndPublishAvailable = Object.values(publishStore || {})
         .filter((value) => !value.optional)
         .every((value) => value.status === 'Completed');
 
