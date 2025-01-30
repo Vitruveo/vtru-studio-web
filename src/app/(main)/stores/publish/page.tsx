@@ -70,9 +70,9 @@ const Component = ({ data }: ComponentProps) => {
             <Box p={2}>
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={6}>
-                        {Object.entries(publishStore)?.map((step, index) => {
+                        {Object.entries(publishStore || {})?.map((step, index) => {
                             const [key, value] = step;
-                            const isLast = index === Object.keys(publishStore).length - 1;
+                            const isLast = index === Object.keys(publishStore || {}).length - 1;
 
                             return (
                                 <Grid key={key} container mb={3}>
