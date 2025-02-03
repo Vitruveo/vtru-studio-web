@@ -505,7 +505,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                 </Box>
                             )}
                         </RadioGroup>
-                        {/* <Box marginTop={1} marginBottom={1} display="flex" gap={1}>
+                        <Box marginTop={1} marginBottom={1} display="flex" gap={1}>
                             <CustomCheckbox
                                 sx={{ padding: 0 }}
                                 name="nft.autoStake"
@@ -523,7 +523,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                             >
                                 Auto-stake for VERSE (95%)
                             </Typography>
-                        </Box> */}
+                        </Box>
                     </Box>
                 )}
                 <Box>
