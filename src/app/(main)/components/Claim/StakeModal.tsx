@@ -12,7 +12,7 @@ interface ModalProps {
 
 const options = [
     {
-        label: 'Claim to wallet (Limit 5%)',
+        label: 'Claim to wallet',
         enable: true,
     },
     {
@@ -27,10 +27,10 @@ const options = [
         label: 'Stake for 5 years at 60% APR',
         enable: true,
     },
-    {
-        label: 'Stake for 3 years at 0% APR - Get VERSE',
-        enable: CLAIM_VERSE_ENABLE,
-    },
+    // {
+    //     label: 'Stake for 3 years at 0% APR - Get VERSE',
+    //     enable: CLAIM_VERSE_ENABLE,
+    // },
 ];
 
 export default function StakeModal({ isOpen, available, loading, claimAllocate, handleClose }: ModalProps) {
@@ -98,7 +98,7 @@ export default function StakeModal({ isOpen, available, loading, claimAllocate, 
                                             disabled={
                                                 !item.enable || (totalAssigned === 100 && selectValues[index] === 0)
                                             }
-                                            max={index === 0 ? 5 : 100}
+                                            max={100}
                                         />
                                         <Typography fontSize={16}>{selectValues[index].toFixed(0)}%</Typography>
                                     </Box>
