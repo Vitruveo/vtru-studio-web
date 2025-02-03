@@ -112,46 +112,46 @@ const Component = () => {
     };
 
     const handleSubmit = (values: Input & { redirectPath: string }) => {
-        let hasFile = false;
-        Object.entries(values).forEach(([key, value]) => {
-            if (value instanceof File) {
-                hasFile = true;
-                const transactionId = nanoid();
+        // let hasFile = false;
+        // Object.entries(values).forEach(([key, value]) => {
+        //     if (value instanceof File) {
+        //         hasFile = true;
+        //         const transactionId = nanoid();
 
-                dispatch(
-                    storesActionsCreators.requestStoreUpload({
-                        key,
-                        status: 'requested',
-                        transactionId,
-                    })
-                );
+        //         dispatch(
+        //             storesActionsCreators.requestStoreUpload({
+        //                 key,
+        //                 status: 'requested',
+        //                 transactionId,
+        //             })
+        //         );
 
-                const image = new Image();
-                image.src = URL.createObjectURL(value);
-                image.onload = () => {
-                    const width = image.width.toString();
-                    const height = image.height.toString();
+        //         const image = new Image();
+        //         image.src = URL.createObjectURL(value);
+        //         image.onload = () => {
+        //             const width = image.width.toString();
+        //             const height = image.height.toString();
 
-                    dispatch(
-                        sendRequestUploadStoresThunk({
-                            mimetype: 'image/jpeg',
-                            metadata: {
-                                width,
-                                height,
-                                formatUpload: key,
-                                path: formatsMapper[key as keyof typeof formatsMapper],
-                                maxSize: mediaConfigs[key as keyof typeof mediaConfigs].sizeMB.toString(),
-                            },
-                            originalName: value.name,
-                            transactionId,
-                            id: selectedStore.id,
-                        })
-                    );
-                };
-            }
-        });
+        //             dispatch(
+        //                 sendRequestUploadStoresThunk({
+        //                     mimetype: 'image/jpeg',
+        //                     metadata: {
+        //                         width,
+        //                         height,
+        //                         formatUpload: key,
+        //                         path: formatsMapper[key as keyof typeof formatsMapper],
+        //                         maxSize: mediaConfigs[key as keyof typeof mediaConfigs].sizeMB.toString(),
+        //                     },
+        //                     originalName: value.name,
+        //                     transactionId,
+        //                     id: selectedStore.id,
+        //                 })
+        //             );
+        //         };
+        //     }
+        // });
 
-        if (hasFile) return;
+        // if (hasFile) return;
 
         dispatch(
             updateOrganizationThunk({
@@ -167,7 +167,7 @@ const Component = () => {
             })
         );
 
-        router.push(values.redirectPath);
+        // router.push(values.redirectPath);
     };
 
     const formik = useFormik<Input & { redirectPath: string }>({
