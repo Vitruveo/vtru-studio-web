@@ -1,5 +1,6 @@
-import { Box, Grid, Select, Typography } from '@mui/material';
+import { useFormikContext } from 'formik';
 import './styles.css';
+import { Box, Grid, Select, Typography } from '@mui/material';
 import { IconMenu2 } from '@tabler/icons-react';
 
 interface Props {
@@ -12,6 +13,8 @@ interface Props {
 }
 
 export const PreviewDetailed = (rest: Props) => {
+    const { values } = useFormikContext();
+
     return (
         <div className="browser-mockup">
             <div className="browser-title-bar">
