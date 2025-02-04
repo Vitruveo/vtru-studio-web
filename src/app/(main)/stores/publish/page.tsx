@@ -30,6 +30,7 @@ const statusStyles = {
 const paths = {
     organization: '/stores/publish/organization',
     artworks: '/stores/publish/artworks',
+    appearanceContent: '/stores/publish/appearanceAndContent',
     reviewAndPublish: '/stores/publish/reviewAndPublish',
 };
 
@@ -72,6 +73,7 @@ const Component = ({ data }: ComponentProps) => {
                     <Grid item xs={12} md={6}>
                         {Object.entries(publishStore || {})?.map((step, index) => {
                             const [key, value] = step;
+
                             const isLast = index === Object.keys(publishStore || {}).length - 1;
 
                             return (
@@ -107,7 +109,6 @@ const Component = ({ data }: ComponentProps) => {
                                                     onClick={() => {
                                                         router.push(paths[key as keyof typeof paths]);
                                                     }}
-                                                    disabled={index > 1}
                                                 >
                                                     {value.status !== 'Not Started' ? 'Edit' : 'Start'}
                                                 </Button>
