@@ -1,7 +1,10 @@
 import { useFormikContext } from 'formik';
 import './styles.css';
-import { Box, Grid, Select, Typography } from '@mui/material';
+import { Box, Button, Grid, Pagination, Select, Typography } from '@mui/material';
 import { IconMenu2 } from '@tabler/icons-react';
+import { State } from '@/app/(main)/stores/publish/appearanceAndContent/page';
+import AssetMock from './assetMock';
+import FilterMock from './filterMock';
 
 interface Props {
     title: string;
@@ -13,7 +16,7 @@ interface Props {
 }
 
 export const PreviewDetailed = (rest: Props) => {
-    const { values } = useFormikContext();
+    const { values } = useFormikContext<State>();
 
     return (
         <div className="browser-mockup">
@@ -40,31 +43,35 @@ export const PreviewDetailed = (rest: Props) => {
                 <span className="url-text">{rest.domain}</span>
             </div>
             <div className="browser-content">
-                <Grid container mb={1}>
-                    <Grid item xs={12} sm={3}>
-                        {rest.logoHorizontal ? (
-                            <img
-                                style={{
-                                    width: '100%',
-                                    height: '40px',
-                                    objectFit: 'contain',
-                                    flexShrink: 0,
-                                }}
-                                src={rest.logoHorizontal}
-                                alt="logo-horizontal"
-                            />
-                        ) : (
-                            <Box width="100%" height="40px" bgcolor="#eeeeee" />
-                        )}
+                {!values.header && (
+                    <Grid container mb={1}>
+                        <Grid item xs={12} sm={3}>
+                            {rest.logoHorizontal ? (
+                                <img
+                                    style={{
+                                        width: '100%',
+                                        height: '40px',
+                                        objectFit: 'contain',
+                                        flexShrink: 0,
+                                    }}
+                                    src={rest.logoHorizontal}
+                                    alt="logo-horizontal"
+                                />
+                            ) : (
+                                <Box width="100%" height="40px" bgcolor="#eeeeee" />
+                            )}
+                        </Grid>
+                        <Grid item xs={12} sm={9} display="flex" alignItems="center" justifyContent="flex-end" px={2}>
+                            <IconMenu2 onClick={() => console.log(values)} />
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12} sm={9} display="flex" alignItems="center" justifyContent="flex-end" px={2}>
-                        <IconMenu2 />
-                    </Grid>
-                </Grid>
+                )}
                 <Grid container style={{ height: 'calc(100% - 55px)' }}>
-                    <Grid item xs={12} sm={3}>
-                        <Box width="100%" height="100%" bgcolor="#eeeeee" />
-                    </Grid>
+                    {!values.filter && (
+                        <Grid item xs={12} sm={3}>
+                            <FilterMock />
+                        </Grid>
+                    )}
                     <Grid item xs={12} sm={9} px={2}>
                         <Typography variant="h4" gutterBottom>
                             {rest.title}
@@ -88,35 +95,68 @@ export const PreviewDetailed = (rest: Props) => {
 
                         <Box display="flex" gap={3} mt={5} mb={2}>
                             {['Artworks Spotlight', 'Artists Spotlight', 'Recently Sold'].map((tab, index) => (
-                                <Box key={tab} display="flex" alignItems="center">
-                                    <Typography variant="body2" fontWeight={index > 0 ? 1 : 'bold'}>
-                                        {tab}
-                                    </Typography>
-                                </Box>
+                                <>
+                                    {!values.spotlight && index === 0 && (
+                                        <Box key={tab} display="flex" alignItems="center">
+                                            <Typography variant="body2">{tab}</Typography>
+                                        </Box>
+                                    )}
+                                    {!values.artistSpotlight && index === 1 && (
+                                        <Box key={tab} display="flex" alignItems="center">
+                                            <Typography variant="body2">{tab}</Typography>
+                                        </Box>
+                                    )}
+                                    {!values.recentlySold && index === 2 && (
+                                        <Box key={tab} display="flex" alignItems="center">
+                                            <Typography variant="body2">{tab}</Typography>
+                                        </Box>
+                                    )}
+                                </>
                             ))}
                         </Box>
 
-                        <Box display="flex" justifyContent="space-between" gap={1} overflow={'hidden'}>
-                            {Array.from({ length: 5 }).map((_, index) => (
-                                <Box key={index} width="calc(25% - 8px)" height="100px" bgcolor="#eeeeee" />
-                            ))}
-                        </Box>
+                        {![values.spotlight, values.artistSpotlight, values.recentlySold].every((item) => item) && (
+                            <Box display="flex" justifyContent="space-between" gap={1} overflow={'hidden'}>
+                                {Array.from({ length: 5 }).map((_, index) => (
+                                    <Box key={index} width="calc(25% - 8px)" height="100px" bgcolor="#eeeeee" />
+                                ))}
+                            </Box>
+                        )}
 
                         <Box display="flex" gap={3} mt={5} mb={2}>
                             {['Sort:', 'Artists:', 'Pagination:'].map((value, index) => (
                                 <Box key={value} display="flex" alignItems="center">
-                                    <Typography variant="body1">{value}</Typography>
-                                    <Select sx={{ width: '75px', height: '30px' }} />
-                                    {index === 2 && <Select sx={{ width: '75px', height: '30px' }} />}
+                                    {!values.order && index !== 2 && (
+                                        <>
+                                            <Typography variant="body1">{value}</Typography>
+                                            <Select sx={{ width: '75px', height: '30px' }} />
+                                        </>
+                                    )}
+                                    {!values.pageNavigation && index === 2 && (
+                                        <>
+                                            <Typography variant="body1">{value}</Typography>
+                                            <Select sx={{ width: '75px', height: '30px' }} />
+                                            <Select sx={{ width: '75px', height: '30px' }} />
+                                        </>
+                                    )}
                                 </Box>
                             ))}
                         </Box>
 
-                        <Box display="flex" justifyContent="space-between" flexWrap="wrap" gap={1}>
-                            {Array.from({ length: 4 }).map((_, index) => (
-                                <Box key={index} width="calc(25% - 8px)" height="100px" bgcolor="#eeeeee" />
-                            ))}
-                        </Box>
+                        {!values.assets && (
+                            <Box display="grid" gridTemplateColumns="repeat(4, 1fr)" gap={2}>
+                                {Array.from({ length: 8 }).map((_, index) => (
+                                    <AssetMock key={index} showBadge showDetails={!values.cardDetail} />
+                                ))}
+                            </Box>
+                        )}
+
+                        {!values.pageNavigation && (
+                            <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                <Pagination count={6} />
+                                <Button variant="contained">Scroll to top</Button>
+                            </Box>
+                        )}
                     </Grid>
                 </Grid>
             </div>
