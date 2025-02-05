@@ -1,17 +1,12 @@
 import { useFormikContext } from 'formik';
-import { Box, Button, Switch, Typography } from '@mui/material';
-import { IconRestore } from '@tabler/icons-react';
+import { Box, Switch } from '@mui/material';
 import { State } from '@/app/(main)/stores/publish/appearanceAndContent/page';
 
 const ShowHideElements = () => {
-    const { setFieldValue, resetForm, values } = useFormikContext<State>();
+    const { setFieldValue, values } = useFormikContext<State>();
 
     const handleChange = (key: keyof State) => {
         setFieldValue(key, !values[key]);
-    };
-
-    const handleReset = () => {
-        resetForm();
     };
 
     return (
@@ -70,9 +65,6 @@ const ShowHideElements = () => {
                 />
                 Show/Hide Digital Assets
             </Box>
-            <Button startIcon={<IconRestore size={18} />} fullWidth variant="contained" onClick={handleReset}>
-                <Typography variant="caption">Reset</Typography>
-            </Button>
         </Box>
     );
 };

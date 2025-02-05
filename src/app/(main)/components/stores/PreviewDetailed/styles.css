@@ -1,5 +1,5 @@
 .browser-mockup {
-    width: 45%;
+    width: 80%;
     border: 2px solid #ccc;
     border-radius: 8px;
     overflow: hidden;
@@ -9,7 +9,7 @@
 
     /* scale 16:9 */
 
-    height: 950px;
+    height: 1100px;
 }
 
 .browser-title-bar {

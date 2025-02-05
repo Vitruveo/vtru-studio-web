@@ -1,21 +1,32 @@
 import { Box, Checkbox, Grid, Typography, Paper, Button } from '@mui/material';
 
-const FilterMock = () => {
+interface Props {
+    color: string;
+}
+
+const FilterMock = ({ color }: Props) => {
     return (
         <Box width="100%" height="100%" bgcolor="#eeeeee" display={'flex'} flexDirection={'column'} gap={4}>
             <Grid container spacing={2}>
                 {Array.from({ length: 8 }).map((_, index) => (
                     <Grid item xs={6} key={index}>
                         <Box display="flex" alignItems="center">
-                            <Checkbox checked />
+                            <Checkbox
+                                checked
+                                sx={{
+                                    '&.Mui-checked': {
+                                        color: color,
+                                    },
+                                }}
+                            />
                             <Typography variant="body2">----</Typography>
                         </Box>
                     </Grid>
                 ))}
             </Grid>
-            <Grid container sx={{ display: 'flex', gap: 5 }}>
+            <Grid container sx={{ display: 'flex', gap: 3 }}>
                 {Array.from({ length: 5 }).map((_, index) => (
-                    <Grid item xs={12} key={index} sx={{ border: '1px solid black', padding: 1 }}>
+                    <Grid item xs={12} key={index} sx={{ border: '1px solid gray', padding: 1 }}>
                         <Box display="flex" alignItems="center" justifyContent={'space-between'} paddingInline={2}>
                             <Typography variant="body2">----</Typography>
                             <Paper
@@ -26,6 +37,8 @@ const FilterMock = () => {
                                     bgColor: 'red',
                                     display: 'flex',
                                     justifyContent: 'center',
+                                    backgroundColor: color,
+                                    color: 'white',
                                 }}
                             >
                                 2
@@ -35,7 +48,11 @@ const FilterMock = () => {
                 ))}
             </Grid>
             <Grid container>
-                <Button variant="contained" color="primary" fullWidth>
+                <Button
+                    variant="contained"
+                    fullWidth
+                    sx={{ backgroundColor: color, '&:hover': { backgroundColor: color } }}
+                >
                     Reset filters
                 </Button>
             </Grid>
