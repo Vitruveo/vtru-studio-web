@@ -1,35 +1,12 @@
 import { useFormikContext } from 'formik';
 import { Box, Button, Switch, Typography } from '@mui/material';
 import { IconRestore } from '@tabler/icons-react';
-
-export interface State {
-    filter: boolean;
-    order: boolean;
-    header: boolean;
-    recentlySold: boolean;
-    spotlight: boolean;
-    artistSpotlight: boolean;
-    pageNavigation: boolean;
-    cardDetail: boolean;
-    assets: boolean;
-}
-
-const initialValues = {
-    filter: false,
-    order: false,
-    header: false,
-    recentlySold: false,
-    spotlight: false,
-    artistSpotlight: false,
-    pageNavigation: false,
-    cardDetail: false,
-    assets: false,
-};
+import { State } from '@/app/(main)/stores/publish/appearanceAndContent/page';
 
 const ShowHideElements = () => {
     const { setFieldValue, resetForm, values } = useFormikContext<State>();
 
-    const handleChange = (key: keyof typeof initialValues) => {
+    const handleChange = (key: keyof State) => {
         setFieldValue(key, !values[key]);
     };
 
