@@ -32,6 +32,7 @@ const AppearanceAndContent = () => {
     const selectedStore = useSelector((state) => state.stores.selectedStore);
     const store = useSelector((state) => state.stores.data.data.find((item) => item._id === selectedStore.id));
     const { highlightColor, hideElements } = store?.appearanceContent || {};
+    console.log(highlightColor);
 
     const isFile = (path: any): path is File => path instanceof File;
 
@@ -50,8 +51,7 @@ const AppearanceAndContent = () => {
         }
         router.push('/stores/publish');
     };
-    const handleBackSave = (setFieldValue: (field: string, value: any) => void, handleSubmit: () => void) => {
-        setFieldValue('redirectPath', '/stores/publish');
+    const handleBackSave = (handleSubmit: () => void) => {
         handleSubmit();
         setOpenDialogSave(false);
     };
@@ -75,16 +75,17 @@ const AppearanceAndContent = () => {
                         cardDetails: hideElements?.cardDetails || false,
                         assets: hideElements?.assets || false,
                     },
-                    highlightColor: highlightColor || '#000000',
+                    highlightColor: highlightColor || '#FF0066',
                 } as AppearanceContent
             }
-            onSubmit={(values) => {
-                dispatch(
+            onSubmit={async (values) => {
+                await dispatch(
                     updateAppearanceContentThunk({
                         id: selectedStore.id,
                         data: values,
                     })
                 );
+                router.push('/stores/publish');
             }}
         >
             {({ setFieldValue, resetForm, dirty, handleSubmit }) => (
@@ -126,6 +127,7 @@ const AppearanceAndContent = () => {
                                             type="color"
                                             onChange={(e) => handleChangeColor(e, setFieldValue)}
                                             ref={inputColorRef}
+                                            defaultValue={highlightColor || '#FF0066'}
                                         />
                                     </Box>
 
@@ -136,7 +138,7 @@ const AppearanceAndContent = () => {
                                         onClick={() => {
                                             resetForm();
                                             if (inputColorRef.current) {
-                                                inputColorRef.current.value = '#000000';
+                                                inputColorRef.current.value = highlightColor || '#FF0066';
                                             }
                                         }}
                                     >
@@ -208,11 +210,7 @@ const AppearanceAndContent = () => {
                             <Button onClick={handleBackCancel} color="primary">
                                 Cancel
                             </Button>
-                            <Button
-                                onClick={() => handleBackSave(setFieldValue, handleSubmit)}
-                                color="success"
-                                variant="outlined"
-                            >
+                            <Button onClick={() => handleBackSave(handleSubmit)} color="success" variant="outlined">
                                 Save
                             </Button>
                         </DialogActions>
