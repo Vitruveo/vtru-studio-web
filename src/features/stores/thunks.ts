@@ -13,6 +13,7 @@ import { storesActionsCreators } from './slice';
 import {
     GetStoresParams,
     StoreStorageParams,
+    UpdateAppearanceContentParams,
     UpdateOrganizationParams,
     UpdateStatusParams,
     ValidateUrlParams,
@@ -49,6 +50,7 @@ export function getStoreByIdThunk(id: string): ReduxThunkAction<Promise<void>> {
             data?.organization?.url && data?.organization?.name && data?.organization?.formats?.logo?.square?.path;
         const isOrganizationInProgress = hasTruthyObject(data?.organization);
         const isArtworksCompleted = !!data?.artworks;
+        const isAppearanceContentCompleted = !!data?.appearanceContent;
 
         if (isOrganizationCompleted) {
             dispatch(storesActionsCreators.setPublishStoreStatusStep({ step: 'organization', status: 'Completed' }));
@@ -62,6 +64,16 @@ export function getStoreByIdThunk(id: string): ReduxThunkAction<Promise<void>> {
             dispatch(storesActionsCreators.setPublishStoreStatusStep({ step: 'artworks', status: 'Completed' }));
         } else {
             dispatch(storesActionsCreators.setPublishStoreStatusStep({ step: 'artworks', status: 'Not Started' }));
+        }
+
+        if (isAppearanceContentCompleted) {
+            dispatch(
+                storesActionsCreators.setPublishStoreStatusStep({ step: 'appearanceContent', status: 'Completed' })
+            );
+        } else {
+            dispatch(
+                storesActionsCreators.setPublishStoreStatusStep({ step: 'appearanceContent', status: 'Not Started' })
+            );
         }
 
         dispatch(storesActionsCreators.setFinishLoading());
@@ -89,6 +101,16 @@ export function updateOrganizationThunk(data: UpdateOrganizationParams): ReduxTh
     return async (_dispatch: any) => {
         await updateStepNameStore({
             stepName: 'organization',
+            id: data.id,
+            data: data.data,
+        });
+    };
+}
+
+export function updateAppearanceContentThunk(data: UpdateAppearanceContentParams): ReduxThunkAction<Promise<void>> {
+    return async (_dispatch: any) => {
+        await updateStepNameStore({
+            stepName: 'appearanceContent',
             id: data.id,
             data: data.data,
         });
