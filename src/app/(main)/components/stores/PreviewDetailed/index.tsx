@@ -2,9 +2,9 @@ import { useFormikContext } from 'formik';
 import './styles.css';
 import { Box, Button, Grid, Pagination, Select, Typography } from '@mui/material';
 import { IconMenu2 } from '@tabler/icons-react';
-import { State } from '@/app/(main)/stores/publish/appearanceAndContent/page';
 import AssetMock from './assetMock';
 import FilterMock from './filterMock';
+import { AppearanceContent } from '@/features/stores/types';
 
 interface Props {
     title: string;
@@ -16,7 +16,7 @@ interface Props {
 }
 
 export const PreviewDetailed = (rest: Props) => {
-    const { values } = useFormikContext<State>();
+    const { values } = useFormikContext<AppearanceContent>();
 
     return (
         <div className="browser-mockup">
@@ -43,7 +43,7 @@ export const PreviewDetailed = (rest: Props) => {
                 <span className="url-text">{rest.domain}</span>
             </div>
             <div className="browser-content">
-                {!values.header && (
+                {!values.hideElements.header && (
                     <Grid container mb={1}>
                         <Grid item xs={12} sm={3}>
                             {rest.logoHorizontal ? (
@@ -67,12 +67,12 @@ export const PreviewDetailed = (rest: Props) => {
                     </Grid>
                 )}
                 <Grid container style={{ height: 'calc(100% - 55px)' }}>
-                    {!values.filter && (
+                    {!values.hideElements.filters && (
                         <Grid item xs={12} sm={3}>
-                            <FilterMock color={values.color} />
+                            <FilterMock color={values.highlightColor} />
                         </Grid>
                     )}
-                    <Grid item xs={12} sm={!values.filter ? 9 : 12} px={2}>
+                    <Grid item xs={12} sm={!values.hideElements.filters ? 9 : 12} px={2}>
                         <Typography variant="h4" gutterBottom>
                             {rest.title}
                         </Typography>
@@ -94,32 +94,36 @@ export const PreviewDetailed = (rest: Props) => {
                         </Typography>
 
                         <Box display="flex" gap={3} mt={3} mb={2}>
-                            {!values.spotlight && (
+                            {!values.hideElements.artworkSpotlight && (
                                 <Box display="flex" alignItems="center">
-                                    <Typography variant="body2" fontWeight={'bold'} color={values.color}>
+                                    <Typography variant="body2" fontWeight={'bold'} color={values.highlightColor}>
                                         Artworks Spotlight
                                     </Typography>
                                 </Box>
                             )}
-                            {!values.artistSpotlight && (
+                            {!values.hideElements.artistSpotlight && (
                                 <Box display="flex" alignItems="center">
                                     <Typography variant="body2">Artists Spotlight</Typography>
                                 </Box>
                             )}
-                            {!values.recentlySold && (
+                            {!values.hideElements.recentlySold && (
                                 <Box display="flex" alignItems="center">
                                     <Typography variant="body2">Recently Sold</Typography>
                                 </Box>
                             )}
                         </Box>
 
-                        {![values.spotlight, values.artistSpotlight, values.recentlySold].every((item) => item) && (
-                            <Box display="flex" justifyContent="space-between" gap={1} overflow={'hidden'}>
-                                {Array.from({ length: !values.filter ? 5 : 8 }).map((_, index) => (
-                                    <Box key={index} width="calc(25% - 8px)" height="100px" bgcolor="#eeeeee" />
-                                ))}
-                            </Box>
-                        )}
+                        {![
+                            values.hideElements.artworkSpotlight,
+                            values.hideElements.artistSpotlight,
+                            values.hideElements.recentlySold,
+                        ].every((item) => item) && (
+                                <Box display="flex" justifyContent="space-between" gap={1} overflow={'hidden'}>
+                                    {Array.from({ length: !values.hideElements.filters ? 5 : 8 }).map((_, index) => (
+                                        <Box key={index} width="calc(25% - 8px)" height="100px" bgcolor="#eeeeee" />
+                                    ))}
+                                </Box>
+                            )}
 
                         <Box display="flex" gap={3} mt={5} mb={3}>
                             {['Sort:', 'Artists:', 'Pagination:'].map((value, index) => (
@@ -130,7 +134,7 @@ export const PreviewDetailed = (rest: Props) => {
                                     justifyContent={'space-between'}
                                     width={'100%'}
                                 >
-                                    {!values.order && index !== 2 && (
+                                    {!values.hideElements.order && index !== 2 && (
                                         <Box display={'flex'} alignItems={'center'}>
                                             <Typography variant="body1">{value}</Typography>
                                             <Select
@@ -138,16 +142,16 @@ export const PreviewDetailed = (rest: Props) => {
                                                     width: '75px',
                                                     height: '30px',
                                                     '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                        borderColor: `${values.color} !important`,
+                                                        borderColor: `${values.highlightColor} !important`,
                                                     },
                                                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                                        borderColor: `${values.color} !important`,
+                                                        borderColor: `${values.highlightColor} !important`,
                                                     },
                                                 }}
                                             />
                                         </Box>
                                     )}
-                                    {!values.pageNavigation && index === 2 && (
+                                    {!values.hideElements.pageNavigation && index === 2 && (
                                         <Box display={'flex'} alignItems={'center'}>
                                             <Typography variant="body1">{value}</Typography>
                                             <Select
@@ -155,10 +159,10 @@ export const PreviewDetailed = (rest: Props) => {
                                                     width: '75px',
                                                     height: '30px',
                                                     '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                        borderColor: `${values.color} !important`,
+                                                        borderColor: `${values.highlightColor} !important`,
                                                     },
                                                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                                        borderColor: `${values.color} !important`,
+                                                        borderColor: `${values.highlightColor} !important`,
                                                     },
                                                 }}
                                             />
@@ -167,10 +171,10 @@ export const PreviewDetailed = (rest: Props) => {
                                                     width: '75px',
                                                     height: '30px',
                                                     '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                        borderColor: `${values.color} !important`,
+                                                        borderColor: `${values.highlightColor} !important`,
                                                     },
                                                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                                        borderColor: `${values.color} !important`,
+                                                        borderColor: `${values.highlightColor} !important`,
                                                     },
                                                 }}
                                             />
@@ -180,27 +184,31 @@ export const PreviewDetailed = (rest: Props) => {
                             ))}
                         </Box>
 
-                        {!values.assets && (
-                            <Box display="grid" gridTemplateColumns={`repeat(${!values.filter ? 4 : 6}, 1fr)`} gap={2}>
+                        {!values.hideElements.assets && (
+                            <Box
+                                display="grid"
+                                gridTemplateColumns={`repeat(${!values.hideElements.filters ? 4 : 6}, 1fr)`}
+                                gap={2}
+                            >
                                 {Array.from({ length: 8 }).map((_, index) => (
                                     <AssetMock
                                         key={index}
                                         showBadge
-                                        showDetails={!values.cardDetail}
-                                        color={values.color}
+                                        showDetails={!values.hideElements.cardDetails}
+                                        color={values.highlightColor}
                                     />
                                 ))}
                             </Box>
                         )}
 
-                        {!values.pageNavigation && (
+                        {!values.hideElements.pageNavigation && (
                             <Box sx={{ marginTop: 4, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                 <Pagination
                                     count={6}
                                     sx={{
                                         '& .MuiPaginationItem-root': {
                                             '&.Mui-selected': {
-                                                backgroundColor: values.color,
+                                                backgroundColor: values.highlightColor,
                                                 color: 'white',
                                             },
                                         },
@@ -208,7 +216,10 @@ export const PreviewDetailed = (rest: Props) => {
                                 />
                                 <Button
                                     variant="contained"
-                                    sx={{ backgroundColor: values.color, '&:hover': { backgroundColor: values.color } }}
+                                    sx={{
+                                        backgroundColor: values.highlightColor,
+                                        '&:hover': { backgroundColor: values.highlightColor },
+                                    }}
                                 >
                                     Scroll to top
                                 </Button>

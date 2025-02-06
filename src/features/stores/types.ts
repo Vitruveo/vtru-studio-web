@@ -63,6 +63,21 @@ export interface Artworks {
     };
 }
 
+export interface AppearanceContent {
+    highlightColor: string;
+    hideElements: {
+        filters: boolean;
+        order: boolean;
+        header: boolean;
+        recentlySold: boolean;
+        artworkSpotlight: boolean;
+        artistSpotlight: boolean;
+        pageNavigation: boolean;
+        cardDetails: boolean;
+        assets: boolean;
+    };
+}
+
 interface Framework {
     createdAt: Date;
     updatedAt: Date;
@@ -74,6 +89,7 @@ export interface Stores {
     _id: string;
     organization: Organization;
     artworks: Artworks;
+    appearanceContent: AppearanceContent;
     framework: Framework;
     status: StoreStatus;
 }
@@ -138,6 +154,11 @@ export interface GetStoresParams {
 export interface UpdateOrganizationParams {
     id: string;
     data: Omit<Organization, 'formats'> & { hasBanner: boolean };
+}
+
+export interface UpdateAppearanceContentParams {
+    id: string;
+    data: AppearanceContent;
 }
 
 export interface UpdateStatusParams {

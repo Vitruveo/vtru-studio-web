@@ -13,6 +13,7 @@ import { storesActionsCreators } from './slice';
 import {
     GetStoresParams,
     StoreStorageParams,
+    UpdateAppearanceContentParams,
     UpdateOrganizationParams,
     UpdateStatusParams,
     ValidateUrlParams,
@@ -89,6 +90,16 @@ export function updateOrganizationThunk(data: UpdateOrganizationParams): ReduxTh
     return async (_dispatch: any) => {
         await updateStepNameStore({
             stepName: 'organization',
+            id: data.id,
+            data: data.data,
+        });
+    };
+}
+
+export function updateAppearanceContentThunk(data: UpdateAppearanceContentParams): ReduxThunkAction<Promise<void>> {
+    return async (_dispatch: any) => {
+        await updateStepNameStore({
+            stepName: 'appearanceContent',
             id: data.id,
             data: data.data,
         });

@@ -1,32 +1,36 @@
 'use client';
+import { useRef, useState } from 'react';
 import { Formik, Form } from 'formik';
-import { STORE_STORAGE_URL } from '@/constants/asset';
-import { useSelector } from '@/store/hooks';
-import Breadcrumb from '@/app/(main)/layout/shared/breadcrumb/Breadcrumb';
-import { Box, Button, Grid, Typography } from '@mui/material';
+import {
+    Box,
+    Button,
+    Grid,
+    Typography,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    DialogContentText,
+} from '@mui/material';
 import { debounce } from '@mui/material/utils';
+import { IconRestore } from '@tabler/icons-react';
+import { STORE_STORAGE_URL } from '@/constants/asset';
+import { useDispatch, useSelector } from '@/store/hooks';
+import Breadcrumb from '@/app/(main)/layout/shared/breadcrumb/Breadcrumb';
 import HideElements from '@/app/(main)/components/stores/hideElements';
 import { PreviewDetailed } from '@/app/(main)/components/stores/PreviewDetailed';
-import { useRef } from 'react';
-import { IconRestore } from '@tabler/icons-react';
-
-export interface State {
-    filter: boolean;
-    order: boolean;
-    header: boolean;
-    recentlySold: boolean;
-    spotlight: boolean;
-    artistSpotlight: boolean;
-    pageNavigation: boolean;
-    cardDetail: boolean;
-    assets: boolean;
-    color: string;
-}
+import { useRouter } from 'next/navigation';
+import { updateAppearanceContentThunk } from '@/features/stores/thunks';
+import { AppearanceContent } from '@/features/stores/types';
 
 const AppearanceAndContent = () => {
+    const router = useRouter();
+    const dispatch = useDispatch();
+    const [openDialogSave, setOpenDialogSave] = useState(false);
+    const inputColorRef = useRef<HTMLInputElement>(null);
+
     const selectedStore = useSelector((state) => state.stores.selectedStore);
     const store = useSelector((state) => state.stores.data.data.find((item) => item._id === selectedStore.id));
-    const inputColorRef = useRef<HTMLInputElement>(null);
     const isFile = (path: any): path is File => path instanceof File;
 
     const handleChangeColor = debounce(
@@ -37,40 +41,65 @@ const AppearanceAndContent = () => {
         500
     );
 
-    const handleBack = () => {};
-    const handleNext = () => {};
+    const handleBack = (isDirty: boolean) => {
+        if (isDirty) {
+            setOpenDialogSave(true);
+            return;
+        }
+        router.push('/stores/publish');
+    };
+    const handleBackSave = (setFieldValue: (field: string, value: any) => void, handleSubmit: () => void) => {
+        setFieldValue('redirectPath', '/stores/publish');
+        handleSubmit();
+        setOpenDialogSave(false);
+    };
+    const handleBackCancel = () => {
+        setOpenDialogSave(false);
+        router.push('/stores/publish');
+    };
 
     return (
         <Formik
-            initialValues={{
-                filter: false,
-                order: false,
-                header: false,
-                recentlySold: false,
-                spotlight: false,
-                artistSpotlight: false,
-                pageNavigation: false,
-                cardDetail: false,
-                assets: false,
-                color: '#000000',
+            initialValues={
+                {
+                    hideElements: {
+                        filters: false,
+                        order: false,
+                        header: false,
+                        recentlySold: false,
+                        artworkSpotlight: false,
+                        artistSpotlight: false,
+                        pageNavigation: false,
+                        cardDetails: false,
+                        assets: false,
+                    },
+                    highlightColor: '#000000',
+                } as AppearanceContent
+            }
+            onSubmit={(values) => {
+                dispatch(
+                    updateAppearanceContentThunk({
+                        id: selectedStore.id,
+                        data: values,
+                    })
+                );
             }}
-            onSubmit={() => {}}
         >
-            {({ setFieldValue, resetForm }) => (
-                <Box display={'grid'} gridTemplateRows={'1fr auto'} height="calc(100vh - 64px)">
-                    <Box paddingInline={3}>
-                        <Breadcrumb
-                            title="Publish Store"
-                            assetTitle={store?.organization.url || ''}
-                            items={[
-                                { title: 'Stores', to: '/stores' },
-                                { title: 'Publish', to: '/stores/publish' },
-                                { title: 'Appearance And Content' },
-                            ]}
-                        />
-                    </Box>
+            {({ setFieldValue, resetForm, dirty, handleSubmit }) => (
+                <Form>
+                    <Box display={'grid'} gridTemplateRows={'1fr auto'} height="calc(100vh - 64px)">
+                        <Box paddingInline={3}>
+                            <Breadcrumb
+                                title="Publish Store"
+                                assetTitle={store?.organization.url || ''}
+                                items={[
+                                    { title: 'Stores', to: '/stores' },
+                                    { title: 'Publish', to: '/stores/publish' },
+                                    { title: 'Appearance And Content' },
+                                ]}
+                            />
+                        </Box>
 
-                    <Form>
                         <Box paddingInline={3} overflow="auto" paddingBottom={20}>
                             <Grid container>
                                 <Grid item xs={12} md={4}>
@@ -131,36 +160,61 @@ const AppearanceAndContent = () => {
                                             isFile(store?.organization.formats?.logo.square.path)
                                                 ? URL.createObjectURL(store?.organization?.formats?.logo.square.path)
                                                 : `${STORE_STORAGE_URL}/${store?.organization.formats?.logo.square.path}` ||
-                                                  ''
+                                                ''
                                         }
                                         logoHorizontal={
                                             isFile(store?.organization.formats?.logo.horizontal.path)
                                                 ? URL.createObjectURL(
-                                                      store?.organization?.formats?.logo.horizontal.path
-                                                  )
+                                                    store?.organization?.formats?.logo.horizontal.path
+                                                )
                                                 : `${STORE_STORAGE_URL}/${store?.organization.formats?.logo.horizontal.path}` ||
-                                                  ''
+                                                ''
                                         }
                                     />
                                 </Grid>
                             </Grid>
                         </Box>
-                    </Form>
 
-                    <Box bgcolor="#e5e7eb">
-                        <Box display="flex" alignItems="center" justifyContent="space-between" p={2}>
-                            <Typography color="GrayText">Step 3 of 3</Typography>
-                            <Box display="flex" gap={2}>
-                                <Button type="button" variant="text" onClick={handleBack}>
-                                    <Typography color="gray">Back</Typography>
-                                </Button>
-                                <Button type="button" onClick={handleNext} variant="contained">
-                                    Next
-                                </Button>
+                        <Box bgcolor="#e5e7eb">
+                            <Box display="flex" alignItems="center" justifyContent="space-between" p={2}>
+                                <Typography color="GrayText">Step 3 of 3</Typography>
+                                <Box display="flex" gap={2}>
+                                    <Button type="button" variant="text" onClick={() => handleBack(dirty)}>
+                                        <Typography color="gray">Back</Typography>
+                                    </Button>
+                                    <Button type="button" onClick={() => handleSubmit()} variant="contained">
+                                        Next
+                                    </Button>
+                                </Box>
                             </Box>
                         </Box>
                     </Box>
-                </Box>
+                    <Dialog
+                        open={openDialogSave}
+                        onClose={() => setOpenDialogSave(false)}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">{'Back to publish page'}</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                                Do you want to save the changes before leaving?
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleBackCancel} color="primary">
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={() => handleBackSave(setFieldValue, handleSubmit)}
+                                color="success"
+                                variant="outlined"
+                            >
+                                Save
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                </Form>
             )}
         </Formik>
     );
