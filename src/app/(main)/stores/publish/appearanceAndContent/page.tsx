@@ -32,7 +32,6 @@ const AppearanceAndContent = () => {
     const selectedStore = useSelector((state) => state.stores.selectedStore);
     const store = useSelector((state) => state.stores.data.data.find((item) => item._id === selectedStore.id));
     const { highlightColor, hideElements } = store?.appearanceContent || {};
-    console.log(highlightColor);
 
     const isFile = (path: any): path is File => path instanceof File;
 
