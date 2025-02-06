@@ -365,7 +365,7 @@ export default function Home() {
                                 </Box>
                             </button>
                         </Box>
-                        <Box flex={1} mt={2}>
+                        {/* <Box flex={1} mt={2}>
                             <button
                                 style={{
                                     height: 80,
@@ -396,7 +396,7 @@ export default function Home() {
                                     </Typography>
                                 </Box>
                             </button>
-                        </Box>
+                        </Box> */}
                     </Box>
 
                     <Box display="flex" alignItems="center" justifyContent="space-between" mt={2}>
