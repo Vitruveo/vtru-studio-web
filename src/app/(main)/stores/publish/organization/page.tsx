@@ -99,8 +99,8 @@ const Component = () => {
     };
 
     const handleValidateUrl = () => {
-        if (selectedStore.id && formik.values.url)
-            dispatch(validateUrlThunk({ storeId: selectedStore.id, url: formik.values.url }));
+        if (selectedStore.id && formik.values?.url)
+            dispatch(validateUrlThunk({ storeId: selectedStore.id, url: formik.values?.url }));
     };
 
     const handleValidateMedia = (field: string, value: any) => {
@@ -157,7 +157,7 @@ const Component = () => {
             updateOrganizationThunk({
                 id: selectedStore.id,
                 data: {
-                    url: values.url,
+                    url: values?.url,
                     name: values.name,
                     description: values.description,
                     markup: values.markup,
@@ -172,10 +172,10 @@ const Component = () => {
 
     const formik = useFormik<Input & { redirectPath: string }>({
         initialValues: {
-            url: store?.organization.url || null,
-            name: store?.organization.name || '',
-            description: store?.organization.description || '',
-            markup: store?.organization.markup || 10,
+            url: store?.organization?.url || null,
+            name: store?.organization?.name || '',
+            description: store?.organization?.description || '',
+            markup: store?.organization?.markup || 10,
             logoHorizontal: formatsMapper.logoHorizontal
                 ? `${STORE_STORAGE_URL}/${formatsMapper.logoHorizontal}`
                 : null,
@@ -255,7 +255,7 @@ const Component = () => {
                     dispatch(
                         storeStorageThunk({
                             file: file as File,
-                            url: value.url,
+                            url: value?.url,
                             transactionId: value.transactionId,
                         })
                     );
@@ -278,7 +278,7 @@ const Component = () => {
             <Box paddingInline={3} overflow="auto" paddingBottom={20}>
                 <Breadcrumb
                     title="Publish Store"
-                    assetTitle={store?.organization.url || ''}
+                    assetTitle={store?.organization?.url || ''}
                     items={[
                         { title: 'Stores', to: '/stores' },
                         { title: 'Publish', to: '/stores/publish' },
@@ -315,16 +315,17 @@ const Component = () => {
                                     placeholder="type your store url here"
                                     size="small"
                                     name="url"
-                                    value={formik.values.url}
+                                    value={formik.values?.url}
                                     onChange={formik.handleChange}
                                     onBlur={handleValidateUrl}
                                     variant="outlined"
+                                    disabled={store?.status === 'active'}
                                     sx={{
                                         marginInline: 1,
                                     }}
                                     InputProps={{
                                         inputProps: {
-                                            size: formik.values.url?.length || 20,
+                                            size: formik.values?.url?.length || 20,
                                         },
                                     }}
                                 />
@@ -333,8 +334,13 @@ const Component = () => {
                                 </Typography>
                             </Box>
                             <Typography variant="caption" color="error">
-                                {formik.errors.url}
+                                {formik.errors?.url}
                             </Typography>
+                            {store?.status === 'active' && (
+                                <Typography variant="caption">
+                                    it is not possible to change the URL in case of active stores*
+                                </Typography>
+                            )}
                             <Typography variant="caption" color="GrayText">
                                 Lowercase a-z, numbers 0-9 and hyphens. Minimum length 4 characters.
                             </Typography>
@@ -517,7 +523,9 @@ const Component = () => {
                             formik.values.description || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
                         }
                         domain={
-                            formik.values.url ? `https://${formik.values.url}.xibit.live` : 'https://example.xibit.live'
+                            formik.values?.url
+                                ? `https://${formik.values.url}.xibit.live`
+                                : 'https://example.xibit.live'
                         }
                         banner={
                             formik.values.banner instanceof File

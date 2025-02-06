@@ -83,7 +83,7 @@ const Component = () => {
             <Box paddingInline={3} overflow={'auto'} paddingBottom={20}>
                 <Breadcrumb
                     title="Publish Store"
-                    assetTitle={store?.organization.url || ''}
+                    assetTitle={store?.organization?.url || ''}
                     items={[
                         { title: 'Stores', to: '/stores' },
                         { title: 'Publish', to: '/stores/publish' },
