@@ -6,7 +6,7 @@ const ShowHideElements = () => {
     const { setFieldValue, values } = useFormikContext<AppearanceContent>();
 
     const handleChange = (key: keyof AppearanceContent['hideElements']) => {
-        setFieldValue(key, !values.hideElements[key]);
+        setFieldValue(`hideElements.${key}`, !values.hideElements[key]);
     };
 
     return (

@@ -31,12 +31,14 @@ const AppearanceAndContent = () => {
 
     const selectedStore = useSelector((state) => state.stores.selectedStore);
     const store = useSelector((state) => state.stores.data.data.find((item) => item._id === selectedStore.id));
+    const { highlightColor, hideElements } = store?.appearanceContent || {};
+
     const isFile = (path: any): path is File => path instanceof File;
 
     const handleChangeColor = debounce(
         (e: React.ChangeEvent<HTMLInputElement>, setFieldValue: (field: string, value: any) => void) => {
             const color = e.target.value;
-            setFieldValue('color', color);
+            setFieldValue('highlightColor', color);
         },
         500
     );
@@ -63,17 +65,17 @@ const AppearanceAndContent = () => {
             initialValues={
                 {
                     hideElements: {
-                        filters: false,
-                        order: false,
-                        header: false,
-                        recentlySold: false,
-                        artworkSpotlight: false,
-                        artistSpotlight: false,
-                        pageNavigation: false,
-                        cardDetails: false,
-                        assets: false,
+                        filters: hideElements?.filters || false,
+                        order: hideElements?.order || false,
+                        header: hideElements?.header || false,
+                        recentlySold: hideElements?.recentlySold || false,
+                        artworkSpotlight: hideElements?.artworkSpotlight || false,
+                        artistSpotlight: hideElements?.artistSpotlight || false,
+                        pageNavigation: hideElements?.pageNavigation || false,
+                        cardDetails: hideElements?.cardDetails || false,
+                        assets: hideElements?.assets || false,
                     },
-                    highlightColor: '#000000',
+                    highlightColor: highlightColor || '#000000',
                 } as AppearanceContent
             }
             onSubmit={(values) => {
@@ -126,6 +128,7 @@ const AppearanceAndContent = () => {
                                             ref={inputColorRef}
                                         />
                                     </Box>
+
                                     <Button
                                         startIcon={<IconRestore size={18} />}
                                         fullWidth
@@ -160,15 +163,15 @@ const AppearanceAndContent = () => {
                                             isFile(store?.organization.formats?.logo.square.path)
                                                 ? URL.createObjectURL(store?.organization?.formats?.logo.square.path)
                                                 : `${STORE_STORAGE_URL}/${store?.organization.formats?.logo.square.path}` ||
-                                                ''
+                                                  ''
                                         }
                                         logoHorizontal={
                                             isFile(store?.organization.formats?.logo.horizontal.path)
                                                 ? URL.createObjectURL(
-                                                    store?.organization?.formats?.logo.horizontal.path
-                                                )
+                                                      store?.organization?.formats?.logo.horizontal.path
+                                                  )
                                                 : `${STORE_STORAGE_URL}/${store?.organization.formats?.logo.horizontal.path}` ||
-                                                ''
+                                                  ''
                                         }
                                     />
                                 </Grid>
