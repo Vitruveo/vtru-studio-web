@@ -95,7 +95,7 @@ const Component = ({ data, actions }: StoreProps) => {
                     placeholder="Duplicate Store"
                     options={store.data.map((item) => ({
                         value: item._id,
-                        label: item.organization.url || 'Untitled',
+                        label: item.organization?.url || 'Untitled',
                     }))}
                     styles={{
                         container: (provided) => ({
@@ -218,7 +218,7 @@ const Component = ({ data, actions }: StoreProps) => {
                                     </Tooltip>
                                     <Image
                                         src={
-                                            item.organization.formats?.logo?.square?.path
+                                            item.organization?.formats?.logo?.square?.path
                                                 ? `${STORE_STORAGE_URL}/${item.organization.formats?.logo.square.path}`
                                                 : NO_IMAGE_ASSET
                                         }
@@ -241,8 +241,8 @@ const Component = ({ data, actions }: StoreProps) => {
                                             borderBottomRightRadius: 5,
                                         }}
                                     >
-                                        <Typography fontSize={16}>{item?.organization.url || 'Untitled'}</Typography>
-                                        <Typography variant="h5">{item?.organization.name || 'N/A Name'}</Typography>
+                                        <Typography fontSize={16}>{item?.organization?.url || 'Untitled'}</Typography>
+                                        <Typography variant="h5">{item?.organization?.name || 'N/A Name'}</Typography>
                                         <Typography
                                             fontSize={16}
                                             style={{

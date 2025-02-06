@@ -55,15 +55,15 @@ const Component = ({ data }: Props) => {
                     { title: 'Publish', to: '/stores/publish' },
                     { title: 'Review And Publish' },
                 ]}
-                assetTitle={store.organization.url || ''}
+                assetTitle={store.organization?.url || ''}
             />
             <PublishStoreMessage message={textsForPublishStoreStatus[store.status].message} loading={loading} />
             <Preview
-                title={store.organization.url || 'Store Name'}
+                title={store.organization?.url || 'Store Name'}
                 description={store.organization.description || 'Store Description'}
                 domain={
-                    store.organization.url
-                        ? `https://${store.organization.url}.xibit.live`
+                    store.organization?.url
+                        ? `https://${store.organization?.url}.xibit.live`
                         : 'https://example.xibit.live'
                 }
                 banner={

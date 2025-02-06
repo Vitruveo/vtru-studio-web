@@ -93,7 +93,7 @@ const AppearanceAndContent = () => {
                         <Box paddingInline={3}>
                             <Breadcrumb
                                 title="Publish Store"
-                                assetTitle={store?.organization.url || ''}
+                                assetTitle={store?.organization?.url || ''}
                                 items={[
                                     { title: 'Stores', to: '/stores' },
                                     { title: 'Publish', to: '/stores/publish' },
@@ -146,11 +146,11 @@ const AppearanceAndContent = () => {
                                 </Grid>
                                 <Grid item xs={12} md={8}>
                                     <PreviewDetailed
-                                        title={store?.organization.url || 'Store Name'}
+                                        title={store?.organization?.url || 'Store Name'}
                                         description={store?.organization.description || 'Store Description'}
                                         domain={
-                                            store?.organization.url
-                                                ? `https://${store?.organization.url}.xibit.live`
+                                            store?.organization?.url
+                                                ? `https://${store?.organization?.url}.xibit.live`
                                                 : 'https://example.xibit.live'
                                         }
                                         banner={
@@ -161,17 +161,17 @@ const AppearanceAndContent = () => {
                                                 : null
                                         }
                                         logo={
-                                            isFile(store?.organization.formats?.logo.square.path)
+                                            isFile(store?.organization.formats?.logo?.square?.path)
                                                 ? URL.createObjectURL(store?.organization?.formats?.logo.square.path)
-                                                : `${STORE_STORAGE_URL}/${store?.organization.formats?.logo.square.path}` ||
+                                                : `${STORE_STORAGE_URL}/${store?.organization.formats?.logo?.square?.path}` ||
                                                   ''
                                         }
                                         logoHorizontal={
-                                            isFile(store?.organization.formats?.logo.horizontal.path)
+                                            isFile(store?.organization.formats?.logo?.horizontal?.path)
                                                 ? URL.createObjectURL(
                                                       store?.organization?.formats?.logo.horizontal.path
                                                   )
-                                                : `${STORE_STORAGE_URL}/${store?.organization.formats?.logo.horizontal.path}` ||
+                                                : `${STORE_STORAGE_URL}/${store?.organization.formats?.logo?.horizontal?.path}` ||
                                                   ''
                                         }
                                     />
