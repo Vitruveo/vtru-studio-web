@@ -5,6 +5,7 @@ import { IconMenu2 } from '@tabler/icons-react';
 import AssetMock from './assetMock';
 import FilterMock from './filterMock';
 import { AppearanceContent } from '@/features/stores/types';
+import { useState } from 'react';
 
 interface Props {
     title: string;
@@ -16,6 +17,8 @@ interface Props {
 }
 
 export const PreviewDetailed = (rest: Props) => {
+    const [imgLogoError, setImgLogoError] = useState(false);
+    const [imgLogoHorizontalError, setImgLogoHorizontalError] = useState(false);
     const { values } = useFormikContext<AppearanceContent>();
 
     return (
@@ -28,7 +31,7 @@ export const PreviewDetailed = (rest: Props) => {
                 </div>
             </div>
             <div className="browser-url-bar">
-                {rest.logo && (
+                {rest.logo && !imgLogoError ? (
                     <img
                         style={{
                             width: '20px',
@@ -38,7 +41,10 @@ export const PreviewDetailed = (rest: Props) => {
                         }}
                         src={rest.logo}
                         alt="logo"
+                        onError={() => setImgLogoError(true)}
                     />
+                ) : (
+                    <Box width={'20px'} height={'20px'} bgcolor="#eeeeee" />
                 )}
                 <span className="url-text">{rest.domain}</span>
             </div>
@@ -46,7 +52,7 @@ export const PreviewDetailed = (rest: Props) => {
                 {!values.hideElements.header && (
                     <Grid container mb={1}>
                         <Grid item xs={12} sm={3}>
-                            {rest.logoHorizontal ? (
+                            {rest.logoHorizontal && !imgLogoHorizontalError ? (
                                 <img
                                     style={{
                                         width: '100%',
@@ -56,6 +62,7 @@ export const PreviewDetailed = (rest: Props) => {
                                     }}
                                     src={rest.logoHorizontal}
                                     alt="logo-horizontal"
+                                    onError={() => setImgLogoHorizontalError(true)}
                                 />
                             ) : (
                                 <Box width="100%" height="40px" bgcolor="#eeeeee" />
