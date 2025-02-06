@@ -161,17 +161,17 @@ const AppearanceAndContent = () => {
                                                 : null
                                         }
                                         logo={
-                                            isFile(store?.organization.formats?.logo.square.path)
+                                            isFile(store?.organization.formats?.logo?.square?.path)
                                                 ? URL.createObjectURL(store?.organization?.formats?.logo.square.path)
-                                                : `${STORE_STORAGE_URL}/${store?.organization.formats?.logo.square.path}` ||
+                                                : `${STORE_STORAGE_URL}/${store?.organization.formats?.logo?.square?.path}` ||
                                                   ''
                                         }
                                         logoHorizontal={
-                                            isFile(store?.organization.formats?.logo.horizontal.path)
+                                            isFile(store?.organization.formats?.logo?.horizontal?.path)
                                                 ? URL.createObjectURL(
                                                       store?.organization?.formats?.logo.horizontal.path
                                                   )
-                                                : `${STORE_STORAGE_URL}/${store?.organization.formats?.logo.horizontal.path}` ||
+                                                : `${STORE_STORAGE_URL}/${store?.organization.formats?.logo?.horizontal?.path}` ||
                                                   ''
                                         }
                                     />

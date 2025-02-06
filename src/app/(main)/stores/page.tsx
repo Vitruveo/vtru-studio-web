@@ -218,7 +218,7 @@ const Component = ({ data, actions }: StoreProps) => {
                                     </Tooltip>
                                     <Image
                                         src={
-                                            item.organization.formats?.logo?.square?.path
+                                            item.organization?.formats?.logo?.square?.path
                                                 ? `${STORE_STORAGE_URL}/${item.organization.formats?.logo.square.path}`
                                                 : NO_IMAGE_ASSET
                                         }
