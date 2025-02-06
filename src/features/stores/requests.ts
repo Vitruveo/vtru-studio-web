@@ -28,8 +28,10 @@ export async function getStoreById(id: string): Promise<APIResponse<Stores>> {
 }
 
 export async function createNewStore(id?: string): Promise<APIResponse<{ insertedId: string }>> {
-    const data = id ? { cloneId: id } : {};
-    return apiService.post('/stores', data);
+    if (id) {
+        return apiService.post(`/stores/clone/${id}`, {});
+    }
+    return apiService.post('/stores', {});
 }
 
 export async function deleteStore(id: string): Promise<APIResponse<void>> {
