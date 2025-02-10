@@ -266,24 +266,9 @@ export default function Home() {
 
                     <Box bgcolor="#ff0066" color="#fff" p={2} borderRadius={2} mt={2}>
                         <Typography fontSize="1.1rem" alignSelf="center" lineHeight={1.5}>
-                            Xibit is beta software. Funds from platform sales are subject to the following restrictions:
+                            Xibit is beta software. For the first 30 days after your initial consignment, no funds may
+                            be withdrawn.
                         </Typography>
-                        <br />
-                        <Typography fontSize="1.1rem" alignSelf="center" lineHeight={1.5}>
-                            1) For the first 30 days after your initial consignment, no funds may be withdrawn.
-                        </Typography>
-                        <Typography fontSize="1.1rem" alignSelf="center" lineHeight={1.5}>
-                            2) After 30 days you have two choices for the funds in your Vault:
-                        </Typography>
-
-                        <Box ml={8}>
-                            <Typography fontSize="1.1rem" alignSelf="center" lineHeight={1.5}>
-                                a) Claim 5% and Stake 95%, OR
-                            </Typography>
-                            <Typography fontSize="1.1rem" alignSelf="center" lineHeight={1.5}>
-                                b) Claim 100% <b>after</b> VTRU is listed on a Centralized Exchange in January 2025
-                            </Typography>
-                        </Box>
                     </Box>
                     <Box gap={2} display="flex">
                         <Box flex={3} mt={2}>
