@@ -1,5 +1,5 @@
 import { useFormikContext } from 'formik';
-import './styles.css';
+import './previewDetailed.css';
 import { Box, Button, Grid, Pagination, Select, Typography } from '@mui/material';
 import { IconMenu2 } from '@tabler/icons-react';
 import AssetMock from './assetMock';
@@ -22,7 +22,7 @@ export const PreviewDetailed = (rest: Props) => {
     const { values } = useFormikContext<AppearanceContent>();
 
     return (
-        <div className="browser-mockup">
+        <div className="browser-mockup-detailed">
             <div className="browser-title-bar">
                 <div className="circles">
                     <span className="circle red"></span>
@@ -198,12 +198,42 @@ export const PreviewDetailed = (rest: Props) => {
                                 gap={2}
                             >
                                 {Array.from({ length: 8 }).map((_, index) => (
-                                    <AssetMock
-                                        key={index}
-                                        showBadge
-                                        showDetails={!values.hideElements.cardDetails}
-                                        color={values.highlightColor}
-                                    />
+                                    <>
+                                        {index === 0 && (
+                                            <AssetMock
+                                                key={index}
+                                                showBadge
+                                                badgeValue="2"
+                                                showDetails={!values.hideElements.cardDetails}
+                                                color={values.highlightColor}
+                                            />
+                                        )}
+                                        {index === 1 && (
+                                            <AssetMock
+                                                key={index}
+                                                showBadge
+                                                badgeValue="10"
+                                                showDetails={!values.hideElements.cardDetails}
+                                                color={values.highlightColor}
+                                            />
+                                        )}
+                                        {index === 2 && (
+                                            <AssetMock
+                                                key={index}
+                                                showBadge
+                                                badgeValue="99+"
+                                                showDetails={!values.hideElements.cardDetails}
+                                                color={values.highlightColor}
+                                            />
+                                        )}
+                                        {index > 2 && (
+                                            <AssetMock
+                                                key={index}
+                                                showDetails={!values.hideElements.cardDetails}
+                                                color={values.highlightColor}
+                                            />
+                                        )}
+                                    </>
                                 ))}
                             </Box>
                         )}

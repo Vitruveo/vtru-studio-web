@@ -178,7 +178,9 @@ const ConsignArtwork = () => {
                                                         fullWidth
                                                     >
                                                         {hasContract
-                                                            ? v.stepId === 'licenses'
+                                                            ? ['licenses', 'assetMetadata', 'auxiliaryMedia'].includes(
+                                                                  v.stepId
+                                                              )
                                                                 ? 'View/Edit'
                                                                 : 'View'
                                                             : (

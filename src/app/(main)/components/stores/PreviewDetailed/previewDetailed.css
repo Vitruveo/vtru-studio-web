@@ -1,5 +1,5 @@
-.browser-mockup {
-    width: 45%;
+.browser-mockup-detailed {
+    width: 80%;
     border: 2px solid #ccc;
     border-radius: 8px;
     overflow: hidden;
@@ -8,8 +8,7 @@
     font-family: Arial, sans-serif;
 
     /* scale 16:9 */
-
-    height: 450px;
+    height: 1100px;
 }
 
 .browser-title-bar {
@@ -67,5 +66,5 @@
 .browser-content {
     padding: 20px;
     background-color: #ffffff;
-    min-height: 200px;
+    height: calc(100% - 60px);
 }

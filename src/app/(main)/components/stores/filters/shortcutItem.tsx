@@ -20,7 +20,7 @@ interface FormValues {
 export const ShortcutItem = () => {
     return (
         <Box>
-            <Typography variant="h6">Shortcuts</Typography>
+            <Typography variant="h6">Filters</Typography>
             <Grid container item xs={6}>
                 {shortcutsOptions.map((item, index) => {
                     const fieldName = `general.shortcuts.${item.name}`;

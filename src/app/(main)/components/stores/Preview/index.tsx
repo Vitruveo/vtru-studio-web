@@ -1,5 +1,6 @@
 import { Box, Grid, Typography } from '@mui/material';
-import './styles.css';
+import './preview.css';
+import { useState } from 'react';
 
 interface Props {
     title: string;
@@ -8,11 +9,17 @@ interface Props {
     banner: string | null;
     logo: string | null;
     logoHorizontal: string | null;
+    style?: {
+        width?: string;
+    };
 }
 
 export const Preview = (rest: Props) => {
+    const [imgLogoError, setImgLogoError] = useState(false);
+    const [imgLogoHorizontalError, setImgLogoHorizontalError] = useState(false);
+
     return (
-        <div className="browser-mockup">
+        <div className="browser-mockup" style={{ width: rest.style?.width || '100%' }}>
             <div className="browser-title-bar">
                 <div className="circles">
                     <span className="circle red"></span>
@@ -21,7 +28,7 @@ export const Preview = (rest: Props) => {
                 </div>
             </div>
             <div className="browser-url-bar">
-                {rest.logo && (
+                {rest.logo && !imgLogoError ? (
                     <img
                         style={{
                             width: '20px',
@@ -31,14 +38,17 @@ export const Preview = (rest: Props) => {
                         }}
                         src={rest.logo}
                         alt="logo"
+                        onError={() => setImgLogoError(true)}
                     />
+                ) : (
+                    <Box width={'20px'} height={'20px'} bgcolor="#eeeeee" />
                 )}
                 <span className="url-text">{rest.domain}</span>
             </div>
             <div className="browser-content">
                 <Grid container mb={1}>
                     <Grid item xs={12} sm={3}>
-                        {rest.logoHorizontal ? (
+                        {rest.logoHorizontal && imgLogoHorizontalError ? (
                             <img
                                 style={{
                                     width: '100%',
@@ -48,6 +58,7 @@ export const Preview = (rest: Props) => {
                                 }}
                                 src={rest.logoHorizontal}
                                 alt="logo-horizontal"
+                                onError={() => setImgLogoHorizontalError(true)}
                             />
                         ) : (
                             <Box width="100%" height="40px" bgcolor="#eeeeee" />

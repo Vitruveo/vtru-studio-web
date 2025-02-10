@@ -12,7 +12,7 @@ const FilterMock = ({ color }: Props) => {
                     <Grid item xs={6} key={index}>
                         <Box display="flex" alignItems="center">
                             <Checkbox
-                                checked
+                                checked={index % 2 === 0}
                                 sx={{
                                     '&.Mui-checked': {
                                         color: color,
@@ -29,20 +29,22 @@ const FilterMock = ({ color }: Props) => {
                     <Grid item xs={12} key={index} sx={{ border: '1px solid gray', padding: 1 }}>
                         <Box display="flex" alignItems="center" justifyContent={'space-between'} paddingInline={2}>
                             <Typography variant="body2">----</Typography>
-                            <Paper
-                                sx={{
-                                    width: 20,
-                                    height: 20,
-                                    borderRadius: '50%',
-                                    bgColor: 'red',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    backgroundColor: color,
-                                    color: 'white',
-                                }}
-                            >
-                                2
-                            </Paper>
+                            {index < 2 && (
+                                <Paper
+                                    sx={{
+                                        width: 20,
+                                        height: 20,
+                                        borderRadius: '50%',
+                                        bgColor: 'red',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        backgroundColor: color,
+                                        color: 'white',
+                                    }}
+                                >
+                                    2
+                                </Paper>
+                            )}
                         </Box>
                     </Grid>
                 ))}

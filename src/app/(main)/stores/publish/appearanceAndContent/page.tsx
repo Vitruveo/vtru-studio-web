@@ -22,6 +22,7 @@ import { PreviewDetailed } from '@/app/(main)/components/stores/PreviewDetailed'
 import { useRouter } from 'next/navigation';
 import { updateAppearanceContentThunk } from '@/features/stores/thunks';
 import { AppearanceContent } from '@/features/stores/types';
+import { isFile } from '@/utils/isFile';
 
 const AppearanceAndContent = () => {
     const router = useRouter();
@@ -32,8 +33,6 @@ const AppearanceAndContent = () => {
     const selectedStore = useSelector((state) => state.stores.selectedStore);
     const store = useSelector((state) => state.stores.data.data.find((item) => item._id === selectedStore.id));
     const { highlightColor, hideElements } = store?.appearanceContent || {};
-
-    const isFile = (path: any): path is File => path instanceof File;
 
     const handleChangeColor = debounce(
         (e: React.ChangeEvent<HTMLInputElement>, setFieldValue: (field: string, value: any) => void) => {
@@ -93,7 +92,7 @@ const AppearanceAndContent = () => {
                         <Box paddingInline={3}>
                             <Breadcrumb
                                 title="Publish Store"
-                                assetTitle={store?.organization?.url || ''}
+                                assetTitle={store?.organization?.name || ''}
                                 items={[
                                     { title: 'Stores', to: '/stores' },
                                     { title: 'Publish', to: '/stores/publish' },
@@ -164,15 +163,15 @@ const AppearanceAndContent = () => {
                                             isFile(store?.organization.formats?.logo?.square?.path)
                                                 ? URL.createObjectURL(store?.organization?.formats?.logo.square.path)
                                                 : `${STORE_STORAGE_URL}/${store?.organization.formats?.logo?.square?.path}` ||
-                                                  ''
+                                                ''
                                         }
                                         logoHorizontal={
                                             isFile(store?.organization.formats?.logo?.horizontal?.path)
                                                 ? URL.createObjectURL(
-                                                      store?.organization?.formats?.logo.horizontal.path
-                                                  )
+                                                    store?.organization?.formats?.logo.horizontal.path
+                                                )
                                                 : `${STORE_STORAGE_URL}/${store?.organization.formats?.logo?.horizontal?.path}` ||
-                                                  ''
+                                                ''
                                         }
                                     />
                                 </Grid>

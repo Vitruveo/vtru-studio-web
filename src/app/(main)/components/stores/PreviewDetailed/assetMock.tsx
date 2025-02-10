@@ -3,18 +3,24 @@ import { IconPhotoScan } from '@tabler/icons-react';
 
 interface Props {
     showBadge?: boolean;
+    badgeValue?: string;
     showDetails?: boolean;
     color: string;
 }
 
-const AssetMock = ({ showBadge = false, showDetails = false, color }: Props) => {
+const AssetMock = ({ showBadge = false, badgeValue = '1', showDetails = false, color }: Props) => {
     return (
         <Badge
             badgeContent={
                 showBadge && (
-                    <Box bgcolor={'gray'} paddingInline={0.6} sx={{ borderRadius: 100, backgroundColor: color }}>
+                    <Box
+                        bgcolor={'gray'}
+                        paddingInline={badgeValue.length === 1 ? 0.8 : 0.6}
+                        paddingBlock={badgeValue.length === 3 ? 0.2 : 0}
+                        sx={{ borderRadius: 100, backgroundColor: color }}
+                    >
                         <Typography fontSize={'0.7rem'} color="white">
-                            10
+                            {badgeValue}
                         </Typography>
                     </Box>
                 )
