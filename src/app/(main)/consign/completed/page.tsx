@@ -34,6 +34,7 @@ export default function CompletedConsignPage() {
     const status = useSelector((state) => state.consignArtwork.status);
     const userIsBlocked = useSelector((state) => state.user?.vault?.isBlocked);
     const transactionHash = useSelector((state) => state.asset.contractExplorer?.tx);
+    const isMinted = useSelector((state) => state.asset.mintExplorer?.transactionHash);
     const selectedAsset = useSelector((state) => state.user.selectedAsset);
 
     const grayColor = theme.palette.text.disabled;
@@ -64,7 +65,12 @@ export default function CompletedConsignPage() {
         dispatch(consignArtworkThunks.preview());
     };
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (status !== 'active') formik.handleChange(e);
+        const value = e.target.value as ConsignArtworkAssetStatus;
+        const notAllowedStatus = ['draft', 'preview'];
+
+        if (isMinted || notAllowedStatus.includes(value)) return;
+
+        dispatch(consignArtworkThunks.updateStatus(value));
     };
 
     const consignSteps = {
@@ -101,7 +107,7 @@ export default function CompletedConsignPage() {
     return (
         <form onSubmit={formik.handleSubmit}>
             <PageContainerFooter
-                submitDisabled={status === 'active' || status === 'blocked' || userIsBlocked}
+                submitDisabled={status === 'active' || status === 'blocked' || userIsBlocked || status === 'hidden'}
                 hasBackButton
             >
                 <Breadcrumb
