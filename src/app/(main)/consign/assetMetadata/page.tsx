@@ -110,7 +110,7 @@ export default function AssetMetadata() {
     const tempColors = useSelector((state) => state.asset.tempColors);
     const assetStatus = useSelector((state) => state.asset.consignArtwork?.status);
 
-    const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
+    const hasContract = useSelector((state) => !!state.asset?.contractExplorer?.tx);
     const asset = useSelector((state) => state.asset);
     const { assetMetadata } = asset;
     const formData = assetMetadata?.context.formData;
@@ -293,14 +293,14 @@ export default function AssetMetadata() {
                         isValid.push(false);
                         return childPath
                             ? {
-                                ...acc,
-                                [parentPath]: {
-                                    ...acc[parentPath],
-                                    [childPath]: {
-                                        __errors: [...(acc[parentPath]?.[childPath]?.__errors || []), message],
-                                    },
-                                },
-                            }
+                                  ...acc,
+                                  [parentPath]: {
+                                      ...acc[parentPath],
+                                      [childPath]: {
+                                          __errors: [...(acc[parentPath]?.[childPath]?.__errors || []), message],
+                                      },
+                                  },
+                              }
                             : { ...acc, [parentPath]: { __errors: [message] } };
                     }
 

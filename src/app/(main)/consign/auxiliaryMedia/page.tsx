@@ -54,6 +54,7 @@ export default function AssetMedia() {
     ];
 
     const asset = useSelector((state) => state.asset);
+    const consignStatus = useSelector((state) => state.consignArtwork.status);
     const formData = useSelector((state) => state.asset.assetMetadata?.context.formData);
     const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
 
@@ -360,6 +361,7 @@ export default function AssetMedia() {
                                         formatValue={value}
                                         setFieldValue={setFieldValue}
                                         handleUploadFile={handleUploadFile}
+                                        disabled={consignStatus !== 'draft'}
                                     />
                                 </Box>
                             ))}

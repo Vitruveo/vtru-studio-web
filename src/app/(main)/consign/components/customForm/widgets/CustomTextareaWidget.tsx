@@ -27,6 +27,7 @@ export const CustomTextareaWidget = (props: WidgetProps) => {
             onChange={onChange}
             onBlur={onBlur}
             onFocus={onFocus}
+            disabled={props.disabled}
             style={{
                 backgroundColor: theme.palette.background.paper,
                 width: '100%',

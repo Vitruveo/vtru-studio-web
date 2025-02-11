@@ -29,6 +29,7 @@ interface MediaCardProps {
         value: any,
         shouldValidate?: boolean | undefined
     ) => Promise<void> | Promise<AssetMediaFormErros>;
+    disabled?: boolean;
 }
 
 export interface MediaConfig {
@@ -48,6 +49,7 @@ export default function MediaCard({
     formatValue,
     setFieldValue,
     handleUploadFile,
+    disabled = false,
 }: MediaCardProps) {
     const imgRef = React.useRef<HTMLImageElement>(null);
     const toast = useToastr();
@@ -355,7 +357,7 @@ export default function MediaCard({
                                     alignItems="center"
                                 >
                                     <input id="asset" {...getInputProps()} />
-                                    <Button {...getRootProps()} size="small" variant="contained">
+                                    <Button {...getRootProps()} size="small" variant="contained" disabled={disabled}>
                                         {texts.uploadButton}
                                     </Button>
                                 </Box>
