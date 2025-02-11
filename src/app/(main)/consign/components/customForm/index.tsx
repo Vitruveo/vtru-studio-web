@@ -26,8 +26,6 @@ const CustomForm = ({
     onSubmit,
     ...otherProps
 }: CustomFormProps) => {
-    console.log('ui: ', uiSchema);
-
     const [fieldHasFocus, setFieldHasFocus] = useState(false);
     const [formIschanged, setFormIschanged] = useState(false);
 
