@@ -60,22 +60,21 @@ const Component = ({ data }: ComponentProps) => {
         );
 
     return (
-        <Box position="relative" paddingInline={3} overflow="auto">
+        <Box position="relative" paddingInline={3} height={'calc(100vh - 140px)'} overflow="auto">
             <Breadcrumb
                 title="Publish Store"
                 assetTitle={store.organization?.name || ''}
                 items={[{ title: 'Stores', to: '/stores' }, { title: 'Publish' }]}
             />
 
-            <Box p={2} pt={0}>
-                <Typography variant="h6" fontWeight="normal" color="GrayText">
-                    Complete all required tasks to publish your Store.
-                </Typography>
-            </Box>
-
-            <Box p={2}>
+            <Box paddingInline={2}>
                 <Grid container spacing={2}>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={5.5}>
+                        <Box pb={4.5}>
+                            <Typography variant="h6" fontWeight="normal" color="GrayText">
+                                Complete all required tasks to publish your Store.
+                            </Typography>
+                        </Box>
                         {Object.entries(publishStore || {})?.map((step, index) => {
                             const [key, value] = step;
 
@@ -124,7 +123,7 @@ const Component = ({ data }: ComponentProps) => {
                             );
                         })}
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={6.5}>
                         <Preview
                             title={store.organization?.name || 'Store Name'}
                             description={store.organization?.description || 'Store Description'}
