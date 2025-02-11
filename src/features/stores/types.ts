@@ -104,7 +104,7 @@ export interface RequestStoreUpload {
     format: string;
 }
 
-export type StepStatus = 'Not Started' | 'Completed' | 'In Progress';
+export type StepStatus = 'Not Started' | 'Completed' | 'In Progress' | 'Not Approved';
 export type StoreStatus = 'draft' | 'pending' | 'active' | 'inactive';
 
 export interface CompletedSteps {

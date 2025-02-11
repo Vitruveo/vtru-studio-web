@@ -48,12 +48,12 @@ export const Preview = (rest: Props) => {
             <div className="browser-content">
                 <Grid container mb={1}>
                     <Grid item xs={12} sm={3}>
-                        {rest.logoHorizontal && imgLogoHorizontalError ? (
+                        {rest.logoHorizontal && !imgLogoHorizontalError ? (
                             <img
                                 style={{
                                     width: '100%',
                                     height: '40px',
-                                    objectFit: 'contain',
+                                    objectFit: 'cover',
                                     flexShrink: 0,
                                 }}
                                 src={rest.logoHorizontal}

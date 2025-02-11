@@ -8,12 +8,12 @@ import Breadcrumb from '@/app/(main)/layout/shared/breadcrumb/Breadcrumb';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useEffect } from 'react';
 import { getStoreByIdThunk } from '@/features/stores/thunks';
-import { Stores, PublishStore } from '@/features/stores/types';
+import { Stores, PublishStore, StepStatus } from '@/features/stores/types';
 import { Preview } from '../../components/stores/Preview';
 import { isFile } from '@/utils/isFile';
 import { STORE_STORAGE_URL } from '@/constants/asset';
 
-const statusStyles = {
+const statusStyles: { [key in StepStatus]: { text: string; background: string } } = {
     Completed: {
         text: '#fff',
         background: '#93C47D',
@@ -25,6 +25,10 @@ const statusStyles = {
     'Not Started': {
         text: '#fff',
         background: 'rgba(0, 0, 0, 0.38);',
+    },
+    'Not Approved': {
+        text: '#fff',
+        background: '#F56236',
     },
 };
 
@@ -78,7 +82,7 @@ const Component = ({ data }: ComponentProps) => {
                             const isLast = index === Object.keys(publishStore || {}).length - 1;
 
                             return (
-                                <Grid key={key} container mb={3}>
+                                <Grid key={key} container mb={3} alignItems={'center'}>
                                     <Grid item xs={3}>
                                         <Typography variant="h6" fontWeight="normal" color="GrayText">
                                             {value.label}
