@@ -47,7 +47,7 @@ const Component = ({ data }: Props) => {
     };
 
     return (
-        <Box paddingInline={3}>
+        <Box paddingInline={3} height={'calc(100vh - 140px)'} overflow={'auto'}>
             <Breadcrumb
                 title={'Publish Store'}
                 items={[
@@ -60,7 +60,7 @@ const Component = ({ data }: Props) => {
             <PublishStoreMessage message={textsForPublishStoreStatus[store.status].message} loading={loading} />
             <Box display={'flex'} justifyContent={'center'} width={'100%'}>
                 <Preview
-                    title={store.organization?.url || 'Store Name'}
+                    title={store.organization?.name || 'Store Name'}
                     description={store.organization.description || 'Store Description'}
                     domain={
                         store.organization?.url
@@ -100,9 +100,15 @@ const Component = ({ data }: Props) => {
                     <Button variant="text" onClick={() => router.push('/stores/publish')}>
                         <Typography color="gray">Back</Typography>
                     </Button>
-                    <Button variant="contained" onClick={handleRequestPublishment} disabled={store.status !== 'draft'}>
-                        {textsForPublishStoreStatus[store.status].buttontitle}
-                    </Button>
+                    {textsForPublishStoreStatus[store.status].buttontitle && (
+                        <Button
+                            variant="contained"
+                            onClick={handleRequestPublishment}
+                            disabled={store.status !== 'draft'}
+                        >
+                            {textsForPublishStoreStatus[store.status].buttontitle}
+                        </Button>
+                    )}
                 </Box>
             </Box>
         </Box>

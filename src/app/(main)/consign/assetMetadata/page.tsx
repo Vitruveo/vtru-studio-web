@@ -108,6 +108,7 @@ export default function AssetMetadata() {
     const toast = useToastr();
     const creator = useSelector((state) => state.user);
     const tempColors = useSelector((state) => state.asset.tempColors);
+    const assetStatus = useSelector((state) => state.asset.consignArtwork?.status);
 
     const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
     const asset = useSelector((state) => state.asset);
@@ -292,14 +293,14 @@ export default function AssetMetadata() {
                         isValid.push(false);
                         return childPath
                             ? {
-                                  ...acc,
-                                  [parentPath]: {
-                                      ...acc[parentPath],
-                                      [childPath]: {
-                                          __errors: [...(acc[parentPath]?.[childPath]?.__errors || []), message],
-                                      },
-                                  },
-                              }
+                                ...acc,
+                                [parentPath]: {
+                                    ...acc[parentPath],
+                                    [childPath]: {
+                                        __errors: [...(acc[parentPath]?.[childPath]?.__errors || []), message],
+                                    },
+                                },
+                            }
                             : { ...acc, [parentPath]: { __errors: [message] } };
                     }
 
@@ -431,6 +432,7 @@ export default function AssetMetadata() {
                                             uiSchema={value.uiSchema}
                                             onChange={handleOnChange}
                                             updateErrors={handleUpdateErrors}
+                                            assetStatus={assetStatus}
                                         />
                                     </Box>
                                 ))}

@@ -8,12 +8,11 @@ import Box from '@mui/material/Box';
 import AssetMediaPreview from '@/app/(main)/consign/components/assetMediaPreview';
 import Breadcrumb from '@/app/(main)/layout/shared/breadcrumb/Breadcrumb';
 import PageContainerFooter from '../components/container/PageContainerFooter';
-import { StepId, StepStatus } from '@/features/consign/types';
+import { StepId } from '@/features/consign/types';
 import { getAssetThunk, publishThunk } from '@/features/asset/thunks';
 import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr';
 import { useI18n } from '@/app/hooks/useI18n';
 import { TranslateFunction } from '@/i18n/types';
-import { CompletedConsignPage } from '@/app/(main)/consign/components/completedConsignPage/CompletedConsignPage';
 import Comments from './components/comments';
 
 const ConsignArtwork = () => {
@@ -36,7 +35,6 @@ const ConsignArtwork = () => {
     const selectedAsset = useSelector((state) => state.user.selectedAsset);
     const { completedSteps } = useSelector((state) => state.consignArtwork);
     const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
-    const hasMinted = useSelector((state) => !!state.asset?.mintExplorer);
 
     const checkAllCompletedSteps = Object.values(completedSteps)
         .filter((v) => !v.optional && v.stepId !== 'reviewAndConsign')
@@ -60,7 +58,7 @@ const ConsignArtwork = () => {
         },
     ];
 
-    const handleChangePage = (page: StepId, stepStatus: StepStatus) => {
+    const handleChangePage = (page: StepId) => {
         router.push(`${pathname}/${page}`);
     };
 
@@ -132,9 +130,8 @@ const ConsignArtwork = () => {
                                         >
                                             <Grid item lg={5} xl={4}>
                                                 <Typography
-                                                    title={`${language[v.stepName] as string} ${
-                                                        v.optional ? ` (${texts.optional})` : ''
-                                                    } `}
+                                                    title={`${language[v.stepName] as string} ${v.optional ? ` (${texts.optional})` : ''
+                                                        } `}
                                                     sx={{
                                                         whiteSpace: 'nowrap',
                                                         textOverflow: 'ellipsis',
@@ -172,24 +169,24 @@ const ConsignArtwork = () => {
                                                     <Button
                                                         style={{ opacity: v.stepId === 'reviewAndConsign' ? 0 : 1 }}
                                                         disabled={v.stepId === 'reviewAndConsign'}
-                                                        onClick={() => handleChangePage(v.stepId, v.status)}
+                                                        onClick={() => handleChangePage(v.stepId)}
                                                         size="small"
                                                         variant="contained"
                                                         fullWidth
                                                     >
                                                         {hasContract
                                                             ? ['licenses', 'assetMetadata', 'auxiliaryMedia'].includes(
-                                                                  v.stepId
-                                                              )
+                                                                v.stepId
+                                                            )
                                                                 ? 'View/Edit'
                                                                 : 'View'
                                                             : (
-                                                                  language[
-                                                                      'studio.consignArtwork.stepButton'
-                                                                  ] as TranslateFunction
-                                                              )({
-                                                                  status: v.status,
-                                                              })}
+                                                                language[
+                                                                'studio.consignArtwork.stepButton'
+                                                                ] as TranslateFunction
+                                                            )({
+                                                                status: v.status,
+                                                            })}
                                                     </Button>
                                                 </Box>
                                             </Grid>

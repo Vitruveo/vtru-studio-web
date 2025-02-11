@@ -145,7 +145,7 @@ const AppearanceAndContent = () => {
                                 </Grid>
                                 <Grid item xs={12} md={8}>
                                     <PreviewDetailed
-                                        title={store?.organization?.url || 'Store Name'}
+                                        title={store?.organization?.name || 'Store Name'}
                                         description={store?.organization.description || 'Store Description'}
                                         domain={
                                             store?.organization?.url
