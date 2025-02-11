@@ -7,6 +7,7 @@ import { SectionName } from './page';
 import { IChangeEvent } from '@rjsf/core';
 import { useI18n } from '@/app/hooks/useI18n';
 import { statusName } from '@/features/consign/slice';
+import { ConsignArtworkAssetStatus } from '@/features/consign/types';
 import { TranslateFunction } from '@/i18n/types';
 
 export type SectionOnChangeParams = { data: IChangeEvent<any, RJSFSchema, any>; sectionName: SectionName };
@@ -20,6 +21,7 @@ interface SectionProps extends Omit<CustomFormProps, 'updateErrors' | 'onChange'
     sectionName: SectionName;
     updateErrors: any;
     onChange: (params: SectionOnChangeParams) => void;
+    assetStatus?: ConsignArtworkAssetStatus;
 }
 
 const Section = ({
@@ -31,7 +33,9 @@ const Section = ({
     onChange,
     setSectionsStatus,
     updateErrors,
+    assetStatus,
 }: SectionProps) => {
+    const [newFormData, setNewFormData] = useState(formData);
     const [status, setStatus] = useState<keyof typeof statusName>('notStarted');
 
     const [expanded, setExpanded] = useState<boolean>(false);
@@ -43,8 +47,6 @@ const Section = ({
         setExpanded((prevExpanded) => !prevExpanded);
     };
 
-    const newFormData = formData;
-
     const handleValidateSection = (formDat: any, fieldsRequired: string[]) => {
         const checkStarted = Object.values(formDat).every(
             (v) => v === null || (typeof v === 'string' && v.trim().length === 0)
@@ -54,10 +56,10 @@ const Section = ({
             return 'notStarted';
         }
 
-        const checkRequired = Object.entries(formDat).filter(([key, v]) => fieldsRequired?.includes(key));
+        const checkRequired = Object.entries(formDat).filter(([key, _value]) => fieldsRequired?.includes(key));
 
         const allFieldsFilled = checkRequired.some(
-            ([key, v]) =>
+            ([_key, v]) =>
                 v === null || (typeof v === 'string' && v.trim().length === 0) || (Array.isArray(v) && !v.length)
         );
 
@@ -134,6 +136,17 @@ const Section = ({
     useEffect(() => {
         handleChangeStatus({ errors });
     }, [errors]);
+
+    // TODO: Usar disable ao invés de setNewFormData
+    useEffect(() => {
+        if (assetStatus !== 'draft') {
+            setNewFormData((prev: any) => ({
+                ...prev,
+                title: prev.title?.trim() || 'title',
+                description: prev.description?.trim() || 'short description',
+            }));
+        }
+    }, [assetStatus]);
 
     return (
         <Accordion style={{ background: '#fafafa' }} expanded={expanded} onChange={handleChange}>

@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from '@/store/hooks';
 import { useRouter } from 'next/navigation';
 import PublishStoreMessage from './publishMessage';
 import { getStoreByIdThunk, updateStatusThunk } from '@/features/stores/thunks';
+import { isFile } from '@/utils/isFile';
 
 interface Props {
     data: {
@@ -19,16 +20,15 @@ const Component = ({ data }: Props) => {
     const dispatch = useDispatch();
     const router = useRouter();
     const { store, loading } = data;
-    const isFile = (path: any): path is File => path instanceof File;
 
     const textsForPublishStoreStatus = {
         draft: {
-            buttontitle: 'Request Publishment',
+            buttontitle: 'Request Moderation',
             message:
-                'Nice work! Your store is ready for request publishment. Once you submit it our team will review it and approve accordingly',
+                'Nice work! Your store is ready for request moderation. Once you submit it our team will review it and approve accordingly',
         },
         pending: {
-            buttontitle: 'Request Publishment Pending',
+            buttontitle: 'Request moderation pending',
             message: 'Your store is being reviewed by our team and you will be notified when it is made available',
         },
         active: {
@@ -47,7 +47,7 @@ const Component = ({ data }: Props) => {
     };
 
     return (
-        <Box paddingInline={3}>
+        <Box paddingInline={3} height={'calc(100vh - 140px)'} overflow={'auto'}>
             <Breadcrumb
                 title={'Publish Store'}
                 items={[
@@ -58,32 +58,35 @@ const Component = ({ data }: Props) => {
                 assetTitle={store.organization?.url || ''}
             />
             <PublishStoreMessage message={textsForPublishStoreStatus[store.status].message} loading={loading} />
-            <Preview
-                title={store.organization?.url || 'Store Name'}
-                description={store.organization.description || 'Store Description'}
-                domain={
-                    store.organization?.url
-                        ? `https://${store.organization?.url}.xibit.live`
-                        : 'https://example.xibit.live'
-                }
-                banner={
-                    store.organization.formats?.banner?.path
-                        ? isFile(store.organization.formats?.banner.path)
-                            ? URL.createObjectURL(store.organization.formats?.banner.path)
-                            : `${STORE_STORAGE_URL}/${store.organization.formats?.banner.path}`
-                        : null
-                }
-                logo={
-                    isFile(store.organization.formats?.logo.square.path)
-                        ? URL.createObjectURL(store.organization.formats?.logo.square.path)
-                        : `${STORE_STORAGE_URL}/${store.organization.formats?.logo.square.path}` || ''
-                }
-                logoHorizontal={
-                    isFile(store.organization.formats?.logo.horizontal.path)
-                        ? URL.createObjectURL(store.organization.formats?.logo.horizontal.path)
-                        : `${STORE_STORAGE_URL}/${store.organization.formats?.logo.horizontal.path}` || ''
-                }
-            />
+            <Box display={'flex'} justifyContent={'center'} width={'100%'}>
+                <Preview
+                    title={store.organization?.name || 'Store Name'}
+                    description={store.organization.description || 'Store Description'}
+                    domain={
+                        store.organization?.url
+                            ? `https://${store.organization?.url}.xibit.live`
+                            : 'https://example.xibit.live'
+                    }
+                    banner={
+                        store.organization.formats?.banner?.path
+                            ? isFile(store.organization.formats?.banner.path)
+                                ? URL.createObjectURL(store.organization.formats?.banner.path)
+                                : `${STORE_STORAGE_URL}/${store.organization.formats?.banner.path}`
+                            : null
+                    }
+                    logo={
+                        isFile(store.organization.formats?.logo.square.path)
+                            ? URL.createObjectURL(store.organization.formats?.logo.square.path)
+                            : `${STORE_STORAGE_URL}/${store.organization.formats?.logo.square.path}` || ''
+                    }
+                    logoHorizontal={
+                        isFile(store.organization.formats?.logo.horizontal.path)
+                            ? URL.createObjectURL(store.organization.formats?.logo.horizontal.path)
+                            : `${STORE_STORAGE_URL}/${store.organization.formats?.logo.horizontal.path}` || ''
+                    }
+                    style={{ width: '55%' }}
+                />
+            </Box>
             <Box
                 bgcolor="#e5e7eb"
                 sx={{
@@ -97,9 +100,15 @@ const Component = ({ data }: Props) => {
                     <Button variant="text" onClick={() => router.push('/stores/publish')}>
                         <Typography color="gray">Back</Typography>
                     </Button>
-                    <Button variant="contained" onClick={handleRequestPublishment} disabled={store.status !== 'draft'}>
-                        {textsForPublishStoreStatus[store.status].buttontitle}
-                    </Button>
+                    {textsForPublishStoreStatus[store.status].buttontitle && (
+                        <Button
+                            variant="contained"
+                            onClick={handleRequestPublishment}
+                            disabled={store.status !== 'draft'}
+                        >
+                            {textsForPublishStoreStatus[store.status].buttontitle}
+                        </Button>
+                    )}
                 </Box>
             </Box>
         </Box>

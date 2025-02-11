@@ -1,7 +1,6 @@
 'use client';
 
 import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 import Breadcrumb from '@/app/(main)/layout/shared/breadcrumb/Breadcrumb';
@@ -9,10 +8,12 @@ import Breadcrumb from '@/app/(main)/layout/shared/breadcrumb/Breadcrumb';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useEffect } from 'react';
 import { getStoreByIdThunk } from '@/features/stores/thunks';
-import { Stores, PublishStore } from '@/features/stores/types';
-import { NO_IMAGE_ASSET, STORE_STORAGE_URL } from '@/constants/asset';
+import { Stores, PublishStore, StepStatus } from '@/features/stores/types';
+import { Preview } from '../../components/stores/Preview';
+import { isFile } from '@/utils/isFile';
+import { STORE_STORAGE_URL } from '@/constants/asset';
 
-const statusStyles = {
+const statusStyles: { [key in StepStatus]: { text: string; background: string } } = {
     Completed: {
         text: '#fff',
         background: '#93C47D',
@@ -24,6 +25,10 @@ const statusStyles = {
     'Not Started': {
         text: '#fff',
         background: 'rgba(0, 0, 0, 0.38);',
+    },
+    'Not Approved': {
+        text: '#fff',
+        background: '#F56236',
     },
 };
 
@@ -55,29 +60,28 @@ const Component = ({ data }: ComponentProps) => {
         );
 
     return (
-        <Box position="relative" paddingInline={3} overflow="auto">
+        <Box position="relative" paddingInline={3} height={'calc(100vh - 140px)'} overflow="auto">
             <Breadcrumb
                 title="Publish Store"
-                assetTitle={store.organization?.url || ''}
+                assetTitle={store.organization?.name || ''}
                 items={[{ title: 'Stores', to: '/stores' }, { title: 'Publish' }]}
             />
 
-            <Box p={2} pt={0}>
-                <Typography variant="h6" fontWeight="normal" color="GrayText">
-                    Complete all required tasks to publish your Store.
-                </Typography>
-            </Box>
-
-            <Box p={2}>
+            <Box paddingInline={2}>
                 <Grid container spacing={2}>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={5.5}>
+                        <Box pb={4.5}>
+                            <Typography variant="h6" fontWeight="normal" color="GrayText">
+                                Complete all required tasks to publish your Store.
+                            </Typography>
+                        </Box>
                         {Object.entries(publishStore || {})?.map((step, index) => {
                             const [key, value] = step;
 
                             const isLast = index === Object.keys(publishStore || {}).length - 1;
 
                             return (
-                                <Grid key={key} container mb={3}>
+                                <Grid key={key} container mb={3} alignItems={'center'}>
                                     <Grid item xs={3}>
                                         <Typography variant="h6" fontWeight="normal" color="GrayText">
                                             {value.label}
@@ -119,22 +123,34 @@ const Component = ({ data }: ComponentProps) => {
                             );
                         })}
                     </Grid>
-                    <Grid item xs={12} md={6}>
-                        <Image
-                            src={
-                                store?.organization?.formats?.logo?.square?.path
-                                    ? `${STORE_STORAGE_URL}/${store?.organization?.formats?.logo.square.path}`
-                                    : NO_IMAGE_ASSET
+                    <Grid item xs={12} md={6.5}>
+                        <Preview
+                            title={store.organization?.name || 'Store Name'}
+                            description={store.organization?.description || 'Store Description'}
+                            domain={
+                                store.organization?.url
+                                    ? `https://${store.organization?.url}.xibit.live`
+                                    : 'https://example.xibit.live'
                             }
-                            alt={store?.organization?.name}
-                            width={400}
-                            height={400}
-                            style={{
-                                width: '100%',
-                                height: '100%',
-                                maxWidth: '400px',
-                                maxHeight: '400px',
-                            }}
+                            banner={
+                                store.organization?.formats?.banner?.path
+                                    ? isFile(store.organization?.formats?.banner?.path)
+                                        ? URL.createObjectURL(store.organization?.formats?.banner?.path)
+                                        : `${STORE_STORAGE_URL}/${store.organization?.formats?.banner?.path}`
+                                    : null
+                            }
+                            logo={
+                                isFile(store.organization?.formats?.logo?.square?.path)
+                                    ? URL.createObjectURL(store.organization?.formats?.logo?.square?.path)
+                                    : `${STORE_STORAGE_URL}/${store.organization?.formats?.logo?.square?.path}` || ''
+                            }
+                            logoHorizontal={
+                                isFile(store.organization?.formats?.logo?.horizontal?.path)
+                                    ? URL.createObjectURL(store.organization?.formats?.logo?.horizontal?.path)
+                                    : `${STORE_STORAGE_URL}/${store.organization?.formats?.logo?.horizontal?.path}` ||
+                                      ''
+                            }
+                            style={{ width: '100%' }}
                         />
                     </Grid>
                 </Grid>

@@ -206,7 +206,7 @@ export default function AssetMedia() {
         );
 
         const deleteFormats = Object.entries(values.formats)
-            .filter(([key, value]) => !initialValues.formats[key as keyof FormatsAuxiliayMedia].file)
+            .filter(([key, _value]) => !initialValues.formats[key as keyof FormatsAuxiliayMedia].file)
             .map(([key, _]) => key);
 
         if (deleteFormats.length) await dispatch(auxiliaryMediaThunk({ deleteFormats }));
@@ -253,7 +253,7 @@ export default function AssetMedia() {
 
                 if (!formatByTransaction) return;
 
-                const [key, value] = formatByTransaction;
+                const [_key, value] = formatByTransaction;
 
                 dispatch(
                     assetStorageThunk({

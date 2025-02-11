@@ -278,7 +278,7 @@ const Component = () => {
             <Box paddingInline={3} overflow="auto" paddingBottom={20}>
                 <Breadcrumb
                     title="Publish Store"
-                    assetTitle={store?.organization?.url || ''}
+                    assetTitle={store?.organization?.name || ''}
                     items={[
                         { title: 'Stores', to: '/stores' },
                         { title: 'Publish', to: '/stores/publish' },
@@ -542,6 +542,7 @@ const Component = () => {
                                 ? URL.createObjectURL(formik.values.logoHorizontal)
                                 : formik.values.logoHorizontal
                         }
+                        style={{ width: '55%' }}
                     />
                 </Box>
                 <Dialog

@@ -12,11 +12,13 @@ import {
 import { storesActionsCreators } from './slice';
 import {
     GetStoresParams,
+    StoreStatus,
     StoreStorageParams,
     UpdateAppearanceContentParams,
     UpdateOrganizationParams,
     UpdateStatusParams,
     ValidateUrlParams,
+    StepStatus,
 } from './types';
 import { hasTruthyObject } from '@/utils/truthyObject';
 
@@ -52,6 +54,13 @@ export function getStoreByIdThunk(id: string): ReduxThunkAction<Promise<void>> {
         const isArtworksCompleted = !!data?.artworks;
         const isAppearanceContentCompleted = !!data?.appearanceContent;
 
+        const reviewAndPublishStatus: { [key in StoreStatus]: StepStatus } = {
+            draft: 'Not Started',
+            pending: 'In Progress',
+            inactive: 'Not Approved',
+            active: 'Completed',
+        };
+
         if (isOrganizationCompleted) {
             dispatch(storesActionsCreators.setPublishStoreStatusStep({ step: 'organization', status: 'Completed' }));
         } else if (isOrganizationInProgress) {
@@ -76,6 +85,12 @@ export function getStoreByIdThunk(id: string): ReduxThunkAction<Promise<void>> {
             );
         }
 
+        dispatch(
+            storesActionsCreators.setPublishStoreStatusStep({
+                step: 'reviewPublish',
+                status: reviewAndPublishStatus[data!.status as StoreStatus],
+            })
+        );
         dispatch(storesActionsCreators.setFinishLoading());
     };
 }

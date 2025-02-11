@@ -59,6 +59,20 @@ export const SelectedFilter = ({ title, content }: SelectedFilterProps) => {
                             delete (valueCopy as any).minPrice;
                             delete (valueCopy as any).maxPrice;
                         }
+
+                        const renderSubTitle = (): string => {
+                            if (hasTruthyObject(valueCopy) || (isColorPrecision && hasColors)) {
+                                if (isShortcut) {
+                                    return 'Filters';
+                                }
+                                if (isLicense) {
+                                    return 'Artwork Price';
+                                }
+                                return key;
+                            }
+                            return '';
+                        };
+
                         return (
                             <Box
                                 key={key}
@@ -67,7 +81,7 @@ export const SelectedFilter = ({ title, content }: SelectedFilterProps) => {
                                 marginBlock={1}
                             >
                                 <Typography variant="subtitle2" fontWeight="bold">
-                                    {hasTruthyObject(valueCopy) || (isColorPrecision && hasColors) ? key : ''}
+                                    {renderSubTitle()}
                                 </Typography>
                                 {isShortcut && <ShortcutFilter content={value as { [key: string]: boolean }} />}
                                 {isLicense && <LicensesFilter content={value as { [key: string]: string }} />}
