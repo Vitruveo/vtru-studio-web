@@ -69,7 +69,7 @@ const Component = ({ data }: ComponentProps) => {
 
             <Box paddingInline={2}>
                 <Grid container spacing={2}>
-                    <Grid item xs={12} md={5.5}>
+                    <Grid item xs={12} md={6}>
                         <Box pb={4.5}>
                             <Typography variant="h6" fontWeight="normal" color="GrayText">
                                 Complete all required tasks to publish your Store.
@@ -123,7 +123,7 @@ const Component = ({ data }: ComponentProps) => {
                             );
                         })}
                     </Grid>
-                    <Grid item xs={12} md={6.5}>
+                    <Grid item xs={12} md={6}>
                         <Preview
                             title={store.organization?.name || 'Store Name'}
                             description={store.organization?.description || 'Store Description'}
@@ -148,7 +148,7 @@ const Component = ({ data }: ComponentProps) => {
                                 isFile(store.organization?.formats?.logo?.horizontal?.path)
                                     ? URL.createObjectURL(store.organization?.formats?.logo?.horizontal?.path)
                                     : `${STORE_STORAGE_URL}/${store.organization?.formats?.logo?.horizontal?.path}` ||
-                                      ''
+                                    ''
                             }
                             style={{ width: '100%' }}
                         />

@@ -36,7 +36,7 @@ export const PreviewDetailed = (rest: Props) => {
                         style={{
                             width: '20px',
                             height: '20px',
-                            objectFit: 'contain',
+                            objectFit: 'cover',
                             flexShrink: 0,
                         }}
                         src={rest.logo}
