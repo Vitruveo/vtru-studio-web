@@ -177,10 +177,6 @@ export async function updatePrice({ assetId, price }: UpdatePriceReq) {
     return api3Service.patch(`/assets/licenses/updatePrice/${assetId}`, { editionPrice: price });
 }
 
-// export async function checkLicenseEditable({ assetId }: CheckLicenseEditableReq): Promise<CheckLicenseEditableRes> {
-//     return api3Service.get(`/assets/licenses/checkEditable/${assetId}`);
-// }
-
 export async function checkLicenseEditable({ assetId }: CheckLicenseEditableReq): Promise<CheckLicenseEditableRes> {
     return api3Service.get(`/assets/licenses/checkEditable/${assetId}`);
 }
