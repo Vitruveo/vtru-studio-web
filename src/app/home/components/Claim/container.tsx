@@ -3,7 +3,7 @@ import { useAccount, useDisconnect, useWalletClient } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useRouter } from 'next/navigation';
 
-import { BASE_URL_BATCH } from '@/constants/api';
+import { BASE_URL_API3 } from '@/constants/api';
 import { useSelector } from '@/store/hooks';
 import { useToastr } from '@/app/hooks/useToastr';
 
@@ -39,7 +39,7 @@ export const ClaimContainer = memo(() => {
         const getBalance = async () => {
             setLoading(true);
             try {
-                const response = await fetch(`${BASE_URL_BATCH}/wallet/balance`, {
+                const response = await fetch(`${BASE_URL_API3}/wallet/balance`, {
                     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 });
 
@@ -86,7 +86,7 @@ export const ClaimContainer = memo(() => {
                     client: client!,
                 });
                 // Send the signed message to backend
-                const response = await fetch(`${BASE_URL_BATCH}/claim/allocate`, {
+                const response = await fetch(`${BASE_URL_API3}/claim/allocate`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

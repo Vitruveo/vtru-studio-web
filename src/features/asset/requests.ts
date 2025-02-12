@@ -24,7 +24,7 @@ import {
 import { apiService } from '@/services/api';
 import { assetActionsCreators } from './slice';
 import { ASSET_STORAGE_BUCKET } from '@/constants/asset';
-import { BASE_URL_BATCH } from '@/constants/api';
+import { BASE_URL_API3 } from '@/constants/api';
 
 export async function requestDeleteFiles(data: RequestDeleteFilesReq): Promise<any> {
     if (!data.deleteKeys.length) return;
@@ -149,11 +149,11 @@ export async function validationConsign(id: string) {
 }
 
 export async function consign(id: string) {
-    return axios.post(`${BASE_URL_BATCH}/consign/${id}`);
+    return axios.post(`${BASE_URL_API3}/consign/${id}`);
 }
 
 export async function eventsByTransaction(transaction: string) {
-    return axios.get(`${BASE_URL_BATCH}/events/${transaction}`);
+    return axios.get(`${BASE_URL_API3}/events/${transaction}`);
 }
 
 export async function requestConsign(id: string) {
@@ -169,7 +169,7 @@ export async function getRequestConsignComments(id: string) {
 }
 
 export async function validateUploadedMedia(data: ValidateUploadedMediaReq) {
-    return axios.post(`${BASE_URL_BATCH}/assets/validate/${data.assetId}`);
+    return axios.post(`${BASE_URL_API3}/assets/validate/${data.assetId}`);
 }
 
 export async function updatePrice({ assetId, price }: UpdatePriceReq) {
@@ -185,7 +185,7 @@ export async function checkLicenseEditable({ assetId }: CheckLicenseEditableReq)
 }
 
 export async function signMessage({ signer, domain, types, tx, signedMessage }: signMessageReq) {
-    return axios.post(`${BASE_URL_BATCH}/assets/verify`, {
+    return axios.post(`${BASE_URL_API3}/assets/verify`, {
         signer,
         domain,
         types,
