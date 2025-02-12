@@ -106,16 +106,6 @@ const AppearanceAndContent = () => {
                                 <Grid item xs={12} md={4}>
                                     <Box display={'flex'} flexDirection={'column'} padding={3} gap={2}>
                                         <Typography variant="h6" fontWeight={'bold'}>
-                                            Hide Elements
-                                        </Typography>
-                                        <Typography variant="body2">
-                                            You can choose which elements you want to show in your store
-                                        </Typography>
-                                        <HideElements />
-                                    </Box>
-
-                                    <Box display={'flex'} flexDirection={'column'} padding={3} gap={2}>
-                                        <Typography variant="h6" fontWeight={'bold'}>
                                             Highlight Color
                                         </Typography>
                                         <Typography variant="body2">
@@ -127,6 +117,16 @@ const AppearanceAndContent = () => {
                                             ref={inputColorRef}
                                             defaultValue={highlightColor || '#FF0066'}
                                         />
+                                    </Box>
+
+                                    <Box display={'flex'} flexDirection={'column'} padding={3} gap={2}>
+                                        <Typography variant="h6" fontWeight={'bold'}>
+                                            Hide Elements
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            You can choose which elements you want to show in your store
+                                        </Typography>
+                                        <HideElements />
                                     </Box>
 
                                     <Button
@@ -163,15 +163,15 @@ const AppearanceAndContent = () => {
                                             isFile(store?.organization.formats?.logo?.square?.path)
                                                 ? URL.createObjectURL(store?.organization?.formats?.logo.square.path)
                                                 : `${STORE_STORAGE_URL}/${store?.organization.formats?.logo?.square?.path}` ||
-                                                ''
+                                                  ''
                                         }
                                         logoHorizontal={
                                             isFile(store?.organization.formats?.logo?.horizontal?.path)
                                                 ? URL.createObjectURL(
-                                                    store?.organization?.formats?.logo.horizontal.path
-                                                )
+                                                      store?.organization?.formats?.logo.horizontal.path
+                                                  )
                                                 : `${STORE_STORAGE_URL}/${store?.organization.formats?.logo?.horizontal?.path}` ||
-                                                ''
+                                                  ''
                                         }
                                     />
                                 </Grid>

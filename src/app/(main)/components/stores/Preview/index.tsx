@@ -1,6 +1,7 @@
-import { Box, Grid, Typography } from '@mui/material';
-import './preview.css';
 import { useState } from 'react';
+import { Box, Grid, Typography } from '@mui/material';
+import { IconMenu2 } from '@tabler/icons-react';
+import './preview.css';
 
 interface Props {
     title: string;
@@ -64,26 +65,8 @@ export const Preview = (rest: Props) => {
                             <Box width="100%" height="40px" bgcolor="#eeeeee" />
                         )}
                     </Grid>
-                    <Grid
-                        item
-                        xs={12}
-                        sm={9}
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="flex-end"
-                        gap={2}
-                        px={2}
-                    >
-                        <Typography variant="h6" color="GrayText" fontWeight={1} fontSize={14} letterSpacing={1.5}>
-                            SEARCH | STACKS | STUDIO
-                        </Typography>
-                        <img
-                            src="/images/icons/xibit-icon-redondo-darkmode.png"
-                            width={35}
-                            height={35}
-                            alt="icon"
-                            style={{ cursor: 'pointer', objectFit: 'contain' }}
-                        />
+                    <Grid item xs={12} sm={9} display="flex" alignItems="center" justifyContent="flex-end" px={2}>
+                        <IconMenu2 />
                     </Grid>
                 </Grid>
                 <Grid container>

@@ -35,13 +35,15 @@ const Section = ({
     updateErrors,
     assetStatus,
 }: SectionProps) => {
-    const [newFormData, setNewFormData] = useState(formData);
+    const [uiSchemaState, setUiSchemaState] = useState(uiSchema);
     const [status, setStatus] = useState<keyof typeof statusName>('notStarted');
 
     const [expanded, setExpanded] = useState<boolean>(false);
 
     const { language } = useI18n();
     const theme = useTheme();
+
+    const newFormData = formData;
 
     const handleChange = () => {
         setExpanded((prevExpanded) => !prevExpanded);
@@ -137,14 +139,21 @@ const Section = ({
         handleChangeStatus({ errors });
     }, [errors]);
 
-    // TODO: Usar disable ao invés de setNewFormData
     useEffect(() => {
-        if (assetStatus !== 'draft') {
-            setNewFormData((prev: any) => ({
+        if (assetStatus && assetStatus !== 'draft') {
+            setUiSchemaState((prev) => ({
                 ...prev,
-                title: prev.title?.trim() || 'title',
-                description: prev.description?.trim() || 'short description',
+                title: {
+                    ...prev?.title,
+                    'ui:disabled': true,
+                },
+                description: {
+                    ...prev?.description,
+                    'ui:disabled': true,
+                },
             }));
+        } else {
+            setUiSchemaState(uiSchema);
         }
     }, [assetStatus]);
 
@@ -192,7 +201,7 @@ const Section = ({
             >
                 <CustomForm
                     langBasePath="studio.consignArtwork.assetMetadata.field"
-                    uiSchema={uiSchema}
+                    uiSchema={uiSchemaState}
                     formData={newFormData}
                     onChange={handleChangeForm}
                     schema={schema}

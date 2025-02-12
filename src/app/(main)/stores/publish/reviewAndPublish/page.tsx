@@ -25,7 +25,7 @@ const Component = ({ data }: Props) => {
         draft: {
             buttontitle: 'Request Moderation',
             message:
-                'Nice work! Your store is ready for request moderation. Once you submit it our team will review it and approve accordingly',
+                'Nice work! Your store is ready for moderation. Once you submit it our team will review it and approve accordingly',
         },
         pending: {
             buttontitle: 'Request moderation pending',
@@ -55,10 +55,10 @@ const Component = ({ data }: Props) => {
                     { title: 'Publish', to: '/stores/publish' },
                     { title: 'Review And Publish' },
                 ]}
-                assetTitle={store.organization?.url || ''}
+                assetTitle={store.organization?.name || ''}
             />
             <PublishStoreMessage message={textsForPublishStoreStatus[store.status].message} loading={loading} />
-            <Box display={'flex'} justifyContent={'center'} width={'100%'}>
+            <Box display={'flex'} justifyContent={'center'} width={'100%'} mb={4}>
                 <Preview
                     title={store.organization?.name || 'Store Name'}
                     description={store.organization.description || 'Store Description'}
