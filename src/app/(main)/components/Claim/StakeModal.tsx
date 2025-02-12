@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Box, Button, CircularProgress, Modal as MuiModal, Slider, Typography } from '@mui/material';
-import { CLAIM_VERSE_ENABLE } from '@/constants/claim';
 
 interface ModalProps {
     isOpen: boolean;

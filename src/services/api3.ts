@@ -1,10 +1,10 @@
 import axios, { AxiosResponse } from 'axios';
 import { store } from '@/store/index';
 import { APIResponse } from '@/features/common/types';
-import { API3_BASE_URL } from '@/constants/api';
+import { BASE_URL_API3 } from '@/constants/api';
 
 const api3 = axios.create({
-    baseURL: API3_BASE_URL,
+    baseURL: BASE_URL_API3,
     timeout: 15000,
     headers: {
         'Content-Type': 'application/json',

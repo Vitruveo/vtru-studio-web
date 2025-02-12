@@ -68,7 +68,7 @@ import {
 import { ReduxThunkAction } from '@/store';
 import { AccountSettingsFormValues } from '@/app/(main)/profile/types';
 import { consignArtworkActionsCreators } from '../consign/slice';
-import { API_BASE_URL } from '@/constants/api';
+import { BASE_URL_API3 } from '@/constants/api';
 import { changeAutoStakeInAllAssets, getAssetById, getMyAssets } from '../asset/requests';
 import { ASSET_STORAGE_URL, NO_IMAGE_ASSET } from '@/constants/asset';
 import { config } from '@/app/(main)/components/apps/wallet';
@@ -410,7 +410,7 @@ export function requestVaultThunk(): ReduxThunkAction<Promise<void>> {
         const token = getState().user.token;
         const ctrl = new AbortController();
 
-        const url = `${API_BASE_URL}/creators/vault`;
+        const url = `${BASE_URL_API3}/creators/vault`;
         const headers = {
             Accept: 'text/event-stream',
             Authorization: `Bearer ${token}`,

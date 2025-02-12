@@ -24,7 +24,7 @@ import {
 import { apiService } from '@/services/api';
 import { assetActionsCreators } from './slice';
 import { ASSET_STORAGE_BUCKET } from '@/constants/asset';
-import { API3_BASE_URL } from '@/constants/api';
+import { BASE_URL_API3 } from '@/constants/api';
 import { api3Service } from '@/services/api3';
 
 export async function requestDeleteFiles(data: RequestDeleteFilesReq): Promise<any> {
@@ -150,11 +150,11 @@ export async function validationConsign(id: string) {
 }
 
 export async function consign(id: string) {
-    return axios.post(`${API3_BASE_URL}/consign/${id}`);
+    return axios.post(`${BASE_URL_API3}/consign/${id}`);
 }
 
 export async function eventsByTransaction(transaction: string) {
-    return axios.get(`${API3_BASE_URL}/events/${transaction}`);
+    return axios.get(`${BASE_URL_API3}/events/${transaction}`);
 }
 
 export async function requestConsign(id: string) {
@@ -170,19 +170,23 @@ export async function getRequestConsignComments(id: string) {
 }
 
 export async function validateUploadedMedia(data: ValidateUploadedMediaReq) {
-    return axios.post(`${API3_BASE_URL}/assets/validate/${data.assetId}`);
+    return axios.post(`${BASE_URL_API3}/assets/validate/${data.assetId}`);
 }
 
 export async function updatePrice({ assetId, price }: UpdatePriceReq) {
     return api3Service.patch(`/assets/licenses/updatePrice/${assetId}`, { editionPrice: price });
 }
 
+// export async function checkLicenseEditable({ assetId }: CheckLicenseEditableReq): Promise<CheckLicenseEditableRes> {
+//     return api3Service.get(`/assets/licenses/checkEditable/${assetId}`);
+// }
+
 export async function checkLicenseEditable({ assetId }: CheckLicenseEditableReq): Promise<CheckLicenseEditableRes> {
     return api3Service.get(`/assets/licenses/checkEditable/${assetId}`);
 }
 
 export async function signMessage({ signer, domain, types, tx, signedMessage }: signMessageReq) {
-    return axios.post(`${API3_BASE_URL}/assets/licenses/verify`, {
+    return axios.post(`${BASE_URL_API3}/assets/licenses/verify`, {
         signer,
         domain,
         types,
