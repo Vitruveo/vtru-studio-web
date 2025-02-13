@@ -84,7 +84,7 @@ const Component = ({ data }: ComponentProps) => {
                                 <Grid key={key} container mb={3} alignItems={'center'}>
                                     <Grid item xs={3}>
                                         <Typography variant="h6" fontWeight="normal" color="GrayText">
-                                            {value.label}
+                                            {value?.label}
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={9}>
@@ -92,16 +92,20 @@ const Component = ({ data }: ComponentProps) => {
                                             <Typography
                                                 width={110}
                                                 height={30}
-                                                color={statusStyles[value.status as keyof typeof statusStyles].text}
+                                                color={
+                                                    statusStyles[value.status as keyof typeof statusStyles]?.text ||
+                                                    statusStyles['Not Started'].text
+                                                }
                                                 bgcolor={
-                                                    statusStyles[value.status as keyof typeof statusStyles].background
+                                                    statusStyles[value.status as keyof typeof statusStyles]
+                                                        ?.background || statusStyles['Not Started'].background
                                                 }
                                                 borderRadius={0}
                                                 paddingBlock={0.5}
                                                 textTransform="none"
                                                 textAlign="center"
                                             >
-                                                {value.status}
+                                                {value?.status}
                                             </Typography>
                                             {!isLast && (
                                                 <Button
@@ -114,7 +118,7 @@ const Component = ({ data }: ComponentProps) => {
                                                         router.push(paths[key as keyof typeof paths]);
                                                     }}
                                                 >
-                                                    {value.status !== 'Not Started' ? 'Edit' : 'Start'}
+                                                    {value?.status !== 'Not Started' ? 'Edit' : 'Start'}
                                                 </Button>
                                             )}
                                         </Box>
@@ -148,7 +152,7 @@ const Component = ({ data }: ComponentProps) => {
                                 isFile(store.organization?.formats?.logo?.horizontal?.path)
                                     ? URL.createObjectURL(store.organization?.formats?.logo?.horizontal?.path)
                                     : `${STORE_STORAGE_URL}/${store.organization?.formats?.logo?.horizontal?.path}` ||
-                                    ''
+                                      ''
                             }
                             style={{ width: '100%' }}
                         />
