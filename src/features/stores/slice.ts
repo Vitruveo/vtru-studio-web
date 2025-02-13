@@ -32,14 +32,14 @@ export const initialState: StoresState = {
             optional: false,
         },
         appearanceContent: {
-            label: 'Appearance & Content (Coming Soon)',
+            label: 'Appearance & Content (optional)',
             status: 'Not Started',
-            optional: false,
+            optional: true,
         },
         reviewPublish: {
-            label: 'Review and Publish (Coming Soon)',
+            label: 'Review and Publish',
             status: 'Not Started',
-            optional: false,
+            optional: true,
         },
     },
     status: 'draft',

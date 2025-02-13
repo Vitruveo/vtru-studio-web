@@ -1,7 +1,7 @@
-import { StepsFormValues } from '@/app/home/consignArtwork/types';
+import { StepsFormValues } from '@/app/(main)/consign/types';
 import { APIResponse, Framework } from '../common/types';
-import { AccountSettingsFormValues } from '@/app/home/myProfile/types';
-import { LicensesFormValues } from '@/app/home/consignArtwork/licenses/types';
+import { AccountSettingsFormValues } from '@/app/(main)/profile/types';
+import { LicensesFormValues } from '@/app/(main)/consign/licenses/types';
 import { ContractExplorer } from '../asset/types';
 
 export interface Email {

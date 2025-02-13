@@ -1,8 +1,8 @@
 export function formatCurrency({ value }: { value: number }) {
-    const language = navigator.language || 'en-US';
-    const formatedPrice = value.toLocaleString(language, {
+    return Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
-    });
-    return formatedPrice.replace('US', '');
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+    }).format(value);
 }

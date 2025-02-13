@@ -8,7 +8,6 @@ const initialState: FeaturesState = {
 
 export const featuresSlice = createSlice({
     name: 'features',
-
     initialState,
     reducers: {
         setEmailAllowed(state, action: PayloadAction<boolean>) {

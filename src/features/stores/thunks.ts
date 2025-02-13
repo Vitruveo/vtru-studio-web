@@ -5,11 +5,21 @@ import {
     getStoreById,
     getStores,
     storeStorage,
+    updateStatusStore,
     updateStepNameStore,
     validateUrl,
 } from './requests';
 import { storesActionsCreators } from './slice';
-import { GetStoresParams, StoreStorageParams, UpdateOrganizationParams, ValidateUrlParams } from './types';
+import {
+    GetStoresParams,
+    StoreStatus,
+    StoreStorageParams,
+    UpdateAppearanceContentParams,
+    UpdateOrganizationParams,
+    UpdateStatusParams,
+    ValidateUrlParams,
+    StepStatus,
+} from './types';
 import { hasTruthyObject } from '@/utils/truthyObject';
 
 export function getStoresThunk(data?: GetStoresParams): ReduxThunkAction<Promise<void>> {
@@ -42,6 +52,14 @@ export function getStoreByIdThunk(id: string): ReduxThunkAction<Promise<void>> {
             data?.organization?.url && data?.organization?.name && data?.organization?.formats?.logo?.square?.path;
         const isOrganizationInProgress = hasTruthyObject(data?.organization);
         const isArtworksCompleted = !!data?.artworks;
+        const isAppearanceContentCompleted = !!data?.appearanceContent;
+
+        const reviewAndPublishStatus: { [key in StoreStatus]: StepStatus } = {
+            draft: 'Not Started',
+            pending: 'In Progress',
+            inactive: 'Not Approved',
+            active: 'Completed',
+        };
 
         if (isOrganizationCompleted) {
             dispatch(storesActionsCreators.setPublishStoreStatusStep({ step: 'organization', status: 'Completed' }));
@@ -57,6 +75,22 @@ export function getStoreByIdThunk(id: string): ReduxThunkAction<Promise<void>> {
             dispatch(storesActionsCreators.setPublishStoreStatusStep({ step: 'artworks', status: 'Not Started' }));
         }
 
+        if (isAppearanceContentCompleted) {
+            dispatch(
+                storesActionsCreators.setPublishStoreStatusStep({ step: 'appearanceContent', status: 'Completed' })
+            );
+        } else {
+            dispatch(
+                storesActionsCreators.setPublishStoreStatusStep({ step: 'appearanceContent', status: 'Not Started' })
+            );
+        }
+
+        dispatch(
+            storesActionsCreators.setPublishStoreStatusStep({
+                step: 'reviewPublish',
+                status: reviewAndPublishStatus[data!.status as StoreStatus],
+            })
+        );
         dispatch(storesActionsCreators.setFinishLoading());
     };
 }
@@ -82,6 +116,16 @@ export function updateOrganizationThunk(data: UpdateOrganizationParams): ReduxTh
     return async (_dispatch: any) => {
         await updateStepNameStore({
             stepName: 'organization',
+            id: data.id,
+            data: data.data,
+        });
+    };
+}
+
+export function updateAppearanceContentThunk(data: UpdateAppearanceContentParams): ReduxThunkAction<Promise<void>> {
+    return async (_dispatch: any) => {
+        await updateStepNameStore({
+            stepName: 'appearanceContent',
             id: data.id,
             data: data.data,
         });
@@ -129,5 +173,14 @@ export function storeStorageThunk({
                 status: 'done',
             })
         );
+    };
+}
+
+export function updateStatusThunk(data: UpdateStatusParams): ReduxThunkAction<Promise<void>> {
+    return async (_dispatch: any) => {
+        await updateStatusStore({
+            id: data.id,
+            status: data.status,
+        });
     };
 }

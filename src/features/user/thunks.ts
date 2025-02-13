@@ -66,12 +66,12 @@ import {
     User,
 } from './types';
 import { ReduxThunkAction } from '@/store';
-import { AccountSettingsFormValues } from '@/app/home/myProfile/types';
-import { consignArtworkActionsCreators } from '../consignArtwork/slice';
-import { BASE_URL_API } from '@/constants/api';
+import { AccountSettingsFormValues } from '@/app/(main)/profile/types';
+import { consignArtworkActionsCreators } from '../consign/slice';
+import { BASE_URL_API3 } from '@/constants/api';
 import { changeAutoStakeInAllAssets, getAssetById, getMyAssets } from '../asset/requests';
 import { ASSET_STORAGE_URL, NO_IMAGE_ASSET } from '@/constants/asset';
-import { config } from '@/app/home/components/apps/wallet';
+import { config } from '@/app/(main)/components/apps/wallet';
 
 export function getTruLevelThunk(): ReduxThunkAction<Promise<void>> {
     return async function (dispatch, getState) {
@@ -410,7 +410,7 @@ export function requestVaultThunk(): ReduxThunkAction<Promise<void>> {
         const token = getState().user.token;
         const ctrl = new AbortController();
 
-        const url = `${BASE_URL_API}/creators/vault`;
+        const url = `${BASE_URL_API3}/creators/vault`;
         const headers = {
             Accept: 'text/event-stream',
             Authorization: `Bearer ${token}`,

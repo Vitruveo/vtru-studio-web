@@ -63,6 +63,21 @@ export interface Artworks {
     };
 }
 
+export interface AppearanceContent {
+    highlightColor: string;
+    hideElements: {
+        filters: boolean;
+        order: boolean;
+        header: boolean;
+        recentlySold: boolean;
+        artworkSpotlight: boolean;
+        artistSpotlight: boolean;
+        pageNavigation: boolean;
+        cardDetails: boolean;
+        assets: boolean;
+    };
+}
+
 interface Framework {
     createdAt: Date;
     updatedAt: Date;
@@ -74,6 +89,7 @@ export interface Stores {
     _id: string;
     organization: Organization;
     artworks: Artworks;
+    appearanceContent: AppearanceContent;
     framework: Framework;
     status: StoreStatus;
 }
@@ -88,8 +104,8 @@ export interface RequestStoreUpload {
     format: string;
 }
 
-export type StepStatus = 'Not Started' | 'Completed' | 'In Progress';
-export type StoreStatus = 'draft' | 'active' | 'inactive';
+export type StepStatus = 'Not Started' | 'Completed' | 'In Progress' | 'Not Approved';
+export type StoreStatus = 'draft' | 'pending' | 'active' | 'inactive';
 
 export interface CompletedSteps {
     status: StepStatus;
@@ -138,6 +154,16 @@ export interface GetStoresParams {
 export interface UpdateOrganizationParams {
     id: string;
     data: Omit<Organization, 'formats'> & { hasBanner: boolean };
+}
+
+export interface UpdateAppearanceContentParams {
+    id: string;
+    data: AppearanceContent;
+}
+
+export interface UpdateStatusParams {
+    id: string;
+    status: StoreStatus;
 }
 
 export interface ValidateUrlParams {

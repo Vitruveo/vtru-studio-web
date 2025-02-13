@@ -44,17 +44,17 @@ import {
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { assetActionsCreators } from './slice';
-import { FormatMediaSave, FormatsMedia } from '@/app/home/consignArtwork/assetMedia/types';
-import { LicensesFormValues } from '@/app/home/consignArtwork/licenses/types';
-import { TermsOfUseFormValues } from '@/app/home/consignArtwork/termsOfUse/types';
-import { consignArtworkActionsCreators } from '../consignArtwork/slice';
+import { FormatMediaSave, FormatsMedia } from '@/app/(main)/consign/assetMedia/types';
+import { LicensesFormValues } from '@/app/(main)/consign/licenses/types';
+import { TermsOfUseFormValues } from '@/app/(main)/consign/terms/types';
+import { consignArtworkActionsCreators } from '../consign/slice';
 import { ASSET_STORAGE_URL } from '@/constants/asset';
-import { SectionsFormData } from '@/app/home/consignArtwork/assetMetadata/page';
-import { FormatsAuxiliayMedia } from '@/app/home/consignArtwork/auxiliaryMedia/types';
+import { SectionsFormData } from '@/app/(main)/consign/assetMetadata/page';
+import { FormatsAuxiliayMedia } from '@/app/(main)/consign/auxiliaryMedia/types';
 
 import { BASE_URL_API } from '@/constants/api';
 import { userActionsCreators } from '../user/slice';
-import { checkStepProgress } from '@/app/home/consignArtwork/licenses/nft';
+import { checkStepProgress } from '@/app/(main)/consign/licenses/nft';
 import { clientToSigner, network, provider } from '@/services/web3';
 import schema from '@/services/web3/contracts.json';
 
@@ -154,7 +154,7 @@ export function getAssetThunk(id: string): ReduxThunkAction<Promise<any>> {
                 if (response.data.terms) {
                     dispatch(
                         consignArtworkActionsCreators.changeStatusStep({
-                            stepId: 'termsOfUse',
+                            stepId: 'terms',
                             status:
                                 response.data.terms.contract &&
                                 response.data.terms.isOriginal &&

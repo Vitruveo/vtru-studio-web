@@ -1,6 +1,6 @@
 'use client';
 import { Grid, Box } from '@mui/material';
-import PageContainer from '@/app/home/components/container/PageContainer';
+import PageContainer from '@/app/(main)/components/container/PageContainer';
 
 import AuthLogo from '@/app/login/components/AuthLogo';
 import LetsVitru from '@/app/letsVitruveo/container';

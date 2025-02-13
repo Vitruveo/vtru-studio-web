@@ -48,7 +48,7 @@ export default function ConfirmContainer() {
                         if (!generalVault && resOTPConfirm.data?.creator.username) {
                             router.push('/home');
                         } else {
-                            router.push('/home/myProfile');
+                            router.push('/profile');
                         }
 
                         return;

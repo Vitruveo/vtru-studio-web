@@ -174,15 +174,11 @@ export async function validateUploadedMedia(data: ValidateUploadedMediaReq) {
 }
 
 export async function updatePrice({ assetId, price }: UpdatePriceReq) {
-    return axios.patch(`${BASE_URL_API3}/assets/licenses/updatePrice/${assetId}`, { editionPrice: price });
+    return api3Service.patch(`/assets/licenses/updatePrice/${assetId}`, { editionPrice: price });
 }
 
-// export async function checkLicenseEditable({ assetId }: CheckLicenseEditableReq): Promise<CheckLicenseEditableRes> {
-//     return api3Service.get(`/assets/licenses/checkEditable/${assetId}`);
-// }
-
 export async function checkLicenseEditable({ assetId }: CheckLicenseEditableReq): Promise<CheckLicenseEditableRes> {
-    return api3Service.get(`${BASE_URL_API3}/assets/licenses/checkEditable/${assetId}`);
+    return api3Service.get(`/assets/licenses/checkEditable/${assetId}`);
 }
 
 export async function signMessage({ signer, domain, types, tx, signedMessage }: signMessageReq) {

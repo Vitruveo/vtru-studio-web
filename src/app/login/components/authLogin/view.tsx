@@ -12,9 +12,9 @@ import {
     Theme,
 } from '@mui/material';
 
-import CustomCheckbox from '@/app/home/components/forms/theme-elements/CustomCheckbox';
-import CustomTextField from '@/app/home/components/forms/theme-elements/CustomTextField';
-import CustomFormLabel from '@/app/home/components/forms/theme-elements/CustomFormLabel';
+import CustomCheckbox from '@/app/(main)/components/forms/theme-elements/CustomCheckbox';
+import CustomTextField from '@/app/(main)/components/forms/theme-elements/CustomTextField';
+import CustomFormLabel from '@/app/(main)/components/forms/theme-elements/CustomFormLabel';
 
 import { LoginViewProps } from './types';
 import Image from 'next/image';
