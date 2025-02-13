@@ -46,15 +46,11 @@ const SidebarItems = () => {
         }
 
         if (v.title === 'studio.sidebar.truLevel') {
-            if (trulevelFeature && trulevelFeature.released) {
-                if (trulevelFeature.isOnlyFor) {
-                    if (trulevelFeature.onlyFor === 'allowList' && isEmailAllowed) return true;
-                    if (trulevelFeature.onlyFor === 'specificUsers' && trulevelFeature.isEmailInList) return true;
-                    return false;
-                }
-                return true;
-            }
-            return false;
+            return checkReleased({ feature: trulevelFeature, isEmailAllowed });
+        }
+
+        if (v.title === 'studio.sidebar.store') {
+            return checkReleased({ feature: storesFeature, isEmailAllowed });
         }
 
         return true;
