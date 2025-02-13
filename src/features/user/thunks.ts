@@ -137,6 +137,7 @@ export function userOTPConfirmThunk(payload: UserOTPConfirmReq): ReduxThunkActio
             const domain = host.replace('studio.', '');
 
             cookie.set('auth', response.data?.token, { path: '/', domain });
+            cookie.set('loggedEmail', payload.email, { path: '/', domain });
 
             if (response.data?.creator)
                 dispatch(consignArtworkActionsCreators.checkIsCompletedProfile(response.data?.creator));

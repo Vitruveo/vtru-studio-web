@@ -1,3 +1,4 @@
+import cookie from 'cookiejs';
 import { AxiosError } from 'axios';
 import { ReduxThunkAction } from '@/store';
 import { checkFeaturesEmail, getFeatures } from './requests';
@@ -7,7 +8,10 @@ import { findEmailInAllowList } from '../allowList/requests';
 export function getFeaturesThunk(): ReduxThunkAction<Promise<void>> {
     return async function (dispatch, getState) {
         const response = await getFeatures();
-        const email = getState().user.login.email;
+
+        const cookieEmail = cookie.get('loggedEmail');
+        const email = (cookieEmail as string) || getState().user.login.email;
+
         const isEmailAllowed = getState().features.isEmailAllowed;
         const list = getState().features.list;
 
