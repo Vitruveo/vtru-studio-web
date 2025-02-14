@@ -39,7 +39,6 @@ const SidebarItems = () => {
 
     const filterMenus = Menuitems.filter((v) => {
         const trulevelFeature = features.find((feature) => feature.name?.includes('trulevel'));
-        const storesFeature = features.find((feature) => feature.name?.includes('stores'));
 
         if (generalVault) {
             return v.title !== 'studio.sidebar.consign';
@@ -47,10 +46,6 @@ const SidebarItems = () => {
 
         if (v.title === 'studio.sidebar.truLevel') {
             return checkReleased({ feature: trulevelFeature, isEmailAllowed });
-        }
-
-        if (v.title === 'studio.sidebar.store') {
-            return checkReleased({ feature: storesFeature, isEmailAllowed });
         }
 
         return true;
