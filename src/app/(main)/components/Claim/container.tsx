@@ -30,6 +30,7 @@ export const ClaimContainer = memo(() => {
     const toast = useToastr();
 
     const vaultTransactionHash = useSelector((state) => state?.user?.vault?.transactionHash);
+    const vaultCreatedAt = useSelector((state) => state?.user?.vault?.createdAt);
     const wallets = useSelector((state) => state.user.wallets);
 
     const closeModalStake = () => setIsModalOpenStake(false);
@@ -134,6 +135,7 @@ export const ClaimContainer = memo(() => {
                 available={Math.trunc(balance)}
                 claimAllocate={onClaimAllocate}
                 loading={loading}
+                vaultCreatedAt={vaultCreatedAt}
             />
 
             <ClaimedModal isOpen={isClaimed} handleClose={closeModalClaimed} />

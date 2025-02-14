@@ -1,9 +1,10 @@
 import { forwardRef, useCallback, useImperativeHandle, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { FileRejection, useDropzone } from 'react-dropzone';
 import { Button, Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
 import Image from 'next/image';
 
 import { Pintura } from '@/app/(main)/components/Pintura';
+import { useToastr } from '@/app/hooks/useToastr';
 
 interface Props {
     file: File | string | null;
@@ -21,13 +22,17 @@ export interface MediaCardRef {
     handleClearMedia: () => void;
 }
 
+const MAX_SIZE = 10_485_760; // 10 MB
 const MediaCardRef = (props: Props, ref: any) => {
     const { ...rest } = props;
 
+    const toast = useToastr();
     const [showCrop, setShowCrop] = useState(false);
     const [mediaCrop, setMediaCrop] = useState<File | null>(null);
 
-    const onDrop = useCallback((acceptedFiles: File[]) => {
+    const onDrop = useCallback((acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
+        if (rejectedFiles.length > 0) return;
+
         setMediaCrop(acceptedFiles[0]);
         setShowCrop(true);
     }, []);
@@ -42,6 +47,17 @@ const MediaCardRef = (props: Props, ref: any) => {
             'image/webp': [],
         },
         maxFiles: 1,
+        maxSize: MAX_SIZE,
+        validator: (file) => {
+            if (file.size > MAX_SIZE) {
+                toast.display({ type: 'error', message: 'File is too big, max size is 10MB' });
+                return {
+                    code: 'file-too-large',
+                    message: 'File is too large, max size is 10MB',
+                };
+            }
+            return null;
+        },
     });
 
     const definition = rest.mediaConfig.definition;
@@ -68,7 +84,6 @@ const MediaCardRef = (props: Props, ref: any) => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         gap: 16,
-                        // height: 200,
                     }}
                 >
                     {isDragActive ? (
