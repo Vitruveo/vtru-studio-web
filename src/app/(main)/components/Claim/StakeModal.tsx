@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { differenceInDays, parseISO } from 'date-fns';
 import { Box, Button, CircularProgress, Modal as MuiModal, Slider, Typography } from '@mui/material';
 
 interface ModalProps {
@@ -7,6 +8,7 @@ interface ModalProps {
     claimAllocate: (values: number[]) => void;
     available: number;
     loading: boolean;
+    vaultCreatedAt: string | null;
 }
 
 const options = [
@@ -32,9 +34,26 @@ const options = [
     // },
 ];
 
-export default function StakeModal({ isOpen, available, loading, claimAllocate, handleClose }: ModalProps) {
+export default function StakeModal({
+    isOpen,
+    available,
+    loading,
+    claimAllocate,
+    handleClose,
+    vaultCreatedAt,
+}: ModalProps) {
     const [unassigned, setUnassigned] = useState(available);
     const [selectValues, setSelectValues] = useState([0, 0, 0, 0, 0]);
+
+    const isLessThan30Days = (): boolean => {
+        if (!vaultCreatedAt) return false;
+
+        const createdAt = parseISO(vaultCreatedAt);
+        const now = new Date();
+        const daysDifference = differenceInDays(now, createdAt);
+
+        return daysDifference < 30;
+    };
 
     const handleSelectChange = (index: number, value: number) => {
         const newSelectValues = [...selectValues];
@@ -111,7 +130,7 @@ export default function StakeModal({ isOpen, available, loading, claimAllocate, 
                             Current stakes
                         </a>
                         <Button
-                            disabled={loading || totalAssigned !== 100}
+                            disabled={loading || totalAssigned !== 100 || isLessThan30Days()}
                             variant="contained"
                             onClick={() => claimAllocate(selectValues)}
                             sx={{ width: '120px' }}
