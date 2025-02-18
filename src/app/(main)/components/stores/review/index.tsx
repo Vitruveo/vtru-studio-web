@@ -58,7 +58,7 @@ export const Review = () => {
                     <Tab
                         label={
                             <Typography sx={{ color: totalFoundArtworks === 0 ? 'red' : '#FF0066' }}>
-                                {totalFoundArtworks}
+                                {totalFoundArtworks} results
                             </Typography>
                         }
                         value={'general'}

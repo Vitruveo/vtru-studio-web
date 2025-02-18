@@ -319,7 +319,7 @@ const Component = () => {
                                     onChange={formik.handleChange}
                                     onBlur={handleValidateUrl}
                                     variant="outlined"
-                                    disabled={store?.status === 'active'}
+                                    disabled={['active', 'pending'].includes(store?.status || 'draft')}
                                     sx={{
                                         marginInline: 1,
                                     }}
