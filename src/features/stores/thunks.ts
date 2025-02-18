@@ -21,7 +21,6 @@ import {
     StepStatus,
 } from './types';
 import { hasTruthyObject } from '@/utils/truthyObject';
-import { APIResponse } from '../common/types';
 
 export function getStoresThunk(data?: GetStoresParams): ReduxThunkAction<Promise<void>> {
     return async (dispatch: any) => {
