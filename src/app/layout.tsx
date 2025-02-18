@@ -16,9 +16,10 @@ import 'react-tiny-fab/dist/styles.css';
 import Providers from '@/store/Provider';
 import CustomizedSnackbar from './common/toastr';
 import { useToastr } from './hooks/useToastr';
-import { useDispatch } from '@/store/hooks';
+import { useDispatch, useSelector } from '@/store/hooks';
 import { getMeThunk } from '@/features/user/thunks';
 import { getFeaturesThunk } from '@/features/features/thunks';
+import { userActionsCreators } from '@/features/user/slice';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -27,6 +28,16 @@ const MyApp = ({ children }: { children: React.ReactNode }) => {
     const toastr = useToastr();
     const dispatch = useDispatch();
     const router = useRouter();
+
+    const cookieEmailLogged = cookie.get('loggedEmail') as string | null;
+    const stateEmailLogged = useSelector((state) => state.user?.login?.email);
+
+    const handleLogout = () => {
+        setTimeout(() => {
+            router.push('/login');
+        }, 1000);
+        dispatch(userActionsCreators.logout());
+    };
 
     useEffect(() => {
         const checkToken = async () => {
@@ -42,15 +53,24 @@ const MyApp = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     useEffect(() => {
-        dispatch(getFeaturesThunk());
-        const featuresInterval = setInterval(() => {
+        if (cookieEmailLogged || stateEmailLogged) {
             dispatch(getFeaturesThunk());
-        }, 60000);
+            const featuresInterval = setInterval(() => {
+                dispatch(getFeaturesThunk());
+            }, 60000);
 
-        return () => {
-            clearInterval(featuresInterval);
-        };
+            return () => {
+                clearInterval(featuresInterval);
+            };
+        }
     }, []);
+
+    useEffect(() => {
+        if ((!cookieEmailLogged || !cookieEmailLogged.length) && (!stateEmailLogged || !stateEmailLogged.length)) {
+            cookie.remove('auth');
+            handleLogout();
+        }
+    }, [cookieEmailLogged, stateEmailLogged]);
 
     return (
         <>
