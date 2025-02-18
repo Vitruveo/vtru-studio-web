@@ -52,7 +52,7 @@ const Component = ({ data }: Props) => {
         const validationResponse = await dispatch(
             validateUrlThunk({ storeId: store._id, url: store.organization.url! })
         );
-        if (!validationResponse) {
+        if (!validationResponse.data) {
             setIsInvalidUrl(true);
             return;
         }
