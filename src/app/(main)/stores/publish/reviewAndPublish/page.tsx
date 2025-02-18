@@ -7,8 +7,9 @@ import { Stores } from '@/features/stores/types';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useRouter } from 'next/navigation';
 import PublishStoreMessage from './publishMessage';
-import { getStoreByIdThunk, updateStatusThunk } from '@/features/stores/thunks';
+import { getStoreByIdThunk, updateStatusThunk, validateUrlThunk } from '@/features/stores/thunks';
 import { isFile } from '@/utils/isFile';
+import { useState } from 'react';
 
 interface Props {
     data: {
@@ -19,6 +20,7 @@ interface Props {
 const Component = ({ data }: Props) => {
     const dispatch = useDispatch();
     const router = useRouter();
+    const [isInvalidUrl, setIsInvalidUrl] = useState(false);
     const { store, loading } = data;
 
     const textsForPublishStoreStatus = {
@@ -39,11 +41,24 @@ const Component = ({ data }: Props) => {
             buttontitle: undefined,
             message: 'Your store did not pass our moderation review.',
         },
+        invalidUrl: {
+            buttontitle: 'Request Moderation',
+            message: 'Your URL is already in use. Please update it and try request moderation again',
+        },
     } as { [key: string]: { buttontitle: string | undefined; message: string } };
 
     const handleRequestPublishment = async () => {
+        setIsInvalidUrl(false);
+        const validationResponse = await dispatch(
+            validateUrlThunk({ storeId: store._id, url: store.organization.url! })
+        );
+        if (!validationResponse.data) {
+            setIsInvalidUrl(true);
+            return;
+        }
         await dispatch(updateStatusThunk({ id: store._id, status: 'pending' }));
         dispatch(getStoreByIdThunk(store._id));
+        setIsInvalidUrl(false);
     };
 
     return (
@@ -57,7 +72,19 @@ const Component = ({ data }: Props) => {
                 ]}
                 assetTitle={store.organization?.name || ''}
             />
-            <PublishStoreMessage message={textsForPublishStoreStatus[store.status].message} loading={loading} />
+            {!isInvalidUrl ? (
+                <PublishStoreMessage
+                    message={textsForPublishStoreStatus[store.status].message}
+                    loading={loading}
+                    type={'warning'}
+                />
+            ) : (
+                <PublishStoreMessage
+                    message={textsForPublishStoreStatus.invalidUrl.message}
+                    loading={loading}
+                    type={'error'}
+                />
+            )}
             <Box display={'flex'} justifyContent={'center'} width={'100%'} mb={4}>
                 <Preview
                     title={store.organization?.name || 'Store Name'}

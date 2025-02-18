@@ -1,5 +1,4 @@
 import { Box, Modal as MuiModal, Typography } from '@mui/material';
-import Link from 'next/link';
 
 interface ModalProps {
     isOpen: boolean;

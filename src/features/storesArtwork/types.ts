@@ -42,3 +42,24 @@ export interface CreateStoreArtworkParams {
     stepName: string;
     data: Artworks;
 }
+
+export interface GetArtworkQuantityParams {
+    price?: { min?: number; max?: number };
+    colorPrecision: number;
+    hasBts: string;
+    filters: Artworks;
+}
+
+export interface BuidlQuery {
+    [key: string]:
+    | string
+    | {
+        $in: string[];
+    }
+    | {
+        [key: string]: {
+            $regex: string;
+            $options: string;
+        };
+    }[];
+}

@@ -38,15 +38,9 @@ const debounceDelay = 1000;
 const TaxonomyItem = () => {
     const dispatch = useDispatch();
     const { values } = useFormikContext<FormValues>();
+    const [tagsOptions, setTagsOptions] = useState<{ value: string; label: string }[]>([]);
     const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
-    const loadOptionsTags = async (_inputValue: string, _callback: (options: any) => void) => {
-        const tags = await dispatch(getArtworkTagsThunk());
-        return tags.map((item) => ({
-            value: item.tag,
-            label: item.tag,
-        }));
-    };
     const getArtworkCollections = async (inputValue: string) => {
         const collections = await dispatch(getArtworkCollectionsThunk(inputValue));
         return collections.map((item) => ({
@@ -89,6 +83,17 @@ const TaxonomyItem = () => {
         }, debounceDelay);
     };
 
+    useEffect(() => {
+        const loadOptionsTags = async (): Promise<{ value: string; label: string }[]> => {
+            const tags = await dispatch(getArtworkTagsThunk());
+            return tags.map((item) => ({
+                value: item.tag,
+                label: item.tag,
+            }));
+        };
+        loadOptionsTags().then((options) => setTagsOptions(options));
+    }, []);
+
     return (
         <Box display={'flex'} flexDirection={'column'} gap={2}>
             <Box>
@@ -111,9 +116,9 @@ const TaxonomyItem = () => {
                 <FieldArray
                     name="taxonomy.tags"
                     render={(arrayHelpers) => (
-                        <AsyncSelect
+                        <MultiSelect
                             arrayHelpers={arrayHelpers}
-                            loadOptions={loadOptionsTags}
+                            options={tagsOptions}
                             value={values.taxonomy.tags.map((item) => ({ value: item, label: item }))}
                         />
                     )}
