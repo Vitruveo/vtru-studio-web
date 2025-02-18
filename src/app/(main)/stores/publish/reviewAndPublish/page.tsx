@@ -7,8 +7,9 @@ import { Stores } from '@/features/stores/types';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useRouter } from 'next/navigation';
 import PublishStoreMessage from './publishMessage';
-import { getStoreByIdThunk, updateStatusThunk } from '@/features/stores/thunks';
+import { getStoreByIdThunk, updateStatusThunk, validateUrlThunk } from '@/features/stores/thunks';
 import { isFile } from '@/utils/isFile';
+import { useToastr } from '@/app/hooks/useToastr';
 
 interface Props {
     data: {
@@ -18,6 +19,7 @@ interface Props {
 }
 const Component = ({ data }: Props) => {
     const dispatch = useDispatch();
+    const toastr = useToastr();
     const router = useRouter();
     const { store, loading } = data;
 
@@ -42,6 +44,13 @@ const Component = ({ data }: Props) => {
     } as { [key: string]: { buttontitle: string | undefined; message: string } };
 
     const handleRequestPublishment = async () => {
+        const validationResponse = await dispatch(
+            validateUrlThunk({ storeId: store._id, url: store.organization.url! })
+        );
+        if (!validationResponse) {
+            toastr.display({ type: 'error', message: 'URL is already in use' });
+            return;
+        }
         await dispatch(updateStatusThunk({ id: store._id, status: 'pending' }));
         dispatch(getStoreByIdThunk(store._id));
     };

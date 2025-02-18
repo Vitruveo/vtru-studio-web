@@ -3,10 +3,11 @@ import {
     createStoreArtwork,
     getArtworkCollections,
     getArtworkCreatorName,
+    getArtworkQuantity,
     getArtworkSubject,
     getArtworkTags,
 } from './requests';
-import { Collections, CreateStoreArtworkParams, Names, Subject, Tags } from './types';
+import { Collections, CreateStoreArtworkParams, GetArtworkQuantityParams, Names, Subject, Tags } from './types';
 
 export function getArtworkTagsThunk(): ReduxThunkAction<Promise<Tags[]>> {
     return async (_dispatch: any) => {
@@ -39,5 +40,22 @@ export function getArtworkCreatorNameThunk(name: string): ReduxThunkAction<Promi
 export function createStoreArtworkThunk(data: CreateStoreArtworkParams): ReduxThunkAction<Promise<void>> {
     return async (_dispatch: any) => {
         await createStoreArtwork(data);
+    };
+}
+
+export function getArtworkQuantityThunk({
+    price,
+    hasBts,
+    filters,
+    colorPrecision,
+}: GetArtworkQuantityParams): ReduxThunkAction<Promise<number>> {
+    return async (_dispatch: any) => {
+        const response = await getArtworkQuantity({
+            price,
+            colorPrecision,
+            hasBts,
+            filters,
+        });
+        return response;
     };
 }

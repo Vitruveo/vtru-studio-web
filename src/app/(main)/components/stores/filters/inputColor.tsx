@@ -43,7 +43,7 @@ export function InputColor({ name, onClick, afterPrecisionChange }: Props) {
                 <Box px={1}>
                     <Slider
                         defaultValue={defaultPrecisionValue * 100}
-                        value={values.context.precision * 100}
+                        value={values.context.precision * 100 || 0}
                         onChange={onChange}
                         min={minPrecision}
                         max={maxPrecision}
