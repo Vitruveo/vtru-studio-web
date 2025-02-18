@@ -21,6 +21,7 @@ import {
     StepStatus,
 } from './types';
 import { hasTruthyObject } from '@/utils/truthyObject';
+import { APIResponse } from '../common/types';
 
 export function getStoresThunk(data?: GetStoresParams): ReduxThunkAction<Promise<void>> {
     return async (dispatch: any) => {
@@ -139,12 +140,17 @@ export function deleteStoreThunk(id: string): ReduxThunkAction<Promise<void>> {
     };
 }
 
-export function validateUrlThunk(data: ValidateUrlParams): ReduxThunkAction<Promise<boolean | undefined>> {
+export function validateUrlThunk(
+    data: ValidateUrlParams
+): ReduxThunkAction<Promise<{ data: boolean | undefined; message: string }>> {
     return async (dispatch: any) => {
         dispatch(storesActionsCreators.setSelectStoreValidateUrl(null));
         const response = await validateUrl(data);
         dispatch(storesActionsCreators.setSelectStoreValidateUrl(response.data || false));
-        return response.data;
+        return {
+            data: response.data,
+            message: response.message,
+        };
     };
 }
 
