@@ -98,9 +98,16 @@ const Component = () => {
         mediaRefs.current[index] = ref;
     };
 
-    const handleValidateUrl = () => {
-        if (selectedStore.id && formik.values?.url)
-            dispatch(validateUrlThunk({ storeId: selectedStore.id, url: formik.values?.url }));
+    const handleValidateUrl = async () => {
+        if (selectedStore.id && formik.values?.url) {
+            const validationUrl = await dispatch(
+                validateUrlThunk({ storeId: selectedStore.id, url: formik.values?.url })
+            );
+            if (!validationUrl.data) {
+                formik.setFieldError('url', validationUrl.message);
+                return validationUrl.message;
+            }
+        }
     };
 
     const handleValidateMedia = (field: string, value: any) => {
@@ -108,10 +115,9 @@ const Component = () => {
         if (card?.required && value === null) {
             return 'This media is required';
         }
-        return undefined;
     };
 
-    const handleSubmit = (values: Input & { redirectPath: string }) => {
+    const handleSubmit = async (values: Input & { redirectPath: string }) => {
         let hasFile = false;
         Object.entries(values || {}).forEach(([key, value]) => {
             if (value instanceof File) {
@@ -192,7 +198,7 @@ const Component = () => {
             description: yup.string().max(250),
             markup: yup.number().required(),
         }),
-        validate: (values) => {
+        validate: async (values) => {
             const errors: any = {};
             cardsToUploadMedias.forEach((item) => {
                 const error = handleValidateMedia(item.field, values[item.field as keyof typeof mediaConfigs]);
@@ -200,6 +206,10 @@ const Component = () => {
                     errors[item.field as keyof typeof mediaConfigs] = error;
                 }
             });
+            const err = await handleValidateUrl();
+            if (err) {
+                errors.url = err;
+            }
             return errors;
         },
         onSubmit: handleSubmit,
@@ -224,10 +234,6 @@ const Component = () => {
     const handleNext = async () => {
         formik.handleSubmit();
     };
-
-    useEffect(() => {
-        if (selectedStore.validateUrl === false) formik.setFieldError('url', 'URL is already in use');
-    }, [selectedStore.validateUrl]);
 
     useEffect(() => {
         if (Object.keys(requestUpload || {}).length === 0) return;
