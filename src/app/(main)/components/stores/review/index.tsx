@@ -17,7 +17,6 @@ export const Review = () => {
         const handler = setTimeout(() => {
             setDebouncedValues(values);
         }, 500);
-
         return () => {
             clearTimeout(handler);
         };
@@ -47,7 +46,6 @@ export const Review = () => {
                 console.error('Error fetching data:', error);
             }
         };
-
         fetchData();
     }, [debouncedValues]);
 
