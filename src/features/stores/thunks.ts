@@ -139,11 +139,12 @@ export function deleteStoreThunk(id: string): ReduxThunkAction<Promise<void>> {
     };
 }
 
-export function validateUrlThunk(data: ValidateUrlParams): ReduxThunkAction<Promise<void>> {
+export function validateUrlThunk(data: ValidateUrlParams): ReduxThunkAction<Promise<boolean | undefined>> {
     return async (dispatch: any) => {
         dispatch(storesActionsCreators.setSelectStoreValidateUrl(null));
         const response = await validateUrl(data);
         dispatch(storesActionsCreators.setSelectStoreValidateUrl(response.data || false));
+        return response.data;
     };
 }
 
