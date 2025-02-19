@@ -20,6 +20,7 @@ import {
     UpdatePriceReq,
     ValidateUploadedMediaReq,
     signMessageReq,
+    signUpdateAssetMessageReq,
 } from './types';
 import { apiService } from '@/services/api';
 import { assetActionsCreators } from './slice';
@@ -47,14 +48,14 @@ export async function assetStorage({ file, url, dispatch, transactionId }: Asset
 
         xhr.open('PUT', url, true);
 
-        xhr.upload.onprogress = function (event) {
+        xhr.upload.onprogress = function(event) {
             if (event.lengthComputable) {
                 const percentCompleted = Math.round((event.loaded * 100) / event.total);
                 dispatch(assetActionsCreators.requestAssetUpload({ transactionId, uploadProgress: percentCompleted }));
             }
         };
 
-        xhr.onload = function () {
+        xhr.onload = function() {
             if (this.status >= 200 && this.status < 300) {
                 resolve(xhr.response);
             } else {
@@ -65,7 +66,7 @@ export async function assetStorage({ file, url, dispatch, transactionId }: Asset
             }
         };
 
-        xhr.onerror = function () {
+        xhr.onerror = function() {
             reject({
                 status: this.status,
                 statusText: xhr.statusText,
@@ -183,6 +184,16 @@ export async function checkLicenseEditable({ assetId }: CheckLicenseEditableReq)
 
 export async function signMessage({ signer, domain, types, tx, signedMessage }: signMessageReq) {
     return axios.post(`${BASE_URL_API3}/assets/licenses/verify`, {
+        signer,
+        domain,
+        types,
+        tx,
+        signedMessage,
+    });
+}
+
+export async function signUpdateAssetMessage({ signer, domain, types, tx, signedMessage }: signUpdateAssetMessageReq) {
+    return axios.post(`${BASE_URL_API3}/assets/verify`, {
         signer,
         domain,
         types,

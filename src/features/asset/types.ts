@@ -252,6 +252,13 @@ export interface signerParams {
     price: number;
 }
 
+export interface signerUpdateAssetParams {
+    client: Client<Transport, Chain, Account>;
+    assetKey: string;
+    title: string;
+    description: string;
+}
+
 export interface signMessageReq {
     signer: string;
     domain: {
@@ -273,6 +280,32 @@ export interface signMessageReq {
         price: number;
         licenseTypeId: number;
         quantity: number;
+        contract: string;
+        timestamp: number;
+    };
+    signedMessage: string;
+}
+
+export interface signUpdateAssetMessageReq {
+    signer: string;
+    domain: {
+        name: string;
+        version: string;
+        chainId: number;
+    };
+    types: {
+        Transaction: {
+            name: string;
+            type: string;
+        }[];
+    };
+    tx: {
+        name: string;
+        action: string;
+        method: string;
+        assetKey: string;
+        title: string;
+        description: string;
         contract: string;
         timestamp: number;
     };
