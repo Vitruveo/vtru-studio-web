@@ -59,6 +59,7 @@ import { MintExplorer } from '@/features/user/types';
 import isVideoExtension from '@/utils/isVideo';
 import { ModalListOfLicenses } from '../components/licenses/ModalListOfLicenses';
 import { userSelector } from '@/features/user';
+import { ModalStoresVisibility } from '../components/stores/visibility/ModalStoresVisibility';
 
 const iconStyle: CSSProperties = {
     position: 'absolute',
@@ -120,6 +121,7 @@ export default function Home() {
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [assetToDelete, setAssetToDelete] = useState<string | null>(null);
     const [showListOfLicenses, setShowListOfLicenses] = useState(false);
+    const [showStoresVisibility, setShowStoresVisibility] = useState(false);
 
     const { emails, username, wallets } = useSelector(userSelector(['emails', 'wallets', 'username']));
     const isCompletedProfile = emails.length && wallets.length && username.length;
@@ -251,8 +253,8 @@ export default function Home() {
                         maxHeight: lgUp
                             ? 'calc(100vh - 100px)'
                             : mdUp || smUp
-                                ? 'calc(100vh - 400px)'
-                                : 'calc(100vh - 500px)',
+                              ? 'calc(100vh - 400px)'
+                              : 'calc(100vh - 500px)',
                         overflowY: 'scroll',
                         overflowX: 'hidden',
                     }}
@@ -551,38 +553,38 @@ export default function Home() {
                                         {!['Pending', 'Sold', 'Listed'].includes(
                                             getStatus(asset.status, asset.mintExplorer)
                                         ) && (
-                                                <Tooltip title="Delete asset" placement="top">
-                                                    <button
-                                                        style={{
-                                                            position: 'absolute',
-                                                            top: 60,
-                                                            right: 10,
-                                                            backgroundColor: '#fff',
-                                                            color: '#000',
-                                                            zIndex: 1,
-                                                            padding: '5px',
-                                                            borderRadius: '5px',
-                                                            cursor: 'pointer',
-                                                            transition: '0.3s',
-                                                            border: '1px solid #fff',
-                                                        }}
-                                                        onClick={(event) => {
-                                                            event.stopPropagation();
-                                                            handleDeleteClick(asset._id);
-                                                        }}
-                                                        onMouseEnter={(event) => {
-                                                            event.currentTarget.style.backgroundColor = '#000';
-                                                            event.currentTarget.style.borderColor = '#ff0000';
-                                                        }}
-                                                        onMouseLeave={(event) => {
-                                                            event.currentTarget.style.backgroundColor = '#fff';
-                                                            event.currentTarget.style.borderColor = '#fff';
-                                                        }}
-                                                    >
-                                                        <IconTrash size={20} color="#ff0000" />
-                                                    </button>
-                                                </Tooltip>
-                                            )}
+                                            <Tooltip title="Delete asset" placement="top">
+                                                <button
+                                                    style={{
+                                                        position: 'absolute',
+                                                        top: 60,
+                                                        right: 10,
+                                                        backgroundColor: '#fff',
+                                                        color: '#000',
+                                                        zIndex: 1,
+                                                        padding: '5px',
+                                                        borderRadius: '5px',
+                                                        cursor: 'pointer',
+                                                        transition: '0.3s',
+                                                        border: '1px solid #fff',
+                                                    }}
+                                                    onClick={(event) => {
+                                                        event.stopPropagation();
+                                                        handleDeleteClick(asset._id);
+                                                    }}
+                                                    onMouseEnter={(event) => {
+                                                        event.currentTarget.style.backgroundColor = '#000';
+                                                        event.currentTarget.style.borderColor = '#ff0000';
+                                                    }}
+                                                    onMouseLeave={(event) => {
+                                                        event.currentTarget.style.backgroundColor = '#fff';
+                                                        event.currentTarget.style.borderColor = '#fff';
+                                                    }}
+                                                >
+                                                    <IconTrash size={20} color="#ff0000" />
+                                                </button>
+                                            </Tooltip>
+                                        )}
 
                                         {isVideoExtension(asset.image) ? (
                                             <video
@@ -716,6 +718,13 @@ export default function Home() {
                                                 )}
                                                 <Action
                                                     style={{ backgroundColor: '#fff' }}
+                                                    text="Store Visibility"
+                                                    onClick={() => setShowStoresVisibility(true)}
+                                                >
+                                                    <IconEye color={theme.palette.primary.main} size={30} />
+                                                </Action>
+                                                <Action
+                                                    style={{ backgroundColor: '#fff' }}
                                                     text="List of Licenses"
                                                     onClick={() => setShowListOfLicenses(true)}
                                                 >
@@ -798,6 +807,13 @@ export default function Home() {
                     ).finally(() => {
                         setShowListOfLicenses(false);
                     });
+                }}
+            />
+
+            <ModalStoresVisibility
+                open={showStoresVisibility}
+                onClose={() => {
+                    setShowStoresVisibility(false);
                 }}
             />
         </Container>
