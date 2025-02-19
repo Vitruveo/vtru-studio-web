@@ -1,8 +1,8 @@
-import { useTheme } from '@mui/material/styles';
-import { FieldArrayRenderProps } from 'formik';
-import Select, { ActionMeta, MultiValue, MenuListProps } from 'react-select';
+import { Children, ReactNode, memo, useRef, useState, useEffect, useCallback, useMemo } from 'react';
+import Select, { ActionMeta, MultiValue, MenuListProps, InputActionMeta } from 'react-select';
 import { VariableSizeList } from 'react-window';
-import { Children, ReactNode, memo } from 'react';
+import { FieldArrayRenderProps } from 'formik';
+import { useTheme } from '@mui/material/styles';
 
 interface Option {
     value: string;
@@ -17,18 +17,26 @@ interface Props {
 
 const CustomMenuList = memo((props: MenuListProps<Option>) => {
     const { children, ...other } = props;
-    const items = Children.toArray(children);
+    const items = useMemo(() => Children.toArray(children), [children]);
     const itemSize = 38;
+    const listRef = useRef<VariableSizeList>(null);
+
+    useEffect(() => {
+        if (listRef.current && items.length > 0) {
+            listRef.current.scrollToItem(0);
+        }
+    }, [items.length]);
 
     if (!Array.isArray(children)) return null;
 
-    const Row = ({ index, style }: { index: number; style: React.CSSProperties }) => {
-        return <div style={style}>{children[index] as ReactNode}</div>;
-    };
+    const Row = ({ index, style }: { index: number; style: React.CSSProperties }) => (
+        <div style={style}>{children[index] as ReactNode}</div>
+    );
 
     return (
         <div {...other} onMouseDown={(event) => event.preventDefault()}>
             <VariableSizeList
+                ref={listRef}
                 height={Math.min(items.length * itemSize, 300)}
                 itemCount={items.length}
                 itemSize={() => itemSize}
@@ -41,16 +49,60 @@ const CustomMenuList = memo((props: MenuListProps<Option>) => {
     );
 });
 
+const useDebounce = (callback: (...args: any[]) => void, delay: number) => {
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    return useCallback(
+        (...args: any[]) => {
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+            timeoutRef.current = setTimeout(() => callback(...args), delay);
+        },
+        [callback, delay]
+    );
+};
+
 const VirtualizedMultiSelect = ({ value, options, arrayHelpers }: Props) => {
     const theme = useTheme();
+    const [inputValue, setInputValue] = useState('');
+    const [filteredOptions, setFilteredOptions] = useState(options);
+    const prevOptionsRef = useRef(options);
 
-    const handleMultiSelectChange = (_selectedOptions: MultiValue<Option>, actionMeta: ActionMeta<Option>) => {
-        if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
-            arrayHelpers.remove(value.findIndex((item) => item.value === actionMeta.removedValue.value));
-        } else if (actionMeta.action === 'select-option' && actionMeta.option) {
-            arrayHelpers.push(actionMeta.option.value);
+    const debouncedFilter = useDebounce((searchTerm: string) => {
+        setFilteredOptions(options.filter((option) => option.label.toLowerCase().includes(searchTerm.toLowerCase())));
+    }, 600);
+
+    const handleMultiSelectChange = useCallback(
+        (_selectedOptions: MultiValue<Option>, actionMeta: ActionMeta<Option>) => {
+            if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
+                arrayHelpers.remove(value.findIndex((item) => item.value === actionMeta.removedValue.value));
+            } else if (actionMeta.action === 'select-option' && actionMeta.option) {
+                arrayHelpers.push(actionMeta.option.value);
+            }
+        },
+        [arrayHelpers, value]
+    );
+
+    const handleInputChange = useCallback(
+        (newValue: string, actionMeta: InputActionMeta) => {
+            if (actionMeta.action === 'input-change') {
+                setInputValue(newValue);
+                debouncedFilter(newValue);
+            }
+        },
+        [debouncedFilter]
+    );
+
+    useEffect(() => {
+        if (prevOptionsRef.current !== options) {
+            setFilteredOptions(options);
+            prevOptionsRef.current = options;
         }
-    };
+    }, [options]);
+
+    const sortedOptions = useMemo(
+        () => filteredOptions.sort((a, b) => a.label.localeCompare(b.label)),
+        [filteredOptions]
+    );
 
     return (
         <Select
@@ -91,10 +143,13 @@ const VirtualizedMultiSelect = ({ value, options, arrayHelpers }: Props) => {
             }}
             components={{ MenuList: CustomMenuList }}
             value={value}
-            options={options?.sort((a, b) => (a.label < b.label ? -1 : a.label > b.label ? 1 : 0))}
+            options={sortedOptions}
             onChange={handleMultiSelectChange}
+            onInputChange={handleInputChange}
+            inputValue={inputValue}
+            filterOption={() => true}
         />
     );
 };
 
-export default VirtualizedMultiSelect;
+export default memo(VirtualizedMultiSelect);
