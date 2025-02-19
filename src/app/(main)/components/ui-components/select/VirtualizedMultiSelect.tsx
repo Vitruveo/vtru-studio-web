@@ -136,7 +136,7 @@ const VirtualizedMultiSelect = ({ value, options, arrayHelpers, load }: Props) =
                     minWidth: '240px',
                     borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
                     backgroundColor: theme.palette.background.paper,
-                    boxShadow: state.isFocused ? '0 0 0 1px #FF0066' : undefined,
+                    boxShadow: '#FF0066',
                     '&:hover': { borderColor: '#FF0066' },
                 }),
                 menu: (base) => ({
