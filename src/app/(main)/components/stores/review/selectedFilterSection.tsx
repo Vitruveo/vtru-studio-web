@@ -5,6 +5,7 @@ import { LicensesFilter } from './licensesFilter';
 import { ColorFilter, ColorPrecisionFilter } from './colorFilter';
 import { MultiSelectFilter } from './multiSelectFilter';
 import { useEffect, useState } from 'react';
+import { subTitlesReviewOptions } from '../filters/options';
 
 interface SelectedFilterProps {
     title: string;
@@ -62,13 +63,7 @@ export const SelectedFilter = ({ title, content }: SelectedFilterProps) => {
 
                         const renderSubTitle = (): string => {
                             if (hasTruthyObject(valueCopy) || (isColorPrecision && hasColors)) {
-                                if (isShortcut) {
-                                    return 'Filters';
-                                }
-                                if (isLicense) {
-                                    return 'Artwork Price';
-                                }
-                                return key;
+                                return subTitlesReviewOptions.find((option) => option.name === key)?.label || key;
                             }
                             return '';
                         };

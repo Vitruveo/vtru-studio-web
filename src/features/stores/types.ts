@@ -125,6 +125,7 @@ export interface StoresState {
     selectedStore: {
         id: string;
         validateUrl: null | boolean;
+        results: number;
     };
     filters: {
         status: string;

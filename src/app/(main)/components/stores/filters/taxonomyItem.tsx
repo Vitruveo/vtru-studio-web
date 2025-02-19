@@ -18,6 +18,7 @@ import {
     getArtworkSubjectThunk,
     getArtworkTagsThunk,
 } from '@/features/storesArtwork/thunks';
+import VirtualizedMultiSelect from '../../ui-components/select/VirtualizedMultiSelect';
 
 interface FormValues {
     taxonomy: {
@@ -116,7 +117,7 @@ const TaxonomyItem = () => {
                 <FieldArray
                     name="taxonomy.tags"
                     render={(arrayHelpers) => (
-                        <MultiSelect
+                        <VirtualizedMultiSelect
                             arrayHelpers={arrayHelpers}
                             options={tagsOptions}
                             value={values.taxonomy.tags.map((item) => ({ value: item, label: item }))}
