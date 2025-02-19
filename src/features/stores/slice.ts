@@ -13,6 +13,7 @@ export const initialState: StoresState = {
     selectedStore: {
         id: '',
         validateUrl: null,
+        results: 0,
     },
     filters: {
         status: 'all',
@@ -69,6 +70,9 @@ export const storesSlice = createSlice({
         },
         setSelectStoreValidateUrl: (state, action: PayloadAction<StoresState['selectedStore']['validateUrl']>) => {
             state.selectedStore.validateUrl = action.payload;
+        },
+        setSelectStoreResults: (state, action: PayloadAction<StoresState['selectedStore']['results']>) => {
+            state.selectedStore.results = action.payload;
         },
         setFilters: (state, action: PayloadAction<StoresState['filters']>) => {
             state.filters = action.payload;
