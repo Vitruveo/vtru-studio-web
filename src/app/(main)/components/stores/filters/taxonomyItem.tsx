@@ -37,6 +37,7 @@ interface FormValues {
 
 const debounceDelay = 1000;
 const TaxonomyItem = () => {
+    const [loadTags, setLoadTags] = useState(true);
     const dispatch = useDispatch();
     const { values } = useFormikContext<FormValues>();
     const [tagsOptions, setTagsOptions] = useState<{ value: string; label: string }[]>([]);
@@ -92,8 +93,16 @@ const TaxonomyItem = () => {
                 label: item.tag,
             }));
         };
-        loadOptionsTags().then((options) => setTagsOptions(options));
+        loadOptionsTags().then((options) => {
+            setTagsOptions(options);
+        });
     }, []);
+
+    useEffect(() => {
+        if (tagsOptions.length) {
+            setLoadTags(false);
+        }
+    }, [tagsOptions]);
 
     return (
         <Box display={'flex'} flexDirection={'column'} gap={2}>
@@ -118,6 +127,7 @@ const TaxonomyItem = () => {
                     name="taxonomy.tags"
                     render={(arrayHelpers) => (
                         <VirtualizedMultiSelect
+                            load={loadTags}
                             arrayHelpers={arrayHelpers}
                             options={tagsOptions}
                             value={values.taxonomy.tags.map((item) => ({ value: item, label: item }))}
