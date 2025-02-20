@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from '@/store/hooks';
 
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
-import { assetMetadataThunk } from '@/features/asset/thunks';
+import { assetMetadataThunk, signerUpdateAssetHeaderThunk } from '@/features/asset/thunks';
 import { consignArtworkActionsCreators } from '@/features/consign/slice';
 import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
@@ -26,6 +26,7 @@ import AssetMediaPreview from '../components/assetMediaPreview';
 import { useToastr } from '@/app/hooks/useToastr';
 import { assetActionsCreators } from '@/features/asset/slice';
 import { UserSliceState } from '@/features/user/types';
+import { useConnectorClient } from 'wagmi';
 
 export type SectionName = 'context' | 'taxonomy' | 'creators' | 'provenance' | 'custom' | 'assets';
 type SectionsJSONType = typeof sectionsJSON;
@@ -106,10 +107,12 @@ const convertHexToRGB = (hex: string) => {
 export default function AssetMetadata() {
     const [sectionsStatus, setSectionsStatus] = useState<{ [key: string]: string }>({});
     const toast = useToastr();
+    const { data: client } = useConnectorClient();
     const creator = useSelector((state) => state.user);
     const tempColors = useSelector((state) => state.asset.tempColors);
 
     const hasContract = useSelector((state) => !!state.asset?.contractExplorer?.tx);
+    const isMinted = useSelector((state) => state.asset?.mintExplorer?.transactionHash);
     const asset = useSelector((state) => state.asset);
     const { assetMetadata } = asset;
     const formData = assetMetadata?.context.formData;
@@ -214,7 +217,7 @@ export default function AssetMetadata() {
     };
 
     const handleOpenBackModal = () => {
-        if (hasContract) {
+        if (isMinted) {
             router.push(`/consign`);
             return;
         }
@@ -254,19 +257,27 @@ export default function AssetMetadata() {
     const filterArray = (object: any, key: string) => {
         const value = object[key];
         if (Array.isArray(value)) {
-            object[key] = value.filter(Boolean);
+            return {
+                ...object,
+                [key]: value.filter(Boolean),
+            };
         }
+        return object;
     };
     const filterObjects = (object: any, key: string) => {
         const value = object[key];
         if (Array.isArray(value)) {
-            object[key] = value.filter((item) => Object.keys(item).length !== 0);
+            return {
+                ...object,
+                [key]: value.filter((item) => Object.keys(item).length !== 0),
+            };
         }
+        return object;
     };
 
     const handleSaveData = async (event?: React.FormEvent, skip?: boolean) => {
         if (event) event.preventDefault();
-        if (hasContract) {
+        if (isMinted) {
             router.push('/consign/licenses');
             return;
         }
@@ -315,10 +326,10 @@ export default function AssetMetadata() {
         if (skip) return;
         const isCompleted = !isValid.length || !isValid.includes(false);
 
-        const colors = (sections.context.formData as any).colors;
+        const formDataContext = sections.context.formData as any;
 
-        if (Array.isArray(colors)) {
-            (sections.context.formData as any).colors = colors.filter(Boolean).map((color) => {
+        if (Array.isArray(formDataContext.colors)) {
+            (sections.context.formData as any).colors = formDataContext.colors.filter(Boolean).map((color: any) => {
                 if (typeof color === 'string') {
                     return convertHexToRGB(color);
                 }
@@ -347,6 +358,20 @@ export default function AssetMetadata() {
         const provenanceKeys = ['exhibitions', 'awards'];
         provenanceKeys.forEach((key) => filterObjects(formDataProvenance, key));
 
+        if (
+            (sectionsFormat.context.formData as any).title != formDataContext.title ||
+            (sectionsFormat.context.formData as any).description != formDataContext.description
+        ) {
+            dispatch(
+                signerUpdateAssetHeaderThunk({
+                    assetKey: asset._id,
+                    client: client!,
+                    title: formDataContext.title,
+                    description: formDataContext.description,
+                })
+            );
+        }
+
         dispatch(
             assetMetadataThunk(
                 Object.entries(sections).reduce(
@@ -364,7 +389,7 @@ export default function AssetMetadata() {
 
         handleUpdateStatus();
 
-        router.push(showBackModal ? '/consign' : `/consign/licenses`);
+        // router.push(showBackModal ? '/consign' : `/consign/licenses`);
 
         setShowBackModal(false);
     };
@@ -382,7 +407,7 @@ export default function AssetMetadata() {
             ...prevSections,
             [sectionName as keyof typeof prevSections]: {
                 ...prevSections[sectionName as keyof typeof prevSections],
-                formData: data.formData,
+                formData: data?.formData,
             },
         }));
     };
