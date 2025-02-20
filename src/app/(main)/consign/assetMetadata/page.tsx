@@ -26,7 +26,7 @@ import AssetMediaPreview from '../components/assetMediaPreview';
 import { useToastr } from '@/app/hooks/useToastr';
 import { assetActionsCreators } from '@/features/asset/slice';
 import { UserSliceState } from '@/features/user/types';
-import { useConnectorClient } from 'wagmi';
+import { useAccount, useConnectorClient } from 'wagmi';
 
 export type SectionName = 'context' | 'taxonomy' | 'creators' | 'provenance' | 'custom' | 'assets';
 type SectionsJSONType = typeof sectionsJSON;
@@ -106,11 +106,15 @@ const convertHexToRGB = (hex: string) => {
 
 export default function AssetMetadata() {
     const [sectionsStatus, setSectionsStatus] = useState<{ [key: string]: string }>({});
+    const [loading, setLoading] = useState(false);
+    const [changedTitleOrDescription, setChangedTitleOrDescription] = useState(false);
     const toast = useToastr();
     const { data: client } = useConnectorClient();
+    const { address } = useAccount();
+    const wallets = useSelector((state) => state.user.wallets);
     const creator = useSelector((state) => state.user);
     const tempColors = useSelector((state) => state.asset.tempColors);
-
+    const userIsBlocked = useSelector((state) => state.user?.vault?.isBlocked);
     const hasContract = useSelector((state) => !!state.asset?.contractExplorer?.tx);
     const isMinted = useSelector((state) => state.asset?.mintExplorer?.transactionHash);
     const asset = useSelector((state) => state.asset);
@@ -303,14 +307,14 @@ export default function AssetMetadata() {
                         isValid.push(false);
                         return childPath
                             ? {
-                                  ...acc,
-                                  [parentPath]: {
-                                      ...acc[parentPath],
-                                      [childPath]: {
-                                          __errors: [...(acc[parentPath]?.[childPath]?.__errors || []), message],
-                                      },
-                                  },
-                              }
+                                ...acc,
+                                [parentPath]: {
+                                    ...acc[parentPath],
+                                    [childPath]: {
+                                        __errors: [...(acc[parentPath]?.[childPath]?.__errors || []), message],
+                                    },
+                                },
+                            }
                             : { ...acc, [parentPath]: { __errors: [message] } };
                     }
 
@@ -358,40 +362,58 @@ export default function AssetMetadata() {
         const provenanceKeys = ['exhibitions', 'awards'];
         provenanceKeys.forEach((key) => filterObjects(formDataProvenance, key));
 
-        if (
-            (sectionsFormat.context.formData as any).title != formDataContext.title ||
-            (sectionsFormat.context.formData as any).description != formDataContext.description
-        ) {
+        try {
+            setLoading(true);
+            if (
+                (sectionsFormat.context.formData as any).title != formDataContext.title ||
+                (sectionsFormat.context.formData as any).description != formDataContext.description
+            ) {
+                const signedMessage = await dispatch(
+                    signerUpdateAssetHeaderThunk({
+                        assetKey: asset._id,
+                        client: client!,
+                        title: formDataContext.title,
+                        description: formDataContext.description,
+                    })
+                );
+
+                if (!signedMessage) {
+                    toast.display({ type: 'error', message: 'Error signing message' });
+                    return;
+                }
+
+                if (!wallets.some((wallet) => wallet.address === address)) {
+                    toast.display({ type: 'error', message: 'Wallet not found in your account' });
+                    return;
+                }
+            }
+
             dispatch(
-                signerUpdateAssetHeaderThunk({
-                    assetKey: asset._id,
-                    client: client!,
-                    title: formDataContext.title,
-                    description: formDataContext.description,
-                })
-            );
-        }
-
-        dispatch(
-            assetMetadataThunk(
-                Object.entries(sections).reduce(
-                    (acc, [key, v]) => ({
-                        isCompleted: isCompleted,
-                        ...acc,
-                        [key]: { formData: v.formData },
-                    }),
-                    {} as SectionsFormData
+                assetMetadataThunk(
+                    Object.entries(sections).reduce(
+                        (acc, [key, v]) => ({
+                            isCompleted: isCompleted,
+                            ...acc,
+                            [key]: { formData: v.formData },
+                        }),
+                        {} as SectionsFormData
+                    )
                 )
-            )
-        );
+            );
 
-        dispatch(assetActionsCreators.setTempColors([]));
+            dispatch(assetActionsCreators.setTempColors([]));
 
-        handleUpdateStatus();
+            handleUpdateStatus();
 
-        // router.push(showBackModal ? '/consign' : `/consign/licenses`);
+            router.push(showBackModal ? '/consign' : `/consign/licenses`);
 
-        setShowBackModal(false);
+            setShowBackModal(false);
+        } catch (error) {
+            console.error(error);
+            toast.display({ type: 'error', message: 'Error updating status' });
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -403,6 +425,17 @@ export default function AssetMetadata() {
     }, [sectionsStatus]);
 
     const handleOnChange = ({ data, sectionName }: SectionOnChangeParams) => {
+        if (sectionName === 'context') {
+            if (
+                data.formData.title !== (sectionsFormat.context.formData as any).title ||
+                data.formData.description !== (sectionsFormat.context.formData as any).description
+            ) {
+                setChangedTitleOrDescription(true);
+            } else {
+                setChangedTitleOrDescription(false);
+            }
+        }
+
         setSections((prevSections) => ({
             ...prevSections,
             [sectionName as keyof typeof prevSections]: {
@@ -414,14 +447,25 @@ export default function AssetMetadata() {
 
     const xL = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'));
 
+    const renderMessage = () => {
+        if (loading) return 'Loading...';
+
+        if (userIsBlocked) return 'You are blocked';
+
+        if (!address && changedTitleOrDescription) return 'Connect your wallet';
+
+        return texts.nextButton;
+    };
+
     return (
         <form onSubmit={handleSaveData}>
             <PageContainerFooter
-                submitText={texts.nextButton}
+                submitText={renderMessage()}
                 stepStatus={hasContract ? 'completed' : status}
                 stepNumber={2}
                 title={texts.consignArtworkTitle}
                 backOnclick={handleOpenBackModal}
+                submitDisabled={changedTitleOrDescription && !address}
             >
                 <Breadcrumb
                     title={texts.consignArtworkTitle}
