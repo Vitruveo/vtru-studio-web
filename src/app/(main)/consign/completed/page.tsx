@@ -1,20 +1,24 @@
 'use client';
 
-import { ChangeEvent, useEffect } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import { Box, Button, Grid, Theme, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useDispatch, useSelector } from '@/store/hooks';
+import { useAccount, useConnectorClient } from 'wagmi';
 
 import PageContainerFooter from '@/app/(main)/components/container/PageContainerFooter';
 import Breadcrumb, { BreadCrumbItem } from '@/app/(main)/layout/shared/breadcrumb/Breadcrumb';
 import { useI18n } from '@/app/hooks/useI18n';
 import { ConsignArtworkAssetStatus } from '@/features/consign/types';
 import { useToastr } from '@/app/hooks/useToastr';
+import { updateAssetStatusThunk } from '@/features/asset/thunks';
 import { consignArtworkThunks } from '@/features/consign/thunks';
 import { EXPLORER_URL } from '@/constants/explorer';
 import { CompletedConsignTableStatus } from '../components/completedConsignPage/CompletedConsignTableStatus';
 import AssetMediaPreview from '../components/assetMediaPreview';
-import { getAssetThunk } from '@/features/asset/thunks';
+import { getAssetThunk, signerUpdateAssetStatusThunk } from '@/features/asset/thunks';
+
+const notAllowedStatus = ['draft', 'preview'];
 
 // TODO: ADICIONAR TRADUÇÃO
 
@@ -28,6 +32,8 @@ export default function CompletedConsignPage() {
     const { language } = useI18n();
     const theme = useTheme();
     const toastr = useToastr();
+    const { data: client } = useConnectorClient();
+    const { address } = useAccount();
 
     const previewAndConsign = useSelector((state) => state.consignArtwork.previewAndConsign);
     const formData = useSelector((state) => state.asset.assetMetadata?.context.formData);
@@ -36,6 +42,9 @@ export default function CompletedConsignPage() {
     const transactionHash = useSelector((state) => state.asset.contractExplorer?.tx);
     const isMinted = useSelector((state) => state.asset.mintExplorer?.transactionHash);
     const selectedAsset = useSelector((state) => state.user.selectedAsset);
+    const wallets = useSelector((state) => state.user.wallets);
+
+    const [loading, setLoading] = useState(false);
 
     const grayColor = theme.palette.text.disabled;
 
@@ -48,8 +57,44 @@ export default function CompletedConsignPage() {
             selectedStatus: status,
         },
         enableReinitialize: true,
-        onSubmit: (values) => {
-            dispatch(consignArtworkThunks.updateStatus(values.selectedStatus));
+        onSubmit: async (values) => {
+            try {
+                setLoading(true);
+
+                if (isMinted || notAllowedStatus.includes(values.selectedStatus)) return;
+
+                const signedMessage = await dispatch(
+                    signerUpdateAssetStatusThunk({
+                        assetKey: selectedAsset,
+                        status: values.selectedStatus,
+                        client: client!,
+                    })
+                );
+
+                if (!signedMessage) {
+                    toastr.display({ type: 'error', message: 'Error signing message' });
+                    return;
+                }
+
+                if (!wallets.some((wallet) => wallet.address === address)) {
+                    toastr.display({ type: 'error', message: 'Wallet not found in your account' });
+                    return;
+                }
+
+                await dispatch(
+                    updateAssetStatusThunk({
+                        assetKey: selectedAsset,
+                        status: values.selectedStatus,
+                    })
+                );
+
+                toastr.display({ type: 'success', message: 'Status updated' });
+            } catch (error) {
+                console.error(error);
+                toastr.display({ type: 'error', message: 'Error updating status' });
+            } finally {
+                setLoading(false);
+            }
         },
     });
 
@@ -64,13 +109,12 @@ export default function CompletedConsignPage() {
     const handlePreview = () => {
         dispatch(consignArtworkThunks.preview());
     };
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value as ConsignArtworkAssetStatus;
-        const notAllowedStatus = ['draft', 'preview'];
 
         if (isMinted || notAllowedStatus.includes(value)) return;
 
-        dispatch(consignArtworkThunks.updateStatus(value));
+        formik.setFieldValue('selectedStatus', value);
     };
 
     const consignSteps = {
@@ -104,11 +148,22 @@ export default function CompletedConsignPage() {
         },
     ];
 
+    const renderMessage = () => {
+        if (loading) return 'Loading...';
+
+        if (userIsBlocked) return 'You are blocked';
+
+        if (!address) return 'Connect your wallet';
+
+        return 'Save';
+    };
+
     return (
         <form onSubmit={formik.handleSubmit}>
             <PageContainerFooter
-                submitDisabled={status === 'active' || status === 'blocked' || userIsBlocked || status === 'hidden'}
+                submitDisabled={!address || loading || userIsBlocked || status === formik.values.selectedStatus}
                 hasBackButton
+                submitText={renderMessage()}
             >
                 <Breadcrumb
                     title={texts.consignArtworkTitle}

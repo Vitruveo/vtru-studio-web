@@ -21,6 +21,8 @@ import {
     ValidateUploadedMediaReq,
     SignUpdateLicensePriceReq,
     SignUpdateAssetHeaderReq,
+    SignUpdateAssetStatusReq,
+    UpdateAssetStatusReq,
 } from './types';
 import { apiService } from '@/services/api';
 import { assetActionsCreators } from './slice';
@@ -48,14 +50,14 @@ export async function assetStorage({ file, url, dispatch, transactionId }: Asset
 
         xhr.open('PUT', url, true);
 
-        xhr.upload.onprogress = function(event) {
+        xhr.upload.onprogress = function (event) {
             if (event.lengthComputable) {
                 const percentCompleted = Math.round((event.loaded * 100) / event.total);
                 dispatch(assetActionsCreators.requestAssetUpload({ transactionId, uploadProgress: percentCompleted }));
             }
         };
 
-        xhr.onload = function() {
+        xhr.onload = function () {
             if (this.status >= 200 && this.status < 300) {
                 resolve(xhr.response);
             } else {
@@ -66,7 +68,7 @@ export async function assetStorage({ file, url, dispatch, transactionId }: Asset
             }
         };
 
-        xhr.onerror = function() {
+        xhr.onerror = function () {
             reject({
                 status: this.status,
                 statusText: xhr.statusText,
@@ -198,4 +200,18 @@ export async function signUpdateAssetHeader({ signer, domain, types, tx, signedM
 
 export async function changeAutoStakeInAllAssets(autoStake: boolean) {
     return apiService.put(`/assets/changeAutoStakeInAllAssets`, { autoStake });
+}
+
+export async function signUpdateAssetStatus({ signer, domain, signedMessage, tx, types }: SignUpdateAssetStatusReq) {
+    return axios.post(`${BASE_URL_API3}/assets/verify/updateAssetStatus`, {
+        signer,
+        domain,
+        types,
+        tx,
+        signedMessage,
+    });
+}
+
+export async function updateAssetStatus({ assetKey, status }: UpdateAssetStatusReq) {
+    return api3Service.patch(`/assets/updateAssetStatus/${assetKey}`, { status });
 }

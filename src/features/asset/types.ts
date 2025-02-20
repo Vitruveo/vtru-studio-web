@@ -259,6 +259,12 @@ export interface SignerUpdateAssetParams {
     description: string;
 }
 
+export interface SignerUpdateAssetStatusParams {
+    client: Client<Transport, Chain, Account>;
+    assetKey: string;
+    status: string;
+}
+
 export interface SignUpdateLicensePriceReq {
     signer: string;
     domain: {
@@ -310,6 +316,36 @@ export interface SignUpdateAssetHeaderReq {
         timestamp: number;
     };
     signedMessage: string;
+}
+
+export interface SignUpdateAssetStatusReq {
+    signer: string;
+    domain: {
+        name: string;
+        version: string;
+        chainId: number;
+    };
+    types: {
+        Transaction: {
+            name: string;
+            type: string;
+        }[];
+    };
+    tx: {
+        name: string;
+        action: string;
+        method: string;
+        assetKey: string;
+        status: string;
+        contract: string;
+        timestamp: number;
+    };
+    signedMessage: string;
+}
+
+export interface UpdateAssetStatusReq {
+    assetKey: string;
+    status: string;
 }
 
 export type UpdateAssetStepApiRes = APIResponse<string>;
