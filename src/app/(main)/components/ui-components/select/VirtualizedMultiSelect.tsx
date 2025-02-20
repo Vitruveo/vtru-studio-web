@@ -3,6 +3,9 @@ import Select, { ActionMeta, MultiValue, MenuListProps, InputActionMeta } from '
 import { VariableSizeList } from 'react-window';
 import { FieldArrayRenderProps } from 'formik';
 import { useTheme } from '@mui/material/styles';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+import { Typography } from '@mui/material';
 
 interface Option {
     value: string;
@@ -13,10 +16,14 @@ interface Props {
     value: Option[];
     options: Option[];
     arrayHelpers: FieldArrayRenderProps;
+    load?: boolean;
 }
 
-const CustomMenuList = memo((props: MenuListProps<Option>) => {
-    const { children, ...other } = props;
+interface CustomMenuListProps extends Omit<MenuListProps<Option>, 'setValue'> {
+    load?: boolean;
+}
+
+const CustomMenuList = memo(({ children, load, ...other }: CustomMenuListProps) => {
     const items = useMemo(() => Children.toArray(children), [children]);
     const itemSize = 38;
     const listRef = useRef<VariableSizeList>(null);
@@ -27,7 +34,20 @@ const CustomMenuList = memo((props: MenuListProps<Option>) => {
         }
     }, [items.length]);
 
-    if (!Array.isArray(children)) return null;
+    if (load) {
+        return (
+            <Box display="flex" justifyContent="center" p={1}>
+                <CircularProgress size={20} />
+            </Box>
+        );
+    }
+
+    if (!Array.isArray(children))
+        return (
+            <Typography textAlign="center" color="GrayText" p={1}>
+                No options
+            </Typography>
+        );
 
     const Row = ({ index, style }: { index: number; style: React.CSSProperties }) => (
         <div style={style}>{children[index] as ReactNode}</div>
@@ -61,7 +81,7 @@ const useDebounce = (callback: (...args: any[]) => void, delay: number) => {
     );
 };
 
-const VirtualizedMultiSelect = ({ value, options, arrayHelpers }: Props) => {
+const VirtualizedMultiSelect = ({ value, options, arrayHelpers, load }: Props) => {
     const theme = useTheme();
     const [inputValue, setInputValue] = useState('');
     const [filteredOptions, setFilteredOptions] = useState(options);
@@ -100,7 +120,10 @@ const VirtualizedMultiSelect = ({ value, options, arrayHelpers }: Props) => {
     }, [options]);
 
     const sortedOptions = useMemo(
-        () => filteredOptions.sort((a, b) => a.label.localeCompare(b.label)),
+        () =>
+            filteredOptions
+                .filter((v) => v.label.length && v.value.length)
+                .sort((a, b) => a.label.localeCompare(b.label)),
         [filteredOptions]
     );
 
@@ -113,7 +136,7 @@ const VirtualizedMultiSelect = ({ value, options, arrayHelpers }: Props) => {
                     minWidth: '240px',
                     borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
                     backgroundColor: theme.palette.background.paper,
-                    boxShadow: '#FF0066',
+                    boxShadow: state.isFocused ? '0 0 0 1px #FF0066' : undefined,
                     '&:hover': { borderColor: '#FF0066' },
                 }),
                 menu: (base) => ({
@@ -141,7 +164,15 @@ const VirtualizedMultiSelect = ({ value, options, arrayHelpers }: Props) => {
                     color: theme.palette.text.primary,
                 }),
             }}
-            components={{ MenuList: CustomMenuList }}
+            components={{
+                MenuList: (props) => <CustomMenuList {...(props as MenuListProps<Option>)} load={load} />,
+            }}
+            isLoading={load}
+            loadingMessage={() => (
+                <Box display="flex" justifyContent="center" p={1}>
+                    <CircularProgress size={20} />
+                </Box>
+            )}
             value={value}
             options={sortedOptions}
             onChange={handleMultiSelectChange}
