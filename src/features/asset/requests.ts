@@ -19,8 +19,8 @@ import {
     UpdateAssetStepReq,
     UpdatePriceReq,
     ValidateUploadedMediaReq,
-    signMessageReq,
-    signUpdateAssetMessageReq,
+    SignUpdateLicensePriceReq,
+    SignUpdateAssetHeaderReq,
 } from './types';
 import { apiService } from '@/services/api';
 import { assetActionsCreators } from './slice';
@@ -87,13 +87,7 @@ export async function getAsset(): Promise<GetAssetApiRes> {
     return res;
 }
 
-export async function getMyAssets({
-    page,
-    status,
-    collection = '',
-    sort,
-    limit,
-}: GetMyAssetsReq): Promise<GetAssetsApiRes> {
+export async function getMyAssets({ page, status, collection = '', sort }: GetMyAssetsReq): Promise<GetAssetsApiRes> {
     const res = await apiService.get<AssetPaginated>(
         `/assets?page=${page}&status=${status?.toLowerCase()}&collection=${encodeURIComponent(collection)}&sort=${sort}`
     );
@@ -182,8 +176,8 @@ export async function checkLicenseEditable({ assetId }: CheckLicenseEditableReq)
     return api3Service.get(`/assets/licenses/checkEditable/${assetId}`);
 }
 
-export async function signMessage({ signer, domain, types, tx, signedMessage }: signMessageReq) {
-    return axios.post(`${BASE_URL_API3}/assets/licenses/verify`, {
+export async function signUpdateLicensePrice({ signer, domain, types, tx, signedMessage }: SignUpdateLicensePriceReq) {
+    return axios.post(`${BASE_URL_API3}/assets/verify/updateLicensePrice`, {
         signer,
         domain,
         types,
@@ -192,8 +186,8 @@ export async function signMessage({ signer, domain, types, tx, signedMessage }: 
     });
 }
 
-export async function signUpdateAssetMessage({ signer, domain, types, tx, signedMessage }: signUpdateAssetMessageReq) {
-    return axios.post(`${BASE_URL_API3}/assets/verify`, {
+export async function signUpdateAssetHeader({ signer, domain, types, tx, signedMessage }: SignUpdateAssetHeaderReq) {
+    return axios.post(`${BASE_URL_API3}/assets/verify/updateAssetHeader`, {
         signer,
         domain,
         types,

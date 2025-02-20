@@ -19,9 +19,9 @@ import {
     validateUploadedMedia,
     updatePrice,
     checkLicenseEditable,
-    signMessage,
+    signUpdateLicensePrice,
     sendRequestUploadStores,
-    signUpdateAssetMessage,
+    signUpdateAssetHeader,
 } from './requests';
 import {
     AssetSendRequestUploadApiRes,
@@ -41,8 +41,8 @@ import {
     UploadIPFSByAssetIdApiRes,
     UploadIPFSByAssetIdReq,
     ValidateUploadedMediaReq,
-    signerParams,
-    signerUpdateAssetParams,
+    SignerParams,
+    SignerUpdateAssetParams,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { assetActionsCreators } from './slice';
@@ -929,7 +929,7 @@ export function checkLicenseEditableThunk(payload: CheckLicenseEditableReq): Red
     };
 }
 
-export function signerThunk(payload: signerParams): ReduxThunkAction<Promise<boolean>> {
+export function signerUpdateLicensePriceThunk(payload: SignerParams): ReduxThunkAction<Promise<boolean>> {
     return async function() {
         try {
             const { client, assetKey, price } = payload;
@@ -973,7 +973,7 @@ export function signerThunk(payload: signerParams): ReduxThunkAction<Promise<boo
             // Sign the message
             const signedMessage = await signer.signTypedData(domain, types, tx);
 
-            const response = await signMessage({
+            const response = await signUpdateLicensePrice({
                 tx,
                 signedMessage,
                 signer: signer.address,
@@ -992,7 +992,7 @@ export function signerThunk(payload: signerParams): ReduxThunkAction<Promise<boo
     };
 }
 
-export function signerUpdateAssetMetadataThunk(payload: signerUpdateAssetParams): ReduxThunkAction<Promise<boolean>> {
+export function signerUpdateAssetHeaderThunk(payload: SignerUpdateAssetParams): ReduxThunkAction<Promise<boolean>> {
     return async function() {
         try {
             const { client, assetKey, title, description } = payload;
@@ -1022,7 +1022,7 @@ export function signerUpdateAssetMetadataThunk(payload: signerUpdateAssetParams)
 
             const tx = {
                 name: 'Asset Registry',
-                action: 'Update Asset Metadata',
+                action: 'Update Asset Header',
                 method: 'updateAssetHeader',
                 assetKey: assetKey,
                 title,
@@ -1034,7 +1034,7 @@ export function signerUpdateAssetMetadataThunk(payload: signerUpdateAssetParams)
             // Sign the message
             const signedMessage = await signer.signTypedData(domain, types, tx);
 
-            const response = await signUpdateAssetMessage({
+            const response = await signUpdateAssetHeader({
                 tx,
                 signedMessage,
                 signer: signer.address,

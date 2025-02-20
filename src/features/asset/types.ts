@@ -246,20 +246,20 @@ export interface CheckLicenseEditableReq {
     assetId: string;
 }
 
-export interface signerParams {
+export interface SignerParams {
     client: Client<Transport, Chain, Account>;
     assetKey: string;
     price: number;
 }
 
-export interface signerUpdateAssetParams {
+export interface SignerUpdateAssetParams {
     client: Client<Transport, Chain, Account>;
     assetKey: string;
     title: string;
     description: string;
 }
 
-export interface signMessageReq {
+export interface SignUpdateLicensePriceReq {
     signer: string;
     domain: {
         name: string;
@@ -286,7 +286,7 @@ export interface signMessageReq {
     signedMessage: string;
 }
 
-export interface signUpdateAssetMessageReq {
+export interface SignUpdateAssetHeaderReq {
     signer: string;
     domain: {
         name: string;
