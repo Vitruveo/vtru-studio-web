@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from '@/store/hooks';
 
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
-import { assetMetadataThunk } from '@/features/asset/thunks';
+import { assetMetadataThunk, signerUpdateAssetHeaderThunk, updateAssetHeaderThunk } from '@/features/asset/thunks';
 import { consignArtworkActionsCreators } from '@/features/consign/slice';
 import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
@@ -26,6 +26,8 @@ import AssetMediaPreview from '../components/assetMediaPreview';
 import { useToastr } from '@/app/hooks/useToastr';
 import { assetActionsCreators } from '@/features/asset/slice';
 import { UserSliceState } from '@/features/user/types';
+import { useAccount, useConnectorClient } from 'wagmi';
+import add from 'date-fns/esm/add';
 
 export type SectionName = 'context' | 'taxonomy' | 'creators' | 'provenance' | 'custom' | 'assets';
 type SectionsJSONType = typeof sectionsJSON;
@@ -105,12 +107,17 @@ const convertHexToRGB = (hex: string) => {
 
 export default function AssetMetadata() {
     const [sectionsStatus, setSectionsStatus] = useState<{ [key: string]: string }>({});
+    const [loading, setLoading] = useState(false);
+    const [changedTitleOrDescription, setChangedTitleOrDescription] = useState(false);
     const toast = useToastr();
+    const { data: client } = useConnectorClient();
+    const { address } = useAccount();
+    const wallets = useSelector((state) => state.user.wallets);
     const creator = useSelector((state) => state.user);
     const tempColors = useSelector((state) => state.asset.tempColors);
-    const assetStatus = useSelector((state) => state.asset.consignArtwork?.status);
-
+    const userIsBlocked = useSelector((state) => state.user?.vault?.isBlocked);
     const hasContract = useSelector((state) => !!state.asset?.contractExplorer?.tx);
+    const isMinted = useSelector((state) => state.asset?.mintExplorer?.transactionHash);
     const asset = useSelector((state) => state.asset);
     const { assetMetadata } = asset;
     const formData = assetMetadata?.context.formData;
@@ -215,7 +222,7 @@ export default function AssetMetadata() {
     };
 
     const handleOpenBackModal = () => {
-        if (hasContract) {
+        if (isMinted) {
             router.push(`/consign`);
             return;
         }
@@ -255,19 +262,27 @@ export default function AssetMetadata() {
     const filterArray = (object: any, key: string) => {
         const value = object[key];
         if (Array.isArray(value)) {
-            object[key] = value.filter(Boolean);
+            return {
+                ...object,
+                [key]: value.filter(Boolean),
+            };
         }
+        return object;
     };
     const filterObjects = (object: any, key: string) => {
         const value = object[key];
         if (Array.isArray(value)) {
-            object[key] = value.filter((item) => Object.keys(item).length !== 0);
+            return {
+                ...object,
+                [key]: value.filter((item) => Object.keys(item).length !== 0),
+            };
         }
+        return object;
     };
 
     const handleSaveData = async (event?: React.FormEvent, skip?: boolean) => {
         if (event) event.preventDefault();
-        if (hasContract) {
+        if (isMinted) {
             router.push('/consign/licenses');
             return;
         }
@@ -316,10 +331,10 @@ export default function AssetMetadata() {
         if (skip) return;
         const isCompleted = !isValid.length || !isValid.includes(false);
 
-        const colors = (sections.context.formData as any).colors;
+        const formDataContext = sections.context.formData as any;
 
-        if (Array.isArray(colors)) {
-            (sections.context.formData as any).colors = colors.filter(Boolean).map((color) => {
+        if (Array.isArray(formDataContext.colors)) {
+            (sections.context.formData as any).colors = formDataContext.colors.filter(Boolean).map((color: any) => {
                 if (typeof color === 'string') {
                     return convertHexToRGB(color);
                 }
@@ -348,26 +363,70 @@ export default function AssetMetadata() {
         const provenanceKeys = ['exhibitions', 'awards'];
         provenanceKeys.forEach((key) => filterObjects(formDataProvenance, key));
 
-        dispatch(
-            assetMetadataThunk(
-                Object.entries(sections).reduce(
-                    (acc, [key, v]) => ({
-                        isCompleted: isCompleted,
-                        ...acc,
-                        [key]: { formData: v.formData },
-                    }),
-                    {} as SectionsFormData
+        try {
+            setLoading(true);
+            if (hasContract) {
+                if (
+                    (sectionsFormat.context.formData as any).title != formDataContext.title ||
+                    (sectionsFormat.context.formData as any).description != formDataContext.description
+                ) {
+                    const signedMessage = await dispatch(
+                        signerUpdateAssetHeaderThunk({
+                            assetKey: asset._id,
+                            client: client!,
+                            title: formDataContext.title,
+                            description: formDataContext.description,
+                        })
+                    );
+
+                    if (!signedMessage) {
+                        toast.display({ type: 'error', message: 'Error signing message' });
+                        return;
+                    }
+
+                    if (!wallets.some((wallet) => wallet.address === address)) {
+                        toast.display({ type: 'error', message: 'Wallet not found in your account' });
+                        return;
+                    }
+
+                    await dispatch(
+                        updateAssetHeaderThunk({
+                            assetKey: asset._id,
+                            header: {
+                                title: formDataContext.title,
+                                description: formDataContext.description,
+                            },
+                        })
+                    );
+                }
+            }
+
+            dispatch(
+                assetMetadataThunk(
+                    Object.entries(sections).reduce(
+                        (acc, [key, v]) => ({
+                            isCompleted: isCompleted,
+                            ...acc,
+                            [key]: { formData: v.formData },
+                        }),
+                        {} as SectionsFormData
+                    )
                 )
-            )
-        );
+            );
 
-        dispatch(assetActionsCreators.setTempColors([]));
+            dispatch(assetActionsCreators.setTempColors([]));
 
-        handleUpdateStatus();
+            handleUpdateStatus();
 
-        router.push(showBackModal ? '/consign' : `/consign/licenses`);
+            router.push(showBackModal ? '/consign' : `/consign/licenses`);
 
-        setShowBackModal(false);
+            setShowBackModal(false);
+        } catch (error) {
+            console.error(error);
+            toast.display({ type: 'error', message: 'Error updating status' });
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -379,25 +438,47 @@ export default function AssetMetadata() {
     }, [sectionsStatus]);
 
     const handleOnChange = ({ data, sectionName }: SectionOnChangeParams) => {
+        if (sectionName === 'context') {
+            if (
+                data.formData.title !== (sectionsFormat.context.formData as any).title ||
+                data.formData.description !== (sectionsFormat.context.formData as any).description
+            ) {
+                setChangedTitleOrDescription(true);
+            } else {
+                setChangedTitleOrDescription(false);
+            }
+        }
+
         setSections((prevSections) => ({
             ...prevSections,
             [sectionName as keyof typeof prevSections]: {
                 ...prevSections[sectionName as keyof typeof prevSections],
-                formData: data.formData,
+                formData: data?.formData,
             },
         }));
     };
 
     const xL = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'));
 
+    const renderMessage = () => {
+        if (loading) return 'Loading...';
+
+        if (userIsBlocked) return 'You are blocked';
+
+        if (!address && changedTitleOrDescription && hasContract) return 'Connect your wallet';
+
+        return texts.nextButton;
+    };
+
     return (
         <form onSubmit={handleSaveData}>
             <PageContainerFooter
-                submitText={texts.nextButton}
+                submitText={renderMessage()}
                 stepStatus={hasContract ? 'completed' : status}
                 stepNumber={2}
                 title={texts.consignArtworkTitle}
                 backOnclick={handleOpenBackModal}
+                submitDisabled={(changedTitleOrDescription && !address && hasContract) || loading}
             >
                 <Breadcrumb
                     title={texts.consignArtworkTitle}
@@ -432,7 +513,6 @@ export default function AssetMetadata() {
                                             uiSchema={value.uiSchema}
                                             onChange={handleOnChange}
                                             updateErrors={handleUpdateErrors}
-                                            assetStatus={assetStatus}
                                         />
                                     </Box>
                                 ))}
@@ -452,7 +532,13 @@ export default function AssetMetadata() {
                     )}
                 </Box>
 
-                <ModalBackConfirm show={showBackModal} handleClose={handleCloseBackModal} yesClick={handleSaveData} />
+                <ModalBackConfirm
+                    show={showBackModal}
+                    handleClose={handleCloseBackModal}
+                    yesClick={handleSaveData}
+                    disabledSave={!address}
+                    saveText={renderMessage()}
+                />
             </PageContainerFooter>
         </form>
     );

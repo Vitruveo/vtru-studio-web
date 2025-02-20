@@ -130,8 +130,9 @@ const ConsignArtwork = () => {
                                         >
                                             <Grid item lg={5} xl={4}>
                                                 <Typography
-                                                    title={`${language[v.stepName] as string} ${v.optional ? ` (${texts.optional})` : ''
-                                                        } `}
+                                                    title={`${language[v.stepName] as string} ${
+                                                        v.optional ? ` (${texts.optional})` : ''
+                                                    } `}
                                                     sx={{
                                                         whiteSpace: 'nowrap',
                                                         textOverflow: 'ellipsis',
@@ -175,18 +176,16 @@ const ConsignArtwork = () => {
                                                         fullWidth
                                                     >
                                                         {hasContract
-                                                            ? ['licenses', 'assetMetadata', 'auxiliaryMedia'].includes(
-                                                                v.stepId
-                                                            )
+                                                            ? ['licenses', 'assetMetadata'].includes(v.stepId)
                                                                 ? 'View/Edit'
                                                                 : 'View'
                                                             : (
-                                                                language[
-                                                                'studio.consignArtwork.stepButton'
-                                                                ] as TranslateFunction
-                                                            )({
-                                                                status: v.status,
-                                                            })}
+                                                                  language[
+                                                                      'studio.consignArtwork.stepButton'
+                                                                  ] as TranslateFunction
+                                                              )({
+                                                                  status: v.status,
+                                                              })}
                                                     </Button>
                                                 </Box>
                                             </Grid>

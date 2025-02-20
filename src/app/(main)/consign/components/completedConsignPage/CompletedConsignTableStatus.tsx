@@ -21,6 +21,7 @@ interface ConsignTableItem {
     view: string;
     license: string;
     search: string;
+    disabled: boolean;
 }
 
 interface CompletedConsignTableStatusProps {
@@ -56,6 +57,7 @@ export const CompletedConsignTableStatus = ({ selectedStatus, onStatusChange }: 
             view: texts.me,
             license: texts.no,
             search: texts.no,
+            disabled: true,
         },
         {
             status: 'preview',
@@ -63,6 +65,7 @@ export const CompletedConsignTableStatus = ({ selectedStatus, onStatusChange }: 
             view: texts.everyone,
             license: texts.no,
             search: texts.no,
+            disabled: true,
         },
         isBlocked
             ? {
@@ -71,6 +74,7 @@ export const CompletedConsignTableStatus = ({ selectedStatus, onStatusChange }: 
                   view: texts.me,
                   license: texts.no,
                   search: texts.no,
+                  disabled: false,
               }
             : {
                   status: 'active',
@@ -78,6 +82,7 @@ export const CompletedConsignTableStatus = ({ selectedStatus, onStatusChange }: 
                   view: texts.everyone,
                   license: texts.no,
                   search: texts.yes,
+                  disabled: false,
               },
         {
             status: 'hidden',
@@ -85,6 +90,7 @@ export const CompletedConsignTableStatus = ({ selectedStatus, onStatusChange }: 
             view: texts.everyone,
             license: texts.yes,
             search: texts.no,
+            disabled: false,
         },
     ];
 
@@ -116,29 +122,48 @@ export const CompletedConsignTableStatus = ({ selectedStatus, onStatusChange }: 
                                     <TableCell scope="row">
                                         <Box display="flex" alignItems="center">
                                             <Radio
-                                                disabled={isBlocked}
+                                                disabled={isBlocked || row.disabled}
                                                 name="selectedStatus"
                                                 value={row.status}
                                                 checked={row.status == selectedStatus}
                                                 onChange={onStatusChange}
+                                                style={{
+                                                    color: row.disabled ? '#D9D9D9' : undefined,
+                                                }}
                                             />
-                                            <Typography variant="subtitle1" color="textPrimary" fontWeight={600}>
+                                            <Typography
+                                                variant="subtitle1"
+                                                color={row.disabled ? 'gray' : 'textPrimary'}
+                                                fontWeight={600}
+                                            >
                                                 {row.title}
                                             </Typography>
                                         </Box>
                                     </TableCell>
                                     <TableCell>
-                                        <Typography variant="subtitle1" color="textPrimary" fontWeight={600}>
+                                        <Typography
+                                            variant="subtitle1"
+                                            color={row.disabled ? 'gray' : 'textPrimary'}
+                                            fontWeight={600}
+                                        >
                                             {row.view}
                                         </Typography>
                                     </TableCell>
                                     <TableCell>
-                                        <Typography variant="subtitle1" color="textPrimary" fontWeight={600}>
+                                        <Typography
+                                            variant="subtitle1"
+                                            color={row.disabled ? 'gray' : 'textPrimary'}
+                                            fontWeight={600}
+                                        >
                                             {row.license}
                                         </Typography>
                                     </TableCell>
                                     <TableCell>
-                                        <Typography variant="subtitle1" color="textPrimary" fontWeight={600}>
+                                        <Typography
+                                            variant="subtitle1"
+                                            color={row.disabled ? 'gray' : 'textPrimary'}
+                                            fontWeight={600}
+                                        >
                                             {row.search}
                                         </Typography>
                                     </TableCell>
