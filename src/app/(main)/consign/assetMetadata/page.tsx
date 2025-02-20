@@ -308,14 +308,14 @@ export default function AssetMetadata() {
                         isValid.push(false);
                         return childPath
                             ? {
-                                ...acc,
-                                [parentPath]: {
-                                    ...acc[parentPath],
-                                    [childPath]: {
-                                        __errors: [...(acc[parentPath]?.[childPath]?.__errors || []), message],
-                                    },
-                                },
-                            }
+                                  ...acc,
+                                  [parentPath]: {
+                                      ...acc[parentPath],
+                                      [childPath]: {
+                                          __errors: [...(acc[parentPath]?.[childPath]?.__errors || []), message],
+                                      },
+                                  },
+                              }
                             : { ...acc, [parentPath]: { __errors: [message] } };
                     }
 
@@ -365,38 +365,40 @@ export default function AssetMetadata() {
 
         try {
             setLoading(true);
-            if (
-                (sectionsFormat.context.formData as any).title != formDataContext.title ||
-                (sectionsFormat.context.formData as any).description != formDataContext.description
-            ) {
-                const signedMessage = await dispatch(
-                    signerUpdateAssetHeaderThunk({
-                        assetKey: asset._id,
-                        client: client!,
-                        title: formDataContext.title,
-                        description: formDataContext.description,
-                    })
-                );
-
-                if (!signedMessage) {
-                    toast.display({ type: 'error', message: 'Error signing message' });
-                    return;
-                }
-
-                if (!wallets.some((wallet) => wallet.address === address)) {
-                    toast.display({ type: 'error', message: 'Wallet not found in your account' });
-                    return;
-                }
-
-                await dispatch(
-                    updateAssetHeaderThunk({
-                        assetKey: asset._id,
-                        header: {
+            if (hasContract) {
+                if (
+                    (sectionsFormat.context.formData as any).title != formDataContext.title ||
+                    (sectionsFormat.context.formData as any).description != formDataContext.description
+                ) {
+                    const signedMessage = await dispatch(
+                        signerUpdateAssetHeaderThunk({
+                            assetKey: asset._id,
+                            client: client!,
                             title: formDataContext.title,
                             description: formDataContext.description,
-                        },
-                    })
-                );
+                        })
+                    );
+
+                    if (!signedMessage) {
+                        toast.display({ type: 'error', message: 'Error signing message' });
+                        return;
+                    }
+
+                    if (!wallets.some((wallet) => wallet.address === address)) {
+                        toast.display({ type: 'error', message: 'Wallet not found in your account' });
+                        return;
+                    }
+
+                    await dispatch(
+                        updateAssetHeaderThunk({
+                            assetKey: asset._id,
+                            header: {
+                                title: formDataContext.title,
+                                description: formDataContext.description,
+                            },
+                        })
+                    );
+                }
             }
 
             dispatch(
@@ -463,7 +465,7 @@ export default function AssetMetadata() {
 
         if (userIsBlocked) return 'You are blocked';
 
-        if (!address && changedTitleOrDescription) return 'Connect your wallet';
+        if (!address && changedTitleOrDescription && hasContract) return 'Connect your wallet';
 
         return texts.nextButton;
     };
@@ -476,7 +478,7 @@ export default function AssetMetadata() {
                 stepNumber={2}
                 title={texts.consignArtworkTitle}
                 backOnclick={handleOpenBackModal}
-                submitDisabled={(changedTitleOrDescription && !address) || loading}
+                submitDisabled={(changedTitleOrDescription && !address && hasContract) || loading}
             >
                 <Breadcrumb
                     title={texts.consignArtworkTitle}
