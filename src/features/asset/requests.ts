@@ -23,6 +23,7 @@ import {
     SignUpdateAssetHeaderReq,
     SignUpdateAssetStatusReq,
     UpdateAssetStatusReq,
+    UpdateAssetHeaderReq,
 } from './types';
 import { apiService } from '@/services/api';
 import { assetActionsCreators } from './slice';
@@ -50,14 +51,14 @@ export async function assetStorage({ file, url, dispatch, transactionId }: Asset
 
         xhr.open('PUT', url, true);
 
-        xhr.upload.onprogress = function (event) {
+        xhr.upload.onprogress = function(event) {
             if (event.lengthComputable) {
                 const percentCompleted = Math.round((event.loaded * 100) / event.total);
                 dispatch(assetActionsCreators.requestAssetUpload({ transactionId, uploadProgress: percentCompleted }));
             }
         };
 
-        xhr.onload = function () {
+        xhr.onload = function() {
             if (this.status >= 200 && this.status < 300) {
                 resolve(xhr.response);
             } else {
@@ -68,7 +69,7 @@ export async function assetStorage({ file, url, dispatch, transactionId }: Asset
             }
         };
 
-        xhr.onerror = function () {
+        xhr.onerror = function() {
             reject({
                 status: this.status,
                 statusText: xhr.statusText,
@@ -196,6 +197,10 @@ export async function signUpdateAssetHeader({ signer, domain, types, tx, signedM
         tx,
         signedMessage,
     });
+}
+
+export async function updateAssetHeader({ assetKey, header }: UpdateAssetHeaderReq) {
+    return api3Service.patch(`/assets/updateAssetHeader/${assetKey}`, header);
 }
 
 export async function changeAutoStakeInAllAssets(autoStake: boolean) {

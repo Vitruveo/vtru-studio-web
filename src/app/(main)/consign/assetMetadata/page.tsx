@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from '@/store/hooks';
 
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
-import { assetMetadataThunk, signerUpdateAssetHeaderThunk } from '@/features/asset/thunks';
+import { assetMetadataThunk, signerUpdateAssetHeaderThunk, updateAssetHeaderThunk } from '@/features/asset/thunks';
 import { consignArtworkActionsCreators } from '@/features/consign/slice';
 import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
@@ -27,6 +27,7 @@ import { useToastr } from '@/app/hooks/useToastr';
 import { assetActionsCreators } from '@/features/asset/slice';
 import { UserSliceState } from '@/features/user/types';
 import { useAccount, useConnectorClient } from 'wagmi';
+import add from 'date-fns/esm/add';
 
 export type SectionName = 'context' | 'taxonomy' | 'creators' | 'provenance' | 'custom' | 'assets';
 type SectionsJSONType = typeof sectionsJSON;
@@ -386,6 +387,16 @@ export default function AssetMetadata() {
                     toast.display({ type: 'error', message: 'Wallet not found in your account' });
                     return;
                 }
+
+                await dispatch(
+                    updateAssetHeaderThunk({
+                        assetKey: asset._id,
+                        header: {
+                            title: formDataContext.title,
+                            description: formDataContext.description,
+                        },
+                    })
+                );
             }
 
             dispatch(
@@ -465,7 +476,7 @@ export default function AssetMetadata() {
                 stepNumber={2}
                 title={texts.consignArtworkTitle}
                 backOnclick={handleOpenBackModal}
-                submitDisabled={changedTitleOrDescription && !address}
+                submitDisabled={(changedTitleOrDescription && !address) || loading}
             >
                 <Breadcrumb
                     title={texts.consignArtworkTitle}
@@ -519,7 +530,13 @@ export default function AssetMetadata() {
                     )}
                 </Box>
 
-                <ModalBackConfirm show={showBackModal} handleClose={handleCloseBackModal} yesClick={handleSaveData} />
+                <ModalBackConfirm
+                    show={showBackModal}
+                    handleClose={handleCloseBackModal}
+                    yesClick={handleSaveData}
+                    disabledSave={!address}
+                    saveText={renderMessage()}
+                />
             </PageContainerFooter>
         </form>
     );

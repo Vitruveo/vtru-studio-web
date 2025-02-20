@@ -348,6 +348,14 @@ export interface UpdateAssetStatusReq {
     status: string;
 }
 
+export interface UpdateAssetHeaderReq {
+    assetKey: string;
+    header: {
+        title: string;
+        description: string;
+    };
+}
+
 export type UpdateAssetStepApiRes = APIResponse<string>;
 export type UploadIPFSByAssetIdApiRes = void;
 export type CreateContractApiRes = void;

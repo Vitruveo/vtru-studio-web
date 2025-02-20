@@ -7,9 +7,18 @@ interface ModalBackConfirmProps {
     noClick?: () => void;
     show: boolean;
     handleClose: () => void;
+    disabledSave?: boolean;
+    saveText?: string;
 }
 
-export const ModalBackConfirm = ({ handleClose, yesClick, noClick, show }: ModalBackConfirmProps) => {
+export const ModalBackConfirm = ({
+    handleClose,
+    yesClick,
+    noClick,
+    show,
+    disabledSave = false,
+    saveText,
+}: ModalBackConfirmProps) => {
     const router = useRouter();
     const { language } = useI18n();
 
@@ -44,8 +53,9 @@ export const ModalBackConfirm = ({ handleClose, yesClick, noClick, show }: Modal
                         variant="contained"
                         color="primary"
                         onClick={yesClick}
+                        disabled={disabledSave}
                     >
-                        {texts.confirm}
+                        {saveText || texts.confirm}
                     </Button>
                 </Box>
             </DialogContent>
