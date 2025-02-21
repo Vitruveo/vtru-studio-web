@@ -162,7 +162,7 @@ export const ModalStoresVisibility = ({ open, onClose }: ModalListOfLicensesProp
                                     label="Hidden for selected Stores"
                                 />
                                 {formik.values.visibility === 'hiddenInSelectedStores' && (
-                                    <Box>
+                                    <Box width={300}>
                                         <FieldArray
                                             name="list"
                                             render={(arrayHelpers) => (
