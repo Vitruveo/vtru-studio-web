@@ -253,13 +253,26 @@ export interface CheckLicenseEditableReq {
     assetId: string;
 }
 
-export interface signerParams {
+export interface SignerParams {
     client: Client<Transport, Chain, Account>;
     assetKey: string;
     price: number;
 }
 
-export interface signMessageReq {
+export interface SignerUpdateAssetParams {
+    client: Client<Transport, Chain, Account>;
+    assetKey: string;
+    title: string;
+    description: string;
+}
+
+export interface SignerUpdateAssetStatusParams {
+    client: Client<Transport, Chain, Account>;
+    assetKey: string;
+    status: string;
+}
+
+export interface SignUpdateLicensePriceReq {
     signer: string;
     domain: {
         name: string;
@@ -284,6 +297,70 @@ export interface signMessageReq {
         timestamp: number;
     };
     signedMessage: string;
+}
+
+export interface SignUpdateAssetHeaderReq {
+    signer: string;
+    domain: {
+        name: string;
+        version: string;
+        chainId: number;
+    };
+    types: {
+        Transaction: {
+            name: string;
+            type: string;
+        }[];
+    };
+    tx: {
+        name: string;
+        action: string;
+        method: string;
+        assetKey: string;
+        title: string;
+        description: string;
+        contract: string;
+        timestamp: number;
+    };
+    signedMessage: string;
+}
+
+export interface SignUpdateAssetStatusReq {
+    signer: string;
+    domain: {
+        name: string;
+        version: string;
+        chainId: number;
+    };
+    types: {
+        Transaction: {
+            name: string;
+            type: string;
+        }[];
+    };
+    tx: {
+        name: string;
+        action: string;
+        method: string;
+        assetKey: string;
+        status: string;
+        contract: string;
+        timestamp: number;
+    };
+    signedMessage: string;
+}
+
+export interface UpdateAssetStatusReq {
+    assetKey: string;
+    status: string;
+}
+
+export interface UpdateAssetHeaderReq {
+    assetKey: string;
+    header: {
+        title: string;
+        description: string;
+    };
 }
 
 export type UpdateAssetStepApiRes = APIResponse<string>;

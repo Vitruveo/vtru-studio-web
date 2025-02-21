@@ -7,7 +7,6 @@ import { SectionName } from './page';
 import { IChangeEvent } from '@rjsf/core';
 import { useI18n } from '@/app/hooks/useI18n';
 import { statusName } from '@/features/consign/slice';
-import { ConsignArtworkAssetStatus } from '@/features/consign/types';
 import { TranslateFunction } from '@/i18n/types';
 
 export type SectionOnChangeParams = { data: IChangeEvent<any, RJSFSchema, any>; sectionName: SectionName };
@@ -21,7 +20,6 @@ interface SectionProps extends Omit<CustomFormProps, 'updateErrors' | 'onChange'
     sectionName: SectionName;
     updateErrors: any;
     onChange: (params: SectionOnChangeParams) => void;
-    assetStatus?: ConsignArtworkAssetStatus;
 }
 
 const Section = ({
@@ -33,9 +31,7 @@ const Section = ({
     onChange,
     setSectionsStatus,
     updateErrors,
-    assetStatus,
 }: SectionProps) => {
-    const [uiSchemaState, setUiSchemaState] = useState(uiSchema);
     const [status, setStatus] = useState<keyof typeof statusName>('notStarted');
 
     const [expanded, setExpanded] = useState<boolean>(false);
@@ -139,24 +135,6 @@ const Section = ({
         handleChangeStatus({ errors });
     }, [errors]);
 
-    useEffect(() => {
-        if (assetStatus && assetStatus !== 'draft') {
-            setUiSchemaState((prev) => ({
-                ...prev,
-                title: {
-                    ...prev?.title,
-                    'ui:disabled': true,
-                },
-                description: {
-                    ...prev?.description,
-                    'ui:disabled': true,
-                },
-            }));
-        } else {
-            setUiSchemaState(uiSchema);
-        }
-    }, [assetStatus]);
-
     return (
         <Accordion style={{ background: '#fafafa' }} expanded={expanded} onChange={handleChange}>
             <AccordionSummary
@@ -201,7 +179,7 @@ const Section = ({
             >
                 <CustomForm
                     langBasePath="studio.consignArtwork.assetMetadata.field"
-                    uiSchema={uiSchemaState}
+                    uiSchema={uiSchema}
                     formData={newFormData}
                     onChange={handleChangeForm}
                     schema={schema}
