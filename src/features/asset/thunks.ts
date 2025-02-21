@@ -19,8 +19,13 @@ import {
     validateUploadedMedia,
     updatePrice,
     checkLicenseEditable,
-    signMessage,
+    signUpdateLicensePrice,
     sendRequestUploadStores,
+    updatedAssetStoresVisibility,
+    signUpdateAssetHeader,
+    signUpdateAssetStatus,
+    updateAssetStatus,
+    updateAssetHeader,
 } from './requests';
 import {
     AssetSendRequestUploadApiRes,
@@ -40,7 +45,11 @@ import {
     UploadIPFSByAssetIdApiRes,
     UploadIPFSByAssetIdReq,
     ValidateUploadedMediaReq,
-    signerParams,
+    SignerParams,
+    SignerUpdateAssetParams,
+    SignerUpdateAssetStatusParams,
+    UpdateAssetStatusReq,
+    UpdateAssetHeaderReq,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { assetActionsCreators } from './slice';
@@ -57,16 +66,17 @@ import { userActionsCreators } from '../user/slice';
 import { checkStepProgress } from '@/app/(main)/consign/licenses/nft';
 import { clientToSigner, network, provider } from '@/services/web3';
 import schema from '@/services/web3/contracts.json';
+import { UpdatedAssetStoresVisibilityReq } from '../common/types';
 
 export function requestDeleteURLThunk(payload: RequestDeleteFilesReq): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch, getState) {
+    return async function () {
         const response = await requestDeleteFiles(payload);
         return response;
     };
 }
 
 export function assetStorageThunk(payload: Omit<AssetStorageReq, 'dispatch'>): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch, getState) {
+    return async function (dispatch, _getState) {
         const response = await assetStorage({
             url: payload.url,
             file: payload.file,
@@ -78,7 +88,7 @@ export function assetStorageThunk(payload: Omit<AssetStorageReq, 'dispatch'>): R
 }
 
 export function createNewAssetThunk(cloneId?: string): ReduxThunkAction<Promise<void>> {
-    return async function (dispatch, getState) {
+    return async function (dispatch, _getState) {
         const response = await createNewAsset(cloneId);
 
         dispatch(userActionsCreators.setSelectedAsset(response.data?.insertedId || ''));
@@ -86,14 +96,14 @@ export function createNewAssetThunk(cloneId?: string): ReduxThunkAction<Promise<
 }
 
 export function deleteAssetThunk(id: string): ReduxThunkAction<Promise<void>> {
-    return async function (dispatch, getState) {
+    return async function (dispatch, _getState) {
         await deleteAsset(id);
         dispatch(userActionsCreators.removeAsset(id));
     };
 }
 
 export function getAssetThunk(id: string): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch, getState) {
+    return async function (dispatch, _getState) {
         try {
             dispatch(assetActionsCreators.resetAsset());
             const response = await getAssetById(id);
@@ -233,7 +243,7 @@ export function getAssetThunk(id: string): ReduxThunkAction<Promise<any>> {
                             ? 'inProgress'
                             : Object.entries(formatAssetsFormats)
                                     .filter(([key]) => key !== 'print')
-                                    .every(([key, value]) => value.file)
+                                    .every(([_key, value]) => value.file)
                               ? 'completed'
                               : Object.values(formatAssetsFormats).some((format) => format.file) ||
                                   formatAssetsFormats.original.file
@@ -312,8 +322,8 @@ export function auxiliaryMediaThunk(payload: {
         const formatsState = getState().asset.mediaAuxiliary.formats;
 
         const formatsPersist = Object.entries(formatsState)
-            .filter(([key, value]) => value.file)
-            .filter(([key, value]) => !payload.deleteFormats?.includes(key))
+            .filter(([_key, value]) => value.file)
+            .filter(([key, _value]) => !payload.deleteFormats?.includes(key))
             .reduce((acc, [key, value]) => {
                 return {
                     ...acc,
@@ -397,8 +407,8 @@ export function assetMediaThunk(payload: {
         }
 
         const formatsPersist = Object.entries(formatsState)
-            .filter(([key, value]) => value.file)
-            .filter(([key, value]) => !payload.deleteFormats?.includes(key))
+            .filter(([_key, value]) => value.file)
+            .filter(([key, _value]) => !payload.deleteFormats?.includes(key))
             .reduce((acc, [key, value]) => {
                 return {
                     ...acc,
@@ -447,13 +457,13 @@ export function assetMediaThunk(payload: {
         if (payload.deleteFormats?.length) dispatch(assetActionsCreators.removeFormats(payload.deleteFormats));
         dispatch(assetActionsCreators.changeLoadingMediaData('finished'));
 
-        const currentFormats = Object.entries(getState().asset.formats).filter(([key, value]) => key !== 'print');
-        const hasFiles = currentFormats.every(([key, value]) => value.path);
+        const currentFormats = Object.entries(getState().asset.formats).filter(([key, _value]) => key !== 'print');
+        const hasFiles = currentFormats.every(([_key, value]) => value.path);
 
         const currentFormatsFields = Object.entries(payload?.formatsFields || {}).filter(
-            ([key, value]) => key !== 'print'
+            ([key, _value]) => key !== 'print'
         );
-        const hasFilesFormatFields = currentFormatsFields.every(([key, value]) => value.file);
+        const hasFilesFormatFields = currentFormatsFields.every(([_key, value]) => value.file);
 
         if (hasFiles && hasFilesFormatFields && !payload.deleteFormats?.length) {
             dispatch(
@@ -500,7 +510,7 @@ export function assetMetadataThunk(
 
 export function licenseThunk(payload: LicensesFormValues): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
-        const response = await updateAssetStep({
+        await updateAssetStep({
             ...payload,
             licenses: payload,
             stepName: 'license',
@@ -515,9 +525,22 @@ export function licenseThunk(payload: LicensesFormValues): ReduxThunkAction<Prom
     };
 }
 
+export function updatedAssetStoresVisibilityThunk(
+    payload: UpdatedAssetStoresVisibilityReq
+): ReduxThunkAction<Promise<any>> {
+    return async function (dispatch, getState) {
+        try {
+            updatedAssetStoresVisibility(payload);
+            dispatch(userActionsCreators.changeAssetStoresVisibility(payload));
+        } catch (err) {
+            console.error(err);
+        }
+    };
+}
+
 export function contractThunk(payload: TermsOfUseFormValues): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
-        const response = await updateAssetStep({
+        await updateAssetStep({
             ...payload,
             stepName: 'contract',
             id: getState().user.selectedAsset,
@@ -538,7 +561,7 @@ export function contractThunk(payload: TermsOfUseFormValues): ReduxThunkAction<P
 
 export function publishThunk(payload: { status: AssetStatus }): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
-        const response = await updateAssetStep({
+        await updateAssetStep({
             ...payload,
             stepName: 'publish',
             id: getState().user.selectedAsset,
@@ -555,7 +578,7 @@ export function publishThunk(payload: { status: AssetStatus }): ReduxThunkAction
 export function sendRequestUploadThunk(
     payload: AssetSendRequestUploadReq
 ): ReduxThunkAction<Promise<AssetSendRequestUploadApiRes>> {
-    return async function (dispatch, getState) {
+    return async function (_dispatch, getState) {
         const assetSelected = getState().user.selectedAsset;
         const response = await sendRequestUpload({
             id: assetSelected,
@@ -572,7 +595,7 @@ export function sendRequestUploadThunk(
 export function sendRequestUploadStoresThunk(
     payload: StoresSendRequestUploadReq
 ): ReduxThunkAction<Promise<StoresSendRequestUploadApiRes>> {
-    return async function (dispatch, getState) {
+    return async function () {
         const response = await sendRequestUploadStores({
             id: payload.id,
             mimetype: payload.mimetype,
@@ -594,7 +617,7 @@ export function signingMediaC2PAThunk(data: SigningMediaC2PAReq): ReduxThunkActi
 export function uploadIPFSByAssetIdThunk(
     data: UploadIPFSByAssetIdReq
 ): ReduxThunkAction<Promise<UploadIPFSByAssetIdApiRes>> {
-    return async function (dispatch, getState) {
+    return async function (_dispatch, getState) {
         const state = getState();
         const token = state.user.token;
 
@@ -631,8 +654,10 @@ export function uploadIPFSByAssetIdThunk(
     };
 }
 
-export function createContractThunk(data: CreateContractByAssetIdReq): ReduxThunkAction<Promise<CreateContractApiRes>> {
-    return async function (dispatch, getState) {
+export function createContractThunk(
+    _data: CreateContractByAssetIdReq
+): ReduxThunkAction<Promise<CreateContractApiRes>> {
+    return async function (_dispatch, getState) {
         const state = getState();
         const token = state.user.token;
 
@@ -739,7 +764,7 @@ export function extractAssetColorsThunk({ id }: { id: string }): ReduxThunkActio
 }
 
 export function validationConsignThunk(): ReduxThunkAction<Promise<void>> {
-    return function (dispatch, getState) {
+    return async function (dispatch, getState) {
         dispatch(assetActionsCreators.setValidationConsign({ status: 'loading', message: '' }));
 
         return validationConsign(getState().user.selectedAsset)
@@ -760,7 +785,7 @@ export function validationConsignThunk(): ReduxThunkAction<Promise<void>> {
 }
 
 export function consignThunk(id: string): ReduxThunkAction<Promise<void>> {
-    return function (dispatch) {
+    return async function (dispatch) {
         return consign(id).then((response) => {
             dispatch(assetActionsCreators.resetConsign());
 
@@ -784,7 +809,7 @@ export const CONSIGN_MESSAGE_MAP = {
 };
 
 export function eventTransactionThunk(): ReduxThunkAction<Promise<void>> {
-    return function (dispatch, getState) {
+    return async function (dispatch, getState) {
         const transaction = getState().asset.consign.transaction;
         if (!transaction) return Promise.resolve();
 
@@ -856,7 +881,7 @@ export function deleteRequestConsignThunk(): ReduxThunkAction<void> {
 }
 
 export function getRequestConsignCommentsThunk({ id }: { id: string }): ReduxThunkAction<Promise<any>> {
-    return function (dispatch, getState) {
+    return async function (dispatch, _getState) {
         return getRequestConsignComments(id)
             .then((response) => {
                 if (Array.isArray(response.data)) {
@@ -870,7 +895,7 @@ export function getRequestConsignCommentsThunk({ id }: { id: string }): ReduxThu
 }
 
 export function validateUploadedMediaThunk(payload: ValidateUploadedMediaReq): ReduxThunkAction<Promise<void>> {
-    return function (dispatch, getState) {
+    return async function (dispatch, _getState) {
         dispatch(assetActionsCreators.changeLoading(true));
         return validateUploadedMedia(payload)
             .then(() => {
@@ -904,9 +929,9 @@ export function validateUploadedMediaThunk(payload: ValidateUploadedMediaReq): R
 }
 
 export function updatePriceThuk(payload: UpdatePriceReq): ReduxThunkAction<Promise<boolean>> {
-    return function (dispatch, getState) {
+    return async function () {
         return updatePrice(payload)
-            .then((response) => true)
+            .then(() => true)
             .catch((error) => {
                 console.log(error);
                 return false;
@@ -915,7 +940,7 @@ export function updatePriceThuk(payload: UpdatePriceReq): ReduxThunkAction<Promi
 }
 
 export function checkLicenseEditableThunk(payload: CheckLicenseEditableReq): ReduxThunkAction<Promise<boolean>> {
-    return function (dispatch, getState) {
+    return async function () {
         return checkLicenseEditable(payload)
             .then((response) => response.data as boolean)
             .catch((error) => {
@@ -925,8 +950,8 @@ export function checkLicenseEditableThunk(payload: CheckLicenseEditableReq): Red
     };
 }
 
-export function signerThunk(payload: signerParams): ReduxThunkAction<Promise<boolean>> {
-    return async function (dispatch, getState) {
+export function signerUpdateLicensePriceThunk(payload: SignerParams): ReduxThunkAction<Promise<boolean>> {
+    return async function () {
         try {
             const { client, assetKey, price } = payload;
 
@@ -969,7 +994,7 @@ export function signerThunk(payload: signerParams): ReduxThunkAction<Promise<boo
             // Sign the message
             const signedMessage = await signer.signTypedData(domain, types, tx);
 
-            const response = await signMessage({
+            const response = await signUpdateLicensePrice({
                 tx,
                 signedMessage,
                 signer: signer.address,
@@ -985,5 +1010,148 @@ export function signerThunk(payload: signerParams): ReduxThunkAction<Promise<boo
         } catch (error) {
             return false;
         }
+    };
+}
+
+export function signerUpdateAssetHeaderThunk(payload: SignerUpdateAssetParams): ReduxThunkAction<Promise<boolean>> {
+    return async function () {
+        try {
+            const { client, assetKey, title, description } = payload;
+
+            const signer = clientToSigner(client);
+
+            const contractAddress = schema[network].AssetRegistry;
+
+            const domain = {
+                name: 'Vitruveo Studio',
+                version: '1',
+                chainId: Number((await provider.getNetwork()).chainId),
+            };
+
+            const types = {
+                Transaction: [
+                    { name: 'name', type: 'string' },
+                    { name: 'action', type: 'string' },
+                    { name: 'method', type: 'string' },
+                    { name: 'assetKey', type: 'string' },
+                    { name: 'title', type: 'string' },
+                    { name: 'description', type: 'string' },
+                    { name: 'contract', type: 'address' },
+                    { name: 'timestamp', type: 'uint' },
+                ],
+            };
+
+            const tx = {
+                name: 'Asset Registry',
+                action: 'Update Asset Header',
+                method: 'updateAssetHeader',
+                assetKey: assetKey,
+                title,
+                description,
+                contract: contractAddress,
+                timestamp: Math.floor(Date.now() / 1000),
+            };
+
+            // Sign the message
+            const signedMessage = await signer.signTypedData(domain, types, tx);
+
+            const response = await signUpdateAssetHeader({
+                tx,
+                signedMessage,
+                signer: signer.address,
+                types,
+                domain,
+            });
+
+            if (response.status !== 200) {
+                return false;
+            }
+
+            return true;
+        } catch (error) {
+            return false;
+        }
+    };
+}
+
+export function signerUpdateAssetStatusThunk(
+    payload: SignerUpdateAssetStatusParams
+): ReduxThunkAction<Promise<boolean>> {
+    return async function () {
+        try {
+            const { client, status, assetKey } = payload;
+
+            const signer = clientToSigner(client);
+
+            const contractAddress = schema[network].AssetRegistry;
+
+            const domain = {
+                name: 'Vitruveo Studio',
+                version: '1',
+                chainId: Number((await provider.getNetwork()).chainId),
+            };
+
+            const types = {
+                Transaction: [
+                    { name: 'name', type: 'string' },
+                    { name: 'action', type: 'string' },
+                    { name: 'method', type: 'string' },
+                    { name: 'assetKey', type: 'string' },
+                    { name: 'status', type: 'string' },
+                    { name: 'contract', type: 'address' },
+                    { name: 'timestamp', type: 'uint' },
+                ],
+            };
+
+            const tx = {
+                name: 'Asset Registry',
+                action: 'Update Asset Status',
+                method: 'updateAssetStatus',
+                assetKey,
+                status,
+                quantity: 1,
+                contract: contractAddress,
+                timestamp: Math.floor(Date.now() / 1000),
+            };
+
+            // Sign the message
+            const signedMessage = await signer.signTypedData(domain, types, tx);
+
+            const response = await signUpdateAssetStatus({
+                signer: signer.address,
+                tx,
+                signedMessage,
+                types,
+                domain,
+            });
+
+            if (response.status !== 200) {
+                return false;
+            }
+
+            return true;
+        } catch (error) {
+            return false;
+        }
+    };
+}
+
+export function updateAssetHeaderThunk(payload: UpdateAssetHeaderReq): ReduxThunkAction<Promise<void>> {
+    const { assetKey, header } = payload;
+    return async function () {
+        await updateAssetHeader({
+            assetKey,
+            header,
+        });
+    };
+}
+
+export function updateAssetStatusThunk(payload: UpdateAssetStatusReq): ReduxThunkAction<Promise<void>> {
+    const { assetKey, status } = payload;
+    return async function () {
+        await updateAssetStatus({
+            assetKey,
+            status,
+        });
     };
 }

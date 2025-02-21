@@ -127,6 +127,7 @@ const TaxonomyItem = () => {
                     name="taxonomy.tags"
                     render={(arrayHelpers) => (
                         <VirtualizedMultiSelect
+                            onlyValueSelected
                             load={loadTags}
                             arrayHelpers={arrayHelpers}
                             options={tagsOptions}

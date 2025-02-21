@@ -23,6 +23,16 @@ export function getStores(data?: GetStoresParams): Promise<APIResponse<StorePagi
     });
 }
 
+export function getAllStores(data?: GetStoresParams): Promise<APIResponse<StorePaginated>> {
+    return apiService.get('/stores/public', {
+        params: {
+            page: data?.page,
+            limit: data?.limit,
+            sort: data?.sort,
+        },
+    });
+}
+
 export async function getStoreById(id: string): Promise<APIResponse<Stores>> {
     return apiService.get(`/stores/${id}`);
 }
@@ -65,14 +75,14 @@ export async function storeStorage({ file, url, dispatch, transactionId }: Store
 
         xhr.open('PUT', url, true);
 
-        xhr.upload.onprogress = function(event) {
+        xhr.upload.onprogress = function (event) {
             if (event.lengthComputable) {
                 const percentCompleted = Math.round((event.loaded * 100) / event.total);
                 dispatch(storesActionsCreators.requestStoreUpload({ transactionId, uploadProgress: percentCompleted }));
             }
         };
 
-        xhr.onload = function() {
+        xhr.onload = function () {
             if (this.status >= 200 && this.status < 300) {
                 resolve(xhr.response);
             } else {
@@ -83,7 +93,7 @@ export async function storeStorage({ file, url, dispatch, transactionId }: Store
             }
         };
 
-        xhr.onerror = function() {
+        xhr.onerror = function () {
             reject({
                 status: this.status,
                 statusText: xhr.statusText,

@@ -17,6 +17,7 @@ interface Props {
     options: Option[];
     arrayHelpers: FieldArrayRenderProps;
     load?: boolean;
+    onlyValueSelected?: boolean;
 }
 
 interface CustomMenuListProps extends Omit<MenuListProps<Option>, 'setValue'> {
@@ -81,7 +82,7 @@ const useDebounce = (callback: (...args: any[]) => void, delay: number) => {
     );
 };
 
-const VirtualizedMultiSelect = ({ value, options, arrayHelpers, load }: Props) => {
+const VirtualizedMultiSelect = ({ value, options, arrayHelpers, load, onlyValueSelected }: Props) => {
     const theme = useTheme();
     const [inputValue, setInputValue] = useState('');
     const [filteredOptions, setFilteredOptions] = useState(options);
@@ -96,7 +97,11 @@ const VirtualizedMultiSelect = ({ value, options, arrayHelpers, load }: Props) =
             if (actionMeta.action === 'remove-value' && actionMeta.removedValue) {
                 arrayHelpers.remove(value.findIndex((item) => item.value === actionMeta.removedValue.value));
             } else if (actionMeta.action === 'select-option' && actionMeta.option) {
-                arrayHelpers.push(actionMeta.option.value);
+                if (onlyValueSelected) {
+                    arrayHelpers.push(actionMeta.option.value);
+                } else {
+                    arrayHelpers.push({ label: actionMeta.option.label, value: actionMeta.option.value });
+                }
             }
         },
         [arrayHelpers, value]
@@ -136,7 +141,7 @@ const VirtualizedMultiSelect = ({ value, options, arrayHelpers, load }: Props) =
                     minWidth: '240px',
                     borderColor: state.isFocused ? theme.palette.primary.main : theme.palette.grey[200],
                     backgroundColor: theme.palette.background.paper,
-                    boxShadow: '#FF0066',
+                    boxShadow: state.isFocused ? '0 0 0 1px #FF0066' : undefined,
                     '&:hover': { borderColor: '#FF0066' },
                 }),
                 menu: (base) => ({

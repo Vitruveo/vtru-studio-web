@@ -1,5 +1,5 @@
 import { StepsFormValues } from '@/app/(main)/consign/types';
-import { APIResponse, Framework } from '../common/types';
+import { APIResponse, Framework, StoresVisibility } from '../common/types';
 import { AccountSettingsFormValues } from '@/app/(main)/profile/types';
 import { LicensesFormValues } from '@/app/(main)/consign/licenses/types';
 import { ContractExplorer } from '../asset/types';
@@ -58,6 +58,7 @@ export interface Assets {
     mintExplorer?: MintExplorer;
     contractExplorer?: ContractExplorer;
     countComments: number;
+    stores: StoresVisibility;
 }
 
 export interface RequestUpload {

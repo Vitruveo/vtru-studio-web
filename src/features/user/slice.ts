@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { RequestUpload, SynapsStep, UserSliceState, VaultProps } from './types';
 import { SynapsChangeNotify } from '../ws/types';
+import { UpdatedAssetStoresVisibilityReq } from '../common/types';
 
 const initialState: UserSliceState = {
     _id: '',
@@ -180,6 +181,12 @@ export const userSlice = createSlice({
         },
         setMyAssets: (state, action: PayloadAction<UserSliceState['assets']>) => {
             state.assets = action.payload;
+        },
+        changeAssetStoresVisibility: (state, action: PayloadAction<UpdatedAssetStoresVisibilityReq>) => {
+            const index = state.assets.data.findIndex((asset) => asset._id === action.payload.assetId);
+            if (index !== -1) {
+                state.assets.data[index].stores = action.payload.stores;
+            }
         },
         setSelectedAsset: (state, action: PayloadAction<string>) => {
             state.selectedAsset = action.payload;

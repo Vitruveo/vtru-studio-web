@@ -21,7 +21,7 @@ import { useI18n } from '@/app/hooks/useI18n';
 import { formatCurrency } from '@/utils/formatCurrency';
 import { StepStatus } from '@/features/consign/types';
 import { useDispatch, useSelector } from '@/store/hooks';
-import { checkLicenseEditableThunk, signerThunk, updatePriceThuk } from '@/features/asset/thunks';
+import { checkLicenseEditableThunk, signerUpdateLicensePriceThunk, updatePriceThuk } from '@/features/asset/thunks';
 import UpdatePriceModal from './UpdatedPriceModal';
 import { useToastr } from '@/app/hooks/useToastr';
 
@@ -168,8 +168,8 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
         values?.editionOption && currentDescription === 'nft.editionOption'
             ? editionTitles[values.editionOption as keyof typeof editionTitles]
             : values?.added
-              ? texts.selectEditionTitle
-              : `NFT-ART-1 ${texts.license}`;
+                ? texts.selectEditionTitle
+                : `NFT-ART-1 ${texts.license}`;
 
     const handleAdded = (added: boolean) => {
         if (added == false) setFieldValue('nft.editionOption', '');
@@ -189,7 +189,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const handleSubmitUpdatePrice = async () => {
         setLoading(true);
         const verify = await dispatch(
-            signerThunk({ assetKey: assetId, price: values.single.editionPrice, client: client! })
+            signerUpdateLicensePriceThunk({ assetKey: assetId, price: values.single.editionPrice, client: client! })
         );
         if (!verify) {
             toastr.display({ type: 'error', message: 'Error signing message' });
