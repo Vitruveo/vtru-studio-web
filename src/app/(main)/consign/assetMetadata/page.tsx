@@ -201,6 +201,7 @@ export default function AssetMetadata() {
         consignArtworkTitle: language['studio.consignArtwork.title'],
         assetMetadataTitle: language['studio.consignArtwork.stepName.assetMetadata'],
         assetMetadataDescription: language['studio.consignArtwork.assetMetadata.description'],
+        save: language['studio.consignArtwork.backModal.confirm.button'],
     } as { [key: string]: string };
 
     const BCrumb = [
@@ -467,6 +468,8 @@ export default function AssetMetadata() {
 
         if (!address && changedTitleOrDescription && hasContract) return 'Connect your wallet';
 
+        if (showBackModal) return texts.save;
+
         return texts.nextButton;
     };
 
@@ -536,7 +539,7 @@ export default function AssetMetadata() {
                     show={showBackModal}
                     handleClose={handleCloseBackModal}
                     yesClick={handleSaveData}
-                    disabledSave={!address}
+                    disabledSave={(changedTitleOrDescription && !address && hasContract) || loading}
                     saveText={renderMessage()}
                 />
             </PageContainerFooter>
