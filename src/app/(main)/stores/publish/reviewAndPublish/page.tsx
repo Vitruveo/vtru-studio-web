@@ -101,6 +101,7 @@ const Component = ({ data }: Props) => {
             )}
             <Box display={'flex'} justifyContent={'center'} width={'100%'} mb={4}>
                 <Preview
+                    storeStatus={store?.status || 'draft'}
                     title={store.organization?.name || 'Store Name'}
                     description={store.organization.description || 'Store Description'}
                     domain={

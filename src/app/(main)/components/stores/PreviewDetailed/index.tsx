@@ -4,8 +4,10 @@ import { Box, Button, Grid, Pagination, Select, Typography } from '@mui/material
 import { IconMenu2 } from '@tabler/icons-react';
 import AssetMock from './assetMock';
 import FilterMock from './filterMock';
-import { AppearanceContent } from '@/features/stores/types';
+import { AppearanceContent, StoreStatus } from '@/features/stores/types';
 import { useState } from 'react';
+import { BASE_URL_SEARCH } from '@/constants/search';
+import { NODE_ENV } from '@/constants/api';
 
 interface Props {
     title: string;
@@ -14,12 +16,18 @@ interface Props {
     banner: string | null;
     logo: string | null;
     logoHorizontal: string | null;
+    storeStatus: StoreStatus;
 }
 
 export const PreviewDetailed = (rest: Props) => {
     const [imgLogoError, setImgLogoError] = useState(false);
     const [imgLogoHorizontalError, setImgLogoHorizontalError] = useState(false);
     const { values } = useFormikContext<AppearanceContent>();
+
+    const redirect = {
+        production: rest.domain,
+        qa: rest.domain.replace('xibit.live', `${BASE_URL_SEARCH.replace('https://', '')}`),
+    } as { [key: string]: string };
 
     return (
         <div className="browser-mockup-detailed">
@@ -46,7 +54,16 @@ export const PreviewDetailed = (rest: Props) => {
                 ) : (
                     <Box width={'20px'} height={'20px'} bgcolor="#eeeeee" />
                 )}
-                <span className="url-text">{rest.domain}</span>
+                <span
+                    className={['active', 'pending'].includes(rest?.storeStatus || 'draft') ? 'url-live' : 'url-text'}
+                    onClick={() =>
+                        ['active', 'pending'].includes(rest?.storeStatus || 'draft')
+                            ? window.open(redirect[NODE_ENV], '_blank')
+                            : {}
+                    }
+                >
+                    {redirect[NODE_ENV]}
+                </span>
             </div>
             <div className="browser-content">
                 {!values.hideElements.header && (
@@ -57,7 +74,7 @@ export const PreviewDetailed = (rest: Props) => {
                                     style={{
                                         width: '100%',
                                         height: '40px',
-                                        objectFit: 'contain',
+                                        objectFit: 'cover',
                                         flexShrink: 0,
                                     }}
                                     src={rest.logoHorizontal}
@@ -68,7 +85,18 @@ export const PreviewDetailed = (rest: Props) => {
                                 <Box width="100%" height="40px" bgcolor="#eeeeee" />
                             )}
                         </Grid>
-                        <Grid item xs={12} sm={9} display="flex" alignItems="center" justifyContent="flex-end" px={2}>
+                        <Grid
+                            item
+                            xs={12}
+                            sm={9}
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="space-between"
+                            px={2}
+                        >
+                            <Typography variant="h4" gutterBottom>
+                                {rest.title}
+                            </Typography>
                             <IconMenu2 />
                         </Grid>
                     </Grid>
@@ -80,9 +108,6 @@ export const PreviewDetailed = (rest: Props) => {
                         </Grid>
                     )}
                     <Grid item xs={12} sm={!values.hideElements.filters ? 9 : 12} px={2}>
-                        <Typography variant="h4" gutterBottom>
-                            {rest.title}
-                        </Typography>
                         {rest.banner && (
                             <img
                                 style={{

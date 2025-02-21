@@ -145,6 +145,7 @@ const AppearanceAndContent = () => {
                                 </Grid>
                                 <Grid item xs={12} md={8}>
                                     <PreviewDetailed
+                                        storeStatus={store?.status || 'draft'}
                                         title={store?.organization?.name || 'Store Name'}
                                         description={store?.organization.description || 'Store Description'}
                                         domain={
@@ -163,15 +164,15 @@ const AppearanceAndContent = () => {
                                             isFile(store?.organization.formats?.logo?.square?.path)
                                                 ? URL.createObjectURL(store?.organization?.formats?.logo.square.path)
                                                 : `${STORE_STORAGE_URL}/${store?.organization.formats?.logo?.square?.path}` ||
-                                                  ''
+                                                ''
                                         }
                                         logoHorizontal={
                                             isFile(store?.organization.formats?.logo?.horizontal?.path)
                                                 ? URL.createObjectURL(
-                                                      store?.organization?.formats?.logo.horizontal.path
-                                                  )
+                                                    store?.organization?.formats?.logo.horizontal.path
+                                                )
                                                 : `${STORE_STORAGE_URL}/${store?.organization.formats?.logo?.horizontal?.path}` ||
-                                                  ''
+                                                ''
                                         }
                                     />
                                 </Grid>
