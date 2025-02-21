@@ -63,6 +63,12 @@
     text-overflow: ellipsis;
 }
 
+.url-live {
+    color: #0000ee;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
 .browser-content {
     padding: 20px;
     background-color: #ffffff;

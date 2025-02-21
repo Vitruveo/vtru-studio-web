@@ -129,6 +129,7 @@ const Component = ({ data }: ComponentProps) => {
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <Preview
+                            storeStatus={store.status}
                             title={store.organization?.name || 'Store Name'}
                             description={store.organization?.description || 'Store Description'}
                             domain={
@@ -152,7 +153,7 @@ const Component = ({ data }: ComponentProps) => {
                                 isFile(store.organization?.formats?.logo?.horizontal?.path)
                                     ? URL.createObjectURL(store.organization?.formats?.logo?.horizontal?.path)
                                     : `${STORE_STORAGE_URL}/${store.organization?.formats?.logo?.horizontal?.path}` ||
-                                      ''
+                                    ''
                             }
                             style={{ width: '100%' }}
                         />

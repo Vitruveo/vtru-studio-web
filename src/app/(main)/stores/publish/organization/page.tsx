@@ -524,6 +524,7 @@ const Component = () => {
                     </form>
 
                     <Preview
+                        storeStatus={store?.status || 'draft'}
                         title={formik.values.name || 'Store Name'}
                         description={
                             formik.values.description || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'

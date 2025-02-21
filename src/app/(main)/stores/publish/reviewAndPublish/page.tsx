@@ -50,6 +50,10 @@ const Component = ({ data }: Props) => {
             buttontitle: 'Request Moderation',
             message: 'Your store is empty. Please add at least one artwork to request moderation',
         },
+        previewAvailable: {
+            buttontitle: undefined,
+            message: 'You can check your store preview by clicking the link below',
+        },
     } as { [key: string]: { buttontitle: string | undefined; message: string } };
 
     const handleRequestPublishment = async () => {
@@ -99,8 +103,16 @@ const Component = ({ data }: Props) => {
                     type={'error'}
                 />
             )}
+            {['active', 'pending'].includes(store.status) && (
+                <PublishStoreMessage
+                    message={textsForPublishStoreStatus.previewAvailable.message}
+                    loading={loading}
+                    type={'warning'}
+                />
+            )}
             <Box display={'flex'} justifyContent={'center'} width={'100%'} mb={4}>
                 <Preview
+                    storeStatus={store?.status || 'draft'}
                     title={store.organization?.name || 'Store Name'}
                     description={store.organization.description || 'Store Description'}
                     domain={
