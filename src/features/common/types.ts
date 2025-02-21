@@ -1,3 +1,5 @@
+import { StoresVisibilityStatus } from '../asset/types';
+
 export interface APIResponse<T = unknown, E = unknown> {
     code: string;
     transaction: string;
@@ -11,4 +13,13 @@ export interface Framework {
     updatedAt: Date | null;
     createdBy: string | null;
     updatedBy: string | null;
+}
+
+export interface StoresVisibility {
+    visibility: StoresVisibilityStatus;
+    list: string[];
+}
+export interface UpdatedAssetStoresVisibilityReq {
+    assetId: string;
+    stores: StoresVisibility;
 }

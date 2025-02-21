@@ -177,6 +177,13 @@ export interface StoresSendRequestUploadReq {
         [key: string]: string | undefined;
     };
 }
+
+export type StoresVisibilityStatus =
+    | 'visibleInAllStores'
+    | 'visibleInSelectedStores'
+    | 'hiddenInSelectedStores'
+    | 'hiddenInAllStores';
+
 export interface Consign {
     transaction: string;
     status: string;

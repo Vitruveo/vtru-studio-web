@@ -21,6 +21,7 @@ import {
     checkLicenseEditable,
     signMessage,
     sendRequestUploadStores,
+    updatedAssetStoresVisibility,
 } from './requests';
 import {
     AssetSendRequestUploadApiRes,
@@ -57,6 +58,7 @@ import { userActionsCreators } from '../user/slice';
 import { checkStepProgress } from '@/app/(main)/consign/licenses/nft';
 import { clientToSigner, network, provider } from '@/services/web3';
 import schema from '@/services/web3/contracts.json';
+import { UpdatedAssetStoresVisibilityReq } from '../common/types';
 
 export function requestDeleteURLThunk(payload: RequestDeleteFilesReq): ReduxThunkAction<Promise<any>> {
     return async function (dispatch, getState) {
@@ -512,6 +514,19 @@ export function licenseThunk(payload: LicensesFormValues): ReduxThunkAction<Prom
                 licenses: payload,
             })
         );
+    };
+}
+
+export function updatedAssetStoresVisibilityThunk(
+    payload: UpdatedAssetStoresVisibilityReq
+): ReduxThunkAction<Promise<any>> {
+    return async function (dispatch, getState) {
+        try {
+            updatedAssetStoresVisibility(payload);
+            dispatch(userActionsCreators.changeAssetStoresVisibility(payload));
+        } catch (err) {
+            console.error(err);
+        }
     };
 }
 

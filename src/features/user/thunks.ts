@@ -502,6 +502,7 @@ export function requestMyAssetsThunk({
                             contractExplorer: asset?.contractExplorer,
                             licenses: asset?.licenses,
                             countComments: asset?.countComments,
+                            stores: asset?.stores,
                         })),
                         limit: response.data.limit,
                         page: response.data.page,

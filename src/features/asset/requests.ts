@@ -26,6 +26,7 @@ import { assetActionsCreators } from './slice';
 import { ASSET_STORAGE_BUCKET } from '@/constants/asset';
 import { BASE_URL_API3 } from '@/constants/api';
 import { api3Service } from '@/services/api3';
+import { UpdatedAssetStoresVisibilityReq } from '../common/types';
 
 export async function requestDeleteFiles(data: RequestDeleteFilesReq): Promise<any> {
     if (!data.deleteKeys.length) return;
@@ -193,4 +194,8 @@ export async function signMessage({ signer, domain, types, tx, signedMessage }: 
 
 export async function changeAutoStakeInAllAssets(autoStake: boolean) {
     return apiService.put(`/assets/changeAutoStakeInAllAssets`, { autoStake });
+}
+
+export async function updatedAssetStoresVisibility({ assetId, stores }: UpdatedAssetStoresVisibilityReq) {
+    return apiService.put(`/assets/${assetId}/storesVisibility`, stores);
 }
