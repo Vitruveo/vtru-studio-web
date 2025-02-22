@@ -9,5 +9,4 @@ export const STORE_STORAGE_URL =
 
 export const ASSET_STORAGE_BUCKET = process.env.NEXT_PUBLIC_ASSET_STORAGE_BUCKET || 'vitruveo-studio-qa-assets';
 
-export const NO_IMAGE_ASSET =
-    'https://cdn.vectorstock.com/i/500p/65/30/default-image-icon-missing-picture-page-vector-40546530.jpg';
+export const NO_IMAGE_ASSET = 'https://vitruveo-studio-production-general.s3.amazonaws.com/noImage.jpg';
