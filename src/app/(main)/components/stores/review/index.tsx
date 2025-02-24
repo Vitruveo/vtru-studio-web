@@ -37,6 +37,7 @@ export const Review = () => {
                             context: values.context,
                             taxonomy: values.taxonomy,
                             artists: values.artists,
+                            portfolio: values.portfolio,
                         },
                         colorPrecision: values.context?.precision,
                     })

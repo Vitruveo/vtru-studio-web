@@ -14,6 +14,7 @@ import {
     styleOptions,
 } from '../filters/options';
 import { countryData } from '@/utils/countryData';
+import { handleFormatWallet } from '../filters/portfolio';
 
 interface MultiSelectFilterProps {
     content: { title: string; key: string; value: string[] };
@@ -43,6 +44,9 @@ const options: Record<string, { [key: string]: { label: string; value: string }[
         nationality: countryData.map((country) => ({ value: country.code, label: country.label })),
         residence: countryData.map((country) => ({ value: country.code, label: country.label })),
     },
+    portfolio: {
+        wallets: [],
+    },
 };
 
 export const MultiSelectFilter = ({ content }: MultiSelectFilterProps) => {
@@ -61,9 +65,11 @@ export const MultiSelectFilter = ({ content }: MultiSelectFilterProps) => {
             {content.value.map((item) => (
                 <Paper key={item} sx={{ padding: 1, display: 'flex' }}>
                     <Typography variant="body1">
-                        {options[content.title][content.key].length
-                            ? options[content.title][content.key].find((option) => option.value === item)?.label
-                            : item}
+                        {handleFormatWallet(
+                            options[content.title][content.key].length
+                                ? options[content.title][content.key].find((option) => option.value === item)?.label
+                                : item
+                        )}
                     </Typography>
                     <Delete
                         fontSize="small"
