@@ -41,7 +41,6 @@ import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr
 import { ASSET_STORAGE_URL } from '@/constants/asset';
 import { useDispatch } from '@/store/hooks';
 import { assetActionsCreators } from '@/features/asset/slice';
-import { validateUploadedMediaThunk } from '@/features/asset/thunks';
 import { IconCircleX } from '@tabler/icons-react';
 
 interface MediaCardProps {
@@ -72,6 +71,7 @@ interface MediaCardProps {
         value: any,
         shouldValidate?: boolean | undefined
     ) => Promise<void> | Promise<AssetMediaFormErros>;
+    hasContract?: boolean;
 }
 
 export interface MediaConfig {
@@ -99,6 +99,7 @@ export default function MediaCard({
     deleteKeys,
     setFieldValue,
     handleUploadFile,
+    hasContract = false,
 }: MediaCardProps) {
     const fileIsLocal = formatValue.file && typeof formatValue.file !== 'string';
 
@@ -244,10 +245,6 @@ export default function MediaCard({
         }
         return accept;
     };
-
-    function convertMBToBytes(sizeInMB: number): number {
-        return sizeInMB * 1000000;
-    }
 
     const { getRootProps, getInputProps } = useDropzone({
         onDrop,
@@ -417,8 +414,13 @@ export default function MediaCard({
                             e.stopPropagation();
                             handleDeleteFile();
                         }}
+                        disabled={hasContract && formatType !== 'print'}
                     >
-                        <IconTrash color="red" size="16" stroke={1.5} />
+                        <IconTrash
+                            color={hasContract && formatType !== 'print' ? 'gray' : 'red'}
+                            size="16"
+                            stroke={1.5}
+                        />
                     </IconButton>
                 )}
             </Box>
