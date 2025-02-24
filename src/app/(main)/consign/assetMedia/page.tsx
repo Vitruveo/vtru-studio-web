@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import CloseIcon from '@mui/icons-material/Close';
 import { Stack } from '@mui/system';
-import { Box, CircularProgress, IconButton, Typography } from '@mui/material';
+import { Box, IconButton, Typography } from '@mui/material';
 
 import { useDispatch, useSelector } from '@/store/hooks';
 import { AssetMediaFormValues, FormatMediaSave, FormatsMedia } from './types';
@@ -39,7 +39,7 @@ export default function AssetMedia() {
 
     const selectedAsset = useSelector((state) => state.user.selectedAsset);
     const formats = useSelector((state) => state.asset.formats);
-    const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
+    const hasContract = useSelector((state) => !!state.asset?.contractExplorer?.tx);
 
     const originalMediaInfo = handleGetFileType(formats.original.file!);
 
@@ -96,11 +96,6 @@ export default function AssetMedia() {
     const { values, errors, setFieldValue, handleSubmit } = useFormik<AssetMediaFormValues>({
         initialValues,
         onSubmit: async () => {
-            if (hasContract) {
-                router.push('/consign/assetMetadata');
-                return;
-            }
-
             const hasChanges = !(JSON.stringify(initialValues) === JSON.stringify(values) && !values.deleteKeys.length);
 
             if (hasChanges) {
@@ -154,11 +149,6 @@ export default function AssetMedia() {
         rangeTimeStart?: string;
         rangeTimeEnd?: string;
     }) => {
-        if (hasContract) {
-            toast.display({ type: 'warning', message: 'You cannot upload new files after signing the contract' });
-            return;
-        }
-
         const transactionId = nanoid();
 
         const isVideo = originalMediaInfo.mediaType === 'video';
@@ -196,11 +186,6 @@ export default function AssetMedia() {
     };
 
     const handleOpenBackModal = () => {
-        if (hasContract) {
-            router.push(`/consign`);
-            return;
-        }
-
         if (isUploading) {
             toast.display({ type: 'warning', message: 'Please wait until the upload is complete' });
             return;
@@ -447,22 +432,19 @@ export default function AssetMedia() {
                             <Box marginTop={1} display="flex" flexWrap="wrap">
                                 {Object.entries(values.formats).map(([formatType, value], index) => (
                                     <Box style={{ marginRight: '10px' }} key={index}>
-                                        {formatType !== 'print' ? (
-                                            <MediaCard
-                                                key={index}
-                                                errors={errors}
-                                                formats={values.formats}
-                                                formatType={formatType}
-                                                formatValue={value}
-                                                deleteKeys={values.deleteKeys}
-                                                urlAssetFile={urlAssetFile}
-                                                definition={values.formats?.original?.definition}
-                                                setFieldValue={setFieldValue}
-                                                handleUploadFile={handleUploadFile}
-                                            />
-                                        ) : (
-                                            <></>
-                                        )}
+                                        <MediaCard
+                                            key={index}
+                                            errors={errors}
+                                            formats={values.formats}
+                                            formatType={formatType}
+                                            formatValue={value}
+                                            deleteKeys={values.deleteKeys}
+                                            urlAssetFile={urlAssetFile}
+                                            definition={values.formats?.original?.definition}
+                                            setFieldValue={setFieldValue}
+                                            handleUploadFile={handleUploadFile}
+                                            hasContract={hasContract}
+                                        />
                                     </Box>
                                 ))}
                             </Box>
