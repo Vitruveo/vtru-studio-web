@@ -6,7 +6,11 @@ import { LicenseProps } from './types';
 import { useI18n } from '@/app/hooks/useI18n';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useToastr } from '@/app/hooks/useToastr';
-import { checkLicenseEditableThunk, updatePrintLicenseThunk } from '@/features/asset/thunks';
+import {
+    checkLicenseEditableThunk,
+    updatePrintLicenseAddedThunk,
+    updatePrintLicensePriceThunk,
+} from '@/features/asset/thunks';
 
 function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const dispatch = useDispatch();
@@ -38,6 +42,7 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
     } as { [key: string]: string };
 
     const handleAdded = (added: boolean) => {
+        dispatch(updatePrintLicenseAddedThunk({ assetKey: assetId, added }));
         setFieldValue('print.added', added);
     };
 
@@ -48,7 +53,7 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const handleSubmitUpdatePrintLicense = async () => {
         setLoading(true);
         const response = await dispatch(
-            updatePrintLicenseThunk({
+            updatePrintLicensePriceThunk({
                 assetKey: assetId,
                 unitPrice: values.unitPrice,
                 availableLicenses: values.availableLicenses,

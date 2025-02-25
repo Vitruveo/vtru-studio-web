@@ -26,7 +26,8 @@ import {
     signUpdateAssetStatus,
     updateAssetStatus,
     updateAssetHeader,
-    updatePrintLicense,
+    updatePrintLicensePrice,
+    updatePrintLicenseAdded,
 } from './requests';
 import {
     AssetSendRequestUploadApiRes,
@@ -51,7 +52,9 @@ import {
     SignerUpdateAssetStatusParams,
     UpdateAssetStatusReq,
     UpdateAssetHeaderReq,
-    UpdatePrintLicenseReq,
+    UpdatePrintLicensePriceReq,
+    Asset,
+    UpdatePrintLicenseAddedReq,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { assetActionsCreators } from './slice';
@@ -65,10 +68,27 @@ import { FormatsAuxiliayMedia } from '@/app/(main)/consign/auxiliaryMedia/types'
 
 import { BASE_URL_API } from '@/constants/api';
 import { userActionsCreators } from '../user/slice';
-import { checkStepProgress } from '@/app/(main)/consign/licenses/nft';
 import { clientToSigner, network, provider } from '@/services/web3';
 import schema from '@/services/web3/contracts.json';
 import { UpdatedAssetStoresVisibilityReq } from '../common/types';
+import { maxPrice, minPrice } from '@/app/(main)/components/stores/filters/licenseItem';
+import { StepStatus } from '../consign/types';
+
+export const checkStepProgress = ({
+    values,
+    formats,
+}: {
+    values: LicensesFormValues;
+    formats: Asset['formats'];
+}): StepStatus => {
+    if (!!formats?.print?.path !== !!values.print.added) return 'inProgress';
+
+    return Object.values(values).filter((v) => v?.added).length &&
+        values.nft.single.editionPrice >= minPrice &&
+        values.nft.single.editionPrice <= maxPrice
+        ? 'completed'
+        : 'inProgress';
+};
 
 export function requestDeleteURLThunk(payload: RequestDeleteFilesReq): ReduxThunkAction<Promise<any>> {
     return async function() {
@@ -146,7 +166,10 @@ export function getAssetThunk(id: string): ReduxThunkAction<Promise<any>> {
                     dispatch(
                         consignArtworkActionsCreators.changeStatusStep({
                             stepId: 'licenses',
-                            status: checkStepProgress({ values: response.data.licenses }),
+                            status: checkStepProgress({
+                                values: response.data.licenses,
+                                formats: response.data.formats,
+                            }),
                         })
                     );
                 }
@@ -1158,9 +1181,20 @@ export function updateAssetStatusThunk(payload: UpdateAssetStatusReq): ReduxThun
     };
 }
 
-export function updatePrintLicenseThunk(payload: UpdatePrintLicenseReq): ReduxThunkAction<Promise<boolean>> {
+export function updatePrintLicensePriceThunk(payload: UpdatePrintLicensePriceReq): ReduxThunkAction<Promise<boolean>> {
     return async function() {
-        return updatePrintLicense(payload)
+        return updatePrintLicensePrice(payload)
+            .then(() => true)
+            .catch((error) => {
+                console.log(error);
+                return false;
+            });
+    };
+}
+
+export function updatePrintLicenseAddedThunk(payload: UpdatePrintLicenseAddedReq): ReduxThunkAction<Promise<boolean>> {
+    return async function() {
+        return updatePrintLicenseAdded(payload)
             .then(() => true)
             .catch((error) => {
                 console.log(error);

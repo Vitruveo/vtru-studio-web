@@ -24,7 +24,8 @@ import {
     SignUpdateAssetStatusReq,
     UpdateAssetStatusReq,
     UpdateAssetHeaderReq,
-    UpdatePrintLicenseReq,
+    UpdatePrintLicensePriceReq,
+    UpdatePrintLicenseAddedReq,
 } from './types';
 import { apiService } from '@/services/api';
 import { assetActionsCreators } from './slice';
@@ -32,6 +33,7 @@ import { ASSET_STORAGE_BUCKET } from '@/constants/asset';
 import { BASE_URL_API3 } from '@/constants/api';
 import { api3Service } from '@/services/api3';
 import { UpdatedAssetStoresVisibilityReq } from '../common/types';
+import add from 'date-fns/fp/add';
 
 export async function requestDeleteFiles(data: RequestDeleteFilesReq): Promise<any> {
     if (!data.deleteKeys.length) return;
@@ -227,6 +229,10 @@ export async function updateAssetStatus({ assetKey, status }: UpdateAssetStatusR
     return api3Service.patch(`/assets/updateAssetStatus/${assetKey}`, { status });
 }
 
-export async function updatePrintLicense({ assetKey, unitPrice, availableLicenses }: UpdatePrintLicenseReq) {
-    return apiService.patch(`/assets/${assetKey}/printLicense`, { unitPrice, availableLicenses });
+export async function updatePrintLicensePrice({ assetKey, unitPrice, availableLicenses }: UpdatePrintLicensePriceReq) {
+    return apiService.patch(`/assets/${assetKey}/printLicense/price`, { unitPrice, availableLicenses });
+}
+
+export async function updatePrintLicenseAdded({ assetKey, added }: UpdatePrintLicenseAddedReq) {
+    return apiService.patch(`/assets/${assetKey}/printLicense/added`, { added });
 }

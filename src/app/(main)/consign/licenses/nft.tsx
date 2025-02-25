@@ -16,10 +16,9 @@ import CustomSelect from '@/app/(main)/components/forms/theme-elements/CustomSel
 import CustomTextField from '@/app/(main)/components/forms/theme-elements/CustomTextField';
 import CustomCheckbox from '@/app/(main)/components/forms/theme-elements/CustomCheckbox';
 import Card from './common/card';
-import { LicenseProps, LicensesFormValues } from './types';
+import { LicenseProps } from './types';
 import { useI18n } from '@/app/hooks/useI18n';
 import { formatCurrency } from '@/utils/formatCurrency';
-import { StepStatus } from '@/features/consign/types';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { checkLicenseEditableThunk, signerUpdateLicensePriceThunk, updatePriceThuk } from '@/features/asset/thunks';
 import UpdatePriceModal from './UpdatedPriceModal';
@@ -29,13 +28,6 @@ import { useToastr } from '@/app/hooks/useToastr';
 // NOTE: AVAILABLE LICENSE DESATIVADO POR ENQUANTO
 export const maxPrice = 10000;
 export const minPrice = 10;
-export const checkStepProgress = ({ values }: { values: LicensesFormValues }): StepStatus => {
-    return Object.values(values).filter((v) => v?.added).length &&
-        values.nft.single.editionPrice >= minPrice &&
-        values.nft.single.editionPrice <= maxPrice
-        ? 'completed'
-        : 'inProgress';
-};
 
 function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const dispatch = useDispatch();
@@ -169,8 +161,8 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
         values?.editionOption && currentDescription === 'nft.editionOption'
             ? editionTitles[values.editionOption as keyof typeof editionTitles]
             : values?.added
-              ? texts.selectEditionTitle
-              : `NFT-ART-1 ${texts.license}`;
+                ? texts.selectEditionTitle
+                : `NFT-ART-1 ${texts.license}`;
 
     const handleAdded = (added: boolean) => {
         if (added == false) setFieldValue('nft.editionOption', '');

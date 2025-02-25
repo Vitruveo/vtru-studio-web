@@ -363,10 +363,15 @@ export interface UpdateAssetHeaderReq {
     };
 }
 
-export interface UpdatePrintLicenseReq {
+export interface UpdatePrintLicensePriceReq {
     assetKey: string;
     unitPrice: number;
     availableLicenses: number;
+}
+
+export interface UpdatePrintLicenseAddedReq {
+    assetKey: string;
+    added: boolean;
 }
 
 export type UpdateAssetStepApiRes = APIResponse<string>;
