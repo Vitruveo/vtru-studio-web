@@ -698,15 +698,13 @@ export default function Home() {
                                                 icon={<IconSettings size={40} />}
                                                 alwaysShowTitle={true}
                                             >
-                                                {!asset.mintExplorer && (
-                                                    <Action
-                                                        style={{ backgroundColor: '#fff' }}
-                                                        text="Edit"
-                                                        onClick={() => router.push('/consign')}
-                                                    >
-                                                        <IconEdit color={theme.palette.primary.main} size={30} />
-                                                    </Action>
-                                                )}
+                                                <Action
+                                                    style={{ backgroundColor: '#fff' }}
+                                                    text="Edit"
+                                                    onClick={() => router.push('/consign')}
+                                                >
+                                                    <IconEdit color={theme.palette.primary.main} size={30} />
+                                                </Action>
                                                 {(asset.mintExplorer || asset.contractExplorer) && (
                                                     <Action
                                                         style={{ backgroundColor: '#fff' }}

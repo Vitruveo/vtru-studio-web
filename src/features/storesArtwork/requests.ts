@@ -55,6 +55,8 @@ export async function getArtworkQuantity({
         creators: filters.artists,
     };
 
+    const wallets = filters.portfolio?.wallets;
+
     const buildQuery = Object.entries(buildFilters || {}).reduce<BuidlQuery>((acc, cur) => {
         const [key, value] = cur;
 
@@ -77,6 +79,12 @@ export async function getArtworkQuantity({
         return acc;
     }, {});
 
+    if (wallets && wallets.length) {
+        buildQuery['mintExplorer.address'] = {
+            $in: wallets,
+        };
+    }
+
     const response = await apiService.post<ResponseAssets>(URL_ASSETS_SEARCH, {
         limit: 1,
         page: 1,
@@ -87,6 +95,7 @@ export async function getArtworkQuantity({
         precision: colorPrecision || 0.7,
         showAdditionalAssets: false,
         hasBts,
+        sort: { order: 'latest', isIncludeSold: false },
     });
     return response.data?.total || 0;
 }

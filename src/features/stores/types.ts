@@ -61,6 +61,9 @@ export interface Artworks {
         nationality?: [string, string][];
         residence?: [string, string][];
     };
+    portfolio: {
+        wallets?: string[];
+    };
 }
 
 export interface AppearanceContent {

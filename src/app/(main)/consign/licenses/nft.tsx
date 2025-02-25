@@ -51,6 +51,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const values = allValues.nft || {};
 
     const hasConsign = useSelector((state) => !!state.asset.contractExplorer);
+    const hasMinted = useSelector((state) => !!state.asset.mintExplorer);
     const assetId = useSelector((state) => state.asset._id);
     const wallets = useSelector((state) => state.user.wallets);
 
@@ -168,8 +169,8 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
         values?.editionOption && currentDescription === 'nft.editionOption'
             ? editionTitles[values.editionOption as keyof typeof editionTitles]
             : values?.added
-                ? texts.selectEditionTitle
-                : `NFT-ART-1 ${texts.license}`;
+              ? texts.selectEditionTitle
+              : `NFT-ART-1 ${texts.license}`;
 
     const handleAdded = (added: boolean) => {
         if (added == false) setFieldValue('nft.editionOption', '');
@@ -530,7 +531,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                     {hasConsign &&
                         (!isEditing ? (
                             <Button
-                                disabled={!canEdit || !address}
+                                disabled={!canEdit || !address || hasMinted}
                                 variant="contained"
                                 color="primary"
                                 fullWidth

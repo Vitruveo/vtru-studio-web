@@ -423,4 +423,5 @@ export const subTitlesReviewOptions = [
     { name: 'name', label: 'Name' },
     { name: 'nationality', label: 'Nationality' },
     { name: 'residence', label: 'Residence' },
+    { name: 'wallets', label: 'Wallets' },
 ];
