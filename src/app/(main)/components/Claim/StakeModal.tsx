@@ -44,6 +44,7 @@ export default function StakeModal({
 }: ModalProps) {
     const [unassigned, setUnassigned] = useState(available);
     const [selectValues, setSelectValues] = useState([0, 0, 0, 0, 0]);
+    const [coin, setCoin] = useState('VTRU');
 
     const isLessThan30Days = (): boolean => {
         if (!vaultCreatedAt) return false;
@@ -71,6 +72,10 @@ export default function StakeModal({
 
     const totalAssigned = selectValues.reduce((acc, cur) => acc + cur, 0);
 
+    const handleChangeCoin = (coinValue: string) => {
+        setCoin(coinValue);
+    };
+
     return (
         <MuiModal open={isOpen} onClose={handleClose}>
             <Box
@@ -97,7 +102,7 @@ export default function StakeModal({
                         </Box>
                     </Box>
 
-                    <Box mb={2} ml={2} width={'88%'}>
+                    <Box mb={2} ml={2} width={'96%'}>
                         {options.map((item, index) => {
                             const valueStaked =
                                 index === 4
@@ -105,9 +110,30 @@ export default function StakeModal({
                                     : (available * selectValues[index]) / 100;
                             return (
                                 <Box key={index} mb={1}>
-                                    <Box display={'flex'} gap={1.5}>
-                                        <Typography fontSize={16}>{valueStaked}</Typography>
-                                        <Typography fontSize={16}>{item.label}</Typography>
+                                    <Box display="flex" justifyContent="space-between" alignItems="center">
+                                        <Box display={'flex'} gap={1.5}>
+                                            <Typography fontSize={16}>{valueStaked}</Typography>
+                                            <Typography fontSize={16}>{item.label}</Typography>
+                                        </Box>
+                                        {index === 0 && (
+                                            <Box display="flex" marginBottom={1} alignItems="center" gap={1}>
+                                                <Button
+                                                    variant={coin === 'VTRU' ? 'contained' : 'outlined'}
+                                                    onClick={() => handleChangeCoin('VTRU')}
+                                                    color={coin === 'VTRU' ? 'primary' : 'inherit'}
+                                                >
+                                                    VTRU
+                                                </Button>
+                                                <Typography fontSize={16}>or</Typography>
+                                                <Button
+                                                    variant={coin === 'VUSD' ? 'contained' : 'outlined'}
+                                                    onClick={() => handleChangeCoin('VUSD')}
+                                                    color={coin === 'VUSD' ? 'primary' : 'inherit'}
+                                                >
+                                                    VUSD
+                                                </Button>
+                                            </Box>
+                                        )}
                                     </Box>
                                     <Box display="flex" gap={3} mb={3} key={index}>
                                         <Slider
@@ -118,6 +144,7 @@ export default function StakeModal({
                                             }
                                             max={100}
                                         />
+
                                         <Typography fontSize={16}>{selectValues[index].toFixed(0)}%</Typography>
                                     </Box>
                                 </Box>
