@@ -24,6 +24,7 @@ import {
     SignUpdateAssetStatusReq,
     UpdateAssetStatusReq,
     UpdateAssetHeaderReq,
+    UpdatePrintLicenseReq,
 } from './types';
 import { apiService } from '@/services/api';
 import { assetActionsCreators } from './slice';
@@ -52,14 +53,14 @@ export async function assetStorage({ file, url, dispatch, transactionId }: Asset
 
         xhr.open('PUT', url, true);
 
-        xhr.upload.onprogress = function (event) {
+        xhr.upload.onprogress = function(event) {
             if (event.lengthComputable) {
                 const percentCompleted = Math.round((event.loaded * 100) / event.total);
                 dispatch(assetActionsCreators.requestAssetUpload({ transactionId, uploadProgress: percentCompleted }));
             }
         };
 
-        xhr.onload = function () {
+        xhr.onload = function() {
             if (this.status >= 200 && this.status < 300) {
                 resolve(xhr.response);
             } else {
@@ -70,7 +71,7 @@ export async function assetStorage({ file, url, dispatch, transactionId }: Asset
             }
         };
 
-        xhr.onerror = function () {
+        xhr.onerror = function() {
             reject({
                 status: this.status,
                 statusText: xhr.statusText,
@@ -224,4 +225,8 @@ export async function signUpdateAssetStatus({ signer, domain, signedMessage, tx,
 
 export async function updateAssetStatus({ assetKey, status }: UpdateAssetStatusReq) {
     return api3Service.patch(`/assets/updateAssetStatus/${assetKey}`, { status });
+}
+
+export async function updatePrintLicense({ assetKey, unitPrice, availableLicenses }: UpdatePrintLicenseReq) {
+    return apiService.patch(`/assets/${assetKey}/printLicense`, { unitPrice, availableLicenses });
 }

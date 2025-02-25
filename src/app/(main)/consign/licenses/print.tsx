@@ -1,13 +1,32 @@
-import { Box, Stack, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Box, Button, Stack, Typography } from '@mui/material';
 import CustomTextField from '@/app/(main)/components/forms/theme-elements/CustomTextField';
 import Card from './common/card';
 import { LicenseProps } from './types';
 import { useI18n } from '@/app/hooks/useI18n';
+import { useDispatch, useSelector } from '@/store/hooks';
+import { useToastr } from '@/app/hooks/useToastr';
+import { checkLicenseEditableThunk, updatePrintLicenseThunk } from '@/features/asset/thunks';
 
 function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
+    const dispatch = useDispatch();
+    const toastr = useToastr();
+    const { language } = useI18n();
+    const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
+    const assetId = useSelector((state) => state.asset._id);
+
+    const [isEditing, setIsEditing] = useState(false);
+    const [canEdit, setCanEdit] = useState(false);
+    const [loading, setLoading] = useState(false);
     const values = allValues.print || {};
 
-    const { language } = useI18n();
+    useEffect(() => {
+        const fecthCanEdit = async () => {
+            const response = await dispatch(checkLicenseEditableThunk({ assetId }));
+            setCanEdit(response);
+        };
+        fecthCanEdit();
+    }, []);
 
     const texts = {
         license: language['studio.consignArtwork.licenses.license'],
@@ -20,6 +39,27 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
 
     const handleAdded = (added: boolean) => {
         setFieldValue('print.added', added);
+    };
+
+    const handleToggleEdit = () => {
+        setIsEditing(!isEditing);
+    };
+
+    const handleSubmitUpdatePrintLicense = async () => {
+        setLoading(true);
+        const response = await dispatch(
+            updatePrintLicenseThunk({
+                assetKey: assetId,
+                unitPrice: values.unitPrice,
+                availableLicenses: values.availableLicenses,
+            })
+        );
+        setLoading(false);
+        if (response) {
+            setIsEditing(false);
+        } else {
+            toastr.display({ type: 'error', message: 'Error updating print license' });
+        }
     };
 
     return (
@@ -58,6 +98,7 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                 onChange={handleChange}
                                 size="small"
                                 variant="outlined"
+                                disabled={!isEditing}
                             />
                         </Stack>
                         <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -75,8 +116,36 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                 size="small"
                                 variant="outlined"
                                 name="print.availableLicenses"
+                                disabled={!isEditing}
                             />
                         </Stack>
+                        {hasContract &&
+                            (!isEditing ? (
+                                <Button
+                                    disabled={!canEdit}
+                                    variant="contained"
+                                    color="primary"
+                                    fullWidth
+                                    onClick={handleToggleEdit}
+                                >
+                                    Edit
+                                </Button>
+                            ) : (
+                                <Box display="flex" gap={2}>
+                                    <Button variant="outlined" color="error" fullWidth onClick={handleToggleEdit}>
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        disabled={loading}
+                                        fullWidth
+                                        onClick={handleSubmitUpdatePrintLicense}
+                                    >
+                                        Confirm
+                                    </Button>
+                                </Box>
+                            ))}
                     </Stack>
                 )}
             </Card>

@@ -39,7 +39,7 @@ export default function AssetMedia() {
 
     const selectedAsset = useSelector((state) => state.user.selectedAsset);
     const formats = useSelector((state) => state.asset.formats);
-    const hasContract = useSelector((state) => !!state.asset?.contractExplorer?.tx);
+    const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
 
     const originalMediaInfo = handleGetFileType(formats.original.file!);
 
@@ -104,11 +104,11 @@ export default function AssetMedia() {
                         stepId: 'assetMedia',
                         status: isAllValid
                             ? getStepStatus({
-                                  formats:
-                                      JSON.stringify(initialValues.formats) === JSON.stringify(values.formats)
-                                          ? asset.formats
-                                          : values.formats,
-                              })
+                                formats:
+                                    JSON.stringify(initialValues.formats) === JSON.stringify(values.formats)
+                                        ? asset.formats
+                                        : values.formats,
+                            })
                             : 'inProgress',
                     })
                 );

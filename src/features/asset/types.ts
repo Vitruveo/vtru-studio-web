@@ -363,6 +363,12 @@ export interface UpdateAssetHeaderReq {
     };
 }
 
+export interface UpdatePrintLicenseReq {
+    assetKey: string;
+    unitPrice: number;
+    availableLicenses: number;
+}
+
 export type UpdateAssetStepApiRes = APIResponse<string>;
 export type UploadIPFSByAssetIdApiRes = void;
 export type CreateContractApiRes = void;
