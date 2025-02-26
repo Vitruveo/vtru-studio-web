@@ -417,7 +417,7 @@ export default function Home() {
                                     <MenuItem value="all">All</MenuItem>
 
                                     {collections
-                                        ?.slice()
+                                        ?.filter((item) => item.collection)
                                         .sort((a, b) => a.collection.localeCompare(b.collection))
                                         .map((item, index) => (
                                             <MenuItem key={index} value={item.collection}>
