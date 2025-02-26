@@ -11,27 +11,30 @@ interface ModalProps {
     vaultCreatedAt: string | null;
 }
 
+const optionsToWallet = [
+    {
+        label: 'For buying Art',
+        currency: 'VUSD',
+    },
+    {
+        label: 'For trading on exchanges',
+        currency: 'VTRU',
+    },
+];
+
 const options = [
     {
-        label: 'Claim to wallet',
-        enable: true,
+        label: '1 year at 15% APR',
+        currency: 'VTRU',
     },
     {
-        label: 'Stake for 1 year at 15% APR',
-        enable: true,
+        label: '3 years at 30% APR',
+        currency: 'VTRU',
     },
     {
-        label: 'Stake for 3 years at 30% APR',
-        enable: true,
+        label: '5 years at 60% APR',
+        currency: 'VTRU',
     },
-    {
-        label: 'Stake for 5 years at 60% APR',
-        enable: true,
-    },
-    // {
-    //     label: 'Stake for 3 years at 0% APR - Get VERSE',
-    //     enable: CLAIM_VERSE_ENABLE,
-    // },
 ];
 
 export default function StakeModal({
@@ -44,7 +47,6 @@ export default function StakeModal({
 }: ModalProps) {
     const [unassigned, setUnassigned] = useState(available);
     const [selectValues, setSelectValues] = useState([0, 0, 0, 0, 0]);
-    const [coin, setCoin] = useState('VTRU');
 
     const isLessThan30Days = (): boolean => {
         if (!vaultCreatedAt) return false;
@@ -72,10 +74,6 @@ export default function StakeModal({
 
     const totalAssigned = selectValues.reduce((acc, cur) => acc + cur, 0);
 
-    const handleChangeCoin = (coinValue: string) => {
-        setCoin(coinValue);
-    };
-
     return (
         <MuiModal open={isOpen} onClose={handleClose}>
             <Box
@@ -90,58 +88,81 @@ export default function StakeModal({
                     <Box display="flex" justifyContent="space-between" mb={2}>
                         <Box>
                             <Typography variant="caption">Available</Typography>
-                            <Typography variant="h3">{available} VTRU</Typography>
+                            <Typography variant="h3">{available} VUSD</Typography>
                         </Box>
-                        <Box>
+                        <Box display="flex" flexDirection="column" alignItems="center">
+                            <Typography variant="caption">VTRU Pirce</Typography>
+                            <Typography variant="h3">$0.2012</Typography>
+                        </Box>
+                        <Box display="flex" flexDirection="column" alignItems="flex-end">
                             <Typography variant="caption" color={'GrayText'}>
                                 Unassigned
                             </Typography>
                             <Typography variant="h3" color={'GrayText'}>
-                                {unassigned} VTRU
+                                {unassigned} VUSD
                             </Typography>
                         </Box>
                     </Box>
-
-                    <Box mb={2} ml={2} width={'96%'}>
-                        {options.map((item, index) => {
-                            const valueStaked =
-                                index === 4
-                                    ? Math.floor((available * selectValues[index]) / 100)
-                                    : (available * selectValues[index]) / 100;
+                    <Typography variant="h5" gutterBottom>
+                        Long-term Income: Stake for Interest
+                    </Typography>
+                    <Box
+                        mb={2}
+                        padding={2}
+                        sx={{
+                            backgroundColor: '#f5f5f5',
+                        }}
+                    >
+                        {options.map((item, indexOptions) => {
+                            const index = indexOptions + optionsToWallet.length;
+                            const valueStaked = (available * selectValues[index]) / 100;
                             return (
                                 <Box key={index} mb={1}>
-                                    <Box display="flex" justifyContent="space-between" alignItems="center">
-                                        <Box display={'flex'} gap={1.5}>
-                                            <Typography fontSize={16}>{valueStaked}</Typography>
-                                            <Typography fontSize={16}>{item.label}</Typography>
-                                        </Box>
-                                        {index === 0 && (
-                                            <Box display="flex" marginBottom={1} alignItems="center" gap={1}>
-                                                <Button
-                                                    variant={coin === 'VTRU' ? 'contained' : 'outlined'}
-                                                    onClick={() => handleChangeCoin('VTRU')}
-                                                    color={coin === 'VTRU' ? 'primary' : 'inherit'}
-                                                >
-                                                    VTRU
-                                                </Button>
-                                                <Typography fontSize={16}>or</Typography>
-                                                <Button
-                                                    variant={coin === 'VUSD' ? 'contained' : 'outlined'}
-                                                    onClick={() => handleChangeCoin('VUSD')}
-                                                    color={coin === 'VUSD' ? 'primary' : 'inherit'}
-                                                >
-                                                    VUSD
-                                                </Button>
-                                            </Box>
-                                        )}
+                                    <Box display={'flex'} mb={1} justifyContent="space-between">
+                                        <Typography fontSize={16}>{item.label}</Typography>
+                                        <Typography fontSize={16}>
+                                            {valueStaked} {item.currency}
+                                        </Typography>
                                     </Box>
                                     <Box display="flex" gap={3} mb={3} key={index}>
                                         <Slider
                                             value={selectValues[index]}
                                             onChange={(_e, v) => handleSelectChange(index, v as number)}
-                                            disabled={
-                                                !item.enable || (totalAssigned === 100 && selectValues[index] === 0)
-                                            }
+                                            disabled={totalAssigned === 100 && selectValues[index] === 0}
+                                            max={100}
+                                        />
+
+                                        <Typography fontSize={16}>{selectValues[index].toFixed(0)}%</Typography>
+                                    </Box>
+                                </Box>
+                            );
+                        })}
+                    </Box>
+                    <Typography variant="h5" gutterBottom>
+                        Short-term Income: Claim to Wallet
+                    </Typography>
+                    <Box
+                        mb={2}
+                        padding={2}
+                        sx={{
+                            backgroundColor: '#f5f5f5',
+                        }}
+                    >
+                        {optionsToWallet.map((item, index) => {
+                            const valueStaked = (available * selectValues[index]) / 100;
+                            return (
+                                <Box key={index} mb={1}>
+                                    <Box display={'flex'} mb={1} justifyContent="space-between">
+                                        <Typography fontSize={16}>{item.label}</Typography>
+                                        <Typography fontSize={16}>
+                                            {valueStaked} {item.currency}
+                                        </Typography>
+                                    </Box>
+                                    <Box display="flex" gap={3} mb={3} key={index}>
+                                        <Slider
+                                            value={selectValues[index]}
+                                            onChange={(_e, v) => handleSelectChange(index, v as number)}
+                                            disabled={totalAssigned === 100 && selectValues[index] === 0}
                                             max={100}
                                         />
 
