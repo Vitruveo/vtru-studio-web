@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import CustomTextField from '@/app/(main)/components/forms/theme-elements/CustomTextField';
 import Card from './common/card';
@@ -6,11 +6,7 @@ import { LicenseProps } from './types';
 import { useI18n } from '@/app/hooks/useI18n';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useToastr } from '@/app/hooks/useToastr';
-import {
-    checkLicenseEditableThunk,
-    updatePrintLicenseAddedThunk,
-    updatePrintLicensePriceThunk,
-} from '@/features/asset/thunks';
+import { updatePrintLicenseAddedThunk, updatePrintLicensePriceThunk } from '@/features/asset/thunks';
 
 function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const dispatch = useDispatch();
@@ -19,18 +15,9 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
     const assetId = useSelector((state) => state.asset._id);
 
-    const [isEditing, setIsEditing] = useState(false);
-    const [canEdit, setCanEdit] = useState(false);
+    const [isEditing, setIsEditing] = useState(!hasContract);
     const [loading, setLoading] = useState(false);
     const values = allValues.print || {};
-
-    useEffect(() => {
-        const fecthCanEdit = async () => {
-            const response = await dispatch(checkLicenseEditableThunk({ assetId }));
-            setCanEdit(response);
-        };
-        fecthCanEdit();
-    }, []);
 
     const texts = {
         license: language['studio.consignArtwork.licenses.license'],
@@ -42,7 +29,7 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
     } as { [key: string]: string };
 
     const handleAdded = (added: boolean) => {
-        dispatch(updatePrintLicenseAddedThunk({ assetKey: assetId, added }));
+        if (hasContract) dispatch(updatePrintLicenseAddedThunk({ assetKey: assetId, added }));
         setFieldValue('print.added', added);
     };
 
@@ -126,13 +113,7 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                         </Stack>
                         {hasContract &&
                             (!isEditing ? (
-                                <Button
-                                    disabled={!canEdit}
-                                    variant="contained"
-                                    color="primary"
-                                    fullWidth
-                                    onClick={handleToggleEdit}
-                                >
+                                <Button variant="contained" color="primary" fullWidth onClick={handleToggleEdit}>
                                     Edit
                                 </Button>
                             ) : (
