@@ -234,9 +234,9 @@ export default function MediaCard({
 
         if (
             mediaWidth &&
-            mediaWidth <= printWidth &&
+            mediaWidth == printWidth &&
             mediaHeight &&
-            mediaHeight <= printHeight &&
+            mediaHeight == printHeight &&
             originalSize &&
             originalSize <= printSize
         ) {
