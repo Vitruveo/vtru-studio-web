@@ -366,7 +366,6 @@ export interface UpdateAssetHeaderReq {
 export interface UpdatePrintLicensePriceReq {
     assetKey: string;
     unitPrice: number;
-    availableLicenses: number;
 }
 
 export interface UpdatePrintLicenseAddedReq {

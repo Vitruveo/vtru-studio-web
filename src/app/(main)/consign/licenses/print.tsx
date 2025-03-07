@@ -43,7 +43,6 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
             updatePrintLicensePriceThunk({
                 assetKey: assetId,
                 unitPrice: values.unitPrice,
-                availableLicenses: values.availableLicenses,
             })
         );
         setLoading(false);
