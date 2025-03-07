@@ -93,24 +93,6 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                 disabled={!isEditing}
                             />
                         </Stack>
-                        <Stack direction="row" justifyContent="space-between" alignItems="center">
-                            <Typography>Available</Typography>
-                            <CustomTextField
-                                type="number"
-                                InputProps={{
-                                    sx: {
-                                        backgroundColor: '#fff',
-                                        width: 90,
-                                    },
-                                }}
-                                value={values.availableLicenses}
-                                onChange={handleChange}
-                                size="small"
-                                variant="outlined"
-                                name="print.availableLicenses"
-                                disabled={!isEditing}
-                            />
-                        </Stack>
                         {hasContract &&
                             (!isEditing ? (
                                 <Button variant="contained" color="primary" fullWidth onClick={handleToggleEdit}>
