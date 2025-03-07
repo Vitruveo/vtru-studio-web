@@ -42,6 +42,7 @@ import { ASSET_STORAGE_URL } from '@/constants/asset';
 import { useDispatch } from '@/store/hooks';
 import { assetActionsCreators } from '@/features/asset/slice';
 import { IconCircleX } from '@tabler/icons-react';
+import { assetMediaThunk } from '@/features/asset/thunks';
 
 interface MediaCardProps {
     deleteKeys: string[];
@@ -114,7 +115,7 @@ export default function MediaCard({
     const [currentSrcType, setCurrentSrcType] = useState<string>(urlAssetFile);
     const [dimensionError, setDimensionError] = useState<boolean>();
     const [sizeError, setSizeError] = useState<boolean>();
-    const [satisfyPrint, setSatisfyPrint] = useState<boolean>(false);
+    const [showSatisfyPrintMessage, setShowSatisfyPrintMessage] = useState<boolean>(false);
     const dispatch = useDispatch();
 
     const [toastr, setToastr] = useState<CustomizedSnackbarState>({
@@ -131,18 +132,13 @@ export default function MediaCard({
 
     const mediaConfig =
         mediaConfigs[definition as keyof typeof mediaConfigs]?.[
-            formatType as keyof (typeof mediaConfigs)['landscape']
+        formatType as keyof (typeof mediaConfigs)['landscape']
         ] || {};
 
     const mediaWidth = formats.original.width;
     const mediaHeight = formats.original.height;
 
-    const {
-        requestAssetUpload: upload,
-        formats: assetFormats,
-        _id,
-        isLoadingMediaData,
-    } = useSelector((state) => state.asset);
+    const { requestAssetUpload: upload, formats: assetFormats } = useSelector((state) => state.asset);
     const format = assetFormats[formatType as keyof FormatsMedia];
     const originalMediaInfo = handleGetFileType(formats.original.file!);
     const isVideo = originalMediaInfo.mediaType === 'video' && formatType !== 'print';
@@ -229,8 +225,6 @@ export default function MediaCard({
     };
 
     const verifyIfOriginalSatisfyPrint = (): boolean => {
-        const originalWidth = formats.original.width;
-        const originalHeight = formats.original.height;
         const originalDefinition = formats.original.definition;
         const originalSize = formats.original?.size ? formats.original.size / 1_000_000 : null; // convert to MB
 
@@ -239,10 +233,10 @@ export default function MediaCard({
         const printSize = mediaConfigs[originalDefinition as keyof typeof mediaConfigs].print.sizeMB.image;
 
         if (
-            originalWidth &&
-            originalWidth <= printWidth &&
-            originalHeight &&
-            originalHeight <= printHeight &&
+            mediaWidth &&
+            mediaWidth <= printWidth &&
+            mediaHeight &&
+            mediaHeight <= printHeight &&
             originalSize &&
             originalSize <= printSize
         ) {
@@ -370,6 +364,22 @@ export default function MediaCard({
         setFileIsload(false);
     };
 
+    const handlePutOriginalAsPrint = () => {
+        setFieldValue(`formats.print`, formats.original);
+        setShowSatisfyPrintMessage(false);
+
+        dispatch(
+            assetMediaThunk({
+                formats: {
+                    print: {
+                        name: formats.original.name || (formats.original.file as any)?.name,
+                        path: formats.original.path || (formats.original.file as any)?.path,
+                    },
+                },
+            })
+        );
+    };
+
     useEffect(() => {
         if (uploadSuccess && fileStatus && formatType === 'preview' && isVideo) {
             const intervalId = setInterval(() => {
@@ -390,7 +400,7 @@ export default function MediaCard({
     }, [uploadSuccess]);
 
     useEffect(() => {
-        setSatisfyPrint(verifyIfOriginalSatisfyPrint());
+        setShowSatisfyPrintMessage(verifyIfOriginalSatisfyPrint());
     }, []);
 
     return (
@@ -462,38 +472,39 @@ export default function MediaCard({
                 borderRadius={2}
                 borderColor="#D5D5D5"
             >
-                <Box
-                    width="100%"
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                    flexDirection="column"
-                    borderBottom="1px solid #D5D5D5"
-                    padding={1}
-                    borderColor="#D5D5D5"
-                    borderRadius="10px 10px 0px 0px"
-                    bgcolor="#EFEFEF"
-                    height={70}
-                >
-                    <Typography fontSize="0.8rem" color="GrayText" textAlign="center">
-                        {isVideo ? originalMediaInfo.contentType : handleGetFileType(formatValue.file).contentType}{' '}
-                        {isVideo ? texts.video : texts.image}
-                        <Typography fontSize="0.8rem">
-                            {mediaConfig?.width || mediaWidth} X {mediaConfig?.height || mediaHeight}
+                {(formatType !== 'print' || !showSatisfyPrintMessage || formatValue.file) && (
+                    <Box
+                        width="100%"
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        flexDirection="column"
+                        borderBottom="1px solid #D5D5D5"
+                        padding={1}
+                        borderColor="#D5D5D5"
+                        borderRadius="10px 10px 0px 0px"
+                        bgcolor="#EFEFEF"
+                        height={70}
+                    >
+                        <Typography fontSize="0.8rem" color="GrayText" textAlign="center">
+                            {isVideo ? originalMediaInfo.contentType : handleGetFileType(formatValue.file).contentType}{' '}
+                            {isVideo ? texts.video : texts.image}
+                            <Typography fontSize="0.8rem">
+                                {mediaConfig?.width || mediaWidth} X {mediaConfig?.height || mediaHeight}
+                            </Typography>
+                            <Typography fontSize="0.8rem">
+                                {!thumbSRC || (mediaConfig?.sizeMB && !formatValue.size)
+                                    ? `${isVideo
+                                        ? formatFileSize(mediaConfig?.sizeMB.video)
+                                        : formatFileSize(mediaConfig?.sizeMB.image)
+                                    } ${(language['studio.consignArtwork.assetMedia.max'] as TranslateFunction)({
+                                        seconds: isVideo && formatType === 'preview' ? 5 : 0,
+                                    })}`
+                                    : getFileSize(formatValue.size)}
+                            </Typography>
                         </Typography>
-                        <Typography fontSize="0.8rem">
-                            {!thumbSRC || (mediaConfig?.sizeMB && !formatValue.size)
-                                ? `${
-                                      isVideo
-                                          ? formatFileSize(mediaConfig?.sizeMB.video)
-                                          : formatFileSize(mediaConfig?.sizeMB.image)
-                                  } ${(language['studio.consignArtwork.assetMedia.max'] as TranslateFunction)({
-                                      seconds: isVideo && formatType === 'preview' ? 5 : 0,
-                                  })}`
-                                : getFileSize(formatValue.size)}
-                        </Typography>
-                    </Typography>
-                </Box>
+                    </Box>
+                )}
                 <Box width="100%" justifyContent="center" alignItems="center" height={200}>
                     <Box paddingInline={1} marginTop={1} height={15}>
                         {fileStatus && fileStatus.status !== 'completed' && fileStatus.status !== 'saved' ? (
@@ -508,8 +519,8 @@ export default function MediaCard({
                                 <Box
                                     display={
                                         formatValue.load ||
-                                        (fileIsload && !isVideo) ||
-                                        (fileIsload && isVideo && formatType === 'preview' && fileStatus)
+                                            (fileIsload && !isVideo) ||
+                                            (fileIsload && isVideo && formatType === 'preview' && fileStatus)
                                             ? 'flex'
                                             : 'none'
                                     }
@@ -520,7 +531,7 @@ export default function MediaCard({
                                 >
                                     <CircularProgress color="primary" />
                                 </Box>
-                                {formatType !== 'print' && originalMediaInfo.mediaType === 'video' ? (
+                                {originalMediaInfo.mediaType === 'video' ? (
                                     <video
                                         ref={videoRef}
                                         onError={handleVideoError}
@@ -534,7 +545,7 @@ export default function MediaCard({
                                             objectFit: 'contain',
                                             display:
                                                 formatValue.load ||
-                                                (fileIsload && fileStatus && formatType === 'preview')
+                                                    (fileIsload && fileStatus && formatType === 'preview')
                                                     ? 'none'
                                                     : '',
                                         }}
@@ -560,28 +571,27 @@ export default function MediaCard({
                             </Box>
                         ) : (
                             <Box>
-                                {formatType === 'print' && satisfyPrint ? (
-                                    <Box paddingInline={1}>
+                                {formatType === 'print' && showSatisfyPrintMessage ? (
+                                    <Box display={'flex'} flexDirection={'column'} gap={2} paddingInline={1}>
                                         <Typography>
                                             Your original artwork meets print requirements. Would you like to copy it as
                                             a print?
                                         </Typography>
                                         <Box display={'flex'} gap={1}>
-                                            <Button
-                                                onClick={() => {
-                                                    setFieldValue(`formats.${formatType}.file`, formats.original.file);
-                                                }}
-                                                size="small"
-                                                variant="contained"
-                                            >
-                                                Yes
-                                            </Button>
                                             <Box>
                                                 <input id="asset" {...getInputProps()} />
-                                                <Button {...getRootProps()} size="small" variant="contained">
+                                                <Button
+                                                    {...getRootProps()}
+                                                    size="small"
+                                                    variant="text"
+                                                    onClick={() => setShowSatisfyPrintMessage(false)}
+                                                >
                                                     No
                                                 </Button>
                                             </Box>
+                                            <Button onClick={handlePutOriginalAsPrint} size="small" variant="contained">
+                                                Yes
+                                            </Button>
                                         </Box>
                                     </Box>
                                 ) : (
@@ -604,7 +614,7 @@ export default function MediaCard({
                                             <Typography textAlign="center" fontWeight="bold">
                                                 {(
                                                     language[
-                                                        'studio.consignArtwork.assetMedia.mediaRequired'
+                                                    'studio.consignArtwork.assetMedia.mediaRequired'
                                                     ] as TranslateFunction
                                                 )({
                                                     required: mediaConfig.required,

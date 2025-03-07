@@ -482,12 +482,10 @@ export function assetMediaThunk(payload: {
         if (payload.deleteFormats?.length) dispatch(assetActionsCreators.removeFormats(payload.deleteFormats));
         dispatch(assetActionsCreators.changeLoadingMediaData('finished'));
 
-        const currentFormats = Object.entries(getState().asset.formats).filter(([key, _value]) => key !== 'print');
+        const currentFormats = Object.entries(getState().asset.formats);
         const hasFiles = currentFormats.every(([_key, value]) => value.path);
 
-        const currentFormatsFields = Object.entries(payload?.formatsFields || {}).filter(
-            ([key, _value]) => key !== 'print'
-        );
+        const currentFormatsFields = Object.entries(payload?.formatsFields || {});
         const hasFilesFormatFields = currentFormatsFields.every(([_key, value]) => value.file);
 
         if (hasFiles && hasFilesFormatFields && !payload.deleteFormats?.length) {

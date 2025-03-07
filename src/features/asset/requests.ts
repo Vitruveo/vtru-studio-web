@@ -33,7 +33,6 @@ import { ASSET_STORAGE_BUCKET } from '@/constants/asset';
 import { BASE_URL_API3 } from '@/constants/api';
 import { api3Service } from '@/services/api3';
 import { UpdatedAssetStoresVisibilityReq } from '../common/types';
-import add from 'date-fns/fp/add';
 
 export async function requestDeleteFiles(data: RequestDeleteFilesReq): Promise<any> {
     if (!data.deleteKeys.length) return;
