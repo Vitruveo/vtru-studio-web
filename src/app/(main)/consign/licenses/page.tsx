@@ -7,13 +7,13 @@ import Typography from '@mui/material/Typography';
 import { Box } from '@mui/material';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { consignArtworkActionsCreators } from '@/features/consign/slice';
-import { licenseThunk } from '@/features/asset/thunks';
+import { checkStepProgress, licenseThunk } from '@/features/asset/thunks';
 import { useI18n } from '@/app/hooks/useI18n';
 import { LicensesFormValues } from './types';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
 import { ModalBackConfirm } from '../modalBackConfirm';
-import Nft, { checkStepProgress } from './nft';
+import Nft from './nft';
 import Print from './print';
 import Stream from './stream';
 import Remix from './remix';
@@ -79,47 +79,47 @@ export default function Licenses() {
     const initialValues: LicensesFormValues = licensesState?.nft?.version
         ? licensesState
         : {
-              nft: {
-                  version: '1',
-                  added: true,
-                  autoStake: licensesState?.nft.autoStake || false,
-                  license: 'CC BY-NC-ND',
-                  elastic: {
-                      editionPrice: 0,
-                      numberOfEditions: 0,
-                      totalPrice: 0,
-                      editionDiscount: false,
-                  },
-                  single: {
-                      editionPrice: 150,
-                  },
-                  unlimited: {
-                      editionPrice: 0,
-                  },
-                  editionOption: 'single',
-                  availableLicenses: 1,
-              },
-              artCards: {
-                  version: '1',
-                  added: false,
-              },
-              stream: {
-                  version: '1',
-                  added: true,
-              },
-              print: {
-                  version: '1',
-                  added: false,
-                  unitPrice: 1,
-                  availableLicenses: 1,
-              },
-              remix: {
-                  version: '1',
-                  added: false,
-                  unitPrice: 1,
-                  availableLicenses: 1,
-              },
-          };
+            nft: {
+                version: '1',
+                added: true,
+                autoStake: licensesState?.nft.autoStake || false,
+                license: 'CC BY-NC-ND',
+                elastic: {
+                    editionPrice: 0,
+                    numberOfEditions: 0,
+                    totalPrice: 0,
+                    editionDiscount: false,
+                },
+                single: {
+                    editionPrice: 150,
+                },
+                unlimited: {
+                    editionPrice: 0,
+                },
+                editionOption: 'single',
+                availableLicenses: 1,
+            },
+            artCards: {
+                version: '1',
+                added: false,
+            },
+            stream: {
+                version: '1',
+                added: true,
+            },
+            print: {
+                version: '1',
+                added: false,
+                unitPrice: 1,
+                availableLicenses: 1,
+            },
+            remix: {
+                version: '1',
+                added: false,
+                unitPrice: 1,
+                availableLicenses: 1,
+            },
+        };
 
     const { values, setFieldValue, handleSubmit, setFieldError, validateForm, handleChange } =
         useFormik<LicensesFormValues>({
@@ -129,7 +129,7 @@ export default function Licenses() {
                 dispatch(
                     consignArtworkActionsCreators.changeStatusStep({
                         stepId: 'licenses',
-                        status: checkStepProgress({ values }),
+                        status: checkStepProgress({ values, formats }),
                     })
                 );
 
@@ -210,7 +210,7 @@ export default function Licenses() {
             <PageContainerFooter
                 submitText={texts.nextButton}
                 title={texts.consignArtworkTitle}
-                stepStatus={checkStepProgress({ values })}
+                stepStatus={checkStepProgress({ values, formats })}
                 stepNumber={3}
                 backOnclick={handleOpenBackModal}
             >

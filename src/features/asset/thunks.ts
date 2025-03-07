@@ -26,6 +26,8 @@ import {
     signUpdateAssetStatus,
     updateAssetStatus,
     updateAssetHeader,
+    updatePrintLicensePrice,
+    updatePrintLicenseAdded,
 } from './requests';
 import {
     AssetSendRequestUploadApiRes,
@@ -50,6 +52,9 @@ import {
     SignerUpdateAssetStatusParams,
     UpdateAssetStatusReq,
     UpdateAssetHeaderReq,
+    UpdatePrintLicensePriceReq,
+    Asset,
+    UpdatePrintLicenseAddedReq,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { assetActionsCreators } from './slice';
@@ -63,20 +68,37 @@ import { FormatsAuxiliayMedia } from '@/app/(main)/consign/auxiliaryMedia/types'
 
 import { BASE_URL_API } from '@/constants/api';
 import { userActionsCreators } from '../user/slice';
-import { checkStepProgress } from '@/app/(main)/consign/licenses/nft';
 import { clientToSigner, network, provider } from '@/services/web3';
 import schema from '@/services/web3/contracts.json';
 import { UpdatedAssetStoresVisibilityReq } from '../common/types';
+import { maxPrice, minPrice } from '@/app/(main)/components/stores/filters/licenseItem';
+import { StepStatus } from '../consign/types';
+
+export const checkStepProgress = ({
+    values,
+    formats,
+}: {
+    values: LicensesFormValues;
+    formats: Asset['formats'];
+}): StepStatus => {
+    if (!!formats?.print?.path !== !!values.print.added) return 'inProgress';
+
+    return Object.values(values).filter((v) => v?.added).length &&
+        values.nft.single.editionPrice >= minPrice &&
+        values.nft.single.editionPrice <= maxPrice
+        ? 'completed'
+        : 'inProgress';
+};
 
 export function requestDeleteURLThunk(payload: RequestDeleteFilesReq): ReduxThunkAction<Promise<any>> {
-    return async function () {
+    return async function() {
         const response = await requestDeleteFiles(payload);
         return response;
     };
 }
 
 export function assetStorageThunk(payload: Omit<AssetStorageReq, 'dispatch'>): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch, _getState) {
+    return async function(dispatch, _getState) {
         const response = await assetStorage({
             url: payload.url,
             file: payload.file,
@@ -88,7 +110,7 @@ export function assetStorageThunk(payload: Omit<AssetStorageReq, 'dispatch'>): R
 }
 
 export function createNewAssetThunk(cloneId?: string): ReduxThunkAction<Promise<void>> {
-    return async function (dispatch, _getState) {
+    return async function(dispatch, _getState) {
         const response = await createNewAsset(cloneId);
 
         dispatch(userActionsCreators.setSelectedAsset(response.data?.insertedId || ''));
@@ -96,22 +118,22 @@ export function createNewAssetThunk(cloneId?: string): ReduxThunkAction<Promise<
 }
 
 export function deleteAssetThunk(id: string): ReduxThunkAction<Promise<void>> {
-    return async function (dispatch, _getState) {
+    return async function(dispatch, _getState) {
         await deleteAsset(id);
         dispatch(userActionsCreators.removeAsset(id));
     };
 }
 
 export function getAssetThunk(id: string): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch, _getState) {
+    return async function(dispatch, _getState) {
         try {
             dispatch(assetActionsCreators.resetAsset());
             const response = await getAssetById(id);
 
             const isAllValid = response.data?.formats
                 ? Object.entries(response.data?.formats)
-                      .filter(([key]) => key !== 'print')
-                      .every(([_, item]) => (item?.validation ? item.validation.isValid : item.path))
+                    .filter(([key]) => key !== 'print')
+                    .every(([_, item]) => (item?.validation ? item.validation.isValid : item.path))
                 : false;
 
             if (response.data) {
@@ -144,7 +166,10 @@ export function getAssetThunk(id: string): ReduxThunkAction<Promise<any>> {
                     dispatch(
                         consignArtworkActionsCreators.changeStatusStep({
                             stepId: 'licenses',
-                            status: checkStepProgress({ values: response.data.licenses }),
+                            status: checkStepProgress({
+                                values: response.data.licenses,
+                                formats: response.data.formats,
+                            }),
                         })
                     );
                 }
@@ -167,16 +192,16 @@ export function getAssetThunk(id: string): ReduxThunkAction<Promise<any>> {
                             stepId: 'terms',
                             status:
                                 response.data.terms.contract &&
-                                response.data.terms.isOriginal &&
-                                response.data.terms.generatedArtworkAI &&
-                                response.data.terms.notMintedOtherBlockchain
+                                    response.data.terms.isOriginal &&
+                                    response.data.terms.generatedArtworkAI &&
+                                    response.data.terms.notMintedOtherBlockchain
                                     ? 'completed'
                                     : response.data.terms.contract ||
                                         response.data.terms.isOriginal ||
                                         response.data.terms.generatedArtworkAI ||
                                         response.data.terms.notMintedOtherBlockchain
-                                      ? 'inProgress'
-                                      : 'notStarted',
+                                        ? 'inProgress'
+                                        : 'notStarted',
                         })
                     );
                 }
@@ -242,13 +267,13 @@ export function getAssetThunk(id: string): ReduxThunkAction<Promise<any>> {
                         Object.entries(formatAssetsFormats).length < 4 || !isAllValid
                             ? 'inProgress'
                             : Object.entries(formatAssetsFormats)
-                                    .filter(([key]) => key !== 'print')
-                                    .every(([_key, value]) => value.file)
-                              ? 'completed'
-                              : Object.values(formatAssetsFormats).some((format) => format.file) ||
-                                  formatAssetsFormats.original.file
-                                ? 'inProgress'
-                                : 'notStarted';
+                                .filter(([key]) => key !== 'print')
+                                .every(([_key, value]) => value.file)
+                                ? 'completed'
+                                : Object.values(formatAssetsFormats).some((format) => format.file) ||
+                                    formatAssetsFormats.original.file
+                                    ? 'inProgress'
+                                    : 'notStarted';
 
                     dispatch(assetActionsCreators.changeFormats(formatAssetsFormats));
                     dispatch(consignArtworkActionsCreators.changeStatusStep({ stepId: 'assetMedia', status }));
@@ -318,7 +343,7 @@ export function auxiliaryMediaThunk(payload: {
     description?: string;
     deleteFormats?: string[];
 }): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch, getState) {
+    return async function(dispatch, getState) {
         const formatsState = getState().asset.mediaAuxiliary.formats;
 
         const formatsPersist = Object.entries(formatsState)
@@ -374,7 +399,7 @@ export function assetMediaThunk(payload: {
     load?: boolean;
     formatsFields?: FormatsMedia;
 }): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch, getState) {
+    return async function(dispatch, getState) {
         dispatch(assetActionsCreators.changeLoadingMediaData('running'));
         const formatsState = getState().asset.formats;
         const assetMetadata = getState().asset.assetMetadata as SectionsFormData;
@@ -457,12 +482,10 @@ export function assetMediaThunk(payload: {
         if (payload.deleteFormats?.length) dispatch(assetActionsCreators.removeFormats(payload.deleteFormats));
         dispatch(assetActionsCreators.changeLoadingMediaData('finished'));
 
-        const currentFormats = Object.entries(getState().asset.formats).filter(([key, _value]) => key !== 'print');
+        const currentFormats = Object.entries(getState().asset.formats);
         const hasFiles = currentFormats.every(([_key, value]) => value.path);
 
-        const currentFormatsFields = Object.entries(payload?.formatsFields || {}).filter(
-            ([key, _value]) => key !== 'print'
-        );
+        const currentFormatsFields = Object.entries(payload?.formatsFields || {});
         const hasFilesFormatFields = currentFormatsFields.every(([_key, value]) => value.file);
 
         if (hasFiles && hasFilesFormatFields && !payload.deleteFormats?.length) {
@@ -485,7 +508,7 @@ export function assetMetadataThunk(
         };
     }
 ): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch, getState) {
+    return async function(dispatch, getState) {
         await updateAssetStep({
             id: getState().user.selectedAsset,
             assetMetadata: {
@@ -509,7 +532,7 @@ export function assetMetadataThunk(
 // }
 
 export function licenseThunk(payload: LicensesFormValues): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch, getState) {
+    return async function(dispatch, getState) {
         await updateAssetStep({
             ...payload,
             licenses: payload,
@@ -528,7 +551,7 @@ export function licenseThunk(payload: LicensesFormValues): ReduxThunkAction<Prom
 export function updatedAssetStoresVisibilityThunk(
     payload: UpdatedAssetStoresVisibilityReq
 ): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch, getState) {
+    return async function(dispatch, getState) {
         try {
             updatedAssetStoresVisibility(payload);
             dispatch(userActionsCreators.changeAssetStoresVisibility(payload));
@@ -539,7 +562,7 @@ export function updatedAssetStoresVisibilityThunk(
 }
 
 export function contractThunk(payload: TermsOfUseFormValues): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch, getState) {
+    return async function(dispatch, getState) {
         await updateAssetStep({
             ...payload,
             stepName: 'contract',
@@ -560,7 +583,7 @@ export function contractThunk(payload: TermsOfUseFormValues): ReduxThunkAction<P
 }
 
 export function publishThunk(payload: { status: AssetStatus }): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch, getState) {
+    return async function(dispatch, getState) {
         await updateAssetStep({
             ...payload,
             stepName: 'publish',
@@ -578,7 +601,7 @@ export function publishThunk(payload: { status: AssetStatus }): ReduxThunkAction
 export function sendRequestUploadThunk(
     payload: AssetSendRequestUploadReq
 ): ReduxThunkAction<Promise<AssetSendRequestUploadApiRes>> {
-    return async function (_dispatch, getState) {
+    return async function(_dispatch, getState) {
         const assetSelected = getState().user.selectedAsset;
         const response = await sendRequestUpload({
             id: assetSelected,
@@ -595,7 +618,7 @@ export function sendRequestUploadThunk(
 export function sendRequestUploadStoresThunk(
     payload: StoresSendRequestUploadReq
 ): ReduxThunkAction<Promise<StoresSendRequestUploadApiRes>> {
-    return async function () {
+    return async function() {
         const response = await sendRequestUploadStores({
             id: payload.id,
             mimetype: payload.mimetype,
@@ -609,7 +632,7 @@ export function sendRequestUploadStoresThunk(
 }
 
 export function signingMediaC2PAThunk(data: SigningMediaC2PAReq): ReduxThunkAction<Promise<AxiosResponse>> {
-    return async function () {
+    return async function() {
         return signingMediaC2PA(data);
     };
 }
@@ -617,7 +640,7 @@ export function signingMediaC2PAThunk(data: SigningMediaC2PAReq): ReduxThunkActi
 export function uploadIPFSByAssetIdThunk(
     data: UploadIPFSByAssetIdReq
 ): ReduxThunkAction<Promise<UploadIPFSByAssetIdApiRes>> {
-    return async function (_dispatch, getState) {
+    return async function(_dispatch, getState) {
         const state = getState();
         const token = state.user.token;
 
@@ -657,7 +680,7 @@ export function uploadIPFSByAssetIdThunk(
 export function createContractThunk(
     _data: CreateContractByAssetIdReq
 ): ReduxThunkAction<Promise<CreateContractApiRes>> {
-    return async function (_dispatch, getState) {
+    return async function(_dispatch, getState) {
         const state = getState();
         const token = state.user.token;
 
@@ -697,7 +720,7 @@ export function createContractThunk(
 export function updateConsignArtworkStepThunk(payload: {
     stepName: ConsignArtworkSteps;
 }): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch, getState) {
+    return async function(dispatch, getState) {
         let reqBodyStep = { finishedAt: new Date() };
         const asset = getState().asset;
 
@@ -716,7 +739,7 @@ export function updateConsignArtworkStepThunk(payload: {
 }
 
 export function extractAssetColorsThunk({ id }: { id: string }): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch, getState) {
+    return async function(dispatch, getState) {
         const state = getState();
         const token = state.user.token;
 
@@ -764,7 +787,7 @@ export function extractAssetColorsThunk({ id }: { id: string }): ReduxThunkActio
 }
 
 export function validationConsignThunk(): ReduxThunkAction<Promise<void>> {
-    return async function (dispatch, getState) {
+    return async function(dispatch, getState) {
         dispatch(assetActionsCreators.setValidationConsign({ status: 'loading', message: '' }));
 
         return validationConsign(getState().user.selectedAsset)
@@ -785,7 +808,7 @@ export function validationConsignThunk(): ReduxThunkAction<Promise<void>> {
 }
 
 export function consignThunk(id: string): ReduxThunkAction<Promise<void>> {
-    return async function (dispatch) {
+    return async function(dispatch) {
         return consign(id).then((response) => {
             dispatch(assetActionsCreators.resetConsign());
 
@@ -809,7 +832,7 @@ export const CONSIGN_MESSAGE_MAP = {
 };
 
 export function eventTransactionThunk(): ReduxThunkAction<Promise<void>> {
-    return async function (dispatch, getState) {
+    return async function(dispatch, getState) {
         const transaction = getState().asset.consign.transaction;
         if (!transaction) return Promise.resolve();
 
@@ -863,14 +886,14 @@ export function eventTransactionThunk(): ReduxThunkAction<Promise<void>> {
 }
 
 export function requestConsignThunk(): ReduxThunkAction<void> {
-    return function (dispatch, getState) {
+    return function(dispatch, getState) {
         dispatch(assetActionsCreators.setRequestConsignStatusPending());
         requestConsign(getState().user.selectedAsset);
     };
 }
 
 export function deleteRequestConsignThunk(): ReduxThunkAction<void> {
-    return function (dispatch, getState) {
+    return function(dispatch, getState) {
         const consignArtworkStatus = getState().asset.consignArtwork?.status;
 
         if (consignArtworkStatus === 'pending') {
@@ -881,7 +904,7 @@ export function deleteRequestConsignThunk(): ReduxThunkAction<void> {
 }
 
 export function getRequestConsignCommentsThunk({ id }: { id: string }): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch, _getState) {
+    return async function(dispatch, _getState) {
         return getRequestConsignComments(id)
             .then((response) => {
                 if (Array.isArray(response.data)) {
@@ -895,7 +918,7 @@ export function getRequestConsignCommentsThunk({ id }: { id: string }): ReduxThu
 }
 
 export function validateUploadedMediaThunk(payload: ValidateUploadedMediaReq): ReduxThunkAction<Promise<void>> {
-    return async function (dispatch, _getState) {
+    return async function(dispatch, _getState) {
         dispatch(assetActionsCreators.changeLoading(true));
         return validateUploadedMedia(payload)
             .then(() => {
@@ -929,7 +952,7 @@ export function validateUploadedMediaThunk(payload: ValidateUploadedMediaReq): R
 }
 
 export function updatePriceThuk(payload: UpdatePriceReq): ReduxThunkAction<Promise<boolean>> {
-    return async function () {
+    return async function() {
         return updatePrice(payload)
             .then(() => true)
             .catch((error) => {
@@ -940,7 +963,7 @@ export function updatePriceThuk(payload: UpdatePriceReq): ReduxThunkAction<Promi
 }
 
 export function checkLicenseEditableThunk(payload: CheckLicenseEditableReq): ReduxThunkAction<Promise<boolean>> {
-    return async function () {
+    return async function() {
         return checkLicenseEditable(payload)
             .then((response) => response.data as boolean)
             .catch((error) => {
@@ -951,7 +974,7 @@ export function checkLicenseEditableThunk(payload: CheckLicenseEditableReq): Red
 }
 
 export function signerUpdateLicensePriceThunk(payload: SignerParams): ReduxThunkAction<Promise<boolean>> {
-    return async function () {
+    return async function() {
         try {
             const { client, assetKey, price } = payload;
 
@@ -1014,7 +1037,7 @@ export function signerUpdateLicensePriceThunk(payload: SignerParams): ReduxThunk
 }
 
 export function signerUpdateAssetHeaderThunk(payload: SignerUpdateAssetParams): ReduxThunkAction<Promise<boolean>> {
-    return async function () {
+    return async function() {
         try {
             const { client, assetKey, title, description } = payload;
 
@@ -1077,7 +1100,7 @@ export function signerUpdateAssetHeaderThunk(payload: SignerUpdateAssetParams): 
 export function signerUpdateAssetStatusThunk(
     payload: SignerUpdateAssetStatusParams
 ): ReduxThunkAction<Promise<boolean>> {
-    return async function () {
+    return async function() {
         try {
             const { client, status, assetKey } = payload;
 
@@ -1138,7 +1161,7 @@ export function signerUpdateAssetStatusThunk(
 
 export function updateAssetHeaderThunk(payload: UpdateAssetHeaderReq): ReduxThunkAction<Promise<void>> {
     const { assetKey, header } = payload;
-    return async function () {
+    return async function() {
         await updateAssetHeader({
             assetKey,
             header,
@@ -1148,10 +1171,32 @@ export function updateAssetHeaderThunk(payload: UpdateAssetHeaderReq): ReduxThun
 
 export function updateAssetStatusThunk(payload: UpdateAssetStatusReq): ReduxThunkAction<Promise<void>> {
     const { assetKey, status } = payload;
-    return async function () {
+    return async function() {
         await updateAssetStatus({
             assetKey,
             status,
         });
+    };
+}
+
+export function updatePrintLicensePriceThunk(payload: UpdatePrintLicensePriceReq): ReduxThunkAction<Promise<boolean>> {
+    return async function() {
+        return updatePrintLicensePrice(payload)
+            .then(() => true)
+            .catch((error) => {
+                console.log(error);
+                return false;
+            });
+    };
+}
+
+export function updatePrintLicenseAddedThunk(payload: UpdatePrintLicenseAddedReq): ReduxThunkAction<Promise<boolean>> {
+    return async function() {
+        return updatePrintLicenseAdded(payload)
+            .then(() => true)
+            .catch((error) => {
+                console.log(error);
+                return false;
+            });
     };
 }

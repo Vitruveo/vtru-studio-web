@@ -1,6 +1,6 @@
 'use client';
 
-import { CSSProperties, useEffect, useMemo, useRef, useState } from 'react';
+import { CSSProperties, useEffect, useRef, useState } from 'react';
 import { Fab, Action } from 'react-tiny-fab';
 import { useRouter } from 'next/navigation';
 import {
@@ -28,8 +28,6 @@ import {
     Pagination,
     Theme,
     useTheme,
-    ToggleButton,
-    Switch,
 } from '@mui/material';
 import { Menu as MenuIcon } from '@mui/icons-material';
 import {
@@ -48,7 +46,7 @@ import Image from 'next/image';
 
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useI18n } from '../../hooks/useI18n';
-import { putAutoStakeThunk, requestMyAssetsThunk } from '@/features/user/thunks';
+import { requestMyAssetsThunk } from '@/features/user/thunks';
 import { userActionsCreators } from '@/features/user/slice';
 import { createNewAssetThunk, deleteAssetThunk } from '@/features/asset/thunks';
 import { consignArtworkActionsCreators } from '@/features/consign/slice';
@@ -60,13 +58,6 @@ import isVideoExtension from '@/utils/isVideo';
 import { ModalListOfLicenses } from '../components/licenses/ModalListOfLicenses';
 import { userSelector } from '@/features/user';
 import { ModalStoresVisibility } from '../components/stores/visibility/ModalStoresVisibility';
-
-const iconStyle: CSSProperties = {
-    position: 'absolute',
-    bottom: 15,
-    right: 10,
-    color: '#595959',
-};
 
 const iconStyleComment: CSSProperties = {
     position: 'absolute',
@@ -107,7 +98,7 @@ export default function Home() {
     const theme = useTheme();
     const isMobile = useMediaQuery('(max-width: 600px)');
     const isTablet = useMediaQuery('(max-width: 900px)');
-    const { assets, currentPage, autoStake, collections, sort } = useSelector((state) => state.user);
+    const { assets, currentPage, collections = [], sort } = useSelector((state) => state.user);
     const customizer = useSelector((state) => state.customizer);
     const lgUp = useMediaQuery((item: Theme) => item.breakpoints.up('lg'));
     const mdUp = useMediaQuery((item: Theme) => item.breakpoints.up('md'));
@@ -214,10 +205,6 @@ export default function Home() {
         );
     };
 
-    const handleChangeAutoStake = () => {
-        dispatch(putAutoStakeThunk());
-    };
-
     if (generalVault) return <></>;
 
     return (
@@ -253,8 +240,8 @@ export default function Home() {
                         maxHeight: lgUp
                             ? 'calc(100vh - 100px)'
                             : mdUp || smUp
-                              ? 'calc(100vh - 400px)'
-                              : 'calc(100vh - 500px)',
+                                ? 'calc(100vh - 400px)'
+                                : 'calc(100vh - 500px)',
                         overflowY: 'scroll',
                         overflowX: 'hidden',
                     }}
@@ -417,8 +404,8 @@ export default function Home() {
                                     <MenuItem value="all">All</MenuItem>
 
                                     {collections
-                                        ?.slice()
-                                        .sort((a, b) => a.collection.localeCompare(b.collection))
+                                        .filter((item) => item.collection)
+                                        .sort((a, b) => a.collection?.localeCompare(b.collection))
                                         .map((item, index) => (
                                             <MenuItem key={index} value={item.collection}>
                                                 {item.collection}
@@ -459,7 +446,6 @@ export default function Home() {
                                     <List>
                                         {filters.map((filter, index) => (
                                             <ListItem
-                                                button
                                                 key={index}
                                                 onClick={() => {
                                                     handleFilterChange(filter);
@@ -553,38 +539,38 @@ export default function Home() {
                                         {!['Pending', 'Sold', 'Listed'].includes(
                                             getStatus(asset.status, asset.mintExplorer)
                                         ) && (
-                                            <Tooltip title="Delete asset" placement="top">
-                                                <button
-                                                    style={{
-                                                        position: 'absolute',
-                                                        top: 60,
-                                                        right: 10,
-                                                        backgroundColor: '#fff',
-                                                        color: '#000',
-                                                        zIndex: 1,
-                                                        padding: '5px',
-                                                        borderRadius: '5px',
-                                                        cursor: 'pointer',
-                                                        transition: '0.3s',
-                                                        border: '1px solid #fff',
-                                                    }}
-                                                    onClick={(event) => {
-                                                        event.stopPropagation();
-                                                        handleDeleteClick(asset._id);
-                                                    }}
-                                                    onMouseEnter={(event) => {
-                                                        event.currentTarget.style.backgroundColor = '#000';
-                                                        event.currentTarget.style.borderColor = '#ff0000';
-                                                    }}
-                                                    onMouseLeave={(event) => {
-                                                        event.currentTarget.style.backgroundColor = '#fff';
-                                                        event.currentTarget.style.borderColor = '#fff';
-                                                    }}
-                                                >
-                                                    <IconTrash size={20} color="#ff0000" />
-                                                </button>
-                                            </Tooltip>
-                                        )}
+                                                <Tooltip title="Delete asset" placement="top">
+                                                    <button
+                                                        style={{
+                                                            position: 'absolute',
+                                                            top: 60,
+                                                            right: 10,
+                                                            backgroundColor: '#fff',
+                                                            color: '#000',
+                                                            zIndex: 1,
+                                                            padding: '5px',
+                                                            borderRadius: '5px',
+                                                            cursor: 'pointer',
+                                                            transition: '0.3s',
+                                                            border: '1px solid #fff',
+                                                        }}
+                                                        onClick={(event) => {
+                                                            event.stopPropagation();
+                                                            handleDeleteClick(asset._id);
+                                                        }}
+                                                        onMouseEnter={(event) => {
+                                                            event.currentTarget.style.backgroundColor = '#000';
+                                                            event.currentTarget.style.borderColor = '#ff0000';
+                                                        }}
+                                                        onMouseLeave={(event) => {
+                                                            event.currentTarget.style.backgroundColor = '#fff';
+                                                            event.currentTarget.style.borderColor = '#fff';
+                                                        }}
+                                                    >
+                                                        <IconTrash size={20} color="#ff0000" />
+                                                    </button>
+                                                </Tooltip>
+                                            )}
 
                                         {isVideoExtension(asset.image) ? (
                                             <video
@@ -637,7 +623,7 @@ export default function Home() {
                                                     textOverflow: 'ellipsis',
                                                     whiteSpace: 'nowrap',
                                                     maxWidth: 270,
-                                                    overflowX: 'hidden',
+                                                    overflow: 'hidden',
                                                     textAlign: 'left',
                                                 }}
                                             >
@@ -698,15 +684,13 @@ export default function Home() {
                                                 icon={<IconSettings size={40} />}
                                                 alwaysShowTitle={true}
                                             >
-                                                {!asset.mintExplorer && (
-                                                    <Action
-                                                        style={{ backgroundColor: '#fff' }}
-                                                        text="Edit"
-                                                        onClick={() => router.push('/consign')}
-                                                    >
-                                                        <IconEdit color={theme.palette.primary.main} size={30} />
-                                                    </Action>
-                                                )}
+                                                <Action
+                                                    style={{ backgroundColor: '#fff' }}
+                                                    text="Edit"
+                                                    onClick={() => router.push('/consign')}
+                                                >
+                                                    <IconEdit color={theme.palette.primary.main} size={30} />
+                                                </Action>
                                                 {(asset.mintExplorer || asset.contractExplorer) && (
                                                     <Action
                                                         style={{ backgroundColor: '#fff' }}
