@@ -114,6 +114,7 @@ export default function MediaCard({
     const [currentSrcType, setCurrentSrcType] = useState<string>(urlAssetFile);
     const [dimensionError, setDimensionError] = useState<boolean>();
     const [sizeError, setSizeError] = useState<boolean>();
+    const [satisfyPrint, setSatisfyPrint] = useState<boolean>(false);
     const dispatch = useDispatch();
 
     const [toastr, setToastr] = useState<CustomizedSnackbarState>({
@@ -175,7 +176,7 @@ export default function MediaCard({
         return true;
     }
 
-    const onDrop = async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
+    const onDrop = async (acceptedFiles: File[], _fileRejections: FileRejection[]) => {
         // fileRejections.forEach(({ file, errors }) => {
         //     if (errors[0].code === 'file-too-large') {
         //         setSizeError(true);
@@ -225,6 +226,29 @@ export default function MediaCard({
             setMediaCrop(acceptedFiles[0]);
             setShowCrop(true);
         }
+    };
+
+    const verifyIfOriginalSatisfyPrint = (): boolean => {
+        const originalWidth = formats.original.width;
+        const originalHeight = formats.original.height;
+        const originalDefinition = formats.original.definition;
+        const originalSize = formats.original?.size ? formats.original.size / 1_000_000 : null; // convert to MB
+
+        const printWidth = mediaConfigs[originalDefinition as keyof typeof mediaConfigs].print.width;
+        const printHeight = mediaConfigs[originalDefinition as keyof typeof mediaConfigs].print.height;
+        const printSize = mediaConfigs[originalDefinition as keyof typeof mediaConfigs].print.sizeMB.image;
+
+        if (
+            originalWidth &&
+            originalWidth <= printWidth &&
+            originalHeight &&
+            originalHeight <= printHeight &&
+            originalSize &&
+            originalSize <= printSize
+        ) {
+            return true;
+        }
+        return false;
     };
 
     const handleGetAccept = () => {
@@ -364,6 +388,10 @@ export default function MediaCard({
             return () => clearInterval(intervalId);
         }
     }, [uploadSuccess]);
+
+    useEffect(() => {
+        setSatisfyPrint(verifyIfOriginalSatisfyPrint());
+    }, []);
 
     return (
         <Box marginLeft={1} width={160}>
@@ -532,31 +560,59 @@ export default function MediaCard({
                             </Box>
                         ) : (
                             <Box>
-                                <Box
-                                    height={80}
-                                    width="100%"
-                                    display="flex"
-                                    justifyContent="center"
-                                    alignItems="center"
-                                >
-                                    <input id="asset" {...getInputProps()} />
-                                    <Button {...getRootProps()} size="small" variant="contained">
-                                        {texts.uploadButton}
-                                    </Button>
-                                </Box>
+                                {formatType === 'print' && satisfyPrint ? (
+                                    <Box paddingInline={1}>
+                                        <Typography>
+                                            Your original artwork meets print requirements. Would you like to copy it as
+                                            a print?
+                                        </Typography>
+                                        <Box display={'flex'} gap={1}>
+                                            <Button
+                                                onClick={() => {
+                                                    setFieldValue(`formats.${formatType}.file`, formats.original.file);
+                                                }}
+                                                size="small"
+                                                variant="contained"
+                                            >
+                                                Yes
+                                            </Button>
+                                            <Box>
+                                                <input id="asset" {...getInputProps()} />
+                                                <Button {...getRootProps()} size="small" variant="contained">
+                                                    No
+                                                </Button>
+                                            </Box>
+                                        </Box>
+                                    </Box>
+                                ) : (
+                                    <Box>
+                                        <Box
+                                            height={80}
+                                            width="100%"
+                                            display="flex"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                        >
+                                            <input id="asset" {...getInputProps()} />
+                                            <Button {...getRootProps()} size="small" variant="contained">
+                                                {texts.uploadButton}
+                                            </Button>
+                                        </Box>
 
-                                <Box>
-                                    <Typography>{texts.mediaIs}</Typography>
-                                    <Typography textAlign="center" fontWeight="bold">
-                                        {(
-                                            language[
-                                                'studio.consignArtwork.assetMedia.mediaRequired'
-                                            ] as TranslateFunction
-                                        )({
-                                            required: mediaConfig.required,
-                                        })}
-                                    </Typography>
-                                </Box>
+                                        <Box>
+                                            <Typography>{texts.mediaIs}</Typography>
+                                            <Typography textAlign="center" fontWeight="bold">
+                                                {(
+                                                    language[
+                                                        'studio.consignArtwork.assetMedia.mediaRequired'
+                                                    ] as TranslateFunction
+                                                )({
+                                                    required: mediaConfig.required,
+                                                })}
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                )}
                             </Box>
                         )}
                     </Box>
