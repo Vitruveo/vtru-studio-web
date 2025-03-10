@@ -7,6 +7,7 @@ import {
     storeStorage,
     updateStatusStore,
     updateStepNameStore,
+    updateStoreVisibility,
     validateUrl,
 } from './requests';
 import { storesActionsCreators } from './slice';
@@ -19,6 +20,7 @@ import {
     UpdateStatusParams,
     ValidateUrlParams,
     StepStatus,
+    UpdateStoreVisibilityParams,
 } from './types';
 import { hasTruthyObject } from '@/utils/truthyObject';
 
@@ -59,6 +61,7 @@ export function getStoreByIdThunk(id: string): ReduxThunkAction<Promise<void>> {
             pending: 'In Progress',
             inactive: 'Not Approved',
             active: 'Completed',
+            hidden: 'Completed',
         };
 
         if (isOrganizationCompleted) {
@@ -185,6 +188,15 @@ export function storeStorageThunk({
 export function updateStatusThunk(data: UpdateStatusParams): ReduxThunkAction<Promise<void>> {
     return async (_dispatch: any) => {
         await updateStatusStore({
+            id: data.id,
+            status: data.status,
+        });
+    };
+}
+
+export function updateStoreVisibilityThunk(data: UpdateStoreVisibilityParams): ReduxThunkAction<Promise<void>> {
+    return async (_dispatch: any) => {
+        await updateStoreVisibility({
             id: data.id,
             status: data.status,
         });
