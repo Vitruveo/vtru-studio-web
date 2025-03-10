@@ -41,8 +41,8 @@ import CustomizedSnackbar, { CustomizedSnackbarState } from '@/app/common/toastr
 import { ASSET_STORAGE_URL } from '@/constants/asset';
 import { useDispatch } from '@/store/hooks';
 import { assetActionsCreators } from '@/features/asset/slice';
-import { validateUploadedMediaThunk } from '@/features/asset/thunks';
 import { IconCircleX } from '@tabler/icons-react';
+import { assetMediaThunk } from '@/features/asset/thunks';
 
 interface MediaCardProps {
     deleteKeys: string[];
@@ -72,6 +72,7 @@ interface MediaCardProps {
         value: any,
         shouldValidate?: boolean | undefined
     ) => Promise<void> | Promise<AssetMediaFormErros>;
+    hasContract?: boolean;
 }
 
 export interface MediaConfig {
@@ -99,6 +100,7 @@ export default function MediaCard({
     deleteKeys,
     setFieldValue,
     handleUploadFile,
+    hasContract = false,
 }: MediaCardProps) {
     const fileIsLocal = formatValue.file && typeof formatValue.file !== 'string';
 
@@ -113,6 +115,7 @@ export default function MediaCard({
     const [currentSrcType, setCurrentSrcType] = useState<string>(urlAssetFile);
     const [dimensionError, setDimensionError] = useState<boolean>();
     const [sizeError, setSizeError] = useState<boolean>();
+    const [showSatisfyPrintMessage, setShowSatisfyPrintMessage] = useState<boolean>(false);
     const dispatch = useDispatch();
 
     const [toastr, setToastr] = useState<CustomizedSnackbarState>({
@@ -129,18 +132,13 @@ export default function MediaCard({
 
     const mediaConfig =
         mediaConfigs[definition as keyof typeof mediaConfigs]?.[
-            formatType as keyof (typeof mediaConfigs)['landscape']
+        formatType as keyof (typeof mediaConfigs)['landscape']
         ] || {};
 
     const mediaWidth = formats.original.width;
     const mediaHeight = formats.original.height;
 
-    const {
-        requestAssetUpload: upload,
-        formats: assetFormats,
-        _id,
-        isLoadingMediaData,
-    } = useSelector((state) => state.asset);
+    const { requestAssetUpload: upload, formats: assetFormats } = useSelector((state) => state.asset);
     const format = assetFormats[formatType as keyof FormatsMedia];
     const originalMediaInfo = handleGetFileType(formats.original.file!);
     const isVideo = originalMediaInfo.mediaType === 'video' && formatType !== 'print';
@@ -174,7 +172,7 @@ export default function MediaCard({
         return true;
     }
 
-    const onDrop = async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
+    const onDrop = async (acceptedFiles: File[], _fileRejections: FileRejection[]) => {
         // fileRejections.forEach(({ file, errors }) => {
         //     if (errors[0].code === 'file-too-large') {
         //         setSizeError(true);
@@ -226,6 +224,27 @@ export default function MediaCard({
         }
     };
 
+    const verifyIfOriginalSatisfyPrint = (): boolean => {
+        const originalDefinition = formats.original.definition;
+        const originalSize = formats.original?.size ? formats.original.size / 1_000_000 : null; // convert to MB
+
+        const printWidth = mediaConfigs[originalDefinition as keyof typeof mediaConfigs].print.width;
+        const printHeight = mediaConfigs[originalDefinition as keyof typeof mediaConfigs].print.height;
+        const printSize = mediaConfigs[originalDefinition as keyof typeof mediaConfigs].print.sizeMB.image;
+
+        if (
+            mediaWidth &&
+            mediaWidth == printWidth &&
+            mediaHeight &&
+            mediaHeight == printHeight &&
+            originalSize &&
+            originalSize <= printSize
+        ) {
+            return true;
+        }
+        return false;
+    };
+
     const handleGetAccept = () => {
         let accept = {};
         if (!isVideo) {
@@ -244,10 +263,6 @@ export default function MediaCard({
         }
         return accept;
     };
-
-    function convertMBToBytes(sizeInMB: number): number {
-        return sizeInMB * 1000000;
-    }
 
     const { getRootProps, getInputProps } = useDropzone({
         onDrop,
@@ -349,6 +364,22 @@ export default function MediaCard({
         setFileIsload(false);
     };
 
+    const handlePutOriginalAsPrint = () => {
+        setFieldValue(`formats.print`, formats.original);
+        setShowSatisfyPrintMessage(false);
+
+        dispatch(
+            assetMediaThunk({
+                formats: {
+                    print: {
+                        name: formats.original.name || (formats.original.file as any)?.name,
+                        path: formats.original.path || (formats.original.file as any)?.path,
+                    },
+                },
+            })
+        );
+    };
+
     useEffect(() => {
         if (uploadSuccess && fileStatus && formatType === 'preview' && isVideo) {
             const intervalId = setInterval(() => {
@@ -367,6 +398,10 @@ export default function MediaCard({
             return () => clearInterval(intervalId);
         }
     }, [uploadSuccess]);
+
+    useEffect(() => {
+        setShowSatisfyPrintMessage(verifyIfOriginalSatisfyPrint());
+    }, []);
 
     return (
         <Box marginLeft={1} width={160}>
@@ -417,8 +452,13 @@ export default function MediaCard({
                             e.stopPropagation();
                             handleDeleteFile();
                         }}
+                        disabled={hasContract && formatType !== 'print'}
                     >
-                        <IconTrash color="red" size="16" stroke={1.5} />
+                        <IconTrash
+                            color={hasContract && formatType !== 'print' ? 'gray' : 'red'}
+                            size="16"
+                            stroke={1.5}
+                        />
                     </IconButton>
                 )}
             </Box>
@@ -432,38 +472,39 @@ export default function MediaCard({
                 borderRadius={2}
                 borderColor="#D5D5D5"
             >
-                <Box
-                    width="100%"
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                    flexDirection="column"
-                    borderBottom="1px solid #D5D5D5"
-                    padding={1}
-                    borderColor="#D5D5D5"
-                    borderRadius="10px 10px 0px 0px"
-                    bgcolor="#EFEFEF"
-                    height={70}
-                >
-                    <Typography fontSize="0.8rem" color="GrayText" textAlign="center">
-                        {isVideo ? originalMediaInfo.contentType : handleGetFileType(formatValue.file).contentType}{' '}
-                        {isVideo ? texts.video : texts.image}
-                        <Typography fontSize="0.8rem">
-                            {mediaConfig?.width || mediaWidth} X {mediaConfig?.height || mediaHeight}
+                {(formatType !== 'print' || !showSatisfyPrintMessage || formatValue.file) && (
+                    <Box
+                        width="100%"
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        flexDirection="column"
+                        borderBottom="1px solid #D5D5D5"
+                        padding={1}
+                        borderColor="#D5D5D5"
+                        borderRadius="10px 10px 0px 0px"
+                        bgcolor="#EFEFEF"
+                        height={70}
+                    >
+                        <Typography fontSize="0.8rem" color="GrayText" textAlign="center">
+                            {isVideo ? originalMediaInfo.contentType : handleGetFileType(formatValue.file).contentType}{' '}
+                            {isVideo ? texts.video : texts.image}
+                            <Typography fontSize="0.8rem">
+                                {mediaConfig?.width || mediaWidth} X {mediaConfig?.height || mediaHeight}
+                            </Typography>
+                            <Typography fontSize="0.8rem">
+                                {!thumbSRC || (mediaConfig?.sizeMB && !formatValue.size)
+                                    ? `${isVideo
+                                        ? formatFileSize(mediaConfig?.sizeMB.video)
+                                        : formatFileSize(mediaConfig?.sizeMB.image)
+                                    } ${(language['studio.consignArtwork.assetMedia.max'] as TranslateFunction)({
+                                        seconds: isVideo && formatType === 'preview' ? 5 : 0,
+                                    })}`
+                                    : getFileSize(formatValue.size)}
+                            </Typography>
                         </Typography>
-                        <Typography fontSize="0.8rem">
-                            {!thumbSRC || (mediaConfig?.sizeMB && !formatValue.size)
-                                ? `${
-                                      isVideo
-                                          ? formatFileSize(mediaConfig?.sizeMB.video)
-                                          : formatFileSize(mediaConfig?.sizeMB.image)
-                                  } ${(language['studio.consignArtwork.assetMedia.max'] as TranslateFunction)({
-                                      seconds: isVideo && formatType === 'preview' ? 5 : 0,
-                                  })}`
-                                : getFileSize(formatValue.size)}
-                        </Typography>
-                    </Typography>
-                </Box>
+                    </Box>
+                )}
                 <Box width="100%" justifyContent="center" alignItems="center" height={200}>
                     <Box paddingInline={1} marginTop={1} height={15}>
                         {fileStatus && fileStatus.status !== 'completed' && fileStatus.status !== 'saved' ? (
@@ -478,8 +519,8 @@ export default function MediaCard({
                                 <Box
                                     display={
                                         formatValue.load ||
-                                        (fileIsload && !isVideo) ||
-                                        (fileIsload && isVideo && formatType === 'preview' && fileStatus)
+                                            (fileIsload && !isVideo) ||
+                                            (fileIsload && isVideo && formatType === 'preview' && fileStatus)
                                             ? 'flex'
                                             : 'none'
                                     }
@@ -490,7 +531,7 @@ export default function MediaCard({
                                 >
                                     <CircularProgress color="primary" />
                                 </Box>
-                                {formatType !== 'print' && originalMediaInfo.mediaType === 'video' ? (
+                                {originalMediaInfo.mediaType === 'video' ? (
                                     <video
                                         ref={videoRef}
                                         onError={handleVideoError}
@@ -504,7 +545,7 @@ export default function MediaCard({
                                             objectFit: 'contain',
                                             display:
                                                 formatValue.load ||
-                                                (fileIsload && fileStatus && formatType === 'preview')
+                                                    (fileIsload && fileStatus && formatType === 'preview')
                                                     ? 'none'
                                                     : '',
                                         }}
@@ -530,31 +571,58 @@ export default function MediaCard({
                             </Box>
                         ) : (
                             <Box>
-                                <Box
-                                    height={80}
-                                    width="100%"
-                                    display="flex"
-                                    justifyContent="center"
-                                    alignItems="center"
-                                >
-                                    <input id="asset" {...getInputProps()} />
-                                    <Button {...getRootProps()} size="small" variant="contained">
-                                        {texts.uploadButton}
-                                    </Button>
-                                </Box>
+                                {formatType === 'print' && showSatisfyPrintMessage ? (
+                                    <Box display={'flex'} flexDirection={'column'} gap={2} paddingInline={1}>
+                                        <Typography>
+                                            Your original artwork meets print requirements. Would you like to copy it as
+                                            a print?
+                                        </Typography>
+                                        <Box display={'flex'} gap={1}>
+                                            <Box>
+                                                <input id="asset" {...getInputProps()} />
+                                                <Button
+                                                    {...getRootProps()}
+                                                    size="small"
+                                                    variant="text"
+                                                    onClick={() => setShowSatisfyPrintMessage(false)}
+                                                >
+                                                    No
+                                                </Button>
+                                            </Box>
+                                            <Button onClick={handlePutOriginalAsPrint} size="small" variant="contained">
+                                                Yes
+                                            </Button>
+                                        </Box>
+                                    </Box>
+                                ) : (
+                                    <Box>
+                                        <Box
+                                            height={80}
+                                            width="100%"
+                                            display="flex"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                        >
+                                            <input id="asset" {...getInputProps()} />
+                                            <Button {...getRootProps()} size="small" variant="contained">
+                                                {texts.uploadButton}
+                                            </Button>
+                                        </Box>
 
-                                <Box>
-                                    <Typography>{texts.mediaIs}</Typography>
-                                    <Typography textAlign="center" fontWeight="bold">
-                                        {(
-                                            language[
-                                                'studio.consignArtwork.assetMedia.mediaRequired'
-                                            ] as TranslateFunction
-                                        )({
-                                            required: mediaConfig.required,
-                                        })}
-                                    </Typography>
-                                </Box>
+                                        <Box>
+                                            <Typography>{texts.mediaIs}</Typography>
+                                            <Typography textAlign="center" fontWeight="bold">
+                                                {(
+                                                    language[
+                                                    'studio.consignArtwork.assetMedia.mediaRequired'
+                                                    ] as TranslateFunction
+                                                )({
+                                                    required: mediaConfig.required,
+                                                })}
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                )}
                             </Box>
                         )}
                     </Box>
