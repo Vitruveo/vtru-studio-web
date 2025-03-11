@@ -195,10 +195,18 @@ export function updateStatusThunk(data: UpdateStatusParams): ReduxThunkAction<Pr
 }
 
 export function updateStoreVisibilityThunk(data: UpdateStoreVisibilityParams): ReduxThunkAction<Promise<void>> {
-    return async (_dispatch: any) => {
-        await updateStoreVisibility({
+    return async (dispatch: any) => {
+        dispatch(storesActionsCreators.setStoreVisibility({ id: data.id, status: data.status }));
+        updateStoreVisibility({
             id: data.id,
             status: data.status,
+        }).catch(() => {
+            dispatch(
+                storesActionsCreators.setStoreVisibility({
+                    id: data.id,
+                    status: data.status === 'active' ? 'hidden' : 'active',
+                })
+            );
         });
     };
 }

@@ -208,17 +208,15 @@ export default function Publish() {
         dispatch(getStoreByIdThunk(selectedStore.id));
     }, [selectedStore]);
 
-    const handleChangeHiddenStore = async () => {
+    const handleChangeHiddenStore = () => {
         if (!['active', 'hidden'].includes(data.data[0].status)) return;
 
-        await dispatch(
+        dispatch(
             updateStoreVisibilityThunk({
                 id: data.data[0]._id,
                 status: data.data[0].status === 'active' ? 'hidden' : 'active',
             })
         );
-
-        dispatch(getStoreByIdThunk(selectedStore.id));
     };
 
     return (
