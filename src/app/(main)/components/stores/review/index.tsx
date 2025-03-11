@@ -56,12 +56,7 @@ export const Review = () => {
                 <TabList variant="scrollable" scrollButtons="auto">
                     <Tab label={'Selected Artworks'} value={'general'} color="inherit" />
                     <Tab
-                        sx={{ backgroundColor: results === 0 ? 'rgba(255, 0, 0, 0.5)' : 'inherit' }}
-                        label={
-                            <Typography sx={{ color: results === 0 ? 'white' : '#FF0066', fontSize: '1.1rem' }}>
-                                {results} results
-                            </Typography>
-                        }
+                        label={<Typography sx={{ fontSize: '1.1rem' }}>{results} results</Typography>}
                         value={'general'}
                         color="inherit"
                     />
