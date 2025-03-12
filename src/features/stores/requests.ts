@@ -7,6 +7,7 @@ import {
     StoreStorageParams,
     UpdateStatusParams,
     UpdateStepNameStoresParams,
+    UpdateStoreVisibilityParams,
     ValidateUrlParams,
 } from './types';
 
@@ -61,6 +62,10 @@ export async function updateStepNameStore({
 
 export async function updateStatusStore({ id, status }: UpdateStatusParams): Promise<APIResponse<void>> {
     return apiService.patch(`/stores/status/${id}`, { status });
+}
+
+export async function updateStoreVisibility({ id, status }: UpdateStoreVisibilityParams): Promise<APIResponse<void>> {
+    return apiService.patch(`/stores/status/${id}/creator`, { status });
 }
 
 export async function validateUrl({ storeId, url }: ValidateUrlParams): Promise<APIResponse<boolean>> {
