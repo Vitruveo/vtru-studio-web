@@ -15,14 +15,13 @@ interface Props {
     data: {
         store: Stores;
         loading: boolean;
-        results: number;
     };
 }
 const Component = ({ data }: Props) => {
     const dispatch = useDispatch();
     const router = useRouter();
     const [isInvalidUrl, setIsInvalidUrl] = useState(false);
-    const { store, loading, results } = data;
+    const { store, loading } = data;
 
     const textsForPublishStoreStatus = {
         draft: {
@@ -46,10 +45,6 @@ const Component = ({ data }: Props) => {
             buttontitle: 'Request Moderation',
             message: 'Your URL is already in use. Please update it and try request moderation again',
         },
-        zeroResults: {
-            buttontitle: 'Request Moderation',
-            message: 'Your store is empty. Please add at least one artwork to request moderation',
-        },
     } as { [key: string]: { buttontitle: string | undefined; message: string } };
 
     const handleRequestPublishment = async () => {
@@ -61,7 +56,6 @@ const Component = ({ data }: Props) => {
             setIsInvalidUrl(true);
             return;
         }
-        if (results === 0) return;
         await dispatch(updateStatusThunk({ id: store._id, status: 'pending' }));
         dispatch(getStoreByIdThunk(store._id));
         setIsInvalidUrl(false);
@@ -78,25 +72,17 @@ const Component = ({ data }: Props) => {
                 ]}
                 assetTitle={store.organization?.name || ''}
             />
-            {!isInvalidUrl && results > 0 && (
-                <PublishStoreMessage
-                    message={textsForPublishStoreStatus[store.status].message}
-                    loading={loading}
-                    type={'warning'}
-                />
-            )}
-            {isInvalidUrl && (
+            {isInvalidUrl ? (
                 <PublishStoreMessage
                     message={textsForPublishStoreStatus.invalidUrl.message}
                     loading={loading}
                     type={'error'}
                 />
-            )}
-            {results === 0 && (
+            ) : (
                 <PublishStoreMessage
-                    message={textsForPublishStoreStatus.zeroResults.message}
+                    message={textsForPublishStoreStatus[store.status].message}
                     loading={loading}
-                    type={'error'}
+                    type={'warning'}
                 />
             )}
             <Box display={'flex'} justifyContent={'center'} width={'100%'} mb={4}>
@@ -142,11 +128,7 @@ const Component = ({ data }: Props) => {
                         <Typography color="gray">Back</Typography>
                     </Button>
                     {textsForPublishStoreStatus[store.status].buttontitle && (
-                        <Button
-                            variant="contained"
-                            onClick={handleRequestPublishment}
-                            disabled={store.status !== 'draft'}
-                        >
+                        <Button variant="contained" onClick={handleRequestPublishment}>
                             {textsForPublishStoreStatus[store.status].buttontitle}
                         </Button>
                     )}
@@ -158,5 +140,5 @@ const Component = ({ data }: Props) => {
 
 export default function ReviewAndPublish() {
     const { data, loading, selectedStore } = useSelector((state) => state.stores);
-    return <Component data={{ store: data.data[0], loading, results: selectedStore.results }} />;
+    return <Component data={{ store: data.data[0], loading }} />;
 }
