@@ -139,6 +139,6 @@ const Component = ({ data }: Props) => {
 };
 
 export default function ReviewAndPublish() {
-    const { data, loading, selectedStore } = useSelector((state) => state.stores);
+    const { data, loading } = useSelector((state) => state.stores);
     return <Component data={{ store: data.data[0], loading }} />;
 }

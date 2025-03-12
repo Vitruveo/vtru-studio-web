@@ -108,7 +108,7 @@ export interface RequestStoreUpload {
 }
 
 export type StepStatus = 'Not Started' | 'Completed' | 'In Progress' | 'Not Approved';
-export type StoreStatus = 'draft' | 'pending' | 'active' | 'inactive';
+export type StoreStatus = 'draft' | 'pending' | 'active' | 'inactive' | 'hidden';
 
 export interface CompletedSteps {
     status: StepStatus;
@@ -166,6 +166,11 @@ export interface UpdateAppearanceContentParams {
 }
 
 export interface UpdateStatusParams {
+    id: string;
+    status: StoreStatus;
+}
+
+export interface UpdateStoreVisibilityParams {
     id: string;
     status: StoreStatus;
 }

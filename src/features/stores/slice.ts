@@ -95,6 +95,14 @@ export const storesSlice = createSlice({
         setPublishStoreStatus: (state, action: PayloadAction<StoresState['status']>) => {
             state.status = action.payload;
         },
+        setStoreVisibility: (state, action: PayloadAction<{ id: string; status: StoresState['status'] }>) => {
+            state.data.data = state.data.data.map((store: Stores) => {
+                if (store._id === action.payload.id) {
+                    store.status = action.payload.status;
+                }
+                return store;
+            });
+        },
     },
 });
 

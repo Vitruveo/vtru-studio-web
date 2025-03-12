@@ -1,13 +1,13 @@
 'use client';
 
-import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Grid, Switch, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
 import Breadcrumb from '@/app/(main)/layout/shared/breadcrumb/Breadcrumb';
 
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useEffect } from 'react';
-import { getStoreByIdThunk } from '@/features/stores/thunks';
+import { getStoreByIdThunk, updateStoreVisibilityThunk } from '@/features/stores/thunks';
 import { Stores, PublishStore, StepStatus } from '@/features/stores/types';
 import { Preview } from '../../components/stores/Preview';
 import { isFile } from '@/utils/isFile';
@@ -46,11 +46,15 @@ interface ComponentProps {
         loading: boolean;
         reviewAndPublishAvailable: boolean;
     };
+    actions: {
+        handleChangeHiddenStore: () => void;
+    };
 }
 
-const Component = ({ data }: ComponentProps) => {
+const Component = ({ data, actions }: ComponentProps) => {
     const router = useRouter();
     const { store, loading, publishStore, reviewAndPublishAvailable } = data;
+    const { handleChangeHiddenStore } = actions;
 
     if (loading || !store)
         return (
@@ -128,6 +132,12 @@ const Component = ({ data }: ComponentProps) => {
                         })}
                     </Grid>
                     <Grid item xs={12} md={6}>
+                        {['active', 'hidden'].includes(store.status) && (
+                            <Box display={'flex'} gap={1} alignItems={'center'} justifyContent={'end'}>
+                                <Typography variant="h5">Hide in Stores view</Typography>
+                                <Switch onChange={handleChangeHiddenStore} checked={store.status === 'hidden'} />
+                            </Box>
+                        )}
                         <Preview
                             title={store.organization?.name || 'Store Name'}
                             description={store.organization?.description || 'Store Description'}
@@ -198,5 +208,21 @@ export default function Publish() {
         dispatch(getStoreByIdThunk(selectedStore.id));
     }, [selectedStore]);
 
-    return <Component data={{ store: data.data[0], loading, publishStore, reviewAndPublishAvailable }} />;
+    const handleChangeHiddenStore = () => {
+        if (!['active', 'hidden'].includes(data.data[0].status)) return;
+
+        dispatch(
+            updateStoreVisibilityThunk({
+                id: data.data[0]._id,
+                status: data.data[0].status === 'active' ? 'hidden' : 'active',
+            })
+        );
+    };
+
+    return (
+        <Component
+            data={{ store: data.data[0], loading, publishStore, reviewAndPublishAvailable }}
+            actions={{ handleChangeHiddenStore }}
+        />
+    );
 }
