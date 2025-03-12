@@ -75,6 +75,10 @@ const ConsignArtwork = () => {
             message:
                 'Nice work! Your artwork is ready for request consignment. Once you submit it our team will review it and approve accordingly',
         },
+        error: {
+            buttontitle: 'Request Consign Error',
+            message: 'There was an error on consignment. Please contact one of our moderators',
+        },
     } as { [key: string]: { buttontitle: string | undefined; message: string } };
 
     const getConsignArtworkStatus = (status: ConsignArtworkAssetStatus | undefined) =>
@@ -139,7 +143,8 @@ const ConsignArtwork = () => {
                 submitDisabled={
                     validateConsign.status !== 'success' ||
                     consignArtwork?.status === 'pending' ||
-                    consignArtwork?.status === 'running'
+                    consignArtwork?.status === 'running' ||
+                    consignArtwork?.status === 'error'
                 }
                 backOnclick={() => {
                     if (consignArtwork?.status === 'pending') {
@@ -247,7 +252,7 @@ const ConsignArtwork = () => {
                             <Box ml={2}>
                                 <Comments assetId={_id} />
                                 <Box display="flex" justifyContent={'space-between'}>
-                                    <CompletedConsignTableStatus onStatusChange={() => {}} selectedStatus="preview" />
+                                    <CompletedConsignTableStatus onStatusChange={() => { }} selectedStatus="preview" />
                                     <AssetMediaPreview />
                                 </Box>
                             </Box>

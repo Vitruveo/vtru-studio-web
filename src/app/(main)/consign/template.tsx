@@ -12,7 +12,7 @@ export default function ConsignArtworkTemplate({ children }: { children: React.R
         if (!canConsignArtwork) {
             router.push('/home');
         }
-        if (status === 'pending') {
+        if (status === 'pending' || status === 'error') {
             router.push('/consign/reviewAndConsign');
         }
     }, [router, status]);
