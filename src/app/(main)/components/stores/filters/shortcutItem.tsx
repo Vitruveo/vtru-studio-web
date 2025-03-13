@@ -56,17 +56,23 @@ const ShortcutCheckbox = ({ fieldName, label }: Props) => {
         helpers.setValue(event.target.checked);
         switch (fieldName) {
             case 'general.shortcuts.hideNudity':
-                setFieldValue('taxonomy.nudity', event.target.checked ? ['no'] : []);
+                setFieldValue(
+                    'taxonomy.nudity',
+                    event.target.checked ? ['no'] : values.taxonomy.nudity.map((item) => item)
+                );
                 break;
             case 'general.shortcuts.hideAI':
-                setFieldValue('taxonomy.aiGeneration', event.target.checked ? ['partial', 'none'] : []);
+                setFieldValue(
+                    'taxonomy.aiGeneration',
+                    event.target.checked ? ['partial', 'none'] : values.taxonomy.aiGeneration.map((item) => item)
+                );
                 break;
             case 'general.shortcuts.photography':
                 setFieldValue(
                     'taxonomy.category',
                     event.target.checked
                         ? [...values.taxonomy.category, 'photography']
-                        : values.taxonomy.category.filter((item) => item !== 'photography')
+                        : values.taxonomy.category.map((item) => item)
                 );
                 break;
             case 'general.shortcuts.animation':
@@ -74,7 +80,7 @@ const ShortcutCheckbox = ({ fieldName, label }: Props) => {
                     'taxonomy.category',
                     event.target.checked
                         ? [...values.taxonomy.category, 'video']
-                        : values.taxonomy.category.filter((item) => item !== 'video')
+                        : values.taxonomy.category.map((item) => item)
                 );
                 break;
             case 'general.shortcuts.physicalArt':
@@ -82,7 +88,7 @@ const ShortcutCheckbox = ({ fieldName, label }: Props) => {
                     'taxonomy.objectType',
                     event.target.checked
                         ? [...values.taxonomy.objectType, 'physicalart']
-                        : values.taxonomy.objectType.filter((item) => item !== 'physicalart')
+                        : values.taxonomy.objectType.map((item) => item)
                 );
                 break;
             case 'general.shortcuts.digitalArt':
@@ -90,7 +96,7 @@ const ShortcutCheckbox = ({ fieldName, label }: Props) => {
                     'taxonomy.objectType',
                     event.target.checked
                         ? [...values.taxonomy.objectType, 'digitalart']
-                        : values.taxonomy.objectType.filter((item) => item !== 'digitalart')
+                        : values.taxonomy.objectType.map((item) => item)
                 );
                 break;
         }
