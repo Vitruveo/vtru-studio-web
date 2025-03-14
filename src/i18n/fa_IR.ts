@@ -854,13 +854,18 @@ const language: Translation = {
         `مبلغ ${data.amount} ${data.from}`,
 
     'studio.consignArtwork.licenses.print.description':
-        'این مجوز اثر هنری را برای کاربران نهایی برای چاپ روی یک مورد فیزیکی تکی با استفاده از فناوری چاپ درخواستی (POD) فراهم می‌کند. این مجوز تا لحظه چاپ قابل انتقال است، پس از آن فقط به مالک مورد فیزیکی قابل انتقال است.',
+        'این مجوز اثر هنری را برای کاربران نهایی در دسترس قرار می‌دهد تا یک مورد فیزیکی واحد را با استفاده از فناوری چاپ بر اساس تقاضا (POD) چاپ کنند. این مجوز تنها در صورتی فعال می‌شود که رسانه چاپی را در بخش "رسانه دارایی" بارگذاری کرده باشید.',
     'studio.consignArtwork.licenses.print.enable':
         'این مجوز را فعال کنید اگر می‌خواهید کاربران نهایی از آثار هنری شما برای برنامه‌های چاپ درخواستی (POD) استفاده کنند. این مجوز برای چاپ فردی است؛ چاپ انبوه مجاز نیست.',
-    'studio.consignArtwork.licenses.print.singlePrint.title': 'چاپ تکی',
+    'studio.consignArtwork.licenses.print.singlePrint.title': 'چاپ تکیمجوز چاپ',
     'studio.consignArtwork.licenses.print.singlePrint.description':
-        '“قیمت واحد” قیمت اثر هنری به دلار آمریکا برای یک چاپ تکی است.',
-    'studio.consignArtwork.licenses.print.singlePrint.field': 'قیمت واحد (دلار آمریکا)',
+        '"قیمت کالا" هزینه مجوز چاپ روی کالاهایی مانند لیوان، کلاه، پیراهن، کیف و غیره است.',
+    'studio.consignArtwork.licenses.print.singlePrint.description2':
+        '"قیمت نمایش" هزینه مجوز چاپ روی موادی است که هدف اصلی آنها نمایش اثر هنری است، مانند بوم، آلومینیوم، پوستر و غیره. این قیمت بر حسب سانتی‌متر مربع بیان می‌شود تا بتوان آن را بر روی محصولات نمایشی با اندازه‌های مختلف اعمال کرد.',
+    'studio.consignArtwork.licenses.print.singlePrint.field': 'قیمت کالا',
+    'studio.consignArtwork.licenses.print.singlePrint2.field': '(USD)',
+    'studio.consignArtwork.licenses.print.displayPrice.field': 'قیمت نمایش',
+    'studio.consignArtwork.licenses.print.displayPrice2.field': '(USD به ازای هر سانتی‌متر مربع)',
 
     'studio.consignArtwork.licenses.remix.description':
         'این مجوز اثر هنری را برای کاربران نهایی برای استفاده در برنامه‌های Remix با استفاده از',

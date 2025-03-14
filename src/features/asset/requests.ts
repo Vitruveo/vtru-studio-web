@@ -228,8 +228,12 @@ export async function updateAssetStatus({ assetKey, status }: UpdateAssetStatusR
     return api3Service.patch(`/assets/updateAssetStatus/${assetKey}`, { status });
 }
 
-export async function updatePrintLicensePrice({ assetKey, unitPrice }: UpdatePrintLicensePriceReq) {
-    return apiService.patch(`/assets/${assetKey}/printLicense/price`, { unitPrice });
+export async function updatePrintLicensePrice({
+    assetKey,
+    merchandisePrice,
+    displayPrice,
+}: UpdatePrintLicensePriceReq) {
+    return apiService.patch(`/assets/${assetKey}/printLicense/price`, { merchandisePrice, displayPrice });
 }
 
 export async function updatePrintLicenseAdded({ assetKey, added }: UpdatePrintLicenseAddedReq) {

@@ -16,17 +16,16 @@ import { ModalBackConfirm } from '../modalBackConfirm';
 import Nft from './nft';
 import Print from './print';
 import Stream from './stream';
-import Remix from './remix';
+
 import ArtCards from './artCard';
 import { useToastr } from '@/app/hooks/useToastr';
 import { WalletProvider } from '../../components/apps/wallet';
 
 const allLicenses = {
     NFT: Nft,
-    ArtCards: ArtCards,
-    Stream: Stream,
     Print: Print,
-    Remix: Remix,
+    Stream: Stream,
+    ArtCards: ArtCards,
 };
 
 export default function Licenses() {
@@ -44,7 +43,7 @@ export default function Licenses() {
     const selectPreviewAsset = Object.entries(formats).find(([key]) => key === 'print');
     const printExists = selectPreviewAsset && selectPreviewAsset[1].file;
 
-    const allLicensesFiltered: Partial<Record<keyof typeof allLicenses, typeof Remix>> = printExists
+    const allLicensesFiltered: Partial<Record<keyof typeof allLicenses, typeof Stream>> = printExists
         ? allLicenses
         : Object.fromEntries(Object.entries(allLicenses).filter(([key]) => key !== 'Print'));
 
@@ -79,47 +78,42 @@ export default function Licenses() {
     const initialValues: LicensesFormValues = licensesState?.nft?.version
         ? licensesState
         : {
-            nft: {
-                version: '1',
-                added: true,
-                autoStake: licensesState?.nft.autoStake || false,
-                license: 'CC BY-NC-ND',
-                elastic: {
-                    editionPrice: 0,
-                    numberOfEditions: 0,
-                    totalPrice: 0,
-                    editionDiscount: false,
-                },
-                single: {
-                    editionPrice: 150,
-                },
-                unlimited: {
-                    editionPrice: 0,
-                },
-                editionOption: 'single',
-                availableLicenses: 1,
-            },
-            artCards: {
-                version: '1',
-                added: false,
-            },
-            stream: {
-                version: '1',
-                added: true,
-            },
-            print: {
-                version: '1',
-                added: false,
-                unitPrice: 1,
-                availableLicenses: 1,
-            },
-            remix: {
-                version: '1',
-                added: false,
-                unitPrice: 1,
-                availableLicenses: 1,
-            },
-        };
+              nft: {
+                  version: '1',
+                  added: true,
+                  autoStake: licensesState?.nft?.autoStake || false,
+                  license: 'CC BY-NC-ND',
+                  elastic: {
+                      editionPrice: 0,
+                      numberOfEditions: 0,
+                      totalPrice: 0,
+                      editionDiscount: false,
+                  },
+                  single: {
+                      editionPrice: 150,
+                  },
+                  unlimited: {
+                      editionPrice: 0,
+                  },
+                  editionOption: 'single',
+                  availableLicenses: 1,
+              },
+              artCards: {
+                  version: '1',
+                  added: false,
+              },
+              stream: {
+                  version: '1',
+                  added: true,
+              },
+              print: {
+                  version: '1',
+                  added: false,
+                  merchandisePrice: 1,
+                  displayPrice: 1,
+                  availableLicenses: 1,
+              },
+          };
 
     const { values, setFieldValue, handleSubmit, setFieldError, validateForm, handleChange } =
         useFormik<LicensesFormValues>({
@@ -170,21 +164,12 @@ export default function Licenses() {
             values.nft.availableLicenses = 1;
         }
 
-        if (values.remix.added && !values.remix.availableLicenses) {
-            toast.display({ type: 'error', message: 'The available field must be greater than 0 on REMIX' });
-            return;
-        }
-
         if (values.print.added && !values.print.availableLicenses) {
             toast.display({ type: 'error', message: 'The available field must be greater than 0 on PRINT' });
             return;
         }
 
-        if (
-            values.nft.availableLicenses < 1 ||
-            values.remix.availableLicenses < 1 ||
-            values.print.availableLicenses < 1
-        ) {
+        if (values.nft.availableLicenses < 1 || values.print.availableLicenses < 1) {
             toast.display({ type: 'error', message: 'The available field must be greater than 0' });
             return;
         }

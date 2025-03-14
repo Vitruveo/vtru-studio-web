@@ -22,10 +22,15 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const texts = {
         license: language['studio.consignArtwork.licenses.license'],
         printDescription: language['studio.consignArtwork.licenses.print.description'],
+        printDescription2: language['studio.consignArtwork.licenses.print.description2'],
         printEnable: language['studio.consignArtwork.licenses.print.enable'],
         singlePrintTitle: language['studio.consignArtwork.licenses.print.singlePrint.title'],
         singlePrintDescription: language['studio.consignArtwork.licenses.print.singlePrint.description'],
+        singlePrintDescription2: language['studio.consignArtwork.licenses.print.singlePrint.description2'],
         singlePrintField: language['studio.consignArtwork.licenses.print.singlePrint.field'],
+        singlePrint2Field: language['studio.consignArtwork.licenses.print.singlePrint2.field'],
+        displayPriceField: language['studio.consignArtwork.licenses.print.displayPrice.field'],
+        displayPrice2Field: language['studio.consignArtwork.licenses.print.displayPrice2.field'],
     } as { [key: string]: string };
 
     const handleAdded = (added: boolean) => {
@@ -42,7 +47,8 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
         const response = await dispatch(
             updatePrintLicensePriceThunk({
                 assetKey: assetId,
-                unitPrice: values.unitPrice,
+                merchandisePrice: values.merchandisePrice,
+                displayPrice: values.displayPrice,
             })
         );
         setLoading(false);
@@ -72,11 +78,14 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                 ) : (
                     <Stack gap={3} p={1.5}>
                         <Stack direction="row" justifyContent="space-between" alignItems="center">
-                            <Typography sx={{ whiteSpace: 'nowrap', marginRight: 3 }}>
-                                {texts.singlePrintField}
-                            </Typography>
+                            <Box>
+                                <Typography sx={{ whiteSpace: 'nowrap', marginRight: 3 }}>
+                                    {texts.singlePrintField}
+                                </Typography>
+                                <Typography>{texts.singlePrint2Field}</Typography>
+                            </Box>
                             <CustomTextField
-                                name="print.unitPrice"
+                                name="print.merchandisePrice"
                                 type="number"
                                 InputProps={{
                                     sx: {
@@ -84,7 +93,30 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                         width: 90,
                                     },
                                 }}
-                                value={values?.unitPrice}
+                                value={values?.merchandisePrice}
+                                inputProps={{ maxLength: 185, minLength: 1 }}
+                                onChange={handleChange}
+                                size="small"
+                                variant="outlined"
+                                disabled={!isEditing}
+                            />
+                        </Stack>
+                        <Stack direction="row" justifyContent="space-between" alignItems="center">
+                            <Box sx={{ marginRight: 3 }}>
+                                <Typography>{texts.displayPriceField}</Typography>
+                                <Typography>{texts.displayPrice2Field}</Typography>
+                            </Box>
+
+                            <CustomTextField
+                                name="print.displayPrice"
+                                type="number"
+                                InputProps={{
+                                    sx: {
+                                        backgroundColor: '#fff',
+                                        width: 90,
+                                    },
+                                }}
+                                value={values?.displayPrice}
                                 inputProps={{ maxLength: 185, minLength: 1 }}
                                 onChange={handleChange}
                                 size="small"
@@ -122,6 +154,9 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                 </Typography>
                 <Typography marginTop={2} color="GrayText" fontSize="0.9rem">
                     {values?.added ? texts.singlePrintDescription : texts.printEnable}
+                </Typography>
+                <Typography marginTop={2} color="GrayText" fontSize="0.9rem">
+                    {values?.added ? texts.singlePrintDescription2 : ''}
                 </Typography>
             </Box>
         </Box>
