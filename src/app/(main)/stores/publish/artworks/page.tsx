@@ -182,12 +182,7 @@ const Component = () => {
                         <Button type="button" variant="text" onClick={handleBack}>
                             <Typography color="gray">Back</Typography>
                         </Button>
-                        <Button
-                            type="button"
-                            onClick={handleNext}
-                            variant="contained"
-                            disabled={selectedStore.results === 0}
-                        >
+                        <Button type="button" onClick={handleNext} variant="contained">
                             Next
                         </Button>
                     </Box>
