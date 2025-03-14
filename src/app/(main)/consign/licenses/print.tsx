@@ -9,15 +9,21 @@ import { useToastr } from '@/app/hooks/useToastr';
 import { updatePrintLicenseAddedThunk, updatePrintLicensePriceThunk } from '@/features/asset/thunks';
 
 function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
+    const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
+    const [isEditing, setIsEditing] = useState(!hasContract);
+    const [loading, setLoading] = useState(false);
+
     const dispatch = useDispatch();
     const toastr = useToastr();
     const { language } = useI18n();
-    const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
-    const assetId = useSelector((state) => state.asset._id);
 
-    const [isEditing, setIsEditing] = useState(!hasContract);
-    const [loading, setLoading] = useState(false);
+    const assetId = useSelector((state) => state.asset._id);
+    const formats = useSelector((state) => state.asset.formats);
+
     const values = allValues.print || {};
+
+    const selectPreviewAsset = Object.entries(formats).find(([key]) => key === 'print');
+    const printExists = selectPreviewAsset && selectPreviewAsset[1].file;
 
     const texts = {
         license: language['studio.consignArtwork.licenses.license'],
@@ -61,7 +67,14 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
 
     return (
         <Box width={700} display="flex" justifyContent="space-between" marginTop={2}>
-            <Card title="PRINT-ART-1" added={values?.added} setAdded={handleAdded} width={320} height={400}>
+            <Card
+                disabled={!printExists}
+                title="PRINT-ART-1"
+                added={values?.added}
+                setAdded={handleAdded}
+                width={320}
+                height={400}
+            >
                 {!values?.added ? (
                     <Box p={1.5}>
                         <Typography

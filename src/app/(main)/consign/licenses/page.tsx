@@ -40,12 +40,8 @@ export default function Licenses() {
     const { licenses: licensesState, formats } = useSelector((state) => state.asset);
     const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
     const formData = useSelector((state) => state.asset.assetMetadata?.context.formData);
-    const selectPreviewAsset = Object.entries(formats).find(([key]) => key === 'print');
-    const printExists = selectPreviewAsset && selectPreviewAsset[1].file;
 
-    const allLicensesFiltered: Partial<Record<keyof typeof allLicenses, typeof Stream>> = printExists
-        ? allLicenses
-        : Object.fromEntries(Object.entries(allLicenses).filter(([key]) => key !== 'Print'));
+    const allLicensesFiltered: Partial<Record<keyof typeof allLicenses, typeof Stream>> = allLicenses;
 
     const texts = {
         nextButton: language['studio.consignArtwork.form.next.button'],

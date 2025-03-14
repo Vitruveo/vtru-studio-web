@@ -132,13 +132,14 @@ export default function MediaCard({
 
     const mediaConfig =
         mediaConfigs[definition as keyof typeof mediaConfigs]?.[
-        formatType as keyof (typeof mediaConfigs)['landscape']
+            formatType as keyof (typeof mediaConfigs)['landscape']
         ] || {};
 
     const mediaWidth = formats.original.width;
     const mediaHeight = formats.original.height;
 
-    const { requestAssetUpload: upload, formats: assetFormats } = useSelector((state) => state.asset);
+    const { requestAssetUpload: upload, formats: assetFormats, licenses } = useSelector((state) => state.asset);
+
     const format = assetFormats[formatType as keyof FormatsMedia];
     const originalMediaInfo = handleGetFileType(formats.original.file!);
     const isVideo = originalMediaInfo.mediaType === 'video' && formatType !== 'print';
@@ -452,10 +453,18 @@ export default function MediaCard({
                             e.stopPropagation();
                             handleDeleteFile();
                         }}
-                        disabled={hasContract && formatType !== 'print'}
+                        disabled={
+                            (hasContract && formatType !== 'print') ||
+                            (formatType === 'print' && licenses?.print?.added)
+                        }
                     >
                         <IconTrash
-                            color={hasContract && formatType !== 'print' ? 'gray' : 'red'}
+                            color={
+                                (formatType === 'print' && licenses?.print?.added) ||
+                                (hasContract && formatType !== 'print')
+                                    ? 'gray'
+                                    : 'red'
+                            }
                             size="16"
                             stroke={1.5}
                         />
@@ -494,12 +503,13 @@ export default function MediaCard({
                             </Typography>
                             <Typography fontSize="0.8rem">
                                 {!thumbSRC || (mediaConfig?.sizeMB && !formatValue.size)
-                                    ? `${isVideo
-                                        ? formatFileSize(mediaConfig?.sizeMB.video)
-                                        : formatFileSize(mediaConfig?.sizeMB.image)
-                                    } ${(language['studio.consignArtwork.assetMedia.max'] as TranslateFunction)({
-                                        seconds: isVideo && formatType === 'preview' ? 5 : 0,
-                                    })}`
+                                    ? `${
+                                          isVideo
+                                              ? formatFileSize(mediaConfig?.sizeMB.video)
+                                              : formatFileSize(mediaConfig?.sizeMB.image)
+                                      } ${(language['studio.consignArtwork.assetMedia.max'] as TranslateFunction)({
+                                          seconds: isVideo && formatType === 'preview' ? 5 : 0,
+                                      })}`
                                     : getFileSize(formatValue.size)}
                             </Typography>
                         </Typography>
@@ -519,8 +529,8 @@ export default function MediaCard({
                                 <Box
                                     display={
                                         formatValue.load ||
-                                            (fileIsload && !isVideo) ||
-                                            (fileIsload && isVideo && formatType === 'preview' && fileStatus)
+                                        (fileIsload && !isVideo) ||
+                                        (fileIsload && isVideo && formatType === 'preview' && fileStatus)
                                             ? 'flex'
                                             : 'none'
                                     }
@@ -545,7 +555,7 @@ export default function MediaCard({
                                             objectFit: 'contain',
                                             display:
                                                 formatValue.load ||
-                                                    (fileIsload && fileStatus && formatType === 'preview')
+                                                (fileIsload && fileStatus && formatType === 'preview')
                                                     ? 'none'
                                                     : '',
                                         }}
@@ -614,7 +624,7 @@ export default function MediaCard({
                                             <Typography textAlign="center" fontWeight="bold">
                                                 {(
                                                     language[
-                                                    'studio.consignArtwork.assetMedia.mediaRequired'
+                                                        'studio.consignArtwork.assetMedia.mediaRequired'
                                                     ] as TranslateFunction
                                                 )({
                                                     required: mediaConfig.required,
