@@ -73,7 +73,7 @@ const ProfileTabs = ({
 
     const sm = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
-    const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
+    const handleChangeTab = (_event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
 
