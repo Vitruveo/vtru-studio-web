@@ -109,11 +109,11 @@ export default function AssetMedia() {
                         stepId: 'assetMedia',
                         status: isAllValid
                             ? getStepStatus({
-                                formats:
-                                    JSON.stringify(initialValues.formats) === JSON.stringify(values.formats)
-                                        ? asset.formats
-                                        : values.formats,
-                            })
+                                  formats:
+                                      JSON.stringify(initialValues.formats) === JSON.stringify(values.formats)
+                                          ? asset.formats
+                                          : values.formats,
+                              })
                             : 'inProgress',
                     })
                 );
