@@ -55,7 +55,7 @@ export default function AssetMedia() {
 
     const isAllValid = Object.entries(formats)
         .filter(([key]) => key !== 'print')
-        .every(([_, item]) => item?.validation?.isValid);
+        .every(([_, item]) => item?.file);
 
     const initialValues = useMemo(
         () => ({
@@ -109,11 +109,11 @@ export default function AssetMedia() {
                         stepId: 'assetMedia',
                         status: isAllValid
                             ? getStepStatus({
-                                  formats:
-                                      JSON.stringify(initialValues.formats) === JSON.stringify(values.formats)
-                                          ? asset.formats
-                                          : values.formats,
-                              })
+                                formats:
+                                    JSON.stringify(initialValues.formats) === JSON.stringify(values.formats)
+                                        ? asset.formats
+                                        : values.formats,
+                            })
                             : 'inProgress',
                     })
                 );
