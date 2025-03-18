@@ -12,7 +12,7 @@ const debounceValidation = debounce(
 );
 
 const validateWithDelay = (schema: yup.StringSchema) => {
-    return (value: any, context: yup.TestContext) => {
+    return (value: any, _context: yup.TestContext) => {
         return new Promise<boolean>((resolve, reject) => {
             debounceValidation(schema, value, (err) => {
                 if (err) {
@@ -30,15 +30,7 @@ export const linkSchema = yup.object().shape({
     url: yup.string().url('Please enter a valid URL').required('URL is required'),
 });
 
-const forbiddenDomains = [
-    'x.com',
-    'google.com',
-    'instagram.com',
-    'vitruveo.xyz',
-    'xibit.app',
-    'linktr.ee',
-    'linktr.com',
-];
+const forbiddenDomains = ['google.com', 'instagram.com', 'vitruveo.xyz', 'xibit.app', 'linktr.ee', 'linktr.com'];
 
 export const ProfileSchemaValidation = yup.object({
     myWebsite: yup
