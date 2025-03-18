@@ -7,10 +7,10 @@ import { NODE_ENV } from '@/constants/api';
 
 const projects = [
     { title: 'SEARCH', url: `${BASE_URL_SEARCH}` },
-    { title: 'STACKS', url: `${BASE_URL_SEARCH}/stacks` },
-    { title: 'STORES', url: NODE_ENV === 'production' ? 'https://xibit.live' : `${BASE_URL_SEARCH}/stores` },
-    { title: 'STREAMS', url: '' },
+    { title: 'FOLIO', url: NODE_ENV === 'production' ? 'https://xibit.live' : `${BASE_URL_SEARCH}/stores` },
     { title: 'STUDIO', url: `${BASE_URL_STUDIO}/login` },
+    // { title: 'STACKS', url: `${SEARCH_BASE_URL}/stacks` },
+    // { title: 'STREAMS', url: '' },
     { title: 'ABOUT XIBIT', url: 'https://about.xibit.app', onlyMobile: true },
     { title: 'ABOUT VITRUVEO', url: 'https://vitruveo.xyz', onlyMobile: true },
 ];
