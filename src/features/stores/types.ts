@@ -64,6 +64,10 @@ export interface Artworks {
     portfolio: {
         wallets?: string[];
     };
+    exclude: {
+        arts?: string[];
+        artists?: string[];
+    };
 }
 
 export interface AppearanceContent {

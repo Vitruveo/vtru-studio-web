@@ -6,6 +6,7 @@ import TaxonomyItem from '../filters/taxonomyItem';
 import ArtistItem from '../filters/artistItem';
 import GeneralItem from '../filters/generalItem';
 import Portfolio from '../filters/portfolio';
+import Exclude from '../filters/exclude';
 
 const TabSliders = () => {
     const [tabvalue, setTabValue] = useState('general');
@@ -19,6 +20,7 @@ const TabSliders = () => {
                     <Tab label="Taxonomy" value={'taxonomy'} />
                     <Tab label="Artists" value={'artists'} />
                     <Tab label="Portfolio" value={'portfolio'} />
+                    <Tab label="Exclude" value={'exclude'} />
                 </TabList>
             </Box>
             <TabPanel value={'general'}>
@@ -35,6 +37,9 @@ const TabSliders = () => {
             </TabPanel>
             <TabPanel value={'portfolio'}>
                 <Portfolio />
+            </TabPanel>
+            <TabPanel value={'exclude'}>
+                <Exclude />
             </TabPanel>
         </TabContext>
     );

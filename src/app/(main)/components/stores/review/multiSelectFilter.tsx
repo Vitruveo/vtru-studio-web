@@ -47,6 +47,10 @@ const options: Record<string, { [key: string]: { label: string; value: string }[
     portfolio: {
         wallets: [],
     },
+    exclude: {
+        arts: [],
+        artists: [],
+    },
 };
 
 export const MultiSelectFilter = ({ content }: MultiSelectFilterProps) => {
