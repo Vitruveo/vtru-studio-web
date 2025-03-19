@@ -91,10 +91,10 @@ const AppearanceAndContent = () => {
                     <Box display={'grid'} gridTemplateRows={'1fr auto'} height="calc(100vh - 64px)">
                         <Box paddingInline={3}>
                             <Breadcrumb
-                                title="Publish Store"
+                                title="Publish Folio"
                                 assetTitle={store?.organization?.name || ''}
                                 items={[
-                                    { title: 'Stores', to: '/stores' },
+                                    { title: 'Folios', to: '/stores' },
                                     { title: 'Publish', to: '/stores/publish' },
                                     { title: 'Appearance And Content' },
                                 ]}
@@ -109,7 +109,7 @@ const AppearanceAndContent = () => {
                                             Highlight Color
                                         </Typography>
                                         <Typography variant="body2">
-                                            You can choose the highlight color for your store
+                                            You can choose the highlight color for your folio
                                         </Typography>
                                         <input
                                             type="color"
@@ -124,7 +124,7 @@ const AppearanceAndContent = () => {
                                             Hide Elements
                                         </Typography>
                                         <Typography variant="body2">
-                                            You can choose which elements you want to show in your store
+                                            You can choose which elements you want to show in your folio
                                         </Typography>
                                         <HideElements />
                                     </Box>
@@ -145,8 +145,8 @@ const AppearanceAndContent = () => {
                                 </Grid>
                                 <Grid item xs={12} md={8}>
                                     <PreviewDetailed
-                                        title={store?.organization?.name || 'Store Name'}
-                                        description={store?.organization.description || 'Store Description'}
+                                        title={store?.organization?.name || 'Folio Name'}
+                                        description={store?.organization.description || 'Folio Description'}
                                         domain={
                                             store?.organization?.url
                                                 ? `https://${store?.organization?.url}.xibit.live`
@@ -163,15 +163,15 @@ const AppearanceAndContent = () => {
                                             isFile(store?.organization.formats?.logo?.square?.path)
                                                 ? URL.createObjectURL(store?.organization?.formats?.logo.square.path)
                                                 : `${STORE_STORAGE_URL}/${store?.organization.formats?.logo?.square?.path}` ||
-                                                  ''
+                                                ''
                                         }
                                         logoHorizontal={
                                             isFile(store?.organization.formats?.logo?.horizontal?.path)
                                                 ? URL.createObjectURL(
-                                                      store?.organization?.formats?.logo.horizontal.path
-                                                  )
+                                                    store?.organization?.formats?.logo.horizontal.path
+                                                )
                                                 : `${STORE_STORAGE_URL}/${store?.organization.formats?.logo?.horizontal?.path}` ||
-                                                  ''
+                                                ''
                                         }
                                     />
                                 </Grid>

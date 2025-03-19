@@ -66,9 +66,9 @@ const Component = ({ data, actions }: ComponentProps) => {
     return (
         <Box position="relative" paddingInline={3} height={'calc(100vh - 140px)'} overflow="auto">
             <Breadcrumb
-                title="Publish Store"
+                title="Publish Folio"
                 assetTitle={store.organization?.name || ''}
-                items={[{ title: 'Stores', to: '/stores' }, { title: 'Publish' }]}
+                items={[{ title: 'Folios', to: '/stores' }, { title: 'Publish' }]}
             />
 
             <Box paddingInline={2}>
@@ -76,7 +76,7 @@ const Component = ({ data, actions }: ComponentProps) => {
                     <Grid item xs={12} md={6}>
                         <Box pb={4.5}>
                             <Typography variant="h6" fontWeight="normal" color="GrayText">
-                                Complete all required tasks to publish your Store.
+                                Complete all required tasks to publish your Folio.
                             </Typography>
                         </Box>
                         {Object.entries(publishStore || {})?.map((step, index) => {
@@ -134,13 +134,13 @@ const Component = ({ data, actions }: ComponentProps) => {
                     <Grid item xs={12} md={6}>
                         {['active', 'hidden'].includes(store.status) && (
                             <Box display={'flex'} gap={1} alignItems={'center'} justifyContent={'end'}>
-                                <Typography variant="h5">Hide in Stores view</Typography>
+                                <Typography variant="h5">Hide in Folio view</Typography>
                                 <Switch onChange={handleChangeHiddenStore} checked={store.status === 'hidden'} />
                             </Box>
                         )}
                         <Preview
-                            title={store.organization?.name || 'Store Name'}
-                            description={store.organization?.description || 'Store Description'}
+                            title={store.organization?.name || 'Folio Name'}
+                            description={store.organization?.description || 'Folio Description'}
                             domain={
                                 store.organization?.url
                                     ? `https://${store.organization?.url}.xibit.live`
@@ -162,7 +162,7 @@ const Component = ({ data, actions }: ComponentProps) => {
                                 isFile(store.organization?.formats?.logo?.horizontal?.path)
                                     ? URL.createObjectURL(store.organization?.formats?.logo?.horizontal?.path)
                                     : `${STORE_STORAGE_URL}/${store.organization?.formats?.logo?.horizontal?.path}` ||
-                                      ''
+                                    ''
                             }
                             style={{ width: '100%' }}
                         />

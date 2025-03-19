@@ -11,10 +11,10 @@ import { createSignedMessage } from './actions';
 import { ClaimComponent } from './components';
 import StakeModal from './StakeModal';
 import ClaimedModal from './ClaimedModal';
-import { CLAIM_VERSE_ENABLE } from '@/constants/claim';
 
 export const ClaimContainer = memo(() => {
     const [balance, setBalance] = useState(0);
+    const [balanceVUSD, setBalanceVUSD] = useState(0);
     const token = useSelector((state) => state.user.token);
     const [isModalOpenStake, setIsModalOpenStake] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -29,35 +29,42 @@ export const ClaimContainer = memo(() => {
     const router = useRouter();
     const toast = useToastr();
 
-    const vaultTransactionHash = useSelector((state) => state?.user?.vault?.transactionHash);
+    const vaultAddress = useSelector((state) => state?.user?.vault?.vaultAddress);
     const vaultCreatedAt = useSelector((state) => state?.user?.vault?.createdAt);
     const wallets = useSelector((state) => state.user.wallets);
 
     const closeModalStake = () => setIsModalOpenStake(false);
     const closeModalClaimed = () => setIsClaimed(false);
 
-    useEffect(() => {
-        const getBalance = async () => {
-            setLoading(true);
-            try {
-                const response = await fetch(`${BASE_URL_API3}/wallet/balance`, {
+    const getBalance = async () => {
+        setLoading(true);
+        try {
+            const [responseBalance, responseBalanceVUSD] = await Promise.all([
+                fetch(`${BASE_URL_API3}/wallet/balance`, {
                     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-                });
+                }),
+                fetch(`${BASE_URL_API3}/wallet/balanceVUSD`, {
+                    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                }),
+            ]);
 
-                const data = await response.json();
-
-                if (response.status === 403 && data.code === 'vitruveo.batch.api.balance.disabled') {
-                    setIsBlocked(true);
-                    return;
-                }
-
-                setBalance(Number(data.data));
-            } catch (error) {
-                // do nothing
-            } finally {
-                setLoading(false);
+            const dataBalance = await responseBalance.json();
+            if (responseBalance.status === 403 && dataBalance.code === 'vitruveo.batch.api.balance.disabled') {
+                setIsBlocked(true);
+                return;
             }
-        };
+            setBalance(Number(dataBalance.data));
+
+            const dataBalanceVUSD = await responseBalanceVUSD.json();
+            setBalanceVUSD(Number(dataBalanceVUSD.data));
+        } catch (error) {
+            // do nothing
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         getBalance();
     }, []);
 
@@ -69,36 +76,22 @@ export const ClaimContainer = memo(() => {
         await disconnect();
     };
 
-    const onClaimAllocate = async (values: number[]) => {
-        const total = values.reduce((acc, cur) => acc + cur, 0);
-        if (total !== 100) {
-            toast.display({ type: 'warning', message: 'The total percentage must be 100%' });
-            return;
-        }
+    const onClaimAllocate = async () => {
         if (wallets.find((wallet) => !wallet.archived && wallet.address === address)) {
             setLoading(true);
             try {
-                const [walletBasisPoints, stake1BasisPoints, stake3BasisPoints, stake5BasisPoints, verseBasisPoints] =
-                    values;
                 const { domain, signedMessage, signer, tx, types } = await createSignedMessage({
                     name: 'Creator Vault',
                     action: 'Claim $VTRU earnings from Vault',
-                    method: 'claimWithAllocateStudio',
+                    method: 'claimStudio',
                     client: client!,
                 });
                 // Send the signed message to backend
-                const response = await fetch(`${BASE_URL_API3}/claim/allocate`, {
+                const response = await fetch(`${BASE_URL_API3}/claim`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         signer: signer.address,
-                        basisPoints: {
-                            walletBasisPoints,
-                            stake1BasisPoints,
-                            stake3BasisPoints,
-                            stake5BasisPoints,
-                            verseBasisPoints: CLAIM_VERSE_ENABLE ? verseBasisPoints : 0,
-                        },
                         domain,
                         types,
                         tx,
@@ -108,6 +101,10 @@ export const ClaimContainer = memo(() => {
                 const responseData = await response.json();
                 if (response.ok) {
                     setIsClaimed(true);
+
+                    setTimeout(() => {
+                        getBalance();
+                    }, 15_000);
                 } else {
                     toast.display({ type: 'error', message: responseData.message });
                 }
@@ -147,14 +144,18 @@ export const ClaimContainer = memo(() => {
                     disabled: loading || balance <= 0 || !client,
                     isConnected,
                     address,
-                    vaultTransactionHash,
+                    vaultAddress,
                     loading,
                     isBlocked,
+                    VUSD: {
+                        value: balanceVUSD.toFixed(2),
+                        symbol: 'VUSD',
+                    },
                 }}
                 actions={{
                     onConnect,
                     onDisconnect,
-                    openStakModal: () => setIsModalOpenStake(true),
+                    openStakModal: onClaimAllocate,
                 }}
             />
         </>

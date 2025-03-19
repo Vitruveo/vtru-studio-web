@@ -250,11 +250,7 @@ export default function Home() {
                 <Box
                     pr={1}
                     sx={{
-                        maxHeight: lgUp
-                            ? 'calc(100vh - 100px)'
-                            : mdUp || smUp
-                              ? 'calc(100vh - 400px)'
-                              : 'calc(100vh - 500px)',
+                        maxHeight: 'calc(100vh - 100px)',
                         overflowY: 'scroll',
                         overflowX: 'hidden',
                     }}
@@ -332,7 +328,7 @@ export default function Home() {
                                     justifyContent={'space-between'}
                                     width={'100%'}
                                 >
-                                    <Typography sx={{ fontSize: 22 }}>Consign a new asset</Typography>
+                                    <Typography sx={{ fontSize: 22 }}>Consign a new Artwork</Typography>
                                     <RSelect
                                         placeholder="Duplicate asset and consign from..."
                                         options={assets.data.map((asset) => ({
