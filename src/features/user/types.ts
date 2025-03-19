@@ -131,6 +131,7 @@ export interface User {
         transactionHash: string | null;
         createdAt: string | null;
         isLoading: boolean;
+        vaultAddress: string | null;
     };
     generalVault?: {
         isBlocked: boolean;

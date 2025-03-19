@@ -9,9 +9,13 @@ interface Props {
         disabled: boolean;
         isConnected: boolean;
         address: `0x${string}` | undefined;
-        vaultTransactionHash: string | null;
+        vaultAddress: string | null;
         loading: boolean;
         isBlocked: boolean;
+        VUSD: {
+            value: string;
+            symbol: string;
+        };
     };
     actions: {
         onConnect: () => void;
@@ -23,7 +27,7 @@ interface Props {
 export const ClaimComponent = ({ data, actions }: Props) => {
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const smUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
-    const { value, symbol, disabled, isConnected, address, vaultTransactionHash, loading, isBlocked } = data;
+    const { value, symbol, disabled, isConnected, address, vaultAddress, loading, isBlocked, VUSD } = data;
     const { onConnect, onDisconnect, openStakModal } = actions;
     const open = Boolean(anchorEl);
 
@@ -33,20 +37,40 @@ export const ClaimComponent = ({ data, actions }: Props) => {
     return (
         <Stack direction={smUp ? 'row' : 'column'} gap={1} alignItems="center">
             {isConnected && isBlocked && <Typography color="red">Account blocked — fund claims disabled</Typography>}
-            {vaultTransactionHash ? (
-                <a
-                    href={`${EXPLORER_URL}/tx/${vaultTransactionHash}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    style={{ color: 'black' }}
-                >
-                    {value} <strong>{symbol}</strong>
-                </a>
-            ) : (
-                <Typography>
-                    {value} <strong>{symbol}</strong>
-                </Typography>
-            )}
+            <Box display="flex" flexDirection="column" alignItems="flex-end">
+                <Box>
+                    {vaultAddress ? (
+                        <a
+                            href={`${EXPLORER_URL}/address/${vaultAddress}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{ color: 'black' }}
+                        >
+                            {value} <strong>{symbol}</strong>
+                        </a>
+                    ) : (
+                        <Typography>
+                            {value} <strong>{symbol}</strong>
+                        </Typography>
+                    )}
+                </Box>
+                <Box>
+                    {vaultAddress ? (
+                        <a
+                            href={`${EXPLORER_URL}/address/${vaultAddress}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{ color: 'black' }}
+                        >
+                            {VUSD.value} <strong>{VUSD.symbol}</strong>
+                        </a>
+                    ) : (
+                        <Typography>
+                            {VUSD.value} <strong>{VUSD.symbol}</strong>
+                        </Typography>
+                    )}
+                </Box>
+            </Box>
             <Box display={'flex'} gap={1}>
                 <Button size="small" variant="contained" disabled={disabled} onClick={openStakModal}>
                     Claim {loading && <CircularProgress size={16} style={{ marginLeft: 10 }} />}

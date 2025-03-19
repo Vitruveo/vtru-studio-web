@@ -50,6 +50,7 @@ const initialState: UserSliceState = {
         transactionHash: null,
         createdAt: null,
         isLoading: false,
+        vaultAddress: '',
     },
     socials: {
         x: {
@@ -110,6 +111,7 @@ export const userSlice = createSlice({
             state.walletDefault = creator.walletDefault;
             state.generalVault = creator.generalVault;
             state.vault.transactionHash = creator?.vault?.transactionHash || null;
+            state.vault.vaultAddress = creator?.vault?.vaultAddress || null;
             state.vault.createdAt = creator?.vault?.createdAt || null;
             state.vault.isBlocked = creator?.vault?.isBlocked || false;
             state.framework = creator.framework;
