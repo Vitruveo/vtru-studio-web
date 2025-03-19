@@ -328,7 +328,7 @@ export default function Home() {
                                     justifyContent={'space-between'}
                                     width={'100%'}
                                 >
-                                    <Typography sx={{ fontSize: 22 }}>Consign a new asset</Typography>
+                                    <Typography sx={{ fontSize: 22 }}>Consign a new Artwork</Typography>
                                     <RSelect
                                         placeholder="Duplicate asset and consign from..."
                                         options={assets.data.map((asset) => ({

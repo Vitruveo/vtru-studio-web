@@ -11,7 +11,6 @@ import { createSignedMessage } from './actions';
 import { ClaimComponent } from './components';
 import StakeModal from './StakeModal';
 import ClaimedModal from './ClaimedModal';
-import { CLAIM_VERSE_ENABLE } from '@/constants/claim';
 
 export const ClaimContainer = memo(() => {
     const [balance, setBalance] = useState(0);
@@ -37,34 +36,35 @@ export const ClaimContainer = memo(() => {
     const closeModalStake = () => setIsModalOpenStake(false);
     const closeModalClaimed = () => setIsClaimed(false);
 
-    useEffect(() => {
-        const getBalance = async () => {
-            setLoading(true);
-            try {
-                const [responseBalance, responseBalanceVUSD] = await Promise.all([
-                    fetch(`${BASE_URL_API3}/wallet/balance`, {
-                        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-                    }),
-                    fetch(`${BASE_URL_API3}/wallet/balanceVUSD`, {
-                        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-                    }),
-                ]);
+    const getBalance = async () => {
+        setLoading(true);
+        try {
+            const [responseBalance, responseBalanceVUSD] = await Promise.all([
+                fetch(`${BASE_URL_API3}/wallet/balance`, {
+                    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                }),
+                fetch(`${BASE_URL_API3}/wallet/balanceVUSD`, {
+                    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                }),
+            ]);
 
-                const dataBalance = await responseBalance.json();
-                if (responseBalance.status === 403 && dataBalance.code === 'vitruveo.batch.api.balance.disabled') {
-                    setIsBlocked(true);
-                    return;
-                }
-                setBalance(Number(dataBalance.data));
-
-                const dataBalanceVUSD = await responseBalanceVUSD.json();
-                setBalanceVUSD(Number(dataBalanceVUSD.data));
-            } catch (error) {
-                // do nothing
-            } finally {
-                setLoading(false);
+            const dataBalance = await responseBalance.json();
+            if (responseBalance.status === 403 && dataBalance.code === 'vitruveo.batch.api.balance.disabled') {
+                setIsBlocked(true);
+                return;
             }
-        };
+            setBalance(Number(dataBalance.data));
+
+            const dataBalanceVUSD = await responseBalanceVUSD.json();
+            setBalanceVUSD(Number(dataBalanceVUSD.data));
+        } catch (error) {
+            // do nothing
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         getBalance();
     }, []);
 
@@ -101,6 +101,10 @@ export const ClaimContainer = memo(() => {
                 const responseData = await response.json();
                 if (response.ok) {
                     setIsClaimed(true);
+
+                    setTimeout(() => {
+                        getBalance();
+                    }, 15_000);
                 } else {
                     toast.display({ type: 'error', message: responseData.message });
                 }
