@@ -103,9 +103,8 @@ const language: Translation = {
     'studio.consignArtwork.assetMedia.upload.button': 'Upload',
     'studio.consignArtwork.assetMedia.assets': 'Media Assets',
     'studio.consignArtwork.assetMedia.definition': (data: { definition: 'landscape' | 'square' | 'portrait' }) => {
-        return `${
-            data.definition === 'landscape' ? 'Landscape' : data.definition === 'portrait' ? 'Portrait' : 'Square'
-        }`;
+        return `${data.definition === 'landscape' ? 'Landscape' : data.definition === 'portrait' ? 'Portrait' : 'Square'
+            }`;
     },
     'studio.consignArtwork.assetMedia.image': 'Image',
     'studio.consignArtwork.assetMedia.video': 'Video',
@@ -755,12 +754,11 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.awardUrl.description': 'Link to award information',
 
     'studio.consignArtwork.assetMetadata.field.errors': (data: { message: string }) =>
-        `${
-            data.message === 'required' || data.message === 'minItems'
-                ? 'Field required'
-                : data.message === 'format'
-                  ? 'Invalid format'
-                  : ''
+        `${data.message === 'required' || data.message === 'minItems'
+            ? 'Field required'
+            : data.message === 'format'
+                ? 'Invalid format'
+                : ''
         }`,
 
     /* Licenses */
@@ -935,7 +933,7 @@ const language: Translation = {
     /* Sidebar */
     'studio.sidebar.consign': 'Consign Artwork',
     'studio.sidebar.community': 'Community Support',
-    'studio.sidebar.store': 'Stores',
+    'studio.sidebar.store': 'Publish Folio',
     'studio.sidebar.truLevel': 'truLevel',
     'studio.sidebar.logout': 'Logout',
     'studio.sidebar.profile': 'Profile',

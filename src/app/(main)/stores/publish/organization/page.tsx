@@ -283,10 +283,10 @@ const Component = () => {
         <Box display="grid" gridTemplateRows="1fr auto" height="calc(100vh - 64px)">
             <Box paddingInline={3} overflow="auto" paddingBottom={20}>
                 <Breadcrumb
-                    title="Publish Store"
+                    title="Publish Folio"
                     assetTitle={store?.organization?.name || ''}
                     items={[
-                        { title: 'Stores', to: '/stores' },
+                        { title: 'Folios', to: '/stores' },
                         { title: 'Publish', to: '/stores/publish' },
                         { title: 'Organization' },
                     ]}
@@ -294,7 +294,7 @@ const Component = () => {
                 <Box p={2} pt={0}>
                     <Typography variant="h4">Organization</Typography>
                     <Typography variant="h6" fontWeight="normal" color="GrayText">
-                        Complete all required tasks to publish your Store.
+                        Complete all required tasks to publish your Folio.
                     </Typography>
                 </Box>
 
@@ -311,14 +311,14 @@ const Component = () => {
                     >
                         <Box display="flex" flexDirection="column" gap={0.5}>
                             <Typography variant="h6" fontWeight="normal">
-                                Store URL <span style={{ color: 'red' }}>*</span>
+                                Folio URL <span style={{ color: 'red' }}>*</span>
                             </Typography>
                             <Box display={'flex'} alignItems={'center'}>
                                 <Typography color={theme.palette.primary.main} fontSize={'1.5rem'}>
                                     https://
                                 </Typography>
                                 <CustomTextField
-                                    placeholder="type your store url here"
+                                    placeholder="type your folio url here"
                                     size="small"
                                     name="url"
                                     value={formik.values?.url}
@@ -431,7 +431,7 @@ const Component = () => {
                         </Box>
                         <Box>
                             <Typography variant="h6" fontWeight="normal">
-                                Store Branding
+                                Folio Branding
                             </Typography>
                             <Box display="flex" gap={4}>
                                 {cardsToUploadMedias.map((item, index) => {
@@ -524,10 +524,8 @@ const Component = () => {
                     </form>
 
                     <Preview
-                        title={formik.values.name || 'Store Name'}
-                        description={
-                            formik.values.description || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-                        }
+                        title={formik.values.name || 'Folio Name'}
+                        description={formik.values.description || 'Folio Description'}
                         domain={
                             formik.values?.url
                                 ? `https://${formik.values.url}.xibit.live`

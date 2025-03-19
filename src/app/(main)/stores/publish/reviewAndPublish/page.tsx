@@ -27,19 +27,19 @@ const Component = ({ data }: Props) => {
         draft: {
             buttontitle: 'Request Moderation',
             message:
-                'Nice work! Your store is ready for moderation. Once you submit it our team will review it and approve accordingly',
+                'Nice work! Your folio is ready for moderation. Once you submit it our team will review it and approve accordingly',
         },
         pending: {
             buttontitle: 'Moderation pending',
-            message: 'Your store is being reviewed by our team and you will be notified when it is made available',
+            message: 'Your folio is being reviewed by our team and you will be notified when it is made available',
         },
         active: {
             buttontitle: undefined,
-            message: 'Your store is active',
+            message: 'Your folio is active',
         },
         inactive: {
             buttontitle: undefined,
-            message: 'Your store did not pass our moderation review.',
+            message: 'Your folio did not pass our moderation review.',
         },
         invalidUrl: {
             buttontitle: 'Request Moderation',
@@ -64,9 +64,9 @@ const Component = ({ data }: Props) => {
     return (
         <Box paddingInline={3} height={'calc(100vh - 140px)'} overflow={'auto'}>
             <Breadcrumb
-                title={'Publish Store'}
+                title={'Publish Folio'}
                 items={[
-                    { title: 'Stores', to: '/stores' },
+                    { title: 'Folios', to: '/stores' },
                     { title: 'Publish', to: '/stores/publish' },
                     { title: 'Review And Publish' },
                 ]}
@@ -87,8 +87,8 @@ const Component = ({ data }: Props) => {
             )}
             <Box display={'flex'} justifyContent={'center'} width={'100%'} mb={4}>
                 <Preview
-                    title={store.organization?.name || 'Store Name'}
-                    description={store.organization.description || 'Store Description'}
+                    title={store.organization?.name || 'Folio Name'}
+                    description={store.organization.description || 'Folio Description'}
                     domain={
                         store.organization?.url
                             ? `https://${store.organization?.url}.xibit.live`

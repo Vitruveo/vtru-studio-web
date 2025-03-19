@@ -752,12 +752,11 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.awardUrl.description': 'Ссылка на описание награды',
 
     'studio.consignArtwork.assetMetadata.field.errors': (data: { message: string }) =>
-        `${
-            data.message === 'required' || data.message === 'minItems'
-                ? 'Поле обязательно для заполнения'
-                : data.message === 'format'
-                  ? 'Неверный формат'
-                  : ''
+        `${data.message === 'required' || data.message === 'minItems'
+            ? 'Поле обязательно для заполнения'
+            : data.message === 'format'
+                ? 'Неверный формат'
+                : ''
         }`,
 
     /* Licenses */
@@ -934,7 +933,7 @@ const language: Translation = {
     /* Sidebar */
     'studio.sidebar.consign': 'Подать Работу',
     'studio.sidebar.community': 'Поддержка Сообщества',
-    'studio.sidebar.store': 'Магазин',
+    'studio.sidebar.store': 'опубликовать фолио',
     'studio.sidebar.truLevel': 'Уровни создателя',
     'studio.sidebar.profile': 'Профиль',
 
