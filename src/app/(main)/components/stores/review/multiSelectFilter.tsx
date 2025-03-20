@@ -66,23 +66,30 @@ export const MultiSelectFilter = ({ content }: MultiSelectFilterProps) => {
 
     return (
         <Box display={'flex'} gap={1} flexWrap={'wrap'}>
-            {content.value.map((item) => (
-                <Paper key={item} sx={{ padding: 1, display: 'flex' }}>
-                    <Typography variant="body1">
-                        {handleFormatWallet(
-                            options[content.title][content.key].length
-                                ? options[content.title][content.key].find((option) => option.value === item)?.label
-                                : item
-                        )}
-                    </Typography>
-                    <Delete
-                        fontSize="small"
-                        color="error"
-                        onClick={() => handleDeleteITem(content.title, content.key, item)}
-                        cursor={'pointer'}
-                    />
-                </Paper>
-            ))}
+            {content.value
+                .filter(() => content.title !== 'exclude')
+                .map((item) => (
+                    <Paper key={item} sx={{ padding: 1, display: 'flex' }}>
+                        <Typography variant="body1">
+                            {handleFormatWallet(
+                                options[content.title][content.key].length
+                                    ? options[content.title][content.key].find((option) => option.value === item)?.label
+                                    : item
+                            )}
+                        </Typography>
+                        <Delete
+                            fontSize="small"
+                            color="error"
+                            onClick={() => handleDeleteITem(content.title, content.key, item)}
+                            cursor={'pointer'}
+                        />
+                    </Paper>
+                ))}
+            <Paper sx={{ padding: 1, display: 'flex' }}>
+                <Typography variant="body1">
+                    {content.value.length} {content.key} hidden
+                </Typography>
+            </Paper>
         </Box>
     );
 };
