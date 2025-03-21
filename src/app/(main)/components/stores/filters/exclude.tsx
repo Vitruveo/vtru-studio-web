@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import Image from 'next/image';
-import { Box, Switch, Typography } from '@mui/material';
-import { CustomTextFieldDebounce } from '../../forms/theme-elements/CustomTextField';
+import { Box, Button, Checkbox, InputAdornment, Switch, TextField, Typography } from '@mui/material';
 import { NO_IMAGE_ASSET } from '@/constants/asset';
 import { useFormikContext } from 'formik';
+import { useSelector } from '@/store/hooks';
 
 interface FormValues {
     exclude: {
@@ -13,8 +13,12 @@ interface FormValues {
 }
 
 const Exclude = () => {
+    const selectedStore = useSelector((state) => state.stores.selectedStore);
+    const store = useSelector((state) => state.stores.data.data.find((item) => item._id === selectedStore.id));
+
     const { values, setFieldValue } = useFormikContext<FormValues>();
     const [inputValue, setInputValue] = useState('');
+    const [isOnlyInStore, setIsOnlyInStore] = useState(true);
 
     const onChangeArt = (id: string) => {
         const arts = values.exclude.arts;
@@ -40,18 +44,34 @@ const Exclude = () => {
         }
     };
 
+    const search = () => {
+        console.log(inputValue);
+    };
+
     return (
         <Box display={'flex'} flexDirection={'column'} gap={2}>
-            <Box>
+            <Box display={'flex'} flexDirection={'column'} gap={1}>
                 <Typography variant="h6">Search Arts / Artists</Typography>
-                <Box>
-                    <Box display="flex" gap={1}>
-                        <CustomTextFieldDebounce
-                            value={inputValue}
-                            handleChange={(e) => setInputValue(e.target.value)}
-                            variant="outlined"
-                        />
-                    </Box>
+                <Box display="flex" gap={1}>
+                    <TextField
+                        variant="outlined"
+                        onChange={(e) => setInputValue(e.target.value)}
+                        fullWidth
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="start">
+                                    <Checkbox
+                                        checked={isOnlyInStore}
+                                        onChange={(e) => setIsOnlyInStore(e.target.checked)}
+                                    />
+                                    <Typography>Only in {store?.organization.name || 'Folio'}</Typography>
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                    <Button variant="contained" onClick={search}>
+                        Search
+                    </Button>
                 </Box>
             </Box>
             <Box>
