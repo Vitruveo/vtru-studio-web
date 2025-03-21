@@ -1,13 +1,24 @@
 import { ReduxThunkAction } from '@/store';
 import {
     createStoreArtwork,
+    getArtsAndArtists,
     getArtworkCollections,
     getArtworkCreatorName,
     getArtworkQuantity,
     getArtworkSubject,
     getArtworkTags,
 } from './requests';
-import { Collections, CreateStoreArtworkParams, GetArtworkQuantityParams, Names, Subject, Tags } from './types';
+import {
+    ArtsAndArtistsList,
+    Collections,
+    CreateStoreArtworkParams,
+    GetArtsAndArtistsParams,
+    GetArtworkQuantityParams,
+    Names,
+    ResponseAssets,
+    Subject,
+    Tags,
+} from './types';
 
 export function getArtworkTagsThunk(): ReduxThunkAction<Promise<Tags[]>> {
     return async (_dispatch: any) => {
@@ -57,5 +68,39 @@ export function getArtworkQuantityThunk({
             filters,
         });
         return response;
+    };
+}
+
+export function getArtsAndArtistsThunk({
+    price,
+    hasBts,
+    filters,
+    colorPrecision,
+    onlyInStore,
+    search,
+}: GetArtsAndArtistsParams): ReduxThunkAction<Promise<ArtsAndArtistsList>> {
+    return async (_dispatch: any) => {
+        const response = await getArtsAndArtists({
+            price,
+            colorPrecision,
+            hasBts,
+            filters,
+            onlyInStore,
+            search,
+        });
+        return {
+            arts: response.data.map((item) => ({
+                id: item._id,
+                image: item.formats.display.path,
+                title: item.assetMetadata.context.formData.title,
+                isHide: false,
+            })),
+            artists: response.data.map((item) => ({
+                id: item.framework.createdBy,
+                avatar: item.formats.display.path,
+                name: item.creator.username,
+                isHide: false,
+            })),
+        };
     };
 }

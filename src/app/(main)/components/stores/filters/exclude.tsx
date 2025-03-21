@@ -1,11 +1,30 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { Box, Button, Checkbox, InputAdornment, Switch, TextField, Typography } from '@mui/material';
-import { NO_IMAGE_ASSET } from '@/constants/asset';
+import { ASSET_STORAGE_URL } from '@/constants/asset';
 import { useFormikContext } from 'formik';
-import { useSelector } from '@/store/hooks';
+import { useDispatch, useSelector } from '@/store/hooks';
+import { getArtsAndArtistsThunk } from '@/features/storesArtwork/thunks';
+import { ArtsAndArtistsList } from '@/features/storesArtwork/types';
 
 interface FormValues {
+    general: {
+        licenses: {
+            minPrice: number;
+            maxPrice: number;
+        };
+        shortcuts: {
+            hasBTS: boolean;
+        };
+    };
+    context: {
+        precision: number;
+    };
+    taxonomy: any;
+    artists: any;
+    portfolio: {
+        wallets: string[];
+    };
     exclude: {
         arts: { value: string; label: string }[];
         artists: { value: string; label: string }[];
@@ -14,12 +33,14 @@ interface FormValues {
 }
 
 const Exclude = () => {
+    const dispatch = useDispatch();
     const selectedStore = useSelector((state) => state.stores.selectedStore);
     const store = useSelector((state) => state.stores.data.data.find((item) => item._id === selectedStore.id));
 
     const { values, setFieldValue } = useFormikContext<FormValues>();
     const [inputValue, setInputValue] = useState('');
     const [isOnlyInStore, setIsOnlyInStore] = useState(true);
+    const [artsAndArtists, setArtsAndArtists] = useState<ArtsAndArtistsList | null>(null);
 
     const onChangeArt = (id: string) => {
         const arts = values.exclude.arts;
@@ -52,8 +73,28 @@ const Exclude = () => {
         setFieldValue('exclude.onlyInStore', value);
     };
 
-    const search = () => {
-        console.log(inputValue);
+    const search = async () => {
+        const artsAndArtistsResponse = await dispatch(
+            getArtsAndArtistsThunk({
+                price: {
+                    max: values.general?.licenses.maxPrice,
+                    min: values.general?.licenses.minPrice,
+                },
+                hasBts: values.general?.shortcuts.hasBTS === true ? 'yes' : '',
+                filters: {
+                    general: values.general,
+                    context: values.context,
+                    taxonomy: values.taxonomy,
+                    artists: values.artists,
+                    portfolio: values.portfolio,
+                    exclude: values.exclude,
+                },
+                colorPrecision: values.context?.precision,
+                onlyInStore: isOnlyInStore,
+                search: inputValue,
+            })
+        );
+        setArtsAndArtists(artsAndArtistsResponse);
     };
 
     return (
@@ -85,13 +126,13 @@ const Exclude = () => {
             <Box>
                 <Typography variant="h6">Arts</Typography>
                 <Box display="flex" gap={2} sx={{ overflowX: 'scroll', overflowY: 'hidden' }}>
-                    {Array.from({ length: 20 }).map((_, index) => (
+                    {artsAndArtists?.arts.map((item) => (
                         <ArtItem
-                            key={index}
-                            id={index.toString()}
-                            image={NO_IMAGE_ASSET}
-                            title="Art Title"
-                            isHide={values.exclude.arts.some((art) => art.value === index.toString())}
+                            key={item.id}
+                            id={item.id}
+                            image={`${ASSET_STORAGE_URL}/${item.image}`}
+                            title={item.title}
+                            isHide={values.exclude.arts.some((art) => art.value === item.id)}
                             onChange={onChangeArt}
                         />
                     ))}
@@ -100,13 +141,13 @@ const Exclude = () => {
             <Box>
                 <Typography variant="h6">Artists</Typography>
                 <Box display="flex" gap={2} sx={{ overflowX: 'scroll', overflowY: 'hidden' }}>
-                    {Array.from({ length: 20 }).map((_, index) => (
+                    {artsAndArtists?.artists.map((item) => (
                         <ArtistItem
-                            key={index}
-                            id={index.toString()}
-                            image={NO_IMAGE_ASSET}
-                            title="Art Title"
-                            isHide={values.exclude.artists.some((artist) => artist.value === index.toString())}
+                            key={item.id}
+                            id={item.id}
+                            image={`${ASSET_STORAGE_URL}/${item.avatar}`}
+                            title={item.name}
+                            isHide={values.exclude.artists.some((artist) => artist.value === item.id)}
                             onChange={onChangeArtist}
                         />
                     ))}

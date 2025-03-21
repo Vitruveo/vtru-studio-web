@@ -50,6 +50,30 @@ export interface GetArtworkQuantityParams {
     filters: Artworks;
 }
 
+export interface GetArtsAndArtistsParams {
+    price?: { min?: number; max?: number };
+    colorPrecision: number;
+    hasBts: string;
+    filters: Artworks;
+    search: string;
+    onlyInStore: boolean;
+}
+
+export interface ArtsAndArtistsList {
+    arts: {
+        id: string;
+        title: string;
+        image: string;
+        isHide: boolean;
+    }[];
+    artists: {
+        id: string;
+        name: string;
+        avatar: string;
+        isHide: boolean;
+    }[];
+}
+
 export interface BuidlQuery {
     [key: string]:
     | string
