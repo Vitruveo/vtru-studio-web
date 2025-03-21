@@ -142,6 +142,7 @@ const Component = () => {
                         exclude: {
                             arts: exclude.arts || [],
                             artists: exclude.artists || [],
+                            onlyInStore: exclude.onlyInStore || false,
                         },
                         redirectPath: '/stores/publish',
                     }}

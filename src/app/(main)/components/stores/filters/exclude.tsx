@@ -7,8 +7,9 @@ import { useSelector } from '@/store/hooks';
 
 interface FormValues {
     exclude: {
-        arts: string[];
-        artists: string[];
+        arts: { value: string; label: string }[];
+        artists: { value: string; label: string }[];
+        onlyInStore: boolean;
     };
 }
 
@@ -22,26 +23,33 @@ const Exclude = () => {
 
     const onChangeArt = (id: string) => {
         const arts = values.exclude.arts;
-        if (arts.includes(id)) {
+        const artIndex = arts.findIndex((art) => art.value === id);
+        if (artIndex !== -1) {
             setFieldValue(
                 'exclude.arts',
-                arts.filter((art) => art !== id)
+                arts.filter((art) => art.value !== id)
             );
         } else {
-            setFieldValue('exclude.arts', [...arts, id]);
+            setFieldValue('exclude.arts', [...arts, { value: id, label: 'Art Title' }]);
         }
     };
 
     const onChangeArtist = (id: string) => {
         const artists = values.exclude.artists;
-        if (artists.includes(id)) {
+        const artistsIndex = artists.findIndex((artist) => artist.value === id);
+        if (artistsIndex !== -1) {
             setFieldValue(
                 'exclude.artists',
-                artists.filter((artist) => artist !== id)
+                artists.filter((artist) => artist.value !== id)
             );
         } else {
-            setFieldValue('exclude.artists', [...artists, id]);
+            setFieldValue('exclude.artists', [...artists, { value: id, label: 'Artist Name' }]);
         }
+    };
+
+    const onChangeSwitch = (value: boolean) => {
+        setIsOnlyInStore(value);
+        setFieldValue('exclude.onlyInStore', value);
     };
 
     const search = () => {
@@ -62,7 +70,7 @@ const Exclude = () => {
                                 <InputAdornment position="start">
                                     <Checkbox
                                         checked={isOnlyInStore}
-                                        onChange={(e) => setIsOnlyInStore(e.target.checked)}
+                                        onChange={(e) => onChangeSwitch(e.target.checked)}
                                     />
                                     <Typography>Only in {store?.organization.name || 'Folio'}</Typography>
                                 </InputAdornment>
@@ -83,7 +91,7 @@ const Exclude = () => {
                             id={index.toString()}
                             image={NO_IMAGE_ASSET}
                             title="Art Title"
-                            isHide={values.exclude.arts.includes(index.toString())}
+                            isHide={values.exclude.arts.some((art) => art.value === index.toString())}
                             onChange={onChangeArt}
                         />
                     ))}
@@ -98,7 +106,7 @@ const Exclude = () => {
                             id={index.toString()}
                             image={NO_IMAGE_ASSET}
                             title="Art Title"
-                            isHide={values.exclude.artists.includes(index.toString())}
+                            isHide={values.exclude.artists.some((artist) => artist.value === index.toString())}
                             onChange={onChangeArtist}
                         />
                     ))}

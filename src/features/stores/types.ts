@@ -65,8 +65,9 @@ export interface Artworks {
         wallets?: string[];
     };
     exclude: {
-        arts?: string[];
-        artists?: string[];
+        arts?: { value: string; label: string }[];
+        artists?: { value: string; label: string }[];
+        onlyInStore?: boolean;
     };
 }
 
