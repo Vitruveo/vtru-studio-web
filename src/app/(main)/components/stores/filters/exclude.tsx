@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import { Box, Button, Checkbox, InputAdornment, Switch, TextField, Typography } from '@mui/material';
-import { ASSET_STORAGE_URL } from '@/constants/asset';
+import { ASSET_STORAGE_URL, NO_IMAGE_ASSET } from '@/constants/asset';
 import { useFormikContext } from 'formik';
 import { useDispatch, useSelector } from '@/store/hooks';
-import { getArtsAndArtistsThunk } from '@/features/storesArtwork/thunks';
+import { getArtsAndArtistsThunk, getCreatorAvatarThunk } from '@/features/storesArtwork/thunks';
 import { ArtsAndArtistsList } from '@/features/storesArtwork/types';
+import MediaRender from '../MediaRender/mediaRender';
 
 interface FormValues {
     general: {
@@ -42,7 +42,7 @@ const Exclude = () => {
     const [isOnlyInStore, setIsOnlyInStore] = useState(true);
     const [artsAndArtists, setArtsAndArtists] = useState<ArtsAndArtistsList | null>(null);
 
-    const onChangeArt = (id: string) => {
+    const onChangeArt = (id: string, label: string) => {
         const arts = values.exclude.arts;
         const artIndex = arts.findIndex((art) => art.value === id);
         if (artIndex !== -1) {
@@ -51,11 +51,11 @@ const Exclude = () => {
                 arts.filter((art) => art.value !== id)
             );
         } else {
-            setFieldValue('exclude.arts', [...arts, { value: id, label: 'Art Title' }]);
+            setFieldValue('exclude.arts', [...arts, { value: id, label }]);
         }
     };
 
-    const onChangeArtist = (id: string) => {
+    const onChangeArtist = (id: string, label: string) => {
         const artists = values.exclude.artists;
         const artistsIndex = artists.findIndex((artist) => artist.value === id);
         if (artistsIndex !== -1) {
@@ -64,7 +64,7 @@ const Exclude = () => {
                 artists.filter((artist) => artist.value !== id)
             );
         } else {
-            setFieldValue('exclude.artists', [...artists, { value: id, label: 'Artist Name' }]);
+            setFieldValue('exclude.artists', [...artists, { value: id, label }]);
         }
     };
 
@@ -74,6 +74,7 @@ const Exclude = () => {
     };
 
     const search = async () => {
+        setArtsAndArtists(null);
         const artsAndArtistsResponse = await dispatch(
             getArtsAndArtistsThunk({
                 price: {
@@ -123,36 +124,39 @@ const Exclude = () => {
                     </Button>
                 </Box>
             </Box>
-            <Box>
-                <Typography variant="h6">Arts</Typography>
-                <Box display="flex" gap={2} sx={{ overflowX: 'scroll', overflowY: 'hidden' }}>
-                    {artsAndArtists?.arts.map((item) => (
-                        <ArtItem
-                            key={item.id}
-                            id={item.id}
-                            image={`${ASSET_STORAGE_URL}/${item.image}`}
-                            title={item.title}
-                            isHide={values.exclude.arts.some((art) => art.value === item.id)}
-                            onChange={onChangeArt}
-                        />
-                    ))}
+            {artsAndArtists?.arts && artsAndArtists.arts.length > 0 && (
+                <Box>
+                    <Typography variant="h6">Arts</Typography>
+                    <Box display="flex" gap={2} sx={{ overflowX: 'scroll', overflowY: 'hidden' }}>
+                        {artsAndArtists?.arts.map((item) => (
+                            <ArtItem
+                                key={item.id}
+                                id={item.id}
+                                image={`${ASSET_STORAGE_URL}/${item.image}`}
+                                title={item.title}
+                                isHide={values.exclude.arts.some((art) => art.value === item.id)}
+                                onChange={onChangeArt}
+                            />
+                        ))}
+                    </Box>
                 </Box>
-            </Box>
-            <Box>
-                <Typography variant="h6">Artists</Typography>
-                <Box display="flex" gap={2} sx={{ overflowX: 'scroll', overflowY: 'hidden' }}>
-                    {artsAndArtists?.artists.map((item) => (
-                        <ArtistItem
-                            key={item.id}
-                            id={item.id}
-                            image={`${ASSET_STORAGE_URL}/${item.avatar}`}
-                            title={item.name}
-                            isHide={values.exclude.artists.some((artist) => artist.value === item.id)}
-                            onChange={onChangeArtist}
-                        />
-                    ))}
+            )}
+            {artsAndArtists?.artists && artsAndArtists.artists.length && (
+                <Box>
+                    <Typography variant="h6">Artists</Typography>
+                    <Box display="flex" gap={2} sx={{ overflowX: 'scroll', overflowY: 'hidden' }}>
+                        {artsAndArtists?.artists.map((item) => (
+                            <ArtistItem
+                                key={item.id}
+                                id={item.id}
+                                name={item.name}
+                                isHide={values.exclude.artists.some((artist) => artist.value === item.id)}
+                                onChange={onChangeArtist}
+                            />
+                        ))}
+                    </Box>
                 </Box>
-            </Box>
+            )}
         </Box>
     );
 };
@@ -162,16 +166,16 @@ interface ArtItemProps {
     image: string;
     title: string;
     isHide: boolean;
-    onChange: (id: string) => void;
+    onChange: (id: string, label: string) => void;
 }
 const ArtItem = ({ id, image, title, isHide, onChange }: ArtItemProps) => {
     return (
         <Box display={'flex'} flexDirection={'column'}>
             <Box display={'flex'} alignItems={'center'}>
                 <Typography>Hide</Typography>
-                <Switch checked={isHide} onChange={() => onChange(id)} />
+                <Switch checked={isHide} onChange={() => onChange(id, title)} />
             </Box>
-            <Image src={image} alt={title} width={100} height={100} />
+            <MediaRender path={image} width={150} height={150} alt={title} fallback={NO_IMAGE_ASSET} />
             <Typography>{title}</Typography>
         </Box>
     );
@@ -179,20 +183,34 @@ const ArtItem = ({ id, image, title, isHide, onChange }: ArtItemProps) => {
 
 interface ArtistItemProps {
     id: string;
-    image: string;
-    title: string;
+    name: string;
     isHide: boolean;
-    onChange: (id: string) => void;
+    onChange: (id: string, label: string) => void;
 }
-const ArtistItem = ({ id, image, title, isHide, onChange }: ArtistItemProps) => {
+const ArtistItem = ({ id, name, isHide, onChange }: ArtistItemProps) => {
+    const dispatch = useDispatch();
+    const [avatar, setAvatar] = useState<string>('');
+
+    useEffect(() => {
+        dispatch(getCreatorAvatarThunk(id)).then((response) => {
+            setAvatar(response);
+        });
+    }, []);
+
     return (
         <Box display={'flex'} flexDirection={'column'}>
             <Box display={'flex'} alignItems={'center'}>
                 <Typography>Hide</Typography>
-                <Switch checked={isHide} onChange={() => onChange(id)} />
+                <Switch checked={isHide} onChange={() => onChange(id, name)} />
             </Box>
-            <Image src={image} alt={title} width={100} height={100} />
-            <Typography>{title}</Typography>
+            <MediaRender
+                path={`${ASSET_STORAGE_URL}/${avatar}`}
+                width={150}
+                height={150}
+                alt={name}
+                fallback={'/images/profile/profileDefault.png'}
+            />
+            <Typography>{name}</Typography>
         </Box>
     );
 };

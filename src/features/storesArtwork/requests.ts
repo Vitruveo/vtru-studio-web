@@ -11,6 +11,7 @@ import {
     Tags,
 } from './types';
 import { convertHexToRGB } from '@/utils/convertColors';
+import { APIResponse } from '../common/types';
 
 export async function getArtworkTags(): Promise<Tags[]> {
     const URL_ASSETS_SEARCH = '/assets/public/search';
@@ -112,40 +113,43 @@ export async function getArtsAndArtists({
     delete filters.context?.precision;
     const URL_ASSETS_SEARCH = '/assets/public/search';
 
-    const buildFilters = {
-        context: filters.context,
-        taxonomy: filters.taxonomy,
-        creators: filters.artists,
-    };
-
-    const wallets = filters.portfolio?.wallets;
-
-    const buildQuery = Object.entries(buildFilters || {}).reduce<BuidlQuery>((acc, cur) => {
-        const [key, value] = cur;
-
-        Object.entries(value).forEach((item) => {
-            const [keyFilter, valueFilter] = item as [string, string | string[]];
-
-            if (!valueFilter) return;
-            if (Array.isArray(valueFilter) && !valueFilter.length) return;
-
-            if (Array.isArray(valueFilter)) {
-                // @ts-expect-error return number in convertHexToRGB
-                acc[`assetMetadata.${key}.formData.${keyFilter === 'arEnabled' ? 'arenabled' : keyFilter}`] = {
-                    $in: keyFilter === 'colors' ? valueFilter.map((v) => convertHexToRGB(v)) : valueFilter,
-                };
-                return;
-            }
-            acc[`assetMetadata.${key}.formData.${keyFilter === 'arEnabled' ? 'arenabled' : keyFilter}`] = valueFilter;
-        });
-
-        return acc;
-    }, {});
-
-    if (wallets && wallets.length) {
-        buildQuery['mintExplorer.address'] = {
-            $in: wallets,
+    let buildQuery: BuidlQuery = {};
+    if (onlyInStore) {
+        const wallets = filters.portfolio?.wallets;
+        const buildFilters = {
+            context: filters.context,
+            taxonomy: filters.taxonomy,
+            creators: filters.artists,
         };
+
+        buildQuery = Object.entries(buildFilters || {}).reduce<BuidlQuery>((acc, cur) => {
+            const [key, value] = cur;
+
+            Object.entries(value).forEach((item) => {
+                const [keyFilter, valueFilter] = item as [string, string | string[]];
+
+                if (!valueFilter) return;
+                if (Array.isArray(valueFilter) && !valueFilter.length) return;
+
+                if (Array.isArray(valueFilter)) {
+                    // @ts-expect-error return number in convertHexToRGB
+                    acc[`assetMetadata.${key}.formData.${keyFilter === 'arEnabled' ? 'arenabled' : keyFilter}`] = {
+                        $in: keyFilter === 'colors' ? valueFilter.map((v) => convertHexToRGB(v)) : valueFilter,
+                    };
+                    return;
+                }
+                acc[`assetMetadata.${key}.formData.${keyFilter === 'arEnabled' ? 'arenabled' : keyFilter}`] =
+                    valueFilter;
+            });
+
+            return acc;
+        }, {});
+
+        if (wallets && wallets.length) {
+            buildQuery['mintExplorer.address'] = {
+                $in: wallets,
+            };
+        }
     }
 
     const response = await apiService.post<ResponseAssets>(URL_ASSETS_SEARCH, {
@@ -161,4 +165,10 @@ export async function getArtsAndArtists({
         sort: { order: 'latest', isIncludeSold: false },
     });
     return response.data || { data: [], tags: [], total: 0, limit: 0, page: 0, totalPage: 0, maxPrice: 0 };
+}
+
+export async function getCreatorAvatar(id: string): Promise<string> {
+    const URL_ASSETS_SEARCH = `/creators/avatar/${id}`;
+    const response = await apiService.get<string>(URL_ASSETS_SEARCH);
+    return response.data || '';
 }

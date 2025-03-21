@@ -7,6 +7,7 @@ import {
     getArtworkQuantity,
     getArtworkSubject,
     getArtworkTags,
+    getCreatorAvatar,
 } from './requests';
 import {
     ArtsAndArtistsList,
@@ -15,7 +16,6 @@ import {
     GetArtsAndArtistsParams,
     GetArtworkQuantityParams,
     Names,
-    ResponseAssets,
     Subject,
     Tags,
 } from './types';
@@ -91,16 +91,28 @@ export function getArtsAndArtistsThunk({
         return {
             arts: response.data.map((item) => ({
                 id: item._id,
-                image: item.formats.display.path,
+                image: item.formats.preview.path,
                 title: item.assetMetadata.context.formData.title,
                 isHide: false,
             })),
-            artists: response.data.map((item) => ({
-                id: item.framework.createdBy,
-                avatar: item.formats.display.path,
-                name: item.creator.username,
-                isHide: false,
-            })),
+            artists: response.data.reduce((acc, current) => {
+                if (!acc.find((item: any) => item.id === current.framework.createdBy)) {
+                    acc.push({
+                        id: current.framework.createdBy,
+                        name: current.creator.username,
+                        avatar: current.formats.preview.path,
+                        isHide: false,
+                    });
+                }
+                return acc;
+            }, []),
         };
+    };
+}
+
+export function getCreatorAvatarThunk(creatorId: string): ReduxThunkAction<Promise<string>> {
+    return async (_dispatch: any) => {
+        const response = await getCreatorAvatar(creatorId);
+        return response;
     };
 }
