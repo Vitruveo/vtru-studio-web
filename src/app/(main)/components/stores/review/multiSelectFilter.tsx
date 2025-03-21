@@ -17,7 +17,7 @@ import { countryData } from '@/utils/countryData';
 import { handleFormatWallet } from '../filters/portfolio';
 
 interface MultiSelectFilterProps {
-    content: { title: string; key: string; value: string[] };
+    content: { title: string; key: string; value: string[] | { value: string; label: string }[] };
 }
 
 const options: Record<string, { [key: string]: { label: string; value: string }[] }> = {
@@ -64,32 +64,31 @@ export const MultiSelectFilter = ({ content }: MultiSelectFilterProps) => {
 
     if (!content.value.length) return null;
 
+    const getItemTitle = (item: string | { value: string; label: string }): string => {
+        if (options[content.title][content.key].length) {
+            return options[content.title][content.key].find((option) => option.value === item)?.label || '';
+        }
+        if (content.title === 'exclude') {
+            return (item as any).label;
+        }
+        return handleFormatWallet(item as string) || '';
+    };
+
     return (
         <Box display={'flex'} gap={1} flexWrap={'wrap'}>
-            {content.value
-                .filter(() => content.title !== 'exclude')
-                .map((item) => (
-                    <Paper key={item} sx={{ padding: 1, display: 'flex' }}>
-                        <Typography variant="body1">
-                            {handleFormatWallet(
-                                options[content.title][content.key].length
-                                    ? options[content.title][content.key].find((option) => option.value === item)?.label
-                                    : item
-                            )}
-                        </Typography>
-                        <Delete
-                            fontSize="small"
-                            color="error"
-                            onClick={() => handleDeleteITem(content.title, content.key, item)}
-                            cursor={'pointer'}
-                        />
-                    </Paper>
-                ))}
-            <Paper sx={{ padding: 1, display: 'flex' }}>
-                <Typography variant="body1">
-                    {content.value.length} {content.key} hidden
-                </Typography>
-            </Paper>
+            {content.value.map((item, index) => (
+                <Paper key={index} sx={{ padding: 1, display: 'flex' }}>
+                    <Typography variant="body1">{getItemTitle(item)}</Typography>
+                    <Delete
+                        fontSize="small"
+                        color="error"
+                        onClick={() =>
+                            handleDeleteITem(content.title, content.key, typeof item === 'string' ? item : item.value)
+                        }
+                        cursor={'pointer'}
+                    />
+                </Paper>
+            ))}
         </Box>
     );
 };
