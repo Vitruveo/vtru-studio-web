@@ -58,7 +58,12 @@ export const MultiSelectFilter = ({ content }: MultiSelectFilterProps) => {
     const handleDeleteITem = (title: string, key: string, value: string) => {
         setFieldValue(
             `${title}.${key}`,
-            content.value.filter((item) => item !== value)
+            content.value.filter((item) => {
+                if (typeof item === 'string') {
+                    return item !== value;
+                }
+                return item.value !== value;
+            })
         );
     };
 

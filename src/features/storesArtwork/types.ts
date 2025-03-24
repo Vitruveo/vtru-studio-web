@@ -57,6 +57,8 @@ export interface GetArtsAndArtistsParams {
     filters: Artworks;
     search: string;
     onlyInStore: boolean;
+    page: number;
+    limit: number;
 }
 
 export interface ArtsAndArtistsList {
@@ -72,18 +74,22 @@ export interface ArtsAndArtistsList {
         avatar: string;
         isHide: boolean;
     }[];
+    page: number;
+    total: number;
+    totalPage: number;
+    limit: number;
 }
 
 export interface BuidlQuery {
     [key: string]:
-    | string
-    | {
-        $in: string[];
-    }
-    | {
-        [key: string]: {
-            $regex: string;
-            $options: string;
-        };
-    }[];
+        | string
+        | {
+              $in: string[];
+          }
+        | {
+              [key: string]: {
+                  $regex: string;
+                  $options: string;
+              };
+          }[];
 }

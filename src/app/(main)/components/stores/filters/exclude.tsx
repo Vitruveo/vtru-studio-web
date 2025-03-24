@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Box, Button, Checkbox, InputAdornment, Switch, TextField, Typography } from '@mui/material';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { Box, Button, Checkbox, InputAdornment, List, Switch, TextField, Typography } from '@mui/material';
 import { ASSET_STORAGE_URL, NO_IMAGE_ASSET } from '@/constants/asset';
 import { useFormikContext } from 'formik';
 import { useDispatch, useSelector } from '@/store/hooks';
@@ -74,13 +75,8 @@ const Exclude = () => {
         setFieldValue('exclude.onlyInStore', value);
     };
 
-    const search = async () => {
-        setArtsAndArtists(null);
-        if (inputValue.length < 3) {
-            setErrorMessage('Please enter at least 3 characters');
-            return;
-        }
-        const artsAndArtistsResponse = await dispatch(
+    const fetchData = async () => {
+        return await dispatch(
             getArtsAndArtistsThunk({
                 price: {
                     max: values.general?.licenses.maxPrice,
@@ -98,14 +94,53 @@ const Exclude = () => {
                 colorPrecision: values.context?.precision,
                 onlyInStore: isOnlyInStore,
                 search: inputValue,
+                page: artsAndArtists?.page || 1,
+                limit: artsAndArtists?.limit || 20,
             })
         );
+    };
+
+    const search = async () => {
+        setArtsAndArtists(null);
+        if (inputValue.length < 1) {
+            setErrorMessage('Please enter at least 1 characters');
+            return;
+        }
+        const artsAndArtistsResponse = await fetchData();
         if (artsAndArtistsResponse.arts.length === 0 && artsAndArtistsResponse.artists.length === 0) {
             setErrorMessage('No results found');
             return;
         }
         setArtsAndArtists(artsAndArtistsResponse);
         setErrorMessage(null);
+    };
+
+    const handleNextPageArts = async () => {
+        const response = await fetchData();
+        if (response.arts.length) {
+            setArtsAndArtists((prev) => ({
+                arts: prev ? [...prev.arts, ...response.arts] : response.arts,
+                artists: prev ? prev.artists : [],
+                page: response.page,
+                limit: response.limit,
+                total: response.total,
+                totalPage: response.totalPage,
+            }));
+        }
+    };
+
+    const handleNextPageArtists = async () => {
+        const response = await fetchData();
+        if (response.arts.length) {
+            setArtsAndArtists((prev) => ({
+                arts: prev ? response.arts : [],
+                artists: prev ? [...prev.artists, ...response.artists] : response.artists,
+                page: response.page,
+                limit: response.limit,
+                total: response.total,
+                totalPage: response.totalPage,
+            }));
+        }
     };
 
     useEffect(() => {
@@ -146,34 +181,54 @@ const Exclude = () => {
             {artsAndArtists?.arts && artsAndArtists.arts.length > 0 && (
                 <Box>
                     <Typography variant="h6">Arts</Typography>
-                    <Box display="flex" gap={2} sx={{ overflowX: 'scroll', overflowY: 'hidden' }}>
-                        {artsAndArtists?.arts.map((item) => (
-                            <ArtItem
-                                key={item.id}
-                                id={item.id}
-                                image={`${ASSET_STORAGE_URL}/${item.image}`}
-                                title={item.title}
-                                isHide={values.exclude.arts.some((art) => art.value === item.id)}
-                                onChange={onChangeArt}
-                            />
-                        ))}
-                    </Box>
+                    <List>
+                        <InfiniteScroll
+                            dataLength={artsAndArtists.arts.length}
+                            loader={<h4>Loading...</h4>}
+                            hasMore={artsAndArtists.page < artsAndArtists.totalPage}
+                            next={handleNextPageArts}
+                            height="100%"
+                            style={{ display: 'flex', gap: 4 }}
+                            scrollThreshold={0.9}
+                        >
+                            {artsAndArtists.arts.map((item) => (
+                                <ArtItem
+                                    key={item.id}
+                                    id={item.id}
+                                    image={`${ASSET_STORAGE_URL}/${item.image}`}
+                                    title={item.title}
+                                    isHide={values.exclude.arts.some((art) => art.value === item.id)}
+                                    onChange={onChangeArt}
+                                />
+                            ))}
+                        </InfiniteScroll>
+                    </List>
                 </Box>
             )}
             {artsAndArtists?.artists && artsAndArtists.artists.length > 0 && (
                 <Box>
                     <Typography variant="h6">Artists</Typography>
-                    <Box display="flex" gap={2} sx={{ overflowX: 'scroll', overflowY: 'hidden' }}>
-                        {artsAndArtists?.artists.map((item) => (
-                            <ArtistItem
-                                key={item.id}
-                                id={item.id}
-                                name={item.name}
-                                isHide={values.exclude.artists.some((artist) => artist.value === item.id)}
-                                onChange={onChangeArtist}
-                            />
-                        ))}
-                    </Box>
+                    <List>
+                        <InfiniteScroll
+                            dataLength={artsAndArtists.artists.length}
+                            loader={<h4>Loading...</h4>}
+                            hasMore={artsAndArtists.page < artsAndArtists.totalPage}
+                            next={handleNextPageArtists}
+                            height={'100%'}
+                            style={{ display: 'flex', gap: 4 }}
+                            scrollThreshold={0.9}
+                        >
+                            {artsAndArtists?.artists.map((item) => (
+                                <ArtistItem
+                                    key={item.id}
+                                    id={item.id}
+                                    name={item.name}
+                                    isHide={values.exclude.artists.some((artist) => artist.value === item.id)}
+                                    onChange={onChangeArtist}
+                                />
+                            ))}
+                        </InfiniteScroll>
+                    </List>
                 </Box>
             )}
         </Box>

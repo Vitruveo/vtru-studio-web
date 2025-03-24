@@ -109,6 +109,8 @@ export async function getArtsAndArtists({
     filters,
     onlyInStore,
     search,
+    page,
+    limit,
 }: GetArtsAndArtistsParams): Promise<ResponseAssets> {
     delete filters.context?.precision;
     const URL_ASSETS_SEARCH = '/assets/public/search';
@@ -153,8 +155,8 @@ export async function getArtsAndArtists({
     }
 
     const response = await apiService.post<ResponseAssets>(URL_ASSETS_SEARCH, {
-        limit: 10,
-        page: 1,
+        limit,
+        page,
         query: buildQuery,
         minPrice: price?.min,
         maxPrice: price?.max,

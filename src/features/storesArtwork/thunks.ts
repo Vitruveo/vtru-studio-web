@@ -78,6 +78,8 @@ export function getArtsAndArtistsThunk({
     colorPrecision,
     onlyInStore,
     search,
+    page,
+    limit,
 }: GetArtsAndArtistsParams): ReduxThunkAction<Promise<ArtsAndArtistsList>> {
     return async (_dispatch: any) => {
         const response = await getArtsAndArtists({
@@ -87,6 +89,8 @@ export function getArtsAndArtistsThunk({
             filters,
             onlyInStore,
             search,
+            page,
+            limit,
         });
         return {
             arts: response.data.map((item) => ({
@@ -106,6 +110,10 @@ export function getArtsAndArtistsThunk({
                 }
                 return acc;
             }, []),
+            page: response.page,
+            total: response.total,
+            totalPage: response.totalPage,
+            limit: response.limit,
         };
     };
 }
