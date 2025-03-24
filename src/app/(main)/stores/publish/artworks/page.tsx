@@ -33,7 +33,7 @@ const Component = () => {
     const handleSubmit = (values: Artworks & { redirectPath: string }) => {
         const filteredValues = filterFalsyValues({
             input: values,
-            keysToPreserve: ['general', 'context', 'taxonomy', 'artists', 'portfolio'],
+            keysToPreserve: ['general', 'context', 'taxonomy', 'artists', 'portfolio', 'exclude'],
         });
         if (filteredValues.context && !filteredValues.context.colors) {
             delete filteredValues.context.precision;

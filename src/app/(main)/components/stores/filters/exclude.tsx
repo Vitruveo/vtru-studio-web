@@ -41,6 +41,7 @@ const Exclude = () => {
     const [inputValue, setInputValue] = useState('');
     const [isOnlyInStore, setIsOnlyInStore] = useState(true);
     const [artsAndArtists, setArtsAndArtists] = useState<ArtsAndArtistsList | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const onChangeArt = (id: string, label: string) => {
         const arts = values.exclude.arts;
@@ -75,6 +76,10 @@ const Exclude = () => {
 
     const search = async () => {
         setArtsAndArtists(null);
+        if (inputValue.length < 3) {
+            setErrorMessage('Please enter at least 3 characters');
+            return;
+        }
         const artsAndArtistsResponse = await dispatch(
             getArtsAndArtistsThunk({
                 price: {
@@ -95,8 +100,21 @@ const Exclude = () => {
                 search: inputValue,
             })
         );
+        if (artsAndArtistsResponse.arts.length === 0 && artsAndArtistsResponse.artists.length === 0) {
+            setErrorMessage('No results found');
+            return;
+        }
         setArtsAndArtists(artsAndArtistsResponse);
+        setErrorMessage(null);
     };
+
+    useEffect(() => {
+        if (errorMessage) {
+            setTimeout(() => {
+                setErrorMessage(null);
+            }, 3000);
+        }
+    }, [errorMessage]);
 
     return (
         <Box display={'flex'} flexDirection={'column'} gap={2}>
@@ -123,6 +141,7 @@ const Exclude = () => {
                         Search
                     </Button>
                 </Box>
+                {errorMessage && <Typography color="error">{errorMessage}</Typography>}
             </Box>
             {artsAndArtists?.arts && artsAndArtists.arts.length > 0 && (
                 <Box>
@@ -141,7 +160,7 @@ const Exclude = () => {
                     </Box>
                 </Box>
             )}
-            {artsAndArtists?.artists && artsAndArtists.artists.length && (
+            {artsAndArtists?.artists && artsAndArtists.artists.length > 0 && (
                 <Box>
                     <Typography variant="h6">Artists</Typography>
                     <Box display="flex" gap={2} sx={{ overflowX: 'scroll', overflowY: 'hidden' }}>
