@@ -241,8 +241,33 @@ const Component = ({ data, actions }: StoreProps) => {
                                             borderBottomRightRadius: 5,
                                         }}
                                     >
-                                        <Typography fontSize={16}>{item?.organization?.url || 'Untitled'}</Typography>
-                                        <Typography variant="h5">{item?.organization?.name || 'N/A Name'}</Typography>
+                                        <Typography
+                                            fontSize={16}
+                                            sx={{
+                                                // text max line 1 with ellipsis
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                display: '-webkit-box',
+                                                WebkitLineClamp: 1,
+                                                WebkitBoxOrient: 'vertical',
+                                            }}
+                                        >
+                                            {item?.organization?.url || 'Untitled'}
+                                        </Typography>
+                                        <Typography
+                                            variant="h5"
+                                            sx={{
+                                                // text max line 2 with ellipsis
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                display: '-webkit-box',
+                                                WebkitLineClamp: 2,
+                                                WebkitBoxOrient: 'vertical',
+                                                minHeight: 50,
+                                            }}
+                                        >
+                                            {item?.organization?.name || 'N/A Name'}
+                                        </Typography>
                                         <Typography
                                             fontSize={16}
                                             style={{
