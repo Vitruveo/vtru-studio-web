@@ -45,6 +45,7 @@ export async function getArtworkQuantity({
     hasBts,
     colorPrecision,
     filters,
+    storesId,
 }: GetArtworkQuantityParams): Promise<number> {
     delete filters.context?.precision;
     const URL_ASSETS_SEARCH = '/assets/public/search';
@@ -96,6 +97,7 @@ export async function getArtworkQuantity({
         showAdditionalAssets: false,
         hasBts,
         sort: { order: 'latest', isIncludeSold: false },
+        storesId,
     });
     return response.data?.total || 0;
 }

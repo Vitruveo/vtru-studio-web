@@ -48,6 +48,7 @@ export function getArtworkQuantityThunk({
     hasBts,
     filters,
     colorPrecision,
+    storesId,
 }: GetArtworkQuantityParams): ReduxThunkAction<Promise<number>> {
     return async (_dispatch: any) => {
         const response = await getArtworkQuantity({
@@ -55,6 +56,7 @@ export function getArtworkQuantityThunk({
             colorPrecision,
             hasBts,
             filters,
+            storesId,
         });
         return response;
     };
