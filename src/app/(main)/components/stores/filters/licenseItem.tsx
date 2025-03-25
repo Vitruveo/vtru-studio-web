@@ -2,6 +2,7 @@ import { formatCurrency } from '@/utils/formatCurrency';
 import { Box, Checkbox, Slider, Stack, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useFormikContext } from 'formik';
+import { useEffect } from 'react';
 
 interface FormValues {
     general: {
@@ -23,6 +24,16 @@ const Licenses = () => {
         maxPrice: 'general.licenses.maxPrice',
         enabled: 'general.licenses.enabled',
     };
+
+    useEffect(() => {
+        if (!values.general.licenses.enabled) {
+            setFieldValue(fieldNames.minPrice, minPrice);
+            setFieldValue(fieldNames.maxPrice, minPrice);
+        } else if (values.general.licenses.minPrice === minPrice && values.general.licenses.maxPrice === minPrice) {
+            setFieldValue(fieldNames.minPrice, minPrice);
+            setFieldValue(fieldNames.maxPrice, maxPrice);
+        }
+    }, [values.general.licenses.enabled]);
 
     const onChange = (_event: Event | null, newValue: number | number[]) => {
         if (!Array.isArray(newValue)) return;

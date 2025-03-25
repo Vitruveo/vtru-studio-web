@@ -77,7 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     //                     toast.display({ type: 'error', message: 'Something went wrong! Try again later.' });
     //                 }
     //             }
-    //         })()
+    //         })();
     //     }
     // }, [email]);
 

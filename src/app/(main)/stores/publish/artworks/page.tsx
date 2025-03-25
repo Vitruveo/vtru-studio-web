@@ -107,7 +107,7 @@ const Component = () => {
                             },
                             licenses: {
                                 minPrice: licenses.minPrice || 0,
-                                maxPrice: licenses.maxPrice || 10_000,
+                                maxPrice: licenses.maxPrice || 0,
                                 enabled: licenses.enabled || false,
                             },
                         },
