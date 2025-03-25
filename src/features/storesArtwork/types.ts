@@ -50,16 +50,46 @@ export interface GetArtworkQuantityParams {
     filters: Artworks;
 }
 
+export interface GetArtsAndArtistsParams {
+    price?: { min?: number; max?: number };
+    colorPrecision: number;
+    hasBts: string;
+    filters: Artworks;
+    search: string;
+    onlyInStore: boolean;
+    page: number;
+    limit: number;
+}
+
+export interface ArtsAndArtistsList {
+    arts: {
+        id: string;
+        title: string;
+        image: string;
+        isHide: boolean;
+    }[];
+    artists: {
+        id: string;
+        name: string;
+        avatar: string;
+        isHide: boolean;
+    }[];
+    page: number;
+    total: number;
+    totalPage: number;
+    limit: number;
+}
+
 export interface BuidlQuery {
     [key: string]:
-    | string
-    | {
-        $in: string[];
-    }
-    | {
-        [key: string]: {
-            $regex: string;
-            $options: string;
-        };
-    }[];
+        | string
+        | {
+              $in: string[];
+          }
+        | {
+              [key: string]: {
+                  $regex: string;
+                  $options: string;
+              };
+          }[];
 }

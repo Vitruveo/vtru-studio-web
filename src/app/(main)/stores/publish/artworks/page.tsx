@@ -33,7 +33,7 @@ const Component = () => {
     const handleSubmit = (values: Artworks & { redirectPath: string }) => {
         const filteredValues = filterFalsyValues({
             input: values,
-            keysToPreserve: ['general', 'context', 'taxonomy', 'artists', 'portfolio'],
+            keysToPreserve: ['general', 'context', 'taxonomy', 'artists', 'portfolio', 'exclude'],
         });
         if (filteredValues.context && !filteredValues.context.colors) {
             delete filteredValues.context.precision;
@@ -78,6 +78,7 @@ const Component = () => {
     const taxonomy = store?.artworks?.taxonomy || {};
     const artists = store?.artworks?.artists || {};
     const portfolio = store?.artworks?.portfolio || {};
+    const exclude = store?.artworks?.exclude || {};
 
     return (
         <Box display={'grid'} gridTemplateRows={'1fr auto'} height="calc(100vh - 64px)">
@@ -137,6 +138,11 @@ const Component = () => {
                         },
                         portfolio: {
                             wallets: portfolio?.wallets,
+                        },
+                        exclude: {
+                            arts: exclude.arts || [],
+                            artists: exclude.artists || [],
+                            onlyInStore: exclude.onlyInStore || false,
                         },
                         redirectPath: '/stores/publish',
                     }}

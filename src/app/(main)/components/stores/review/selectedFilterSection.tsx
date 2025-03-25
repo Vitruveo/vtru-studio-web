@@ -23,6 +23,7 @@ export const SelectedFilter = ({ title, content }: SelectedFilterProps) => {
 
     const contentCopy = { ...content };
     delete contentCopy.precision;
+    delete contentCopy.onlyInStore;
 
     const renderTitle = (): string => {
         if (!hasTruthyObject(contentCopy)) {
@@ -50,6 +51,8 @@ export const SelectedFilter = ({ title, content }: SelectedFilterProps) => {
                     .filter(([_key, value]) => (Array.isArray(value) ? value.length : !!value))
                     .map((element) => {
                         const [key, value] = element;
+                        if (key === 'onlyInStore') return null;
+
                         const isShortcut = key === 'shortcuts';
                         const isLicense = key === 'licenses';
                         const isColorPrecision = key === 'precision';

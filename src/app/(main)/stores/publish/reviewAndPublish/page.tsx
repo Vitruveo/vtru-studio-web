@@ -128,11 +128,7 @@ const Component = ({ data }: Props) => {
                         <Typography color="gray">Back</Typography>
                     </Button>
                     {textsForPublishStoreStatus[store.status].buttontitle && (
-                        <Button
-                            variant="contained"
-                            onClick={handleRequestPublishment}
-                            disabled={store.status !== 'draft'}
-                        >
+                        <Button variant="contained" onClick={handleRequestPublishment}>
                             {textsForPublishStoreStatus[store.status].buttontitle}
                         </Button>
                     )}
