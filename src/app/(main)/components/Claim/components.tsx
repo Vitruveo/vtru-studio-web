@@ -46,11 +46,11 @@ export const ClaimComponent = ({ data, actions }: Props) => {
                             rel="noreferrer"
                             style={{ color: 'black' }}
                         >
-                            {value} <strong>{symbol}</strong>
+                            {VUSD.value} <strong>{VUSD.symbol}</strong>
                         </a>
                     ) : (
                         <Typography>
-                            {value} <strong>{symbol}</strong>
+                            {VUSD.value} <strong>{VUSD.symbol}</strong>
                         </Typography>
                     )}
                 </Box>
@@ -62,11 +62,11 @@ export const ClaimComponent = ({ data, actions }: Props) => {
                             rel="noreferrer"
                             style={{ color: 'black' }}
                         >
-                            {VUSD.value} <strong>{VUSD.symbol}</strong>
+                            {value} <strong>{symbol}</strong>
                         </a>
                     ) : (
                         <Typography>
-                            {VUSD.value} <strong>{VUSD.symbol}</strong>
+                            {value} <strong>{symbol}</strong>
                         </Typography>
                     )}
                 </Box>

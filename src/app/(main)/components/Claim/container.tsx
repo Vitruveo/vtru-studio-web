@@ -11,12 +11,14 @@ import { createSignedMessage } from './actions';
 import { ClaimComponent } from './components';
 import StakeModal from './StakeModal';
 import ClaimedModal from './ClaimedModal';
+import { ClaimModal } from './ClaimModal';
 
 export const ClaimContainer = memo(() => {
     const [balance, setBalance] = useState(0);
     const [balanceVUSD, setBalanceVUSD] = useState(0);
     const token = useSelector((state) => state.user.token);
     const [isModalOpenStake, setIsModalOpenStake] = useState(false);
+    const [isModalOpenClaimed, setIsModalOpenClaimed] = useState(false);
     const [loading, setLoading] = useState(false);
     const [isBlocked, setIsBlocked] = useState(false);
     const [isClaimed, setIsClaimed] = useState(false);
@@ -35,6 +37,7 @@ export const ClaimContainer = memo(() => {
 
     const closeModalStake = () => setIsModalOpenStake(false);
     const closeModalClaimed = () => setIsClaimed(false);
+    const closeModalClaim = () => setIsModalOpenClaimed(false);
 
     const getBalance = async () => {
         setLoading(true);
@@ -53,10 +56,10 @@ export const ClaimContainer = memo(() => {
                 setIsBlocked(true);
                 return;
             }
-            setBalance(Number(dataBalance.data));
+            setBalance(Number(dataBalance.data) || 0);
 
             const dataBalanceVUSD = await responseBalanceVUSD.json();
-            setBalanceVUSD(Number(dataBalanceVUSD.data));
+            setBalanceVUSD(Number(dataBalanceVUSD.data) || 0);
         } catch (error) {
             // do nothing
         } finally {
@@ -76,7 +79,7 @@ export const ClaimContainer = memo(() => {
         await disconnect();
     };
 
-    const onClaimAllocate = async () => {
+    const onClaimAllocate = async ({ vusd, vtru }: { vusd: number; vtru: number }) => {
         if (wallets.find((wallet) => !wallet.archived && wallet.address === address)) {
             setLoading(true);
             try {
@@ -96,6 +99,10 @@ export const ClaimContainer = memo(() => {
                         types,
                         tx,
                         signedMessage,
+                        basisPoints: {
+                            vusdBasisPoints: vusd,
+                            vtruBasisPoints: vtru,
+                        },
                     }),
                 });
                 const responseData = await response.json();
@@ -115,6 +122,7 @@ export const ClaimContainer = memo(() => {
                 toast.display({ type: 'error', message: 'An error occurred' });
             } finally {
                 setLoading(false);
+                closeModalClaim();
                 closeModalStake();
             }
         } else {
@@ -130,18 +138,27 @@ export const ClaimContainer = memo(() => {
                 isOpen={isModalOpenStake}
                 handleClose={closeModalStake}
                 available={Math.trunc(balance)}
-                claimAllocate={onClaimAllocate}
+                claimAllocate={() => onClaimAllocate({ vtru: 0, vusd: 0 })}
                 loading={loading}
                 vaultCreatedAt={vaultCreatedAt}
             />
 
             <ClaimedModal isOpen={isClaimed} handleClose={closeModalClaimed} />
 
+            <ClaimModal
+                isOpen={isModalOpenClaimed}
+                isLoading={loading}
+                handleClose={closeModalClaim}
+                vusd={balanceVUSD}
+                vtru={balance}
+                handleClaim={onClaimAllocate}
+            />
+
             <ClaimComponent
                 data={{
                     value: balance.toFixed(4),
                     symbol: 'VTRU',
-                    disabled: loading || balance <= 0 || !client,
+                    disabled: loading || balance <= 0 || !client || (balanceVUSD <= 0 && balance <= 0),
                     isConnected,
                     address,
                     vaultAddress,
@@ -155,7 +172,17 @@ export const ClaimContainer = memo(() => {
                 actions={{
                     onConnect,
                     onDisconnect,
-                    openStakModal: onClaimAllocate,
+                    openStakModal: () => {
+                        if (balanceVUSD > 0) {
+                            setIsModalOpenStake(true);
+                            return;
+                        }
+
+                        onClaimAllocate({
+                            vusd: 0,
+                            vtru: 10_000,
+                        });
+                    },
                 }}
             />
         </>
