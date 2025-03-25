@@ -84,10 +84,10 @@ const Component = () => {
         <Box display={'grid'} gridTemplateRows={'1fr auto'} height="calc(100vh - 64px)">
             <Box paddingInline={3} overflow={'auto'} paddingBottom={20}>
                 <Breadcrumb
-                    title="Publish Store"
+                    title="Publish Folio"
                     assetTitle={store?.organization?.name || ''}
                     items={[
-                        { title: 'Stores', to: '/stores' },
+                        { title: 'Folios', to: '/stores' },
                         { title: 'Publish', to: '/stores/publish' },
                         { title: 'Artworks' },
                     ]}
@@ -108,7 +108,7 @@ const Component = () => {
                             },
                             licenses: {
                                 minPrice: licenses.minPrice || 0,
-                                maxPrice: licenses.maxPrice || 10_000,
+                                maxPrice: licenses.maxPrice || 0,
                                 enabled: licenses.enabled || false,
                             },
                         },

@@ -11,12 +11,14 @@ import { createSignedMessage } from './actions';
 import { ClaimComponent } from './components';
 import StakeModal from './StakeModal';
 import ClaimedModal from './ClaimedModal';
-import { CLAIM_VERSE_ENABLE } from '@/constants/claim';
+import { ClaimModal } from './ClaimModal';
 
 export const ClaimContainer = memo(() => {
     const [balance, setBalance] = useState(0);
+    const [balanceVUSD, setBalanceVUSD] = useState(0);
     const token = useSelector((state) => state.user.token);
     const [isModalOpenStake, setIsModalOpenStake] = useState(false);
+    const [isModalOpenClaimed, setIsModalOpenClaimed] = useState(false);
     const [loading, setLoading] = useState(false);
     const [isBlocked, setIsBlocked] = useState(false);
     const [isClaimed, setIsClaimed] = useState(false);
@@ -29,35 +31,43 @@ export const ClaimContainer = memo(() => {
     const router = useRouter();
     const toast = useToastr();
 
-    const vaultTransactionHash = useSelector((state) => state?.user?.vault?.transactionHash);
+    const vaultAddress = useSelector((state) => state?.user?.vault?.vaultAddress);
     const vaultCreatedAt = useSelector((state) => state?.user?.vault?.createdAt);
     const wallets = useSelector((state) => state.user.wallets);
 
     const closeModalStake = () => setIsModalOpenStake(false);
     const closeModalClaimed = () => setIsClaimed(false);
+    const closeModalClaim = () => setIsModalOpenClaimed(false);
+
+    const getBalance = async () => {
+        setLoading(true);
+        try {
+            const [responseBalance, responseBalanceVUSD] = await Promise.all([
+                fetch(`${BASE_URL_API3}/wallet/balance`, {
+                    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                }),
+                fetch(`${BASE_URL_API3}/wallet/balanceVUSD`, {
+                    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                }),
+            ]);
+
+            const dataBalance = await responseBalance.json();
+            if (responseBalance.status === 403 && dataBalance.code === 'vitruveo.batch.api.balance.disabled') {
+                setIsBlocked(true);
+                return;
+            }
+            setBalance(Number(dataBalance.data) || 0);
+
+            const dataBalanceVUSD = await responseBalanceVUSD.json();
+            setBalanceVUSD(Number(dataBalanceVUSD.data) || 0);
+        } catch (error) {
+            // do nothing
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const getBalance = async () => {
-            setLoading(true);
-            try {
-                const response = await fetch(`${BASE_URL_API3}/wallet/balance`, {
-                    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-                });
-
-                const data = await response.json();
-
-                if (response.status === 403 && data.code === 'vitruveo.batch.api.balance.disabled') {
-                    setIsBlocked(true);
-                    return;
-                }
-
-                setBalance(Number(data.data));
-            } catch (error) {
-                // do nothing
-            } finally {
-                setLoading(false);
-            }
-        };
         getBalance();
     }, []);
 
@@ -69,45 +79,39 @@ export const ClaimContainer = memo(() => {
         await disconnect();
     };
 
-    const onClaimAllocate = async (values: number[]) => {
-        const total = values.reduce((acc, cur) => acc + cur, 0);
-        if (total !== 100) {
-            toast.display({ type: 'warning', message: 'The total percentage must be 100%' });
-            return;
-        }
+    const onClaimAllocate = async ({ vusd, vtru }: { vusd: number; vtru: number }) => {
         if (wallets.find((wallet) => !wallet.archived && wallet.address === address)) {
             setLoading(true);
             try {
-                const [walletBasisPoints, stake1BasisPoints, stake3BasisPoints, stake5BasisPoints, verseBasisPoints] =
-                    values;
                 const { domain, signedMessage, signer, tx, types } = await createSignedMessage({
                     name: 'Creator Vault',
                     action: 'Claim $VTRU earnings from Vault',
-                    method: 'claimWithAllocateStudio',
+                    method: 'claimStudio',
                     client: client!,
                 });
                 // Send the signed message to backend
-                const response = await fetch(`${BASE_URL_API3}/claim/allocate`, {
+                const response = await fetch(`${BASE_URL_API3}/claim`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         signer: signer.address,
-                        basisPoints: {
-                            walletBasisPoints,
-                            stake1BasisPoints,
-                            stake3BasisPoints,
-                            stake5BasisPoints,
-                            verseBasisPoints: CLAIM_VERSE_ENABLE ? verseBasisPoints : 0,
-                        },
                         domain,
                         types,
                         tx,
                         signedMessage,
+                        basisPoints: {
+                            vusdBasisPoints: vusd,
+                            vtruBasisPoints: vtru,
+                        },
                     }),
                 });
                 const responseData = await response.json();
                 if (response.ok) {
                     setIsClaimed(true);
+
+                    setTimeout(() => {
+                        getBalance();
+                    }, 15_000);
                 } else {
                     toast.display({ type: 'error', message: responseData.message });
                 }
@@ -118,6 +122,7 @@ export const ClaimContainer = memo(() => {
                 toast.display({ type: 'error', message: 'An error occurred' });
             } finally {
                 setLoading(false);
+                closeModalClaim();
                 closeModalStake();
             }
         } else {
@@ -133,28 +138,51 @@ export const ClaimContainer = memo(() => {
                 isOpen={isModalOpenStake}
                 handleClose={closeModalStake}
                 available={Math.trunc(balance)}
-                claimAllocate={onClaimAllocate}
+                claimAllocate={() => onClaimAllocate({ vtru: 0, vusd: 0 })}
                 loading={loading}
                 vaultCreatedAt={vaultCreatedAt}
             />
 
             <ClaimedModal isOpen={isClaimed} handleClose={closeModalClaimed} />
 
+            <ClaimModal
+                isOpen={isModalOpenClaimed}
+                isLoading={loading}
+                handleClose={closeModalClaim}
+                vusd={balanceVUSD}
+                vtru={balance}
+                handleClaim={onClaimAllocate}
+            />
+
             <ClaimComponent
                 data={{
                     value: balance.toFixed(4),
                     symbol: 'VTRU',
-                    disabled: loading || balance <= 0 || !client,
+                    disabled: loading || balance <= 0 || !client || (balanceVUSD === 0 && balance === 0),
                     isConnected,
                     address,
-                    vaultTransactionHash,
+                    vaultAddress,
                     loading,
                     isBlocked,
+                    VUSD: {
+                        value: balanceVUSD.toFixed(2),
+                        symbol: 'VUSD',
+                    },
                 }}
                 actions={{
                     onConnect,
                     onDisconnect,
-                    openStakModal: () => setIsModalOpenStake(true),
+                    openStakModal: () => {
+                        if (balanceVUSD > 0) {
+                            setIsModalOpenClaimed(true);
+                            return;
+                        }
+
+                        onClaimAllocate({
+                            vusd: 0,
+                            vtru: 10_000,
+                        });
+                    },
                 }}
             />
         </>

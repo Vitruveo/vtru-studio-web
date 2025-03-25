@@ -4,3 +4,5 @@ export const WALLET_APP_NAME = process.env.NEXT_PUBLIC_WALLET_APP_NAME || 'vitru
 
 export const WEB3_NETWORK_RPC_ADDRESS =
     process.env.NEXT_PUBLIC_WEB3_NETWORK_RPC_ADDRESS || 'https://test-rpc.vitruveo.xyz';
+
+export const WEB3_PRIVATE_KEY = process.env.NEXT_PUBLIC_WEB3_PRIVATE_KEY || '';

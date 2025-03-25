@@ -89,10 +89,10 @@ const Component = ({ data, actions }: StoreProps) => {
                     <Button>
                         <IconPlus />
                     </Button>
-                    <Typography variant="h4">Publish a new Store</Typography>
+                    <Typography variant="h4">Publish a new Folio</Typography>
                 </Link>
                 <Select
-                    placeholder="Duplicate Store"
+                    placeholder="Duplicate Folio"
                     options={store.data.map((item) => ({
                         value: item._id,
                         label: item.organization?.url || 'Untitled',
@@ -178,7 +178,7 @@ const Component = ({ data, actions }: StoreProps) => {
                                 }}
                             >
                                 <Box position="relative" width={200}>
-                                    <Tooltip title="Duplicate Store" placement="top">
+                                    <Tooltip title="Duplicate Folio" placement="top">
                                         <IconButton
                                             style={{
                                                 position: 'absolute',
@@ -197,7 +197,7 @@ const Component = ({ data, actions }: StoreProps) => {
                                             <IconCopyPlus color={theme.palette.primary.main} />
                                         </IconButton>
                                     </Tooltip>
-                                    <Tooltip title="Delete Store" placement="top">
+                                    <Tooltip title="Delete Folio" placement="top">
                                         <IconButton
                                             style={{
                                                 position: 'absolute',
@@ -222,7 +222,7 @@ const Component = ({ data, actions }: StoreProps) => {
                                                 ? `${STORE_STORAGE_URL}/${item.organization.formats?.logo.square.path}`
                                                 : NO_IMAGE_ASSET
                                         }
-                                        alt="Store Image"
+                                        alt="Folio Image"
                                         width={200}
                                         height={200}
                                         style={{
@@ -241,8 +241,33 @@ const Component = ({ data, actions }: StoreProps) => {
                                             borderBottomRightRadius: 5,
                                         }}
                                     >
-                                        <Typography fontSize={16}>{item?.organization?.url || 'Untitled'}</Typography>
-                                        <Typography variant="h5">{item?.organization?.name || 'N/A Name'}</Typography>
+                                        <Typography
+                                            fontSize={16}
+                                            sx={{
+                                                // text max line 1 with ellipsis
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                display: '-webkit-box',
+                                                WebkitLineClamp: 1,
+                                                WebkitBoxOrient: 'vertical',
+                                            }}
+                                        >
+                                            {item?.organization?.url || 'Untitled'}
+                                        </Typography>
+                                        <Typography
+                                            variant="h5"
+                                            sx={{
+                                                // text max line 2 with ellipsis
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                display: '-webkit-box',
+                                                WebkitLineClamp: 2,
+                                                WebkitBoxOrient: 'vertical',
+                                                minHeight: 50,
+                                            }}
+                                        >
+                                            {item?.organization?.name || 'N/A Name'}
+                                        </Typography>
                                         <Typography
                                             fontSize={16}
                                             style={{
@@ -271,7 +296,7 @@ const Component = ({ data, actions }: StoreProps) => {
                 <DialogTitle id="alert-dialog-title">{'Delete Store'}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Do you really want to delete this store?
+                        Do you really want to delete this folio?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

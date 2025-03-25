@@ -237,11 +237,7 @@ export default function Home() {
                 <Box
                     pr={1}
                     sx={{
-                        maxHeight: lgUp
-                            ? 'calc(100vh - 100px)'
-                            : mdUp || smUp
-                                ? 'calc(100vh - 400px)'
-                                : 'calc(100vh - 500px)',
+                        maxHeight: 'calc(100vh - 100px)',
                         overflowY: 'scroll',
                         overflowX: 'hidden',
                     }}
@@ -319,7 +315,7 @@ export default function Home() {
                                     justifyContent={'space-between'}
                                     width={'100%'}
                                 >
-                                    <Typography sx={{ fontSize: 22 }}>Consign a new asset</Typography>
+                                    <Typography sx={{ fontSize: 22 }}>Consign a new Artwork</Typography>
                                     <RSelect
                                         placeholder="Duplicate asset and consign from..."
                                         options={assets.data.map((asset) => ({
@@ -539,38 +535,38 @@ export default function Home() {
                                         {!['Pending', 'Sold', 'Listed'].includes(
                                             getStatus(asset.status, asset.mintExplorer)
                                         ) && (
-                                                <Tooltip title="Delete asset" placement="top">
-                                                    <button
-                                                        style={{
-                                                            position: 'absolute',
-                                                            top: 60,
-                                                            right: 10,
-                                                            backgroundColor: '#fff',
-                                                            color: '#000',
-                                                            zIndex: 1,
-                                                            padding: '5px',
-                                                            borderRadius: '5px',
-                                                            cursor: 'pointer',
-                                                            transition: '0.3s',
-                                                            border: '1px solid #fff',
-                                                        }}
-                                                        onClick={(event) => {
-                                                            event.stopPropagation();
-                                                            handleDeleteClick(asset._id);
-                                                        }}
-                                                        onMouseEnter={(event) => {
-                                                            event.currentTarget.style.backgroundColor = '#000';
-                                                            event.currentTarget.style.borderColor = '#ff0000';
-                                                        }}
-                                                        onMouseLeave={(event) => {
-                                                            event.currentTarget.style.backgroundColor = '#fff';
-                                                            event.currentTarget.style.borderColor = '#fff';
-                                                        }}
-                                                    >
-                                                        <IconTrash size={20} color="#ff0000" />
-                                                    </button>
-                                                </Tooltip>
-                                            )}
+                                            <Tooltip title="Delete asset" placement="top">
+                                                <button
+                                                    style={{
+                                                        position: 'absolute',
+                                                        top: 60,
+                                                        right: 10,
+                                                        backgroundColor: '#fff',
+                                                        color: '#000',
+                                                        zIndex: 1,
+                                                        padding: '5px',
+                                                        borderRadius: '5px',
+                                                        cursor: 'pointer',
+                                                        transition: '0.3s',
+                                                        border: '1px solid #fff',
+                                                    }}
+                                                    onClick={(event) => {
+                                                        event.stopPropagation();
+                                                        handleDeleteClick(asset._id);
+                                                    }}
+                                                    onMouseEnter={(event) => {
+                                                        event.currentTarget.style.backgroundColor = '#000';
+                                                        event.currentTarget.style.borderColor = '#ff0000';
+                                                    }}
+                                                    onMouseLeave={(event) => {
+                                                        event.currentTarget.style.backgroundColor = '#fff';
+                                                        event.currentTarget.style.borderColor = '#fff';
+                                                    }}
+                                                >
+                                                    <IconTrash size={20} color="#ff0000" />
+                                                </button>
+                                            </Tooltip>
+                                        )}
 
                                         {isVideoExtension(asset.image) ? (
                                             <video

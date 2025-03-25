@@ -1,5 +1,12 @@
 import { uniqueId } from 'lodash';
-import { IconPhotoUp, IconBrandWechat, IconTrendingUp, IconUser, IconLogout } from '@tabler/icons-react';
+import {
+    IconPhotoUp,
+    IconBrandWechat,
+    IconTrendingUp,
+    IconUser,
+    IconLogout,
+    IconFolderPlus,
+} from '@tabler/icons-react';
 
 interface MenuitemsType {
     [x: string]: any;
@@ -27,7 +34,7 @@ const Menuitems: MenuitemsType[] = [
     {
         id: uniqueId(),
         title: 'studio.sidebar.store',
-        icon: IconPhotoUp,
+        icon: IconFolderPlus,
         href: '/stores',
     },
     {

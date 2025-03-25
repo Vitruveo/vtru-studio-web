@@ -11,7 +11,7 @@ export const Review = () => {
     const dispatch = useDispatch();
     const { values } = useFormikContext<{ [key: string]: any }>();
     const [debouncedValues, setDebouncedValues] = useState(values);
-    const { results } = useSelector((state) => state.stores.selectedStore);
+    const { results, id } = useSelector((state) => state.stores.selectedStore);
 
     useEffect(() => {
         const handler = setTimeout(() => {
@@ -41,6 +41,7 @@ export const Review = () => {
                             exclude: values.exclude,
                         },
                         colorPrecision: values.context?.precision,
+                        storesId: id,
                     })
                 );
                 dispatch(storesActionsCreators.setSelectStoreResults(response));

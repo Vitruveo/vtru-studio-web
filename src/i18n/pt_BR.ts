@@ -101,9 +101,8 @@ const language: Translation = {
     'studio.consignArtwork.assetMedia.assets': 'Arquivos de Mídia',
 
     'studio.consignArtwork.assetMedia.definition': (data: { definition: 'landscape' | 'square' | 'portrait' }) => {
-        return `${
-            data.definition === 'landscape' ? 'Paisagem' : data.definition === 'portrait' ? 'Retrato' : 'Quadrado'
-        }`;
+        return `${data.definition === 'landscape' ? 'Paisagem' : data.definition === 'portrait' ? 'Retrato' : 'Quadrado'
+            }`;
     },
     'studio.consignArtwork.assetMedia.image': 'imagem',
     'studio.consignArtwork.assetMedia.max': (data: { seconds: number }) =>
@@ -591,12 +590,11 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.awardUrl': 'URL do Prêmio',
     'studio.consignArtwork.assetMetadata.field.awardUrl.description': 'Link para informações do prêmio',
     'studio.consignArtwork.assetMetadata.field.errors': (data) =>
-        `${
-            data.message === 'required' || data.message === 'minItems'
-                ? 'Campo obrigatório'
-                : data.message === 'format'
-                  ? 'Formato inválido'
-                  : ''
+        `${data.message === 'required' || data.message === 'minItems'
+            ? 'Campo obrigatório'
+            : data.message === 'format'
+                ? 'Formato inválido'
+                : ''
         }`,
 
     /* Licenças */
@@ -776,7 +774,7 @@ const language: Translation = {
     /* Sidebar */
     'studio.sidebar.consign': 'Consignar Obra de Arte',
     'studio.sidebar.community': 'Apoio Comunitário',
-    'studio.sidebar.store': 'Loja',
+    'studio.sidebar.store': 'Publicar Folio',
     'studio.sidebar.truLevel': 'Níveis de Criador',
     'studio.sidebar.profile': 'Perfil',
 

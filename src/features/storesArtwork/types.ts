@@ -48,6 +48,7 @@ export interface GetArtworkQuantityParams {
     colorPrecision: number;
     hasBts: string;
     filters: Artworks;
+    storesId: string;
 }
 
 export interface GetArtsAndArtistsParams {
