@@ -162,7 +162,7 @@ const Component = ({ data, actions }: ComponentProps) => {
                                 isFile(store.organization?.formats?.logo?.horizontal?.path)
                                     ? URL.createObjectURL(store.organization?.formats?.logo?.horizontal?.path)
                                     : `${STORE_STORAGE_URL}/${store.organization?.formats?.logo?.horizontal?.path}` ||
-                                      ''
+                                    ''
                             }
                             style={{ width: '100%' }}
                         />

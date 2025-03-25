@@ -695,13 +695,18 @@ const language: Translation = {
         `${data.amount} de ${data.from} Licenças Ativas`,
 
     'studio.consignArtwork.licenses.print.description':
-        'Esta licença torna a obra de arte disponível para os usuários finais para impressão em um único item físico usando a tecnologia Print-on-Demand (POD). A licença é livremente transferível até o ponto de impressão, após o qual é transferível apenas para o proprietário do item físico.',
+        'Esta licença disponibiliza a obra de arte para os usuários finais imprimirem um único item físico usando a tecnologia de Impressão sob Demanda (POD). A licença só é ativada se você tiver enviado Mídia de Impressão na seção "Mídia de Ativos".',
     'studio.consignArtwork.licenses.print.enable':
         'Ative esta licença se você deseja que os usuários finais usem sua arte para aplicações de impressão sob demanda (POD). Esta licença é para impressão individual; a impressão em massa não é permitida.',
-    'studio.consignArtwork.licenses.print.singlePrint.title': 'Impressão Única',
+    'studio.consignArtwork.licenses.print.singlePrint.title': 'Licença de Impressão',
     'studio.consignArtwork.licenses.print.singlePrint.description':
-        '“Preço Unitário” é o preço da obra de arte em dólares americanos para uma única impressão.',
-    'studio.consignArtwork.licenses.print.singlePrint.field': 'Preço Unitário (USD)',
+        'O "Preço de Mercadoria" é o preço de uma licença para imprimir em mercadorias como canecas, bonés, camisetas, bolsas, etc.',
+    'studio.consignArtwork.licenses.print.singlePrint.description2':
+        'O "Preço de Exibição" é o preço de uma licença para imprimir em materiais cujo principal objetivo é exibir a obra de arte, como tela, alumínio, pôster, etc. Ele é expresso em centímetros quadrados para que possa ser aplicado a produtos de exibição de tamanhos variáveis.',
+    'studio.consignArtwork.licenses.print.singlePrint.field': 'Preço de Mercadoria',
+    'studio.consignArtwork.licenses.print.singlePrint2.field': '(USD)',
+    'studio.consignArtwork.licenses.print.displayPrice.field': 'Preço de Exibição',
+    'studio.consignArtwork.licenses.print.displayPrice2.field': '(USD por cm²)',
 
     'studio.consignArtwork.licenses.remix.description':
         'Esta licença torna a obra de arte disponível para os usuários finais para uso em aplicações Remix usando a',

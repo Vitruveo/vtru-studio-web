@@ -26,6 +26,8 @@ import {
     signUpdateAssetStatus,
     updateAssetStatus,
     updateAssetHeader,
+    updatePrintLicensePrice,
+    updatePrintLicenseAdded,
 } from './requests';
 import {
     AssetSendRequestUploadApiRes,
@@ -50,6 +52,9 @@ import {
     SignerUpdateAssetStatusParams,
     UpdateAssetStatusReq,
     UpdateAssetHeaderReq,
+    UpdatePrintLicensePriceReq,
+    Asset,
+    UpdatePrintLicenseAddedReq,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { assetActionsCreators } from './slice';
@@ -63,10 +68,27 @@ import { FormatsAuxiliayMedia } from '@/app/(main)/consign/auxiliaryMedia/types'
 
 import { BASE_URL_API } from '@/constants/api';
 import { userActionsCreators } from '../user/slice';
-import { checkStepProgress } from '@/app/(main)/consign/licenses/nft';
 import { clientToSigner, network, provider } from '@/services/web3';
 import schema from '@/services/web3/contracts.json';
 import { UpdatedAssetStoresVisibilityReq } from '../common/types';
+import { maxPrice, minPrice } from '@/app/(main)/components/stores/filters/licenseItem';
+import { StepStatus } from '../consign/types';
+
+export const checkStepProgress = ({
+    values,
+    formats,
+}: {
+    values: LicensesFormValues;
+    formats: Asset['formats'];
+}): StepStatus => {
+    if (!!formats?.print?.path !== !!values.print.added) return 'inProgress';
+
+    return Object.values(values).filter((v) => v?.added).length &&
+        values.nft.single.editionPrice >= minPrice &&
+        values.nft.single.editionPrice <= maxPrice
+        ? 'completed'
+        : 'inProgress';
+};
 
 export function requestDeleteURLThunk(payload: RequestDeleteFilesReq): ReduxThunkAction<Promise<any>> {
     return async function () {
@@ -144,7 +166,10 @@ export function getAssetThunk(id: string): ReduxThunkAction<Promise<any>> {
                     dispatch(
                         consignArtworkActionsCreators.changeStatusStep({
                             stepId: 'licenses',
-                            status: checkStepProgress({ values: response.data.licenses }),
+                            status: checkStepProgress({
+                                values: response.data.licenses,
+                                formats: response.data.formats,
+                            }),
                         })
                     );
                 }
@@ -457,15 +482,29 @@ export function assetMediaThunk(payload: {
         if (payload.deleteFormats?.length) dispatch(assetActionsCreators.removeFormats(payload.deleteFormats));
         dispatch(assetActionsCreators.changeLoadingMediaData('finished'));
 
-        const currentFormats = Object.entries(getState().asset.formats).filter(([key, _value]) => key !== 'print');
+        const currentFormats = Object.entries(getState().asset.formats || {}).filter(
+            ([key, _value]) => key !== 'print'
+        );
         const hasFiles = currentFormats.every(([_key, value]) => value.path);
 
         const currentFormatsFields = Object.entries(payload?.formatsFields || {}).filter(
             ([key, _value]) => key !== 'print'
         );
+
         const hasFilesFormatFields = currentFormatsFields.every(([_key, value]) => value.file);
 
         if (hasFiles && hasFilesFormatFields && !payload.deleteFormats?.length) {
+            dispatch(
+                validateUploadedMediaThunk({
+                    assetId: getState().asset._id,
+                })
+            );
+        }
+
+        // Print
+        const hasPrintFile = getState().asset.formats?.print?.path;
+        const hasPrintFileFields = payload?.formatsFields?.print?.file;
+        if (hasPrintFile && hasPrintFileFields && !payload.deleteFormats?.length) {
             dispatch(
                 validateUploadedMediaThunk({
                     assetId: getState().asset._id,
@@ -1153,5 +1192,27 @@ export function updateAssetStatusThunk(payload: UpdateAssetStatusReq): ReduxThun
             assetKey,
             status,
         });
+    };
+}
+
+export function updatePrintLicensePriceThunk(payload: UpdatePrintLicensePriceReq): ReduxThunkAction<Promise<boolean>> {
+    return async function () {
+        return updatePrintLicensePrice(payload)
+            .then(() => true)
+            .catch((error) => {
+                console.log(error);
+                return false;
+            });
+    };
+}
+
+export function updatePrintLicenseAddedThunk(payload: UpdatePrintLicenseAddedReq): ReduxThunkAction<Promise<boolean>> {
+    return async function () {
+        return updatePrintLicenseAdded(payload)
+            .then(() => true)
+            .catch((error) => {
+                console.log(error);
+                return false;
+            });
     };
 }

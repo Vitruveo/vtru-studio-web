@@ -7,26 +7,25 @@ import Typography from '@mui/material/Typography';
 import { Box } from '@mui/material';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { consignArtworkActionsCreators } from '@/features/consign/slice';
-import { licenseThunk } from '@/features/asset/thunks';
+import { checkStepProgress, licenseThunk } from '@/features/asset/thunks';
 import { useI18n } from '@/app/hooks/useI18n';
 import { LicensesFormValues } from './types';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
 import { ModalBackConfirm } from '../modalBackConfirm';
-import Nft, { checkStepProgress } from './nft';
+import Nft from './nft';
 import Print from './print';
 import Stream from './stream';
-import Remix from './remix';
+
 import ArtCards from './artCard';
 import { useToastr } from '@/app/hooks/useToastr';
 import { WalletProvider } from '../../components/apps/wallet';
 
 const allLicenses = {
     NFT: Nft,
-    ArtCards: ArtCards,
-    Stream: Stream,
     Print: Print,
-    Remix: Remix,
+    Stream: Stream,
+    ArtCards: ArtCards,
 };
 
 export default function Licenses() {
@@ -41,12 +40,8 @@ export default function Licenses() {
     const { licenses: licensesState, formats } = useSelector((state) => state.asset);
     const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
     const formData = useSelector((state) => state.asset.assetMetadata?.context.formData);
-    const selectPreviewAsset = Object.entries(formats).find(([key]) => key === 'print');
-    const printExists = selectPreviewAsset && selectPreviewAsset[1].file;
 
-    const allLicensesFiltered: Partial<Record<keyof typeof allLicenses, typeof Remix>> = printExists
-        ? allLicenses
-        : Object.fromEntries(Object.entries(allLicenses).filter(([key]) => key !== 'Print'));
+    const allLicensesFiltered: Partial<Record<keyof typeof allLicenses, typeof Stream>> = allLicenses;
 
     const texts = {
         nextButton: language['studio.consignArtwork.form.next.button'],
@@ -82,7 +77,7 @@ export default function Licenses() {
               nft: {
                   version: '1',
                   added: true,
-                  autoStake: licensesState?.nft.autoStake || false,
+                  autoStake: licensesState?.nft?.autoStake || false,
                   license: 'CC BY-NC-ND',
                   elastic: {
                       editionPrice: 0,
@@ -110,13 +105,8 @@ export default function Licenses() {
               print: {
                   version: '1',
                   added: false,
-                  unitPrice: 1,
-                  availableLicenses: 1,
-              },
-              remix: {
-                  version: '1',
-                  added: false,
-                  unitPrice: 1,
+                  merchandisePrice: 1,
+                  displayPrice: 1,
                   availableLicenses: 1,
               },
           };
@@ -129,7 +119,7 @@ export default function Licenses() {
                 dispatch(
                     consignArtworkActionsCreators.changeStatusStep({
                         stepId: 'licenses',
-                        status: checkStepProgress({ values }),
+                        status: checkStepProgress({ values, formats }),
                     })
                 );
 
@@ -170,21 +160,12 @@ export default function Licenses() {
             values.nft.availableLicenses = 1;
         }
 
-        if (values.remix.added && !values.remix.availableLicenses) {
-            toast.display({ type: 'error', message: 'The available field must be greater than 0 on REMIX' });
-            return;
-        }
-
         if (values.print.added && !values.print.availableLicenses) {
             toast.display({ type: 'error', message: 'The available field must be greater than 0 on PRINT' });
             return;
         }
 
-        if (
-            values.nft.availableLicenses < 1 ||
-            values.remix.availableLicenses < 1 ||
-            values.print.availableLicenses < 1
-        ) {
+        if (values.nft.availableLicenses < 1 || values.print.availableLicenses < 1) {
             toast.display({ type: 'error', message: 'The available field must be greater than 0' });
             return;
         }
@@ -210,7 +191,7 @@ export default function Licenses() {
             <PageContainerFooter
                 submitText={texts.nextButton}
                 title={texts.consignArtworkTitle}
-                stepStatus={checkStepProgress({ values })}
+                stepStatus={checkStepProgress({ values, formats })}
                 stepNumber={3}
                 backOnclick={handleOpenBackModal}
             >

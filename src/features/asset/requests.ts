@@ -24,6 +24,8 @@ import {
     SignUpdateAssetStatusReq,
     UpdateAssetStatusReq,
     UpdateAssetHeaderReq,
+    UpdatePrintLicensePriceReq,
+    UpdatePrintLicenseAddedReq,
 } from './types';
 import { apiService } from '@/services/api';
 import { assetActionsCreators } from './slice';
@@ -224,4 +226,16 @@ export async function signUpdateAssetStatus({ signer, domain, signedMessage, tx,
 
 export async function updateAssetStatus({ assetKey, status }: UpdateAssetStatusReq) {
     return api3Service.patch(`/assets/updateAssetStatus/${assetKey}`, { status });
+}
+
+export async function updatePrintLicensePrice({
+    assetKey,
+    merchandisePrice,
+    displayPrice,
+}: UpdatePrintLicensePriceReq) {
+    return apiService.patch(`/assets/${assetKey}/printLicense/price`, { merchandisePrice, displayPrice });
+}
+
+export async function updatePrintLicenseAdded({ assetKey, added }: UpdatePrintLicenseAddedReq) {
+    return apiService.patch(`/assets/${assetKey}/printLicense/added`, { added });
 }

@@ -363,6 +363,17 @@ export interface UpdateAssetHeaderReq {
     };
 }
 
+export interface UpdatePrintLicensePriceReq {
+    assetKey: string;
+    merchandisePrice: number;
+    displayPrice: number;
+}
+
+export interface UpdatePrintLicenseAddedReq {
+    assetKey: string;
+    added: boolean;
+}
+
 export type UpdateAssetStepApiRes = APIResponse<string>;
 export type UploadIPFSByAssetIdApiRes = void;
 export type CreateContractApiRes = void;

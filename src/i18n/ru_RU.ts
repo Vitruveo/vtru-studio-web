@@ -856,13 +856,18 @@ const language: Translation = {
         `${data.amount} из ${data.from} активных лицензий`,
 
     'studio.consignArtwork.licenses.print.description':
-        'Эта лицензия предоставляет произведение конечным пользователям для печати на один физический объект с использованием технологии печати по требованию (POD). Лицензия свободно передается до момента первой печати, после чего она передается исключительно владельцу физического объекта.',
+        'Эта лицензия позволяет конечным пользователям печатать произведение искусства на одном физическом объекте с использованием технологии печати по запросу (POD). Лицензия активируется только в том случае, если вы загрузили печатные материалы в разделе «Медиа-активы».',
     'studio.consignArtwork.licenses.print.enable':
         'Включите эту лицензию, если хотите, чтобы конечные пользователи использовали ваше искусство для приложений печати по требованию (POD). Эта лицензия предназначена для индивидуальной печати; массовая печать не разрешена.',
-    'studio.consignArtwork.licenses.print.singlePrint.title': 'Одиночная печать',
+    'studio.consignArtwork.licenses.print.singlePrint.title': 'Лицензия на печать',
     'studio.consignArtwork.licenses.print.singlePrint.description':
-        '“Цена за единицу” - это цена произведения искусства в долларах США за одну печать.',
-    'studio.consignArtwork.licenses.print.singlePrint.field': 'Цена за единицу (USD)',
+        '"Цена на товары" – это стоимость лицензии на печать на товарах, таких как кружки, кепки, футболки, сумки и т. д.',
+    'studio.consignArtwork.licenses.print.singlePrint.description2':
+        '"Цена за отображение" – это стоимость лицензии на печать на материалах, основная цель которых – демонстрация произведения искусства, таких как холст, алюминий, постер и т. д. Цена выражается в квадратных сантиметрах, чтобы ее можно было применять к продуктам разного размера.',
+    'studio.consignArtwork.licenses.print.singlePrint.field': 'Цена на товары',
+    'studio.consignArtwork.licenses.print.singlePrint2.field': '(USD)',
+    'studio.consignArtwork.licenses.print.displayPrice.field': 'Цена за отображение',
+    'studio.consignArtwork.licenses.print.displayPrice2.field': '(USD за кв. см)',
 
     'studio.consignArtwork.licenses.remix.description':
         'Эта лицензия позволяет конечным пользователям использовать работу в приложениях создания ремиксов с использованием',

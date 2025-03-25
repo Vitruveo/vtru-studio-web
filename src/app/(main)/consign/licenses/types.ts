@@ -29,13 +29,8 @@ export interface LicensesFormValues {
     print: {
         version: string;
         added: boolean;
-        unitPrice: number;
-        availableLicenses: number;
-    };
-    remix: {
-        version: string;
-        added: boolean;
-        unitPrice: number;
+        merchandisePrice: number;
+        displayPrice: number;
         availableLicenses: number;
     };
     artCards: {
