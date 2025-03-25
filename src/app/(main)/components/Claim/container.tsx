@@ -158,7 +158,7 @@ export const ClaimContainer = memo(() => {
                 data={{
                     value: balance.toFixed(4),
                     symbol: 'VTRU',
-                    disabled: loading || balance <= 0 || !client || (balanceVUSD <= 0 && balance <= 0),
+                    disabled: loading || balance <= 0 || !client || (balanceVUSD === 0 && balance === 0),
                     isConnected,
                     address,
                     vaultAddress,
@@ -174,7 +174,7 @@ export const ClaimContainer = memo(() => {
                     onDisconnect,
                     openStakModal: () => {
                         if (balanceVUSD > 0) {
-                            setIsModalOpenStake(true);
+                            setIsModalOpenClaimed(true);
                             return;
                         }
 
