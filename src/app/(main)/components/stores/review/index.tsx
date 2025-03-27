@@ -39,6 +39,7 @@ export const Review = () => {
                             artists: values.artists,
                             portfolio: values.portfolio,
                             exclude: values.exclude,
+                            include: values.include,
                         },
                         colorPrecision: values.context?.precision,
                         storesId: id,

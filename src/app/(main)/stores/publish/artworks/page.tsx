@@ -9,7 +9,11 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    FormControl,
+    FormControlLabel,
     Grid,
+    Radio,
+    RadioGroup,
     Typography,
 } from '@mui/material';
 import { useDispatch, useSelector } from '@/store/hooks';
@@ -21,11 +25,14 @@ import { Review } from '@/app/(main)/components/stores/review';
 import { filterFalsyValues } from '@/utils/truthyObject';
 import { createStoreArtworkThunk } from '@/features/storesArtwork/thunks';
 import { type Artworks } from '@/features/stores/types';
+import Include from '@/app/(main)/components/stores/include/include';
+import { ReviewInclude } from '@/app/(main)/components/stores/include/reviewInclude';
 
 const Component = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const [openDialogSave, setOpenDialogSave] = useState(false);
+    const [selectedRadio, setSelectedRadio] = useState('filter');
     const formikRef = useRef<FormikProps<Artworks & { redirectPath: string }>>(null);
     const selectedStore = useSelector((state) => state.stores.selectedStore);
     const store = useSelector((state) => state.stores.data.data.find((item) => item._id === selectedStore.id));
@@ -33,7 +40,7 @@ const Component = () => {
     const handleSubmit = (values: Artworks & { redirectPath: string }) => {
         const filteredValues = filterFalsyValues({
             input: values,
-            keysToPreserve: ['general', 'context', 'taxonomy', 'artists', 'portfolio', 'exclude'],
+            keysToPreserve: ['general', 'context', 'taxonomy', 'artists', 'portfolio', 'exclude', 'include'],
         });
         if (filteredValues.context && !filteredValues.context.colors) {
             delete filteredValues.context.precision;
@@ -79,6 +86,7 @@ const Component = () => {
     const artists = store?.artworks?.artists || {};
     const portfolio = store?.artworks?.portfolio || {};
     const exclude = store?.artworks?.exclude || {};
+    const include = store?.artworks?.include || {};
 
     return (
         <Box display={'grid'} gridTemplateRows={'1fr auto'} height="calc(100vh - 64px)">
@@ -92,6 +100,12 @@ const Component = () => {
                         { title: 'Artworks' },
                     ]}
                 />
+                <FormControl sx={{ paddingInline: 2 }}>
+                    <RadioGroup row value={selectedRadio} onChange={(e) => setSelectedRadio(e.target.value)}>
+                        <FormControlLabel value="filter" control={<Radio />} label="Filter" />
+                        <FormControlLabel value="select" control={<Radio />} label="Select" />
+                    </RadioGroup>
+                </FormControl>
                 <Formik
                     innerRef={formikRef}
                     initialValues={{
@@ -144,19 +158,35 @@ const Component = () => {
                             artists: exclude.artists || [],
                             onlyInStore: exclude.onlyInStore || false,
                         },
+                        include: {
+                            arts: include.arts || [],
+                            artists: include.artists || [],
+                        },
                         redirectPath: '/stores/publish',
                     }}
                     onSubmit={handleSubmit}
                 >
                     <Form>
-                        <Grid container spacing={4}>
-                            <Grid item xs={6}>
-                                <TabSliders />
+                        {selectedRadio === 'filter' && (
+                            <Grid container spacing={4}>
+                                <Grid item xs={6}>
+                                    <TabSliders />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Review />
+                                </Grid>
                             </Grid>
-                            <Grid item xs={6}>
-                                <Review />
+                        )}
+                        {selectedRadio === 'select' && (
+                            <Grid container spacing={4}>
+                                <Grid item xs={6}>
+                                    <Include />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <ReviewInclude />
+                                </Grid>
                             </Grid>
-                        </Grid>
+                        )}
                         <Dialog
                             open={openDialogSave}
                             onClose={() => setOpenDialogSave(false)}

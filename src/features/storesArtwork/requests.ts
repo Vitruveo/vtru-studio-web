@@ -114,22 +114,22 @@ export async function getArtsAndArtists({
     page,
     limit,
 }: GetArtsAndArtistsParams): Promise<ResponseAssets> {
-    delete filters.context?.precision;
+    delete filters?.context?.precision;
     const URL_ASSETS_SEARCH = '/assets/public/search';
 
     let buildQuery: BuidlQuery = {};
     if (onlyInStore) {
-        const wallets = filters.portfolio?.wallets;
+        const wallets = filters?.portfolio?.wallets;
         const buildFilters = {
-            context: filters.context,
-            taxonomy: filters.taxonomy,
-            creators: filters.artists,
+            context: filters?.context,
+            taxonomy: filters?.taxonomy,
+            creators: filters?.artists,
         };
 
         buildQuery = Object.entries(buildFilters || {}).reduce<BuidlQuery>((acc, cur) => {
             const [key, value] = cur;
 
-            Object.entries(value).forEach((item) => {
+            Object.entries(value || {}).forEach((item) => {
                 const [keyFilter, valueFilter] = item as [string, string | string[]];
 
                 if (!valueFilter) return;
