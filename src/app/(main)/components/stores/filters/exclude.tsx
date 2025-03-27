@@ -31,6 +31,10 @@ interface FormValues {
         artists: { value: string; label: string }[];
         onlyInStore: boolean;
     };
+    include: {
+        arts: { value: string; label: string }[];
+        artists: { value: string; label: string }[];
+    };
 }
 
 const Exclude = () => {
@@ -90,6 +94,7 @@ const Exclude = () => {
                     artists: values.artists,
                     portfolio: values.portfolio,
                     exclude: values.exclude,
+                    include: values.include,
                 },
                 colorPrecision: values.context?.precision,
                 onlyInStore: isOnlyInStore,

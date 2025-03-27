@@ -69,6 +69,7 @@ export const Review = () => {
                 <Grid container spacing={4}>
                     {Object.entries(values)
                         .filter(([key, _value]) => key !== 'redirectPath')
+                        .filter(([key, _value]) => key !== 'include')
                         .map((element) => {
                             const [key, value] = element;
                             return <SelectedFilter key={key} title={key} content={value} />;

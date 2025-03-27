@@ -3,6 +3,7 @@ import {
     BuidlQuery,
     Collections,
     CreateStoreArtworkParams,
+    GetArtsAndArtistsForIncludeParams,
     GetArtsAndArtistsParams,
     GetArtworkQuantityParams,
     Names,
@@ -114,22 +115,22 @@ export async function getArtsAndArtists({
     page,
     limit,
 }: GetArtsAndArtistsParams): Promise<ResponseAssets> {
-    delete filters?.context?.precision;
+    delete filters.context?.precision;
     const URL_ASSETS_SEARCH = '/assets/public/search';
 
     let buildQuery: BuidlQuery = {};
     if (onlyInStore) {
-        const wallets = filters?.portfolio?.wallets;
+        const wallets = filters.portfolio?.wallets;
         const buildFilters = {
-            context: filters?.context,
-            taxonomy: filters?.taxonomy,
-            creators: filters?.artists,
+            context: filters.context,
+            taxonomy: filters.taxonomy,
+            creators: filters.artists,
         };
 
         buildQuery = Object.entries(buildFilters || {}).reduce<BuidlQuery>((acc, cur) => {
             const [key, value] = cur;
 
-            Object.entries(value || {}).forEach((item) => {
+            Object.entries(value).forEach((item) => {
                 const [keyFilter, valueFilter] = item as [string, string | string[]];
 
                 if (!valueFilter) return;
@@ -166,6 +167,44 @@ export async function getArtsAndArtists({
         precision: colorPrecision || 0.7,
         showAdditionalAssets: false,
         hasBts,
+        sort: { order: 'latest', isIncludeSold: false },
+    });
+    return response.data || { data: [], tags: [], total: 0, limit: 0, page: 0, totalPage: 0, maxPrice: 0 };
+}
+
+export async function getArtsAndArtistsForInclude({
+    exclude,
+    search,
+    page,
+    limit,
+}: GetArtsAndArtistsForIncludeParams): Promise<ResponseAssets> {
+    const URL_ASSETS_SEARCH = '/assets/public/search';
+
+    const buildQuery: BuidlQuery = {};
+
+    if (exclude.arts && exclude.arts.length > 0) {
+        buildQuery['_id'] = {
+            // @ts-expect-error $nin is not typed
+            $nin: exclude.arts.map((item) => item.value.toString()),
+        };
+    }
+    if (exclude.artists && exclude.artists.length > 0) {
+        buildQuery['framework.createdBy'] = {
+            // @ts-expect-error $nin is not typed
+            $nin: exclude.artists.map((item) => item.value.toString()),
+        };
+    }
+
+    const response = await apiService.post<ResponseAssets>(URL_ASSETS_SEARCH, {
+        limit,
+        page,
+        query: buildQuery,
+        minPrice: 0,
+        maxPrice: 0,
+        name: search,
+        precision: 0.7,
+        showAdditionalAssets: false,
+        hasBts: '',
         sort: { order: 'latest', isIncludeSold: false },
     });
     return response.data || { data: [], tags: [], total: 0, limit: 0, page: 0, totalPage: 0, maxPrice: 0 };

@@ -4,12 +4,16 @@ import { Box, Button, List, Switch, TextField, Typography } from '@mui/material'
 import { ASSET_STORAGE_URL, NO_IMAGE_ASSET } from '@/constants/asset';
 import { useFormikContext } from 'formik';
 import { useDispatch } from '@/store/hooks';
-import { getArtsAndArtistsThunk, getCreatorAvatarThunk } from '@/features/storesArtwork/thunks';
+import { getArtsAndArtistsForIncludeThunk, getCreatorAvatarThunk } from '@/features/storesArtwork/thunks';
 import { ArtsAndArtistsList } from '@/features/storesArtwork/types';
 import MediaRender from '../MediaRender/mediaRender';
 
 interface FormValues {
     include: {
+        arts: { value: string; label: string }[];
+        artists: { value: string; label: string }[];
+    };
+    exclude: {
         arts: { value: string; label: string }[];
         artists: { value: string; label: string }[];
     };
@@ -51,8 +55,8 @@ const Include = () => {
 
     const fetchData = async () => {
         return await dispatch(
-            getArtsAndArtistsThunk({
-                onlyInStore: false,
+            getArtsAndArtistsForIncludeThunk({
+                exclude: values.exclude,
                 search: inputValue,
                 page: artsAndArtists?.page || 1,
                 limit: artsAndArtists?.limit || 20,
