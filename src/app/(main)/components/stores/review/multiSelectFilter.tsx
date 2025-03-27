@@ -47,6 +47,14 @@ const options: Record<string, { [key: string]: { label: string; value: string }[
     portfolio: {
         wallets: [],
     },
+    exclude: {
+        arts: [],
+        artists: [],
+    },
+    include: {
+        arts: [],
+        artists: [],
+    },
 };
 
 export const MultiSelectFilter = ({ content }: MultiSelectFilterProps) => {
@@ -59,6 +67,16 @@ export const MultiSelectFilter = ({ content }: MultiSelectFilterProps) => {
     };
 
     if (!content.value.length) return null;
+
+    const getItemTitle = (item: string | { value: string; label: string }): string => {
+        if (options[content.title][content.key].length) {
+            return options[content.title][content.key].find((option) => option.value === item)?.label || '';
+        }
+        if (content.title === 'exclude' || content.title === 'include') {
+            return (item as any).label;
+        }
+        return handleFormatWallet(item as string) || '';
+    };
 
     return (
         <Box display={'flex'} gap={1} flexWrap={'wrap'}>
