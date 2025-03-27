@@ -75,8 +75,6 @@ const Component = () => {
     const handleNext = () => {
         if (formikRef.current) {
             formikRef.current.setFieldValue('redirectPath', '/stores/publish/artworks');
-            console.log('formikRef.current?.values', formikRef.current?.values);
-
             handleSubmit(formikRef.current?.values);
         }
     };

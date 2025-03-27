@@ -13,6 +13,7 @@ import {
 } from './types';
 import { convertHexToRGB } from '@/utils/convertColors';
 import { APIResponse } from '../common/types';
+import { filter } from 'lodash';
 
 export async function getArtworkTags(): Promise<Tags[]> {
     const URL_ASSETS_SEARCH = '/assets/public/search';
@@ -83,9 +84,34 @@ export async function getArtworkQuantity({
         return acc;
     }, {});
 
-    if (wallets && wallets.length) {
+    if (wallets && wallets.length > 0) {
         buildQuery['mintExplorer.address'] = {
             $in: wallets,
+        };
+    }
+
+    if (
+        (filters.exclude?.arts && filters.exclude.arts.length > 0) ||
+        (filters.include?.arts && filters.include.arts.length > 0)
+    ) {
+        // @ts-expect-error $nin dont exist in type of BuidlQuery
+        buildQuery['_id'] = {
+            ...(filters.exclude.arts &&
+                filters.exclude.arts.length > 0 && { $nin: filters.exclude.arts.map((item) => item.value) }),
+            ...(filters.include.arts &&
+                filters.include.arts.length > 0 && { $in: filters.include.arts.map((item) => item.value) }),
+        };
+    }
+    if (
+        (filters.exclude?.artists && filters.exclude.artists.length > 0) ||
+        (filters.include?.artists && filters.include.artists.length > 0)
+    ) {
+        // @ts-expect-error $nin dont exist in type of BuidlQuery
+        buildQuery['framework.createdBy'] = {
+            ...(filters.exclude.artists &&
+                filters.exclude.artists.length > 0 && { $nin: filters.exclude.artists.map((item) => item.value) }),
+            ...(filters.include.artists &&
+                filters.include.artists.length > 0 && { $in: filters.include.artists.map((item) => item.value) }),
         };
     }
 
