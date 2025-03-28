@@ -123,14 +123,12 @@ export function getArtsAndArtistsThunk({
 }
 
 export function getArtsAndArtistsForIncludeThunk({
-    exclude,
     search,
     page,
     limit,
 }: GetArtsAndArtistsForIncludeParams): ReduxThunkAction<Promise<ArtsAndArtistsList>> {
     return async (_dispatch: any) => {
         const response = await getArtsAndArtistsForInclude({
-            exclude,
             search,
             page,
             limit,

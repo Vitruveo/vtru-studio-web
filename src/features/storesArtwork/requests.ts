@@ -88,28 +88,18 @@ export async function getArtworkQuantity({
         };
     }
 
-    if (
-        (filters.exclude?.arts && filters.exclude.arts.length > 0) ||
-        (filters.include?.arts && filters.include.arts.length > 0)
-    ) {
+    if (filters.exclude?.arts && filters.exclude.arts.length > 0) {
         // @ts-expect-error $nin dont exist in type of BuidlQuery
         buildQuery['_id'] = {
             ...(filters.exclude.arts &&
                 filters.exclude.arts.length > 0 && { $nin: filters.exclude.arts.map((item) => item.value) }),
-            ...(filters.include.arts &&
-                filters.include.arts.length > 0 && { $in: filters.include.arts.map((item) => item.value) }),
         };
     }
-    if (
-        (filters.exclude?.artists && filters.exclude.artists.length > 0) ||
-        (filters.include?.artists && filters.include.artists.length > 0)
-    ) {
+    if (filters.exclude?.artists && filters.exclude.artists.length > 0) {
         // @ts-expect-error $nin dont exist in type of BuidlQuery
         buildQuery['framework.createdBy'] = {
             ...(filters.exclude.artists &&
                 filters.exclude.artists.length > 0 && { $nin: filters.exclude.artists.map((item) => item.value) }),
-            ...(filters.include.artists &&
-                filters.include.artists.length > 0 && { $in: filters.include.artists.map((item) => item.value) }),
         };
     }
 
@@ -197,32 +187,16 @@ export async function getArtsAndArtists({
 }
 
 export async function getArtsAndArtistsForInclude({
-    exclude,
     search,
     page,
     limit,
 }: GetArtsAndArtistsForIncludeParams): Promise<ResponseAssets> {
     const URL_ASSETS_SEARCH = '/assets/public/search';
 
-    const buildQuery: BuidlQuery = {};
-
-    if (exclude.arts && exclude.arts.length > 0) {
-        buildQuery['_id'] = {
-            // @ts-expect-error $nin is not typed
-            $nin: exclude.arts.map((item) => item.value.toString()),
-        };
-    }
-    if (exclude.artists && exclude.artists.length > 0) {
-        buildQuery['framework.createdBy'] = {
-            // @ts-expect-error $nin is not typed
-            $nin: exclude.artists.map((item) => item.value.toString()),
-        };
-    }
-
     const response = await apiService.post<ResponseAssets>(URL_ASSETS_SEARCH, {
         limit,
         page,
-        query: buildQuery,
+        query: {},
         minPrice: 0,
         maxPrice: 0,
         name: search,
