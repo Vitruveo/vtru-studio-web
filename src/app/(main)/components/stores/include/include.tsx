@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { Box, Button, List, Switch, TextField, Typography } from '@mui/material';
-import { ASSET_STORAGE_URL, NO_IMAGE_ASSET } from '@/constants/asset';
+import { ASSET_STORAGE_URL, GENERAL_STORAGE_URL, NO_IMAGE_ASSET } from '@/constants/asset';
 import { useFormikContext } from 'formik';
 import { useDispatch } from '@/store/hooks';
 import { getArtsAndArtistsForIncludeThunk, getCreatorAvatarThunk } from '@/features/storesArtwork/thunks';
@@ -222,7 +222,7 @@ const ArtistItem = ({ id, name, isHide, onChange }: ArtistItemProps) => {
                 <Switch checked={isHide} onChange={() => onChange(id, name)} />
             </Box>
             <MediaRender
-                path={`${ASSET_STORAGE_URL}/${avatar}`}
+                path={`${GENERAL_STORAGE_URL}/${avatar}`}
                 width={150}
                 height={150}
                 alt={name}
