@@ -100,7 +100,7 @@ const Component = () => {
     const portfolio = store?.artworks?.portfolio || {};
     const exclude = store?.artworks?.exclude || {};
     const include = store?.artworks?.include || {};
-    const searchOption = store?.artworks?.searchOption || '';
+    const searchOption = store?.artworks?.searchOption || 'filter';
 
     return (
         <Box display={'grid'} gridTemplateRows={'1fr auto'} height="calc(100vh - 64px)">

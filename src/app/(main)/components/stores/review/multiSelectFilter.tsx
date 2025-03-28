@@ -17,7 +17,7 @@ import { countryData } from '@/utils/countryData';
 import { handleFormatWallet } from '../filters/portfolio';
 
 interface MultiSelectFilterProps {
-    content: { title: string; key: string; value: string[] };
+    content: { title: string; key: string; value: string[] | { value: string; label: string }[] };
 }
 
 const options: Record<string, { [key: string]: { label: string; value: string }[] }> = {
@@ -62,7 +62,12 @@ export const MultiSelectFilter = ({ content }: MultiSelectFilterProps) => {
     const handleDeleteITem = (title: string, key: string, value: string) => {
         setFieldValue(
             `${title}.${key}`,
-            content.value.filter((item) => item !== value)
+            content.value.filter((item) => {
+                if (typeof item === 'string') {
+                    return item !== value;
+                }
+                return item.value !== value;
+            })
         );
     };
 
@@ -80,19 +85,15 @@ export const MultiSelectFilter = ({ content }: MultiSelectFilterProps) => {
 
     return (
         <Box display={'flex'} gap={1} flexWrap={'wrap'}>
-            {content.value.map((item) => (
-                <Paper key={item} sx={{ padding: 1, display: 'flex' }}>
-                    <Typography variant="body1">
-                        {handleFormatWallet(
-                            options[content.title][content.key].length
-                                ? options[content.title][content.key].find((option) => option.value === item)?.label
-                                : item
-                        )}
-                    </Typography>
+            {content.value.map((item, index) => (
+                <Paper key={index} sx={{ padding: 1, display: 'flex' }}>
+                    <Typography variant="body1">{getItemTitle(item)}</Typography>
                     <Delete
                         fontSize="small"
                         color="error"
-                        onClick={() => handleDeleteITem(content.title, content.key, item)}
+                        onClick={() =>
+                            handleDeleteITem(content.title, content.key, typeof item === 'string' ? item : item.value)
+                        }
                         cursor={'pointer'}
                     />
                 </Paper>
