@@ -3,6 +3,8 @@ import {
     BuidlQuery,
     Collections,
     CreateStoreArtworkParams,
+    GetArtsAndArtistsForIncludeParams,
+    GetArtsAndArtistsParams,
     GetArtworkQuantityParams,
     Names,
     ResponseAssets,
@@ -80,9 +82,24 @@ export async function getArtworkQuantity({
         return acc;
     }, {});
 
-    if (wallets && wallets.length) {
+    if (wallets && wallets.length > 0) {
         buildQuery['mintExplorer.address'] = {
             $in: wallets,
+        };
+    }
+
+    if (filters.exclude?.arts && filters.exclude.arts.length > 0) {
+        // @ts-expect-error $nin dont exist in type of BuidlQuery
+        buildQuery['_id'] = {
+            ...(filters.exclude.arts &&
+                filters.exclude.arts.length > 0 && { $nin: filters.exclude.arts.map((item) => item.value) }),
+        };
+    }
+    if (filters.exclude?.artists && filters.exclude.artists.length > 0) {
+        // @ts-expect-error $nin dont exist in type of BuidlQuery
+        buildQuery['framework.createdBy'] = {
+            ...(filters.exclude.artists &&
+                filters.exclude.artists.length > 0 && { $nin: filters.exclude.artists.map((item) => item.value) }),
         };
     }
 
@@ -100,4 +117,99 @@ export async function getArtworkQuantity({
         storesId,
     });
     return response.data?.total || 0;
+}
+
+export async function getArtsAndArtists({
+    price,
+    hasBts,
+    colorPrecision,
+    filters,
+    onlyInStore,
+    search,
+    page,
+    limit,
+}: GetArtsAndArtistsParams): Promise<ResponseAssets> {
+    delete filters.context?.precision;
+    const URL_ASSETS_SEARCH = '/assets/public/search';
+
+    let buildQuery: BuidlQuery = {};
+    if (onlyInStore) {
+        const wallets = filters.portfolio?.wallets;
+        const buildFilters = {
+            context: filters.context,
+            taxonomy: filters.taxonomy,
+            creators: filters.artists,
+        };
+
+        buildQuery = Object.entries(buildFilters || {}).reduce<BuidlQuery>((acc, cur) => {
+            const [key, value] = cur;
+
+            Object.entries(value).forEach((item) => {
+                const [keyFilter, valueFilter] = item as [string, string | string[]];
+
+                if (!valueFilter) return;
+                if (Array.isArray(valueFilter) && !valueFilter.length) return;
+
+                if (Array.isArray(valueFilter)) {
+                    // @ts-expect-error return number in convertHexToRGB
+                    acc[`assetMetadata.${key}.formData.${keyFilter === 'arEnabled' ? 'arenabled' : keyFilter}`] = {
+                        $in: keyFilter === 'colors' ? valueFilter.map((v) => convertHexToRGB(v)) : valueFilter,
+                    };
+                    return;
+                }
+                acc[`assetMetadata.${key}.formData.${keyFilter === 'arEnabled' ? 'arenabled' : keyFilter}`] =
+                    valueFilter;
+            });
+
+            return acc;
+        }, {});
+
+        if (wallets && wallets.length) {
+            buildQuery['mintExplorer.address'] = {
+                $in: wallets,
+            };
+        }
+    }
+
+    const response = await apiService.post<ResponseAssets>(URL_ASSETS_SEARCH, {
+        limit,
+        page,
+        query: buildQuery,
+        minPrice: price?.min,
+        maxPrice: price?.max,
+        name: search,
+        precision: colorPrecision || 0.7,
+        showAdditionalAssets: false,
+        hasBts,
+        sort: { order: 'latest', isIncludeSold: false },
+    });
+    return response.data || { data: [], tags: [], total: 0, limit: 0, page: 0, totalPage: 0, maxPrice: 0 };
+}
+
+export async function getArtsAndArtistsForInclude({
+    search,
+    page,
+    limit,
+}: GetArtsAndArtistsForIncludeParams): Promise<ResponseAssets> {
+    const URL_ASSETS_SEARCH = '/assets/public/search';
+
+    const response = await apiService.post<ResponseAssets>(URL_ASSETS_SEARCH, {
+        limit,
+        page,
+        query: {},
+        minPrice: 0,
+        maxPrice: 0,
+        name: search,
+        precision: 0.7,
+        showAdditionalAssets: false,
+        hasBts: '',
+        sort: { order: 'latest', isIncludeSold: false },
+    });
+    return response.data || { data: [], tags: [], total: 0, limit: 0, page: 0, totalPage: 0, maxPrice: 0 };
+}
+
+export async function getCreatorAvatar(id: string): Promise<string> {
+    const URL_ASSETS_SEARCH = `/creators/avatar/${id}`;
+    const response = await apiService.get<string>(URL_ASSETS_SEARCH);
+    return response.data || '';
 }

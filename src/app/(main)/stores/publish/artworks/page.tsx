@@ -9,7 +9,11 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    FormControl,
+    FormControlLabel,
     Grid,
+    Radio,
+    RadioGroup,
     Typography,
 } from '@mui/material';
 import { useDispatch, useSelector } from '@/store/hooks';
@@ -21,6 +25,8 @@ import { Review } from '@/app/(main)/components/stores/review';
 import { filterFalsyValues } from '@/utils/truthyObject';
 import { createStoreArtworkThunk } from '@/features/storesArtwork/thunks';
 import { type Artworks } from '@/features/stores/types';
+import Include from '@/app/(main)/components/stores/include/include';
+import { ReviewInclude } from '@/app/(main)/components/stores/include/reviewInclude';
 
 const Component = () => {
     const dispatch = useDispatch();
@@ -29,11 +35,12 @@ const Component = () => {
     const formikRef = useRef<FormikProps<Artworks & { redirectPath: string }>>(null);
     const selectedStore = useSelector((state) => state.stores.selectedStore);
     const store = useSelector((state) => state.stores.data.data.find((item) => item._id === selectedStore.id));
+    const [selectedRadio, setSelectedRadio] = useState(store?.artworks?.searchOption || 'filter');
 
     const handleSubmit = (values: Artworks & { redirectPath: string }) => {
         const filteredValues = filterFalsyValues({
             input: values,
-            keysToPreserve: ['general', 'context', 'taxonomy', 'artists', 'portfolio'],
+            keysToPreserve: ['general', 'context', 'taxonomy', 'artists', 'portfolio', 'exclude', 'include'],
         });
         if (filteredValues.context && !filteredValues.context.colors) {
             delete filteredValues.context.precision;
@@ -41,7 +48,13 @@ const Component = () => {
         if (filteredValues.general && !filteredValues.general.licenses.enabled) {
             delete filteredValues.general.licenses;
         }
-        dispatch(createStoreArtworkThunk({ id: selectedStore.id, stepName: 'artworks', data: filteredValues }));
+        dispatch(
+            createStoreArtworkThunk({
+                id: selectedStore.id,
+                stepName: 'artworks',
+                data: { ...filteredValues, searchOption: values.searchOption },
+            })
+        );
         router.push(values.redirectPath);
     };
 
@@ -72,12 +85,22 @@ const Component = () => {
         }
     };
 
+    const handleChangeSelectedRadio = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSelectedRadio(event.target.value);
+        if (formikRef.current) {
+            formikRef.current.setFieldValue('searchOption', event.target.value);
+        }
+    };
+
     const shortcuts = store?.artworks?.general?.shortcuts || {};
     const licenses = store?.artworks?.general?.licenses || {};
     const context = store?.artworks?.context || {};
     const taxonomy = store?.artworks?.taxonomy || {};
     const artists = store?.artworks?.artists || {};
     const portfolio = store?.artworks?.portfolio || {};
+    const exclude = store?.artworks?.exclude || {};
+    const include = store?.artworks?.include || {};
+    const searchOption = store?.artworks?.searchOption || 'filter';
 
     return (
         <Box display={'grid'} gridTemplateRows={'1fr auto'} height="calc(100vh - 64px)">
@@ -91,6 +114,12 @@ const Component = () => {
                         { title: 'Artworks' },
                     ]}
                 />
+                <FormControl sx={{ paddingInline: 2 }}>
+                    <RadioGroup row value={selectedRadio} onChange={handleChangeSelectedRadio}>
+                        <FormControlLabel value="filter" control={<Radio />} label="Filter" />
+                        <FormControlLabel value="select" control={<Radio />} label="Select" />
+                    </RadioGroup>
+                </FormControl>
                 <Formik
                     innerRef={formikRef}
                     initialValues={{
@@ -138,19 +167,41 @@ const Component = () => {
                         portfolio: {
                             wallets: portfolio?.wallets,
                         },
+                        exclude: {
+                            arts: exclude.arts || [],
+                            artists: exclude.artists || [],
+                            onlyInStore: exclude.onlyInStore || false,
+                        },
+                        include: {
+                            arts: include.arts || [],
+                            artists: include.artists || [],
+                        },
+                        searchOption,
                         redirectPath: '/stores/publish',
                     }}
                     onSubmit={handleSubmit}
                 >
                     <Form>
-                        <Grid container spacing={4}>
-                            <Grid item xs={6}>
-                                <TabSliders />
+                        {selectedRadio === 'filter' && (
+                            <Grid container spacing={4}>
+                                <Grid item xs={6}>
+                                    <TabSliders />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Review />
+                                </Grid>
                             </Grid>
-                            <Grid item xs={6}>
-                                <Review />
+                        )}
+                        {selectedRadio === 'select' && (
+                            <Grid container spacing={4}>
+                                <Grid item xs={6}>
+                                    <Include />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <ReviewInclude />
+                                </Grid>
                             </Grid>
-                        </Grid>
+                        )}
                         <Dialog
                             open={openDialogSave}
                             onClose={() => setOpenDialogSave(false)}

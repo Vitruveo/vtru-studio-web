@@ -38,6 +38,9 @@ export const Review = () => {
                             taxonomy: values.taxonomy,
                             artists: values.artists,
                             portfolio: values.portfolio,
+                            exclude: values.exclude,
+                            include: values.include,
+                            searchOption: values.searchOption,
                         },
                         colorPrecision: values.context?.precision,
                         storesId: id,
@@ -66,7 +69,7 @@ export const Review = () => {
             <Card sx={{ padding: 2 }}>
                 <Grid container spacing={4}>
                     {Object.entries(values)
-                        .filter(([key, _value]) => key !== 'redirectPath')
+                        .filter(([key, _value]) => !['redirectPath', 'include', 'searchOption'].includes(key))
                         .map((element) => {
                             const [key, value] = element;
                             return <SelectedFilter key={key} title={key} content={value} />;
