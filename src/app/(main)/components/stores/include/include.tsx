@@ -13,10 +13,6 @@ interface FormValues {
         arts: { value: string; label: string }[];
         artists: { value: string; label: string }[];
     };
-    exclude: {
-        arts: { value: string; label: string }[];
-        artists: { value: string; label: string }[];
-    };
 }
 
 const Include = () => {
