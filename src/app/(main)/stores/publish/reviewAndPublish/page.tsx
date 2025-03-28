@@ -128,7 +128,11 @@ const Component = ({ data }: Props) => {
                         <Typography color="gray">Back</Typography>
                     </Button>
                     {textsForPublishStoreStatus[store.status].buttontitle && (
-                        <Button variant="contained" onClick={handleRequestPublishment}>
+                        <Button
+                            variant="contained"
+                            onClick={handleRequestPublishment}
+                            disabled={['pending', 'invalidUrl'].includes(store.status)}
+                        >
                             {textsForPublishStoreStatus[store.status].buttontitle}
                         </Button>
                     )}

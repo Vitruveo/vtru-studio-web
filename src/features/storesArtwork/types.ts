@@ -62,6 +62,12 @@ export interface GetArtsAndArtistsParams {
     limit: number;
 }
 
+export interface GetArtsAndArtistsForIncludeParams {
+    search: string;
+    page: number;
+    limit: number;
+}
+
 export interface ArtsAndArtistsList {
     arts: {
         id: string;
@@ -83,14 +89,14 @@ export interface ArtsAndArtistsList {
 
 export interface BuidlQuery {
     [key: string]:
-        | string
-        | {
-              $in: string[];
-          }
-        | {
-              [key: string]: {
-                  $regex: string;
-                  $options: string;
-              };
-          }[];
+    | string
+    | {
+        $in: string[];
+    }
+    | {
+        [key: string]: {
+            $regex: string;
+            $options: string;
+        };
+    }[];
 }
