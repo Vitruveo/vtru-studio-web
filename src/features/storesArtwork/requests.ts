@@ -12,8 +12,6 @@ import {
     Tags,
 } from './types';
 import { convertHexToRGB } from '@/utils/convertColors';
-import { APIResponse } from '../common/types';
-import { filter } from 'lodash';
 
 export async function getArtworkTags(): Promise<Tags[]> {
     const URL_ASSETS_SEARCH = '/assets/public/search';
