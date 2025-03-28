@@ -73,6 +73,7 @@ export interface Artworks {
         arts?: { value: string; label: string }[];
         artists?: { value: string; label: string }[];
     };
+    searchOption: string;
 }
 
 export interface AppearanceContent {

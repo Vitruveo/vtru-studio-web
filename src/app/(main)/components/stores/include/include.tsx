@@ -56,7 +56,6 @@ const Include = () => {
     const fetchData = async () => {
         return await dispatch(
             getArtsAndArtistsForIncludeThunk({
-                exclude: values.exclude,
                 search: inputValue,
                 page: artsAndArtists?.page || 1,
                 limit: artsAndArtists?.limit || 20,

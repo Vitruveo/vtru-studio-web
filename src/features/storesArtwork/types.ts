@@ -63,10 +63,6 @@ export interface GetArtsAndArtistsParams {
 }
 
 export interface GetArtsAndArtistsForIncludeParams {
-    exclude: {
-        arts: { value: string; label: string }[];
-        artists: { value: string; label: string }[];
-    };
     search: string;
     page: number;
     limit: number;
@@ -93,14 +89,14 @@ export interface ArtsAndArtistsList {
 
 export interface BuidlQuery {
     [key: string]:
-        | string
-        | {
-              $in: string[];
-          }
-        | {
-              [key: string]: {
-                  $regex: string;
-                  $options: string;
-              };
-          }[];
+    | string
+    | {
+        $in: string[];
+    }
+    | {
+        [key: string]: {
+            $regex: string;
+            $options: string;
+        };
+    }[];
 }

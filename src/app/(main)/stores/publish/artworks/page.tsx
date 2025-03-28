@@ -32,10 +32,10 @@ const Component = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const [openDialogSave, setOpenDialogSave] = useState(false);
-    const [selectedRadio, setSelectedRadio] = useState('filter');
     const formikRef = useRef<FormikProps<Artworks & { redirectPath: string }>>(null);
     const selectedStore = useSelector((state) => state.stores.selectedStore);
     const store = useSelector((state) => state.stores.data.data.find((item) => item._id === selectedStore.id));
+    const [selectedRadio, setSelectedRadio] = useState(store?.artworks.searchOption || 'filter');
 
     const handleSubmit = (values: Artworks & { redirectPath: string }) => {
         const filteredValues = filterFalsyValues({
@@ -48,7 +48,13 @@ const Component = () => {
         if (filteredValues.general && !filteredValues.general.licenses.enabled) {
             delete filteredValues.general.licenses;
         }
-        dispatch(createStoreArtworkThunk({ id: selectedStore.id, stepName: 'artworks', data: filteredValues }));
+        dispatch(
+            createStoreArtworkThunk({
+                id: selectedStore.id,
+                stepName: 'artworks',
+                data: { ...filteredValues, searchOption: values.searchOption },
+            })
+        );
         router.push(values.redirectPath);
     };
 
@@ -79,6 +85,13 @@ const Component = () => {
         }
     };
 
+    const handleChangeSelectedRadio = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSelectedRadio(event.target.value);
+        if (formikRef.current) {
+            formikRef.current.setFieldValue('searchOption', event.target.value);
+        }
+    };
+
     const shortcuts = store?.artworks?.general?.shortcuts || {};
     const licenses = store?.artworks?.general?.licenses || {};
     const context = store?.artworks?.context || {};
@@ -87,6 +100,7 @@ const Component = () => {
     const portfolio = store?.artworks?.portfolio || {};
     const exclude = store?.artworks?.exclude || {};
     const include = store?.artworks?.include || {};
+    const searchOption = store?.artworks?.searchOption || '';
 
     return (
         <Box display={'grid'} gridTemplateRows={'1fr auto'} height="calc(100vh - 64px)">
@@ -101,7 +115,7 @@ const Component = () => {
                     ]}
                 />
                 <FormControl sx={{ paddingInline: 2 }}>
-                    <RadioGroup row value={selectedRadio} onChange={(e) => setSelectedRadio(e.target.value)}>
+                    <RadioGroup row value={selectedRadio} onChange={handleChangeSelectedRadio}>
                         <FormControlLabel value="filter" control={<Radio />} label="Filter" />
                         <FormControlLabel value="select" control={<Radio />} label="Select" />
                     </RadioGroup>
@@ -162,6 +176,7 @@ const Component = () => {
                             arts: include.arts || [],
                             artists: include.artists || [],
                         },
+                        searchOption,
                         redirectPath: '/stores/publish',
                     }}
                     onSubmit={handleSubmit}

@@ -35,6 +35,7 @@ interface FormValues {
         arts: { value: string; label: string }[];
         artists: { value: string; label: string }[];
     };
+    searchOption: string;
 }
 
 const Exclude = () => {
@@ -95,6 +96,7 @@ const Exclude = () => {
                     portfolio: values.portfolio,
                     exclude: values.exclude,
                     include: values.include,
+                    searchOption: values.searchOption,
                 },
                 colorPrecision: values.context?.precision,
                 onlyInStore: isOnlyInStore,
