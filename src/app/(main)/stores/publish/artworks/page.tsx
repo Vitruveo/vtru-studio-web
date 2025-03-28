@@ -35,7 +35,7 @@ const Component = () => {
     const formikRef = useRef<FormikProps<Artworks & { redirectPath: string }>>(null);
     const selectedStore = useSelector((state) => state.stores.selectedStore);
     const store = useSelector((state) => state.stores.data.data.find((item) => item._id === selectedStore.id));
-    const [selectedRadio, setSelectedRadio] = useState(store?.artworks.searchOption || 'filter');
+    const [selectedRadio, setSelectedRadio] = useState(store?.artworks?.searchOption || 'filter');
 
     const handleSubmit = (values: Artworks & { redirectPath: string }) => {
         const filteredValues = filterFalsyValues({
