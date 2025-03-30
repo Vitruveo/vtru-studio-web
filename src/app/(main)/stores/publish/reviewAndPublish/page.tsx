@@ -45,6 +45,10 @@ const Component = ({ data }: Props) => {
             buttontitle: 'Request Moderation',
             message: 'Your URL is already in use. Please update it and try request moderation again',
         },
+        hidden: {
+            buttontitle: undefined,
+            message: 'Your folio is hidden',
+        },
     } as { [key: string]: { buttontitle: string | undefined; message: string } };
 
     const handleRequestPublishment = async () => {
