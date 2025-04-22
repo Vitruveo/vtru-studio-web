@@ -19,7 +19,7 @@ function Print2({ allValues, handleChange, setFieldValue }: LicenseProps) {
 
     const assetId = useSelector((state) => state.asset._id);
 
-    const values = allValues.print || {};
+    const values = allValues.print2 || {};
 
     const texts = {
         printDescription: language['studio.consignArtwork.licenses.print.description'],
@@ -34,7 +34,7 @@ function Print2({ allValues, handleChange, setFieldValue }: LicenseProps) {
 
     const handleAdded = (added: boolean) => {
         if (hasContract) dispatch(updatePrintLicenseAddedThunk({ assetKey: assetId, added }));
-        setFieldValue('print.added', added);
+        setFieldValue('print2.added', added);
     };
 
     const handleToggleEdit = () => {
@@ -82,7 +82,7 @@ function Print2({ allValues, handleChange, setFieldValue }: LicenseProps) {
                             <Typography>{texts.singlePrint2Field}</Typography>
                         </Box>
                         <CustomTextField
-                            name="print.merchandisePrice"
+                            name="print2.merchandisePrice"
                             type="number"
                             InputProps={{
                                 sx: {
@@ -105,7 +105,7 @@ function Print2({ allValues, handleChange, setFieldValue }: LicenseProps) {
                         </Box>
 
                         <CustomTextField
-                            name="print.displayPrice"
+                            name="print2.displayPrice"
                             type="number"
                             InputProps={{
                                 sx: {
