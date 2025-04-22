@@ -752,11 +752,12 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.awardUrl.description': 'لینک به اطلاعات جایزه',
 
     'studio.consignArtwork.assetMetadata.field.errors': (data: { message: string }) =>
-        `${data.message === 'required' || data.message === 'minItems'
-            ? 'این فیلد الزامی است'
-            : data.message === 'format'
-                ? 'فرمت این فیلد اشتباه است'
-                : ''
+        `${
+            data.message === 'required' || data.message === 'minItems'
+                ? 'این فیلد الزامی است'
+                : data.message === 'format'
+                  ? 'فرمت این فیلد اشتباه است'
+                  : ''
         }`,
 
     /* Licenses */
@@ -853,7 +854,7 @@ const language: Translation = {
         `مبلغ ${data.amount} ${data.from}`,
 
     'studio.consignArtwork.licenses.print.description':
-        'این مجوز اثر هنری را برای کاربران نهایی در دسترس قرار می‌دهد تا یک مورد فیزیکی واحد را با استفاده از فناوری چاپ بر اساس تقاضا (POD) چاپ کنند. این مجوز تنها در صورتی فعال می‌شود که رسانه چاپی را در بخش "رسانه دارایی" بارگذاری کرده باشید.',
+        'این مجوز، اثر هنری را برای چاپ روی یک آیتم فیزیکی با استفاده از فناوری چاپ بر حسب تقاضا (POD) در دسترس کاربران نهایی قرار می‌دهد. مجوز فقط محصولاتی را به مشتریان نشان می‌دهد که برای فایل‌های آثار هنری با وضوح پایین مناسب هستند.',
     'studio.consignArtwork.licenses.print.enable':
         'این مجوز را فعال کنید اگر می‌خواهید کاربران نهایی از آثار هنری شما برای برنامه‌های چاپ درخواستی (POD) استفاده کنند. این مجوز برای چاپ فردی است؛ چاپ انبوه مجاز نیست.',
     'studio.consignArtwork.licenses.print.singlePrint.title': 'چاپ تکیمجوز چاپ',

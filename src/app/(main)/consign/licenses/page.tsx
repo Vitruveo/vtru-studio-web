@@ -15,6 +15,7 @@ import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
 import { ModalBackConfirm } from '../modalBackConfirm';
 import Nft from './nft';
 import Print from './print';
+import Print2 from './print2';
 import Stream from './stream';
 
 import ArtCards from './artCard';
@@ -24,12 +25,13 @@ import { WalletProvider } from '../../components/apps/wallet';
 const allLicenses = {
     NFT: Nft,
     Print: Print,
+    Print2: Print2,
     Stream: Stream,
     ArtCards: ArtCards,
 };
 
 export default function Licenses() {
-    const [currentLicense, setCurrentLicense] = useState<keyof typeof allLicenses>('NFT');
+    const [_currentLicense, setCurrentLicense] = useState<keyof typeof allLicenses>('NFT');
     const [showBackModal, setShowBackModal] = useState(false);
     const toast = useToastr();
 
@@ -216,7 +218,7 @@ export default function Licenses() {
                             {texts.licensesTitle}
                         </Typography>
 
-                        {Object.entries(allLicensesFiltered).map(([key, Component]) => (
+                        {Object.entries(allLicensesFiltered).map(([key]) => (
                             <a key={key} href={`#${key}`} onClick={(e) => handleScrollToElement(e, key)}>
                                 <Typography
                                     onClick={() => setCurrentLicense(key as keyof typeof allLicensesFiltered)}

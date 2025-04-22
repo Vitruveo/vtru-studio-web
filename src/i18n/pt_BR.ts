@@ -101,8 +101,9 @@ const language: Translation = {
     'studio.consignArtwork.assetMedia.assets': 'Arquivos de Mídia',
 
     'studio.consignArtwork.assetMedia.definition': (data: { definition: 'landscape' | 'square' | 'portrait' }) => {
-        return `${data.definition === 'landscape' ? 'Paisagem' : data.definition === 'portrait' ? 'Retrato' : 'Quadrado'
-            }`;
+        return `${
+            data.definition === 'landscape' ? 'Paisagem' : data.definition === 'portrait' ? 'Retrato' : 'Quadrado'
+        }`;
     },
     'studio.consignArtwork.assetMedia.image': 'imagem',
     'studio.consignArtwork.assetMedia.max': (data: { seconds: number }) =>
@@ -590,11 +591,12 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.awardUrl': 'URL do Prêmio',
     'studio.consignArtwork.assetMetadata.field.awardUrl.description': 'Link para informações do prêmio',
     'studio.consignArtwork.assetMetadata.field.errors': (data) =>
-        `${data.message === 'required' || data.message === 'minItems'
-            ? 'Campo obrigatório'
-            : data.message === 'format'
-                ? 'Formato inválido'
-                : ''
+        `${
+            data.message === 'required' || data.message === 'minItems'
+                ? 'Campo obrigatório'
+                : data.message === 'format'
+                  ? 'Formato inválido'
+                  : ''
         }`,
 
     /* Licenças */
@@ -684,7 +686,7 @@ const language: Translation = {
         'A obra de arte pode ser usada para transmissão em cenários ilimitados.',
 
     'studio.consignArtwork.licenses.artCards.description':
-        'Esta licença torna a obra de arte disponível para os usuários finais para impressão em um único item físico usando a tecnologia Print-on-Demand (POD). A licença é livremente transferível até o ponto de impressão, após o qual é transferível apenas para o proprietário do item físico.',
+        'Esta licença disponibiliza a arte aos usuários finais para impressão em um único item físico usando a tecnologia de impressão sob demanda (POD). A licença mostra aos clientes apenas produtos adequados para arquivos de arte de baixa resolução.',
     'studio.consignArtwork.licenses.artCards.enable':
         'Ative esta licença se você deseja que os usuários finais usem sua arte para aplicações de impressão sob demanda (POD). Esta licença é para impressão individual; a impressão em massa não é permitida.',
     'studio.consignArtwork.licenses.artCards.enable.description':
