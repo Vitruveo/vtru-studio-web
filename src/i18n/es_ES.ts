@@ -105,8 +105,9 @@ const language: Translation = {
     'studio.consignArtwork.assetMedia.assets': 'Medios',
 
     'studio.consignArtwork.assetMedia.definition': (data: { definition: 'landscape' | 'square' | 'portrait' }) => {
-        return `${data.definition === 'landscape' ? 'Paisaje' : data.definition === 'portrait' ? 'Retrato' : 'Cuadrado'
-            }`;
+        return `${
+            data.definition === 'landscape' ? 'Paisaje' : data.definition === 'portrait' ? 'Retrato' : 'Cuadrado'
+        }`;
     },
     'studio.consignArtwork.assetMedia.image': 'imagen',
     'studio.consignArtwork.assetMedia.video': 'video',
@@ -711,11 +712,12 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.awardUrl': 'URL del premio',
     'studio.consignArtwork.assetMetadata.field.awardUrl.description': 'Enlace a la información del premio',
     'studio.consignArtwork.assetMetadata.field.errors': (data: { message: string }) =>
-        `${data.message === 'required' || data.message === 'minItems'
-            ? 'Campo requerido'
-            : data.message === 'format'
-                ? 'Formato incorrecto'
-                : ''
+        `${
+            data.message === 'required' || data.message === 'minItems'
+                ? 'Campo requerido'
+                : data.message === 'format'
+                  ? 'Formato incorrecto'
+                  : ''
         }`,
 
     /* Licenses */
@@ -812,7 +814,7 @@ const language: Translation = {
         `${data.amount} de ${data.from} Licencias habilitadas`,
 
     'studio.consignArtwork.licenses.print.description':
-        'Esta licencia pone la obra de arte a disposición de los usuarios finales para imprimir un único artículo físico utilizando la tecnología de impresión bajo demanda (POD). La licencia solo se activa si has subido medios de impresión en la sección "Medios de Activos".',
+        'Esta licencia hace que las ilustraciones estén disponibles para que los usuarios finales puedan imprimirlas en un solo artículo físico mediante la tecnología de impresión bajo demanda (POD). La licencia muestra a los clientes únicamente productos que son adecuados para archivos de ilustraciones de baja resolución.',
     'studio.consignArtwork.licenses.print.enable':
         'Habilite esta licencia si desea que los usuarios finales utilicen su arte para aplicaciones de impresión bajo demanda (POD). Esta licencia es para impresión individual; no se permite la impresión en masa.',
     'studio.consignArtwork.licenses.print.singlePrint.title': 'Licencia de Impresión',

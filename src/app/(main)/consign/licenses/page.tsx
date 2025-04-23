@@ -15,6 +15,7 @@ import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
 import { ModalBackConfirm } from '../modalBackConfirm';
 import Nft from './nft';
 import Print from './print';
+import Print2 from './print2';
 import Stream from './stream';
 
 import ArtCards from './artCard';
@@ -24,12 +25,13 @@ import { WalletProvider } from '../../components/apps/wallet';
 const allLicenses = {
     NFT: Nft,
     Print: Print,
+    Print2: Print2,
     Stream: Stream,
     ArtCards: ArtCards,
 };
 
 export default function Licenses() {
-    const [currentLicense, setCurrentLicense] = useState<keyof typeof allLicenses>('NFT');
+    const [_currentLicense, setCurrentLicense] = useState<keyof typeof allLicenses>('NFT');
     const [showBackModal, setShowBackModal] = useState(false);
     const toast = useToastr();
 
@@ -37,7 +39,7 @@ export default function Licenses() {
     const router = useRouter();
     const dispatch = useDispatch();
 
-    const { licenses: licensesState, formats } = useSelector((state) => state.asset);
+    const { licenses: licensesState } = useSelector((state) => state.asset);
     const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
     const formData = useSelector((state) => state.asset.assetMetadata?.context.formData);
 
@@ -105,6 +107,11 @@ export default function Licenses() {
               print: {
                   version: '1',
                   added: false,
+                  availableLicenses: 1,
+              },
+              print2: {
+                  version: '1',
+                  added: false,
                   merchandisePrice: 1,
                   displayPrice: 1,
                   availableLicenses: 1,
@@ -119,7 +126,7 @@ export default function Licenses() {
                 dispatch(
                     consignArtworkActionsCreators.changeStatusStep({
                         stepId: 'licenses',
-                        status: checkStepProgress({ values, formats }),
+                        status: checkStepProgress({ values }),
                     })
                 );
 
@@ -191,7 +198,7 @@ export default function Licenses() {
             <PageContainerFooter
                 submitText={texts.nextButton}
                 title={texts.consignArtworkTitle}
-                stepStatus={checkStepProgress({ values, formats })}
+                stepStatus={checkStepProgress({ values })}
                 stepNumber={3}
                 backOnclick={handleOpenBackModal}
             >
@@ -216,7 +223,7 @@ export default function Licenses() {
                             {texts.licensesTitle}
                         </Typography>
 
-                        {Object.entries(allLicensesFiltered).map(([key, Component]) => (
+                        {Object.entries(allLicensesFiltered).map(([key]) => (
                             <a key={key} href={`#${key}`} onClick={(e) => handleScrollToElement(e, key)}>
                                 <Typography
                                     onClick={() => setCurrentLicense(key as keyof typeof allLicensesFiltered)}

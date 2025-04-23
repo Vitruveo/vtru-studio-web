@@ -53,7 +53,6 @@ import {
     UpdateAssetStatusReq,
     UpdateAssetHeaderReq,
     UpdatePrintLicensePriceReq,
-    Asset,
     UpdatePrintLicenseAddedReq,
 } from './types';
 import { ReduxThunkAction } from '@/store';
@@ -74,15 +73,7 @@ import { UpdatedAssetStoresVisibilityReq } from '../common/types';
 import { maxPrice, minPrice } from '@/app/(main)/components/stores/filters/licenseItem';
 import { StepStatus } from '../consign/types';
 
-export const checkStepProgress = ({
-    values,
-    formats,
-}: {
-    values: LicensesFormValues;
-    formats: Asset['formats'];
-}): StepStatus => {
-    if (!!formats?.print?.path !== !!values.print.added) return 'inProgress';
-
+export const checkStepProgress = ({ values }: { values: LicensesFormValues }): StepStatus => {
     return Object.values(values).filter((v) => v?.added).length &&
         values.nft.single.editionPrice >= minPrice &&
         values.nft.single.editionPrice <= maxPrice
@@ -168,7 +159,6 @@ export function getAssetThunk(id: string): ReduxThunkAction<Promise<any>> {
                             stepId: 'licenses',
                             status: checkStepProgress({
                                 values: response.data.licenses,
-                                formats: response.data.formats,
                             }),
                         })
                     );
@@ -567,7 +557,7 @@ export function licenseThunk(payload: LicensesFormValues): ReduxThunkAction<Prom
 export function updatedAssetStoresVisibilityThunk(
     payload: UpdatedAssetStoresVisibilityReq
 ): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch, getState) {
+    return async function (dispatch) {
         try {
             updatedAssetStoresVisibility(payload);
             dispatch(userActionsCreators.changeAssetStoresVisibility(payload));
