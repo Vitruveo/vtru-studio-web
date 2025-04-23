@@ -98,7 +98,12 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                             }}
                             value={values?.merchandisePrice}
                             inputProps={{ maxLength: 185, minLength: 1 }}
-                            onChange={handleChange}
+                            onChange={(e) => {
+                                if (Number(e.target.value) < 0) {
+                                    e.target.value = '0';
+                                }
+                                handleChange(e);
+                            }}
                             size="small"
                             variant="outlined"
                             disabled={!isEditing}
@@ -121,7 +126,12 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                             }}
                             value={values?.displayPrice}
                             inputProps={{ maxLength: 185, minLength: 1 }}
-                            onChange={handleChange}
+                            onChange={(e) => {
+                                if (Number(e.target.value) < 0) {
+                                    e.target.value = '0';
+                                }
+                                handleChange(e);
+                            }}
                             size="small"
                             variant="outlined"
                             disabled={!isEditing}
