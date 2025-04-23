@@ -15,7 +15,6 @@ import Breadcrumb from '../../layout/shared/breadcrumb/Breadcrumb';
 import { ModalBackConfirm } from '../modalBackConfirm';
 import Nft from './nft';
 import Print from './print';
-import Print2 from './print2';
 import Stream from './stream';
 
 import ArtCards from './artCard';
@@ -25,7 +24,6 @@ import { WalletProvider } from '../../components/apps/wallet';
 const allLicenses = {
     NFT: Nft,
     Print: Print,
-    Print2: Print2,
     Stream: Stream,
     ArtCards: ArtCards,
 };
@@ -107,12 +105,8 @@ export default function Licenses() {
               print: {
                   version: '1',
                   added: false,
-              },
-              print2: {
-                  version: '1',
-                  added: false,
-                  merchandisePrice: 1,
-                  displayPrice: 1,
+                  merchandisePrice: 5,
+                  displayPrice: 4,
               },
           };
 
