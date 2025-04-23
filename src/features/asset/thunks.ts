@@ -492,15 +492,15 @@ export function assetMediaThunk(payload: {
         }
 
         // Print
-        const hasPrintFile = getState().asset.formats?.print?.path;
-        const hasPrintFileFields = payload?.formatsFields?.print?.file;
-        if (hasPrintFile && hasPrintFileFields && !payload.deleteFormats?.length) {
-            dispatch(
-                validateUploadedMediaThunk({
-                    assetId: getState().asset._id,
-                })
-            );
-        }
+        // const hasPrintFile = getState().asset.formats?.print?.path;
+        // const hasPrintFileFields = payload?.formatsFields?.print?.file;
+        // if (hasPrintFile && hasPrintFileFields && !payload.deleteFormats?.length) {
+        //     dispatch(
+        //         validateUploadedMediaThunk({
+        //             assetId: getState().asset._id,
+        //         })
+        //     );
+        // }
     };
 }
 
