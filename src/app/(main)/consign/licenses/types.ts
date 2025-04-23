@@ -29,14 +29,12 @@ export interface LicensesFormValues {
     print: {
         version: string;
         added: boolean;
-        availableLicenses: number;
     };
     print2: {
         version: string;
         added: boolean;
         merchandisePrice: number;
         displayPrice: number;
-        availableLicenses: number;
     };
     artCards: {
         version: string;

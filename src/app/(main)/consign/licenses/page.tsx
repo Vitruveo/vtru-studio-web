@@ -107,14 +107,12 @@ export default function Licenses() {
               print: {
                   version: '1',
                   added: false,
-                  availableLicenses: 1,
               },
               print2: {
                   version: '1',
                   added: false,
                   merchandisePrice: 1,
                   displayPrice: 1,
-                  availableLicenses: 1,
               },
           };
 
@@ -167,12 +165,7 @@ export default function Licenses() {
             values.nft.availableLicenses = 1;
         }
 
-        if (values.print.added && !values.print.availableLicenses) {
-            toast.display({ type: 'error', message: 'The available field must be greater than 0 on PRINT' });
-            return;
-        }
-
-        if (values.nft.availableLicenses < 1 || values.print.availableLicenses < 1) {
+        if (values.nft.availableLicenses < 1) {
             toast.display({ type: 'error', message: 'The available field must be greater than 0' });
             return;
         }
