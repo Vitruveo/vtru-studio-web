@@ -218,7 +218,15 @@ export function getAssetThunk(id: string): ReduxThunkAction<Promise<any>> {
                 if (response.data.licenses) {
                     dispatch(
                         assetActionsCreators.change({
-                            licenses: response.data.licenses,
+                            licenses: {
+                                ...response.data.licenses,
+                                print2: {
+                                    version: response.data.licenses.print2.version || '1',
+                                    added: response.data.licenses.print2.added || false,
+                                    merchandisePrice: response.data.licenses.print2.merchandisePrice || 0,
+                                    displayPrice: response.data.licenses.print2.displayPrice || 0,
+                                },
+                            },
                         })
                     );
                 }

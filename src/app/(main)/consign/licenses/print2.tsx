@@ -95,7 +95,6 @@ function Print2({ allValues, handleChange, setFieldValue }: LicenseProps) {
                             onChange={handleChange}
                             size="small"
                             variant="outlined"
-                            disabled={!isEditing}
                         />
                     </Stack>
                     <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -118,30 +117,29 @@ function Print2({ allValues, handleChange, setFieldValue }: LicenseProps) {
                             onChange={handleChange}
                             size="small"
                             variant="outlined"
-                            disabled={!isEditing}
                         />
                     </Stack>
-                    {hasContract &&
-                        (!isEditing ? (
-                            <Button variant="contained" color="primary" fullWidth onClick={handleToggleEdit}>
-                                Edit
-                            </Button>
-                        ) : (
-                            <Box display="flex" gap={2}>
-                                <Button variant="outlined" color="error" fullWidth onClick={handleToggleEdit}>
-                                    Cancel
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    disabled={loading}
-                                    fullWidth
-                                    onClick={handleSubmitUpdatePrintLicense}
-                                >
-                                    Confirm
-                                </Button>
-                            </Box>
-                        ))}
+                    {/* {hasContract && */}
+                    {/*     (!isEditing ? ( */}
+                    {/*         <Button variant="contained" color="primary" fullWidth onClick={handleToggleEdit}> */}
+                    {/*             Edit */}
+                    {/*         </Button> */}
+                    {/*     ) : ( */}
+                    {/*         <Box display="flex" gap={2}> */}
+                    {/*             <Button variant="outlined" color="error" fullWidth onClick={handleToggleEdit}> */}
+                    {/*                 Cancel */}
+                    {/*             </Button> */}
+                    {/*             <Button */}
+                    {/*                 variant="contained" */}
+                    {/*                 color="primary" */}
+                    {/*                 disabled={loading} */}
+                    {/*                 fullWidth */}
+                    {/*                 onClick={handleSubmitUpdatePrintLicense} */}
+                    {/*             > */}
+                    {/*                 Confirm */}
+                    {/*             </Button> */}
+                    {/*         </Box> */}
+                    {/*     ))} */}
                 </Stack>
             </Card>
             <Box marginTop={2} width={300}>

@@ -101,7 +101,6 @@ export default function Home() {
     const { assets, currentPage, collections = [], sort } = useSelector((state) => state.user);
     const customizer = useSelector((state) => state.customizer);
     const lgUp = useMediaQuery((item: Theme) => item.breakpoints.up('lg'));
-    const mdUp = useMediaQuery((item: Theme) => item.breakpoints.up('md'));
     const smUp = useMediaQuery((item: Theme) => item.breakpoints.up('sm'));
     const selectedFilter = useSelector((state) => state.filters.selectedFilter);
 

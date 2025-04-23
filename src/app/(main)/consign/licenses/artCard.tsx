@@ -4,7 +4,7 @@ import { LicenseProps } from './types';
 import { useI18n } from '@/app/hooks/useI18n';
 import { useSelector } from '@/store/hooks';
 
-function ArtCards({ allValues, handleChange, setFieldValue }: LicenseProps) {
+function ArtCards({ allValues, setFieldValue }: LicenseProps) {
     const values = allValues.artCards || {};
 
     const { language } = useI18n();
