@@ -585,7 +585,7 @@ export default function MediaCard({
                                     <Box display={'flex'} flexDirection={'column'} gap={2} paddingInline={1}>
                                         <Typography>
                                             Your original artwork meets print requirements. Would you like to copy it as
-                                            a print?
+                                            Print media?
                                         </Typography>
                                         <Box display={'flex'} gap={1}>
                                             <Box>
