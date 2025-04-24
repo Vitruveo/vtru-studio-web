@@ -29,10 +29,6 @@ export interface LicensesFormValues {
     print: {
         version: string;
         added: boolean;
-    };
-    print2: {
-        version: string;
-        added: boolean;
         merchandisePrice: number;
         displayPrice: number;
     };
