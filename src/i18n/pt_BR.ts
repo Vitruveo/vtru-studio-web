@@ -609,7 +609,7 @@ const language: Translation = {
     'studio.consignArtwork.licenses.delete.button': 'Deletar',
     'studio.consignArtwork.licenses.add.button': 'Adicionar',
     'studio.consignArtwork.licenses.warning':
-        'As obras da Gênese foram garantidas para uma venda de NFT por $150. Por favor, selecione a licença NFT-ART-1, Edição Única e insira $150. Você também pode selecionar licenças adicionais.',
+        'As obras da Gênese foram garantidas para uma venda de NFT por $150. Por favor, selecione a licença DIGITAL COLLECTIBLE-ART-1, Edição Única e insira $150. Você também pode selecionar licenças adicionais.',
 
     'studio.consignArtwork.licenses.field.checkBoolean': (data: { checkBoolean: unknown }) =>
         `${data.checkBoolean === true ? 'sim' : data.checkBoolean === false ? 'não' : data.checkBoolean}`,
@@ -706,7 +706,7 @@ const language: Translation = {
     'studio.consignArtwork.licenses.print.singlePrint.field': 'Preço de Mercadoria',
     'studio.consignArtwork.licenses.print.singlePrint2.field': '(USD)',
     'studio.consignArtwork.licenses.print.displayPrice.field': 'Preço de Exibição',
-    'studio.consignArtwork.licenses.print.displayPrice2.field': '(USD por cm²)',
+    'studio.consignArtwork.licenses.print.displayPrice2.field': '(Cents por cm²)',
 
     'studio.consignArtwork.licenses.remix.description':
         'Esta licença torna a obra de arte disponível para os usuários finais para uso em aplicações Remix usando a',

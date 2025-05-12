@@ -96,7 +96,7 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                     width: 90,
                                 },
                             }}
-                            value={values?.merchandisePrice}
+                            value={values?.merchandisePrice || 5}
                             inputProps={{ maxLength: 185, minLength: 1 }}
                             onChange={(e) => {
                                 if (Number(e.target.value) < 0) {
@@ -124,7 +124,7 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                     width: 90,
                                 },
                             }}
-                            value={values?.displayPrice}
+                            value={values?.displayPrice || 4}
                             inputProps={{ maxLength: 185, minLength: 1 }}
                             onChange={(e) => {
                                 if (Number(e.target.value) < 0) {

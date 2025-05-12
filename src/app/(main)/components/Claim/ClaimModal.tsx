@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Button, Modal as MuiModal, Slider, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Modal as MuiModal, Slider, Typography } from '@mui/material';
 import { BigNumber } from '@ethersproject/bignumber';
 
 import { VUSD } from './actions';
@@ -22,7 +22,7 @@ export const ClaimModal = ({ isOpen, isLoading, handleClose, handleClaim, vusd =
     const [currentVusd, setCurrentVusd] = useState(vusd);
     const [currentVtru, setCurrentVtru] = useState(vtru);
 
-    const handleChangeSlider = (event: Event, newValue: number | number[]) => {
+    const handleChangeSlider = (_event: Event, newValue: number | number[]) => {
         setPorcentage(newValue as number);
     };
 
@@ -66,15 +66,15 @@ export const ClaimModal = ({ isOpen, isLoading, handleClose, handleClaim, vusd =
 
                     {/* This is slider for converting VUSD to VTRU */}
                     <Box display="flex" marginTop={2} marginBottom={4}>
-                        <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
+                        <Box display="flex" flexDirection="column" alignItems="center" gap={1} width={50}>
                             <Typography>VUSD</Typography>
-                            <Typography>{currentVusd.toFixed(4)}</Typography>
+                            <Typography>{currentVusd.toFixed(2)}</Typography>
                         </Box>
                         <Box width="100%" marginInline={2} display="flex" flexDirection="column" alignItems="center">
                             <Slider value={percentage} onChange={handleChangeSlider} />
                             <Typography>{percentage}%</Typography>
                         </Box>
-                        <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
+                        <Box display="flex" flexDirection="column" alignItems="center" gap={1} width={50}>
                             <Typography>VTRU</Typography>
                             <Typography>{currentVtru.toFixed(4)}</Typography>
                         </Box>
@@ -86,7 +86,7 @@ export const ClaimModal = ({ isOpen, isLoading, handleClose, handleClaim, vusd =
 
                     <Box display="flex" justifyContent="flex-end">
                         <Button variant="contained" onClick={handleClickClaim} disabled={isLoading || vusd <= 0}>
-                            Claim
+                            Claim {isLoading && <CircularProgress size={16} style={{ marginLeft: 10 }} />}{' '}
                         </Button>
                     </Box>
                 </Box>

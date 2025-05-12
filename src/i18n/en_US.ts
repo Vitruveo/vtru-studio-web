@@ -774,7 +774,7 @@ const language: Translation = {
     'studio.consignArtwork.licenses.delete.button': 'Delete',
     'studio.consignArtwork.licenses.add.button': 'Add',
     'studio.consignArtwork.licenses.warning':
-        'Genesis artworks have been guaranteed an NFT sale for $150. Please select the NFT-ART-1 license, Single Edition and enter $150. You can select additional licenses as well.',
+        'Genesis artworks have been guaranteed an NFT sale for $150. Please select the DIGITAL COLLECTIBLE-ART-1 license, Single Edition and enter $150. You can select additional licenses as well.',
 
     'studio.consignArtwork.licenses.field.checkBoolean': (data: { checkBoolean: unknown }) =>
         `${data.checkBoolean === true ? 'yes' : data.checkBoolean === false ? 'no' : data.checkBoolean}`,
@@ -870,7 +870,7 @@ const language: Translation = {
     'studio.consignArtwork.licenses.print.singlePrint.field': 'Merchandise Price',
     'studio.consignArtwork.licenses.print.singlePrint2.field': '(USD)',
     'studio.consignArtwork.licenses.print.displayPrice.field': 'Display Price',
-    'studio.consignArtwork.licenses.print.displayPrice2.field': '(USD per sq. cm.)',
+    'studio.consignArtwork.licenses.print.displayPrice2.field': '(Cents per sq. cm.)',
 
     'studio.consignArtwork.licenses.remix.description':
         'This license makes the artwork available to end-users for use in Remix applications using the',
