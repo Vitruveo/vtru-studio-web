@@ -770,7 +770,7 @@ const language: Translation = {
     'studio.consignArtwork.licenses.delete.button': 'حذف',
     'studio.consignArtwork.licenses.add.button': 'اضافه',
     'studio.consignArtwork.licenses.warning':
-        'آثار تولید اولیه به فروش ام‌اف‌تی به ارزش 150 دلار تضمین شده‌اند. لطفاً لایسنس NFT-ART-1 را انتخاب کنید، ادیشن تکی را انتخاب کرده و مبلغ 150 دلار را وارد کنید. همچنین می‌توانید لایسنس‌های اضافی را نیز انتخاب کنید.',
+        'آثار تولید اولیه به فروش ام‌اف‌تی به ارزش 150 دلار تضمین شده‌اند. لطفاً لایسنس DIGITAL COLLECTIBLE-ART-1 را انتخاب کنید، ادیشن تکی را انتخاب کرده و مبلغ 150 دلار را وارد کنید. همچنین می‌توانید لایسنس‌های اضافی را نیز انتخاب کنید.',
 
     'studio.consignArtwork.licenses.field.checkBoolean': (data: { checkBoolean: unknown }) =>
         `${data.checkBoolean === true ? 'بله' : data.checkBoolean === false ? 'خیر' : data.checkBoolean}`,
@@ -865,7 +865,7 @@ const language: Translation = {
     'studio.consignArtwork.licenses.print.singlePrint.field': 'قیمت کالا',
     'studio.consignArtwork.licenses.print.singlePrint2.field': '(USD)',
     'studio.consignArtwork.licenses.print.displayPrice.field': 'قیمت نمایش',
-    'studio.consignArtwork.licenses.print.displayPrice2.field': '(USD به ازای هر سانتی‌متر مربع)',
+    'studio.consignArtwork.licenses.print.displayPrice2.field': '(Cents به ازای هر سانتی‌متر مربع)',
 
     'studio.consignArtwork.licenses.remix.description':
         'این مجوز اثر هنری را برای کاربران نهایی برای استفاده در برنامه‌های Remix با استفاده از',

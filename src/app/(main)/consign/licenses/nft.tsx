@@ -161,8 +161,8 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
         values?.editionOption && currentDescription === 'nft.editionOption'
             ? editionTitles[values.editionOption as keyof typeof editionTitles]
             : values?.added
-                ? texts.selectEditionTitle
-                : `NFT-ART-1 ${texts.license}`;
+              ? texts.selectEditionTitle
+              : `DIGITAL COLLECTIBLE-ART-1 ${texts.license}`;
 
     const handleAdded = (added: boolean) => {
         if (added == false) setFieldValue('nft.editionOption', '');
@@ -218,7 +218,14 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
 
     return (
         <Box width={700} display="flex" justifyContent="space-between" marginTop={2}>
-            <Card disabled title="NFT-ART-1" added={values?.added} setAdded={handleAdded} width={320} height={400}>
+            <Card
+                disabled
+                title="DIGITAL COLLECTIBLE-ART-1"
+                added={values?.added}
+                setAdded={handleAdded}
+                width={320}
+                height={400}
+            >
                 {!values?.added ? (
                     <Box p={1.5}>
                         <Typography

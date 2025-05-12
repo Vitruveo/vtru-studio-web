@@ -771,7 +771,7 @@ const language: Translation = {
     'studio.consignArtwork.licenses.delete.button': 'Удалить',
     'studio.consignArtwork.licenses.add.button': 'Добавить',
     'studio.consignArtwork.licenses.warning':
-        'Произведения Genesis были гарантированы на продажу NFT за $150. Пожалуйста, выберите лицензию NFT-ART-1, Одну единицу и введите $150. Вы также можете выбрать дополнительные лицензии.',
+        'Произведения Genesis были гарантированы на продажу NFT за $150. Пожалуйста, выберите лицензию DIGITAL COLLECTIBLE-ART-1, Одну единицу и введите $150. Вы также можете выбрать дополнительные лицензии.',
 
     'studio.consignArtwork.licenses.field.checkBoolean': (data: { checkBoolean: unknown }) =>
         `${data.checkBoolean === true ? 'да' : data.checkBoolean === false ? 'нет' : data.checkBoolean}`,
@@ -867,7 +867,7 @@ const language: Translation = {
     'studio.consignArtwork.licenses.print.singlePrint.field': 'Цена на товары',
     'studio.consignArtwork.licenses.print.singlePrint2.field': '(USD)',
     'studio.consignArtwork.licenses.print.displayPrice.field': 'Цена за отображение',
-    'studio.consignArtwork.licenses.print.displayPrice2.field': '(USD за кв. см)',
+    'studio.consignArtwork.licenses.print.displayPrice2.field': '(Cents за кв. см)',
 
     'studio.consignArtwork.licenses.remix.description':
         'Эта лицензия позволяет конечным пользователям использовать работу в приложениях создания ремиксов с использованием',
