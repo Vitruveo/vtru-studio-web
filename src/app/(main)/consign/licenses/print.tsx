@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Box, Button, Slider, Stack, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import CustomTextField from '@/app/(main)/components/forms/theme-elements/CustomTextField';
 import Card from './common/card';
 import { LicenseProps } from './types';
@@ -9,6 +10,7 @@ import { useToastr } from '@/app/hooks/useToastr';
 import { updatePrintLicenseAddedThunk, updatePrintLicensePriceThunk } from '@/features/asset/thunks';
 
 function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
+    const theme = useTheme();
     const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
     const [isEditing, setIsEditing] = useState(!hasContract);
     const [loading, setLoading] = useState(false);
@@ -82,7 +84,7 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                     </Box>
                 )}
                 {values.added && (
-                    <Stack gap={1} p={1.5}>
+                    <Stack gap={4} p={1.5}>
                         <Stack direction="row" justifyContent="space-between" alignItems="center">
                             <Box>
                                 <Typography sx={{ whiteSpace: 'nowrap', marginRight: 3 }}>
@@ -127,7 +129,7 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                         width: 90,
                                     },
                                 }}
-                                value={Math.trunc((values.merchandisePrice * 100 * values.mutiplier) / 10_000) || 1}
+                                value={Math.trunc((values.merchandisePrice * 100 * values.multiplier) / 10_000) || 1}
                                 inputProps={{ maxLength: 185, minLength: 1 }}
                                 size="small"
                                 variant="outlined"
@@ -136,11 +138,18 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                         </Stack>
                         <Stack direction="column" justifyContent="space-between" alignItems="center">
                             <Slider
-                                max={100}
-                                min={10}
-                                step={10}
-                                value={values.mutiplier}
-                                onChange={(e, value) => setFieldValue('print.mutiplier', value)}
+                                max={1}
+                                min={0.1}
+                                step={0.1}
+                                value={values.multiplier}
+                                onChange={(_, value) => setFieldValue('print.multiplier', value)}
+                                valueLabelDisplay="auto"
+                                sx={{
+                                    '& .MuiSlider-valueLabel': {
+                                        backgroundColor: theme.palette.primary.main,
+                                        color: '#fff',
+                                    },
+                                }}
                             />
                             <Box
                                 width={'100%'}

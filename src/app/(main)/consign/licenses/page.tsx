@@ -105,7 +105,7 @@ export default function Licenses() {
                   added: false,
                   merchandisePrice: 5,
                   displayPrice: 4,
-                  mutiplier: 0.1,
+                  multiplier: 0.1,
               },
           };
 
