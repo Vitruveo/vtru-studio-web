@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Box, Button, Slider, Stack, Typography } from '@mui/material';
 import CustomTextField from '@/app/(main)/components/forms/theme-elements/CustomTextField';
 import Card from './common/card';
 import { LicenseProps } from './types';
@@ -67,98 +67,119 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                 width={320}
                 height={hasContract ? 430 : 400}
             >
-                <Box paddingInline={1.5} paddingBlock={0.5}>
-                    <Typography
-                        style={{ wordWrap: 'break-word' }}
-                        color="grey"
-                        fontWeight="500"
-                        variant="subtitle1"
-                        component="label"
-                        fontSize="1rem"
-                    >
-                        {texts.printDescription}
-                    </Typography>
-                </Box>
-                <Stack gap={1} p={1.5}>
-                    <Stack direction="row" justifyContent="space-between" alignItems="center">
-                        <Box>
-                            <Typography sx={{ whiteSpace: 'nowrap', marginRight: 3 }}>
-                                {texts.singlePrintField}
-                            </Typography>
-                            <Typography>{texts.singlePrint2Field}</Typography>
-                        </Box>
-                        <CustomTextField
-                            name="print.merchandisePrice"
-                            type="number"
-                            InputProps={{
-                                sx: {
-                                    backgroundColor: '#fff',
-                                    width: 90,
-                                },
-                            }}
-                            value={values?.merchandisePrice || 5}
-                            inputProps={{ maxLength: 185, minLength: 1 }}
-                            onChange={(e) => {
-                                if (Number(e.target.value) < 0) {
-                                    e.target.value = '0';
-                                }
-                                handleChange(e);
-                            }}
-                            size="small"
-                            variant="outlined"
-                            disabled={!isEditing}
-                        />
-                    </Stack>
-                    <Stack direction="row" justifyContent="space-between" alignItems="center">
-                        <Box sx={{ marginRight: 3 }}>
-                            <Typography>{texts.displayPriceField}</Typography>
-                            <Typography>{texts.displayPrice2Field}</Typography>
-                        </Box>
-
-                        <CustomTextField
-                            name="print.displayPrice"
-                            type="number"
-                            InputProps={{
-                                sx: {
-                                    backgroundColor: '#fff',
-                                    width: 90,
-                                },
-                            }}
-                            value={values?.displayPrice || 4}
-                            inputProps={{ maxLength: 185, minLength: 1 }}
-                            onChange={(e) => {
-                                if (Number(e.target.value) < 0) {
-                                    e.target.value = '0';
-                                }
-                                handleChange(e);
-                            }}
-                            size="small"
-                            variant="outlined"
-                            disabled={!isEditing}
-                        />
-                    </Stack>
-                    {hasContract &&
-                        (!isEditing ? (
-                            <Button variant="contained" color="primary" fullWidth onClick={handleToggleEdit}>
-                                Edit
-                            </Button>
-                        ) : (
-                            <Box display="flex" gap={2}>
-                                <Button variant="outlined" color="error" fullWidth onClick={handleToggleEdit}>
-                                    Cancel
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    disabled={loading}
-                                    fullWidth
-                                    onClick={handleSubmitUpdatePrintLicense}
-                                >
-                                    Confirm
-                                </Button>
+                {!values.added && (
+                    <Box paddingInline={1.5} paddingBlock={0.5}>
+                        <Typography
+                            style={{ wordWrap: 'break-word' }}
+                            color="grey"
+                            fontWeight="500"
+                            variant="subtitle1"
+                            component="label"
+                            fontSize="1rem"
+                        >
+                            {texts.printDescription}
+                        </Typography>
+                    </Box>
+                )}
+                {values.added && (
+                    <Stack gap={1} p={1.5}>
+                        <Stack direction="row" justifyContent="space-between" alignItems="center">
+                            <Box>
+                                <Typography sx={{ whiteSpace: 'nowrap', marginRight: 3 }}>
+                                    {texts.singlePrintField}
+                                </Typography>
+                                <Typography>{texts.singlePrint2Field}</Typography>
                             </Box>
-                        ))}
-                </Stack>
+                            <CustomTextField
+                                name="print.merchandisePrice"
+                                type="number"
+                                InputProps={{
+                                    sx: {
+                                        backgroundColor: '#fff',
+                                        width: 90,
+                                    },
+                                }}
+                                value={values?.merchandisePrice || 5}
+                                inputProps={{ maxLength: 185, minLength: 1 }}
+                                onChange={(e) => {
+                                    if (Number(e.target.value) < 0) {
+                                        e.target.value = '0';
+                                    }
+                                    handleChange(e);
+                                }}
+                                size="small"
+                                variant="outlined"
+                                disabled={!isEditing}
+                            />
+                        </Stack>
+                        <Stack direction="row" justifyContent="space-between" alignItems="center">
+                            <Box sx={{ marginRight: 3 }}>
+                                <Typography>{texts.displayPriceField}</Typography>
+                                <Typography>{texts.displayPrice2Field}</Typography>
+                            </Box>
+
+                            <CustomTextField
+                                name="print.displayPrice"
+                                type="number"
+                                InputProps={{
+                                    sx: {
+                                        backgroundColor: '#fff',
+                                        width: 90,
+                                    },
+                                }}
+                                value={Math.trunc((values.merchandisePrice * 100 * values.mutiplier) / 10_000) || 1}
+                                inputProps={{ maxLength: 185, minLength: 1 }}
+                                size="small"
+                                variant="outlined"
+                                disabled={true}
+                            />
+                        </Stack>
+                        <Stack direction="column" justifyContent="space-between" alignItems="center">
+                            <Slider
+                                max={100}
+                                min={10}
+                                step={10}
+                                value={values.mutiplier}
+                                onChange={(e, value) => setFieldValue('print.mutiplier', value)}
+                            />
+                            <Box
+                                width={'100%'}
+                                display="flex"
+                                gap={1}
+                                alignItems="center"
+                                justifyContent="space-between"
+                            >
+                                <Typography fontSize="0.8rem" color="gray">
+                                    0.1%
+                                </Typography>
+                                <Typography fontSize="0.8rem" color="gray">
+                                    1.0%
+                                </Typography>
+                            </Box>
+                        </Stack>
+                        {hasContract &&
+                            (!isEditing ? (
+                                <Button variant="contained" color="primary" fullWidth onClick={handleToggleEdit}>
+                                    Edit
+                                </Button>
+                            ) : (
+                                <Box display="flex" gap={2}>
+                                    <Button variant="outlined" color="error" fullWidth onClick={handleToggleEdit}>
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        disabled={loading}
+                                        fullWidth
+                                        onClick={handleSubmitUpdatePrintLicense}
+                                    >
+                                        Confirm
+                                    </Button>
+                                </Box>
+                            ))}
+                    </Stack>
+                )}
             </Card>
             <Box marginTop={2} width={300}>
                 <Typography color="gray" fontSize="1.1rem" fontWeight="bold">

@@ -17,19 +17,17 @@ import Nft from './nft';
 import Print from './print';
 import Stream from './stream';
 
-import ArtCards from './artCard';
 import { useToastr } from '@/app/hooks/useToastr';
 import { WalletProvider } from '../../components/apps/wallet';
 
 const allLicenses = {
-    NFT: Nft,
+    Collectible: Nft,
     Print: Print,
     Stream: Stream,
-    ArtCards: ArtCards,
 };
 
 export default function Licenses() {
-    const [_currentLicense, setCurrentLicense] = useState<keyof typeof allLicenses>('NFT');
+    const [_currentLicense, setCurrentLicense] = useState<keyof typeof allLicenses>('Collectible');
     const [showBackModal, setShowBackModal] = useState(false);
     const toast = useToastr();
 
@@ -107,6 +105,7 @@ export default function Licenses() {
                   added: false,
                   merchandisePrice: 5,
                   displayPrice: 4,
+                  mutiplier: 0.1,
               },
           };
 
@@ -224,9 +223,9 @@ export default function Licenses() {
                     </Box>
 
                     <Grid mt={1} sx={{ overflowX: 'auto' }} alignItems="center" lg={6} xs={12}>
-                        <Typography fontSize="1.1rem" fontWeight="normal" color="GrayText">
+                        {/*<Typography fontSize="1.1rem" fontWeight="normal" color="GrayText">
                             {texts.licensesDescription}
-                        </Typography>
+                        </Typography>*/}
 
                         {Object.values(allLicensesFiltered).map((License, i) => (
                             <Box key={i} id={Object.keys(allLicensesFiltered)[i]}>

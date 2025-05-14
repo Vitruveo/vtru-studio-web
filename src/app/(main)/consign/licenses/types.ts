@@ -31,6 +31,7 @@ export interface LicensesFormValues {
         added: boolean;
         merchandisePrice: number;
         displayPrice: number;
+        mutiplier: number;
     };
     artCards: {
         version: string;
