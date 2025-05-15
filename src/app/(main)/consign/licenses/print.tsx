@@ -50,6 +50,7 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                 assetKey: assetId,
                 merchandisePrice: values.merchandisePrice,
                 displayPrice: values.displayPrice,
+                multiplier: values.multiplier,
             })
         );
         setLoading(false);
@@ -129,7 +130,10 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                         width: 90,
                                     },
                                 }}
-                                value={Math.trunc((values.merchandisePrice * 100 * values.multiplier) / 10_000) || 1}
+                                value={
+                                    Math.trunc((values.merchandisePrice * 100 * (values.multiplier * 100)) / 10_000) ||
+                                    1
+                                }
                                 inputProps={{ maxLength: 185, minLength: 1 }}
                                 size="small"
                                 variant="outlined"
@@ -150,6 +154,7 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                         color: '#fff',
                                     },
                                 }}
+                                disabled={!isEditing}
                             />
                             <Box
                                 width={'100%'}
