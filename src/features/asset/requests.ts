@@ -232,8 +232,9 @@ export async function updatePrintLicensePrice({
     assetKey,
     merchandisePrice,
     displayPrice,
+    multiplier,
 }: UpdatePrintLicensePriceReq) {
-    return apiService.patch(`/assets/${assetKey}/printLicense/price`, { merchandisePrice, displayPrice });
+    return apiService.patch(`/assets/${assetKey}/printLicense/price`, { merchandisePrice, displayPrice, multiplier });
 }
 
 export async function updatePrintLicenseAdded({ assetKey, added }: UpdatePrintLicenseAddedReq) {
