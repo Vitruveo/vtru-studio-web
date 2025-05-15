@@ -220,7 +220,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
         <Box width={700} display="flex" justifyContent="space-between" marginTop={2}>
             <Card
                 disabled
-                title="DIGITAL COLLECTIBLE-ART-1"
+                title="COLLECTIBLE-ART-1"
                 added={values?.added}
                 setAdded={handleAdded}
                 width={320}
@@ -460,7 +460,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                     />
                                 </Box>
                             )}
-                            <FormControlLabel
+                            {/* <FormControlLabel
                                 value="elastic"
                                 control={<Radio disabled />}
                                 label={texts.elasticEditionsTitle}
@@ -469,7 +469,8 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                 value="unlimited"
                                 control={<Radio disabled />}
                                 label={texts.unlimitedEditionsTitle}
-                            />
+                            /> */}
+
                             {values.editionOption === 'unlimited' && (
                                 <Box marginLeft={4} display="flex" alignItems="center" justifyContent="space-between">
                                     <Box marginRight={1}>

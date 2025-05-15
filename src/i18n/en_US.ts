@@ -859,7 +859,7 @@ const language: Translation = {
         `(${data.amount} of ${data.from}) Licenses enabled`,
 
     'studio.consignArtwork.licenses.print.description':
-        'This license makes the artwork available to end-users for printing to a single physical item using Print-on-Demand(POD) technology. The license shows customers only products that are suitable for low-res artworks files.',
+        'This license makes the artwork available to end-users for printing to a single physical item using Print-on-Demand(POD) technology. ',
     'studio.consignArtwork.licenses.print.enable':
         'Enable this license if you want end-users to use your art for print-on-demand (POD) applications. This license is for individual printing; bulk printing is not permitted.',
     'studio.consignArtwork.licenses.print.singlePrint.title': 'Print License',
