@@ -14,15 +14,16 @@ interface Props {
 
     vusd: number;
     vtru: number;
+    usdc: number;
 }
 
-export const ClaimModal = ({ isOpen, isLoading, handleClose, handleClaim, vusd = 10, vtru }: Props) => {
+export const ClaimModal = ({ isOpen, isLoading, handleClose, handleClaim, vusd = 10, vtru, usdc }: Props) => {
     const [percentage, setPorcentage] = useState(0);
 
     const [currentVusd, setCurrentVusd] = useState(vusd);
     const [currentVtru, setCurrentVtru] = useState(vtru);
 
-    const handleChangeSlider = (event: Event, newValue: number | number[]) => {
+    const handleChangeSlider = (_event: Event, newValue: number | number[]) => {
         setPorcentage(newValue as number);
     };
 
@@ -83,6 +84,8 @@ export const ClaimModal = ({ isOpen, isLoading, handleClose, handleClaim, vusd =
                     {/* This is currently a placeholder */}
                     <Typography fontWeight="bold">VTRU: {vtru.toFixed(4)}</Typography>
                     <Typography color="gray">Your VTRU balance will be transferred to your wallet </Typography>
+                    <br />
+                    <Typography fontWeight="bold">USDC.pol: {usdc.toFixed(4)}</Typography>
 
                     <Box display="flex" justifyContent="flex-end">
                         <Button variant="contained" onClick={handleClickClaim} disabled={isLoading || vusd <= 0}>

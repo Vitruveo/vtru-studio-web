@@ -16,6 +16,7 @@ import { ClaimModal } from './ClaimModal';
 export const ClaimContainer = memo(() => {
     const [balance, setBalance] = useState(0);
     const [balanceVUSD, setBalanceVUSD] = useState(0);
+    const [balanceUSDC, setBalanceUSDC] = useState(0);
     const token = useSelector((state) => state.user.token);
     const [isModalOpenStake, setIsModalOpenStake] = useState(false);
     const [isModalOpenClaimed, setIsModalOpenClaimed] = useState(false);
@@ -42,11 +43,14 @@ export const ClaimContainer = memo(() => {
     const getBalance = async () => {
         setLoading(true);
         try {
-            const [responseBalance, responseBalanceVUSD] = await Promise.all([
+            const [responseBalance, responseBalanceVUSD, responseBalanceUSDC] = await Promise.all([
                 fetch(`${BASE_URL_API3}/wallet/balance`, {
                     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 }),
                 fetch(`${BASE_URL_API3}/wallet/balanceVUSD`, {
+                    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                }),
+                fetch(`${BASE_URL_API3}/wallet/balanceUSDC`, {
                     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 }),
             ]);
@@ -60,6 +64,9 @@ export const ClaimContainer = memo(() => {
 
             const dataBalanceVUSD = await responseBalanceVUSD.json();
             setBalanceVUSD(Number(dataBalanceVUSD.data) || 0);
+
+            const dataBalanceUSDC = await responseBalanceUSDC.json();
+            setBalanceUSDC(Number(dataBalanceUSDC.data) || 0);
         } catch (error) {
             // do nothing
         } finally {
@@ -76,7 +83,7 @@ export const ClaimContainer = memo(() => {
     };
 
     const onDisconnect = async () => {
-        await disconnect();
+        disconnect();
     };
 
     const onClaimAllocate = async ({ vusd, vtru }: { vusd: number; vtru: number }) => {
@@ -151,6 +158,7 @@ export const ClaimContainer = memo(() => {
                 handleClose={closeModalClaim}
                 vusd={balanceVUSD}
                 vtru={balance}
+                usdc={balanceUSDC}
                 handleClaim={onClaimAllocate}
             />
 
