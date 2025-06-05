@@ -16,12 +16,7 @@ import MediaCard from './mediaCard';
 import SelectMedia from './selectMedia';
 import { consignArtworkActionsCreators } from '@/features/consign/slice';
 
-import {
-    assetMediaThunk,
-    assetStorageThunk,
-    sendRequestUploadThunk,
-    updatePrintLicenseAddedThunk,
-} from '@/features/asset/thunks';
+import { assetMediaThunk, assetStorageThunk, sendRequestUploadThunk } from '@/features/asset/thunks';
 import { getMediaDefinition, getStepStatus, handleGetFileType } from './helpers';
 import { ModalBackConfirm } from '../modalBackConfirm';
 import { useI18n } from '@/app/hooks/useI18n';
@@ -109,11 +104,11 @@ export default function AssetMedia() {
                         stepId: 'assetMedia',
                         status: isAllValid
                             ? getStepStatus({
-                                formats:
-                                    JSON.stringify(initialValues.formats) === JSON.stringify(values.formats)
-                                        ? asset.formats
-                                        : values.formats,
-                            })
+                                  formats:
+                                      JSON.stringify(initialValues.formats) === JSON.stringify(values.formats)
+                                          ? asset.formats
+                                          : values.formats,
+                              })
                             : 'inProgress',
                     })
                 );
@@ -129,10 +124,6 @@ export default function AssetMedia() {
                     .map(([key, _]) => key);
 
                 if (deleteFormats.length) await dispatch(assetMediaThunk({ deleteFormats }));
-            }
-
-            if (!values.formats.print?.name) {
-                dispatch(updatePrintLicenseAddedThunk({ assetKey: asset._id, added: false }));
             }
 
             router.push(showBackModal ? '/consign' : `/consign/assetMetadata`);
