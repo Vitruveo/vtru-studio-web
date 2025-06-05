@@ -870,7 +870,7 @@ const language: Translation = {
     'studio.consignArtwork.licenses.print.singlePrint.field': 'Merchandise Price',
     'studio.consignArtwork.licenses.print.singlePrint2.field': '(USD)',
     'studio.consignArtwork.licenses.print.displayPrice.field': 'Display Price',
-    'studio.consignArtwork.licenses.print.displayPrice2.field': '(Cents per sq. cm.)',
+    'studio.consignArtwork.licenses.print.displayPrice2.field': '(USD per sq. cm.)',
 
     'studio.consignArtwork.licenses.remix.description':
         'This license makes the artwork available to end-users for use in Remix applications using the',

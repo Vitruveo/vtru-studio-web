@@ -26,6 +26,7 @@ import {
     UpdateAssetHeaderReq,
     UpdatePrintLicensePriceReq,
     UpdatePrintLicenseAddedReq,
+    SignMessageReq,
 } from './types';
 import { apiService } from '@/services/api';
 import { assetActionsCreators } from './slice';
@@ -202,6 +203,26 @@ export async function signUpdateAssetHeader({ signer, domain, types, tx, signedM
     });
 }
 
+export async function signAddedPrintLicense({ signer, domain, types, tx, signedMessage }: SignMessageReq) {
+    return axios.post(`${BASE_URL_API3}/assets/verify/print/added`, {
+        signer,
+        domain,
+        types,
+        tx,
+        signedMessage,
+    });
+}
+
+export async function signUpdatePrintLicensePrice({ signer, domain, types, tx, signedMessage }: SignMessageReq) {
+    return axios.post(`${BASE_URL_API3}/assets/verify/print/updatePrice`, {
+        signer,
+        domain,
+        types,
+        tx,
+        signedMessage,
+    });
+}
+
 export async function updateAssetHeader({ assetKey, header }: UpdateAssetHeaderReq) {
     return api3Service.patch(`/assets/updateAssetHeader/${assetKey}`, header);
 }
@@ -232,10 +253,15 @@ export async function updatePrintLicensePrice({
     assetKey,
     merchandisePrice,
     displayPrice,
+    multiplier,
 }: UpdatePrintLicensePriceReq) {
-    return apiService.patch(`/assets/${assetKey}/printLicense/price`, { merchandisePrice, displayPrice });
+    return api3Service.patch(`/assets/licenses/print/updatePrice/${assetKey}`, {
+        merchandisePrice,
+        displayPrice,
+        multiplier,
+    });
 }
 
-export async function updatePrintLicenseAdded({ assetKey, added }: UpdatePrintLicenseAddedReq) {
-    return apiService.patch(`/assets/${assetKey}/printLicense/added`, { added });
+export async function addedPrintLicense({ assetKey, added }: UpdatePrintLicenseAddedReq) {
+    return api3Service.patch(`/assets/licenses/print/added/${assetKey}`, { added });
 }

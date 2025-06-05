@@ -27,7 +27,8 @@ import {
     updateAssetStatus,
     updateAssetHeader,
     updatePrintLicensePrice,
-    updatePrintLicenseAdded,
+    addedPrintLicense,
+    signAddedPrintLicense,
 } from './requests';
 import {
     AssetSendRequestUploadApiRes,
@@ -54,6 +55,8 @@ import {
     UpdateAssetHeaderReq,
     UpdatePrintLicensePriceReq,
     UpdatePrintLicenseAddedReq,
+    SignerAddedPrintLicenseParams,
+    SignerUpdatePricePrintLicenseParams,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { assetActionsCreators } from './slice';
@@ -979,6 +982,81 @@ export function checkLicenseEditableThunk(payload: CheckLicenseEditableReq): Red
     };
 }
 
+export function signerUpdatePricePrintLicenseThunk(
+    payload: SignerUpdatePricePrintLicenseParams
+): ReduxThunkAction<Promise<boolean>> {
+    return async function () {
+        try {
+            const { client, assetKey, displayPrice, merchandisePrice, multiplier } = payload;
+
+            return true;
+        } catch (error) {
+            return false;
+        }
+    };
+}
+
+export function signerAddedPrintLicenseThunk(
+    payload: SignerAddedPrintLicenseParams
+): ReduxThunkAction<Promise<boolean>> {
+    return async function () {
+        try {
+            const { client, assetKey, added } = payload;
+            const signer = clientToSigner(client);
+
+            const contractAddress = schema[network].AssetRegistry;
+
+            const domain = {
+                name: 'Vitruveo Studio',
+                version: '1',
+                chainId: Number((await provider.getNetwork()).chainId),
+            };
+
+            const types = {
+                Transaction: [
+                    { name: 'name', type: 'string' },
+                    { name: 'action', type: 'string' },
+                    { name: 'method', type: 'string' },
+                    { name: 'assetKey', type: 'string' },
+                    { name: 'added', type: 'bool' },
+                    { name: 'licenseTypeId', type: 'uint' },
+                    { name: 'contract', type: 'address' },
+                    { name: 'timestamp', type: 'uint' },
+                ],
+            };
+
+            const tx = {
+                name: 'Asset Registry',
+                action: 'Added Print License',
+                method: 'addedPrintLicense',
+                assetKey: assetKey,
+                added,
+                licenseTypeId: 4,
+                contract: contractAddress,
+                timestamp: Math.floor(Date.now() / 1000),
+            };
+
+            // Sign the message
+            const signedMessage = await signer.signTypedData(domain, types, tx);
+
+            const response = await signAddedPrintLicense({
+                tx,
+                signedMessage,
+                signer: signer.address,
+                types,
+                domain,
+            });
+
+            if (response.status !== 200) {
+                return false;
+            }
+            return true;
+        } catch (error) {
+            return false;
+        }
+    };
+}
+
 export function signerUpdateLicensePriceThunk(payload: SignerParams): ReduxThunkAction<Promise<boolean>> {
     return async function () {
         try {
@@ -1196,9 +1274,9 @@ export function updatePrintLicensePriceThunk(payload: UpdatePrintLicensePriceReq
     };
 }
 
-export function updatePrintLicenseAddedThunk(payload: UpdatePrintLicenseAddedReq): ReduxThunkAction<Promise<boolean>> {
+export function addedPrintLicenseThunk(payload: UpdatePrintLicenseAddedReq): ReduxThunkAction<Promise<boolean>> {
     return async function () {
-        return updatePrintLicenseAdded(payload)
+        return addedPrintLicense(payload)
             .then(() => true)
             .catch((error) => {
                 console.log(error);

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useAccount } from 'wagmi';
 import { Box, Button, Slider, Stack, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import CustomTextField from '@/app/(main)/components/forms/theme-elements/CustomTextField';
@@ -7,13 +8,17 @@ import { LicenseProps } from './types';
 import { useI18n } from '@/app/hooks/useI18n';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useToastr } from '@/app/hooks/useToastr';
-import { updatePrintLicenseAddedThunk, updatePrintLicensePriceThunk } from '@/features/asset/thunks';
+import { addedPrintLicenseThunk, updatePrintLicensePriceThunk } from '@/features/asset/thunks';
+import UpdatePriceModal from './UpdatedPriceModal';
 
 function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const theme = useTheme();
+
+    const { address } = useAccount();
     const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
     const [isEditing, setIsEditing] = useState(!hasContract);
     const [loading, setLoading] = useState(false);
+    const [openModalSuccessUpdate, setOpenModalSuccessUpdate] = useState(false);
 
     const dispatch = useDispatch();
     const toastr = useToastr();
@@ -34,8 +39,20 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
         displayPrice2Field: language['studio.consignArtwork.licenses.print.displayPrice2.field'],
     } as { [key: string]: string };
 
+    useEffect(() => {
+        setFieldValue(
+            'print.displayPrice',
+            Number(((values.merchandisePrice * 100 * values.multiplier) / 10_000).toFixed(2))
+        );
+    }, [values.merchandisePrice, values.multiplier, setFieldValue]);
+
     const handleAdded = (added: boolean) => {
-        if (hasContract) dispatch(updatePrintLicenseAddedThunk({ assetKey: assetId, added }));
+        if (hasContract) {
+            dispatch(addedPrintLicenseThunk({ assetKey: assetId, added }));
+            setFieldValue('print.added', added);
+
+            return;
+        }
         setFieldValue('print.added', added);
     };
 
@@ -45,19 +62,28 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
 
     const handleSubmitUpdatePrintLicense = async () => {
         setLoading(true);
+
         const response = await dispatch(
             updatePrintLicensePriceThunk({
                 assetKey: assetId,
                 merchandisePrice: values.merchandisePrice,
                 displayPrice: values.displayPrice,
+                multiplier: values.multiplier,
             })
         );
         setLoading(false);
         if (response) {
+            setOpenModalSuccessUpdate(true);
             setIsEditing(false);
         } else {
             toastr.display({ type: 'error', message: 'Error updating print license' });
         }
+    };
+
+    const renderMessage = () => {
+        if (!address) return 'Connect Wallet to Edit';
+
+        return 'Edit';
     };
 
     return (
@@ -68,9 +94,17 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                 setAdded={handleAdded}
                 width={320}
                 height={hasContract ? 430 : 400}
+                disabled={hasContract && !address}
             >
                 {!values.added && (
-                    <Box paddingInline={1.5} paddingBlock={0.5}>
+                    <Box
+                        paddingInline={1.5}
+                        paddingBlock={0.5}
+                        display="flex"
+                        flexDirection="column"
+                        justifyContent="space-between"
+                        height="90%"
+                    >
                         <Typography
                             style={{ wordWrap: 'break-word' }}
                             color="grey"
@@ -81,6 +115,19 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                         >
                             {texts.printDescription}
                         </Typography>
+                        {hasContract && !address && (
+                            <Typography
+                                style={{ wordWrap: 'break-word' }}
+                                color="grey"
+                                fontWeight="500"
+                                variant="subtitle1"
+                                component="label"
+                                fontSize="0.9rem"
+                                textAlign="center"
+                            >
+                                Connect Wallet to Edit
+                            </Typography>
+                        )}
                     </Box>
                 )}
                 {values.added && (
@@ -129,7 +176,7 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                         width: 90,
                                     },
                                 }}
-                                value={Math.trunc((values.merchandisePrice * 100 * values.multiplier) / 10_000) || 1}
+                                value={values.displayPrice}
                                 inputProps={{ maxLength: 185, minLength: 1 }}
                                 size="small"
                                 variant="outlined"
@@ -142,6 +189,7 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                 min={0.1}
                                 step={0.1}
                                 value={values.multiplier}
+                                disabled={!isEditing}
                                 onChange={(_, value) => setFieldValue('print.multiplier', value)}
                                 valueLabelDisplay="auto"
                                 sx={{
@@ -161,6 +209,7 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                 <Typography fontSize="0.8rem" color="gray">
                                     0.1%
                                 </Typography>
+                                <Typography fontWeight="bold">{values.multiplier}%</Typography>
                                 <Typography fontSize="0.8rem" color="gray">
                                     1.0%
                                 </Typography>
@@ -168,8 +217,14 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                         </Stack>
                         {hasContract &&
                             (!isEditing ? (
-                                <Button variant="contained" color="primary" fullWidth onClick={handleToggleEdit}>
-                                    Edit
+                                <Button
+                                    disabled={!address}
+                                    variant="contained"
+                                    color="primary"
+                                    fullWidth
+                                    onClick={handleToggleEdit}
+                                >
+                                    {renderMessage()}
                                 </Button>
                             ) : (
                                 <Box display="flex" gap={2}>
@@ -201,6 +256,8 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                     {texts.singlePrintDescription2}
                 </Typography>
             </Box>
+
+            <UpdatePriceModal isOpen={openModalSuccessUpdate} handleClose={() => setOpenModalSuccessUpdate(false)} />
         </Box>
     );
 }

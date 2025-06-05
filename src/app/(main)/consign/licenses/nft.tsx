@@ -181,29 +181,29 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
 
     const handleSubmitUpdatePrice = async () => {
         setLoading(true);
-        const verify = await dispatch(
-            signerUpdateLicensePriceThunk({ assetKey: assetId, price: values.single.editionPrice, client: client! })
-        );
-        if (!verify) {
-            toastr.display({ type: 'error', message: 'Error signing message' });
-            setLoading(false);
-            return;
-        }
+        // const verify = await dispatch(
+        //     signerUpdateLicensePriceThunk({ assetKey: assetId, price: values.single.editionPrice, client: client! })
+        // );
+        // if (!verify) {
+        //     toastr.display({ type: 'error', message: 'Error signing message' });
+        //     setLoading(false);
+        //     return;
+        // }
 
-        if (!wallets.some((wallet) => wallet.address === address)) {
-            // wallet not found
+        // if (!wallets.some((wallet) => wallet.address === address)) {
+        //     // wallet not found
 
-            setLoading(false);
-            toastr.display({ type: 'error', message: 'Wallet not found in your account' });
-            return;
-        }
+        //     setLoading(false);
+        //     toastr.display({ type: 'error', message: 'Wallet not found in your account' });
+        //     return;
+        // }
 
         const response = await dispatch(updatePriceThuk({ price: values.single.editionPrice, assetId }));
         setLoading(false);
         if (response) {
             setOpen(true);
             setIsEditing(false);
-        } else toastr.display({ type: 'error', message: 'Error updating price' });
+        } else toastr.display({ type: 'error', message: 'Error updating digital license' });
     };
 
     const handleChangeAutoStake = () => {
