@@ -103,9 +103,9 @@ export default function Licenses() {
               print: {
                   version: '1',
                   added: false,
-                  merchandisePrice: 5,
-                  displayPrice: 4,
-                  multiplier: 0.1,
+                  merchandisePrice: 10,
+                  displayPrice: 0.05,
+                  multiplier: 0.5,
               },
           };
 

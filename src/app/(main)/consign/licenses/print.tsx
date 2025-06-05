@@ -46,10 +46,6 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
         );
     }, [values.merchandisePrice, values.multiplier, setFieldValue]);
 
-    useEffect(() => {
-        console.log('display price changed:', values.displayPrice);
-    }, [values.displayPrice]);
-
     const handleAdded = (added: boolean) => {
         if (hasContract) {
             dispatch(addedPrintLicenseThunk({ assetKey: assetId, added }));
