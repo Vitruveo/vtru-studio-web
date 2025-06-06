@@ -123,11 +123,6 @@ export default function ProfileSettings() {
                     translation: texts.emailsTitle,
                     isValid: !!values.emails.length,
                 },
-
-                wallets: {
-                    translation: texts.walletsTitle,
-                    isValid: !!values.wallets.length,
-                },
             };
 
             const invalidFields = Object.entries(fields).filter(([_key, value]) => !value.isValid);
