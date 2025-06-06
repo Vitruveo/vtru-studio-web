@@ -93,12 +93,9 @@ export const consignArtworkSlice = createSlice({
     name: 'consignArtwork',
     initialState,
     reducers: {
-        checkIsCompletedProfile: (
-            state,
-            action: PayloadAction<{ username: string; wallets: Wallet[]; emails: Email[] }>
-        ) => {
-            const { username, wallets, emails } = action.payload;
-            state.isCompletedProfile = !!(emails.length && wallets.length && username.length);
+        checkIsCompletedProfile: (state, action: PayloadAction<{ username: string; emails: Email[] }>) => {
+            const { username, emails } = action.payload;
+            state.isCompletedProfile = !!(emails.length && username.length);
         },
         changeGoToConsignArtwork: (state, action: PayloadAction<boolean>) => {
             state.goToConsignArtwork = action.payload;

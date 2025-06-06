@@ -113,8 +113,8 @@ export default function Home() {
     const [showListOfLicenses, setShowListOfLicenses] = useState(false);
     const [showStoresVisibility, setShowStoresVisibility] = useState(false);
 
-    const { emails, username, wallets } = useSelector(userSelector(['emails', 'wallets', 'username']));
-    const isCompletedProfile = emails.length && wallets.length && username.length;
+    const { emails, username } = useSelector(userSelector(['emails', 'username']));
+    const isCompletedProfile = emails.length && username.length;
 
     const generalVault = useSelector((state) => state.user.generalVault);
 
