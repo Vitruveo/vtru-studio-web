@@ -228,7 +228,6 @@ export default function ProfileSettings() {
             consignArtworkActionsCreators.checkIsCompletedProfile({
                 username: values.username,
                 emails: values.emails,
-                wallets: values.wallets,
             })
         );
 
@@ -299,8 +298,8 @@ export default function ProfileSettings() {
     const isNewAvatar = resetAvatar
         ? '/images/profile/profileDefault.png'
         : changeAvatarFile instanceof File
-            ? URL.createObjectURL(changeAvatarFile)
-            : avatarSrc;
+          ? URL.createObjectURL(changeAvatarFile)
+          : avatarSrc;
 
     return (
         <form onSubmit={handleSubmit}>
