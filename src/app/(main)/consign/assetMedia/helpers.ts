@@ -33,11 +33,11 @@ export const mediaConfigs = {
             required: true,
         },
         print: {
-            width: 12000,
-            height: 8000,
+            width: 9000,
+            height: 6000,
             ppi: 300,
             sizeMB: {
-                image: 500,
+                image: 250,
                 video: 0,
             },
             required: false,
@@ -75,11 +75,11 @@ export const mediaConfigs = {
             required: true,
         },
         print: {
-            width: 12000,
-            height: 12000,
+            width: 6000,
+            height: 6000,
             ppi: 300,
             sizeMB: {
-                image: 500,
+                image: 250,
                 video: 0,
             },
             required: false,
@@ -117,11 +117,11 @@ export const mediaConfigs = {
             required: true,
         },
         print: {
-            width: 8000,
-            height: 12000,
+            width: 6000,
+            height: 9000,
             ppi: 300,
             sizeMB: {
-                image: 500,
+                image: 250,
                 video: 0,
             },
             required: false,
@@ -250,7 +250,7 @@ export function calculatePPI(fileOrUrl: File | string): Promise<number | null> {
             resolve(ppi);
         };
 
-        image.onerror = function (error) {
+        image.onerror = function () {
             resolve(null);
         };
 
@@ -295,8 +295,8 @@ export async function getMediaDefinition({
 
 export function getStepStatus({ formats }: { formats: FormatsMedia }) {
     return Object.entries(formats || {})
-        .filter(([key, value]) => key !== 'print')
-        .every(([key, value]) => value.file)
+        .filter(([key, _value]) => key !== 'print')
+        .every(([_key, value]) => value.file)
         ? 'completed'
         : Object.values(formats || {}).some((format) => format.file) || formats?.original?.file
           ? 'inProgress'

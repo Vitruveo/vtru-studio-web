@@ -46,7 +46,7 @@ export interface CreateStoreArtworkParams {
 export interface GetArtworkQuantityParams {
     price?: { min?: number; max?: number };
     colorPrecision: number;
-    hasBts: string;
+    hasBts: boolean;
     filters: Artworks;
     storesId: string;
 }
@@ -54,7 +54,7 @@ export interface GetArtworkQuantityParams {
 export interface GetArtsAndArtistsParams {
     price?: { min?: number; max?: number };
     colorPrecision: number;
-    hasBts: string;
+    hasBts: boolean;
     filters: Artworks;
     search: string;
     onlyInStore: boolean;
@@ -89,14 +89,14 @@ export interface ArtsAndArtistsList {
 
 export interface BuidlQuery {
     [key: string]:
-    | string
-    | {
-        $in: string[];
-    }
-    | {
-        [key: string]: {
-            $regex: string;
-            $options: string;
-        };
-    }[];
+        | string
+        | {
+              $in: string[];
+          }
+        | {
+              [key: string]: {
+                  $regex: string;
+                  $options: string;
+              };
+          }[];
 }

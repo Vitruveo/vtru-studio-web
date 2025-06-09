@@ -7,7 +7,6 @@ import { useSelector } from '@/store/hooks';
 import { userSelector } from '@/features/user';
 import { ProfileTabsGeneralProps } from '.';
 import BlankCard from '../../components/shared/BlankCard';
-import AccountSettings from '../accountSettings';
 
 export interface IdentityProps extends ProfileTabsGeneralProps {
     usernameError: string;

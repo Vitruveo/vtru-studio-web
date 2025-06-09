@@ -752,11 +752,12 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.awardUrl.description': 'Ссылка на описание награды',
 
     'studio.consignArtwork.assetMetadata.field.errors': (data: { message: string }) =>
-        `${data.message === 'required' || data.message === 'minItems'
-            ? 'Поле обязательно для заполнения'
-            : data.message === 'format'
-                ? 'Неверный формат'
-                : ''
+        `${
+            data.message === 'required' || data.message === 'minItems'
+                ? 'Поле обязательно для заполнения'
+                : data.message === 'format'
+                  ? 'Неверный формат'
+                  : ''
         }`,
 
     /* Licenses */
@@ -770,7 +771,7 @@ const language: Translation = {
     'studio.consignArtwork.licenses.delete.button': 'Удалить',
     'studio.consignArtwork.licenses.add.button': 'Добавить',
     'studio.consignArtwork.licenses.warning':
-        'Произведения Genesis были гарантированы на продажу NFT за $150. Пожалуйста, выберите лицензию NFT-ART-1, Одну единицу и введите $150. Вы также можете выбрать дополнительные лицензии.',
+        'Произведения Genesis были гарантированы на продажу NFT за $150. Пожалуйста, выберите лицензию DIGITAL COLLECTIBLE-ART-1, Одну единицу и введите $150. Вы также можете выбрать дополнительные лицензии.',
 
     'studio.consignArtwork.licenses.field.checkBoolean': (data: { checkBoolean: unknown }) =>
         `${data.checkBoolean === true ? 'да' : data.checkBoolean === false ? 'нет' : data.checkBoolean}`,
@@ -855,13 +856,18 @@ const language: Translation = {
         `${data.amount} из ${data.from} активных лицензий`,
 
     'studio.consignArtwork.licenses.print.description':
-        'Эта лицензия предоставляет произведение конечным пользователям для печати на один физический объект с использованием технологии печати по требованию (POD). Лицензия свободно передается до момента первой печати, после чего она передается исключительно владельцу физического объекта.',
+        'Данная лицензия предоставляет конечным пользователям возможность распечатать произведение искусства на одном физическом носителе с использованием технологии «Печать по требованию» (POD). Данная лицензия показывает клиентам только те продукты, которые подходят для файлов произведений искусства с низким разрешением.',
     'studio.consignArtwork.licenses.print.enable':
         'Включите эту лицензию, если хотите, чтобы конечные пользователи использовали ваше искусство для приложений печати по требованию (POD). Эта лицензия предназначена для индивидуальной печати; массовая печать не разрешена.',
-    'studio.consignArtwork.licenses.print.singlePrint.title': 'Одиночная печать',
+    'studio.consignArtwork.licenses.print.singlePrint.title': 'Лицензия на печать',
     'studio.consignArtwork.licenses.print.singlePrint.description':
-        '“Цена за единицу” - это цена произведения искусства в долларах США за одну печать.',
-    'studio.consignArtwork.licenses.print.singlePrint.field': 'Цена за единицу (USD)',
+        '"Цена на товары" – это стоимость лицензии на печать на товарах, таких как кружки, кепки, футболки, сумки и т. д.',
+    'studio.consignArtwork.licenses.print.singlePrint.description2':
+        '"Цена за отображение" – это стоимость лицензии на печать на материалах, основная цель которых – демонстрация произведения искусства, таких как холст, алюминий, постер и т. д. Цена выражается в квадратных сантиметрах, чтобы ее можно было применять к продуктам разного размера.',
+    'studio.consignArtwork.licenses.print.singlePrint.field': 'Цена на товары',
+    'studio.consignArtwork.licenses.print.singlePrint2.field': '(USD)',
+    'studio.consignArtwork.licenses.print.displayPrice.field': 'Цена за отображение',
+    'studio.consignArtwork.licenses.print.displayPrice2.field': '(Cents за кв. см)',
 
     'studio.consignArtwork.licenses.remix.description':
         'Эта лицензия позволяет конечным пользователям использовать работу в приложениях создания ремиксов с использованием',

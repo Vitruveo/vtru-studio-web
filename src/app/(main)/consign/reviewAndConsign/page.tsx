@@ -10,7 +10,7 @@ import { useI18n } from '@/app/hooks/useI18n';
 import PageContainerFooter from '../../components/container/PageContainerFooter';
 
 import { consignArtworkThunks } from '@/features/consign/thunks';
-import { requestConsignThunk, validationConsignThunk, deleteRequestConsignThunk } from '@/features/asset/thunks';
+import { requestConsignThunk, validationConsignThunk } from '@/features/asset/thunks';
 import { ConsignArtworkAssetStatus } from '@/features/consign/types';
 import ConsignMessage from './consignMessage';
 import { CompletedConsignTableStatus } from '../components/completedConsignPage/CompletedConsignTableStatus';
@@ -49,14 +49,14 @@ const ConsignArtwork = () => {
 
     const textsForConsignArtWorkStatus = {
         pending: {
-            buttontitle: 'Request Consign Pending',
+            buttontitle: 'Request Consign in queue',
             message:
-                'Your artwork is being reviewed by our team and you will be notified when it is made available for purchase',
+                'Your artwork has been queued for processing, it will be published soon and you will receive an email with more details.',
         },
         running: {
-            buttontitle: 'Request Consign Pending',
+            buttontitle: 'Request Consign in queue',
             message:
-                'Your artwork is being reviewed by our team and you will be notified when it is made available for purchase',
+                'Your artwork has been queued for processing, it will be published soon and you will receive an email with more details.',
         },
         rejected: {
             buttontitle: undefined,
@@ -106,9 +106,6 @@ const ConsignArtwork = () => {
     const handlePreview = () => {
         dispatch(consignArtworkThunks.checkPreview());
     };
-    const handleCancelRequestConsign = () => {
-        dispatch(deleteRequestConsignThunk());
-    };
 
     const consignSteps: ConsignStepsProps = {
         artworkListing: {
@@ -116,12 +113,6 @@ const ConsignArtwork = () => {
             actionTitle: texts.preview,
             actionFunc: handlePreview,
             show: true,
-        },
-        cancelRequest: {
-            title: 'Cancel Request Consignment',
-            actionTitle: 'Cancel',
-            actionFunc: handleCancelRequestConsign,
-            show: consignArtwork?.status === 'pending',
         },
     };
 

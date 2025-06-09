@@ -53,8 +53,8 @@ export default function NavItem({ item, level, pathDirect, hideMenu, forceClick,
     const { language } = useI18n();
 
     const status = useSelector((state) => state.asset.status);
-    const { emails, username, wallets } = useSelector(userSelector(['emails', 'wallets', 'username']));
-    const isCompletedProfile = emails.length && wallets.length && username.length;
+    const { emails, username } = useSelector(userSelector(['emails', 'username']));
+    const isCompletedProfile = emails.length && username.length;
     const isConsign = item.href === '/consign';
     const itemIcon = level > 1 ? <Icon stroke={1.5} size="1rem" /> : <Icon stroke={1.5} size="1.3rem" />;
 
