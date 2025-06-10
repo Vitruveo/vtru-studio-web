@@ -864,12 +864,12 @@ const language: Translation = {
         'Enable this license if you want end-users to use your art for print-on-demand (POD) applications. This license is for individual printing; bulk printing is not permitted.',
     'studio.consignArtwork.licenses.print.singlePrint.title': 'Print License',
     'studio.consignArtwork.licenses.print.singlePrint.description':
-        '“Merchandise Price” is the price for a license to print on merchandise such as mugs, hats, shirts, bags etc.',
+        '“Merchandise License Price” is the price for a license to print on merchandise such as mugs, hats, shirts, bags etc.',
     'studio.consignArtwork.licenses.print.singlePrint.description2':
-        '“Display Price” is the price for a license to print on material whose primary purpose is to showcase the artwork such as canvas, aluminum, poster etc. It is expressed in square centimeters so that it can be applied to display products of variable size.',
-    'studio.consignArtwork.licenses.print.singlePrint.field': 'Merchandise Price',
+        '“Display License Price” is the price for a license to print on material whose primary purpose is to showcase the artwork such as canvas, aluminum, poster etc. It is expressed in square centimeters so that it can be applied to display products of variable size.',
+    'studio.consignArtwork.licenses.print.singlePrint.field': 'Merchandise License Price',
     'studio.consignArtwork.licenses.print.singlePrint2.field': '(USD)',
-    'studio.consignArtwork.licenses.print.displayPrice.field': 'Display Price',
+    'studio.consignArtwork.licenses.print.displayPrice.field': 'Display License Price',
     'studio.consignArtwork.licenses.print.displayPrice2.field': '(USD per sq. cm.)',
 
     'studio.consignArtwork.licenses.remix.description':

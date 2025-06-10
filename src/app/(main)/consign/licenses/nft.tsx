@@ -11,7 +11,6 @@ import {
     Typography,
 } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
-import { useAccount, useConnectorClient } from 'wagmi';
 import CustomSelect from '@/app/(main)/components/forms/theme-elements/CustomSelect';
 import CustomTextField from '@/app/(main)/components/forms/theme-elements/CustomTextField';
 import CustomCheckbox from '@/app/(main)/components/forms/theme-elements/CustomCheckbox';
@@ -45,10 +44,6 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const hasConsign = useSelector((state) => !!state.asset.contractExplorer);
     const hasMinted = useSelector((state) => !!state.asset.mintExplorer);
     const assetId = useSelector((state) => state.asset._id);
-    const wallets = useSelector((state) => state.user.wallets);
-
-    const { data: client } = useConnectorClient();
-    const { address } = useAccount();
 
     useEffect(() => {
         const fecthCanEdit = async () => {
@@ -181,22 +176,6 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
 
     const handleSubmitUpdatePrice = async () => {
         setLoading(true);
-        // const verify = await dispatch(
-        //     signerUpdateLicensePriceThunk({ assetKey: assetId, price: values.single.editionPrice, client: client! })
-        // );
-        // if (!verify) {
-        //     toastr.display({ type: 'error', message: 'Error signing message' });
-        //     setLoading(false);
-        //     return;
-        // }
-
-        // if (!wallets.some((wallet) => wallet.address === address)) {
-        //     // wallet not found
-
-        //     setLoading(false);
-        //     toastr.display({ type: 'error', message: 'Wallet not found in your account' });
-        //     return;
-        // }
 
         const response = await dispatch(updatePriceThuk({ price: values.single.editionPrice, assetId }));
         setLoading(false);
@@ -204,16 +183,6 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
             setOpen(true);
             setIsEditing(false);
         } else toastr.display({ type: 'error', message: 'Error updating digital license' });
-    };
-
-    const handleChangeAutoStake = () => {
-        setFieldValue('nft.autoStake', !values.autoStake);
-    };
-
-    const renderMessage = () => {
-        if (!address) return 'Connect Wallet to Edit';
-
-        return 'Edit';
     };
 
     return (
@@ -531,13 +500,13 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                     {hasConsign &&
                         (!isEditing ? (
                             <Button
-                                disabled={!canEdit || !address || hasMinted}
+                                disabled={!canEdit || hasMinted}
                                 variant="contained"
                                 color="primary"
                                 fullWidth
                                 onClick={handleToggleEdit}
                             >
-                                {renderMessage()}
+                                Edit
                             </Button>
                         ) : (
                             <Box display="flex" gap={2}>

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
 import { Box, Button, Slider, Stack, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import CustomTextField from '@/app/(main)/components/forms/theme-elements/CustomTextField';
@@ -14,7 +13,6 @@ import UpdatePriceModal from './UpdatedPriceModal';
 function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const theme = useTheme();
 
-    const { address } = useAccount();
     const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
     const [isEditing, setIsEditing] = useState(!hasContract);
     const [loading, setLoading] = useState(false);
@@ -80,12 +78,6 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
         }
     };
 
-    const renderMessage = () => {
-        if (!address) return 'Connect Wallet to Edit';
-
-        return 'Edit';
-    };
-
     return (
         <Box width={700} display="flex" justifyContent="space-between" marginTop={2}>
             <Card
@@ -94,7 +86,6 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                 setAdded={handleAdded}
                 width={320}
                 height={hasContract ? 430 : 400}
-                disabled={hasContract && !address}
             >
                 {!values.added && (
                     <Box
@@ -115,29 +106,15 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                         >
                             {texts.printDescription}
                         </Typography>
-                        {hasContract && !address && (
-                            <Typography
-                                style={{ wordWrap: 'break-word' }}
-                                color="grey"
-                                fontWeight="500"
-                                variant="subtitle1"
-                                component="label"
-                                fontSize="0.9rem"
-                                textAlign="center"
-                            >
-                                Connect Wallet to Edit
-                            </Typography>
-                        )}
                     </Box>
                 )}
                 {values.added && (
                     <Stack gap={4} p={1.5}>
                         <Stack direction="row" justifyContent="space-between" alignItems="center">
-                            <Box>
-                                <Typography sx={{ whiteSpace: 'nowrap', marginRight: 3 }}>
-                                    {texts.singlePrintField}
+                            <Box width={150}>
+                                <Typography>
+                                    {texts.singlePrintField} {texts.singlePrint2Field}
                                 </Typography>
-                                <Typography>{texts.singlePrint2Field}</Typography>
                             </Box>
                             <CustomTextField
                                 name="print.merchandisePrice"
@@ -217,14 +194,8 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                         </Stack>
                         {hasContract &&
                             (!isEditing ? (
-                                <Button
-                                    disabled={!address}
-                                    variant="contained"
-                                    color="primary"
-                                    fullWidth
-                                    onClick={handleToggleEdit}
-                                >
-                                    {renderMessage()}
+                                <Button variant="contained" color="primary" fullWidth onClick={handleToggleEdit}>
+                                    Edit
                                 </Button>
                             ) : (
                                 <Box display="flex" gap={2}>
