@@ -11,15 +11,13 @@ import {
     Typography,
 } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
-import { useAccount, useConnectorClient } from 'wagmi';
 import CustomSelect from '@/app/(main)/components/forms/theme-elements/CustomSelect';
 import CustomTextField from '@/app/(main)/components/forms/theme-elements/CustomTextField';
 import CustomCheckbox from '@/app/(main)/components/forms/theme-elements/CustomCheckbox';
 import Card from './common/card';
-import { LicenseProps, LicensesFormValues } from './types';
+import { LicenseProps } from './types';
 import { useI18n } from '@/app/hooks/useI18n';
 import { formatCurrency } from '@/utils/formatCurrency';
-import { StepStatus } from '@/features/consign/types';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { checkLicenseEditableThunk, signerUpdateLicensePriceThunk, updatePriceThuk } from '@/features/asset/thunks';
 import UpdatePriceModal from './UpdatedPriceModal';
@@ -29,13 +27,6 @@ import { useToastr } from '@/app/hooks/useToastr';
 // NOTE: AVAILABLE LICENSE DESATIVADO POR ENQUANTO
 export const maxPrice = 10000;
 export const minPrice = 10;
-export const checkStepProgress = ({ values }: { values: LicensesFormValues }): StepStatus => {
-    return Object.values(values).filter((v) => v?.added).length &&
-        values.nft.single.editionPrice >= minPrice &&
-        values.nft.single.editionPrice <= maxPrice
-        ? 'completed'
-        : 'inProgress';
-};
 
 function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const dispatch = useDispatch();
@@ -51,11 +42,8 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const values = allValues.nft || {};
 
     const hasConsign = useSelector((state) => !!state.asset.contractExplorer);
+    const hasMinted = useSelector((state) => !!state.asset.mintExplorer);
     const assetId = useSelector((state) => state.asset._id);
-    const wallets = useSelector((state) => state.user.wallets);
-
-    const { data: client } = useConnectorClient();
-    const { address } = useAccount();
 
     useEffect(() => {
         const fecthCanEdit = async () => {
@@ -168,8 +156,8 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
         values?.editionOption && currentDescription === 'nft.editionOption'
             ? editionTitles[values.editionOption as keyof typeof editionTitles]
             : values?.added
-                ? texts.selectEditionTitle
-                : `NFT-ART-1 ${texts.license}`;
+              ? texts.selectEditionTitle
+              : `DIGITAL COLLECTIBLE-ART-1 ${texts.license}`;
 
     const handleAdded = (added: boolean) => {
         if (added == false) setFieldValue('nft.editionOption', '');
@@ -188,44 +176,25 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
 
     const handleSubmitUpdatePrice = async () => {
         setLoading(true);
-        const verify = await dispatch(
-            signerUpdateLicensePriceThunk({ assetKey: assetId, price: values.single.editionPrice, client: client! })
-        );
-        if (!verify) {
-            toastr.display({ type: 'error', message: 'Error signing message' });
-            setLoading(false);
-            return;
-        }
-
-        if (!wallets.some((wallet) => wallet.address === address)) {
-            // wallet not found
-
-            setLoading(false);
-            toastr.display({ type: 'error', message: 'Wallet not found in your account' });
-            return;
-        }
 
         const response = await dispatch(updatePriceThuk({ price: values.single.editionPrice, assetId }));
         setLoading(false);
         if (response) {
             setOpen(true);
             setIsEditing(false);
-        } else toastr.display({ type: 'error', message: 'Error updating price' });
-    };
-
-    const handleChangeAutoStake = () => {
-        setFieldValue('nft.autoStake', !values.autoStake);
-    };
-
-    const renderMessage = () => {
-        if (!address) return 'Connect Wallet to Edit';
-
-        return 'Edit';
+        } else toastr.display({ type: 'error', message: 'Error updating digital license' });
     };
 
     return (
         <Box width={700} display="flex" justifyContent="space-between" marginTop={2}>
-            <Card disabled title="NFT-ART-1" added={values?.added} setAdded={handleAdded} width={320} height={400}>
+            <Card
+                disabled
+                title="COLLECTIBLE-ART-1"
+                added={values?.added}
+                setAdded={handleAdded}
+                width={320}
+                height={400}
+            >
                 {!values?.added ? (
                     <Box p={1.5}>
                         <Typography
@@ -460,7 +429,7 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                     />
                                 </Box>
                             )}
-                            <FormControlLabel
+                            {/* <FormControlLabel
                                 value="elastic"
                                 control={<Radio disabled />}
                                 label={texts.elasticEditionsTitle}
@@ -469,7 +438,8 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                 value="unlimited"
                                 control={<Radio disabled />}
                                 label={texts.unlimitedEditionsTitle}
-                            />
+                            /> */}
+
                             {values.editionOption === 'unlimited' && (
                                 <Box marginLeft={4} display="flex" alignItems="center" justifyContent="space-between">
                                     <Box marginRight={1}>
@@ -530,13 +500,13 @@ function Nft({ allValues, handleChange, setFieldValue }: LicenseProps) {
                     {hasConsign &&
                         (!isEditing ? (
                             <Button
-                                disabled={!canEdit || !address}
+                                disabled={!canEdit || hasMinted}
                                 variant="contained"
                                 color="primary"
                                 fullWidth
                                 onClick={handleToggleEdit}
                             >
-                                {renderMessage()}
+                                Edit
                             </Button>
                         ) : (
                             <Box display="flex" gap={2}>

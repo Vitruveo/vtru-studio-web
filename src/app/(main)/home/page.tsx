@@ -1,6 +1,6 @@
 'use client';
 
-import { CSSProperties, useEffect, useMemo, useRef, useState } from 'react';
+import { CSSProperties, useEffect, useRef, useState } from 'react';
 import { Fab, Action } from 'react-tiny-fab';
 import { useRouter } from 'next/navigation';
 import {
@@ -28,8 +28,6 @@ import {
     Pagination,
     Theme,
     useTheme,
-    ToggleButton,
-    Switch,
 } from '@mui/material';
 import { Menu as MenuIcon } from '@mui/icons-material';
 import {
@@ -48,7 +46,7 @@ import Image from 'next/image';
 
 import { useDispatch, useSelector } from '@/store/hooks';
 import { useI18n } from '../../hooks/useI18n';
-import { putAutoStakeThunk, requestMyAssetsThunk } from '@/features/user/thunks';
+import { requestMyAssetsThunk } from '@/features/user/thunks';
 import { userActionsCreators } from '@/features/user/slice';
 import { createNewAssetThunk, deleteAssetThunk } from '@/features/asset/thunks';
 import { consignArtworkActionsCreators } from '@/features/consign/slice';
@@ -60,13 +58,6 @@ import isVideoExtension from '@/utils/isVideo';
 import { ModalListOfLicenses } from '../components/licenses/ModalListOfLicenses';
 import { userSelector } from '@/features/user';
 import { ModalStoresVisibility } from '../components/stores/visibility/ModalStoresVisibility';
-
-const iconStyle: CSSProperties = {
-    position: 'absolute',
-    bottom: 15,
-    right: 10,
-    color: '#595959',
-};
 
 const iconStyleComment: CSSProperties = {
     position: 'absolute',
@@ -107,10 +98,9 @@ export default function Home() {
     const theme = useTheme();
     const isMobile = useMediaQuery('(max-width: 600px)');
     const isTablet = useMediaQuery('(max-width: 900px)');
-    const { assets, currentPage, autoStake, collections, sort } = useSelector((state) => state.user);
+    const { assets, currentPage, collections = [], sort } = useSelector((state) => state.user);
     const customizer = useSelector((state) => state.customizer);
     const lgUp = useMediaQuery((item: Theme) => item.breakpoints.up('lg'));
-    const mdUp = useMediaQuery((item: Theme) => item.breakpoints.up('md'));
     const smUp = useMediaQuery((item: Theme) => item.breakpoints.up('sm'));
     const selectedFilter = useSelector((state) => state.filters.selectedFilter);
 
@@ -123,8 +113,8 @@ export default function Home() {
     const [showListOfLicenses, setShowListOfLicenses] = useState(false);
     const [showStoresVisibility, setShowStoresVisibility] = useState(false);
 
-    const { emails, username, wallets } = useSelector(userSelector(['emails', 'wallets', 'username']));
-    const isCompletedProfile = emails.length && wallets.length && username.length;
+    const { emails, username } = useSelector(userSelector(['emails', 'username']));
+    const isCompletedProfile = emails.length && username.length;
 
     const generalVault = useSelector((state) => state.user.generalVault);
 
@@ -212,10 +202,6 @@ export default function Home() {
                 sort,
             })
         );
-    };
-
-    const handleChangeAutoStake = () => {
-        dispatch(putAutoStakeThunk());
     };
 
     if (generalVault) return <></>;
@@ -455,7 +441,6 @@ export default function Home() {
                                     <List>
                                         {filters.map((filter, index) => (
                                             <ListItem
-                                                button
                                                 key={index}
                                                 onClick={() => {
                                                     handleFilterChange(filter);
@@ -633,7 +618,7 @@ export default function Home() {
                                                     textOverflow: 'ellipsis',
                                                     whiteSpace: 'nowrap',
                                                     maxWidth: 270,
-                                                    overflowX: 'hidden',
+                                                    overflow: 'hidden',
                                                     textAlign: 'left',
                                                 }}
                                             >
@@ -694,15 +679,13 @@ export default function Home() {
                                                 icon={<IconSettings size={40} />}
                                                 alwaysShowTitle={true}
                                             >
-                                                {!asset.mintExplorer && (
-                                                    <Action
-                                                        style={{ backgroundColor: '#fff' }}
-                                                        text="Edit"
-                                                        onClick={() => router.push('/consign')}
-                                                    >
-                                                        <IconEdit color={theme.palette.primary.main} size={30} />
-                                                    </Action>
-                                                )}
+                                                <Action
+                                                    style={{ backgroundColor: '#fff' }}
+                                                    text="Edit"
+                                                    onClick={() => router.push('/consign')}
+                                                >
+                                                    <IconEdit color={theme.palette.primary.main} size={30} />
+                                                </Action>
                                                 {(asset.mintExplorer || asset.contractExplorer) && (
                                                     <Action
                                                         style={{ backgroundColor: '#fff' }}

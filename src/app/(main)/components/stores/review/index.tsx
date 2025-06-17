@@ -31,7 +31,7 @@ export const Review = () => {
                             max: values.general?.licenses.maxPrice,
                             min: values.general?.licenses.minPrice,
                         },
-                        hasBts: values.general?.shortcuts.hasBTS === true ? 'yes' : '',
+                        hasBts: values.general?.shortcuts.hasBTS,
                         filters: {
                             general: values.general,
                             context: values.context,

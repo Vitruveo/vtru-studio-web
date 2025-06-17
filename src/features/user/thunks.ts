@@ -129,7 +129,6 @@ export function userOTPConfirmThunk(payload: UserOTPConfirmReq): ReduxThunkActio
         const response = await userOTPConfimReq({ email: payload.email, code: payload.code });
 
         if (response) {
-            response.data?.creator;
             await dispatch(userActionsCreators.otpConfirm(response));
 
             // save cookie
