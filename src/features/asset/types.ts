@@ -259,6 +259,20 @@ export interface SignerParams {
     price: number;
 }
 
+export interface SignerAddedPrintLicenseParams {
+    client: Client<Transport, Chain, Account>;
+    assetKey: string;
+    added: boolean;
+}
+
+export interface SignerUpdatePricePrintLicenseParams {
+    client: Client<Transport, Chain, Account>;
+    assetKey: string;
+    merchandisePrice: number;
+    displayPrice: number;
+    multiplier: number;
+}
+
 export interface SignerUpdateAssetParams {
     client: Client<Transport, Chain, Account>;
     assetKey: string;
@@ -325,6 +339,23 @@ export interface SignUpdateAssetHeaderReq {
     signedMessage: string;
 }
 
+export interface SignMessageReq {
+    signer: string;
+    domain: {
+        name: string;
+        version: string;
+        chainId: number;
+    };
+    types: {
+        Transaction: {
+            name: string;
+            type: string;
+        }[];
+    };
+    tx: Record<string, any>;
+    signedMessage: string;
+}
+
 export interface SignUpdateAssetStatusReq {
     signer: string;
     domain: {
@@ -361,6 +392,18 @@ export interface UpdateAssetHeaderReq {
         title: string;
         description: string;
     };
+}
+
+export interface UpdatePrintLicensePriceReq {
+    assetKey: string;
+    merchandisePrice: number;
+    displayPrice: number;
+    multiplier: number;
+}
+
+export interface UpdatePrintLicenseAddedReq {
+    assetKey: string;
+    added: boolean;
 }
 
 export type UpdateAssetStepApiRes = APIResponse<string>;

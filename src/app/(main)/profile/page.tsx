@@ -2,13 +2,10 @@
 import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
-import { Avatar, Box, Button, CardContent, Grid, Typography, Tabs, Tab, Divider } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useDispatch, useSelector } from '@/store/hooks';
 import Breadcrumb from '@/app/(main)/layout/shared/breadcrumb/Breadcrumb';
-import BlankCard from '../components/shared/BlankCard';
-import AccountSettings from './accountSettings';
 
-import { Stack } from '@mui/system';
 import {
     changeAvatarThunk,
     generalStorageAvatarThunk,
@@ -17,14 +14,12 @@ import {
 } from '@/features/user/thunks';
 import { userSelector } from '@/features/user';
 import { AccountSettingsFormValues } from './types';
-import CustomTextField from '../components/forms/theme-elements/CustomTextField';
 import { debouncedUsernameValidation } from '../consign/formschema';
 import PageContainerFooter from '../components/container/PageContainerFooter';
 import { consignArtworkActionsCreators } from '@/features/consign/slice';
 import { useI18n } from '@/app/hooks/useI18n';
 import { useAvatar } from './useAvatar';
 import { useToastr } from '@/app/hooks/useToastr';
-import { BASE_URL_SEARCH } from '@/constants/search';
 import ProfileTabs from './tabs/index';
 import { ProfileSchemaValidation } from './tabs/formschema';
 import ConfirmModal from './confirmModal';
@@ -128,14 +123,9 @@ export default function ProfileSettings() {
                     translation: texts.emailsTitle,
                     isValid: !!values.emails.length,
                 },
-
-                wallets: {
-                    translation: texts.walletsTitle,
-                    isValid: !!values.wallets.length,
-                },
             };
 
-            const invalidFields = Object.entries(fields).filter(([key, value]) => !value.isValid);
+            const invalidFields = Object.entries(fields).filter(([_key, value]) => !value.isValid);
 
             dispatch(consignArtworkActionsCreators.changeGoToConsignArtwork(false));
 
@@ -147,7 +137,7 @@ export default function ProfileSettings() {
                             {`${texts.accessConsignMessage}`}
                             <Box>
                                 Fill in the fields:{' '}
-                                {`${invalidFields.map(([key, value]) => value.translation).join(', ')}`}
+                                {`${invalidFields.map(([_key, value]) => value.translation).join(', ')}`}
                             </Box>
                         </Box>
                     ),
@@ -233,7 +223,6 @@ export default function ProfileSettings() {
             consignArtworkActionsCreators.checkIsCompletedProfile({
                 username: values.username,
                 emails: values.emails,
-                wallets: values.wallets,
             })
         );
 

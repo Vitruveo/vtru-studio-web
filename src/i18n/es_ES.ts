@@ -105,8 +105,9 @@ const language: Translation = {
     'studio.consignArtwork.assetMedia.assets': 'Medios',
 
     'studio.consignArtwork.assetMedia.definition': (data: { definition: 'landscape' | 'square' | 'portrait' }) => {
-        return `${data.definition === 'landscape' ? 'Paisaje' : data.definition === 'portrait' ? 'Retrato' : 'Cuadrado'
-            }`;
+        return `${
+            data.definition === 'landscape' ? 'Paisaje' : data.definition === 'portrait' ? 'Retrato' : 'Cuadrado'
+        }`;
     },
     'studio.consignArtwork.assetMedia.image': 'imagen',
     'studio.consignArtwork.assetMedia.video': 'video',
@@ -711,11 +712,12 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.awardUrl': 'URL del premio',
     'studio.consignArtwork.assetMetadata.field.awardUrl.description': 'Enlace a la información del premio',
     'studio.consignArtwork.assetMetadata.field.errors': (data: { message: string }) =>
-        `${data.message === 'required' || data.message === 'minItems'
-            ? 'Campo requerido'
-            : data.message === 'format'
-                ? 'Formato incorrecto'
-                : ''
+        `${
+            data.message === 'required' || data.message === 'minItems'
+                ? 'Campo requerido'
+                : data.message === 'format'
+                  ? 'Formato incorrecto'
+                  : ''
         }`,
 
     /* Licenses */
@@ -728,7 +730,7 @@ const language: Translation = {
     'studio.consignArtwork.licenses.delete.button': 'Eliminar',
     'studio.consignArtwork.licenses.add.button': 'Añadir',
     'studio.consignArtwork.licenses.warning':
-        'Las obras de Génesis han sido garantizadas para una venta de NFT por $150. Por favor, seleccione la licencia NFT-ART-1, Edición Única e ingrese $150. También puede seleccionar licencias adicionales.',
+        'Las obras de Génesis han sido garantizadas para una venta de NFT por $150. Por favor, seleccione la licencia DIGITAL COLLECTIBLE-ART-1, Edición Única e ingrese $150. También puede seleccionar licencias adicionales.',
     'studio.consignArtwork.licenses.field.checkBoolean': (data: { checkBoolean: unknown }) =>
         `${data.checkBoolean === true ? 'sí' : data.checkBoolean === false ? 'no' : data.checkBoolean}`,
     'studio.consignArtwork.licenses.field.errors': (data: { message: string }) =>
@@ -812,13 +814,18 @@ const language: Translation = {
         `${data.amount} de ${data.from} Licencias habilitadas`,
 
     'studio.consignArtwork.licenses.print.description':
-        'Esta licencia hace que la obra de arte esté disponible para los usuarios finales para imprimir en un solo artículo físico utilizando la tecnología de impresión bajo demanda (POD). La licencia es libremente transferible hasta el punto de impresión, después de lo cual es transferible únicamente al propietario del artículo físico.',
+        'Esta licencia hace que las ilustraciones estén disponibles para que los usuarios finales puedan imprimirlas en un solo artículo físico mediante la tecnología de impresión bajo demanda (POD). La licencia muestra a los clientes únicamente productos que son adecuados para archivos de ilustraciones de baja resolución.',
     'studio.consignArtwork.licenses.print.enable':
         'Habilite esta licencia si desea que los usuarios finales utilicen su arte para aplicaciones de impresión bajo demanda (POD). Esta licencia es para impresión individual; no se permite la impresión en masa.',
-    'studio.consignArtwork.licenses.print.singlePrint.title': 'Impresión Única',
+    'studio.consignArtwork.licenses.print.singlePrint.title': 'Licencia de Impresión',
     'studio.consignArtwork.licenses.print.singlePrint.description':
-        '“Precio Unitario” es el precio de la obra de arte en dólares estadounidenses para una sola impresión.',
-    'studio.consignArtwork.licenses.print.singlePrint.field': 'Precio Unitario (USD)',
+        'El "Precio de Mercancía" es el precio de una licencia para imprimir en productos como tazas, gorras, camisetas, bolsas, etc.',
+    'studio.consignArtwork.licenses.print.singlePrint.description2':
+        'El "Precio de Exhibición" es el precio de una licencia para imprimir en materiales cuyo propósito principal es exhibir la obra de arte, como lienzo, aluminio, póster, etc. Se expresa en centímetros cuadrados para que pueda aplicarse a productos de exhibición de tamaño variable.',
+    'studio.consignArtwork.licenses.print.singlePrint.field': 'Precio de Mercancía',
+    'studio.consignArtwork.licenses.print.singlePrint2.field': '(USD)',
+    'studio.consignArtwork.licenses.print.displayPrice.field': 'Precio de Exhibición',
+    'studio.consignArtwork.licenses.print.displayPrice2.field': '(Cents por cm²)',
 
     'studio.consignArtwork.licenses.remix.description':
         'Esta licencia hace que la obra de arte esté disponible para los usuarios finales para su uso en aplicaciones de Remix utilizando la',

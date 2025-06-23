@@ -27,6 +27,8 @@ export function loginWebSocketThunk(): ReduxThunkAction {
         });
 
         webSocketService.on('preSignedURL', (data: PreSignedURLPayload) => {
+            console.log('receive preSignedURL', data);
+
             if (data.method === 'PUT') {
                 if (data.origin === 'asset')
                     dispatch(

@@ -17,7 +17,6 @@ import Language from './Language';
 import { ClaimContainer } from '@/app/(main)/components/Claim/container';
 import { WalletProvider } from '@/app/(main)/components/apps/wallet';
 import AllProjectsMenu from './AllProjectsMenu';
-import Image from 'next/image';
 
 const Header = () => {
     const dispatch = useDispatch();

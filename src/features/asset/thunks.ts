@@ -26,6 +26,9 @@ import {
     signUpdateAssetStatus,
     updateAssetStatus,
     updateAssetHeader,
+    updatePrintLicensePrice,
+    addedPrintLicense,
+    signAddedPrintLicense,
 } from './requests';
 import {
     AssetSendRequestUploadApiRes,
@@ -50,6 +53,10 @@ import {
     SignerUpdateAssetStatusParams,
     UpdateAssetStatusReq,
     UpdateAssetHeaderReq,
+    UpdatePrintLicensePriceReq,
+    UpdatePrintLicenseAddedReq,
+    SignerAddedPrintLicenseParams,
+    SignerUpdatePricePrintLicenseParams,
 } from './types';
 import { ReduxThunkAction } from '@/store';
 import { assetActionsCreators } from './slice';
@@ -63,10 +70,19 @@ import { FormatsAuxiliayMedia } from '@/app/(main)/consign/auxiliaryMedia/types'
 
 import { BASE_URL_API } from '@/constants/api';
 import { userActionsCreators } from '../user/slice';
-import { checkStepProgress } from '@/app/(main)/consign/licenses/nft';
 import { clientToSigner, network, provider } from '@/services/web3';
 import schema from '@/services/web3/contracts.json';
 import { UpdatedAssetStoresVisibilityReq } from '../common/types';
+import { maxPrice, minPrice } from '@/app/(main)/components/stores/filters/licenseItem';
+import { StepStatus } from '../consign/types';
+
+export const checkStepProgress = ({ values }: { values: LicensesFormValues }): StepStatus => {
+    return Object.values(values).filter((v) => v?.added).length &&
+        values.nft.single.editionPrice >= minPrice &&
+        values.nft.single.editionPrice <= maxPrice
+        ? 'completed'
+        : 'inProgress';
+};
 
 export function requestDeleteURLThunk(payload: RequestDeleteFilesReq): ReduxThunkAction<Promise<any>> {
     return async function () {
@@ -144,7 +160,9 @@ export function getAssetThunk(id: string): ReduxThunkAction<Promise<any>> {
                     dispatch(
                         consignArtworkActionsCreators.changeStatusStep({
                             stepId: 'licenses',
-                            status: checkStepProgress({ values: response.data.licenses }),
+                            status: checkStepProgress({
+                                values: response.data.licenses,
+                            }),
                         })
                     );
                 }
@@ -457,12 +475,15 @@ export function assetMediaThunk(payload: {
         if (payload.deleteFormats?.length) dispatch(assetActionsCreators.removeFormats(payload.deleteFormats));
         dispatch(assetActionsCreators.changeLoadingMediaData('finished'));
 
-        const currentFormats = Object.entries(getState().asset.formats).filter(([key, _value]) => key !== 'print');
+        const currentFormats = Object.entries(getState().asset.formats || {}).filter(
+            ([key, _value]) => key !== 'print'
+        );
         const hasFiles = currentFormats.every(([_key, value]) => value.path);
 
         const currentFormatsFields = Object.entries(payload?.formatsFields || {}).filter(
             ([key, _value]) => key !== 'print'
         );
+
         const hasFilesFormatFields = currentFormatsFields.every(([_key, value]) => value.file);
 
         if (hasFiles && hasFilesFormatFields && !payload.deleteFormats?.length) {
@@ -472,6 +493,17 @@ export function assetMediaThunk(payload: {
                 })
             );
         }
+
+        // Print
+        // const hasPrintFile = getState().asset.formats?.print?.path;
+        // const hasPrintFileFields = payload?.formatsFields?.print?.file;
+        // if (hasPrintFile && hasPrintFileFields && !payload.deleteFormats?.length) {
+        //     dispatch(
+        //         validateUploadedMediaThunk({
+        //             assetId: getState().asset._id,
+        //         })
+        //     );
+        // }
     };
 }
 
@@ -528,7 +560,7 @@ export function licenseThunk(payload: LicensesFormValues): ReduxThunkAction<Prom
 export function updatedAssetStoresVisibilityThunk(
     payload: UpdatedAssetStoresVisibilityReq
 ): ReduxThunkAction<Promise<any>> {
-    return async function (dispatch, getState) {
+    return async function (dispatch) {
         try {
             updatedAssetStoresVisibility(payload);
             dispatch(userActionsCreators.changeAssetStoresVisibility(payload));
@@ -950,6 +982,81 @@ export function checkLicenseEditableThunk(payload: CheckLicenseEditableReq): Red
     };
 }
 
+export function signerUpdatePricePrintLicenseThunk(
+    payload: SignerUpdatePricePrintLicenseParams
+): ReduxThunkAction<Promise<boolean>> {
+    return async function () {
+        try {
+            const { client, assetKey, displayPrice, merchandisePrice, multiplier } = payload;
+
+            return true;
+        } catch (error) {
+            return false;
+        }
+    };
+}
+
+export function signerAddedPrintLicenseThunk(
+    payload: SignerAddedPrintLicenseParams
+): ReduxThunkAction<Promise<boolean>> {
+    return async function () {
+        try {
+            const { client, assetKey, added } = payload;
+            const signer = clientToSigner(client);
+
+            const contractAddress = schema[network].AssetRegistry;
+
+            const domain = {
+                name: 'Vitruveo Studio',
+                version: '1',
+                chainId: Number((await provider.getNetwork()).chainId),
+            };
+
+            const types = {
+                Transaction: [
+                    { name: 'name', type: 'string' },
+                    { name: 'action', type: 'string' },
+                    { name: 'method', type: 'string' },
+                    { name: 'assetKey', type: 'string' },
+                    { name: 'added', type: 'bool' },
+                    { name: 'licenseTypeId', type: 'uint' },
+                    { name: 'contract', type: 'address' },
+                    { name: 'timestamp', type: 'uint' },
+                ],
+            };
+
+            const tx = {
+                name: 'Asset Registry',
+                action: 'Added Print License',
+                method: 'addedPrintLicense',
+                assetKey: assetKey,
+                added,
+                licenseTypeId: 4,
+                contract: contractAddress,
+                timestamp: Math.floor(Date.now() / 1000),
+            };
+
+            // Sign the message
+            const signedMessage = await signer.signTypedData(domain, types, tx);
+
+            const response = await signAddedPrintLicense({
+                tx,
+                signedMessage,
+                signer: signer.address,
+                types,
+                domain,
+            });
+
+            if (response.status !== 200) {
+                return false;
+            }
+            return true;
+        } catch (error) {
+            return false;
+        }
+    };
+}
+
 export function signerUpdateLicensePriceThunk(payload: SignerParams): ReduxThunkAction<Promise<boolean>> {
     return async function () {
         try {
@@ -1153,5 +1260,27 @@ export function updateAssetStatusThunk(payload: UpdateAssetStatusReq): ReduxThun
             assetKey,
             status,
         });
+    };
+}
+
+export function updatePrintLicensePriceThunk(payload: UpdatePrintLicensePriceReq): ReduxThunkAction<Promise<boolean>> {
+    return async function () {
+        return updatePrintLicensePrice(payload)
+            .then(() => true)
+            .catch((error) => {
+                console.log(error);
+                return false;
+            });
+    };
+}
+
+export function addedPrintLicenseThunk(payload: UpdatePrintLicenseAddedReq): ReduxThunkAction<Promise<boolean>> {
+    return async function () {
+        return addedPrintLicense(payload)
+            .then(() => true)
+            .catch((error) => {
+                console.log(error);
+                return false;
+            });
     };
 }

@@ -752,11 +752,12 @@ const language: Translation = {
     'studio.consignArtwork.assetMetadata.field.awardUrl.description': 'لینک به اطلاعات جایزه',
 
     'studio.consignArtwork.assetMetadata.field.errors': (data: { message: string }) =>
-        `${data.message === 'required' || data.message === 'minItems'
-            ? 'این فیلد الزامی است'
-            : data.message === 'format'
-                ? 'فرمت این فیلد اشتباه است'
-                : ''
+        `${
+            data.message === 'required' || data.message === 'minItems'
+                ? 'این فیلد الزامی است'
+                : data.message === 'format'
+                  ? 'فرمت این فیلد اشتباه است'
+                  : ''
         }`,
 
     /* Licenses */
@@ -769,7 +770,7 @@ const language: Translation = {
     'studio.consignArtwork.licenses.delete.button': 'حذف',
     'studio.consignArtwork.licenses.add.button': 'اضافه',
     'studio.consignArtwork.licenses.warning':
-        'آثار تولید اولیه به فروش ام‌اف‌تی به ارزش 150 دلار تضمین شده‌اند. لطفاً لایسنس NFT-ART-1 را انتخاب کنید، ادیشن تکی را انتخاب کرده و مبلغ 150 دلار را وارد کنید. همچنین می‌توانید لایسنس‌های اضافی را نیز انتخاب کنید.',
+        'آثار تولید اولیه به فروش ام‌اف‌تی به ارزش 150 دلار تضمین شده‌اند. لطفاً لایسنس DIGITAL COLLECTIBLE-ART-1 را انتخاب کنید، ادیشن تکی را انتخاب کرده و مبلغ 150 دلار را وارد کنید. همچنین می‌توانید لایسنس‌های اضافی را نیز انتخاب کنید.',
 
     'studio.consignArtwork.licenses.field.checkBoolean': (data: { checkBoolean: unknown }) =>
         `${data.checkBoolean === true ? 'بله' : data.checkBoolean === false ? 'خیر' : data.checkBoolean}`,
@@ -853,13 +854,18 @@ const language: Translation = {
         `مبلغ ${data.amount} ${data.from}`,
 
     'studio.consignArtwork.licenses.print.description':
-        'این مجوز اثر هنری را برای کاربران نهایی برای چاپ روی یک مورد فیزیکی تکی با استفاده از فناوری چاپ درخواستی (POD) فراهم می‌کند. این مجوز تا لحظه چاپ قابل انتقال است، پس از آن فقط به مالک مورد فیزیکی قابل انتقال است.',
+        'این مجوز، اثر هنری را برای چاپ روی یک آیتم فیزیکی با استفاده از فناوری چاپ بر حسب تقاضا (POD) در دسترس کاربران نهایی قرار می‌دهد. مجوز فقط محصولاتی را به مشتریان نشان می‌دهد که برای فایل‌های آثار هنری با وضوح پایین مناسب هستند.',
     'studio.consignArtwork.licenses.print.enable':
         'این مجوز را فعال کنید اگر می‌خواهید کاربران نهایی از آثار هنری شما برای برنامه‌های چاپ درخواستی (POD) استفاده کنند. این مجوز برای چاپ فردی است؛ چاپ انبوه مجاز نیست.',
-    'studio.consignArtwork.licenses.print.singlePrint.title': 'چاپ تکی',
+    'studio.consignArtwork.licenses.print.singlePrint.title': 'چاپ تکیمجوز چاپ',
     'studio.consignArtwork.licenses.print.singlePrint.description':
-        '“قیمت واحد” قیمت اثر هنری به دلار آمریکا برای یک چاپ تکی است.',
-    'studio.consignArtwork.licenses.print.singlePrint.field': 'قیمت واحد (دلار آمریکا)',
+        '"قیمت کالا" هزینه مجوز چاپ روی کالاهایی مانند لیوان، کلاه، پیراهن، کیف و غیره است.',
+    'studio.consignArtwork.licenses.print.singlePrint.description2':
+        '"قیمت نمایش" هزینه مجوز چاپ روی موادی است که هدف اصلی آنها نمایش اثر هنری است، مانند بوم، آلومینیوم، پوستر و غیره. این قیمت بر حسب سانتی‌متر مربع بیان می‌شود تا بتوان آن را بر روی محصولات نمایشی با اندازه‌های مختلف اعمال کرد.',
+    'studio.consignArtwork.licenses.print.singlePrint.field': 'قیمت کالا',
+    'studio.consignArtwork.licenses.print.singlePrint2.field': '(USD)',
+    'studio.consignArtwork.licenses.print.displayPrice.field': 'قیمت نمایش',
+    'studio.consignArtwork.licenses.print.displayPrice2.field': '(Cents به ازای هر سانتی‌متر مربع)',
 
     'studio.consignArtwork.licenses.remix.description':
         'این مجوز اثر هنری را برای کاربران نهایی برای استفاده در برنامه‌های Remix با استفاده از',

@@ -4,8 +4,9 @@ import Card from './common/card';
 import { LicenseProps } from './types';
 import { useI18n } from '@/app/hooks/useI18n';
 
-function Remix({ allValues, setFieldValue, handleChange }: LicenseProps) {
-    const values = allValues.remix || {};
+function Remix({ setFieldValue, handleChange }: LicenseProps) {
+    const values = {} as any;
+    // const values = allValues.remix || {};
 
     const { language } = useI18n();
 

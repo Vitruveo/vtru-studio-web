@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import CloseIcon from '@mui/icons-material/Close';
 import { Stack } from '@mui/system';
-import { Box, CircularProgress, IconButton, Typography } from '@mui/material';
+import { Box, IconButton, Typography } from '@mui/material';
 
 import { useDispatch, useSelector } from '@/store/hooks';
 import { AssetMediaFormValues, FormatMediaSave, FormatsMedia } from './types';
@@ -50,7 +50,7 @@ export default function AssetMedia() {
 
     const isAllValid = Object.entries(formats)
         .filter(([key]) => key !== 'print')
-        .every(([_, item]) => item?.validation?.isValid);
+        .every(([_, item]) => item?.file);
 
     const initialValues = useMemo(
         () => ({
@@ -96,11 +96,6 @@ export default function AssetMedia() {
     const { values, errors, setFieldValue, handleSubmit } = useFormik<AssetMediaFormValues>({
         initialValues,
         onSubmit: async () => {
-            if (hasContract) {
-                router.push('/consign/assetMetadata');
-                return;
-            }
-
             const hasChanges = !(JSON.stringify(initialValues) === JSON.stringify(values) && !values.deleteKeys.length);
 
             if (hasChanges) {
@@ -154,11 +149,6 @@ export default function AssetMedia() {
         rangeTimeStart?: string;
         rangeTimeEnd?: string;
     }) => {
-        if (hasContract) {
-            toast.display({ type: 'warning', message: 'You cannot upload new files after signing the contract' });
-            return;
-        }
-
         const transactionId = nanoid();
 
         const isVideo = originalMediaInfo.mediaType === 'video';
@@ -196,11 +186,6 @@ export default function AssetMedia() {
     };
 
     const handleOpenBackModal = () => {
-        if (hasContract) {
-            router.push(`/consign`);
-            return;
-        }
-
         if (isUploading) {
             toast.display({ type: 'warning', message: 'Please wait until the upload is complete' });
             return;
@@ -227,7 +212,7 @@ export default function AssetMedia() {
         );
 
         const deleteFormats = Object.entries(values.formats)
-            .filter(([key, value]) => !initialValues.formats[key as keyof FormatsMedia]?.file)
+            .filter(([key, _value]) => !initialValues.formats[key as keyof FormatsMedia]?.file)
             .map(([key, _]) => key);
 
         if (deleteFormats.length) await dispatch(assetMediaThunk({ deleteFormats }));
@@ -263,7 +248,7 @@ export default function AssetMedia() {
 
                     if (!formatByTransaction) return;
 
-                    const [key, value] = formatByTransaction;
+                    const [_key, value] = formatByTransaction;
 
                     dispatch(
                         assetStorageThunk({
@@ -445,9 +430,15 @@ export default function AssetMedia() {
                             )}
 
                             <Box marginTop={1} display="flex" flexWrap="wrap">
-                                {Object.entries(values.formats).map(([formatType, value], index) => (
-                                    <Box style={{ marginRight: '10px' }} key={index}>
-                                        {formatType !== 'print' ? (
+                                {Object.entries(values.formats).map(([formatType, value], index) => {
+                                    if (
+                                        formatType === 'print' &&
+                                        !['JPEG', 'PNG'].includes(originalMediaInfo.contentType?.toUpperCase() ?? '')
+                                    ) {
+                                        return null;
+                                    }
+                                    return (
+                                        <Box style={{ marginRight: '10px' }} key={index}>
                                             <MediaCard
                                                 key={index}
                                                 errors={errors}
@@ -459,12 +450,11 @@ export default function AssetMedia() {
                                                 definition={values.formats?.original?.definition}
                                                 setFieldValue={setFieldValue}
                                                 handleUploadFile={handleUploadFile}
+                                                hasContract={hasContract}
                                             />
-                                        ) : (
-                                            <></>
-                                        )}
-                                    </Box>
-                                ))}
+                                        </Box>
+                                    );
+                                })}
                             </Box>
                         </Box>
                     )}
