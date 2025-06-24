@@ -38,9 +38,15 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
     } as { [key: string]: string };
 
     useEffect(() => {
+        if (!values.merchandisePrice) {
+            setFieldValue('print.merchandisePrice', 5);
+        }
+        if (!values.multiplier) {
+            setFieldValue('print.multiplier', 0.1);
+        }
         setFieldValue(
             'print.displayPrice',
-            Number(((values.merchandisePrice * 100 * values.multiplier) / 10_000).toFixed(2))
+            Number((((values.merchandisePrice || 5) * 100 * (values.multiplier || 0.1)) / 10_000).toFixed(2))
         );
     }, [values.merchandisePrice, values.multiplier, setFieldValue]);
 
@@ -48,7 +54,6 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
         if (hasContract) {
             dispatch(addedPrintLicenseThunk({ assetKey: assetId, added }));
             setFieldValue('print.added', added);
-
             return;
         }
         setFieldValue('print.added', added);
@@ -125,7 +130,7 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
                                         width: 90,
                                     },
                                 }}
-                                value={values?.merchandisePrice || 5}
+                                value={values?.merchandisePrice}
                                 inputProps={{ maxLength: 185, minLength: 1 }}
                                 onChange={(e) => {
                                     if (Number(e.target.value) < 0) {
