@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
-import { licenseThunk } from '@/features/asset/thunks';
-import { useDispatch, useSelector } from '@/store/hooks';
-import { Box, Button, Modal, Switch, Typography } from '@mui/material';
+import { useMemo } from 'react';
+import { useSelector } from '@/store/hooks';
+import { Box, Modal, Typography } from '@mui/material';
+import { IconCheck, IconX } from '@tabler/icons-react';
+import { useTheme } from '@mui/material/styles';
 
 interface ModalListOfLicensesProps {
     open: boolean;
@@ -13,56 +14,20 @@ interface Licenses {
 }
 
 export const ModalListOfLicenses = ({ ...rest }: ModalListOfLicensesProps) => {
-    const dispatch = useDispatch();
+    const theme = useTheme();
 
     const assetSelected = useSelector((state) => state.user.selectedAsset);
     const asset = useSelector((state) => state.user.assets.data.find((item) => item._id === assetSelected));
-    const currentLicensesAmount = useSelector((state) => state.user.assets.licenseArtCards);
-    const limitLicenses = useSelector((state) => state.user.licenses?.artCards ?? 3);
-
-    const [licenseArtCards, setLicenseArtCards] = useState(asset?.licenses?.artCards?.added ?? false);
-    const [loading, setLoading] = useState(false);
 
     const licenses: Licenses = useMemo(() => {
         if (!asset?.licenses) {
             return {};
         }
 
-        if (!asset.licenses.artCards) {
-            return {
-                ...asset.licenses,
-                artCards: {
-                    added: false,
-                    version: '1',
-                },
-            };
-        }
+        const { artCards, ...filteredLicenses } = asset.licenses;
 
-        return asset.licenses;
+        return filteredLicenses;
     }, [asset]);
-
-    useEffect(() => {
-        setLoading(false);
-        setLicenseArtCards(asset?.licenses?.artCards?.added ?? false);
-    }, [asset]);
-
-    const handleSave = () => {
-        setLoading(true);
-
-        if (currentLicensesAmount >= limitLicenses && licenseArtCards) return;
-
-        dispatch(
-            licenseThunk({
-                ...asset!.licenses,
-                artCards: {
-                    ...asset!.licenses.artCards,
-                    added: licenseArtCards,
-                },
-            })
-        ).finally(() => {
-            rest.onClose();
-        });
-    };
 
     return (
         <Modal open={rest.open} onClose={rest.onClose}>
@@ -81,48 +46,23 @@ export const ModalListOfLicenses = ({ ...rest }: ModalListOfLicensesProps) => {
                 <Typography variant="h3" textAlign="center">
                     List of Licenses
                 </Typography>
-                {currentLicensesAmount >= limitLicenses && licenseArtCards && (
-                    <Box display="flex" alignItems="center" justifyContent="center">
-                        <Typography variant="caption" color="error" textAlign="center">
-                            You have reached the limit of licenses
-                        </Typography>
-                    </Box>
-                )}
                 <Box mt={4}>
                     {!Object.entries(licenses).length ? (
                         <Typography variant="h4">No licenses found for this asset</Typography>
                     ) : (
                         Object.entries(licenses).map(([key, value]) => (
                             <Box key={key} display="flex" justifyContent="space-between">
-                                <Box display="flex" alignItems="center">
-                                    <Switch
-                                        disabled={key !== 'artCards'}
-                                        checked={key !== 'artCards' ? value.added : licenseArtCards}
-                                        onChange={(e) => {
-                                            if (key === 'artCards') {
-                                                setLicenseArtCards(e.target.checked);
-                                            }
-                                        }}
-                                    />
-                                    <Typography variant="h4">
-                                        {key.toUpperCase()}{' '}
-                                        {key === 'artCards' ? `(${currentLicensesAmount}/${limitLicenses})` : ''}
-                                    </Typography>
+                                <Box display="flex" alignItems="center" gap={2}>
+                                    {value?.added ? (
+                                        <IconCheck color={theme.palette.primary.main} />
+                                    ) : (
+                                        <IconX color={theme.palette.primary.main} />
+                                    )}
+                                    <Typography variant="h4">{key.toUpperCase()} </Typography>
                                 </Box>
-                                {key === 'artCards' && licenseArtCards && value?.status}
                             </Box>
                         ))
                     )}
-                </Box>
-
-                <Box display="flex" justifyContent="flex-end">
-                    <Button
-                        variant="contained"
-                        onClick={handleSave}
-                        disabled={(currentLicensesAmount >= limitLicenses && licenseArtCards) || loading}
-                    >
-                        {loading ? 'Loading...' : 'Save'}
-                    </Button>
                 </Box>
             </Box>
         </Modal>
