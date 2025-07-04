@@ -10,10 +10,34 @@ import { useToastr } from '@/app/hooks/useToastr';
 import { addedPrintLicenseThunk, updatePrintLicensePriceThunk } from '@/features/asset/thunks';
 import UpdatePriceModal from './UpdatedPriceModal';
 
+function isImageByExtension(filePath?: string) {
+    if (!filePath || typeof filePath !== 'string') return false;
+
+    const imageExtensions = [
+        '.jpg',
+        '.jpeg',
+        '.png',
+        '.gif',
+        '.bmp',
+        '.webp',
+        '.svg',
+        '.ico',
+        '.tiff',
+        '.tif',
+        '.avif',
+        '.heic',
+    ];
+
+    const extension = filePath.toLowerCase().split('.').pop();
+    return imageExtensions.includes('.' + extension);
+}
+
 function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
     const theme = useTheme();
 
     const hasContract = useSelector((state) => !!state.asset?.contractExplorer);
+    const hasOriginal = useSelector((state) => !!state.asset.formats.original);
+    const isValidToPrint = useSelector((state) => isImageByExtension(state.asset.formats.original?.path));
     const [isEditing, setIsEditing] = useState(!hasContract);
     const [loading, setLoading] = useState(false);
     const [openModalSuccessUpdate, setOpenModalSuccessUpdate] = useState(false);
@@ -82,6 +106,8 @@ function Print({ allValues, handleChange, setFieldValue }: LicenseProps) {
             toastr.display({ type: 'error', message: 'Error updating print license' });
         }
     };
+
+    if (hasOriginal && !isValidToPrint) return <></>;
 
     return (
         <Box width={700} display="flex" justifyContent="space-between" marginTop={2}>
