@@ -88,7 +88,11 @@ export const ClaimModal = ({ isOpen, isLoading, handleClose, handleClaim, vusd =
                     <Typography fontWeight="bold">USDC.pol: {usdc.toFixed(4)}</Typography>
 
                     <Box display="flex" justifyContent="flex-end">
-                        <Button variant="contained" onClick={handleClickClaim} disabled={isLoading || vusd <= 0}>
+                        <Button
+                            variant="contained"
+                            onClick={handleClickClaim}
+                            disabled={isLoading || (vusd === 0 && usdc === 0)}
+                        >
                             Claim {isLoading && <CircularProgress size={16} style={{ marginLeft: 10 }} />}{' '}
                         </Button>
                     </Box>
