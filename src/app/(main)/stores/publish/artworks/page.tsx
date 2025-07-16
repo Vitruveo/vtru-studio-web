@@ -40,7 +40,16 @@ const Component = () => {
     const handleSubmit = (values: Artworks & { redirectPath: string }) => {
         const filteredValues = filterFalsyValues({
             input: values,
-            keysToPreserve: ['general', 'context', 'taxonomy', 'artists', 'portfolio', 'exclude', 'include'],
+            keysToPreserve: [
+                'general',
+                'licenses',
+                'context',
+                'taxonomy',
+                'artists',
+                'portfolio',
+                'exclude',
+                'include',
+            ],
         });
         if (filteredValues.context && !filteredValues.context.colors) {
             delete filteredValues.context.precision;
@@ -94,6 +103,7 @@ const Component = () => {
 
     const shortcuts = store?.artworks?.general?.shortcuts || {};
     const licenses = store?.artworks?.general?.licenses || {};
+    const licenseChecked = store?.artworks?.licenseChecked || {};
     const context = store?.artworks?.context || {};
     const taxonomy = store?.artworks?.taxonomy || {};
     const artists = store?.artworks?.artists || {};
@@ -138,6 +148,14 @@ const Component = () => {
                                 minPrice: licenses.minPrice || 0,
                                 maxPrice: licenses.maxPrice || 0,
                                 enabled: licenses.enabled || false,
+                            },
+                        },
+                        licenseChecked: {
+                            nft: {
+                                added: licenseChecked?.nft?.added || false,
+                            },
+                            print: {
+                                added: licenseChecked?.print?.added || false,
                             },
                         },
                         context: {

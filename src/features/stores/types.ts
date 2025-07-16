@@ -37,6 +37,14 @@ export interface Artworks {
             enabled?: boolean;
         };
     };
+    licenseChecked: {
+        nft?: {
+            added?: boolean;
+        };
+        print?: {
+            added?: boolean;
+        };
+    };
     context: {
         culture?: string[];
         mood?: [string, string][];

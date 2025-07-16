@@ -21,6 +21,12 @@ interface FormValues {
     context: {
         precision: number;
     };
+    licenseChecked: {
+        nft: { added: boolean };
+        print: {
+            added: boolean;
+        };
+    };
     taxonomy: any;
     artists: any;
     portfolio: {
@@ -91,6 +97,7 @@ const Exclude = () => {
                 filters: {
                     general: values.general,
                     context: values.context,
+                    licenseChecked: values.licenseChecked,
                     taxonomy: values.taxonomy,
                     artists: values.artists,
                     portfolio: values.portfolio,

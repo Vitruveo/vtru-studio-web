@@ -110,11 +110,15 @@ export async function getArtworkQuantity({
         minPrice: price?.min,
         maxPrice: price?.max,
         name: '',
-        precision: String(colorPrecision) || '0.7',
+        precision: colorPrecision ? String(colorPrecision) : '0.7',
         showAdditionalAssets: false,
         hasBts,
         sort: { order: 'latest', isIncludeSold: false },
         storesId,
+        licenseChecked: {
+            nft: filters.licenseChecked?.nft?.added || false,
+            print: filters.licenseChecked?.print?.added || false,
+        },
     });
     return response.data?.total || 0;
 }
