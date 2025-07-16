@@ -1,5 +1,3 @@
-import sub from 'date-fns/esm/fp/sub/index';
-
 export const objectTypeOptions = [
     { value: 'digitalart', label: 'Digital Art' },
     { value: 'physicalart', label: 'Physical Art' },
@@ -424,4 +422,11 @@ export const subTitlesReviewOptions = [
     { name: 'nationality', label: 'Nationality' },
     { name: 'residence', label: 'Residence' },
     { name: 'wallets', label: 'Wallets' },
+    { name: 'nft', label: 'Digital Collectible' },
+    { name: 'print', label: 'Print' },
+];
+
+export const licensesOptions = [
+    { name: 'nft', label: 'Digital Collectible' },
+    { name: 'print', label: 'Print' },
 ];

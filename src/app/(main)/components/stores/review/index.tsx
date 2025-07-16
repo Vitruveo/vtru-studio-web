@@ -34,6 +34,7 @@ export const Review = () => {
                         hasBts: values.general?.shortcuts.hasBTS,
                         filters: {
                             general: values.general,
+                            licenseChecked: values.licenseChecked,
                             context: values.context,
                             taxonomy: values.taxonomy,
                             artists: values.artists,
