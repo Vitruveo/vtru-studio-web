@@ -16,7 +16,7 @@ interface FormValues {
 
 export const minPrice = 0;
 export const maxPrice = 10_000;
-const Licenses = () => {
+const LicensePrice = () => {
     const theme = useTheme();
     const { setFieldValue, values } = useFormikContext<FormValues>();
     const fieldNames = {
@@ -79,4 +79,4 @@ const Licenses = () => {
     );
 };
 
-export default Licenses;
+export default LicensePrice;
