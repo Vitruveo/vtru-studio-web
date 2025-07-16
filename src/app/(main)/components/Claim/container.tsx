@@ -164,9 +164,10 @@ export const ClaimContainer = memo(() => {
 
             <ClaimComponent
                 data={{
-                    value: balance.toFixed(4),
-                    symbol: 'VTRU',
-                    disabled: loading || balance <= 0 || !client || (balanceVUSD === 0 && balance === 0),
+                    value: balanceUSDC.toFixed(2),
+                    symbol: 'USDC',
+                    // disabled: loading || balance <= 0 || !client || (balanceVUSD === 0 && balance === 0),
+                    disabled: loading || !client,
                     isConnected,
                     address,
                     vaultAddress,
