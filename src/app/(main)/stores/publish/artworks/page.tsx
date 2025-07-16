@@ -42,7 +42,7 @@ const Component = () => {
             input: values,
             keysToPreserve: [
                 'general',
-                'licenses',
+                'licenseChecked',
                 'context',
                 'taxonomy',
                 'artists',
