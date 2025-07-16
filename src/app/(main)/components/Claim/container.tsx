@@ -182,15 +182,7 @@ export const ClaimContainer = memo(() => {
                     onConnect,
                     onDisconnect,
                     openStakModal: () => {
-                        if (balanceVUSD > 0) {
-                            setIsModalOpenClaimed(true);
-                            return;
-                        }
-
-                        onClaimAllocate({
-                            vusd: 0,
-                            vtru: 10_000,
-                        });
+                        setIsModalOpenClaimed(true);
                     },
                 }}
             />
