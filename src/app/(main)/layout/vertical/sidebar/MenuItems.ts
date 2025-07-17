@@ -7,6 +7,7 @@ import {
     IconLogout,
     IconFolderPlus,
 } from '@tabler/icons-react';
+import { DREAMVERSE_URL } from '@/constants/vitruveo';
 
 interface MenuitemsType {
     [x: string]: any;
@@ -54,7 +55,7 @@ const Menuitems: MenuitemsType[] = [
         title: 'studio.sidebar.community',
         icon: IconBrandWechat,
         external: true,
-        href: 'https://dreamverse.vitruveo.xyz/',
+        href: DREAMVERSE_URL,
     },
 ];
 

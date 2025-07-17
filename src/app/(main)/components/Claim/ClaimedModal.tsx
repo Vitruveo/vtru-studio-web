@@ -1,3 +1,4 @@
+import { VTRU_SCOPE_URL } from '@/constants/vitruveo';
 import { Box, Modal as MuiModal, Typography } from '@mui/material';
 
 interface ModalProps {
@@ -45,7 +46,7 @@ export default function ClaimedModal({ isOpen, handleClose }: ModalProps) {
                         <Typography variant="h6">Your claim was successful. Check your wallet.</Typography>
                         <Typography variant="body1">
                             Check active stakes on{' '}
-                            <a href="https://scope.vitruveo.xyz/staking/vtru" target="_new">
+                            <a href={`${VTRU_SCOPE_URL}/staking/vtru`} target="_new">
                                 Scope
                             </a>
                         </Typography>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { differenceInDays, parseISO } from 'date-fns';
 import { Box, Button, CircularProgress, Modal as MuiModal, Slider, Typography } from '@mui/material';
+import { VTRU_SCOPE_URL } from '@/constants/vitruveo';
 
 interface ModalProps {
     isOpen: boolean;
@@ -174,7 +175,7 @@ export default function StakeModal({
                     </Box>
 
                     <Box display="flex" justifyContent={'space-between'}>
-                        <a href="https://scope.vitruveo.xyz/staking/vtru" target="_new">
+                        <a href={`${VTRU_SCOPE_URL}/staking/vtru`} target="_new">
                             Current stakes
                         </a>
                         <Button
