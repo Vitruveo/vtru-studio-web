@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { Box, Typography, useTheme } from '@mui/material';
 
 import { useSelector } from '@/store/hooks';
-import { BASE_URL_VITRUVEO } from '@/constants/vitruveo';
+import { VITRUVEO_URL } from '@/constants/vitruveo';
 
 const Logo = () => {
     const customizer = useSelector((state) => state.customizer);
@@ -63,7 +63,7 @@ const Logo = () => {
                                     color: '#333',
                                 },
                             }}
-                            onClick={() => window.open(BASE_URL_VITRUVEO, '_blank', 'noopener,noreferrer')}
+                            onClick={() => window.open(VITRUVEO_URL, '_blank', 'noopener,noreferrer')}
                         >
                             BY VITRUVEO
                         </Typography>

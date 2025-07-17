@@ -4,7 +4,7 @@ import { IconMenu2 } from '@tabler/icons-react';
 import { BASE_URL_SEARCH } from '@/constants/search';
 import { BASE_URL_STUDIO } from '@/constants/studio';
 import { NODE_ENV } from '@/constants/api';
-import { BASE_URL_VITRUVEO } from '@/constants/vitruveo';
+import { VITRUVEO_URL } from '@/constants/vitruveo';
 
 const projects = [
     { title: 'SEARCH', url: BASE_URL_SEARCH },
@@ -13,7 +13,7 @@ const projects = [
     // { title: 'STACKS', url: `${SEARCH_BASE_URL}/stacks` },
     // { title: 'STREAMS', url: '' },
     { title: 'ABOUT XIBIT', url: 'https://about.xibit.app', onlyMobile: true },
-    { title: 'ABOUT VITRUVEO', url: BASE_URL_VITRUVEO, onlyMobile: true },
+    { title: 'ABOUT VITRUVEO', url: VITRUVEO_URL, onlyMobile: true },
 ];
 
 const AllProjectsMenu = () => {
