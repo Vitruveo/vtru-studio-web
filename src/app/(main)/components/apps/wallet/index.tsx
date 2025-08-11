@@ -1,8 +1,9 @@
 import { WagmiProvider } from 'wagmi';
 import { RainbowKitProvider, getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { WALLET_APP_NAME, WALLET_NETWORKS, WALLET_PROJECT_ID } from '@/constants/wallet';
+import { WALLET_APP_NAME, WALLET_NETWORKS, WALLET_PROJECT_ID, WEB3_NETWORK_RPC_ADDRESS } from '@/constants/wallet';
 import '@rainbow-me/rainbowkit/styles.css';
+import { EXPLORER_URL } from '@/constants/explorer';
 
 interface EtheriumProviderProps {
     children: React.ReactNode;
@@ -20,12 +21,12 @@ const vitruveoMainnet = {
         symbol: 'VTRU',
     },
     rpcUrls: {
-        public: { http: ['https://rpc.vitruveo.xyz/'] },
-        default: { http: ['https://rpc.vitruveo.xyz/'] },
+        public: { http: [WEB3_NETWORK_RPC_ADDRESS] },
+        default: { http: [WEB3_NETWORK_RPC_ADDRESS] },
     },
     blockExplorers: {
-        default: { name: 'VitruveoScan', url: 'https://explorer.vitruveo.xyz' },
-        etherscan: { name: 'VitruveoScan', url: 'https://explorer.vitruveo.xyz' },
+        default: { name: 'VitruveoScan', url: EXPLORER_URL },
+        etherscan: { name: 'VitruveoScan', url: EXPLORER_URL },
     },
     testnet: false,
 };
@@ -42,12 +43,12 @@ const vitruveoTestnet = {
         symbol: 'tVTRU',
     },
     rpcUrls: {
-        public: { http: ['https://test-rpc.vitruveo.xyz/'] },
-        default: { http: ['https://test-rpc.vitruveo.xyz/'] },
+        public: { http: [WEB3_NETWORK_RPC_ADDRESS] },
+        default: { http: [WEB3_NETWORK_RPC_ADDRESS] },
     },
     blockExplorers: {
-        default: { name: 'VitruveoScan', url: 'https://test-explorer.vitruveo.xyz' },
-        etherscan: { name: 'VitruveoScan', url: 'https://test-explorer.vitruveo.xyz' },
+        default: { name: 'VitruveoScan', url: EXPLORER_URL },
+        etherscan: { name: 'VitruveoScan', url: EXPLORER_URL },
     },
     testnet: true,
 };

@@ -1,11 +1,10 @@
-import { FC } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { styled } from '@mui/material/styles';
-
-import Image from 'next/image';
 import { Box, Typography, useTheme } from '@mui/material';
-import VtruTitle from '@/app/(main)/components/vtruTItle';
+
 import { useSelector } from '@/store/hooks';
+import { VITRUVEO_URL } from '@/constants/vitruveo';
 
 const Logo = () => {
     const customizer = useSelector((state) => state.customizer);
@@ -64,7 +63,7 @@ const Logo = () => {
                                     color: '#333',
                                 },
                             }}
-                            onClick={() => window.open('https://vitruveo.xyz', '_blank', 'noopener,noreferrer')}
+                            onClick={() => window.open(VITRUVEO_URL, '_blank', 'noopener,noreferrer')}
                         >
                             BY VITRUVEO
                         </Typography>
