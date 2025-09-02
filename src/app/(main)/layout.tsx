@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { styled, useTheme } from '@mui/material/styles';
+import jwt from 'jsonwebtoken';
 import Header from './layout/vertical/header/Header';
 import Sidebar from './layout/vertical/sidebar/Sidebar';
 import Navigation from './layout/horizontal/navbar/Navigation';
@@ -12,6 +13,7 @@ import webSocketService from '@/services/websocket';
 import { connectWebSocketThunk, loginWebSocketThunk } from '@/features/ws/thunks';
 import { userSelector } from '@/features/user';
 import LoadingOverlay from './components/loadingOverlay';
+import { userActionsCreators } from '@/features/user/slice';
 
 const MainWrapper = styled('div')(() => ({
     display: 'flex',
@@ -28,25 +30,60 @@ const PageFooterWrapper = styled('div')(() => ({
     backgroundColor: 'transparent',
 }));
 
-const isValidToken = (token: string) => {
-    return token !== null && token !== undefined && token !== '';
-};
+const checkValidToken = (token: string) => {
+    if (!token || token === null || token === undefined || token === '') {
+        return false;
+    }
+    try {
+        const decoded = jwt.decode(token) as jwt.JwtPayload | null;
 
+        if (!decoded || typeof decoded !== 'object') {
+            return false;
+        }
+        if (!decoded.exp) {
+            return false;
+        }
+        const currentTime = Math.floor(Date.now() / 1000);
+        return decoded.exp > currentTime;
+    } catch (error) {
+        return false;
+    }
+};
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const dispatch = useDispatch();
-    const token = useSelector((state) => state.user.token);
+
     const isLoading = useSelector((state) => state.asset.isLoading);
     const isSubmittingFiles = useSelector((state) => state.stores.isSubmittingFiles);
     const customizer = useSelector((state) => state.customizer);
 
+    const token = useSelector((state) => state.user?.token);
+
     const { generalVault } = useSelector(userSelector(['generalVault']));
 
-    useEffect(() => {
-        if (!isValidToken(token)) {
+    const handleLogout = () => {
+        setTimeout(() => {
             router.push('/login');
+        }, 1000);
+        dispatch(userActionsCreators.logout());
+    };
+
+    useEffect(() => {
+        if (!checkValidToken(token)) {
+            handleLogout();
+            return;
         }
-    }, [token, router]);
+
+        const tokenExpirationCheck = setInterval(() => {
+            if (!checkValidToken(token)) {
+                handleLogout();
+            }
+        }, 60000);
+
+        return () => {
+            clearInterval(tokenExpirationCheck);
+        };
+    }, [token]);
 
     useEffect(() => {
         if (!webSocketService.socket) {
@@ -83,7 +120,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
     const theme = useTheme();
 
-    if (!isValidToken(token)) return <div />;
+    if (!checkValidToken(token)) return <div />;
 
     return (
         <MainWrapper>
