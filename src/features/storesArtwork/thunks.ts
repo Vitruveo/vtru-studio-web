@@ -22,9 +22,9 @@ import {
     Tags,
 } from './types';
 
-export function getArtworkTagsThunk(): ReduxThunkAction<Promise<Tags[]>> {
+export function getArtworkTagsThunk({ name }: { name?: string }): ReduxThunkAction<Promise<Tags[]>> {
     return async (_dispatch: any) => {
-        const response = await getArtworkTags();
+        const response = await getArtworkTags(name);
         return response;
     };
 }

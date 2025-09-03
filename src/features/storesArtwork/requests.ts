@@ -13,10 +13,21 @@ import {
 } from './types';
 import { convertHexToRGB } from '@/utils/convertColors';
 
-export async function getArtworkTags(): Promise<Tags[]> {
-    const URL_ASSETS_SEARCH = '/assets/public/search';
-    const response = await apiService.post<ResponseAssets>(URL_ASSETS_SEARCH, { limit: 1 });
-    return response.data?.tags || [];
+export async function getArtworkTags(name?: string): Promise<Tags[]> {
+    if (name) {
+        const URL_ASSETS_SEARCH = `/assets/public/tags?name=${name}`;
+        const response = await apiService.get<Tags[]>(URL_ASSETS_SEARCH);
+
+        return response.data || [];
+    } else {
+        const URL_ASSETS_SEARCH = '/assets/public/search';
+        const response = await apiService.post<ResponseAssets>(URL_ASSETS_SEARCH, {
+            limit: 1,
+            sort: { order: 'latest', isIncludeSold: true },
+        });
+
+        return response.data?.tags || [];
+    }
 }
 
 export async function getArtworkCollections(collection: string): Promise<Collections[]> {
