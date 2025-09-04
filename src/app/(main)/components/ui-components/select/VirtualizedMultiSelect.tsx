@@ -18,6 +18,7 @@ interface Props {
     arrayHelpers: FieldArrayRenderProps;
     load?: boolean;
     onlyValueSelected?: boolean;
+    loadOptions?: (inputValue: string, callback: (options: Option[]) => void) => void;
 }
 
 interface CustomMenuListProps extends Omit<MenuListProps<Option>, 'setValue'> {
@@ -82,14 +83,25 @@ const useDebounce = (callback: (...args: any[]) => void, delay: number) => {
     );
 };
 
-const VirtualizedMultiSelect = ({ value, options, arrayHelpers, load, onlyValueSelected }: Props) => {
+const VirtualizedMultiSelect = ({ value, options, arrayHelpers, load, onlyValueSelected, loadOptions }: Props) => {
     const theme = useTheme();
     const [inputValue, setInputValue] = useState('');
     const [filteredOptions, setFilteredOptions] = useState(options);
+    const [isAsyncLoading, setIsAsyncLoading] = useState(false);
     const prevOptionsRef = useRef(options);
 
     const debouncedFilter = useDebounce((searchTerm: string) => {
-        setFilteredOptions(options.filter((option) => option.label.toLowerCase().includes(searchTerm.toLowerCase())));
+        if (loadOptions) {
+            setIsAsyncLoading(true);
+            loadOptions(searchTerm, (asyncOptions) => {
+                setFilteredOptions(asyncOptions);
+                setIsAsyncLoading(false);
+            });
+        } else {
+            setFilteredOptions(
+                options.filter((option) => option.label.toLowerCase().includes(searchTerm.toLowerCase()))
+            );
+        }
     }, 600);
 
     const handleMultiSelectChange = useCallback(
@@ -123,6 +135,16 @@ const VirtualizedMultiSelect = ({ value, options, arrayHelpers, load, onlyValueS
             prevOptionsRef.current = options;
         }
     }, [options]);
+
+    useEffect(() => {
+        if (loadOptions && inputValue === '' && filteredOptions.length === 0) {
+            setIsAsyncLoading(true);
+            loadOptions('', (asyncOptions) => {
+                setFilteredOptions(asyncOptions);
+                setIsAsyncLoading(false);
+            });
+        }
+    }, [loadOptions, inputValue, filteredOptions.length]);
 
     const sortedOptions = useMemo(
         () =>
@@ -170,9 +192,11 @@ const VirtualizedMultiSelect = ({ value, options, arrayHelpers, load, onlyValueS
                 }),
             }}
             components={{
-                MenuList: (props) => <CustomMenuList {...(props as MenuListProps<Option>)} load={load} />,
+                MenuList: (props) => (
+                    <CustomMenuList {...(props as MenuListProps<Option>)} load={load || isAsyncLoading} />
+                ),
             }}
-            isLoading={load}
+            isLoading={load || isAsyncLoading}
             loadingMessage={() => (
                 <Box display="flex" justifyContent="center" p={1}>
                     <CircularProgress size={20} />
