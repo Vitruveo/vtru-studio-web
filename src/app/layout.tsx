@@ -28,6 +28,7 @@ const MyApp = ({ children }: { children: React.ReactNode }) => {
     const toastr = useToastr();
     const dispatch = useDispatch();
     const router = useRouter();
+    const token = useSelector((state) => state.user?.token);
 
     const cookieEmailLogged = cookie.get('loggedEmail') as string | null;
     const stateEmailLogged = useSelector((state) => state.user?.login?.email);
@@ -53,7 +54,7 @@ const MyApp = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     useEffect(() => {
-        if (cookieEmailLogged || stateEmailLogged) {
+        if ((cookieEmailLogged || stateEmailLogged) && token) {
             dispatch(getFeaturesThunk());
             const featuresInterval = setInterval(() => {
                 dispatch(getFeaturesThunk());
@@ -63,7 +64,7 @@ const MyApp = ({ children }: { children: React.ReactNode }) => {
                 clearInterval(featuresInterval);
             };
         }
-    }, []);
+    }, [token]);
 
     useEffect(() => {
         if ((!cookieEmailLogged || !cookieEmailLogged.length) && (!stateEmailLogged || !stateEmailLogged.length)) {

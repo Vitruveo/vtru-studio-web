@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { Box, Button, Checkbox, InputAdornment, List, Switch, TextField, Typography } from '@mui/material';
+import { useEffect, useState, useCallback, useRef, useMemo, memo } from 'react';
+import { FixedSizeList as List } from 'react-window';
+import { Box, Button, Checkbox, InputAdornment, Switch, TextField, Typography } from '@mui/material';
 import { ASSET_STORAGE_URL, GENERAL_STORAGE_URL, NO_IMAGE_ASSET } from '@/constants/asset';
 import { useFormikContext } from 'formik';
 import { useDispatch, useSelector } from '@/store/hooks';
@@ -48,12 +48,23 @@ const Exclude = () => {
     const dispatch = useDispatch();
     const selectedStore = useSelector((state) => state.stores.selectedStore);
     const store = useSelector((state) => state.stores.data.data.find((item) => item._id === selectedStore.id));
+    const artsContainerRef = useRef<HTMLDivElement>(null);
+    const artistsContainerRef = useRef<HTMLDivElement>(null);
+
+    const avatarCacheRef = useRef<Map<string, string>>(new Map());
 
     const { values, setFieldValue } = useFormikContext<FormValues>();
     const [inputValue, setInputValue] = useState('');
     const [isOnlyInStore, setIsOnlyInStore] = useState(true);
     const [artsAndArtists, setArtsAndArtists] = useState<ArtsAndArtistsList | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [isLoadingArts, setIsLoadingArts] = useState(false);
+    const [isLoadingArtists, setIsLoadingArtists] = useState(false);
+    const [containerWidth, setContainerWidth] = useState(800);
+    const [artsPage, setArtsPage] = useState(1);
+    const [artistsPage, setArtistsPage] = useState(1);
+    const artsScrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const artistsScrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const onChangeArt = (id: string, label: string) => {
         const arts = values.exclude.arts;
@@ -116,6 +127,11 @@ const Exclude = () => {
 
     const search = async () => {
         setArtsAndArtists(null);
+        setArtsPage(1);
+        setArtistsPage(1);
+
+        avatarCacheRef.current.clear();
+
         if (inputValue.length < 1) {
             setErrorMessage('Please enter at least 1 characters');
             return;
@@ -125,37 +141,159 @@ const Exclude = () => {
             setErrorMessage('No results found');
             return;
         }
+
+        artsAndArtistsResponse.arts.forEach((art) => {
+            const img = document.createElement('img');
+            img.src = `${ASSET_STORAGE_URL}/${art.image}`;
+        });
+
         setArtsAndArtists(artsAndArtistsResponse);
         setErrorMessage(null);
     };
 
-    const handleNextPageArts = async () => {
-        const response = await fetchData();
-        if (response.arts.length) {
-            setArtsAndArtists((prev) => ({
-                arts: prev ? [...prev.arts, ...response.arts] : response.arts,
-                artists: prev ? prev.artists : [],
-                page: response.page,
-                limit: response.limit,
-                total: response.total,
-                totalPage: response.totalPage,
-            }));
-        }
-    };
+    const handleNextPageArts = useCallback(async () => {
+        if (isLoadingArts || !artsAndArtists || artsPage >= artsAndArtists.totalPage) return;
 
-    const handleNextPageArtists = async () => {
-        const response = await fetchData();
-        if (response.arts.length) {
-            setArtsAndArtists((prev) => ({
-                arts: prev ? response.arts : [],
-                artists: prev ? [...prev.artists, ...response.artists] : response.artists,
-                page: response.page,
-                limit: response.limit,
-                total: response.total,
-                totalPage: response.totalPage,
-            }));
+        setIsLoadingArts(true);
+        try {
+            const response = await dispatch(
+                getArtsAndArtistsThunk({
+                    price: {
+                        max: values.general?.licenses.maxPrice,
+                        min: values.general?.licenses.minPrice,
+                    },
+                    hasBts: values.general?.shortcuts.hasBTS,
+                    filters: {
+                        general: values.general,
+                        context: values.context,
+                        licenseChecked: values.licenseChecked,
+                        taxonomy: values.taxonomy,
+                        artists: values.artists,
+                        portfolio: values.portfolio,
+                        exclude: values.exclude,
+                        include: values.include,
+                        searchOption: values.searchOption,
+                    },
+                    colorPrecision: values.context?.precision,
+                    onlyInStore: isOnlyInStore,
+                    search: inputValue,
+                    page: artsPage + 1,
+                    limit: artsAndArtists.limit || 20,
+                })
+            );
+
+            if (response.arts.length) {
+                response.arts.forEach((art) => {
+                    const img = document.createElement('img');
+                    img.src = `${ASSET_STORAGE_URL}/${art.image}`;
+                });
+
+                setArtsAndArtists((prev) => ({
+                    ...prev!,
+                    arts: [
+                        ...prev!.arts,
+                        ...response.arts.filter((cur) => !prev!.arts.find((item) => item.id === cur.id)),
+                    ],
+                }));
+                setArtsPage((prev) => prev + 1);
+            }
+        } finally {
+            setIsLoadingArts(false);
         }
-    };
+    }, [dispatch, inputValue, artsAndArtists, isLoadingArts, artsPage, isOnlyInStore, values]);
+
+    const handleNextPageArtists = useCallback(async () => {
+        if (isLoadingArtists || !artsAndArtists || artistsPage >= artsAndArtists.totalPage) return;
+
+        setIsLoadingArtists(true);
+        try {
+            const response = await dispatch(
+                getArtsAndArtistsThunk({
+                    price: {
+                        max: values.general?.licenses.maxPrice,
+                        min: values.general?.licenses.minPrice,
+                    },
+                    hasBts: values.general?.shortcuts.hasBTS,
+                    filters: {
+                        general: values.general,
+                        context: values.context,
+                        licenseChecked: values.licenseChecked,
+                        taxonomy: values.taxonomy,
+                        artists: values.artists,
+                        portfolio: values.portfolio,
+                        exclude: values.exclude,
+                        include: values.include,
+                        searchOption: values.searchOption,
+                    },
+                    colorPrecision: values.context?.precision,
+                    onlyInStore: isOnlyInStore,
+                    search: inputValue,
+                    page: artistsPage + 1,
+                    limit: artsAndArtists.limit || 20,
+                })
+            );
+
+            if (response.artists.length) {
+                setArtsAndArtists((prev) => ({
+                    ...prev!,
+                    artists: [
+                        ...prev!.artists,
+                        ...response.artists.filter((cur) => !prev!.artists.find((item) => item.id === cur.id)),
+                    ],
+                }));
+                setArtistsPage((prev) => prev + 1);
+            }
+        } finally {
+            setIsLoadingArtists(false);
+        }
+    }, [dispatch, inputValue, artsAndArtists, isLoadingArtists, artistsPage, isOnlyInStore, values]);
+
+    const handleArtsScroll = useCallback(
+        ({ scrollOffset, scrollDirection }: { scrollOffset: number; scrollDirection: 'backward' | 'forward' }) => {
+            if (!artsAndArtists?.arts || scrollDirection !== 'forward') return;
+
+            const itemWidth = 180;
+            const totalWidth = artsAndArtists.arts.length * itemWidth;
+            const visibleWidth = containerWidth;
+            const scrollPercentage = (scrollOffset + visibleWidth) / totalWidth;
+
+            const remainingDistance = totalWidth - (scrollOffset + visibleWidth);
+            const shouldLoadMore = scrollPercentage > 0.7 || remainingDistance < itemWidth * 3;
+
+            if (shouldLoadMore && artsPage < artsAndArtists.totalPage && !isLoadingArts) {
+                if (artsScrollTimeoutRef.current) {
+                    clearTimeout(artsScrollTimeoutRef.current);
+                }
+                artsScrollTimeoutRef.current = setTimeout(() => {
+                    handleNextPageArts();
+                }, 50);
+            }
+        },
+        [artsAndArtists, containerWidth, artsPage, isLoadingArts, handleNextPageArts]
+    );
+
+    const handleArtistsScroll = useCallback(
+        ({ scrollOffset, scrollDirection }: { scrollOffset: number; scrollDirection: 'backward' | 'forward' }) => {
+            if (!artsAndArtists?.artists || scrollDirection !== 'forward') return;
+
+            const itemWidth = 180;
+            const totalWidth = artsAndArtists.artists.length * itemWidth;
+            const visibleWidth = containerWidth;
+            const scrollPercentage = (scrollOffset + visibleWidth) / totalWidth;
+
+            const remainingDistance = totalWidth - (scrollOffset + visibleWidth);
+            const shouldLoadMore = scrollPercentage > 0.7 || remainingDistance < itemWidth * 3;
+            if (shouldLoadMore && artistsPage < artsAndArtists.totalPage && !isLoadingArtists) {
+                if (artistsScrollTimeoutRef.current) {
+                    clearTimeout(artistsScrollTimeoutRef.current);
+                }
+                artistsScrollTimeoutRef.current = setTimeout(() => {
+                    handleNextPageArtists();
+                }, 50);
+            }
+        },
+        [artsAndArtists, containerWidth, artistsPage, isLoadingArtists, handleNextPageArtists]
+    );
 
     useEffect(() => {
         if (errorMessage) {
@@ -164,6 +302,74 @@ const Exclude = () => {
             }, 3000);
         }
     }, [errorMessage]);
+
+    useEffect(() => {
+        const updateWidth = () => {
+            if (artsContainerRef.current) {
+                setContainerWidth(artsContainerRef.current.offsetWidth);
+            }
+        };
+
+        updateWidth();
+        window.addEventListener('resize', updateWidth);
+
+        return () => {
+            window.removeEventListener('resize', updateWidth);
+
+            if (artsScrollTimeoutRef.current) {
+                clearTimeout(artsScrollTimeoutRef.current);
+            }
+            if (artistsScrollTimeoutRef.current) {
+                clearTimeout(artistsScrollTimeoutRef.current);
+            }
+        };
+    }, []);
+
+    const ArtRow = useCallback(
+        ({ index, style }: { index: number; style: React.CSSProperties }) => {
+            if (!artsAndArtists?.arts) return null;
+
+            const item = artsAndArtists.arts[index];
+
+            return (
+                <div style={{ ...style, display: 'flex', alignItems: 'center', padding: '4px' }}>
+                    <MemoizedArtItem
+                        key={item.id}
+                        id={item.id}
+                        image={`${ASSET_STORAGE_URL}/${item.image}`}
+                        title={item.title}
+                        isHide={values.exclude.arts.some((art) => art.value === item.id)}
+                        onChange={onChangeArt}
+                        forceLoad={true}
+                    />
+                </div>
+            );
+        },
+        [artsAndArtists, values.exclude.arts, onChangeArt]
+    );
+
+    const ArtistRow = useCallback(
+        ({ index, style }: { index: number; style: React.CSSProperties }) => {
+            if (!artsAndArtists?.artists) return null;
+
+            const item = artsAndArtists.artists[index];
+
+            return (
+                <div style={{ ...style, display: 'flex', alignItems: 'center', padding: '4px' }}>
+                    <MemoizedArtistItem
+                        key={item.id}
+                        id={item.id}
+                        name={item.name}
+                        isHide={values.exclude.artists.some((artist) => artist.value === item.id)}
+                        onChange={onChangeArtist}
+                        forceLoad={true}
+                        avatarCache={avatarCacheRef.current}
+                    />
+                </div>
+            );
+        },
+        [artsAndArtists, values.exclude.artists, onChangeArtist]
+    );
 
     return (
         <Box display={'flex'} flexDirection={'column'} gap={2}>
@@ -193,56 +399,51 @@ const Exclude = () => {
                 {errorMessage && <Typography color="error">{errorMessage}</Typography>}
             </Box>
             {artsAndArtists?.arts && artsAndArtists.arts.length > 0 && (
-                <Box>
+                <Box paddingBlock={2}>
                     <Typography variant="h6">Arts</Typography>
-                    <List>
-                        <InfiniteScroll
-                            dataLength={artsAndArtists.arts.length}
-                            loader={<h4>Loading...</h4>}
-                            hasMore={artsAndArtists.page < artsAndArtists.totalPage}
-                            next={handleNextPageArts}
-                            height="100%"
-                            style={{ display: 'flex', gap: 4 }}
-                            scrollThreshold={0.9}
+                    <Box ref={artsContainerRef} width="100%" height={220}>
+                        <List
+                            style={{ overflowY: 'hidden' }}
+                            height={220}
+                            width={containerWidth}
+                            itemCount={artsAndArtists.arts.length}
+                            itemSize={180}
+                            layout="horizontal"
+                            onScroll={handleArtsScroll}
+                            overscanCount={8}
                         >
-                            {artsAndArtists.arts.map((item) => (
-                                <ArtItem
-                                    key={item.id}
-                                    id={item.id}
-                                    image={`${ASSET_STORAGE_URL}/${item.image}`}
-                                    title={item.title}
-                                    isHide={values.exclude.arts.some((art) => art.value === item.id)}
-                                    onChange={onChangeArt}
-                                />
-                            ))}
-                        </InfiniteScroll>
-                    </List>
+                            {ArtRow}
+                        </List>
+                    </Box>
+                    {isLoadingArts && (
+                        <Box display="flex" justifyContent="center" padding={2}>
+                            <Typography>Loading more arts...</Typography>
+                        </Box>
+                    )}
                 </Box>
             )}
             {artsAndArtists?.artists && artsAndArtists.artists.length > 0 && (
                 <Box>
                     <Typography variant="h6">Artists</Typography>
-                    <List>
-                        <InfiniteScroll
-                            dataLength={artsAndArtists.artists.length}
-                            loader={<h4>Loading...</h4>}
-                            hasMore={artsAndArtists.page < artsAndArtists.totalPage}
-                            next={handleNextPageArtists}
-                            height={'100%'}
-                            style={{ display: 'flex', gap: 4 }}
-                            scrollThreshold={0.9}
+                    <Box ref={artistsContainerRef} width="100%" height={220}>
+                        <List
+                            style={{ overflowY: 'hidden' }}
+                            height={220}
+                            width={containerWidth}
+                            itemCount={artsAndArtists.artists.length}
+                            itemSize={180}
+                            layout="horizontal"
+                            onScroll={handleArtistsScroll}
+                            overscanCount={8}
                         >
-                            {artsAndArtists?.artists.map((item) => (
-                                <ArtistItem
-                                    key={item.id}
-                                    id={item.id}
-                                    name={item.name}
-                                    isHide={values.exclude.artists.some((artist) => artist.value === item.id)}
-                                    onChange={onChangeArtist}
-                                />
-                            ))}
-                        </InfiniteScroll>
-                    </List>
+                            {ArtistRow}
+                        </List>
+                    </Box>
+                    {isLoadingArtists && (
+                        <Box display="flex" justifyContent="center" padding={2}>
+                            <Typography>Loading more artists...</Typography>
+                        </Box>
+                    )}
                 </Box>
             )}
         </Box>
@@ -255,35 +456,87 @@ interface ArtItemProps {
     title: string;
     isHide: boolean;
     onChange: (id: string, label: string) => void;
+    forceLoad?: boolean;
 }
-const ArtItem = ({ id, image, title, isHide, onChange }: ArtItemProps) => {
+const ArtItem = ({ id, image, title, isHide, onChange, forceLoad = false }: ArtItemProps) => {
     return (
         <Box display={'flex'} flexDirection={'column'}>
             <Box display={'flex'} alignItems={'center'}>
                 <Typography>Hide</Typography>
                 <Switch checked={isHide} onChange={() => onChange(id, title)} />
             </Box>
-            <MediaRender path={image} width={150} height={150} alt={title} fallback={NO_IMAGE_ASSET} />
-            <Typography>{title}</Typography>
+            <MediaRender
+                path={image}
+                width={150}
+                height={150}
+                alt={title}
+                fallback={NO_IMAGE_ASSET}
+                forceLoad={forceLoad}
+            />
+            <Typography
+                sx={{
+                    maxWidth: 150,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                }}
+            >
+                {title}
+            </Typography>
         </Box>
     );
 };
+
+const MemoizedArtItem = memo(ArtItem);
 
 interface ArtistItemProps {
     id: string;
     name: string;
     isHide: boolean;
     onChange: (id: string, label: string) => void;
+    forceLoad?: boolean;
+    avatarCache?: Map<string, string>;
 }
-const ArtistItem = ({ id, name, isHide, onChange }: ArtistItemProps) => {
+const ArtistItem = ({ id, name, isHide, onChange, forceLoad = false, avatarCache }: ArtistItemProps) => {
     const dispatch = useDispatch();
     const [avatar, setAvatar] = useState<string>('');
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        let isMounted = true;
+
+        if (avatarCache?.has(id)) {
+            const cachedAvatar = avatarCache.get(id) || '';
+            setAvatar(cachedAvatar);
+            setIsLoading(false);
+            return;
+        }
+
         dispatch(getCreatorAvatarThunk(id)).then((response) => {
-            setAvatar(response);
+            if (isMounted) {
+                const avatarUrl = response || '';
+                setAvatar(avatarUrl);
+                setIsLoading(false);
+
+                if (avatarCache) {
+                    avatarCache.set(id, avatarUrl);
+                }
+
+                if (forceLoad && response) {
+                    const img = document.createElement('img');
+                    img.src = `${GENERAL_STORAGE_URL}/${response}`;
+                }
+            }
         });
-    }, []);
+
+        return () => {
+            isMounted = false;
+        };
+    }, [dispatch, id, forceLoad, avatarCache]);
+
+    const imagePath = useMemo(() => {
+        return avatar ? `${GENERAL_STORAGE_URL}/${avatar}` : '/images/profile/profileDefault.png';
+    }, [avatar]);
 
     return (
         <Box display={'flex'} flexDirection={'column'}>
@@ -292,15 +545,19 @@ const ArtistItem = ({ id, name, isHide, onChange }: ArtistItemProps) => {
                 <Switch checked={isHide} onChange={() => onChange(id, name)} />
             </Box>
             <MediaRender
-                path={`${GENERAL_STORAGE_URL}/${avatar}`}
+                path={imagePath}
                 width={150}
                 height={150}
                 alt={name}
                 fallback={'/images/profile/profileDefault.png'}
+                forceLoad={forceLoad}
+                isLoading={isLoading}
             />
             <Typography>{name}</Typography>
         </Box>
     );
 };
+
+const MemoizedArtistItem = memo(ArtistItem);
 
 export default Exclude;

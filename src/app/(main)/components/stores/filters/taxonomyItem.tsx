@@ -85,15 +85,32 @@ const TaxonomyItem = () => {
         }, debounceDelay);
     };
 
+    const getArtworkTags = async (inputValue: string) => {
+        const searchPattern = inputValue.trim() ? `.*${inputValue.trim()}.*` : '.*.*';
+        const tags = await dispatch(getArtworkTagsThunk({ name: searchPattern }));
+        return tags.map((item) => ({
+            value: item.tag,
+            label: item.tag,
+        }));
+    };
+
+    const loadOptionsTags = (inputValue: string, callback: (options: any) => void) => {
+        if (debounceTimeout.current) {
+            clearTimeout(debounceTimeout.current);
+        }
+        debounceTimeout.current = setTimeout(async () => {
+            const options = await getArtworkTags(inputValue.trim());
+            callback(options);
+            if (inputValue === '') {
+                setTagsOptions(options);
+                setLoadTags(false);
+            }
+        }, debounceDelay);
+    };
+
     useEffect(() => {
-        const loadOptionsTags = async (): Promise<{ value: string; label: string }[]> => {
-            const tags = await dispatch(getArtworkTagsThunk());
-            return tags.map((item) => ({
-                value: item.tag,
-                label: item.tag,
-            }));
-        };
-        loadOptionsTags().then((options) => {
+        // Carrega opções iniciais das tags
+        loadOptionsTags('', (options) => {
             setTagsOptions(options);
         });
     }, []);
@@ -131,6 +148,7 @@ const TaxonomyItem = () => {
                             load={loadTags}
                             arrayHelpers={arrayHelpers}
                             options={tagsOptions}
+                            loadOptions={loadOptionsTags}
                             value={values.taxonomy.tags.map((item) => ({ value: item, label: item }))}
                         />
                     )}

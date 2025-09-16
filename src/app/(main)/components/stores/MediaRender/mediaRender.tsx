@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo, memo } from 'react';
 import Image from 'next/image';
 import { Box } from '@mui/material';
 import isVideoExtension from '@/utils/isVideo';
@@ -9,30 +9,64 @@ interface MediaRenderProps {
     height: number;
     fallback: string;
     alt: string;
+    forceLoad?: boolean;
+    isLoading?: boolean;
 }
 
-const MediaRender = ({ path, width, height, alt, fallback }: MediaRenderProps) => {
-    const [src, setSrc] = useState(fallback);
-    const [isLoading, setIsLoading] = useState(true);
+const MediaRender = ({
+    path,
+    width,
+    height,
+    alt,
+    fallback,
+    forceLoad = false,
+    isLoading = false,
+}: MediaRenderProps) => {
+    const [src, setSrc] = useState(isLoading ? fallback : path);
     const [isError, setIsError] = useState(false);
 
-    useEffect(() => {
-        setIsLoading(true);
-        setIsError(false);
-        setSrc(fallback);
-    }, [path, fallback]);
+    // Memoizar a verificação de vídeo para evitar recalcular
+    const isVideo = useMemo(() => isVideoExtension(path), [path]);
 
     useEffect(() => {
-        if (!isLoading && !isError) {
+        // Se não está carregando, usar o path; senão usar fallback
+        if (!isLoading) {
+            setIsError(false);
             setSrc(path);
-        } else if (isError) {
+
+            // Preload da imagem para forçar carregamento imediato
+            if (forceLoad && !isVideo) {
+                const img = document.createElement('img');
+                img.onload = () => {
+                    setSrc(path);
+                };
+                img.onerror = () => {
+                    setIsError(true);
+                    setSrc(fallback);
+                };
+                img.src = path;
+            }
+        } else {
             setSrc(fallback);
         }
-    }, [isLoading, isError, path, fallback]);
+    }, [path, fallback, forceLoad, isLoading, isVideo]);
+
+    const handleError = () => {
+        if (!isError && src !== fallback) {
+            setIsError(true);
+            setSrc(fallback);
+        }
+    };
+
+    const handleLoad = () => {
+        if (isError && src === path) {
+            setIsError(false);
+        }
+    };
 
     return (
         <Box>
-            {isVideoExtension(path) ? (
+            {isVideo ? (
                 <video
                     autoPlay
                     muted
@@ -42,13 +76,10 @@ const MediaRender = ({ path, width, height, alt, fallback }: MediaRenderProps) =
                     }}
                     width={width}
                     height={height}
-                    onLoadedData={() => setIsLoading(false)}
-                    onError={() => {
-                        setIsLoading(false);
-                        setIsError(true);
-                    }}
+                    onLoadedData={handleLoad}
+                    onError={handleError}
                 >
-                    <source src={isError ? fallback : path} type="video/mp4" />
+                    <source src={src} type="video/mp4" />
                 </video>
             ) : (
                 <Image
@@ -59,15 +90,15 @@ const MediaRender = ({ path, width, height, alt, fallback }: MediaRenderProps) =
                     style={{
                         objectFit: 'contain',
                     }}
-                    onLoad={() => setIsLoading(false)}
-                    onError={() => {
-                        setIsLoading(false);
-                        setIsError(true);
-                    }}
+                    onLoad={handleLoad}
+                    onError={handleError}
+                    priority={forceLoad}
+                    loading={forceLoad ? 'eager' : 'lazy'}
+                    unoptimized={forceLoad}
                 />
             )}
         </Box>
     );
 };
 
-export default MediaRender;
+export default memo(MediaRender);
