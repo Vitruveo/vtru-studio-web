@@ -1,10 +1,12 @@
+import cookie from 'cookiejs';
+import axios from 'axios';
 import { ReduxThunkAction } from '@/store';
 import { ConsignArtworkAssetStatus } from './types';
 import { updateAssetStep } from '../asset/requests';
 import { consignArtworkActionsCreators } from './slice';
 import { toastrActionsCreators } from '../toastr/slice';
-import { CONSIGN_ARTWORK_PREVIEW_URL } from '@/constants/consign-artwork';
-import cookie from 'cookiejs';
+import { NODE_ENV } from '@/constants/api';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 
 export function updateStatus(status: ConsignArtworkAssetStatus): ReduxThunkAction {
     return async (dispatch, getState) => {
@@ -37,12 +39,15 @@ export function updateStatus(status: ConsignArtworkAssetStatus): ReduxThunkActio
 export function checkPreview(): ReduxThunkAction {
     return async (dispatch, getState) => {
         try {
+            const rowData = await axios.get(REDIRECTS_JSON);
+            const storeUrl = rowData.data[NODE_ENV].xibit.store_url;
+
             const assetId = getState().asset._id;
             const domain = window.location.hostname.replace('studio.', '');
             cookie.set('token', getState().user.token, { path: '/', domain });
 
             if (assetId) {
-                const URL = `${CONSIGN_ARTWORK_PREVIEW_URL}/preview/${assetId}/${Date.now()}`;
+                const URL = `${storeUrl}/preview/${assetId}/${Date.now()}`;
                 window.open(URL, '_blank');
             }
         } catch (error) {
@@ -59,12 +64,15 @@ export function checkPreview(): ReduxThunkAction {
 export function preview(): ReduxThunkAction {
     return async (dispatch, getState) => {
         try {
+            const rowData = await axios.get(REDIRECTS_JSON);
+            const storeUrl = rowData.data[NODE_ENV].xibit.store_url;
+
             const assetId = getState().asset._id;
             const username = getState().user.username;
 
             if (!username || !assetId) throw new Error('Username or assetId not found');
 
-            const URL = `${CONSIGN_ARTWORK_PREVIEW_URL}/${username}/${assetId}`;
+            const URL = `${storeUrl}/${username}/${assetId}`;
             window.open(URL, '_blank');
         } catch (error) {
             dispatch(

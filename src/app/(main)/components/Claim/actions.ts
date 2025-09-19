@@ -1,13 +1,25 @@
-import { WALLET_NETWORKS, WEB3_NETWORK_RPC_ADDRESS, WEB3_PRIVATE_KEY } from '@/constants/wallet';
+import { WALLET_NETWORKS, WEB3_PRIVATE_KEY } from '@/constants/wallet';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { JsonRpcProvider, Contract, BrowserProvider, JsonRpcSigner, Wallet } from 'ethers';
 import type { Account, Chain, Client, Transport } from 'viem';
 
 import schema from '../../../../services/web3/contracts.json';
+import axios from 'axios';
+import { NODE_ENV } from '@/constants/api';
 
 const isTestNet = WALLET_NETWORKS === 'testnet';
 export const network = isTestNet ? 'testnet' : 'mainnet';
 
-export const provider = new JsonRpcProvider(WEB3_NETWORK_RPC_ADDRESS);
+let web3_network_rpc = '';
+const fetchData = async () => {
+    const rowData = await axios.get(REDIRECTS_JSON);
+    return rowData.data[NODE_ENV].vitruveo.web3_network_rpc;
+};
+fetchData().then((data) => {
+    web3_network_rpc = data;
+});
+
+export const provider = new JsonRpcProvider(web3_network_rpc);
 const signerWallet = new Wallet(WEB3_PRIVATE_KEY, provider);
 
 type MainnetKeys = keyof (typeof schema)['mainnet'];

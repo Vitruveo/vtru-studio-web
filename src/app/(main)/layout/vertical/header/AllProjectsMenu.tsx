@@ -1,25 +1,44 @@
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Box, Drawer, IconButton, List, ListItem, ListItemText, Typography, useMediaQuery } from '@mui/material';
-import { useState } from 'react';
 import { IconMenu2 } from '@tabler/icons-react';
-import { BASE_URL_SEARCH } from '@/constants/search';
-import { BASE_URL_STUDIO } from '@/constants/studio';
 import { NODE_ENV } from '@/constants/api';
-import { VITRUVEO_URL } from '@/constants/vitruveo';
-
-const projects = [
-    { title: 'SEARCH', url: BASE_URL_SEARCH },
-    { title: 'FOLIO', url: NODE_ENV === 'production' ? 'https://xibit.live' : `${BASE_URL_SEARCH}/stores` },
-    { title: 'STUDIO', url: `${BASE_URL_STUDIO}/login` },
-    // { title: 'STACKS', url: `${SEARCH_BASE_URL}/stacks` },
-    // { title: 'STREAMS', url: '' },
-    { title: 'ABOUT XIBIT', url: 'https://about.xibit.app', onlyMobile: true },
-    { title: 'ABOUT VITRUVEO', url: VITRUVEO_URL, onlyMobile: true },
-];
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 
 const AllProjectsMenu = () => {
+    const [redirects, setRedirects] = useState({
+        vitruveo: '',
+        search: '',
+        studio: '',
+        stores: '',
+        about: '',
+    });
     const [drawerOpen, setDrawerOpen] = useState(false);
-
     const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
+
+    useEffect(() => {
+        const fetchRedirects = async () => {
+            const rowData = await axios.get(REDIRECTS_JSON);
+            setRedirects({
+                vitruveo: rowData.data.common.vitruveo.base_url,
+                search: rowData.data[NODE_ENV].xibit.search_url,
+                studio: rowData.data[NODE_ENV].xibit.studio_url,
+                stores: rowData.data[NODE_ENV].xibit.stores_url,
+                about: rowData.data.common.xibit.about_url,
+            });
+        };
+        fetchRedirects();
+    }, []);
+
+    const projects = [
+        { title: 'SEARCH', url: redirects.search },
+        { title: 'FOLIO', url: redirects.stores },
+        { title: 'STUDIO', url: `${redirects.studio}/login` },
+        // { title: 'STACKS', url: `${SEARCH_BASE_URL}/stacks` },
+        // { title: 'STREAMS', url: '' },
+        { title: 'ABOUT XIBIT', url: redirects.about, onlyMobile: true },
+        { title: 'ABOUT VITRUVEO', url: redirects.vitruveo, onlyMobile: true },
+    ];
 
     const toggleDrawer = (open: boolean) => () => {
         setDrawerOpen(open);

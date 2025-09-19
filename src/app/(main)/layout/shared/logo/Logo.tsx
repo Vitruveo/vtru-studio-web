@@ -1,13 +1,24 @@
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import Image from 'next/image';
 import Link from 'next/link';
 import { styled } from '@mui/material/styles';
 import { Box, Typography, useTheme } from '@mui/material';
 
 import { useSelector } from '@/store/hooks';
-import { VITRUVEO_URL } from '@/constants/vitruveo';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 
 const Logo = () => {
+    const [vitruveoUrl, setVitruveoUrl] = useState('');
     const customizer = useSelector((state) => state.customizer);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const rowData = await axios.get(REDIRECTS_JSON);
+            setVitruveoUrl(rowData.data.common.vitruveo.base_url);
+        };
+        fetchData();
+    }, []);
 
     const theme = useTheme();
 
@@ -63,7 +74,7 @@ const Logo = () => {
                                     color: '#333',
                                 },
                             }}
-                            onClick={() => window.open(VITRUVEO_URL, '_blank', 'noopener,noreferrer')}
+                            onClick={() => window.open(vitruveoUrl, '_blank', 'noopener,noreferrer')}
                         >
                             BY VITRUVEO
                         </Typography>

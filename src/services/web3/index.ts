@@ -1,12 +1,24 @@
+import axios from 'axios';
 import { JsonRpcProvider, BrowserProvider, JsonRpcSigner } from 'ethers';
 import type { Account, Chain, Client, Transport } from 'viem';
 
-import { WALLET_NETWORKS, WEB3_NETWORK_RPC_ADDRESS } from '@/constants/wallet';
+import { WALLET_NETWORKS } from '@/constants/wallet';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
+import { NODE_ENV } from '@/constants/api';
 
 const isTestNet = WALLET_NETWORKS === 'testnet';
 export const network = isTestNet ? 'testnet' : 'mainnet';
 
-export const provider = new JsonRpcProvider(WEB3_NETWORK_RPC_ADDRESS);
+let web3_network_rpc = '';
+const fetchData = async () => {
+    const rowData = await axios.get(REDIRECTS_JSON);
+    return rowData.data[NODE_ENV].vitruveo.web3_network_rpc;
+};
+fetchData().then((data) => {
+    web3_network_rpc = data;
+});
+
+export const provider = new JsonRpcProvider(web3_network_rpc);
 
 export const clientToSigner = (client: Client<Transport, Chain, Account>) => {
     const { account, chain, transport } = client;

@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Button, CircularProgress, Stack, Typography, Popover, Box, useMediaQuery, Theme } from '@mui/material';
-import { EXPLORER_URL } from '@/constants/explorer';
-import { useState } from 'react';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
+import { NODE_ENV } from '@/constants/api';
 
 interface Props {
     data: {
@@ -26,10 +28,19 @@ interface Props {
 
 export const ClaimComponent = ({ data, actions }: Props) => {
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+    const [explorerUrl, setExplorerUrl] = useState('');
     const smUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
     const { value, symbol, disabled, isConnected, address, vaultAddress, loading, isBlocked, VUSD } = data;
     const { onConnect, onDisconnect, openStakModal } = actions;
     const open = Boolean(anchorEl);
+
+    useEffect(() => {
+        const fetchRedirects = async () => {
+            const rowData = await axios.get(REDIRECTS_JSON);
+            setExplorerUrl(rowData.data[NODE_ENV].vitruveo.explorer_url);
+        };
+        fetchRedirects();
+    }, []);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget);
     const handleClose = () => setAnchorEl(null);
@@ -41,7 +52,7 @@ export const ClaimComponent = ({ data, actions }: Props) => {
                 <Box>
                     {vaultAddress ? (
                         <a
-                            href={`${EXPLORER_URL}/address/${vaultAddress}`}
+                            href={`${explorerUrl}/address/${vaultAddress}`}
                             target="_blank"
                             rel="noreferrer"
                             style={{ color: 'black' }}
@@ -57,7 +68,7 @@ export const ClaimComponent = ({ data, actions }: Props) => {
                 <Box>
                     {vaultAddress ? (
                         <a
-                            href={`${EXPLORER_URL}/address/${vaultAddress}`}
+                            href={`${explorerUrl}/address/${vaultAddress}`}
                             target="_blank"
                             rel="noreferrer"
                             style={{ color: 'black' }}
