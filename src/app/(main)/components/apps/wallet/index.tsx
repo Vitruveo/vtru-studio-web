@@ -66,7 +66,7 @@ fetchRedirects().then((data) => {
         network.rpcUrls.default.http[0] = data[env].vitruveo.web3_network_rpc;
     };
     updateNetwork(vitruveoMainnet, 'production');
-    updateNetwork(vitruveoTestnet, 'development');
+    updateNetwork(vitruveoTestnet, 'qa');
 });
 
 export const config = getDefaultConfig({
