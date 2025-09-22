@@ -11,23 +11,38 @@ const isTestNet = WALLET_NETWORKS === 'testnet';
 export const network = isTestNet ? 'testnet' : 'mainnet';
 
 let web3_network_rpc = '';
+let _provider: JsonRpcProvider | null = null;
+let _signer: Wallet | null = null;
+
 const fetchData = async () => {
     const rowData = await axios.get(REDIRECTS_JSON);
     return rowData.data[NODE_ENV].vitruveo.web3_network_rpc;
 };
-fetchData().then((data) => {
+
+const initPromise = fetchData().then((data) => {
     web3_network_rpc = data;
+    _provider = new JsonRpcProvider(web3_network_rpc);
+    _signer = new Wallet(WEB3_PRIVATE_KEY, _provider);
 });
 
-export const provider = new JsonRpcProvider(web3_network_rpc);
-const signerWallet = new Wallet(WEB3_PRIVATE_KEY, provider);
+const getProvider = async () => {
+    await initPromise;
+    return _provider!;
+};
+const getSigner = async () => {
+    await initPromise;
+    return _signer!;
+};
 
 type MainnetKeys = keyof (typeof schema)['mainnet'];
 type TestnetKeys = keyof (typeof schema)['testnet'];
 
 const getContractAddress = (name: MainnetKeys | TestnetKeys) => schema[network][name];
 
-export const VUSD = new Contract(getContractAddress('VUSD'), schema.abi.VUSD, signerWallet);
+const getVUSD = async () => {
+    await getSigner();
+    return new Contract(getContractAddress('VUSD'), schema.abi.VUSD, _signer!);
+};
 
 export const clientToSigner = (client: Client<Transport, Chain, Account>) => {
     const { account, chain, transport } = client;
@@ -53,6 +68,7 @@ export const createSignedMessage = async ({
     client: Client<Transport, Chain, Account>;
 }) => {
     const signer = clientToSigner(client!);
+    const provider = await getProvider();
 
     const domain = {
         name: 'Vitruveo Studio',
@@ -86,3 +102,5 @@ export const createSignedMessage = async ({
         signer,
     };
 };
+
+export { getProvider as provider, getVUSD as VUSD };

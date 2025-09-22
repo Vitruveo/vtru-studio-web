@@ -70,7 +70,7 @@ import { FormatsAuxiliayMedia } from '@/app/(main)/consign/auxiliaryMedia/types'
 
 import { BASE_URL_API } from '@/constants/api';
 import { userActionsCreators } from '../user/slice';
-import { clientToSigner, network, provider } from '@/services/web3';
+import { clientToSigner, network, getProvider } from '@/services/web3';
 import schema from '@/services/web3/contracts.json';
 import { UpdatedAssetStoresVisibilityReq } from '../common/types';
 import { maxPrice, minPrice } from '@/app/(main)/components/stores/filters/licenseItem';
@@ -1003,6 +1003,7 @@ export function signerAddedPrintLicenseThunk(
         try {
             const { client, assetKey, added } = payload;
             const signer = clientToSigner(client);
+            const provider = await getProvider();
 
             const contractAddress = schema[network].AssetRegistry;
 
@@ -1063,6 +1064,8 @@ export function signerUpdateLicensePriceThunk(payload: SignerParams): ReduxThunk
             const { client, assetKey, price } = payload;
 
             const signer = clientToSigner(client);
+
+            const provider = await getProvider();
 
             const contractAddress = schema[network].AssetRegistry;
 
@@ -1127,6 +1130,8 @@ export function signerUpdateAssetHeaderThunk(payload: SignerUpdateAssetParams): 
 
             const signer = clientToSigner(client);
 
+            const provider = await getProvider();
+
             const contractAddress = schema[network].AssetRegistry;
 
             const domain = {
@@ -1189,6 +1194,8 @@ export function signerUpdateAssetStatusThunk(
             const { client, status, assetKey } = payload;
 
             const signer = clientToSigner(client);
+
+            const provider = await getProvider();
 
             const contractAddress = schema[network].AssetRegistry;
 

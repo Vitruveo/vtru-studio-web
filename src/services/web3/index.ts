@@ -10,17 +10,24 @@ const isTestNet = WALLET_NETWORKS === 'testnet';
 export const network = isTestNet ? 'testnet' : 'mainnet';
 
 let web3_network_rpc = '';
+let _provider: JsonRpcProvider | null = null;
+
 const fetchData = async () => {
     const rowData = await axios.get(REDIRECTS_JSON);
     return rowData.data[NODE_ENV].vitruveo.web3_network_rpc;
 };
-fetchData().then((data) => {
+
+const initPromise = fetchData().then((data) => {
     web3_network_rpc = data;
+    _provider = new JsonRpcProvider(web3_network_rpc);
 });
 
-export const provider = new JsonRpcProvider(web3_network_rpc);
+const getProvider = async () => {
+    await initPromise;
+    return _provider!;
+};
 
-export const clientToSigner = (client: Client<Transport, Chain, Account>) => {
+const clientToSigner = (client: Client<Transport, Chain, Account>) => {
     const { account, chain, transport } = client;
     const networkClient = {
         chainId: chain.id,
@@ -31,3 +38,5 @@ export const clientToSigner = (client: Client<Transport, Chain, Account>) => {
     const signer = new JsonRpcSigner(providerClient, account.address);
     return signer;
 };
+
+export { getProvider, clientToSigner };
