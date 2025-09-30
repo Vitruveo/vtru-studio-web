@@ -254,6 +254,12 @@ export default function Home() {
                             be withdrawn.
                         </Typography>
                     </Box>
+                    <Box bgcolor="#FF9800" color="#fff" p={2} borderRadius={2} mt={1}>
+                        <Typography fontSize="1.1rem" alignSelf="center" lineHeight={1.5}>
+                            Consignments are currently paused. We are troubleshooting the issue.
+                        </Typography>
+                    </Box>
+
                     <Box gap={2} display="flex">
                         <Box flex={3} mt={2}>
                             <button
