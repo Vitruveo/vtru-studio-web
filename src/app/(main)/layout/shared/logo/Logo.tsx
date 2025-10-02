@@ -1,26 +1,13 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
 import Image from 'next/image';
 import Link from 'next/link';
 import { styled } from '@mui/material/styles';
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 
 import { useSelector } from '@/store/hooks';
-import { REDIRECTS_JSON } from '@/constants/vitruveo';
 
 const Logo = () => {
-    const [vitruveoUrl, setVitruveoUrl] = useState('');
-    const customizer = useSelector((state) => state.customizer);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const rowData = await axios.get(REDIRECTS_JSON);
-            setVitruveoUrl(rowData.data.common.vitruveo.base_url);
-        };
-        fetchData();
-    }, []);
-
     const theme = useTheme();
+    const customizer = useSelector((state) => state.customizer);
 
     const LinkStyled = styled(Link)(() => ({
         height: customizer.TopbarHeight,
@@ -61,23 +48,6 @@ const Logo = () => {
                             width={120}
                             priority
                         />
-                        <Typography
-                            sx={{
-                                fontSize: 9,
-                                marginLeft: 1,
-                                textDecoration: 'none',
-                                cursor: 'pointer',
-                                letterSpacing: '2px',
-                                color: 'black',
-                                fontWeight: 500,
-                                '&:hover': {
-                                    color: '#333',
-                                },
-                            }}
-                            onClick={() => window.open(vitruveoUrl, '_blank', 'noopener,noreferrer')}
-                        >
-                            BY VITRUVEO
-                        </Typography>
                     </Box>
                 )}
             </LinkStyled>
