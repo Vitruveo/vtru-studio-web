@@ -1,5 +1,4 @@
 'use client';
-import Img from 'next/image';
 import { Box, Typography, Button, Grid } from '@mui/material';
 import Link from 'next/link';
 
@@ -20,8 +19,6 @@ function LetsView() {
                 alignItems="center"
                 flexDirection="column"
             >
-                <Img src={'/images/logos/letsvitruveo.png'} alt="bg" width={300} height={60} />
-
                 <Typography marginTop={5} fontSize="1.2rem" mb={1}>
                     Your gateway to sustainable income through digital art
                 </Typography>
