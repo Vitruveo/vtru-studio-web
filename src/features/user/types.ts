@@ -94,6 +94,22 @@ export interface TruLevel {
     levels: LevelType[];
 }
 
+export interface DiditSession {
+    session_id: string;
+    session_number: number;
+    session_token: string;
+    url: string;
+    vendor_data: string;
+    metadata: any;
+    status: string;
+    callback: any;
+    workflow_id: string;
+}
+
+export interface Didit {
+    session: DiditSession;
+}
+
 export interface User {
     _id: string;
     name: string;
@@ -103,10 +119,7 @@ export interface User {
     login: {
         email: string;
     };
-    synaps?: {
-        sessionId: string;
-        steps: SynapsStep[];
-    };
+    didit?: Didit;
     walletDefault: string;
     emailDefault: string;
     wallets: Wallet[];
@@ -337,9 +350,7 @@ export interface GeneralStorageReq {
     file: File;
     dispatch?: any;
 }
-export interface SessionInitRes {
-    session_id: string;
-}
+export type SessionInitRes = DiditSession;
 
 export interface StepRes {
     id: string;
@@ -377,7 +388,7 @@ export type VerifyCodeApiRes = APIResponse<User>;
 export type ChangeAvatarApiRes = APIResponse<ChangeAvatarRes>;
 export type RequestConnectWalletApiRes = APIResponse<ResquestConnectWalletRes>;
 export type VerifyConnectWalletApiRes = APIResponse;
-export type SynapsSessionInitApiRes = APIResponse<SessionInitRes>;
+export type DiditSessionInitApiRes = APIResponse<SessionInitRes>;
 export type SynapsIndividualSessionApiRes = APIResponse<SynapsIndividualSessionRes>;
 export type GetTruLevelApiRes = APIResponse<TruLevel>;
 

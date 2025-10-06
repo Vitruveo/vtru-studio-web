@@ -1,7 +1,7 @@
 'use client';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { RequestUpload, SynapsStep, UserSliceState, VaultProps } from './types';
+import { DiditSession, RequestUpload, SynapsStep, UserSliceState, VaultProps } from './types';
 import { SynapsChangeNotify } from '../ws/types';
 import { UpdatedAssetStoresVisibilityReq } from '../common/types';
 
@@ -115,7 +115,7 @@ export const userSlice = createSlice({
             state.vault.createdAt = creator?.vault?.createdAt || null;
             state.vault.isBlocked = creator?.vault?.isBlocked || false;
             state.framework = creator.framework;
-            state.synaps = creator.synaps;
+            state.didit = creator.didit;
             state.truLevel = creator.truLevel;
             state.licenses = creator.licenses;
             state.autoStake = creator.autoStake;
@@ -211,28 +211,27 @@ export const userSlice = createSlice({
                 data: state.assets.data.filter((asset) => asset._id !== action.payload),
             };
         },
-        setSynapsSessionId: (state, action: PayloadAction<string>) => {
+        setDiditSession: (state, action: PayloadAction<DiditSession>) => {
             return {
                 ...state,
-                synaps: {
-                    ...(state.synaps || {}),
-                    sessionId: action.payload,
-                    steps: [],
+                didit: {
+                    ...(state.didit || {}),
+                    session: action.payload,
                 },
             };
         },
-        setSynapsSteps: (state, action: PayloadAction<SynapsStep[]>) => {
-            if (state.synaps) {
-                state.synaps.steps = action.payload;
-            }
-        },
-        changeSynapsStep: (state, action: PayloadAction<SynapsChangeNotify>) => {
-            if (state.synaps) {
-                state.synaps.steps = state.synaps.steps.map((step) =>
-                    step.id === action.payload.stepId ? { ...step, status: action.payload.status } : step
-                );
-            }
-        },
+        // setSynapsSteps: (state, action: PayloadAction<SynapsStep[]>) => {
+        //     if (state.synaps) {
+        //         state.synaps.steps = action.payload;
+        //     }
+        // },
+        // changeSynapsStep: (state, action: PayloadAction<SynapsChangeNotify>) => {
+        //     if (state.synaps) {
+        //         state.synaps.steps = state.synaps.steps.map((step) =>
+        //             step.id === action.payload.stepId ? { ...step, status: action.payload.status } : step
+        //         );
+        //     }
+        // },
         changeAutoStake: (state, action: PayloadAction<boolean>) => {
             state.autoStake = action.payload;
         },
