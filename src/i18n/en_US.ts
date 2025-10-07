@@ -14,7 +14,7 @@ const language: Translation = {
     'studio.home.wellcome': 'Welcome to',
     'studio.home.title': 'Home',
     'studio.home.transforming':
-        'Vitruveo is transforming Web3 art, and that means all-new software like this “Beta” version of vtruStudio. Beta means the software is not fully ready and you’re helping us test it so it can be improved.',
+        'Xibit is transforming Web3 art, and that means all-new software like this “Beta” version of vtruStudio. Beta means the software is not fully ready and you’re helping us test it so it can be improved.',
     'studio.home.software': 'The software currently has two features you can access with the buttons below:',
     'studio.home.consign': 'Consign Artwork',
     'studio.home.myProfile': 'My Profile',
@@ -30,7 +30,7 @@ const language: Translation = {
     /* My Profile */
     'studio.myProfile.pasteCode': 'Paste code',
     'studio.myProfile.title': 'My Profile',
-    'studio.myProfile.subtitle': 'Customize your Vitruveo profile with multiple email and wallet addresses.',
+    'studio.myProfile.subtitle': 'Customize your xibit profile with multiple email and wallet addresses.',
     'studio.myProfile.home': 'Home',
     'studio.myProfile.saveMessage': 'Data saved successfully',
     'studio.myProfile.accessConsignMessage':
@@ -767,7 +767,7 @@ const language: Translation = {
 
     'studio.consignArtwork.licenses.title': 'Licenses',
     'studio.consignArtwork.licenses.description':
-        'Currently, Vitruveo offers four ways for your artwork to be licensed/sold. Here you can choose any of these licensing options:',
+        'Currently, Xibit offers four ways for your artwork to be licensed/sold. Here you can choose any of these licensing options:',
     'studio.consignArtwork.licenses.oneLicense.error': 'Please add at least one license',
     'studio.consignArtwork.licenses.fillFields.error': 'Fill in the fields correctly.',
     'studio.consignArtwork.licenses.alreadyAdded': 'License already added',

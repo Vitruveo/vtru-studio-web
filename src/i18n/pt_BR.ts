@@ -12,7 +12,7 @@ const language: Translation = {
     'studio.home.wellcome': 'Bem-vindo a',
     'studio.home.title': 'Início',
     'studio.home.transforming':
-        'Vitruveo está transformando a arte Web3, e isso significa um software totalmente novo como esta versão "Beta" do vtruStudio. Beta significa que o software não está totalmente pronto e você está nos ajudando a testá-lo para que possa ser melhorado.',
+        'Xibit está transformando a arte Web3, e isso significa um software totalmente novo como esta versão "Beta" do vtruStudio. Beta significa que o software não está totalmente pronto e você está nos ajudando a testá-lo para que possa ser melhorado.',
     'studio.home.software': 'O software atualmente tem dois recursos que você pode acessar com os botões abaixo:',
     'studio.home.consign': 'Consignar Obra de Arte',
     'studio.home.myProfile': 'Meu Perfil',
@@ -28,7 +28,7 @@ const language: Translation = {
     /* My Profile */
     'studio.myProfile.pasteCode': 'Cole o código',
     'studio.myProfile.title': 'Meu Perfil',
-    'studio.myProfile.subtitle': 'Personalize seu perfil Vitruveo com vários emails e endereços de carteira.',
+    'studio.myProfile.subtitle': 'Personalize seu perfil Xibit com vários emails e endereços de carteira.',
     'studio.myProfile.home': 'Início',
     'studio.myProfile.saveMessage': 'Dados salvos com sucesso',
     'studio.myProfile.accessConsignMessage':
@@ -602,7 +602,7 @@ const language: Translation = {
     /* Licenças */
     'studio.consignArtwork.licenses.title': 'Licenças',
     'studio.consignArtwork.licenses.description':
-        'Atualmente, a Vitruveo oferece quatro formas de licenciar/vender sua obra de arte. Aqui você pode escolher qualquer uma dessas opções de licenciamento:',
+        'Atualmente, a Xibit oferece quatro formas de licenciar/vender sua obra de arte. Aqui você pode escolher qualquer uma dessas opções de licenciamento:',
     'studio.consignArtwork.licenses.oneLicense.error': 'Por favor, adicione pelo menos uma licença',
     'studio.consignArtwork.licenses.fillFields.error': 'Preencha os campos corretamente.',
     'studio.consignArtwork.licenses.alreadyAdded': 'Licença já adicionada',
