@@ -88,7 +88,7 @@ const initialSteps = {
     },
     contractExplorer: {
         status: undefined,
-        title: 'Consigning artwork to Vitruveo blockchain',
+        title: 'Consigning artwork to blockchain',
     },
 };
 
