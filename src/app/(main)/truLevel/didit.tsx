@@ -91,7 +91,7 @@ const DiditModal = memo(() => {
                     height: '64px',
                     width: '100%',
                     fontWeight: 'bold',
-                    fontSize: '1.5rem',
+                    fontSize: isApproved ? '1.4rem' : '1.5rem',
                     whiteSpace: 'nowrap',
                     color: 'white',
                     '&:hover': isApproved

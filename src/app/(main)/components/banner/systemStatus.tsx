@@ -34,7 +34,7 @@ const BannerSystemStatus = ({ systemStatus }: Props) => {
         []
     );
     return (
-        <Box m={3}>
+        <Box mt={2}>
             {whichSystemHasIssues.map((issue, index) => (
                 <Box key={index} paddingBlock={1}>
                     {issue.level === 'warn' && <BannerWarning message={issue.message} />}
@@ -49,7 +49,13 @@ const BannerSystemStatus = ({ systemStatus }: Props) => {
 const BannerWarning = ({ message }: { message: string }) => {
     const theme = useTheme();
     return (
-        <Box bgcolor={theme.palette.warning.main} p={2} display="flex" justifyContent="space-between">
+        <Box
+            borderRadius="10px"
+            bgcolor={theme.palette.warning.main}
+            p={2}
+            display="flex"
+            justifyContent="space-between"
+        >
             <IconAlertHexagon size={30} />
             <Typography variant="h5" color={theme.palette.primary.contrastText}>
                 {message}
@@ -62,7 +68,7 @@ const BannerWarning = ({ message }: { message: string }) => {
 const BannerError = ({ message }: { message: string }) => {
     const theme = useTheme();
     return (
-        <Box bgcolor={theme.palette.error.main} p={2} display="flex" justifyContent="space-between">
+        <Box borderRadius="10px" bgcolor={theme.palette.error.main} p={2} display="flex" justifyContent="space-between">
             <IconXboxX size={30} />
             <Typography variant="h5" color={theme.palette.primary.contrastText}>
                 {message}
@@ -75,7 +81,13 @@ const BannerError = ({ message }: { message: string }) => {
 const BannerInfo = ({ message }: { message: string }) => {
     const theme = useTheme();
     return (
-        <Box bgcolor={theme.palette.primary.main} p={2} display="flex" justifyContent="space-between">
+        <Box
+            borderRadius="10px"
+            bgcolor={theme.palette.primary.main}
+            p={2}
+            display="flex"
+            justifyContent="space-between"
+        >
             <Typography variant="h5" color={theme.palette.primary.contrastText}>
                 {message}
             </Typography>
