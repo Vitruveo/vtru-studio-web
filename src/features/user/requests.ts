@@ -36,9 +36,8 @@ import {
     RemoveSocialApiRes,
     RemoveSocialReq,
     GeneralStorageReq,
-    SynapsSessionInitApiRes,
-    SynapsIndividualSessionApiRes,
     GetTruLevelApiRes,
+    DiditSessionInitApiRes,
 } from './types';
 import { Framework } from '../common/types';
 import { api3Service } from '@/services/api3';
@@ -214,13 +213,13 @@ export async function me() {
     return apiService.get('/creators/me');
 }
 
-export async function synapsSessionInit(): Promise<SynapsSessionInitApiRes> {
-    return apiService.post('/creators/synaps/session/init', {});
+export async function diditSessionInit(): Promise<DiditSessionInitApiRes> {
+    return apiService.post('/creators/didit/session/init', {});
 }
 
-export async function synapsIndividualSession(): Promise<SynapsIndividualSessionApiRes> {
-    return apiService.post(`/creators/synaps/individual/session`, {});
-}
+// export async function diditIndividualSession(): Promise<SynapsIndividualSessionApiRes> {
+//     return apiService.post(`/creators/didit/individual/session`, {});
+// }
 
 export async function getTruLevel(): Promise<GetTruLevelApiRes> {
     return apiService.get('/creators/truLevel');

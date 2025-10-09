@@ -27,8 +27,7 @@ import {
     getWalletsVault,
     generalStorageAvatar,
     me,
-    synapsSessionInit,
-    synapsIndividualSession,
+    diditSessionInit,
     getTruLevel,
     putAutoStake,
 } from './requests';
@@ -541,24 +540,24 @@ export function removeSocialThunk(data: RemoveSocialReq): ReduxThunkAction<Promi
     };
 }
 
-export function synapsSessionInitThunk(): ReduxThunkAction<Promise<void>> {
+export function diditSessionInitThunk(): ReduxThunkAction<Promise<void>> {
     return async function (dispatch, getState) {
-        const res = await synapsSessionInit();
-        if (res.data?.session_id) {
-            dispatch(userActionsCreators.setSynapsSessionId(res.data.session_id));
+        const res = await diditSessionInit();
+        if (res.data) {
+            dispatch(userActionsCreators.setDiditSession(res.data));
         }
     };
 }
 
-export function synapsIndividualSessionThunk(): ReduxThunkAction<Promise<void>> {
-    return async function (dispatch, getState) {
-        const res = await synapsIndividualSession();
-        if (res.data?.session) {
-            const steps = res.data.session.steps.map((v) => ({ ...v, name: v.type }));
-            dispatch(userActionsCreators.setSynapsSteps(steps));
-        }
-    };
-}
+// export function synapsIndividualSessionThunk(): ReduxThunkAction<Promise<void>> {
+//     return async function (dispatch, getState) {
+//         const res = await synapsIndividualSession();
+//         if (res.data?.session) {
+//             const steps = res.data.session.steps.map((v) => ({ ...v, name: v.type }));
+//             dispatch(userActionsCreators.setSynapsSteps(steps));
+//         }
+//     };
+// }
 
 export function putAutoStakeThunk(): ReduxThunkAction<Promise<void>> {
     return async function (dispatch, getState) {

@@ -1,4 +1,7 @@
+import axios from 'axios';
 import { Box, Modal as MuiModal, Typography } from '@mui/material';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
+import { useEffect, useState } from 'react';
 
 interface ModalProps {
     isOpen: boolean;
@@ -6,6 +9,16 @@ interface ModalProps {
 }
 
 export default function ClaimedModal({ isOpen, handleClose }: ModalProps) {
+    const [vtruScopeUrl, setVtruScopeUrl] = useState('');
+
+    useEffect(() => {
+        const fetchRedirects = async () => {
+            const rowData = await axios.get(REDIRECTS_JSON);
+            setVtruScopeUrl(rowData.data.common.vitruveo.scope_url);
+        };
+        fetchRedirects();
+    }, []);
+
     return (
         <MuiModal open={isOpen} onClose={handleClose}>
             <Box
@@ -45,7 +58,7 @@ export default function ClaimedModal({ isOpen, handleClose }: ModalProps) {
                         <Typography variant="h6">Your claim was successful. Check your wallet.</Typography>
                         <Typography variant="body1">
                             Check active stakes on{' '}
-                            <a href="https://scope.vitruveo.xyz/staking/vtru" target="_new">
+                            <a href={`${vtruScopeUrl}/staking/vtru`} target="_new">
                                 Scope
                             </a>
                         </Typography>

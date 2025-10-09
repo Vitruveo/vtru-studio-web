@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { differenceInDays, parseISO } from 'date-fns';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { Box, Button, CircularProgress, Modal as MuiModal, Slider, Typography } from '@mui/material';
 
 interface ModalProps {
@@ -47,6 +49,15 @@ export default function StakeModal({
 }: ModalProps) {
     const [unassigned, setUnassigned] = useState(available);
     const [selectValues, setSelectValues] = useState([0, 0, 0, 0, 0]);
+    const [vtruScopeUrl, setVtruScopeUrl] = useState('');
+
+    useEffect(() => {
+        const fetchRedirects = async () => {
+            const rowData = await axios.get(REDIRECTS_JSON);
+            setVtruScopeUrl(rowData.data.common.vitruveo.scope_url);
+        };
+        fetchRedirects();
+    }, []);
 
     const isLessThan30Days = (): boolean => {
         if (!vaultCreatedAt) return false;
@@ -174,7 +185,7 @@ export default function StakeModal({
                     </Box>
 
                     <Box display="flex" justifyContent={'space-between'}>
-                        <a href="https://scope.vitruveo.xyz/staking/vtru" target="_new">
+                        <a href={`${vtruScopeUrl}/staking/vtru`} target="_new">
                             Current stakes
                         </a>
                         <Button

@@ -31,16 +31,20 @@ export const ClaimModal = ({ isOpen, isLoading, handleClose, handleClaim, vusd =
         // current vuds
         setCurrentVusd((vusd * (100 - percentage)) / 100);
 
-        // current vtru
-        VUSD.convertVusdToVtru(((vusd * percentage) / 100) * 10 ** 6)
-            .then((data) => {
-                const converted = data / BigInt(10 ** 18);
-                const convertedToNumber = BigNumber.from(converted).toNumber();
-                setCurrentVtru(convertedToNumber);
-            })
-            .catch((err) => {
-                console.error('Error converting VUSD to VTRU', err);
-            });
+        const fetchContract = async () => {
+            // current vtru
+            const VUSDContract = await VUSD();
+            VUSDContract.convertVusdToVtru(((vusd * percentage) / 100) * 10 ** 6)
+                .then((data) => {
+                    const converted = data / BigInt(10 ** 18);
+                    const convertedToNumber = BigNumber.from(converted).toNumber();
+                    setCurrentVtru(convertedToNumber);
+                })
+                .catch((err) => {
+                    console.error('Error converting VUSD to VTRU', err);
+                });
+        };
+        fetchContract();
     }, [percentage]);
 
     const handleClickClaim = () => {

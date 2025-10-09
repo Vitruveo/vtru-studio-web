@@ -1,16 +1,13 @@
-import { FC } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { styled } from '@mui/material/styles';
+import { Box, useTheme } from '@mui/material';
 
-import Image from 'next/image';
-import { Box, Typography, useTheme } from '@mui/material';
-import VtruTitle from '@/app/(main)/components/vtruTItle';
 import { useSelector } from '@/store/hooks';
 
 const Logo = () => {
-    const customizer = useSelector((state) => state.customizer);
-
     const theme = useTheme();
+    const customizer = useSelector((state) => state.customizer);
 
     const LinkStyled = styled(Link)(() => ({
         height: customizer.TopbarHeight,
@@ -51,23 +48,6 @@ const Logo = () => {
                             width={120}
                             priority
                         />
-                        <Typography
-                            sx={{
-                                fontSize: 9,
-                                marginLeft: 1,
-                                textDecoration: 'none',
-                                cursor: 'pointer',
-                                letterSpacing: '2px',
-                                color: 'black',
-                                fontWeight: 500,
-                                '&:hover': {
-                                    color: '#333',
-                                },
-                            }}
-                            onClick={() => window.open('https://vitruveo.xyz', '_blank', 'noopener,noreferrer')}
-                        >
-                            BY VITRUVEO
-                        </Typography>
                     </Box>
                 )}
             </LinkStyled>

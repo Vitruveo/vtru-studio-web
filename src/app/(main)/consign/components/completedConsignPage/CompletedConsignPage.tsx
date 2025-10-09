@@ -1,16 +1,18 @@
+import { ChangeEvent, useEffect, useState } from 'react';
+import { useFormik } from 'formik';
 import { Box, Button, Grid, Theme, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { CompletedConsignTableStatus } from './CompletedConsignTableStatus';
 import PageContainerFooter from '@/app/(main)/components/container/PageContainerFooter';
 import Breadcrumb, { BreadCrumbItem } from '@/app/(main)/layout/shared/breadcrumb/Breadcrumb';
 import AssetMediaPreview from '../assetMediaPreview';
-import { useFormik } from 'formik';
 import { useI18n } from '@/app/hooks/useI18n';
 import { ConsignArtworkAssetStatus } from '@/features/consign/types';
 import { useToastr } from '@/app/hooks/useToastr';
 import { consignArtworkThunks } from '@/features/consign/thunks';
-import { EXPLORER_URL } from '@/constants/explorer';
-import { ChangeEvent } from 'react';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
+import axios from 'axios';
+import { NODE_ENV } from '@/constants/api';
 
 // TODO: ADICIONAR TRADUÇÃO
 
@@ -20,6 +22,7 @@ interface FormType {
 
 export const CompletedConsignPage = () => {
     const dispatch = useDispatch();
+    const [explorerUrl, setExplorerUrl] = useState('');
     const xL = useMediaQuery((them: Theme) => them.breakpoints.up('xl'));
     const { language } = useI18n();
     const theme = useTheme();
@@ -30,6 +33,14 @@ export const CompletedConsignPage = () => {
     const status = useSelector((state) => state.consignArtwork.status);
     const userIsBlocked = useSelector((state) => state.user?.vault?.isBlocked);
     const transactionHash = useSelector((state) => state.asset.contractExplorer?.tx);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const rowData = await axios.get(REDIRECTS_JSON);
+            setExplorerUrl(rowData.data[NODE_ENV].vitruveo.explorer_url);
+        };
+        fetchData();
+    }, []);
 
     const grayColor = theme.palette.text.disabled;
 
@@ -71,7 +82,7 @@ export const CompletedConsignPage = () => {
             value: previewAndConsign.creatorContract?.value,
             actionFunc: async () => {
                 if (transactionHash) {
-                    window.open(`${EXPLORER_URL}/tx/${transactionHash}`, '_blank');
+                    window.open(`${explorerUrl}/tx/${transactionHash}`, '_blank');
                 } else {
                     toastr.display({ type: 'error', message: 'Explorer URL not found' });
                 }

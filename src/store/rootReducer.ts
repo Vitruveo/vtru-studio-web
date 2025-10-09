@@ -10,6 +10,7 @@ import { toastrSlice } from '@/features/toastr/slice';
 import { storesSlice } from '@/features/stores/slice';
 import filtersSlice from '@/features/filters/filtersSlice';
 import { featuresSlice } from '@/features/features';
+import { systemStatusSlice } from '@/features/systemStatus';
 
 interface RootState {
     user: ReturnType<typeof userSlice.reducer>;
@@ -21,6 +22,7 @@ interface RootState {
     filters: ReturnType<typeof filtersSlice>;
     stores: ReturnType<typeof storesSlice.reducer>;
     features: ReturnType<typeof featuresSlice.reducer>;
+    systemStatus: ReturnType<typeof systemStatusSlice.reducer>;
 }
 
 const appReducer = combineReducers<RootState>({
@@ -33,6 +35,7 @@ const appReducer = combineReducers<RootState>({
     filters: filtersSlice,
     stores: storesSlice.reducer,
     features: featuresSlice.reducer,
+    systemStatus: systemStatusSlice.reducer,
 });
 
 export const reducer: Reducer<RootState, AnyAction> = (state: RootState | undefined, action: AnyAction) => {

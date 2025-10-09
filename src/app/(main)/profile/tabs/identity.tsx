@@ -1,8 +1,10 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
+import axios from 'axios';
 import { Avatar, Box, Button, CardContent, Grid, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import CustomTextField, { CustomTextFieldDebounce } from '../../components/forms/theme-elements/CustomTextField';
-import { BASE_URL_SEARCH } from '@/constants/search';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
+import { NODE_ENV } from '@/constants/api';
 import { useSelector } from '@/store/hooks';
 import { userSelector } from '@/features/user';
 import { ProfileTabsGeneralProps } from '.';
@@ -26,17 +28,22 @@ const Identity = ({
     handleFileChange,
     handleOnClickReset,
     setFieldValue,
-    handleChange,
-    handleSubmit,
-    setFieldError,
-    setErrors,
 }: IdentityProps) => {
     const [copySearchMessage, setCopySearchMessage] = useState('Copy my search URL');
+    const [searchUrl, setSearchUrl] = useState('');
+
+    useEffect(() => {
+        const fetchRedirects = async () => {
+            const rowData = await axios.get(REDIRECTS_JSON);
+            setSearchUrl(rowData.data[NODE_ENV].xibit.search_url);
+        };
+        fetchRedirects();
+    }, []);
 
     const { _id } = useSelector(userSelector(['_id']));
 
     const handleCopySearchUrl = () => {
-        navigator.clipboard.writeText(`${BASE_URL_SEARCH}/?creatorId=${_id}`);
+        navigator.clipboard.writeText(`${searchUrl}/?creatorId=${_id}`);
         setCopySearchMessage('Copied!');
         setTimeout(() => {
             setCopySearchMessage('Copy my search URL');

@@ -1,8 +1,10 @@
 import { WagmiProvider } from 'wagmi';
+import axios from 'axios';
 import { RainbowKitProvider, getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WALLET_APP_NAME, WALLET_NETWORKS, WALLET_PROJECT_ID } from '@/constants/wallet';
 import '@rainbow-me/rainbowkit/styles.css';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 
 interface EtheriumProviderProps {
     children: React.ReactNode;
@@ -20,12 +22,12 @@ const vitruveoMainnet = {
         symbol: 'VTRU',
     },
     rpcUrls: {
-        public: { http: ['https://rpc.vitruveo.xyz/'] },
-        default: { http: ['https://rpc.vitruveo.xyz/'] },
+        public: { http: [''] },
+        default: { http: [''] },
     },
     blockExplorers: {
-        default: { name: 'VitruveoScan', url: 'https://explorer.vitruveo.xyz' },
-        etherscan: { name: 'VitruveoScan', url: 'https://explorer.vitruveo.xyz' },
+        default: { name: 'VitruveoScan', url: '' },
+        etherscan: { name: 'VitruveoScan', url: '' },
     },
     testnet: false,
 };
@@ -42,15 +44,30 @@ const vitruveoTestnet = {
         symbol: 'tVTRU',
     },
     rpcUrls: {
-        public: { http: ['https://test-rpc.vitruveo.xyz/'] },
-        default: { http: ['https://test-rpc.vitruveo.xyz/'] },
+        public: { http: [''] },
+        default: { http: [''] },
     },
     blockExplorers: {
-        default: { name: 'VitruveoScan', url: 'https://test-explorer.vitruveo.xyz' },
-        etherscan: { name: 'VitruveoScan', url: 'https://test-explorer.vitruveo.xyz' },
+        default: { name: 'VitruveoScan', url: '' },
+        etherscan: { name: 'VitruveoScan', url: '' },
     },
     testnet: true,
 };
+
+const fetchRedirects = async () => {
+    const rowData = await axios.get(REDIRECTS_JSON);
+    return rowData.data;
+};
+fetchRedirects().then((data) => {
+    const updateNetwork = (network: any, env: string) => {
+        network.blockExplorers.default.url = data[env].vitruveo.explorer_url;
+        network.blockExplorers.etherscan.url = data[env].vitruveo.explorer_url;
+        network.rpcUrls.public.http[0] = data[env].vitruveo.web3_network_rpc;
+        network.rpcUrls.default.http[0] = data[env].vitruveo.web3_network_rpc;
+    };
+    updateNetwork(vitruveoMainnet, 'production');
+    updateNetwork(vitruveoTestnet, 'qa');
+});
 
 export const config = getDefaultConfig({
     appName: WALLET_APP_NAME,

@@ -13,10 +13,12 @@ import { ConsignArtworkAssetStatus } from '@/features/consign/types';
 import { useToastr } from '@/app/hooks/useToastr';
 import { updateAssetStatusThunk } from '@/features/asset/thunks';
 import { consignArtworkThunks } from '@/features/consign/thunks';
-import { EXPLORER_URL } from '@/constants/explorer';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 import { CompletedConsignTableStatus } from '../components/completedConsignPage/CompletedConsignTableStatus';
 import AssetMediaPreview from '../components/assetMediaPreview';
 import { getAssetThunk, signerUpdateAssetStatusThunk } from '@/features/asset/thunks';
+import axios from 'axios';
+import { NODE_ENV } from '@/constants/api';
 
 const notAllowedStatus = ['draft', 'preview'];
 
@@ -28,6 +30,7 @@ interface FormType {
 
 export default function CompletedConsignPage() {
     const dispatch = useDispatch();
+    const [explorerUrl, setExplorerUrl] = useState('');
     const xL = useMediaQuery((them: Theme) => them.breakpoints.up('xl'));
     const { language } = useI18n();
     const theme = useTheme();
@@ -50,6 +53,11 @@ export default function CompletedConsignPage() {
 
     useEffect(() => {
         dispatch(getAssetThunk(selectedAsset));
+        const fetchData = async () => {
+            const rowData = await axios.get(REDIRECTS_JSON);
+            setExplorerUrl(rowData.data[NODE_ENV].vitruveo.explorer_url);
+        };
+        fetchData();
     }, []);
 
     const formik = useFormik<FormType>({
@@ -130,7 +138,7 @@ export default function CompletedConsignPage() {
             value: previewAndConsign.creatorContract?.value,
             actionFunc: async () => {
                 if (transactionHash) {
-                    window.open(`${EXPLORER_URL}/tx/${transactionHash}`, '_blank');
+                    window.open(`${explorerUrl}/tx/${transactionHash}`, '_blank');
                 } else {
                     toastr.display({ type: 'error', message: 'Explorer URL not found' });
                 }

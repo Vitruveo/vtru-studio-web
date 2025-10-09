@@ -5,7 +5,7 @@ import { Box, Button, Theme, Typography, useMediaQuery } from '@mui/material';
 
 import Breadcrumb from '@/app/(main)/layout/shared/breadcrumb/Breadcrumb';
 import { useI18n } from '@/app/hooks/useI18n';
-import Synaps from './synaps';
+import Didit from './didit';
 import Total from './total';
 import PageContainer from '../components/container/PageContainer';
 import Levels from './levels';
@@ -201,7 +201,7 @@ const TruLevel = () => {
                         </Typography>
                         <Box gap={4} display="flex">
                             <Box flex={1}>
-                                <Synaps />
+                                <Didit />
                             </Box>
                             <Box flex={1}>
                                 <Button

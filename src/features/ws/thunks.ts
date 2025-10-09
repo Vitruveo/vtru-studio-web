@@ -134,18 +134,6 @@ export function loginWebSocketThunk(): ReduxThunkAction {
                     );
                 }
             }
-            if (data?.notification?.messageType === 'synapsSteps') {
-                const { sessionId, stepId, status, stepName, messageType } = data.notification;
-                dispatch(
-                    userActionsCreators.changeSynapsStep({
-                        sessionId,
-                        stepId,
-                        status,
-                        stepName,
-                        messageType,
-                    })
-                );
-            }
         });
     };
 }

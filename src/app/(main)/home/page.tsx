@@ -49,6 +49,7 @@ import { useI18n } from '../../hooks/useI18n';
 import { requestMyAssetsThunk } from '@/features/user/thunks';
 import { userActionsCreators } from '@/features/user/slice';
 import { createNewAssetThunk, deleteAssetThunk } from '@/features/asset/thunks';
+import { loadSystemStatusThunk } from '@/features/systemStatus/thunks';
 import { consignArtworkActionsCreators } from '@/features/consign/slice';
 import { assetActionsCreators } from '@/features/asset/slice';
 import { setFilter } from '@/features/filters/filtersSlice';
@@ -58,6 +59,7 @@ import isVideoExtension from '@/utils/isVideo';
 import { ModalListOfLicenses } from '../components/licenses/ModalListOfLicenses';
 import { userSelector } from '@/features/user';
 import { ModalStoresVisibility } from '../components/stores/visibility/ModalStoresVisibility';
+import BannerSystemStatus from '../components/banner/systemStatus';
 
 const iconStyleComment: CSSProperties = {
     position: 'absolute',
@@ -135,6 +137,10 @@ export default function Home() {
             });
         }
     };
+
+    useEffect(() => {
+        dispatch(loadSystemStatusThunk());
+    }, []);
 
     useEffect(() => {
         handleScrollToTop();
@@ -248,18 +254,7 @@ export default function Home() {
                         <Image src={'/images/logos/XIBIT-logo_light.png'} priority alt="bg" width={90} height={30} />
                     </Box>
 
-                    <Box bgcolor="#ff0066" color="#fff" p={2} borderRadius={2} mt={2}>
-                        <Typography fontSize="1.1rem" alignSelf="center" lineHeight={1.5}>
-                            Xibit is beta software. For the first 30 days after your initial consignment, no funds may
-                            be withdrawn.
-                        </Typography>
-                    </Box>
-                    <Box bgcolor="#FF9800" color="#fff" p={2} borderRadius={2} mt={1}>
-                        <Typography fontSize="1.1rem" alignSelf="center" lineHeight={1.5}>
-                            Consignments are currently paused. We are troubleshooting the issue.
-                        </Typography>
-                    </Box>
-
+                    <BannerSystemStatus />
                     <Box gap={2} display="flex">
                         <Box flex={3} mt={2}>
                             <button

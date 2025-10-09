@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { uniqueId } from 'lodash';
 import {
     IconPhotoUp,
@@ -7,6 +8,7 @@ import {
     IconLogout,
     IconFolderPlus,
 } from '@tabler/icons-react';
+import { REDIRECTS_JSON } from '@/constants/vitruveo';
 
 interface MenuitemsType {
     [x: string]: any;
@@ -22,6 +24,17 @@ interface MenuitemsType {
     variant?: string;
     external?: boolean;
 }
+
+const fetchDreamverseUrl = async (): Promise<string> => {
+    const rowData = await axios.get(REDIRECTS_JSON);
+    return rowData.data.common.vitruveo.dreamverse_url;
+};
+fetchDreamverseUrl().then((url) => {
+    const item = Menuitems.find((i) => i.title === 'studio.sidebar.community');
+    if (item) {
+        item.href = url;
+    }
+});
 
 const Menuitems: MenuitemsType[] = [
     {
@@ -54,7 +67,7 @@ const Menuitems: MenuitemsType[] = [
         title: 'studio.sidebar.community',
         icon: IconBrandWechat,
         external: true,
-        href: 'https://dreamverse.vitruveo.xyz/',
+        href: '',
     },
 ];
 
