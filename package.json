@@ -1,6 +1,6 @@
 {
     "name": "studio-web",
-    "version": "0.1.656",
+    "version": "0.1.657",
     "private": true,
     "scripts": {
         "dev": "next dev",
