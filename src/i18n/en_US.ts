@@ -30,7 +30,7 @@ const language: Translation = {
     /* My Profile */
     'studio.myProfile.pasteCode': 'Paste code',
     'studio.myProfile.title': 'My Profile',
-    'studio.myProfile.subtitle': 'Customize your xibit profile with multiple email and wallet addresses.',
+    'studio.myProfile.subtitle': 'Customize your Xibit profile with multiple email and wallet addresses.',
     'studio.myProfile.home': 'Home',
     'studio.myProfile.saveMessage': 'Data saved successfully',
     'studio.myProfile.accessConsignMessage':
