@@ -226,9 +226,12 @@ const TruLevel = () => {
                     </Box>
                     <Levels truLevel={truLevel} />
                 </Box>
-                <Box marginLeft={2}>
+                <Box display={'flex'} flexDirection={'column'} gap={1} marginLeft={2}>
                     <Typography color="GrayText" lineHeight={1.3} fontSize={20}>
                         Points are added to your profile after a Level has been completed.
+                    </Typography>
+                    <Typography color="GrayText" lineHeight={1.3} fontSize={20}>
+                        "Facts" is under development and will be available in the future.
                     </Typography>
                 </Box>
             </Box>
