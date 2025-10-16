@@ -7,10 +7,12 @@ import { createPortal } from 'react-dom';
 const DiditModal = memo(() => {
     const [open, setOpen] = useState(false);
     const dispatch = useDispatch();
+
     const diditURL = useSelector((state) => state.user.didit?.session?.url);
     const diditStatus = useSelector((state) => state.user.didit?.session?.status);
+    const currentWorkflow = useSelector((state) => state.user.didit?.session?.currentWorkflow);
 
-    const isApproved = diditStatus === 'Approved';
+    const isApproved = diditStatus === 'Approved' && !currentWorkflow;
 
     const handleOpen = () => {
         if (isApproved) return;
@@ -27,7 +29,7 @@ const DiditModal = memo(() => {
         if (isApproved || !open) return;
         const interval = setInterval(() => {
             dispatch(diditSessionInitThunk());
-        }, 5000);
+        }, 2500);
         return () => clearInterval(interval);
     }, [isApproved, open]);
 

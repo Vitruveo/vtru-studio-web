@@ -95,6 +95,7 @@ export interface TruLevel {
 }
 
 export interface DiditSession {
+    currentWorkflow: string;
     session_id: string;
     session_number: number;
     session_token: string;

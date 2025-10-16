@@ -2,7 +2,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { DiditSession, RequestUpload, SynapsStep, UserSliceState, VaultProps } from './types';
-import { SynapsChangeNotify } from '../ws/types';
+
 import { UpdatedAssetStoresVisibilityReq } from '../common/types';
 
 const initialState: UserSliceState = {
