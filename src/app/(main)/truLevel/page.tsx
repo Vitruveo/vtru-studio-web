@@ -231,7 +231,7 @@ const TruLevel = () => {
                         Points are added to your profile after a Level has been completed.
                     </Typography>
                     <Typography color="GrayText" lineHeight={1.3} fontSize={20}>
-                        "Facts" is under development and will be available in the future.
+                        &quot;Facts&quot; is under development and will be available in the future.
                     </Typography>
                 </Box>
             </Box>
