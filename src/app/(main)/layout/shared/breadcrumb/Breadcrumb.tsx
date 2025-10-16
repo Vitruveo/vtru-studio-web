@@ -2,9 +2,7 @@ import React from 'react';
 import { Grid, Typography, Box, Breadcrumbs, Theme } from '@mui/material';
 import NextLink from 'next/link';
 
-import breadcrumbImg from 'public/images/breadcrumb/brand-asset-banner.png';
 import { IconCircle } from '@tabler/icons-react';
-import Image from 'next/image';
 
 export interface BreadCrumbItem {
     title: string;
@@ -14,7 +12,7 @@ export interface BreadCrumbItem {
 interface BreadCrumbType {
     subtitle?: string;
     items?: BreadCrumbItem[];
-    title: string;
+    title: string | JSX.Element;
     children?: JSX.Element;
     assetTitle?: string;
 }
@@ -31,7 +29,7 @@ const Breadcrumb = ({ subtitle, items, title, children, assetTitle }: BreadCrumb
         }}
     >
         <Grid item xs={12} sm={6} lg={8} mb={1} display={'flex'} flexDirection={'column'} gap={0.5}>
-            <Typography variant="h4">{title}</Typography>
+            {typeof title === 'string' ? <Typography variant="h4">{title}</Typography> : title}
             {subtitle && (
                 <Typography color="textSecondary" variant="h6" fontWeight={400} mt={0.8} mb={0}>
                     {subtitle}
