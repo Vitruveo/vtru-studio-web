@@ -12,6 +12,7 @@ import Levels from './levels';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { getTruLevelThunk } from '@/features/user/thunks';
 import { TruLevel as TruLevelType } from '@/features/user/types';
+import { levelsDescriptions } from './utils';
 
 export interface LevelStep {
     name: string;
@@ -190,10 +191,13 @@ const TruLevel = () => {
                     >
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <Typography fontWeight={500} color="primary" lineHeight={0.9} fontSize={50}>
-                                tru
-                            </Typography>
-                            <Typography fontWeight={500} color="black" lineHeight={0.9} fontSize={50}>
-                                Level
+                                {
+                                    levelsDescriptions[
+                                        truLevel.currentLevel < levelsDescriptions.length
+                                            ? truLevel.currentLevel + 1
+                                            : truLevel.currentLevel
+                                    ]?.name
+                                }
                             </Typography>
                         </div>
                         <Typography color="GrayText" lineHeight={1.3} fontSize={20}>

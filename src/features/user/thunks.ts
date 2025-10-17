@@ -76,12 +76,18 @@ export function getTruLevelThunk(): ReduxThunkAction<Promise<void>> {
     return async function (dispatch, getState) {
         const response = await getTruLevel();
         const currentTrulevel = getState().user.truLevel;
-        if (JSON.stringify(currentTrulevel) !== JSON.stringify(response.data))
-            dispatch(
-                userActionsCreators.change({
-                    truLevel: response.data,
-                })
-            );
+        const { url, ...currentDidit } = getState().user.didit || {};
+
+        if (JSON.stringify(response.data) === JSON.stringify({ truLevel: currentTrulevel, didit: currentDidit })) {
+            return;
+        }
+
+        dispatch(
+            userActionsCreators.change({
+                truLevel: response.data?.truLevel,
+                didit: { ...response.data?.didit },
+            })
+        );
     };
 }
 
@@ -543,8 +549,8 @@ export function removeSocialThunk(data: RemoveSocialReq): ReduxThunkAction<Promi
 export function diditSessionInitThunk(): ReduxThunkAction<Promise<void>> {
     return async function (dispatch, getState) {
         const res = await diditSessionInit();
-        if (res.data) {
-            dispatch(userActionsCreators.setDiditSession(res.data));
+        if (res.data && res.data.url) {
+            dispatch(userActionsCreators.setDiditUrl({ url: res.data.url }));
         }
     };
 }

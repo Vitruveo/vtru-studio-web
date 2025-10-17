@@ -1,46 +1,21 @@
 import React, { useState } from 'react';
-import { Box, Theme, Typography, useMediaQuery } from '@mui/material';
+import { Box, CircularProgress, Theme, Typography, useMediaQuery } from '@mui/material';
 import { dynamicStyles } from './styles';
 import Square from './square';
 import Dot from './dot';
 import ProgressBar from './progressBar';
-import { novaSquare } from './utils';
+import { labels, levelsDescriptions, novaSquare } from './utils';
 import { LevelItem } from '@/features/user/types';
 
 interface LevelProps {
     id: string;
+    loading?: boolean;
     items: LevelItem[];
     levelNumber: number;
     levelsCompleted: { [key: string]: boolean };
 }
 
-const labels = {
-    email: 'Email',
-    avatar: 'Avatar',
-    social: 'Social',
-    profile: 'Profile Link',
-    vault: 'Vault',
-    liveness: 'Liveness',
-    idaml: 'ID+AML',
-    facts2: '0 Facts',
-    address: 'Address',
-    phone: 'Phone',
-    facts3: '0 Facts',
-    facts4: '0 Facts',
-};
-
-const levelsDescriptions = [
-    { name: '', description: 'All users start at this level.' },
-    { name: 'STARTERS', description: 'These artists are at the very beginning of their artistic journey.' },
-    { name: 'NOVAS', description: 'These emerging artists are on the rise, showing promising talent and potential.' },
-    {
-        name: 'VIRTUOSOS',
-        description: 'These artists are highly skilled and have achieved considerable success in their careers.',
-    },
-    { name: 'MAESTROS', description: 'These artists represent the pinnacle of their craft.' },
-];
-
-const Level = ({ id, items, levelNumber, levelsCompleted }: LevelProps) => {
+const Level = ({ id, loading, items, levelNumber, levelsCompleted }: LevelProps) => {
     const [isFlipped, setIsFlipped] = useState(false);
 
     const handleFlip = () => {
@@ -97,7 +72,11 @@ const Level = ({ id, items, levelNumber, levelsCompleted }: LevelProps) => {
                                 {`Level ${id}`}
                             </Typography>
                             <Box marginTop={3} width="100%" display="flex" justifyContent="center">
-                                <Square count={levelNumber} />
+                                {loading ? (
+                                    <CircularProgress style={{ height: '30px', width: '30px' }} />
+                                ) : (
+                                    <Square count={levelNumber} />
+                                )}
                             </Box>
                             <Box marginTop={5}>
                                 {items.map((item, index) => {

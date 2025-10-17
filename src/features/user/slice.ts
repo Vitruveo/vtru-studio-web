@@ -1,7 +1,7 @@
 'use client';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { DiditSession, RequestUpload, SynapsStep, UserSliceState, VaultProps } from './types';
+import { Didit, RequestUpload, UserSliceState, VaultProps } from './types';
 
 import { UpdatedAssetStoresVisibilityReq } from '../common/types';
 
@@ -211,27 +211,15 @@ export const userSlice = createSlice({
                 data: state.assets.data.filter((asset) => asset._id !== action.payload),
             };
         },
-        setDiditSession: (state, action: PayloadAction<DiditSession>) => {
+        setDiditUrl: (state, action: PayloadAction<{ url: string }>) => {
             return {
                 ...state,
                 didit: {
                     ...(state.didit || {}),
-                    session: action.payload,
+                    url: action.payload.url,
                 },
             };
         },
-        // setSynapsSteps: (state, action: PayloadAction<SynapsStep[]>) => {
-        //     if (state.synaps) {
-        //         state.synaps.steps = action.payload;
-        //     }
-        // },
-        // changeSynapsStep: (state, action: PayloadAction<SynapsChangeNotify>) => {
-        //     if (state.synaps) {
-        //         state.synaps.steps = state.synaps.steps.map((step) =>
-        //             step.id === action.payload.stepId ? { ...step, status: action.payload.status } : step
-        //         );
-        //     }
-        // },
         changeAutoStake: (state, action: PayloadAction<boolean>) => {
             state.autoStake = action.payload;
         },

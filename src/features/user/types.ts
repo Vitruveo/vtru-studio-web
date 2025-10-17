@@ -94,21 +94,25 @@ export interface TruLevel {
     levels: LevelType[];
 }
 
-export interface DiditSession {
-    currentWorkflow: string;
-    session_id: string;
-    session_number: number;
-    session_token: string;
-    url: string;
-    vendor_data: string;
-    metadata: any;
-    status: string;
-    callback: any;
-    workflow_id: string;
+type WorkflowStatus = 'Not Started' | 'In Progress' | 'In Review' | 'Approved' | 'Declined' | 'Abandoned' | 'Pending';
+
+interface WorkflowItem {
+    id: string;
+    status?: WorkflowStatus;
+}
+
+interface Workflows {
+    current?: string;
+    list: WorkflowItem[];
 }
 
 export interface Didit {
-    session: DiditSession;
+    steps?: {
+        status: 'Approved' | 'Pending' | 'Rejected' | 'Declined';
+        name: 'ID_VERIFICATION' | 'LIVENESS' | 'FACE_MATCH' | 'PROOF_OF_ADDRESS' | 'PHONE_VERIFICATION';
+    }[];
+    workflows?: Workflows;
+    url?: string;
 }
 
 export interface User {
@@ -351,7 +355,6 @@ export interface GeneralStorageReq {
     file: File;
     dispatch?: any;
 }
-export type SessionInitRes = DiditSession;
 
 export interface StepRes {
     id: string;
@@ -389,9 +392,9 @@ export type VerifyCodeApiRes = APIResponse<User>;
 export type ChangeAvatarApiRes = APIResponse<ChangeAvatarRes>;
 export type RequestConnectWalletApiRes = APIResponse<ResquestConnectWalletRes>;
 export type VerifyConnectWalletApiRes = APIResponse;
-export type DiditSessionInitApiRes = APIResponse<SessionInitRes>;
+export type DiditSessionInitApiRes = APIResponse<Didit>;
 export type SynapsIndividualSessionApiRes = APIResponse<SynapsIndividualSessionRes>;
-export type GetTruLevelApiRes = APIResponse<TruLevel>;
+export type GetTruLevelApiRes = APIResponse<{ truLevel: TruLevel; didit: Didit }>;
 
 export interface MintExplorer {
     transactionHash: string;

@@ -1,18 +1,18 @@
 import { useEffect, useState, memo } from 'react';
+import { createPortal } from 'react-dom';
+import { Button, CircularProgress } from '@mui/material';
 import { diditSessionInitThunk } from '@/features/user/thunks';
 import { useDispatch, useSelector } from '@/store/hooks';
-import { Button, CircularProgress } from '@mui/material';
-import { createPortal } from 'react-dom';
 
 const DiditModal = memo(() => {
     const [open, setOpen] = useState(false);
     const dispatch = useDispatch();
 
-    const diditURL = useSelector((state) => state.user.didit?.session?.url);
-    const diditStatus = useSelector((state) => state.user.didit?.session?.status);
-    const currentWorkflow = useSelector((state) => state.user.didit?.session?.currentWorkflow);
+    const diditURL = useSelector((state) => state.user.didit?.url);
+    const workflows = useSelector((state) => state.user.didit?.workflows);
 
-    const isApproved = diditStatus === 'Approved' && !currentWorkflow;
+    const isApproved = workflows?.list?.some((v) => v.id === workflows.current && v.status === 'Approved');
+    console.log(diditURL, open, isApproved);
 
     const handleOpen = () => {
         if (isApproved) return;
@@ -27,10 +27,6 @@ const DiditModal = memo(() => {
         dispatch(diditSessionInitThunk());
         if (isApproved) setOpen(false);
         if (isApproved || !open) return;
-        const interval = setInterval(() => {
-            dispatch(diditSessionInitThunk());
-        }, 2500);
-        return () => clearInterval(interval);
     }, [isApproved, open]);
 
     const modal = (
