@@ -63,8 +63,6 @@ const Levels = ({ truLevel }: LevelsProps) => {
         };
     });
 
-    console.log('checkSyncWeb2AndWeb3', checkSyncWeb2AndWeb3);
-
     return (
         <>
             {truLevel?.levels.map((level, i) => (

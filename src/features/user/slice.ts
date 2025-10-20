@@ -211,7 +211,7 @@ export const userSlice = createSlice({
                 data: state.assets.data.filter((asset) => asset._id !== action.payload),
             };
         },
-        setDiditUrl: (state, action: PayloadAction<{ url: string }>) => {
+        setDiditUrl: (state, action: PayloadAction<{ url?: string }>) => {
             return {
                 ...state,
                 didit: {

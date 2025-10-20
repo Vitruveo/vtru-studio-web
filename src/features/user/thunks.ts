@@ -85,7 +85,7 @@ export function getTruLevelThunk(): ReduxThunkAction<Promise<void>> {
         dispatch(
             userActionsCreators.change({
                 truLevel: response.data?.truLevel,
-                didit: { ...response.data?.didit },
+                didit: { ...response.data?.didit, url },
             })
         );
     };

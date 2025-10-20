@@ -134,9 +134,6 @@ const TruLevel = () => {
     const truLevel = truLevelState || initTruLevel;
 
     const xlUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'));
-    const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
-    const mdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
-    const smUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
 
     const { language } = useI18n();
 
@@ -168,7 +165,7 @@ const TruLevel = () => {
     return (
         <PageContainer title={texts.title} margin>
             <Box margin="auto 0" marginBottom={10} display="relative">
-                <Breadcrumb title={texts.title} items={BCrumb} />
+                <Breadcrumb title={truLevelTitle()} items={BCrumb} />
                 <Box
                     width={xlUp ? '75%' : '100%'}
                     maxWidth={xlUp ? 800 : '100%'}
@@ -230,7 +227,7 @@ const TruLevel = () => {
                     </Box>
                     <Levels truLevel={truLevel} />
                 </Box>
-                <Box display={'flex'} flexDirection={'column'} gap={1} marginLeft={2}>
+                <Box display={'flex'} flexDirection={'row'} gap={2} marginLeft={2}>
                     <Typography color="GrayText" lineHeight={1.3} fontSize={20}>
                         Points are added to your profile after a Level has been completed.
                     </Typography>
@@ -243,4 +240,14 @@ const TruLevel = () => {
     );
 };
 
+const truLevelTitle = () => (
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Typography fontWeight={500} color="primary" lineHeight={0.9} fontSize={50}>
+            tru
+        </Typography>
+        <Typography fontWeight={500} color="black" lineHeight={0.9} fontSize={50}>
+            Level
+        </Typography>
+    </div>
+);
 export default memo(TruLevel);
